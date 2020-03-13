@@ -5,11 +5,11 @@ README.rst
 requirements.txt
 setup.py
 memo.md
-tests/*
 builelib/__init__.py
 builelib/common.py
 builelib/core.py
 builelib/helpers.py
+builelib/database/make/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
