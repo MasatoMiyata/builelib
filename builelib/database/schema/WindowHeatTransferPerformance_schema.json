@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "窓性能値データベース：JsonSchema",
+    "type": "object",
+    "additionalProperties":{
+        "$ref": "#/definitions/window"
+    },
+    "definitions": {
+        "window": {
+            "description": "窓の種類",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "定義": {
+                    "description": "定義",
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "木製・樹脂製建具": {
+                    "description": "木製・樹脂製建具の場合の性能",
+                    "type": "object",
+                    "$ref": "#/definitions/performance"
+                },
+                "金属木複合製・金属樹脂複合製建具": {
+                    "description": "金属木複合製・金属樹脂複合製建具の場合の性能",
+                    "type": "object",
+                    "$ref": "#/definitions/performance"
+                },
+                "金属製建具": {
+                    "description": "金属製建具の場合の性能",
+                    "type": "object",
+                    "$ref": "#/definitions/performance"
+                },
+                "ガラス単体": {
+                    "description": "ガラス単体の場合の性能",
+                    "type": "object",
+                    "$ref": "#/definitions/performance"
+                }
+            }
+        },
+        "performance":{
+            "description": "窓の性能値",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "熱貫流率": {
+                    "description": "熱貫流率",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10
+                },
+                "熱貫流率・ブラインド込": {
+                    "description": "熱貫流率・ブラインド込",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10
+                },
+                "日射熱取得率": {
+                    "description": "日射熱取得率",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "日射熱取得率・ブラインド込": {
+                    "description": "日射熱取得率・ブラインド込",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            }
+        }
+    }
+}

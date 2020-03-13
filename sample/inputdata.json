@@ -1,0 +1,243 @@
+{
+    "Building": {
+        "Name": "●●●●ビルディング",
+        "BuildingAddress": {
+            "Prefecture": "兵庫県",
+            "City": "神戸市",
+            "Address": "星和台６丁目"
+        },
+        "Region": "6",
+        "AnnualSolarRegion": "A4",
+        "BuildingFloorArea": 2340.97,
+        "Coefficient_DHC": {
+            "Cooling": 0.98,
+            "Heating": 1.22
+        }
+    },
+    "Rooms": [
+        {
+            "floorName": "1F",
+            "roomName": "事務室1",
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "roomArea": 352.5,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
+        },
+        {
+            "floorName": "1F",
+            "roomName": "事務室2",
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "roomArea": 100.0,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
+        },
+        {
+            "floorName": "2F",
+            "roomName": "事務室1",
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "roomArea": 200.0,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
+        },
+        {
+            "floorName": "2F",
+            "roomName": "事務室2",
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "roomArea": 300.0,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
+        },
+        {
+            "floorName": "3F",
+            "roomName": "事務室1",
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "roomArea": 400.0,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
+        },
+        {
+            "floorName": "3F",
+            "roomName": "事務室2",
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "roomArea": 500.0,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
+        }
+    ],
+    "LightingSystems": [
+        {
+            "floorName": "1F",
+            "roomName": "事務室1",
+            "roomWidth": 12.0,
+            "roomDepth": 3.2,
+            "unitHeight": 1.2,
+            "roomIndex": null,
+            "lightingUnit": [
+                {
+                    "UnitName": "照明1",
+                    "RatedPower": 88.0,
+                    "Number": 35.0,
+                    "OccupantSensingCTRL": "下限調光方式",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                {
+                    "UnitName": "照明2",
+                    "RatedPower": 92.0,
+                    "Number": 25.0,
+                    "OccupantSensingCTRL": "点滅方式",
+                    "IlluminanceSensingCTRL": "調光方式",
+                    "TimeScheduleCTRL": "減光",
+                    "InitialIlluminationCorrectionCTRL": "タイマ方式(LED)"
+                }
+            ]
+        },
+        {
+            "floorName": "1F",
+            "roomName": "事務室2",
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 2.1,
+            "lightingUnit": [
+                {
+                    "UnitName": "照明3",
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "減光方式",
+                    "IlluminanceSensingCTRL": "調光方式BL",
+                    "TimeScheduleCTRL": "消灯",
+                    "InitialIlluminationCorrectionCTRL": "タイマ方式(蛍光灯)"
+                },
+                {
+                    "UnitName": "照明4",
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W15",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "センサ方式(LED)"
+                }
+            ]
+        },
+        {
+            "floorName": "2F",
+            "roomName": "事務室1",
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 1.1,
+            "lightingUnit": [
+                {
+                    "UnitName": "照明1",
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W15BL",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "センサ方式(蛍光灯)"
+                },
+                {
+                    "UnitName": "照明2",
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W20",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            ]
+        },
+        {
+            "floorName": "2F",
+            "roomName": "事務室2",
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 1.0,
+            "lightingUnit": [
+                {
+                    "UnitName": "照明3",
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W20BL",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                {
+                    "UnitName": "照明4",
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W25",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            ]
+        },
+        {
+            "floorName": "3F",
+            "roomName": "事務室1",
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 2.0,
+            "lightingUnit": [
+                {
+                    "UnitName": "照明1",
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W25BL",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                {
+                    "UnitName": "照明2",
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "点滅方式",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            ]
+        },
+        {
+            "floorName": "3F",
+            "roomName": "事務室2",
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 3.0,
+            "lightingUnit": [
+                {
+                    "UnitName": "照明3",
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                {
+                    "UnitName": "照明4",
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,311 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "WebプログラムVer3用JsonSchema",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "Building": {
+            "description": "様式BL",
+            "$ref": "#/definitions/Building"
+        },
+        "Rooms": {
+            "description": "様式RM"
+        },
+        "LightingSystems": {
+            "description": "様式L",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/LightingSystem"
+            }
+        }
+    },
+    "dependencies": {
+        "LightingSystems": ["Building"]
+    },
+    "required": [
+        "Building"
+    ],
+    "definitions": {
+        "Building": {
+            "description": "様式BL",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Name": {
+                    "description": "BL-1:建築物の名称",
+                    "default":"-",
+                    "type": "string",
+                    "maxLength": 1000
+                },
+                "BuildingAddress": {
+                    "description": "BL-2,3,4:建築物所在地",
+                    "$ref": "#/definitions/BuildingAddress"
+                },
+                "Region": {
+                    "description": "BL-5:地域の区分",
+                    "type": "string",
+                    "enum":[
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8"
+                    ]
+                },
+                "AnnualSolarRegion": {
+                    "description": "BL-6:年間日射地域区分",
+                    "type": "string",
+                    "enum":[
+                        "A1",
+                        "A2",
+                        "A3",
+                        "A4",
+                        "A5"
+                    ]
+                },
+                "BuildingFloorArea": {
+                    "description": "BL-7:延べ面積 [m2]",
+                    "type": "number",
+                    "minimum": 0.01,
+                    "maximum": 100000000
+                },
+                "Coefficient_DHC": {
+                    "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
+                    "$ref": "#/definitions/CoefficientDHC"
+                }
+            },
+            "required": [
+                "Region",
+                "AnnualSolarRegion",
+                "BuildingFloorArea",
+                "Coefficient_DHC"
+            ],
+            "title": "Model"
+        },
+        "BuildingAddress": {
+            "description": "BL-2,3,4:建築物所在地",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Prefecture": {
+                    "description": "BL-2:都道府県",
+                    "type": "string",
+                    "maxLength": 100,
+                    "default":"-"
+                },
+                "City": {
+                    "description": "BL-3:市区町村",
+                    "type": "string",
+                    "maxLength": 100,
+                    "default":"-"
+                },
+                "Address": {
+                    "description": "BL-4:丁目、番地等",
+                    "type": "string",
+                    "maxLength": 1000,
+                    "default":"-"
+                }
+            },
+            "required": [
+                "Address",
+                "City",
+                "Prefecture"
+            ],
+            "title": "BuildingAddress"
+        },
+        "CoefficientDHC": {
+            "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Cooling": {
+                    "description": "BL-8:冷熱",
+                    "default":1.36,
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "Heating": {
+                    "description": "BL-9:温熱",
+                    "default":1.36,
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                }
+            },
+            "required": [
+                "Cooling",
+                "Heating"
+            ],
+            "title": "CoefficientDHC"
+        },
+        "LightingSystem": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "floorName": {
+                    "description": "L-1:階",
+                    "type": "string"
+                },
+                "roomName": {
+                    "description": "L-2:室名",
+                    "type": "string"
+                },
+                "roomWidth": {
+                    "description": "L-3:室指数　室の間口 [m]",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "roomDepth": {
+                    "description": "L-4:室指数　室の奥行 [m]",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "unitHeight": {
+                    "description": "L-5:室指数　器具高さ [m]",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "roomIndex": {
+                    "description": "L-6:室指数 [-]",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "default": 2.5,
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "lightingUnit": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/LightingUnit"
+                    }
+                }
+            },
+            "required": [
+                "floorName",
+                "roomName",
+                "lightingUnit"
+            ],
+            "title": "LightingSystem"
+        },
+        "LightingUnit": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "UnitName": {
+                    "description": "L-7:機器名称",
+                    "type": "string",
+                    "default": "-"
+                },
+                "RatedPower": {
+                    "description": "L-8:定格消費電力 [W/台]",
+                    "type": "number",
+                    "minimum": 0.01,
+                    "maximum": 1000000000
+                },
+                "Number": {
+                    "description": "L-9:台数",
+                    "type": "integer",
+                    "minimum": 0.01,
+                    "maximum": 1000000000,
+                    "default": 1
+                },
+                "OccupantSensingCTRL": {
+                    "description": "L-10:在室検知制御",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "下限調光方式",
+                        "点滅方式",
+                        "減光方式"
+                    ],
+                    "default":"無"
+                },
+                "IlluminanceSensingCTRL": {
+                    "description": "L-11:明るさ検知制御",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "調光方式",
+                        "調光方式BL",
+                        "調光方式W15",
+                        "調光方式W15BL",
+                        "調光方式W20",
+                        "調光方式W20BL",
+                        "調光方式W25",
+                        "調光方式W25BL",
+                        "点滅方式"
+                    ],
+                    "default":"無"
+                },
+                "TimeScheduleCTRL": {
+                    "description": "L-12:タイムスケジュール制御",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "減光",
+                        "消灯"
+                    ],
+                    "default":"無"
+                },
+                "InitialIlluminationCorrectionCTRL": {
+                    "description": "L-13:初期照度補正機能",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "タイマ方式(LED)",
+                        "タイマ方式(蛍光灯)",
+                        "センサ方式(LED)",
+                        "センサ方式(蛍光灯)"
+                    ],
+                    "default":"無"
+                }
+            },
+            "required": [
+                "UnitName",
+                "Number",
+                "RatedPower",
+                "IlluminanceSensingCTRL",
+                "InitialIlluminationCorrectionCTRL",
+                "OccupantSensingCTRL",
+                "TimeScheduleCTRL"
+            ],
+            "title": "LightingUnit"
+        }
+    }
+}

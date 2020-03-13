@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "空調運転モード：JsonSchema",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "日付": {
+            "description": "日付",
+            "type": "array",
+            "minItems":365,
+            "maxItems":365
+        },
+        "寒冷地": {
+            "description": "寒冷地の運転モード",
+            "type": "array",
+            "minItems":365,
+            "maxItems":365,
+            "items": {
+                "$ref": "#/definitions/mode"
+            }
+        },
+        "温暖地": {
+            "description": "温暖地の運転モード",
+            "type": "array",
+            "minItems":365,
+            "maxItems":365,
+            "items": {
+                "$ref": "#/definitions/mode"
+            }
+        },
+        "蒸暑地": {
+            "description": "蒸暑地の運転モード",
+            "type": "array",
+            "minItems":365,
+            "maxItems":365,
+            "items": {
+                "$ref": "#/definitions/mode"
+            }
+        }
+    },
+    "required": [
+        "日付","寒冷地","温暖地","蒸暑地"
+    ],
+    "definitions": {
+        "mode": {
+            "description": "運転モードの選択肢",
+            "type": "string",
+            "enum":[
+                "暖房",
+                "冷房",
+                "中間"
+            ]
+        }
+    }
+}

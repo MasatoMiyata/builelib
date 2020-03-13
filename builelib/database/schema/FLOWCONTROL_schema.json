@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "風量制御データベース：JsonSchema",
+    "type": "object",
+    "additionalProperties":{
+        "$ref": "#/definitions/flowcntrl"
+    },
+    "definitions": {
+        "flowcntrl": {
+            "description": "制御の種類",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Name": {
+                    "description": "名前",
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "Type": {
+                    "description": "制御の種類",
+                    "type": "string",
+                    "enum":[
+                        "定風量",
+                        "変風量",
+                        "定流量",
+                        "変流量"
+                    ]
+                },
+                "a4": {
+                    "description": "4次式の係数（4次）",
+                    "type": "number",
+                    "minimum": -100,
+                    "maximum": 100
+                },
+                "a3": {
+                    "description": "4次式の係数（3次）",
+                    "type": "number",
+                    "minimum": -100,
+                    "maximum": 100
+                },
+                "a2": {
+                    "description": "4次式の係数（2次）",
+                    "type": "number",
+                    "minimum": -100,
+                    "maximum": 100
+                },
+                "a1": {
+                    "description": "4次式の係数（1次）",
+                    "type": "number",
+                    "minimum": -100,
+                    "maximum": 100
+                },
+                "a0": {
+                    "description": "4次式の係数（切片）",
+                    "type": "number",
+                    "minimum": -100,
+                    "maximum": 100
+                }
+            }
+        }
+    }
+}
