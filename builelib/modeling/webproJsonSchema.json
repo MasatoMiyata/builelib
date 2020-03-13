@@ -11,6 +11,20 @@
         "Rooms": {
             "description": "様式RM"
         },
+        "VentilationRoom":{
+            "description": "様式V1",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/VentilationRoom"
+            }
+        },
+        "VentilationUnit":{
+            "description": "様式V2",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/VentilationUnit"
+            }
+        },
         "LightingSystems": {
             "description": "様式L",
             "type": "array",
@@ -20,10 +34,11 @@
         }
     },
     "dependencies": {
-        "LightingSystems": ["Building"]
+        "VentilationRoom": ["Building","Rooms","VentilationUnit"],
+        "LightingSystems": ["Building","Rooms"]
     },
     "required": [
-        "Building"
+        "Building", "Rooms"
     ],
     "definitions": {
         "Building": {
@@ -143,6 +158,221 @@
                 "Heating"
             ],
             "title": "CoefficientDHC"
+        },
+        "VentilationRoom":{
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Floor": {
+                    "description": "V1-1:階",
+                    "type": "string"
+                },
+                "RoomName": {
+                    "description": "V1-2:室名",
+                    "type": "string"
+                },
+                "VentilationType": {
+                    "description": "V1-3:換気方式",
+                    "type": "string",
+                    "enum":[
+                        "一種換気",
+                        "二種換気",
+                        "三種換気"
+                    ]
+                },
+                "VentilationUnitRef": {
+                    "type": "array",
+                    "items": {
+                        "properties": {
+                            "UnitType": {
+                                "description": "V1-4:機器の種類",
+                                "type": "string",
+                                "enum":[
+                                    "給気",
+                                    "排気",
+                                    "空調",
+                                    "循環"
+                                ]
+                            },
+                            "Name": {
+                                "description": "V1-5:機器名称",
+                                "type": "string"
+                            },
+                            "Info": {
+                                "description": "V1-6:備考",
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "required": [
+                "Floor",
+                "RoomName",
+                "VentilationType",
+                "VentilationUnitRef"
+            ],
+            "title": "VentilationRoom"
+        },
+        "VentilationUnit":{
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Name": {
+                    "description": "V2-1:換気機器名称",
+                    "type": "string"
+                },
+                "Number": {
+                    "description": "V2-2:台数",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                },
+                "FanAirVolume": {
+                    "description": "V2-3:設計風量",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10000000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "MoterRatedPower": {
+                    "description": "V2-4:定格電動機出力",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10000000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "PowerConsumption": {
+                    "description": "V2-5:定格消費電力",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10000000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "HighEfficiencyMotor": {
+                    "description": "V2-6:高効率電動機の有無",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "有"
+                    ],
+                    "default":"無"
+                },
+                "Inverter": {
+                    "description": "V2-7:インバータの有無",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "有"
+                    ],
+                    "default":"無"
+                },
+                "AirVolumeControl": {
+                    "description": "V2-8:送風量制御",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "CO濃度制御",
+                        "温度制御"
+                    ],
+                    "default":"無"
+                },
+                "VentilationRoomType": {
+                    "description": "V2-9:対象室の用途",
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "enum":[
+                                "電気室",
+                                "機械室",
+                                "エレベータ機械室",
+                                "その他"
+                            ],
+                            "default":"その他"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "AC_CoolingCapacity": {
+                    "description": "V2-10:必要冷却能力",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10000000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "AC_RefEfficiency": {
+                    "description": "V2-11:熱源効率(一次換算値)",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10000000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "AC_PumpPower": {
+                    "description": "V2-12:ポンプの定格消費電力",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10000000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "Info": {
+                    "description": "V1-6:備考",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "Name",
+                "Number",
+                "FanAirVolume",
+                "MoterRatedPower",
+                "PowerConsumption",
+                "HighEfficiencyMotor",
+                "Inverter",
+                "AirVolumeControl",
+                "VentilationRoomType",
+                "AC_CoolingCapacity",
+                "AC_RefEfficiency",
+                "AC_PumpPower",
+                "Info"
+            ],
+            "title": "VentilationUnit"
         },
         "LightingSystem": {
             "type": "object",
