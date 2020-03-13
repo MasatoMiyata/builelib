@@ -2,6 +2,7 @@ import pandas as pd
 import csv
 import pprint as pp
 from builelib.lighting import lighting
+import jsonschema
 
 # CSVを読み込む関数
 def readCSVfile(filename):
@@ -37,6 +38,9 @@ def calculation(filename):
 
         # 計算モデルの作成
         inputdata = {
+            "Building":{
+                "Region": "6"
+            },
             "Rooms": [
                 {
                     "floorName": "1F",
@@ -78,19 +82,22 @@ def calculation(filename):
             ]
         }
 
-        # 計算実行
-        resultJson = lighting(inputdata)
+        try:
 
-        if data[20] == "err":
-            # ここは将来の課題
-            print('スキップしました')
-        else:
+            # 計算実行        
+            resultJson = lighting(inputdata)
+
             # 期待値
             resultJson["expectedDesignValue"]   = convert2number(data[20],0)
             resultJson["expectedStandardValue"] = convert2number(data[21],0)
 
             assert (resultJson["E_lighting"] - resultJson["expectedDesignValue"])   < 0.000001
             assert (resultJson["Es_lighting"] - resultJson["expectedStandardValue"]) < 0.000001
+
+        except:
+        
+            assert data[20] == "err"
+
 
 
 #### テスト実行 ####
@@ -104,8 +111,8 @@ def test_roomWidth():
 def test_unitHeight():
     calculation('./tests/lighting/◇器具高さ_20190730-183436.txt')
 
-# def test_roomDepth():
-#     calculation('./tests/lighting/◇境界値エラー側_20190730-183436.txt')
+def test_roomDepth():
+    calculation('./tests/lighting/◇境界値エラー側_20190730-183436.txt')
 
 def test_roomIndex():
     calculation('./tests/lighting/◇室指数_20190730-183436.txt')

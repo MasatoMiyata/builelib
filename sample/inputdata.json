@@ -70,6 +70,171 @@
             "ceilingHeight": 2.6
         }
     ],
+    "VentilationRoom": [
+        {
+            "Floor": "1F",
+            "RoomName": "駐車場",
+            "VentilationType": "一種換気",
+            "VentilationUnitRef": [
+                {
+                    "UnitType": "給気",
+                    "Name": "SF-1",
+                    "Info": ""
+                },
+                {
+                    "UnitType": "排気",
+                    "Name": "EF-1",
+                    "Info": ""
+                }
+            ]
+        },
+        {
+            "Floor": "1F",
+            "RoomName": "便所",
+            "VentilationType": "三種換気",
+            "VentilationUnitRef": [
+                {
+                    "UnitType": "排気",
+                    "Name": "EF-2",
+                    "Info": ""
+                }
+            ]
+        },
+        {
+            "Floor": "1F",
+            "RoomName": "機械室",
+            "VentilationType": "一種換気",
+            "VentilationUnitRef": [
+                {
+                    "UnitType": "空調",
+                    "Name": "AC-1",
+                    "Info": ""
+                },
+                {
+                    "UnitType": "給気",
+                    "Name": "SF-2",
+                    "Info": ""
+                },
+                {
+                    "UnitType": "排気",
+                    "Name": "EF-3",
+                    "Info": ""
+                },
+                {
+                    "UnitType": "循環",
+                    "Name": "FF-1",
+                    "Info": ""
+                }
+            ]
+        }
+    ],
+    "VentilationUnit": [
+        {
+            "Name": "SF-1",
+            "Number": 1.0,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.154,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "CO濃度制御",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        {
+            "Name": "EF-1",
+            "Number": 2.0,
+            "FanAirVolume": 150.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.154,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        {
+            "Name": "EF-2",
+            "Number": 2.0,
+            "FanAirVolume": 150.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.022,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "有",
+            "AirVolumeControl": "温度制御",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        {
+            "Name": "AC-1",
+            "Number": 1.0,
+            "FanAirVolume": 1000.0,
+            "MoterRatedPower": 0.75,
+            "PowerConsumption": null,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": "エレベータ機械室",
+            "AC_CoolingCapacity": 20.0,
+            "AC_RefEfficiency": 1.25,
+            "AC_PumpPower": 2.2,
+            "Info": ""
+        },
+        {
+            "Name": "SF-2",
+            "Number": 1.0,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.088,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        {
+            "Name": "EF-3",
+            "Number": 1.0,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.902,
+            "HighEfficiencyMotor": "有",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        {
+            "Name": "FF-1",
+            "Number": 3.0,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": 0.22,
+            "PowerConsumption": null,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        }
+    ],
     "LightingSystems": [
         {
             "floorName": "1F",

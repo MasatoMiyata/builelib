@@ -93,10 +93,7 @@
                 }
             },
             "required": [
-                "Region",
-                "AnnualSolarRegion",
-                "BuildingFloorArea",
-                "Coefficient_DHC"
+                "Region"
             ],
             "title": "Model"
         },
@@ -392,7 +389,7 @@
                         {
                             "type": "number",
                             "minimum": 0,
-                            "maximum": 1000
+                            "maximum": 1000000000
                         },
                         {
                             "type": "null"
@@ -405,7 +402,7 @@
                         {
                             "type": "number",
                             "minimum": 0,
-                            "maximum": 1000
+                            "maximum": 1000000000
                         },
                         {
                             "type": "null"
@@ -418,7 +415,7 @@
                         {
                             "type": "number",
                             "minimum": 0,
-                            "maximum": 100
+                            "maximum": 1000000000
                         },
                         {
                             "type": "null"
@@ -432,7 +429,7 @@
                             "type": "number",
                             "default": 2.5,
                             "minimum": 0,
-                            "maximum": 100
+                            "maximum": 1000000000
                         },
                         {
                             "type": "null"
@@ -465,13 +462,13 @@
                 "RatedPower": {
                     "description": "L-8:定格消費電力 [W/台]",
                     "type": "number",
-                    "minimum": 0.01,
+                    "minimum": 0,
                     "maximum": 1000000000
                 },
                 "Number": {
                     "description": "L-9:台数",
-                    "type": "integer",
-                    "minimum": 0.01,
+                    "type": "number",
+                    "minimum": 0,
                     "maximum": 1000000000,
                     "default": 1
                 },

@@ -1,5 +1,6 @@
 #%%
 import json
+import jsonschema
 import pprint as pp
 
 # 室の形状に応じて定められる係数（仕様書4.4）
@@ -40,6 +41,14 @@ def get_roomSpec(floorName,roomName,roomsdata):
 
 #%%
 def lighting(inputdata):
+
+    # スキーマの読み込み
+    with open('./builelib/modeling/webproJsonSchema.json') as file_obj:
+        schema_data = json.load(file_obj)    
+
+    # バリデーションの実行
+    jsonschema.validate(inputdata, schema_data)
+
 
     # データベースjsonの読み込み
     with open('./builelib/database/RoomUsageSchedule.json', 'r') as f:
@@ -151,11 +160,9 @@ def lighting(inputdata):
     return resultJson
 
 
-
 if __name__ == '__main__':
 
     print('----- lighting.py -----')
-    
     filename = './sample/inputdata.json'
 
     # テンプレートjsonの読み込み
