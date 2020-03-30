@@ -36,6 +36,7 @@ def set_roomIndexCoeff(roomIndex):
 #%%
 def lighting(inputdata):
 
+    # 入力ファイルの検証
     bc.inputdata_validation(inputdata)
 
     # データベースjsonの読み込み
@@ -48,21 +49,25 @@ def lighting(inputdata):
         "Es_lighting": None,
         "BEI_L": None,
         "E_lighting_hourly": None,
-        "lighting":[
-        ]
+        "lighting":{
+        }
     }
 
-    # 室毎（照明系統毎）のループ
+    # 変数初期化
     E_lighting = 0    # 設計一次エネルギー消費量 [GJ]
     E_lighting_hourly = np.zeros((365,24))  # 設計一次エネルギー消費量（時刻別） [GJ]
     Es_lighting = 0   # 基準一次エネルギー消費量 [GJ]
 
-    for isys in inputdata["LightingSystems"]:
+
+    # 室毎（照明系統毎）のループ
+    for ikey, isys in inputdata["LightingSystems"].items():
 
         # 建物用途、室用途、室面積の取得
-        (buildingType, roomType, roomArea) = bc.get_roomSpec(isys["floorName"],isys["roomName"],inputdata["Rooms"])
+        buildingType = inputdata["Rooms"][ikey]["buildingType"]
+        roomType     = inputdata["Rooms"][ikey]["roomType"]
+        roomArea     = inputdata["Rooms"][ikey]["roomArea"]
 
-        # 年間照明点灯時間 [時間] ← 計算には使用しない。検算用。
+        # 年間照明点灯時間 [時間] ← 計算には使用しない。
         opeTime = bc.RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]
         # 時刻別スケジュールの読み込み
         opePattern_hourly_light = bc.get_dailyOpeSchedule_lighting(buildingType, roomType)
@@ -84,7 +89,7 @@ def lighting(inputdata):
 
         ## 器具毎のループ
         unitPower = 0
-        for iunit in isys["lightingUnit"]:
+        for _, iunit in isys["lightingUnit"].items():
         
             # 室指数による補正
             rmIx = 1
@@ -124,10 +129,7 @@ def lighting(inputdata):
 
 
         # 各室の計算結果を格納
-        resultJson["lighting"].append(
-            {
-                "floorName": isys["floorName"],
-                "roomName": isys["roomName"],
+        resultJson["lighting"][ikey] = {
                 "buildingType": buildingType,
                 "roomType": roomType,
                 "roomArea": roomArea,
@@ -138,8 +140,7 @@ def lighting(inputdata):
                 "PrimaryEnergy": E_room,
                 "PrimaryEnergyPerArea": PrimaryEnergyPerArea,
                 "StandardEnergy": Es_room
-            })
-
+            }
 
     # BEI/L [-]
     if Es_lighting <= 0:
