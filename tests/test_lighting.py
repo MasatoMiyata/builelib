@@ -41,26 +41,23 @@ def calculation(filename):
             "Building":{
                 "Region": "6"
             },
-            "Rooms": [
-                {
+            "Rooms": {
+                "1F_室": {
                     "floorName": "1F",
                     "roomName": "室",
                     "buildingType": data[1],
                     "roomType": data[2],
                     "roomArea": convert2number(data[3],None),
                 }
-            ],
-            "LightingSystems": [
-                {
-                    "floorName": "1F",
-                    "roomName": "室",
+            },
+            "LightingSystems": {
+                "1F_室": {
                     "roomWidth": convert2number(data[5],None),
                     "roomDepth": convert2number(data[6],None),
                     "unitHeight": convert2number(data[4],None),
                     "roomIndex": convert2number(data[7],None),
-                    "lightingUnit": [
-                        {
-                            "UnitName": "照明1",
+                    "lightingUnit": {
+                        "照明1": {
                             "RatedPower": convert2number(data[8],0),
                             "Number": convert2number(data[9],0),
                             "OccupantSensingCTRL": data[10],
@@ -68,8 +65,7 @@ def calculation(filename):
                             "TimeScheduleCTRL": data[12],
                             "InitialIlluminationCorrectionCTRL": data[13]
                         },
-                        {
-                            "UnitName": "照明2",
+                        "照明2": {
                             "RatedPower": convert2number(data[14],0),
                             "Number": convert2number(data[15],0),
                             "OccupantSensingCTRL": data[16],
@@ -77,9 +73,9 @@ def calculation(filename):
                             "TimeScheduleCTRL": data[18],
                             "InitialIlluminationCorrectionCTRL": data[19]
                         }
-                    ]
+                    }
                 }
-            ]
+            }
         }
 
         try:
