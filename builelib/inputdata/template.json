@@ -14,13 +14,13 @@
             "Heating": 1.22
         }
     },
-    "Rooms":[
-    ],
-    "VentilationRoom":[
-    ],
-    "VentilationUnit":[
-    ],
-    "LightingSystems":[
-    ]
+    "Rooms":{
+    },
+    "VentilationRoom":{
+    },
+    "VentilationUnit":{
+    },
+    "LightingSystems":{
+    }
 
 }

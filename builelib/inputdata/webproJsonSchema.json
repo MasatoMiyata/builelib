@@ -13,21 +13,21 @@
         },
         "VentilationRoom":{
             "description": "様式V1",
-            "type": "array",
+            "type": "object",
             "items": {
                 "$ref": "#/definitions/VentilationRoom"
             }
         },
         "VentilationUnit":{
             "description": "様式V2",
-            "type": "array",
+            "type": "object",
             "items": {
                 "$ref": "#/definitions/VentilationUnit"
             }
         },
         "LightingSystems": {
             "description": "様式L",
-            "type": "array",
+            "type": "object",
             "items": {
                 "$ref": "#/definitions/LightingSystem"
             }
@@ -160,14 +160,6 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "Floor": {
-                    "description": "V1-1:階",
-                    "type": "string"
-                },
-                "RoomName": {
-                    "description": "V1-2:室名",
-                    "type": "string"
-                },
                 "VentilationType": {
                     "description": "V1-3:換気方式",
                     "type": "string",
@@ -204,8 +196,6 @@
                 }
             },
             "required": [
-                "Floor",
-                "RoomName",
                 "VentilationType",
                 "VentilationUnitRef"
             ],
@@ -215,10 +205,6 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "Name": {
-                    "description": "V2-1:換気機器名称",
-                    "type": "string"
-                },
                 "Number": {
                     "description": "V2-2:台数",
                     "type": "number",
@@ -355,7 +341,6 @@
                 }
             },
             "required": [
-                "Name",
                 "Number",
                 "FanAirVolume",
                 "MoterRatedPower",
@@ -375,14 +360,6 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "floorName": {
-                    "description": "L-1:階",
-                    "type": "string"
-                },
-                "roomName": {
-                    "description": "L-2:室名",
-                    "type": "string"
-                },
                 "roomWidth": {
                     "description": "L-3:室指数　室の間口 [m]",
                     "anyOf":[
@@ -444,8 +421,6 @@
                 }
             },
             "required": [
-                "floorName",
-                "roomName",
                 "lightingUnit"
             ],
             "title": "LightingSystem"
@@ -454,11 +429,6 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "UnitName": {
-                    "description": "L-7:機器名称",
-                    "type": "string",
-                    "default": "-"
-                },
                 "RatedPower": {
                     "description": "L-8:定格消費電力 [W/台]",
                     "type": "number",
@@ -524,7 +494,6 @@
                 }
             },
             "required": [
-                "UnitName",
                 "Number",
                 "RatedPower",
                 "IlluminanceSensingCTRL",

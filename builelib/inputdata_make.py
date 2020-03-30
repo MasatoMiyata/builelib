@@ -64,6 +64,8 @@ def inputdata_make(inputfileName):
 
         # シートの読み込み
         sheet_BL = wb.sheet_by_name("様式RM")
+        # 初期化
+        roomKey = None
 
         # 行のループ
         for i in range(10,sheet_BL.nrows):
@@ -74,18 +76,16 @@ def inputdata_make(inputfileName):
             # 階と室名が空欄でない場合
             if (dataBL[0] != "") and (dataBL[1] != ""):
 
-                addDic = {
-                    "floorName": str(dataBL[0]),
-                    "roomName": str(dataBL[1]),
-                    "buildingType": str(dataBL[2]),               
-                    "roomType": str(dataBL[3]),
-                    "roomArea": float(dataBL[4]),
-                    "floorHeight": float(dataBL[5]),
-                    "ceilingHeight": float(dataBL[6])
-                }
+                # 階＋室をkeyとする
+                roomKey = str(dataBL[0]) + '_' + str(dataBL[1])
 
-                # リストを追加
-                data["Rooms"].append(addDic)
+                data["Rooms"][roomKey] = {
+                        "buildingType": str(dataBL[2]),               
+                        "roomType": str(dataBL[3]),
+                        "roomArea": float(dataBL[4]),
+                        "floorHeight": float(dataBL[5]),
+                        "ceilingHeight": float(dataBL[6])
+                }
 
 
     #%% 
@@ -94,6 +94,8 @@ def inputdata_make(inputfileName):
         
         # シートの読み込み
         sheet_V1 = wb.sheet_by_name("様式V1")
+        # 初期化
+        roomKey = None
 
         # 行のループ
         for i in range(10,sheet_V1.nrows):
@@ -104,39 +106,35 @@ def inputdata_make(inputfileName):
             # 階と室名が空欄でない場合
             if (dataV[0] != "") and (dataV[1] != ""):
 
-                addDic = {
-                    "Floor": str(dataV[0]),
-                    "RoomName": str(dataV[1]),
-                    "VentilationType": str(dataV[2]),
-                    "VentilationUnitRef":[
-                        {
-                            "UnitType": str(dataV[3]),
-                            "Name": str(dataV[4]),
-                            "Info": str(dataV[5])
-                        }
-                    ]
-                }
+                # 階＋室をkeyとする
+                roomKey = str(dataV[0]) + '_' + str(dataV[1])
 
-                # リストを追加
-                data["VentilationRoom"].append(addDic)
+                data["VentilationRoom"][roomKey] = {
+                        "VentilationType": str(dataV[2]),
+                        "VentilationUnitRef":{
+                            str(dataV[4]):{
+                                "UnitType": str(dataV[3]),
+                                "Info": str(dataV[5])
+                            }
+                        }
+                }
 
             # 階と室名が空欄であり、かつ、機器名称に入力がある場合
-            if (dataV[0] == "") and (dataV[1] == "") and (dataV[4] != ""):
+            # 上記 if文 内で定義された roomKey をkeyとして、機器を追加する。
+            elif (dataV[0] == "") and (dataV[1] == "") and (dataV[4] != ""):
 
-                addDic = {
+                data["VentilationRoom"][roomKey]["VentilationUnitRef"][str(dataV[4])]  = {
                     "UnitType": str(dataV[3]),
-                    "Name": str(dataV[4]),
                     "Info": str(dataV[5])
-                }
-
-                # リストの最後の追加する。
-                data["VentilationRoom"][-1]["VentilationUnitRef"].append(addDic)
+                }               
 
 
     if "様式V2" in wb.sheet_names():
         
         # シートの読み込み
         sheet_V2 = wb.sheet_by_name("様式V2")
+        # 初期化
+        unitKey = None
 
         # 行のループ
         for i in range(10,sheet_V2.nrows):
@@ -146,9 +144,8 @@ def inputdata_make(inputfileName):
 
             # 換気機器名称が空欄でない場合
             if (dataV[0] != ""):
-
-                addDic = {
-                    "Name": str(dataV[0]),
+                
+                data["VentilationUnit"][str(dataV[0])] = {
                     "Number": set_default(dataV[1], 1, "float"),
                     "FanAirVolume": set_default(dataV[2], None, "float"),
                     "MoterRatedPower": set_default(dataV[3], None, "float"),
@@ -163,15 +160,14 @@ def inputdata_make(inputfileName):
                     "Info": str(dataV[12])
                 }
 
-                # リストを追加
-                data["VentilationUnit"].append(addDic)
-
 
     #%% 
     if "様式L" in wb.sheet_names():
         
         # シートの読み込み
         sheet_L = wb.sheet_by_name("様式L")
+        # 初期化
+        roomKey = None
 
         # 行のループ
         for i in range(10,sheet_L.nrows):
@@ -182,16 +178,16 @@ def inputdata_make(inputfileName):
             # 階と室名が空欄でない場合
             if (dataL[0] != "") and (dataL[1] != ""):
 
-                addDic = {
-                    "floorName": str(dataL[0]),
-                    "roomName": str(dataL[1]),
+                # 階＋室をkeyとする
+                roomKey = str(dataL[0]) + '_' + str(dataL[1])
+
+                data["LightingSystems"][roomKey] = {
                     "roomWidth": set_default(dataL[2],None, "float"),
                     "roomDepth": set_default(dataL[3],None, "float"),
                     "unitHeight": set_default(dataL[4],None, "float"),
                     "roomIndex": set_default(dataL[5],None, "float"),
-                    "lightingUnit":[
-                        {
-                            "UnitName": str(dataL[6]),
+                    "lightingUnit": {
+                        str(dataL[6]): {
                             "RatedPower": float(dataL[7]),
                             "Number": float(dataL[8]),
                             "OccupantSensingCTRL": set_default(str(dataL[9]),schema_data["definitions"]["LightingUnit"]["properties"]["OccupantSensingCTRL"]["default"], "str"),
@@ -199,17 +195,13 @@ def inputdata_make(inputfileName):
                             "TimeScheduleCTRL": set_default(str(dataL[11]),schema_data["definitions"]["LightingUnit"]["properties"]["TimeScheduleCTRL"]["default"], "str"),
                             "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["LightingUnit"]["properties"]["InitialIlluminationCorrectionCTRL"]["default"], "str")
                         }
-                    ]
+                    }
                 }
 
-                # リストを追加
-                data["LightingSystems"].append(addDic)
-                
             # 階と室名が空欄であり、かつ、消費電力の入力がある場合
             if (dataL[0] == "") and (dataL[1] == "") and (dataL[7] != ""):
 
-                addDic = {
-                    "UnitName": str(dataL[6]),
+                data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[6])] = {
                     "RatedPower": float(dataL[7]),
                     "Number": float(dataL[8]),
                     "OccupantSensingCTRL": set_default(str(dataL[9]),schema_data["definitions"]["LightingUnit"]["properties"]["OccupantSensingCTRL"]["default"], "str"),
@@ -217,9 +209,6 @@ def inputdata_make(inputfileName):
                     "TimeScheduleCTRL": set_default(str(dataL[11]),schema_data["definitions"]["LightingUnit"]["properties"]["TimeScheduleCTRL"]["default"], "str"),
                     "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["LightingUnit"]["properties"]["InitialIlluminationCorrectionCTRL"]["default"], "str")
                 }
-
-                # リストの最後の追加する。
-                data["LightingSystems"][-1]["lightingUnit"].append(addDic)
 
 
     # バリデーションの実行

@@ -2,135 +2,130 @@
     "Building": {
         "Name": "●●●●ビルディング",
         "BuildingAddress": {
-            "Prefecture": "兵庫県",
-            "City": "神戸市",
-            "Address": "星和台６丁目"
+            "Prefecture": "茨城県",
+            "City": "つくば市（旧つくば市）",
+            "Address": "吾妻"
         },
-        "Region": "6",
-        "AnnualSolarRegion": "A4",
+        "Region": "5",
+        "AnnualSolarRegion": "A3",
         "BuildingFloorArea": 2340.97,
         "Coefficient_DHC": {
             "Cooling": 0.98,
             "Heating": 1.22
         }
     },
-    "Rooms": [
-        {
-            "floorName": "1F",
-            "roomName": "事務室1",
+    "Rooms": {
+        "1F_事務室1": {
             "buildingType": "事務所等",
             "roomType": "事務室",
             "roomArea": 352.5,
             "floorHeight": 5.0,
             "ceilingHeight": 2.6
         },
-        {
-            "floorName": "1F",
-            "roomName": "事務室2",
+        "1F_事務室2": {
             "buildingType": "事務所等",
             "roomType": "事務室",
             "roomArea": 100.0,
             "floorHeight": 5.0,
             "ceilingHeight": 2.6
         },
-        {
-            "floorName": "2F",
-            "roomName": "事務室1",
+        "2F_事務室1": {
             "buildingType": "事務所等",
             "roomType": "事務室",
             "roomArea": 200.0,
             "floorHeight": 5.0,
             "ceilingHeight": 2.6
         },
-        {
-            "floorName": "2F",
-            "roomName": "事務室2",
+        "2F_事務室2": {
             "buildingType": "事務所等",
             "roomType": "事務室",
             "roomArea": 300.0,
             "floorHeight": 5.0,
             "ceilingHeight": 2.6
         },
-        {
-            "floorName": "3F",
-            "roomName": "事務室1",
+        "3F_事務室1": {
             "buildingType": "事務所等",
             "roomType": "事務室",
             "roomArea": 400.0,
             "floorHeight": 5.0,
             "ceilingHeight": 2.6
         },
-        {
-            "floorName": "3F",
-            "roomName": "事務室2",
+        "3F_事務室2": {
             "buildingType": "事務所等",
             "roomType": "事務室",
             "roomArea": 500.0,
             "floorHeight": 5.0,
             "ceilingHeight": 2.6
+        },
+        "1F_駐車場": {
+            "buildingType": "ホテル等",
+            "roomType": "屋内駐車場",
+            "roomArea": 1000.0,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
+        },
+        "1F_便所": {
+            "buildingType": "病院等",
+            "roomType": "終日利用される共用部の便所",
+            "roomArea": 200.0,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
+        },
+        "1F_機械室": {
+            "buildingType": "飲食店等",
+            "roomType": "機械室",
+            "roomArea": 300.0,
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6
         }
-    ],
-    "VentilationRoom": [
-        {
-            "Floor": "1F",
-            "RoomName": "駐車場",
+    },
+    "VentilationRoom": {
+        "1F_駐車場": {
             "VentilationType": "一種換気",
-            "VentilationUnitRef": [
-                {
+            "VentilationUnitRef": {
+                "SF-1": {
                     "UnitType": "給気",
-                    "Name": "SF-1",
                     "Info": ""
                 },
-                {
+                "EF-1": {
                     "UnitType": "排気",
-                    "Name": "EF-1",
                     "Info": ""
                 }
-            ]
+            }
         },
-        {
-            "Floor": "1F",
-            "RoomName": "便所",
+        "1F_便所": {
             "VentilationType": "三種換気",
-            "VentilationUnitRef": [
-                {
+            "VentilationUnitRef": {
+                "EF-2": {
                     "UnitType": "排気",
-                    "Name": "EF-2",
                     "Info": ""
                 }
-            ]
+            }
         },
-        {
-            "Floor": "1F",
-            "RoomName": "機械室",
+        "1F_機械室": {
             "VentilationType": "一種換気",
-            "VentilationUnitRef": [
-                {
+            "VentilationUnitRef": {
+                "AC-1": {
                     "UnitType": "空調",
-                    "Name": "AC-1",
                     "Info": ""
                 },
-                {
+                "SF-2": {
                     "UnitType": "給気",
-                    "Name": "SF-2",
                     "Info": ""
                 },
-                {
+                "EF-3": {
                     "UnitType": "排気",
-                    "Name": "EF-3",
                     "Info": ""
                 },
-                {
+                "FF-1": {
                     "UnitType": "循環",
-                    "Name": "FF-1",
                     "Info": ""
                 }
-            ]
+            }
         }
-    ],
-    "VentilationUnit": [
-        {
-            "Name": "SF-1",
+    },
+    "VentilationUnit": {
+        "SF-1": {
             "Number": 1.0,
             "FanAirVolume": 200.0,
             "MoterRatedPower": null,
@@ -144,8 +139,7 @@
             "AC_PumpPower": null,
             "Info": ""
         },
-        {
-            "Name": "EF-1",
+        "EF-1": {
             "Number": 2.0,
             "FanAirVolume": 150.0,
             "MoterRatedPower": null,
@@ -159,8 +153,7 @@
             "AC_PumpPower": null,
             "Info": ""
         },
-        {
-            "Name": "EF-2",
+        "EF-2": {
             "Number": 2.0,
             "FanAirVolume": 150.0,
             "MoterRatedPower": null,
@@ -174,8 +167,7 @@
             "AC_PumpPower": null,
             "Info": ""
         },
-        {
-            "Name": "AC-1",
+        "AC-1": {
             "Number": 1.0,
             "FanAirVolume": 1000.0,
             "MoterRatedPower": 0.75,
@@ -189,8 +181,7 @@
             "AC_PumpPower": 2.2,
             "Info": ""
         },
-        {
-            "Name": "SF-2",
+        "SF-2": {
             "Number": 1.0,
             "FanAirVolume": 200.0,
             "MoterRatedPower": null,
@@ -204,8 +195,7 @@
             "AC_PumpPower": null,
             "Info": ""
         },
-        {
-            "Name": "EF-3",
+        "EF-3": {
             "Number": 1.0,
             "FanAirVolume": 200.0,
             "MoterRatedPower": null,
@@ -219,8 +209,7 @@
             "AC_PumpPower": null,
             "Info": ""
         },
-        {
-            "Name": "FF-1",
+        "FF-1": {
             "Number": 3.0,
             "FanAirVolume": 200.0,
             "MoterRatedPower": 0.22,
@@ -234,18 +223,15 @@
             "AC_PumpPower": null,
             "Info": ""
         }
-    ],
-    "LightingSystems": [
-        {
-            "floorName": "1F",
-            "roomName": "事務室1",
+    },
+    "LightingSystems": {
+        "1F_事務室1": {
             "roomWidth": 12.0,
             "roomDepth": 3.2,
             "unitHeight": 1.2,
             "roomIndex": null,
-            "lightingUnit": [
-                {
-                    "UnitName": "照明1",
+            "lightingUnit": {
+                "照明1": {
                     "RatedPower": 88.0,
                     "Number": 35.0,
                     "OccupantSensingCTRL": "下限調光方式",
@@ -253,8 +239,7 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "無"
                 },
-                {
-                    "UnitName": "照明2",
+                "照明2": {
                     "RatedPower": 92.0,
                     "Number": 25.0,
                     "OccupantSensingCTRL": "点滅方式",
@@ -262,18 +247,15 @@
                     "TimeScheduleCTRL": "減光",
                     "InitialIlluminationCorrectionCTRL": "タイマ方式(LED)"
                 }
-            ]
+            }
         },
-        {
-            "floorName": "1F",
-            "roomName": "事務室2",
+        "1F_事務室2": {
             "roomWidth": null,
             "roomDepth": null,
             "unitHeight": null,
             "roomIndex": 2.1,
-            "lightingUnit": [
-                {
-                    "UnitName": "照明3",
+            "lightingUnit": {
+                "照明3": {
                     "RatedPower": 88.0,
                     "Number": 22.0,
                     "OccupantSensingCTRL": "減光方式",
@@ -281,8 +263,7 @@
                     "TimeScheduleCTRL": "消灯",
                     "InitialIlluminationCorrectionCTRL": "タイマ方式(蛍光灯)"
                 },
-                {
-                    "UnitName": "照明4",
+                "照明4": {
                     "RatedPower": 92.0,
                     "Number": 18.0,
                     "OccupantSensingCTRL": "無",
@@ -290,18 +271,15 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "センサ方式(LED)"
                 }
-            ]
+            }
         },
-        {
-            "floorName": "2F",
-            "roomName": "事務室1",
+        "2F_事務室1": {
             "roomWidth": null,
             "roomDepth": null,
             "unitHeight": null,
             "roomIndex": 1.1,
-            "lightingUnit": [
-                {
-                    "UnitName": "照明1",
+            "lightingUnit": {
+                "照明1": {
                     "RatedPower": 88.0,
                     "Number": 22.0,
                     "OccupantSensingCTRL": "無",
@@ -309,8 +287,7 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "センサ方式(蛍光灯)"
                 },
-                {
-                    "UnitName": "照明2",
+                "照明2": {
                     "RatedPower": 92.0,
                     "Number": 18.0,
                     "OccupantSensingCTRL": "無",
@@ -318,18 +295,15 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "無"
                 }
-            ]
+            }
         },
-        {
-            "floorName": "2F",
-            "roomName": "事務室2",
+        "2F_事務室2": {
             "roomWidth": null,
             "roomDepth": null,
             "unitHeight": null,
             "roomIndex": 1.0,
-            "lightingUnit": [
-                {
-                    "UnitName": "照明3",
+            "lightingUnit": {
+                "照明3": {
                     "RatedPower": 88.0,
                     "Number": 22.0,
                     "OccupantSensingCTRL": "無",
@@ -337,8 +311,7 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "無"
                 },
-                {
-                    "UnitName": "照明4",
+                "照明4": {
                     "RatedPower": 92.0,
                     "Number": 18.0,
                     "OccupantSensingCTRL": "無",
@@ -346,18 +319,15 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "無"
                 }
-            ]
+            }
         },
-        {
-            "floorName": "3F",
-            "roomName": "事務室1",
+        "3F_事務室1": {
             "roomWidth": null,
             "roomDepth": null,
             "unitHeight": null,
             "roomIndex": 2.0,
-            "lightingUnit": [
-                {
-                    "UnitName": "照明1",
+            "lightingUnit": {
+                "照明1": {
                     "RatedPower": 88.0,
                     "Number": 22.0,
                     "OccupantSensingCTRL": "無",
@@ -365,8 +335,7 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "無"
                 },
-                {
-                    "UnitName": "照明2",
+                "照明2": {
                     "RatedPower": 92.0,
                     "Number": 18.0,
                     "OccupantSensingCTRL": "無",
@@ -374,18 +343,15 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "無"
                 }
-            ]
+            }
         },
-        {
-            "floorName": "3F",
-            "roomName": "事務室2",
+        "3F_事務室2": {
             "roomWidth": null,
             "roomDepth": null,
             "unitHeight": null,
             "roomIndex": 3.0,
-            "lightingUnit": [
-                {
-                    "UnitName": "照明3",
+            "lightingUnit": {
+                "照明3": {
                     "RatedPower": 88.0,
                     "Number": 22.0,
                     "OccupantSensingCTRL": "無",
@@ -393,8 +359,7 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "無"
                 },
-                {
-                    "UnitName": "照明4",
+                "照明4": {
                     "RatedPower": 92.0,
                     "Number": 18.0,
                     "OccupantSensingCTRL": "無",
@@ -402,7 +367,7 @@
                     "TimeScheduleCTRL": "無",
                     "InitialIlluminationCorrectionCTRL": "無"
                 }
-            ]
+            }
         }
-    ]
+    }
 }
