@@ -55,16 +55,22 @@ def get_dailyOpeSchedule_lighting(buildingType, roomType):
 
 
 
-# 「roomsdata」から該当する室の情報（建物用途。室用途、床面積）を取得する関数
-def get_roomSpec(floorName,roomName,roomsdata):
-    for room in roomsdata:
-        if room["floorName"] == floorName and room["roomName"] == roomName:
-            buildingType = room["buildingType"]
-            roomType = room["roomType"]
-            roomArea = room["roomArea"]
-            break
+# # 「roomsdata」から該当する室の情報（建物用途。室用途、床面積）を取得する関数
+# def get_roomSpec(floorName,roomName,roomsdata):
+
+#     check = False
+#     for room in roomsdata:
+#         if room["floorName"] == floorName and room["roomName"] == roomName:
+#             buildingType = room["buildingType"]
+#             roomType = room["roomType"]
+#             roomArea = room["roomArea"]
+#             check = True
+#             break
     
-    return (buildingType,roomType,roomArea)
+#     if check == False:
+#         print('該当する室が見つかりません')
+    
+#     return (buildingType,roomType,roomArea)
 
 
 # 入力データのバリデーション
