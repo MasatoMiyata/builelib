@@ -14,22 +14,22 @@
         "VentilationRoom":{
             "description": "様式V1",
             "type": "object",
-            "items": {
+            "additionalProperties":{
                 "$ref": "#/definitions/VentilationRoom"
             }
         },
         "VentilationUnit":{
             "description": "様式V2",
             "type": "object",
-            "items": {
+            "additionalProperties": {
                 "$ref": "#/definitions/VentilationUnit"
             }
         },
         "LightingSystems": {
             "description": "様式L",
             "type": "object",
-            "items": {
-                "$ref": "#/definitions/LightingSystem"
+            "additionalProperties": {
+                "$ref": "#/definitions/LightingRoom"
             }
         }
     },
@@ -157,8 +157,6 @@
             "title": "CoefficientDHC"
         },
         "VentilationRoom":{
-            "type": "object",
-            "additionalProperties": false,
             "properties": {
                 "VentilationType": {
                     "description": "V1-3:換気方式",
@@ -170,8 +168,8 @@
                     ]
                 },
                 "VentilationUnitRef": {
-                    "type": "array",
-                    "items": {
+                    "type": "object",
+                    "additionalProperties": {
                         "properties": {
                             "UnitType": {
                                 "description": "V1-4:機器の種類",
@@ -183,10 +181,6 @@
                                     "循環"
                                 ]
                             },
-                            "Name": {
-                                "description": "V1-5:機器名称",
-                                "type": "string"
-                            },
                             "Info": {
                                 "description": "V1-6:備考",
                                 "type": "string"
@@ -196,14 +190,12 @@
                 }
             },
             "required": [
-                "VentilationType",
                 "VentilationUnitRef"
             ],
             "title": "VentilationRoom"
         },
         "VentilationUnit":{
             "type": "object",
-            "additionalProperties": false,
             "properties": {
                 "Number": {
                     "description": "V2-2:台数",
@@ -356,9 +348,7 @@
             ],
             "title": "VentilationUnit"
         },
-        "LightingSystem": {
-            "type": "object",
-            "additionalProperties": false,
+        "LightingRoom": {
             "properties": {
                 "roomWidth": {
                     "description": "L-3:室指数　室の間口 [m]",
@@ -414,94 +404,93 @@
                     ]
                 },
                 "lightingUnit": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/LightingUnit"
+                    "type": "object",
+                    "additionalProperties": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "RatedPower": {
+                                "description": "L-8:定格消費電力 [W/台]",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1000000000
+                            },
+                            "Number": {
+                                "description": "L-9:台数",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1000000000,
+                                "default": 1
+                            },
+                            "OccupantSensingCTRL": {
+                                "$ref": "#/definitions/Lighting_OccupantSensingCTRL"
+                            },
+                            "IlluminanceSensingCTRL": {
+                                "$ref": "#/definitions/Lighting_IlluminanceSensingCTRL"
+                            },
+                            "TimeScheduleCTRL": {
+                                "$ref": "#/definitions/Lighting_TimeScheduleCTRL"
+                            },
+                            "InitialIlluminationCorrectionCTRL": {
+                                "$ref": "#/definitions/Lighting_InitialIlluminationCorrectionCTRL"
+                            }
+                        }
                     }
                 }
             },
             "required": [
                 "lightingUnit"
             ],
-            "title": "LightingSystem"
+            "title": "LightingRoom"
         },
-        "LightingUnit": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "RatedPower": {
-                    "description": "L-8:定格消費電力 [W/台]",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1000000000
-                },
-                "Number": {
-                    "description": "L-9:台数",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1000000000,
-                    "default": 1
-                },
-                "OccupantSensingCTRL": {
-                    "description": "L-10:在室検知制御",
-                    "type": "string",
-                    "enum":[
-                        "無",
-                        "下限調光方式",
-                        "点滅方式",
-                        "減光方式"
-                    ],
-                    "default":"無"
-                },
-                "IlluminanceSensingCTRL": {
-                    "description": "L-11:明るさ検知制御",
-                    "type": "string",
-                    "enum":[
-                        "無",
-                        "調光方式",
-                        "調光方式BL",
-                        "調光方式W15",
-                        "調光方式W15BL",
-                        "調光方式W20",
-                        "調光方式W20BL",
-                        "調光方式W25",
-                        "調光方式W25BL",
-                        "点滅方式"
-                    ],
-                    "default":"無"
-                },
-                "TimeScheduleCTRL": {
-                    "description": "L-12:タイムスケジュール制御",
-                    "type": "string",
-                    "enum":[
-                        "無",
-                        "減光",
-                        "消灯"
-                    ],
-                    "default":"無"
-                },
-                "InitialIlluminationCorrectionCTRL": {
-                    "description": "L-13:初期照度補正機能",
-                    "type": "string",
-                    "enum":[
-                        "無",
-                        "タイマ方式(LED)",
-                        "タイマ方式(蛍光灯)",
-                        "センサ方式(LED)",
-                        "センサ方式(蛍光灯)"
-                    ],
-                    "default":"無"
-                }
-            },
-            "required": [
-                "Number",
-                "RatedPower",
-                "IlluminanceSensingCTRL",
-                "InitialIlluminationCorrectionCTRL",
-                "OccupantSensingCTRL",
-                "TimeScheduleCTRL"
+        "Lighting_OccupantSensingCTRL": {
+            "description": "L-10:在室検知制御",
+            "type": "string",
+            "enum":[
+                "無",
+                "下限調光方式",
+                "点滅方式",
+                "減光方式"
             ],
-            "title": "LightingUnit"
+            "default":"無"
+        },
+        "Lighting_IlluminanceSensingCTRL": {
+            "description": "L-11:明るさ検知制御",
+            "type": "string",
+            "enum":[
+                "無",
+                "調光方式",
+                "調光方式BL",
+                "調光方式W15",
+                "調光方式W15BL",
+                "調光方式W20",
+                "調光方式W20BL",
+                "調光方式W25",
+                "調光方式W25BL",
+                "点滅方式"
+            ],
+            "default":"無"
+        },
+        "Lighting_TimeScheduleCTRL": {
+            "description": "L-12:タイムスケジュール制御",
+            "type": "string",
+            "enum":[
+                "無",
+                "減光",
+                "消灯"
+            ],
+            "default":"無"
+        },
+        "Lighting_InitialIlluminationCorrectionCTRL": {
+            "description": "L-13:初期照度補正機能",
+            "type": "string",
+            "enum":[
+                "無",
+                "タイマ方式(LED)",
+                "タイマ方式(蛍光灯)",
+                "センサ方式(LED)",
+                "センサ方式(蛍光灯)"
+            ],
+            "default":"無"
         }
     }
 }

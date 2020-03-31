@@ -190,10 +190,10 @@ def inputdata_make(inputfileName):
                         str(dataL[6]): {
                             "RatedPower": float(dataL[7]),
                             "Number": float(dataL[8]),
-                            "OccupantSensingCTRL": set_default(str(dataL[9]),schema_data["definitions"]["LightingUnit"]["properties"]["OccupantSensingCTRL"]["default"], "str"),
-                            "IlluminanceSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["LightingUnit"]["properties"]["IlluminanceSensingCTRL"]["default"], "str"),
-                            "TimeScheduleCTRL": set_default(str(dataL[11]),schema_data["definitions"]["LightingUnit"]["properties"]["TimeScheduleCTRL"]["default"], "str"),
-                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["LightingUnit"]["properties"]["InitialIlluminationCorrectionCTRL"]["default"], "str")
+                            "OccupantSensingCTRL": set_default(str(dataL[9]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
+                            "IlluminanceSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
+                            "TimeScheduleCTRL": set_default(str(dataL[11]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
+                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
                         }
                     }
                 }
@@ -204,19 +204,15 @@ def inputdata_make(inputfileName):
                 data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[6])] = {
                     "RatedPower": float(dataL[7]),
                     "Number": float(dataL[8]),
-                    "OccupantSensingCTRL": set_default(str(dataL[9]),schema_data["definitions"]["LightingUnit"]["properties"]["OccupantSensingCTRL"]["default"], "str"),
-                    "IlluminanceSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["LightingUnit"]["properties"]["IlluminanceSensingCTRL"]["default"], "str"),
-                    "TimeScheduleCTRL": set_default(str(dataL[11]),schema_data["definitions"]["LightingUnit"]["properties"]["TimeScheduleCTRL"]["default"], "str"),
-                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["LightingUnit"]["properties"]["InitialIlluminationCorrectionCTRL"]["default"], "str")
+                    "OccupantSensingCTRL": set_default(str(dataL[9]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
+                    "IlluminanceSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
+                    "TimeScheduleCTRL": set_default(str(dataL[11]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
+                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
                 }
 
 
     # バリデーションの実行
     jsonschema.validate(data, schema_data)
-
-    # json出力
-    fw = open('inputdata.json','w')
-    json.dump(data,fw,indent=4,ensure_ascii=False)
 
     return data
 
@@ -226,3 +222,7 @@ if __name__ == '__main__':
     inputfileName = './sample/WEBPRO_inputSheet_for_Ver3.xlsx'
 
     inputdata = inputdata_make(inputfileName)
+
+    # json出力
+    fw = open('./sample/inputdata.json','w')
+    json.dump(inputdata,fw,indent=4,ensure_ascii=False)

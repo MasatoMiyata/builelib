@@ -96,7 +96,7 @@
         "1F_便所": {
             "VentilationType": "三種換気",
             "VentilationUnitRef": {
-                "EF-2": {
+                "EF-1": {
                     "UnitType": "排気",
                     "Info": ""
                 }
@@ -153,20 +153,6 @@
             "AC_PumpPower": null,
             "Info": ""
         },
-        "EF-2": {
-            "Number": 2.0,
-            "FanAirVolume": 150.0,
-            "MoterRatedPower": null,
-            "PowerConsumption": 0.022,
-            "HighEfficiencyMotor": "無",
-            "Inverter": "有",
-            "AirVolumeControl": "温度制御",
-            "VentilationRoomType": null,
-            "AC_CoolingCapacity": null,
-            "AC_RefEfficiency": null,
-            "AC_PumpPower": null,
-            "Info": ""
-        },
         "AC-1": {
             "Number": 1.0,
             "FanAirVolume": 1000.0,
@@ -210,13 +196,13 @@
             "Info": ""
         },
         "FF-1": {
-            "Number": 3.0,
-            "FanAirVolume": 200.0,
-            "MoterRatedPower": 0.22,
-            "PowerConsumption": null,
+            "Number": 2.0,
+            "FanAirVolume": 150.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.022,
             "HighEfficiencyMotor": "無",
-            "Inverter": "無",
-            "AirVolumeControl": "無",
+            "Inverter": "有",
+            "AirVolumeControl": "温度制御",
             "VentilationRoomType": null,
             "AC_CoolingCapacity": null,
             "AC_RefEfficiency": null,
