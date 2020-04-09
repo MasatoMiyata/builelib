@@ -9,7 +9,18 @@
             "$ref": "#/definitions/Building"
         },
         "Rooms": {
-            "description": "様式RM"
+            "description": "様式RM",
+            "type": "object",
+            "additionalProperties":{
+                "$ref": "#/definitions/Rooms"
+            }
+        },
+        "EnvelopeSet":{
+            "description": "様式BE1",
+            "type": "object",
+            "additionalProperties":{
+                "$ref": "#/definitions/EnvelopeSet"
+            }
         },
         "VentilationRoom":{
             "description": "様式V1",
@@ -155,6 +166,85 @@
                 "Heating"
             ],
             "title": "CoefficientDHC"
+        },
+        "Rooms":{
+            "properties": {
+                "buildingType": {
+                    "description": "RM-3:建物用途",
+                    "type": "string",
+                    "enum":[
+                        "事務所等",
+                        "ホテル等",
+                        "病院等",
+                        "物販店舗等",
+                        "学校等",
+                        "飲食店等",
+                        "集会所等",
+                        "工場等",
+                        "共同住宅"
+                    ]
+                },
+                "roomType": {
+                    "description": "RM-4:室用途",
+                    "type": "string"
+                },
+                "roomArea": {
+                    "description": "RM-5:床面積",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10000000000
+                },
+                "floorHeight": {
+                    "description": "RM-6:階高",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                },
+                "ceilingHeight": {
+                    "description": "RM-7:天井高",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                },
+                "isCal_AC":{
+                    "description": "RM-8:計算対象設備 空調",
+                    "type": "boolean"
+                },
+                "isCal_V":{
+                    "description": "RM-9:計算対象設備 換気",
+                    "type": "boolean"
+                },
+                "isCal_L":{
+                    "description": "RM-10:計算対象設備 照明",
+                    "type": "boolean"
+                },
+                "isCal_HW":{
+                    "description": "RM-11:計算対象設備 給湯",
+                    "type": "boolean"
+                },
+                "isCal_EV":{
+                    "description": "RM-12:計算対象設備 昇降機",
+                    "type": "boolean"
+                },
+                "modelBuildingType":{
+                    "type": "string"
+                },
+                "buildingGroup":{
+                    "type": "string"
+                }
+            }
+        },
+        "EnvelopeSet":{
+            "properties": {
+                "isAirconditioned": {
+                    "description": "BE1-3:空調の有無",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "有"
+                    ]
+                }
+            }
         },
         "VentilationRoom":{
             "properties": {

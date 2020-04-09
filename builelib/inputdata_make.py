@@ -18,6 +18,16 @@ def set_default(value,default,type):
             out = value
     return out
 
+# 計算対象設備があるかどうかを判定する関数
+def set_isCalculatedEquipment(input):
+    if input == "■":
+        isEquip = True
+    else:
+        isEquip = False
+
+    return isEquip
+
+
 #%% メイン関数
 def inputdata_make(inputfileName):
 
@@ -84,8 +94,96 @@ def inputdata_make(inputfileName):
                         "roomType": str(dataBL[3]),
                         "roomArea": float(dataBL[4]),
                         "floorHeight": float(dataBL[5]),
-                        "ceilingHeight": float(dataBL[6])
+                        "ceilingHeight": float(dataBL[6]),
+                        "isCal_AC": set_isCalculatedEquipment(dataBL[7]),
+                        "isCal_V": set_isCalculatedEquipment(dataBL[8]),
+                        "isCal_L": set_isCalculatedEquipment(dataBL[9]),
+                        "isCal_HW": set_isCalculatedEquipment(dataBL[10]),
+                        "isCal_EV": set_isCalculatedEquipment(dataBL[11]),
+                        "modelBuildingType": str(dataBL[12]),  
+                        "buildingGroup": str(dataBL[13])
                 }
+
+    #%% 
+    ## 外皮
+    if "様式BE1" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_BE1 = wb.sheet_by_name("様式BE1")
+        # 初期化
+        roomKey = None
+
+        # 行のループ
+        for i in range(10,sheet_BE1.nrows):
+
+            # シートから「行」の読み込み
+            dataBE1 = sheet_BE1.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataBE1[0] != "") and (dataBE1[1] != ""):
+
+                # 階＋室をkeyとする（上書き）
+                roomKey = str(dataBE1[0]) + '_' + str(dataBE1[1])
+
+                data["EnvelopeSet"][roomKey] = {
+                        "isAirconditioned": set_default(str(dataBE1[2]),'無', "str"),
+                        "WallList": [
+                            {
+                                "Direction": str(dataBE1[3]),
+                                "EnvelopeArea": set_default(str(dataBE1[4]),None, "float"),
+                                "EnvelopeWidth": set_default(str(dataBE1[5]),None, "float"),
+                                "EnvelopeHeight": set_default(str(dataBE1[6]),None, "float"),
+                                "WallSpec": set_default(str(dataBE1[7]),"無","str"),
+                                "WallType": set_default(str(dataBE1[8]),"無","str"),
+                                "WindowList":[
+                                    {
+                                        "WindowID": set_default(str(dataBE1[9]),"無","str"),
+                                        "WindowNumber": set_default(str(dataBE1[10]),None, "float"),
+                                        "isBlind": set_default(str(dataBE1[11]),"無","str"),
+                                        "EavesID": set_default(str(dataBE1[12]),"無","str"),
+                                        "Info": set_default(str(dataBE1[13]),"無","str"),
+                                    }
+                                ]       
+                            }
+                        ],
+                    }
+
+            else: # 階と室名が空欄である場合
+
+                if (str(dataBE1[3]) == "") and (str(dataBE1[9]) != ""): ## 方位に入力がなく、建具種類に入力がある場合
+
+                    data["EnvelopeSet"][roomKey]["WallList"][-1]["WindowList"].append(
+                        {
+                            "WindowID": str(dataBE1[9]),
+                            "WindowNumber": set_default(str(dataBE1[10]),None, "float"),
+                            "isBlind": set_default(str(dataBE1[11]),"無","str"),
+                            "EavesID": set_default(str(dataBE1[12]),"無","str"),
+                            "Info": set_default(str(dataBE1[13]),"無","str")
+                        }
+                    )                     
+
+                elif (str(dataBE1[3]) != ""):  ## 方位に入力がある場合
+
+                    data["EnvelopeSet"][roomKey]["WallList"].append(
+                        {
+                            "Direction": str(dataBE1[3]),
+                            "EnvelopeArea": set_default(str(dataBE1[4]),None, "float"),
+                            "EnvelopeWidth": set_default(str(dataBE1[5]),None, "float"),
+                            "EnvelopeHeight": set_default(str(dataBE1[6]),None, "float"),
+                            "WallSpec": set_default(str(dataBE1[7]),"無","str"),
+                            "WallType": set_default(str(dataBE1[8]),"無","str"),
+                            "WindowList":[
+                                {
+                                    "WindowID": set_default(str(dataBE1[9]),"無","str"),
+                                    "WindowNumber": set_default(str(dataBE1[10]),None, "float"),
+                                    "isBlind": set_default(str(dataBE1[11]),"無","str"),
+                                    "EavesID": set_default(str(dataBE1[12]),"無","str"),
+                                    "Info": set_default(str(dataBE1[13]),"無","str")
+                                }
+                            ]       
+                        }
+                    )
+
 
 
     #%% 
@@ -224,5 +322,5 @@ if __name__ == '__main__':
     inputdata = inputdata_make(inputfileName)
 
     # json出力
-    fw = open('./sample/inputdata.json','w')
+    fw = open('./sample/inputdata_test.json','w')
     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
