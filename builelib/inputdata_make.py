@@ -184,6 +184,91 @@ def inputdata_make(inputfileName):
                         }
                     )
 
+    if "様式BE2" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_BE2 = wb.sheet_by_name("様式BE2")
+        # 初期化
+        eltKey = None
+        inputMethod = None
+
+        # 行のループ
+        for i in range(10,sheet_BE2.nrows):
+
+            # シートから「行」の読み込み
+            dataBE2 = sheet_BE2.row_values(i)
+
+            # 断熱仕様名称が空欄でない場合
+            if (dataBE2[0] != ""):
+
+                # 断熱仕様名称をkeyとする（上書き）
+                eltKey = str(dataBE2[0]) 
+
+                # 入力方法を識別
+                if dataBE2[9] != "":
+                    inputMethod = "熱貫流率を入力"
+                elif (dataBE2[6] != "") or (dataBE2[7] != ""):
+                    inputMethod = "建材構成を入力"
+                elif (dataBE2[3] != "") or (dataBE2[4] != ""):
+                    inputMethod = "断熱材種類を入力"
+                else:
+                    raise Exception('Error!')
+                
+                if inputMethod == "熱貫流率を入力":
+
+                    data["WallConfigure"][eltKey] = {
+                            "structureType": str(dataBE2[1]),
+                            "solarAbsorptionRatio": set_default(dataBE2[2], None, "float"),
+                            "inputMethod": inputMethod,
+                            "Uvalue": set_default(dataBE2[9], None, "float"),
+                            "Info": set_default(dataBE2[10], "無","str"),
+                        }
+
+                elif inputMethod == "建材構成を入力":
+
+                    data["WallConfigure"][eltKey] = {
+                            "structureType": str(dataBE2[1]),
+                            "solarAbsorptionRatio": set_default(dataBE2[2], None, "float"),
+                            "inputMethod": inputMethod,
+                            "layers": [
+                                {
+                                "materialID": set_default(dataBE2[6], None, "str"),
+                                "Rvalue": set_default(dataBE2[7], None, "float"),
+                                "thickness": set_default(dataBE2[8], None, "float"),
+                                "Info": set_default(dataBE2[10], "無", "str")
+                                }
+                            ]
+                        }
+
+                elif inputMethod == "断熱材種類を入力":
+
+                    data["WallConfigure"][eltKey] = {
+                            "structureType": str(dataBE2[1]),
+                            "solarAbsorptionRatio": set_default(dataBE2[2], None, "float"),
+                            "inputMethod": inputMethod,
+                            "materialID": set_default(dataBE2[3], None, "str"),
+                            "Rvalue": set_default(dataBE2[4], None, "float"),
+                            "thickness": set_default(dataBE2[5], None, "float"),
+                            "Info": set_default(dataBE2[10], "無","str"),
+                        }
+            else:
+
+                if inputMethod == "建材構成を入力":
+
+                    data["WallConfigure"][eltKey]["layers"].append(
+                        {
+                            "materialID": set_default(dataBE2[6], None, "str"),
+                            "Rvalue": set_default(dataBE2[7], None, "float"),
+                            "thickness": set_default(dataBE2[8], None, "float"),
+                            "Info": set_default(dataBE2[10], "無", "str")
+                        }
+                    )
+
+
+
+
+    # if "様式BE3" in wb.sheet_names():
+
 
 
     #%% 

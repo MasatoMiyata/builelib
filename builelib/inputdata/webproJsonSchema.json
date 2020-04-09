@@ -22,6 +22,20 @@
                 "$ref": "#/definitions/EnvelopeSet"
             }
         },
+        "WallConfigure":{
+            "description": "様式BE2",
+            "type": "object",
+            "additionalProperties":{
+                "$ref": "#/definitions/WallConfigure"
+            }
+        },
+        "WindowConfigure":{
+            "description": "様式BE3",
+            "type": "object",
+            "additionalProperties":{
+                "$ref": "#/definitions/WindowConfigure"
+            }
+        },
         "VentilationRoom":{
             "description": "様式V1",
             "type": "object",
@@ -364,9 +378,141 @@
                 }
             }
         },
+        "WallConfigure":{
+            "properties": {
+                "structureType": {
+                    "description": "BE2-2:構造種別",
+                    "type": "string",
+                    "enum":[
+                        "木造",
+                        "鉄筋コンクリート造等",
+                        "鉄骨造",
+                        "その他"
+                    ]
+                },
+                "solarAbsorptionRatio":{
+                    "description": "BE2-3:日射吸収率",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "inputMethod":{
+                    "description": "断熱性能の入力方法",
+                    "type": "string",
+                    "enum":[
+                        "熱貫流率を入力",
+                        "建材構成を入力",
+                        "断熱材種類を入力"
+                    ]
+                },
+                "materialID":{
+                    "description": "BE2-4:断熱材の種類",
+                    "anyOf":[
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "Rvalue":{
+                    "description": "BE2-5:熱伝導率",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "thickness":{
+                    "description": "BE2-6:厚み",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "Uvalue":{
+                    "description": "BE2-10:熱貫流率",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10
+                },
+                "Info": {
+                    "description": "BE2-11:備考",
+                    "type": "string"
+                },
+                "layers":{
+                    "type": "array",
+                    "items":{
+                        "type": "object",
+                        "properties": {
+                            "materialID":{
+                                "description": "BE2-7:断熱材の種類",
+                                "anyOf":[
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "Rvalue":{
+                                "description": "BE2-8:熱伝導率",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 10
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "thickness":{
+                                "description": "BE2-9:厚み",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1000
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "Info": {
+                                "description": "BE2-11:備考",
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "WindowConfigure":{
 
- 
-
+        },
         "VentilationRoom":{
             "properties": {
                 "VentilationType": {
