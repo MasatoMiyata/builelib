@@ -264,11 +264,73 @@ def inputdata_make(inputfileName):
                         }
                     )
 
+    if "様式BE3" in wb.sheet_names():
 
+        # シートの読み込み
+        sheet_BE3 = wb.sheet_by_name("様式BE3")
+        # 初期化
+        eltKey = None
+        inputMethod = None
 
+        # 行のループ
+        for i in range(10,sheet_BE3.nrows):
 
-    # if "様式BE3" in wb.sheet_names():
+            # シートから「行」の読み込み
+            dataBE3 = sheet_BE3.row_values(i)
 
+            # 開口部仕様名称が空欄でない場合
+            if (dataBE3[0] != ""):
+
+                # 開口部仕様名称をkeyとする（上書き）
+                eltKey = str(dataBE3[0]) 
+
+                # 入力方法を識別
+                if (dataBE3[9] != "") and (dataBE3[10] != ""):
+                    inputMethod = "性能値を入力"
+                elif (dataBE3[7] != "") and (dataBE3[8] != ""):
+                    inputMethod = "ガラスの性能を入力"
+                elif (dataBE3[5] != ""):
+                    inputMethod = "ガラスの種類を入力"
+                else:
+                    raise Exception('Error!')
+
+                if inputMethod == "性能値を入力":
+
+                    data["WindowConfigure"][eltKey] = {
+                            "windowArea": set_default(str(dataBE3[1]),None, "float"),
+                            "windowWidth": set_default(str(dataBE3[2]),None, "float"),
+                            "windowHeight": set_default(str(dataBE3[3]),None, "float"),
+                            "inputMethod": inputMethod,
+                            "windowUvalue": set_default(dataBE3[9], None, "float"),
+                            "windowIvalue": set_default(dataBE3[10], None, "float"),
+                            "Info": set_default(dataBE3[11], "無","str"),
+                        }
+
+                elif inputMethod == "ガラスの性能を入力":
+
+                    data["WindowConfigure"][eltKey] = {
+                            "windowArea": set_default(str(dataBE3[1]),None, "float"),
+                            "windowWidth": set_default(str(dataBE3[2]),None, "float"),
+                            "windowHeight": set_default(str(dataBE3[3]),None, "float"),
+                            "inputMethod": inputMethod,
+                            "frameType": set_default(dataBE3[4], "金属製", "str"),
+                            "layerType": set_default(dataBE3[6], "単層", "str"),
+                            "glassUvalue": set_default(dataBE3[7], None, "float"),
+                            "glassIvalue": set_default(dataBE3[8], None, "float"),
+                            "Info": set_default(dataBE3[11], "無","str"),
+                        }
+
+                elif inputMethod == "ガラスの種類を入力":
+
+                    data["WindowConfigure"][eltKey] = {
+                            "windowArea": set_default(str(dataBE3[1]),None, "float"),
+                            "windowWidth": set_default(str(dataBE3[2]),None, "float"),
+                            "windowHeight": set_default(str(dataBE3[3]),None, "float"),
+                            "inputMethod": inputMethod,
+                            "frameType": set_default(dataBE3[4], "金属製", "str"),
+                            "glassID": set_default(dataBE3[5], None, "str"),
+                            "Info": set_default(dataBE3[11], "無","str"),
+                        }
 
 
     #%% 

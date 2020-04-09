@@ -338,7 +338,7 @@
                                     "type": "object",
                                     "properties": {
                                         "WindowID": {
-                                            "description": "BE1-10:建具仕様",
+                                            "description": "BE1-10:開口部仕様名称",
                                             "type": "string"
                                         },
                                         "WindowNumber":{
@@ -511,7 +511,135 @@
             }
         },
         "WindowConfigure":{
-
+            "properties": {
+                "windowArea": {
+                    "description": "BE3-2:窓面積",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 100000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "windowWidth": {
+                    "description": "BE3-3:窓の幅",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 100000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "windowHeight": {
+                    "description": "BE3-4:窓の高さ",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 100000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "inputMethod":{
+                    "description": "窓性能の入力方法",
+                    "type": "string",
+                    "enum":[
+                        "性能値を入力",
+                        "ガラスの性能を入力",
+                        "ガラスの種類を入力"
+                    ]
+                },
+                "frameType": {
+                    "description": "BE3-5:建具の種類",
+                    "type": "string",
+                    "enum":[
+                        "樹脂製",
+                        "木製",
+                        "金属樹脂複合製",
+                        "金属木複合製",
+                        "金属製"
+                    ]
+                },
+                "glassID":{
+                    "description": "BE3-6:ガラス建築確認記号",
+                    "type": "string"
+                },
+                "layerType": {
+                    "description": "BE3-7:ガラスの層数",
+                    "type": "string",
+                    "enum":[
+                        "複層",
+                        "単層"
+                    ]
+                },
+                "glassUvalue":{
+                    "description": "BE3-8:ガラスの熱伝導率",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "glassIvalue":{
+                    "description": "BE3-9:ガラスの日射熱取得率",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }, 
+                "windowUvalue":{
+                    "description": "BE3-10:窓の熱伝導率",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "windowIvalue":{
+                    "description": "BE3-11:窓の日射熱取得率",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }, 
+                "Info": {
+                    "description": "BE3-12:備考",
+                    "type": "string"
+                }
+            }
         },
         "VentilationRoom":{
             "properties": {
