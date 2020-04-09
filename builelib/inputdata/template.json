@@ -18,6 +18,12 @@
     },
     "EnvelopeSet":{
     },
+    "WallConfigure":{
+    },
+    "WindowConfigure":{
+    },
+    "ShadingConfigure":{
+    },
     "VentilationRoom":{
     },
     "VentilationUnit":{

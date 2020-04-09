@@ -36,6 +36,13 @@
                 "$ref": "#/definitions/WindowConfigure"
             }
         },
+        "ShadingConfigure":{
+            "description": "様式BE4",
+            "type": "object",
+            "additionalProperties":{
+                "$ref": "#/definitions/ShadingConfigure"
+            }  
+        },
         "VentilationRoom":{
             "description": "様式V1",
             "type": "object",
@@ -640,6 +647,83 @@
                     "type": "string"
                 }
             }
+        },
+        "ShadingConfigure":{
+            "properties": {
+                "shadingEffect_C": {
+                    "description": "BE4-2:日除け効果係数（冷房）",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "shadingEffect_H": {
+                    "description": "BE4-3:日除け効果係数（暖房）",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "x1": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "x2": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "x3": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "y1": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "y2": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "y3": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "zxPlus": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "zxMinus": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "zyPlus": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "zyMinus": {
+                    "$ref": "#/definitions/ShadingLength"
+                },
+                "Info": {
+                    "description": "BE4-14:備考",
+                    "type": "string"
+                }
+            }
+        },
+        "ShadingLength":{
+            "description": "BE4-4〜13:日除けの形状",
+            "anyOf":[
+                {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                {
+                    "type": "null"
+                }
+            ]
         },
         "VentilationRoom":{
             "properties": {
