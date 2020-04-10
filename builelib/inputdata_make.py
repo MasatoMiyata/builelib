@@ -332,6 +332,40 @@ def inputdata_make(inputfileName):
                             "Info": set_default(dataBE3[11], "無","str"),
                         }
 
+    if "様式BE4" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_BE4 = wb.sheet_by_name("様式BE4")
+        # 初期化
+        eltKey = None
+
+        # 行のループ
+        for i in range(10,sheet_BE4.nrows):
+
+            # シートから「行」の読み込み
+            dataBE4 = sheet_BE4.row_values(i)
+
+            # 日よけの名称が空欄でない場合
+            if (dataBE4[0] != ""):
+
+                # 日よけの名称名称をkeyとする（上書き）
+                eltKey = str(dataBE4[0]) 
+
+                data["ShadingConfigure"][eltKey] = {
+                        "shadingEffect_C": set_default(str(dataBE4[1]),None, "float"),
+                        "shadingEffect_H": set_default(str(dataBE4[2]),None, "float"),
+                        "x1": set_default(str(dataBE4[3]),None, "float"),
+                        "x2": set_default(str(dataBE4[4]),None, "float"),
+                        "x3": set_default(str(dataBE4[5]),None, "float"),
+                        "y1": set_default(str(dataBE4[6]),None, "float"),
+                        "y2": set_default(str(dataBE4[7]),None, "float"),
+                        "y3": set_default(str(dataBE4[8]),None, "float"),
+                        "zxPlus": set_default(str(dataBE4[9]),None, "float"),
+                        "zxMinus": set_default(str(dataBE4[10]),None, "float"),
+                        "zyPlus": set_default(str(dataBE4[11]),None, "float"),
+                        "zyMinus": set_default(str(dataBE4[12]),None, "float"),
+                        "Info": set_default(dataBE4[13], "無","str"),
+                    }
 
     #%% 
     ## 機械換気設備
