@@ -297,29 +297,37 @@ def func_25(x1,x2,x3,y3,y2,zxp,zxm,zym):
 
 def shading(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym):
 
+    ## 入力チェック
+    if x1 < 0 or x2 < 0 or x3 < 0:
+        raise Exception('Error!')
+    if y1 < 0 or y2 < 0 or y3 < 0:
+        raise Exception('Error!')
+    if zxp < 0 or zxm < 0 or zyp < 0 or zym < 0:
+        raise Exception('Error!')
+
     ## 地域別データ読み込み
     with open('./builelib/database/AREA.json', 'r') as f:
         areaDB = json.load(f)
-    climatefilename = './builelib/climatedata/C1_' + areaDB[AREA]["気象データファイル名"] # 気象データ
+    climatefilename = './builelib/climatedata/C1_' + areaDB[AREA+"地域"]["気象データファイル名"] # 気象データ
 
     # 気象データ読み込み
     # IodALL : 法線面直達日射量[W/m2]
     # IosALL : 水平面天空日射量[W/m2]
     [_,_,Iod_ALL,Ios_ALL,_] = climate.readHaspClimateData(climatefilename)
 
-    phi = areaDB[AREA]["緯度"] # 緯度 [deg]
-    L   = areaDB[AREA]["経度"] # 経度 [deg]
+    phi = areaDB[AREA+"地域"]["緯度"] # 緯度 [deg]
+    L   = areaDB[AREA+"地域"]["経度"] # 経度 [deg]
     
     # 暖冷房期間
-    if AREA == "1地域" or AREA == "2地域":
+    if AREA == "1" or AREA == "2":
         SUM = list(range(121,304+1)) # 冷房期間
         WIN = list(range(1,120+1))
         WIN.extend(list(range(305,365+1))) # 暖房期間
-    elif AREA == "3地域" or AREA == "4地域" or AREA == "5地域" or AREA == "6地域" or AREA == "7地域":
+    elif AREA == "3" or AREA == "4" or AREA == "5" or AREA == "6" or AREA == "7":
         SUM = list(range(91,334+1)) # 冷房期間
         WIN = list(range(1,90+1))
         WIN.extend(list(range(335,365+1))) # 暖房期間
-    elif AREA == "8地域":
+    elif AREA == "8":
         SUM = list(range(91,365+1)) # 冷房期間
         WIN = list(range(1,90+1)) # 暖房期間
     else:
@@ -510,22 +518,22 @@ def shading(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym):
                         raise Exception('Error!')
 
 
-    if S_xp_SUM > 0:
+    if S_xp_SUM > 0 and Awind > 0:
         r_dsr_j_xp_SUM = S_shade_xp_SUM / (Awind * S_xp_SUM)
     else:
         r_dsr_j_xp_SUM = 0
 
-    if S_xm_SUM > 0:
+    if S_xm_SUM > 0 and Awind > 0:
         r_dsr_j_xm_SUM = S_shade_xm_SUM / (Awind * S_xm_SUM)
     else:
         r_dsr_j_xm_SUM = 0
 
-    if S_xp_WIN > 0:
+    if S_xp_WIN > 0 and Awind > 0:
         r_dsr_j_xp_WIN = S_shade_xp_WIN / (Awind * S_xp_WIN)
     else:
         r_dsr_j_xp_WIN = 0
 
-    if S_xm_WIN > 0:
+    if S_xm_WIN > 0 and Awind > 0:
         r_dsr_j_xm_WIN = S_shade_xm_WIN / (Awind * S_xm_WIN)
     else:
         r_dsr_j_xm_WIN = 0
@@ -597,18 +605,31 @@ def shading(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym):
 #%%
 if __name__ == '__main__':
 
-    AREA = "6地域"
-    Direction = "南"
-    x1=0
-    x2=5
-    x3=0
-    y1=0
-    y2=2
-    y3=0
-    zxp=2
-    zxm=2
-    zyp=2
-    zym=0
+    # AREA = "6"
+    # Direction = "南"
+    # x1=0
+    # x2=5
+    # x3=0
+    # y1=0
+    # y2=2
+    # y3=0
+    # zxp=2
+    # zxm=2
+    # zyp=2
+    # zym=0
+    
+    AREA ="7"	
+    Direction ="北東"
+    x1=0.2
+    x2=1
+    x3=0.2
+    y1=0.3
+    y2=1.5
+    y3=0.4
+    zxp=0.05
+    zxm=0.4
+    zyp=0.2
+    zym=0.35
     
     r_wind_SUM, r_wind_WIN = shading(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym)
 
