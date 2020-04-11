@@ -4,13 +4,6 @@ import pprint as pp
 from builelib.lighting import lighting
 import jsonschema
 
-# CSVを読み込む関数
-def readCSVfile(filename):
-    data = pd.read_csv(
-        filepath_or_buffer=filename, sep='\t'
-        )
-    return data
-
 # 空欄にデフォルト値を代入する
 def convert2number(x, default):
     if x == "":

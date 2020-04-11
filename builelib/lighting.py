@@ -120,7 +120,7 @@ def lighting(inputdata):
         if roomArea <= 0:
             PrimaryEnergyPerArea = None
         else:
-            PrimaryEnergyPerArea = E_room/roomArea
+            PrimaryEnergyPerArea = E_room / roomArea
 
 
         # 基準一次エネルギー消費量 [MJ]
