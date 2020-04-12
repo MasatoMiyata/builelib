@@ -101,8 +101,11 @@
         }
     },
     "dependencies": {
+        "EnvelopeSet": ["Building","Rooms","WallConfigure","WindowConfigure"],
         "VentilationRoom": ["Building","Rooms","VentilationUnit"],
-        "LightingSystems": ["Building","Rooms"]
+        "LightingSystems": ["Building","Rooms"],
+        "HotwaterRoom": ["Building","Rooms","HotwaterSupplySystems"],
+        "Elevators": ["Building","Rooms"]
     },
     "required": [
         "Building", "Rooms"
