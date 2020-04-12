@@ -298,7 +298,7 @@
         "EnvelopeSet":{
             "properties": {
                 "isAirconditioned": {
-                    "description": "BE1-3:空調の有無",
+                    "description": "BE1-4:空調の有無",
                     "type": "string",
                     "enum":[
                         "無",
@@ -311,7 +311,7 @@
                         "type": "object",
                         "properties": {
                             "Direction": {
-                                "description": "BE1-4:方位",
+                                "description": "BE1-5:方位",
                                 "type": "string",
                                 "enum":[
                                     "北",
@@ -327,7 +327,7 @@
                                 ]
                             },
                             "EnvelopeArea":{
-                                "description": "BE1-5:外皮面積",
+                                "description": "BE1-6:外皮面積",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -340,7 +340,7 @@
                                 ]
                             },
                             "EnvelopeWidth":{
-                                "description": "BE1-6:外皮の幅",
+                                "description": "BE1-7:外皮の幅",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -353,7 +353,7 @@
                                 ]
                             },
                             "EnvelopeHeight":{
-                                "description": "BE1-7:外皮の高さ",
+                                "description": "BE1-8:外皮の高さ",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -366,11 +366,11 @@
                                 ]
                             },
                             "WallSpec": {
-                                "description": "BE1-8:断熱仕様名称",
+                                "description": "BE1-9:断熱仕様名称",
                                 "type": "string"
                             },
                             "WallType":{
-                                "description": "BE1-9:外壁の種類",
+                                "description": "BE1-10:外壁の種類",
                                 "type": "string",
                                 "enum":[
                                     "日の当たる外壁",
@@ -385,11 +385,11 @@
                                     "type": "object",
                                     "properties": {
                                         "WindowID": {
-                                            "description": "BE1-10:開口部仕様名称",
+                                            "description": "BE1-11:開口部仕様名称",
                                             "type": "string"
                                         },
                                         "WindowNumber":{
-                                            "description": "BE1-11:建具等個数",
+                                            "description": "BE1-12:建具等個数",
                                             "anyOf":[
                                                 {
                                                     "type": "number",
@@ -403,18 +403,18 @@
                                         },
                                         "isBlind":{
                                             "type": "string",
-                                            "description": "BE1-12:ブラインドの有無",
+                                            "description": "BE1-13:ブラインドの有無",
                                             "enum":[
                                                 "有",
                                                 "無"
                                             ]
                                         },
                                         "EavesID":{
-                                            "description": "BE1-13:日除けの名称",
+                                            "description": "BE1-14:日除けの名称",
                                             "type": "string"
                                         },
                                         "Info": {
-                                            "description": "BE1-14:備考",
+                                            "description": "BE1-15:備考",
                                             "type": "string"
                                         }
                                     }
@@ -960,7 +960,7 @@
         "LightingRoom": {
             "properties": {
                 "roomWidth": {
-                    "description": "L-3:室指数　室の間口 [m]",
+                    "description": "L-4:室指数　室の間口 [m]",
                     "anyOf":[
                         {
                             "type": "number",
@@ -973,7 +973,7 @@
                     ]
                 },
                 "roomDepth": {
-                    "description": "L-4:室指数　室の奥行 [m]",
+                    "description": "L-5:室指数　室の奥行 [m]",
                     "anyOf":[
                         {
                             "type": "number",
@@ -986,7 +986,7 @@
                     ]
                 },
                 "unitHeight": {
-                    "description": "L-5:室指数　器具高さ [m]",
+                    "description": "L-6:室指数　器具高さ [m]",
                     "anyOf":[
                         {
                             "type": "number",
@@ -999,7 +999,7 @@
                     ]
                 },
                 "roomIndex": {
-                    "description": "L-6:室指数 [-]",
+                    "description": "L-7:室指数 [-]",
                     "anyOf":[
                         {
                             "type": "number",
@@ -1018,13 +1018,13 @@
                         "additionalProperties": false,
                         "properties": {
                             "RatedPower": {
-                                "description": "L-8:定格消費電力 [W/台]",
+                                "description": "L-9:定格消費電力 [W/台]",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000000
                             },
                             "Number": {
-                                "description": "L-9:台数",
+                                "description": "L-10:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000000,
@@ -1052,7 +1052,7 @@
             "title": "LightingRoom"
         },
         "Lighting_OccupantSensingCTRL": {
-            "description": "L-10:在室検知制御",
+            "description": "L-11:在室検知制御",
             "type": "string",
             "enum":[
                 "無",
@@ -1063,7 +1063,7 @@
             "default":"無"
         },
         "Lighting_IlluminanceSensingCTRL": {
-            "description": "L-11:明るさ検知制御",
+            "description": "L-12:明るさ検知制御",
             "type": "string",
             "enum":[
                 "無",
@@ -1080,7 +1080,7 @@
             "default":"無"
         },
         "Lighting_TimeScheduleCTRL": {
-            "description": "L-12:タイムスケジュール制御",
+            "description": "L-13:タイムスケジュール制御",
             "type": "string",
             "enum":[
                 "無",
@@ -1090,7 +1090,7 @@
             "default":"無"
         },
         "Lighting_InitialIlluminationCorrectionCTRL": {
-            "description": "L-13:初期照度補正機能",
+            "description": "L-14:初期照度補正機能",
             "type": "string",
             "enum":[
                 "無",
