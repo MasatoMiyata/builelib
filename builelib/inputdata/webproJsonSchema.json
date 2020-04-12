@@ -247,48 +247,50 @@
                     "description": "RM-4:室用途",
                     "type": "string"
                 },
-                "roomArea": {
-                    "description": "RM-5:床面積",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 10000000000
-                },
                 "floorHeight": {
-                    "description": "RM-6:階高",
+                    "description": "RM-5:階高",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
                 },
                 "ceilingHeight": {
-                    "description": "RM-7:天井高",
+                    "description": "RM-6:天井高",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
                 },
-                "isCal_AC":{
-                    "description": "RM-8:計算対象設備 空調",
-                    "type": "boolean"
+                "roomArea": {
+                    "description": "RM-7:床面積",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10000000000
                 },
-                "isCal_V":{
-                    "description": "RM-9:計算対象設備 換気",
-                    "type": "boolean"
-                },
-                "isCal_L":{
-                    "description": "RM-10:計算対象設備 照明",
-                    "type": "boolean"
-                },
-                "isCal_HW":{
-                    "description": "RM-11:計算対象設備 給湯",
-                    "type": "boolean"
-                },
-                "isCal_EV":{
-                    "description": "RM-12:計算対象設備 昇降機",
-                    "type": "boolean"
+                "zone":{
+                    "anyOf":[
+                        {
+                            "type": "object",
+                            "additionalProperties":{
+                                "properties": {
+                                    "zoneArea": {
+                                        "description": "RM-9:ゾーン面積",
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 10000000000
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "modelBuildingType":{
+                    "description": "RM-10:モデル建物",
                     "type": "string"
                 },
                 "buildingGroup":{
+                    "description": "RM-11:建物群名称",
                     "type": "string"
                 }
             }

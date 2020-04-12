@@ -87,20 +87,47 @@ def inputdata_make(inputfileName):
                 # 階＋室をkeyとする
                 roomKey = str(dataBL[0]) + '_' + str(dataBL[1])
 
-                data["Rooms"][roomKey] = {
-                        "buildingType": str(dataBL[2]),               
-                        "roomType": str(dataBL[3]),
-                        "roomArea": float(dataBL[4]),
-                        "floorHeight": float(dataBL[5]),
-                        "ceilingHeight": float(dataBL[6]),
-                        "isCal_AC": set_isCalculatedEquipment(dataBL[7]),
-                        "isCal_V": set_isCalculatedEquipment(dataBL[8]),
-                        "isCal_L": set_isCalculatedEquipment(dataBL[9]),
-                        "isCal_HW": set_isCalculatedEquipment(dataBL[10]),
-                        "isCal_EV": set_isCalculatedEquipment(dataBL[11]),
-                        "modelBuildingType": str(dataBL[12]),  
-                        "buildingGroup": str(dataBL[13])
-                }
+                # ゾーンがある場合
+                if (dataBL[7] != ""):
+
+                    data["Rooms"][roomKey] = {
+                            "buildingType": str(dataBL[2]),               
+                            "roomType": str(dataBL[3]),
+                            "floorHeight": float(dataBL[4]),
+                            "ceilingHeight": float(dataBL[5]),
+                            "roomArea": float(dataBL[6]),
+                            "zone":{
+                                str(dataBL[7]):{
+                                    "zoneArea": set_default(str(dataBL[8]),None, "float"),
+                                    "Info": str(dataBL[11])
+                                }
+                            },
+                            "modelBuildingType": str(dataBL[9]),  
+                            "buildingGroup": str(dataBL[10])
+                    }
+
+                else:
+
+                    data["Rooms"][roomKey] = {
+                            "buildingType": str(dataBL[2]),               
+                            "roomType": str(dataBL[3]),
+                            "floorHeight": float(dataBL[4]),
+                            "ceilingHeight": float(dataBL[5]),
+                            "roomArea": float(dataBL[6]),
+                            "zone": None,
+                            "modelBuildingType": str(dataBL[9]),  
+                            "buildingGroup": str(dataBL[10]),
+                            "Info": str(dataBL[11])
+                    }
+
+            # 複数のゾーンがある場合
+            elif (dataBL[7] != ""):
+
+                data["Rooms"][roomKey]["zone"][str(dataBL[7])] = {
+                        "zoneArea": set_default(str(dataBL[8]),None, "float"),
+                        "Info": str(dataBL[11])
+                    }
+
 
     ## 外皮
     if "様式BE1" in wb.sheet_names():
@@ -119,26 +146,29 @@ def inputdata_make(inputfileName):
             # 階と室名が空欄でない場合
             if (dataBE1[0] != "") and (dataBE1[1] != ""):
 
-                # 階＋室をkeyとする（上書き）
-                roomKey = str(dataBE1[0]) + '_' + str(dataBE1[1])
+                # 階＋室＋ゾーン名をkeyとする（上書き）
+                if (dataBE1[2] != ""):
+                    roomKey = str(dataBE1[0]) + '_' + str(dataBE1[1]) + '_' + str(dataBE1[2])
+                else:
+                    roomKey = str(dataBE1[0]) + '_' + str(dataBE1[1])
 
                 data["EnvelopeSet"][roomKey] = {
-                        "isAirconditioned": set_default(str(dataBE1[2]),'無', "str"),
+                        "isAirconditioned": set_default(str(dataBE1[3]),'無', "str"),
                         "WallList": [
                             {
-                                "Direction": str(dataBE1[3]),
-                                "EnvelopeArea": set_default(str(dataBE1[4]),None, "float"),
-                                "EnvelopeWidth": set_default(str(dataBE1[5]),None, "float"),
-                                "EnvelopeHeight": set_default(str(dataBE1[6]),None, "float"),
-                                "WallSpec": set_default(str(dataBE1[7]),"無","str"),
-                                "WallType": set_default(str(dataBE1[8]),"無","str"),
+                                "Direction": str(dataBE1[4]),
+                                "EnvelopeArea": set_default(str(dataBE1[5]),None, "float"),
+                                "EnvelopeWidth": set_default(str(dataBE1[6]),None, "float"),
+                                "EnvelopeHeight": set_default(str(dataBE1[7]),None, "float"),
+                                "WallSpec": set_default(str(dataBE1[8]),"無","str"),
+                                "WallType": set_default(str(dataBE1[9]),"無","str"),
                                 "WindowList":[
                                     {
-                                        "WindowID": set_default(str(dataBE1[9]),"無","str"),
-                                        "WindowNumber": set_default(str(dataBE1[10]),None, "float"),
-                                        "isBlind": set_default(str(dataBE1[11]),"無","str"),
-                                        "EavesID": set_default(str(dataBE1[12]),"無","str"),
-                                        "Info": set_default(str(dataBE1[13]),"無","str"),
+                                        "WindowID": set_default(str(dataBE1[10]),"無","str"),
+                                        "WindowNumber": set_default(str(dataBE1[11]),None, "float"),
+                                        "isBlind": set_default(str(dataBE1[12]),"無","str"),
+                                        "EavesID": set_default(str(dataBE1[13]),"無","str"),
+                                        "Info": set_default(str(dataBE1[14]),"無","str"),
                                     }
                                 ]       
                             }
@@ -147,35 +177,35 @@ def inputdata_make(inputfileName):
 
             else: # 階と室名が空欄である場合
 
-                if (str(dataBE1[3]) == "") and (str(dataBE1[9]) != ""): ## 方位に入力がなく、建具種類に入力がある場合
+                if (str(dataBE1[4]) == "") and (str(dataBE1[10]) != ""): ## 方位に入力がなく、建具種類に入力がある場合
 
                     data["EnvelopeSet"][roomKey]["WallList"][-1]["WindowList"].append(
                         {
-                            "WindowID": str(dataBE1[9]),
-                            "WindowNumber": set_default(str(dataBE1[10]),None, "float"),
-                            "isBlind": set_default(str(dataBE1[11]),"無","str"),
-                            "EavesID": set_default(str(dataBE1[12]),"無","str"),
-                            "Info": set_default(str(dataBE1[13]),"無","str")
+                            "WindowID": str(dataBE1[10]),
+                            "WindowNumber": set_default(str(dataBE1[11]),None, "float"),
+                            "isBlind": set_default(str(dataBE1[12]),"無","str"),
+                            "EavesID": set_default(str(dataBE1[13]),"無","str"),
+                            "Info": set_default(str(dataBE1[14]),"無","str")
                         }
                     )                     
 
-                elif (str(dataBE1[3]) != ""):  ## 方位に入力がある場合
+                elif (str(dataBE1[4]) != ""):  ## 方位に入力がある場合
 
                     data["EnvelopeSet"][roomKey]["WallList"].append(
                         {
-                            "Direction": str(dataBE1[3]),
-                            "EnvelopeArea": set_default(str(dataBE1[4]),None, "float"),
-                            "EnvelopeWidth": set_default(str(dataBE1[5]),None, "float"),
-                            "EnvelopeHeight": set_default(str(dataBE1[6]),None, "float"),
-                            "WallSpec": set_default(str(dataBE1[7]),"無","str"),
-                            "WallType": set_default(str(dataBE1[8]),"無","str"),
+                            "Direction": str(dataBE1[4]),
+                            "EnvelopeArea": set_default(str(dataBE1[5]),None, "float"),
+                            "EnvelopeWidth": set_default(str(dataBE1[6]),None, "float"),
+                            "EnvelopeHeight": set_default(str(dataBE1[7]),None, "float"),
+                            "WallSpec": set_default(str(dataBE1[8]),"無","str"),
+                            "WallType": set_default(str(dataBE1[9]),"無","str"),
                             "WindowList":[
                                 {
-                                    "WindowID": set_default(str(dataBE1[9]),"無","str"),
-                                    "WindowNumber": set_default(str(dataBE1[10]),None, "float"),
-                                    "isBlind": set_default(str(dataBE1[11]),"無","str"),
-                                    "EavesID": set_default(str(dataBE1[12]),"無","str"),
-                                    "Info": set_default(str(dataBE1[13]),"無","str")
+                                    "WindowID": set_default(str(dataBE1[10]),"無","str"),
+                                    "WindowNumber": set_default(str(dataBE1[11]),None, "float"),
+                                    "isBlind": set_default(str(dataBE1[12]),"無","str"),
+                                    "EavesID": set_default(str(dataBE1[13]),"無","str"),
+                                    "Info": set_default(str(dataBE1[14]),"無","str")
                                 }
                             ]       
                         }
@@ -451,36 +481,39 @@ def inputdata_make(inputfileName):
             # 階と室名が空欄でない場合
             if (dataL[0] != "") and (dataL[1] != ""):
 
-                # 階＋室をkeyとする
-                roomKey = str(dataL[0]) + '_' + str(dataL[1])
+                # 階＋室+ゾーン名をkeyとする
+                if (dataL[2] != ""):
+                    roomKey = str(dataL[0]) + '_' + str(dataL[1]) + '_' + str(dataL[2])
+                else:
+                    roomKey = str(dataL[0]) + '_' + str(dataL[1])
 
                 data["LightingSystems"][roomKey] = {
-                    "roomWidth": set_default(dataL[2],None, "float"),
-                    "roomDepth": set_default(dataL[3],None, "float"),
-                    "unitHeight": set_default(dataL[4],None, "float"),
-                    "roomIndex": set_default(dataL[5],None, "float"),
+                    "roomWidth": set_default(dataL[3],None, "float"),
+                    "roomDepth": set_default(dataL[4],None, "float"),
+                    "unitHeight": set_default(dataL[5],None, "float"),
+                    "roomIndex": set_default(dataL[6],None, "float"),
                     "lightingUnit": {
-                        str(dataL[6]): {
-                            "RatedPower": float(dataL[7]),
-                            "Number": float(dataL[8]),
-                            "OccupantSensingCTRL": set_default(str(dataL[9]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
-                            "IlluminanceSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
-                            "TimeScheduleCTRL": set_default(str(dataL[11]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
-                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
+                        str(dataL[7]): {
+                            "RatedPower": float(dataL[8]),
+                            "Number": float(dataL[9]),
+                            "OccupantSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
+                            "IlluminanceSensingCTRL": set_default(str(dataL[11]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
+                            "TimeScheduleCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
+                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[13]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
                         }
                     }
                 }
 
             # 階と室名が空欄であり、かつ、消費電力の入力がある場合
-            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[7] != ""):
+            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[8] != ""):
 
-                data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[6])] = {
-                    "RatedPower": float(dataL[7]),
-                    "Number": float(dataL[8]),
-                    "OccupantSensingCTRL": set_default(str(dataL[9]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
-                    "IlluminanceSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
-                    "TimeScheduleCTRL": set_default(str(dataL[11]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
-                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
+                data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[7])] = {
+                    "RatedPower": float(dataL[8]),
+                    "Number": float(dataL[9]),
+                    "OccupantSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
+                    "IlluminanceSensingCTRL": set_default(str(dataL[11]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
+                    "TimeScheduleCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
+                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[13]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
                 }
 
     if "様式HW1" in wb.sheet_names():
@@ -683,8 +716,6 @@ def inputdata_make(inputfileName):
                     "HowWaterSystem": set_default(dataCG[15], None, "str"),
                     "Info": str(dataCG[16])
                 }
-
-
 
     # バリデーションの実行
     jsonschema.validate(data, schema_data)
