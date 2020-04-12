@@ -64,6 +64,17 @@
                 "$ref": "#/definitions/LightingRoom"
             }
         },
+        "HotwaterRoom":{
+            "description": "様式HW1",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/HotwaterRoom"
+            }
+        },
+        "HotwaterSupplySystems":{
+            "description": "様式HW2",
+            "type": "object"
+        },
         "Elevators": {
             "description": "様式EV",
             "type": "object",
@@ -1067,6 +1078,45 @@
                 "センサ方式(蛍光灯)"
             ],
             "default":"無"
+        },
+        "HotwaterRoom":{
+            "properties": {
+                "HotwaterSystem":{
+                    "type": "array",
+                    "items":{
+                        "type": "object",
+                        "properties": {
+                            "UsageType":{
+                                "description": "HW1-3:給湯用途",
+                                "type": "string",
+                                "enum":[
+                                    "便所",
+                                    "浴室",
+                                    "厨房",
+                                    "その他"
+                                ]
+                            },
+                            "SystemName":{
+                                "description": "HW1-4:給湯システム名称",
+                                "type": "string"
+                            },
+                            "HotWaterSavingSystem":{
+                                "description": "HW1-5:節湯器具",
+                                "type": "string",
+                                "enum":[
+                                    "自動給湯栓",
+                                    "節湯B1",
+                                    "無"
+                                ]
+                            },
+                            "Info": {
+                                "description": "HW1-6:備考",
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         },
         "Elevators":{
             "properties": {

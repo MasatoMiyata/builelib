@@ -491,6 +491,49 @@ def inputdata_make(inputfileName):
 
 
     #%% 
+    if "様式HW1" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_HW1 = wb.sheet_by_name("様式HW1")
+        # 初期化
+        roomKey = None
+
+        # 行のループ
+        for i in range(10,sheet_HW1.nrows):
+
+            # シートから「行」の読み込み
+            dataHW1 = sheet_HW1.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataHW1[0] != "") and (dataHW1[1] != "") :
+
+                # 階＋室をkeyとする
+                roomKey = str(dataHW1[0]) + '_' + str(dataHW1[1])
+
+                data["HotwaterRoom"][roomKey] = {
+                    "HotwaterSystem":[
+                        {
+                            "UsageType": str(dataHW1[2]),
+                            "SystemName": str(dataHW1[3]),
+                            "HotWaterSavingSystem": set_default(str(dataHW1[4]),"裸管","str"),
+                            "Info": str(dataHW1[5])
+                        }
+                    ]
+                }
+
+            elif (dataHW1[2] != "") and (dataHW1[3] != "") :
+
+                data["HotwaterRoom"][roomKey]["HotwaterSystem"].append(
+                    {
+                        "UsageType": str(dataHW1[2]),
+                        "SystemName": str(dataHW1[3]),
+                        "HotWaterSavingSystem": set_default(str(dataHW1[4]),"裸管","str"),
+                        "Info": str(dataHW1[5])
+                    }
+                )
+
+
+    #%% 
     if "様式EV" in wb.sheet_names():
 
         # シートの読み込み

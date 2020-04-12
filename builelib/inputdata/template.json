@@ -1,17 +1,8 @@
 {
     "Building":{
-        "Name": "●●●●ビルディング",
         "BuildingAddress": {
-            "Prefecture": "兵庫県",
-            "City": "神戸市",
-            "Address": "星和台"
         },
-        "Region": "6",
-        "AnnualSolarRegion": "A4",
-        "BuildingFloorArea": 2340.97,
         "Coefficient_DHC": {
-            "Cooling": 0.98,
-            "Heating": 1.22
         }
     },
     "Rooms":{
@@ -29,6 +20,10 @@
     "VentilationUnit":{
     },
     "LightingSystems":{
+    },
+    "HotwaterRoom":{
+    },
+    "HotwaterSupplySystems":{
     },
     "Elevators":{
     }
