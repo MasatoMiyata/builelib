@@ -63,6 +63,13 @@
             "additionalProperties": {
                 "$ref": "#/definitions/LightingRoom"
             }
+        },
+        "Elevators": {
+            "description": "様式EV",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/Elevators"
+            }
         }
     },
     "dependencies": {
@@ -1060,6 +1067,68 @@
                 "センサ方式(蛍光灯)"
             ],
             "default":"無"
+        },
+        "Elevators":{
+            "properties": {
+                "Elevator":{
+                    "type": "array",
+                    "items":{
+                        "type": "object",
+                        "properties": {
+                            "ElevatorName":{
+                                "description": "EV-3:昇降機系統の名称",
+                                "type": "string"
+                            },
+                            "Number":{
+                                "description": "EV-4:台数",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1000
+                            },
+                            "LoadLimit":{
+                                "description": "EV-5:積載量",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10000
+                            },
+                            "Velocity":{
+                                "description": "EV-6:速度",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10000
+                            },
+                            "TransportCapacityFactor":{
+                                "description": "EV-7:輸送能力係数",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 10
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "ControlType":{
+                                "description": "EV-6:速度",
+                                "type": "string",
+                                "enum":[
+                                    "VVVF（電力回生なし）",
+                                    "VVVF（電力回生あり）",
+                                    "VVVF（電力回生なし、ギアレス）",
+                                    "VVVF（電力回生あり、ギアレス）",
+                                    "交流帰還制御"
+                                ]
+                            },
+                            "Info": {
+                                "description": "EV-7:備考",
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

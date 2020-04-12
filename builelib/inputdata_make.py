@@ -478,7 +478,7 @@ def inputdata_make(inputfileName):
                 }
 
             # 階と室名が空欄であり、かつ、消費電力の入力がある場合
-            if (dataL[0] == "") and (dataL[1] == "") and (dataL[7] != ""):
+            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[7] != ""):
 
                 data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[6])] = {
                     "RatedPower": float(dataL[7]),
@@ -490,10 +490,60 @@ def inputdata_make(inputfileName):
                 }
 
 
+    #%% 
+    if "様式EV" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_EV = wb.sheet_by_name("様式EV")
+        # 初期化
+        roomKey = None
+
+        # 行のループ
+        for i in range(10,sheet_EV.nrows):
+
+            # シートから「行」の読み込み
+            dataEV = sheet_EV.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataEV[0] != "") and (dataEV[1] != "") :
+
+                # 階＋室をkeyとする
+                roomKey = str(dataEV[0]) + '_' + str(dataEV[1])
+
+                data["Elevators"][roomKey] = {
+                    "Elevator": [
+                        {
+                            "ElevatorName": set_default(str(dataEV[2]),"-","str"),
+                            "Number": float(dataEV[3]),
+                            "LoadLimit": float(dataEV[4]),
+                            "Velocity": float(dataEV[5]),
+                            "TransportCapacityFactor": set_default(str(dataEV[6]),1,"float"),
+                            "ControlType": set_default(str(dataEV[7]),"交流帰還制御","str"),
+                            "Info": str(dataEV[8])
+                        }
+                    ]
+                }
+
+            elif (dataEV[3] != "") or (dataEV[4] != ""):
+
+                data["Elevators"][roomKey]["Elevator"].append(
+                    {
+                        "ElevatorName": set_default(str(dataEV[2]),"-","str"),
+                        "Number": float(dataEV[3]),
+                        "LoadLimit": float(dataEV[4]),
+                        "Velocity": float(dataEV[5]),
+                        "TransportCapacityFactor": set_default(str(dataEV[6]),1,"float"),
+                        "ControlType": set_default(str(dataEV[7]),"交流帰還制御","str"),
+                        "Info": str(dataEV[8])
+                    }
+                )
+
+
     # バリデーションの実行
     jsonschema.validate(data, schema_data)
 
     return data
+
 
 #%%
 if __name__ == '__main__':
