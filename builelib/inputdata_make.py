@@ -1,4 +1,3 @@
-#%%
 import xlrd
 import json
 import jsonschema
@@ -28,7 +27,6 @@ def set_isCalculatedEquipment(input):
     return isEquip
 
 
-#%% メイン関数
 def inputdata_make(inputfileName):
 
     # 入力シートの読み込み
@@ -68,7 +66,7 @@ def inputdata_make(inputfileName):
         # BL-9	の一次エネルギー換算係数	温熱	(数値)
         data["Building"]["Coefficient_DHC"]["Heating"] = float(sheet_BL.cell(18, 4).value)
 
-    #%%
+    
     # 様式RMの読み込み
     if "様式RM" in wb.sheet_names():
 
@@ -104,7 +102,6 @@ def inputdata_make(inputfileName):
                         "buildingGroup": str(dataBL[13])
                 }
 
-    #%% 
     ## 外皮
     if "様式BE1" in wb.sheet_names():
 
@@ -367,7 +364,6 @@ def inputdata_make(inputfileName):
                         "Info": set_default(dataBE4[13], "無","str"),
                     }
 
-    #%% 
     ## 機械換気設備
     if "様式V1" in wb.sheet_names():
         
@@ -439,8 +435,6 @@ def inputdata_make(inputfileName):
                     "Info": str(dataV[12])
                 }
 
-
-    #%% 
     if "様式L" in wb.sheet_names():
         
         # シートの読み込み
@@ -489,8 +483,6 @@ def inputdata_make(inputfileName):
                     "InitialIlluminationCorrectionCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
                 }
 
-
-    #%% 
     if "様式HW1" in wb.sheet_names():
 
         # シートの読み込み
@@ -532,7 +524,6 @@ def inputdata_make(inputfileName):
                     }
                 )
 
-    #%% 
     if "様式HW2" in wb.sheet_names():
 
         # シートの読み込み
@@ -584,7 +575,6 @@ def inputdata_make(inputfileName):
                     }
                 )
 
-    #%% 
     if "様式EV" in wb.sheet_names():
 
         # シートの読み込み
@@ -632,7 +622,6 @@ def inputdata_make(inputfileName):
                     }
                 )
 
-    #%% 
     if "様式PV" in wb.sheet_names():
 
         # シートの読み込み
@@ -659,6 +648,43 @@ def inputdata_make(inputfileName):
                     "Info": str(dataPV[7])
                 }
 
+    
+    if "様式CG" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_CG = wb.sheet_by_name("様式CG")
+        # 初期化
+        unitKey = None
+
+        # 行のループ
+        for i in range(10,sheet_CG.nrows):
+
+            # シートから「行」の読み込み
+            dataCG = sheet_CG.row_values(i)
+
+            # コージェネレーション設備名称が空欄でない場合
+            if (dataCG[0] != ""):
+
+                data["CogenerationSystems"][dataCG[0]] = {
+                    "RatedCapacity": float(dataCG[1]),
+                    "Number": float(dataCG[2]),
+                    "PowerGenerationEfficiency_100": float(dataCG[3]),
+                    "PowerGenerationEfficiency_75": float(dataCG[4]),
+                    "PowerGenerationEfficiency_50": float(dataCG[5]),
+                    "HeatGenerationEfficiency_100": float(dataCG[6]),
+                    "HeatGenerationEfficiency_75": float(dataCG[7]),
+                    "HeatGenerationEfficiency_50": float(dataCG[8]),
+                    "HeatRecoveryPriorityCooling": set_default(dataCG[9], None, "str"),
+                    "HeatRecoveryPriorityHeating": set_default(dataCG[10], None, "str"),
+                    "HeatRecoveryPriorityHotWater": set_default(dataCG[11], None, "str"),
+                    "24hourOperation": set_default(dataCG[12],'無', "str"),
+                    "CoolingSystem": set_default(dataCG[13], None, "str"),
+                    "HeatingSystem": set_default(dataCG[14], None, "str"),
+                    "HowWaterSystem": set_default(dataCG[15], None, "str"),
+                    "Info": str(dataCG[16])
+                }
+
+
 
     # バリデーションの実行
     jsonschema.validate(data, schema_data)
@@ -666,7 +692,7 @@ def inputdata_make(inputfileName):
     return data
 
 
-#%%
+
 if __name__ == '__main__':
     
     inputfileName = './sample/WEBPRO_inputSheet_for_Ver3.xlsx'

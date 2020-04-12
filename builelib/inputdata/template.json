@@ -26,6 +26,9 @@
     "HotwaterSupplySystems":{
     },
     "Elevators":{
+    },
+    "PhotovoltaicSystems":{        
+    },
+    "CogenerationSystems":{
     }
-
 }

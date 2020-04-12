@@ -94,7 +94,10 @@
         },
         "CogenerationSystems":{
             "description": "様式CG",
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/CogenerationSystems"
+            }
         }
     },
     "dependencies": {
@@ -1366,6 +1369,151 @@
                     "type": "number",
                     "minimum": 0,
                     "maximum": 90
+                },
+                "Info": {
+                    "description": "PV-8:備考",
+                    "type": "string"
+                }
+            }
+        },
+        "CogenerationSystems":{
+            "properties": {
+                "RatedCapacity":{
+                    "description": "CG-2:定格発電出力",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100000
+                },
+                "Number":{
+                    "description": "CG-3:台数",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "PowerGenerationEfficiency_100":{
+                    "description": "CG-4:発電効率 負荷率1.00",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "PowerGenerationEfficiency_75":{
+                    "description": "CG-5:発電効率 負荷率0.75",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "PowerGenerationEfficiency_50":{
+                    "description": "CG-6:発電効率 負荷率0.50",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "HeatGenerationEfficiency_100":{
+                    "description": "CG-7:排熱効率 負荷率1.00",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "HeatGenerationEfficiency_75":{
+                    "description": "CG-8:排熱効率 負荷率0.75",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "HeatGenerationEfficiency_50":{
+                    "description": "CG-9:排熱効率 負荷率0.50",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "HeatRecoveryPriorityCooling":{
+                    "description": "CG-10:排熱利用優先順位 空調冷熱源",
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "enum":[
+                                "1番目",
+                                "2番目",
+                                "3番目"
+                            ]
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "HeatRecoveryPriorityHeating":{
+                    "description": "CG-11:排熱利用優先順位 空調温熱源",
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "enum":[
+                                "1番目",
+                                "2番目",
+                                "3番目"
+                            ]
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "HeatRecoveryPriorityHotWater":{
+                    "description": "CG-12:排熱利用優先順位 給湯",
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "enum":[
+                                "1番目",
+                                "2番目",
+                                "3番目"
+                            ]
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "24hourOperation":{
+                    "description": "CG-13:24時間運転の有無",
+                    "type": "string",
+                    "enum":[
+                        "有",
+                        "無"
+                    ]
+                },
+                "CoolingSystem":{
+                    "description": "CG-14:排熱利用系統 空調 冷熱",
+                    "anyOf":[
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "HeatingSystem":{
+                    "description": "CG-14:排熱利用系統 空調 温熱",
+                    "anyOf":[
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "HowWaterSystem":{
+                    "description": "CG-14:排熱利用系統 給湯",
+                    "anyOf":[
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "Info": {
                     "description": "PV-8:備考",
