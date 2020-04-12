@@ -73,7 +73,10 @@
         },
         "HotwaterSupplySystems":{
             "description": "様式HW2",
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/HotwaterSupplySystems"
+            }
         },
         "Elevators": {
             "description": "様式EV",
@@ -1115,6 +1118,129 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "HotwaterSupplySystems":{
+            "properties": {
+                "HeatSourceUnit":{
+                    "type": "array",
+                    "items":{
+                        "type": "object",
+                        "properties": {
+                            "UsageType":{
+                                "description": "HW2-2:給湯用途",
+                                "type": "string",
+                                "enum":[
+                                    "給湯負荷用",
+                                    "配管保温用",
+                                    "貯湯槽保温用",
+                                    "その他"
+                                ]
+                            },
+                            "HeatSourceType":{
+                                "description": "HW2-3:熱源機種",
+                                "type": "string",
+                                "enum":[
+                                    "ガス給湯機",
+                                    "ガス給湯暖房機",
+                                    "ボイラ",
+                                    "石油給湯機(給湯単機能)",
+                                    "石油給湯機(給湯機付ふろがま)",
+                                    "家庭用ヒートポンプ給湯機",
+                                    "業務用ヒートポンプ給湯機",
+                                    "貯湯式電気温水器",
+                                    "電気瞬間湯沸器",
+                                    "真空式温水発生機",
+                                    "無圧式温水発生機",
+                                    "地域熱供給"
+                                ]
+                            },
+                            "Number":{
+                                "description": "HW2-4:台数",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1000
+                            },
+                            "RatedCapacity":{
+                                "description": "HW2-5:定格加熱能力",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1000000
+                            },
+                            "RatedPowerConsumption":{
+                                "description": "HW2-6:定格消費電力",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1000000
+                            },
+                            "RatedFuelConsumption":{
+                                "description": "HW2-7:定格燃料消費量(高位)",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1000000
+                            },
+                            "Info": {
+                                "description": "HW2-13:備考",
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "InsulationType":{
+                    "description": "HW2-8:配管保温仕様",
+                    "type": "string",
+                    "enum":[
+                        "保温仕様1",
+                        "保温仕様2",
+                        "保温仕様3",
+                        "裸管"
+                    ]
+                },
+                "PipeSize":{
+                    "description": "HW2-9:配管最大口径",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                },
+                "SolarSystemArea":{
+                    "description": "HW2-10:太陽熱利用 有効集熱面積",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "SolarSystemDirection":{
+                    "description": "HW2-11:太陽熱利用 集熱面の方位角",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "SolarSystemAngle":{
+                    "description": "HW2-12:太陽熱利用 集熱面の傾斜角",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 }
             }
         },
