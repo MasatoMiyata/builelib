@@ -532,6 +532,57 @@ def inputdata_make(inputfileName):
                     }
                 )
 
+    #%% 
+    if "様式HW2" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_HW2 = wb.sheet_by_name("様式HW2")
+        # 初期化
+        unitKey = None
+
+        # 行のループ
+        for i in range(10,sheet_HW2.nrows):
+
+            # シートから「行」の読み込み
+            dataHW2 = sheet_HW2.row_values(i)
+
+            # 給湯システム名称が空欄でない場合
+            if (dataHW2[0] != ""):
+
+                # 階＋室をkeyとする
+                unitKey = str(dataHW2[0])
+
+                data["HotwaterSupplySystems"][unitKey] = {
+                    "HeatSourceUnit":[
+                        {
+                            "UsageType": str(dataHW2[1]),
+                            "HeatSourceType": str(dataHW2[2]),
+                            "Number": float(dataHW2[3]),
+                            "RatedCapacity": float(dataHW2[4]),
+                            "RatedPowerConsumption": float(dataHW2[5]),
+                            "RatedFuelConsumption": float(dataHW2[6]),
+                        }
+                    ],
+                    "InsulationType": str(dataHW2[7]),
+                    "PipeSize": float(dataHW2[8]),
+                    "SolarSystemArea": set_default(dataHW2[9], None, "float"),
+                    "SolarSystemDirection": set_default(dataHW2[10], None, "float"),
+                    "SolarSystemAngle": set_default(dataHW2[11], None, "float"),
+                    "Info": str(dataHW2[12])
+                }
+
+            elif (dataHW2[1] != "") and (dataHW2[2] != ""):
+
+                data["HotwaterSupplySystems"][unitKey]["HeatSourceUnit"].append(
+                    {
+                        "UsageType": str(dataHW2[1]),
+                        "HeatSourceType": str(dataHW2[2]),
+                        "Number": float(dataHW2[3]),
+                        "RatedCapacity": float(dataHW2[4]),
+                        "RatedPowerConsumption": float(dataHW2[5]),
+                        "RatedFuelConsumption": float(dataHW2[6]),
+                    }
+                )
 
     #%% 
     if "様式EV" in wb.sheet_names():
