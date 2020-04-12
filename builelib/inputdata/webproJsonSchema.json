@@ -84,6 +84,17 @@
             "additionalProperties": {
                 "$ref": "#/definitions/Elevators"
             }
+        },
+        "PhotovoltaicSystems":{
+            "description": "様式PV",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/PhotovoltaicSystems"
+            }
+        },
+        "CogenerationSystems":{
+            "description": "様式CG",
+            "type": "object"
         }
     },
     "dependencies": {
@@ -1303,6 +1314,62 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "PhotovoltaicSystems":{
+            "properties": {
+                "PowerConditionerEfficiency":{
+                    "description": "PV-2:パワーコンディショナの効率",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "CellType":{
+                    "description": "PV-3:太陽電池の種類",
+                    "type": "string",
+                    "enum":[
+                        "結晶系",
+                        "結晶系以外"
+                    ]
+                },
+                "ArraySetupType":{
+                    "description": "PV-4:アレイ設置方式",
+                    "type": "string",
+                    "enum":[
+                        "架台設置形",
+                        "屋根置き形",
+                        "その他"
+                    ]
+                },
+                "ArrayCapacity":{
+                    "description": "PV-5:アレイのシステム容量",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100000
+                },
+                "Direction":{
+                    "description": "PV-6:パネルの方位角",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 360
+                },
+                "Angle":{
+                    "description": "PV-7:パネルの傾斜角",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 90
+                },
+                "Info": {
+                    "description": "PV-8:備考",
+                    "type": "string"
                 }
             }
         }

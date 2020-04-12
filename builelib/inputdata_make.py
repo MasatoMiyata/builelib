@@ -632,6 +632,33 @@ def inputdata_make(inputfileName):
                     }
                 )
 
+    #%% 
+    if "様式PV" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_PV = wb.sheet_by_name("様式PV")
+        # 初期化
+        unitKey = None
+
+        # 行のループ
+        for i in range(10,sheet_PV.nrows):
+
+            # シートから「行」の読み込み
+            dataPV = sheet_PV.row_values(i)
+
+            # 太陽光発電システム名称が空欄でない場合
+            if (dataPV[0] != ""):
+
+                data["PhotovoltaicSystems"][dataPV[0]] = {
+                    "PowerConditionerEfficiency": set_default(dataPV[1], None, "float"),
+                    "CellType": str(dataPV[2]),
+                    "ArraySetupType": str(dataPV[3]),
+                    "ArrayCapacity": float(dataPV[4]),
+                    "Direction": float(dataPV[5]),
+                    "Angle": float(dataPV[6]),
+                    "Info": str(dataPV[7])
+                }
+
 
     # バリデーションの実行
     jsonschema.validate(data, schema_data)
