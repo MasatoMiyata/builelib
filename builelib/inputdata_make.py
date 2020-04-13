@@ -394,6 +394,49 @@ def inputdata_make(inputfileName):
                         "Info": set_default(dataBE4[13], "無","str"),
                     }
 
+    ## 空調設備
+    if "様式AC1" in wb.sheet_names():
+        
+        # シートの読み込み
+        sheet_AC1 = wb.sheet_by_name("様式AC1")
+        # 初期化
+        roomKey = None
+
+        # 行のループ
+        for i in range(10,sheet_AC1.nrows):
+
+            # シートから「行」の読み込み
+            dataAC1 = sheet_AC1.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataAC1[0] != "") and (dataAC1[1] != ""):
+
+                # 階＋室+ゾーン名をkeyとする
+                if (dataAC1[2] != ""):
+                    roomKey = str(dataAC1[0]) + '_' + str(dataAC1[1]) + '_' + str(dataAC1[2])
+                else:
+                    roomKey = str(dataAC1[0]) + '_' + str(dataAC1[1])
+
+                data["AirConditioningZone"][roomKey] = {
+                    "isNatualVentilation": set_default(dataAC1[3], "無", "str"),
+                    "isSimultaneousSupply": set_default(dataAC1[4], "無", "str"),
+                    "AHU_cooling_insideLoad": set_default(dataAC1[5], None, "str"),
+                    "AHU_cooling_outdoorLoad": set_default(dataAC1[6], None, "str"),
+                    "AHU_heating_insideLoad": set_default(dataAC1[7], None, "str"),
+                    "AHU_heating_outdoorLoad": set_default(dataAC1[8], None, "str"),
+                    "Pump_cooling": set_default(dataAC1[9], None, "str"),
+                    "Pump_heating": set_default(dataAC1[10], None, "str"),
+                    "HeatSorce_cooling": set_default(dataAC1[11], None, "str"),
+                    "HeatSorce_heating": set_default(dataAC1[12], None, "str"),
+                    "Info": str(dataAC1[13])
+                }
+
+
+
+
+
+
+
     ## 機械換気設備
     if "様式V1" in wb.sheet_names():
         
@@ -432,7 +475,6 @@ def inputdata_make(inputfileName):
                     "UnitType": str(dataV[3]),
                     "Info": str(dataV[5])
                 }               
-
 
     if "様式V2" in wb.sheet_names():
         

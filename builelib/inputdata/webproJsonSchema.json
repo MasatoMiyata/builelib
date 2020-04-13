@@ -43,6 +43,13 @@
                 "$ref": "#/definitions/ShadingConfigure"
             }  
         },
+        "AirConditioningZone":{
+            "description": "様式AC1",
+            "type": "object",
+            "additionalProperties":{
+                "$ref": "#/definitions/AirConditioningZone"
+            }
+        },
         "VentilationRoom":{
             "description": "様式V1",
             "type": "object",
@@ -764,6 +771,76 @@
                     "type": "null"
                 }
             ]
+        },
+        "AirConditioningZone":{
+            "properties": {
+                "isNatualVentilation": {
+                    "description": "AC1-4:自然換気の有無",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "有"
+                    ]
+                },
+                "isSimultaneousSupply": {
+                    "description": "AC1-5:冷暖同時供給の有無",
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "有"
+                    ]
+                },
+                "AHU_cooling_insideLoad": {
+                    "description": "AC1-6:空調機群名称 冷房 室負荷処理",
+                    "type": "string"
+                },
+                "AHU_cooling_outdoorLoad": {
+                    "description": "AC1-7:空調機群名称 冷房 外気負荷処理",
+                    "type": "string"
+                },
+                "AHU_heating_insideLoad": {
+                    "description": "AC1-8:空調機群名称 暖房 室負荷処理",
+                    "type": "string"
+                },
+                "AHU_heeating_outdoorLoad": {
+                    "description": "AC1-9:空調機群名称 暖房 外気負荷処理",
+                    "type": "string"
+                },
+                "Pump_cooling": {
+                    "description": "AC1-10:二次ポンプ群名称 冷房",
+                    "anyOf":[
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "Pump_heating": {
+                    "description": "AC1-11:二次ポンプ群名称 暖房",
+                    "anyOf":[
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "HeatSorce_cooling": {
+                    "description": "AC1-12:熱源群名称 冷房",
+                    "type": "string"
+                },
+                "HeatSorce_heating": {
+                    "description": "AC1-13:熱源群名称 暖房",
+                    "type": "string"
+                },
+                "Info": {
+                    "description": "AC1-14:備考",
+                    "type": "string"
+                }
+            }
         },
         "VentilationRoom":{
             "properties": {
