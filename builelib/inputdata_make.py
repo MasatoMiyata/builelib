@@ -599,9 +599,70 @@ def inputdata_make(inputfileName):
                     ]
                 }
     
-    
+    if "様式AC4" in wb.sheet_names():
+        
+        # シートの読み込み
+        sheet_AC4 = wb.sheet_by_name("様式AC4")
+        # 初期化
+        unitKey = None
 
+        # 行のループ
+        for i in range(10,sheet_AC4.nrows):
 
+            # シートから「行」の読み込み
+            dataAC4 = sheet_AC4.row_values(i)
+
+            # 空調機群名称が空欄でない場合
+            if (dataAC4[0] != ""):      
+                
+                unitKey = str(dataAC4[0])
+
+                data["AirHandlingSystem"][unitKey] = {
+                    "isEconomizer": set_default(dataAC4[1], "無", "str"),
+                    "EconomizerMaxAirVolume": set_default(dataAC4[2], None, "float"),
+                    "isOutdoorAirCut": set_default(dataAC4[3], "無", "str"),
+                    "AirHandlingUnit" :[
+                        {
+                            "Type": str(dataAC4[4]),
+                            "Number": float(dataAC4[5]),
+                            "RatedCapacityCooling": set_default(dataAC4[6], None, "float"),
+                            "RatedCapacityHeating": set_default(dataAC4[7], None, "float"),
+                            "FanType": set_default(dataAC4[8], None, "str"),
+                            "FanAirVolume": set_default(dataAC4[9], None, "float"),
+                            "FanPowerConsumption": set_default(dataAC4[10], None, "float"),
+                            "FanControlType": set_default(dataAC4[11], "無", "str"),
+                            "FanMinOpeningRate": set_default(dataAC4[12], None, "float"),
+                            "AirHeatExchangeRatioCooling": set_default(dataAC4[13], None, "float"),
+                            "AirHeatExchangeRatioHeating": set_default(dataAC4[14], None, "float"),
+                            "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[15], None, "float"),
+                            "AirHeatExchangerControl": set_default(dataAC4[16], "無", "str"),
+                            "AirHeatExchangerPowerConsumption": set_default(dataAC4[17], None, "float"),
+                            "Info": str(dataAC4[18])
+                        }
+                    ]
+                }
+
+            elif (dataAC4[4] != ""):      
+
+                data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
+                    {
+                        "Type": str(dataAC4[4]),
+                        "Number": float(dataAC4[5]),
+                        "RatedCapacityCooling": set_default(dataAC4[6], None, "float"),
+                        "RatedCapacityHeating": set_default(dataAC4[7], None, "float"),
+                        "FanType": set_default(dataAC4[8], None, "str"),
+                        "FanAirVolume": set_default(dataAC4[9], None, "float"),
+                        "FanPowerConsumption": set_default(dataAC4[10], None, "float"),
+                        "FanControlType": set_default(dataAC4[11], "無", "str"),
+                        "FanMinOpeningRate": set_default(dataAC4[12], None, "float"),
+                        "AirHeatExchangeRatioCooling": set_default(dataAC4[13], None, "float"),
+                        "AirHeatExchangeRatioHeating": set_default(dataAC4[14], None, "float"),
+                        "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[15], None, "float"),
+                        "AirHeatExchangerControl": set_default(dataAC4[16], "無", "str"),
+                        "AirHeatExchangerPowerConsumption": set_default(dataAC4[17], None, "float"),
+                        "Info": str(dataAC4[18])
+                    }
+                )
 
     ## 機械換気設備
     if "様式V1" in wb.sheet_names():
