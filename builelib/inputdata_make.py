@@ -530,6 +530,78 @@ def inputdata_make(inputfileName):
                 }
 
 
+    if "様式AC3" in wb.sheet_names():
+        
+        # シートの読み込み
+        sheet_AC3 = wb.sheet_by_name("様式AC3")
+        # 初期化
+        unitKey = None
+        modeKey = None
+
+        # 行のループ
+        for i in range(10,sheet_AC3.nrows):
+
+            # シートから「行」の読み込み
+            dataAC3 = sheet_AC3.row_values(i)
+
+            # 二次ポンプ群名称と運転モードが空欄でない場合
+            if (dataAC3[0] != "") and (dataAC3[1] != ""):      
+                
+                unitKey = str(dataAC3[0])
+                modeKey = str(dataAC3[1])
+
+                data["SecondaryPumpSystem"][unitKey] = {
+                    modeKey : {
+                        "TempelatureDifference": float(dataAC3[2]),
+                        "isStagingControl": set_default(dataAC3[3], "無", "str"),
+                        "SecondaryPump" :[
+                            {
+                                "Number": float(dataAC3[4]),
+                                "RatedWaterFlowRate": float(dataAC3[5]),
+                                "RatedPowerConsumption": float(dataAC3[6]),
+                                "ContolType": set_default(dataAC3[7], "無", "str"),
+                                "MinOpeningRate": set_default(dataAC3[8], None, "float"),
+                                "Info": str(dataAC3[9])
+                            }
+                        ]
+                    }
+                }
+            
+            elif (dataAC3[1] == "") and (dataAC3[4] != ""):
+
+                data["SecondaryPumpSystem"][unitKey][modeKey]["SecondaryPump"].append(
+                    {
+                        "Number": float(dataAC3[4]),
+                        "RatedWaterFlowRate": float(dataAC3[5]),
+                        "RatedPowerConsumption": float(dataAC3[6]),
+                        "ContolType": set_default(dataAC3[7], "無", "str"),
+                        "MinOpeningRate": set_default(dataAC3[8], None, "float"),
+                        "Info": str(dataAC3[9])
+                    }
+                )
+
+            elif (dataAC3[2] != ""):
+
+                modeKey = str(dataAC3[1])
+
+                data["SecondaryPumpSystem"][unitKey][modeKey] = {
+                    "TempelatureDifference": float(dataAC3[2]),
+                    "isStagingControl": set_default(dataAC3[3], "無", "str"),
+                    "SecondaryPump" :[
+                        {
+                            "Number": float(dataAC3[4]),
+                            "RatedWaterFlowRate": float(dataAC3[5]),
+                            "RatedPowerConsumption": float(dataAC3[6]),
+                            "ContolType": set_default(dataAC3[7], "無", "str"),
+                            "MinOpeningRate": set_default(dataAC3[8], None, "float"),
+                            "Info": str(dataAC3[9])
+                        }
+                    ]
+                }
+    
+    
+
+
 
     ## 機械換気設備
     if "様式V1" in wb.sheet_names():

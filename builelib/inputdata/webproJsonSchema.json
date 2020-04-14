@@ -59,7 +59,10 @@
         },
         "SecondaryPumpSystem":{
             "description": "様式AC3",
-            "type": "object"
+            "type": "object",
+            "additionalProperties":{
+                "$ref": "#/definitions/SecondaryPumpSystem"
+            }
         },
         "AirHandlingSystem":{
             "description": "様式AC4",
@@ -1072,6 +1075,87 @@
                             },
                             "Info": {
                                 "description": "AC2-20:備考",
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "SecondaryPumpSystem":{
+            "properties": {
+                "冷房": {
+                    "type": "object",
+                    "$ref": "#/definitions/SecondaryPump"
+                },
+                "暖房": {
+                    "type": "object",
+                    "$ref": "#/definitions/SecondaryPump"
+                }
+            }
+        },
+        "SecondaryPump":{
+            "properties": {
+                "TempelatureDifference": {
+                    "description": "AC3-3:設計温度差",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "isStagingControl":{
+                    "description": "AC3-4:台数制御の有無",
+                    "type": "string",
+                    "enum":[
+                        "有",
+                        "無"
+                    ]
+                },
+                "SecondaryPump":{
+                    "type": "array",
+                    "items":{
+                        "type": "object",
+                        "properties": {
+                            "Number": {
+                                "description": "AC3-5:台数",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100000
+                            },
+                            "RatedWaterFlowRate": {
+                                "description": "AC3-6:定格流量",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100000
+                            },
+                            "RatedPowerConsumption": {
+                                "description": "AC3-7:定格消費電力",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100000
+                            },
+                            "ContolType": {
+                                "description": "AC3-8:制御方式",
+                                "enum":[
+                                    "無",
+                                    "回転数制御",
+                                    "定風量制御"
+                                ]
+                            },
+                            "MinOpeningRate":{
+                                "description": "AC3-9:最小流量比",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 100
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "Info": {
+                                "description": "AC3-10:備考",
                                 "type": "string"
                             }
                         }
