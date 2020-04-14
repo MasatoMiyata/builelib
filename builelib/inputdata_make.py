@@ -431,9 +431,103 @@ def inputdata_make(inputfileName):
                     "Info": str(dataAC1[13])
                 }
 
+    if "様式AC2" in wb.sheet_names():
+        
+        # シートの読み込み
+        sheet_AC2 = wb.sheet_by_name("様式AC2")
+        # 初期化
+        unitKey = None
+        modeKey = None
 
+        # 行のループ
+        for i in range(10,sheet_AC2.nrows):
 
+            # シートから「行」の読み込み
+            dataAC2 = sheet_AC2.row_values(i)
 
+            # 熱源群名称と運転モードが空欄でない場合
+            if (dataAC2[0] != "") and (dataAC2[1] != ""):      
+                
+                unitKey = str(dataAC2[0])
+                modeKey = str(dataAC2[1])
+
+                data["HeatsourceSystem"][unitKey] = {
+                    modeKey : {
+                        "StorageType": set_default(dataAC2[2], None, "str"),
+                        "StorageSize": set_default(dataAC2[3], None, "float"),
+                        "isStagingControl": set_default(dataAC2[4], "無", "str"),
+                        "Heatsource" :[
+                            {
+                                "HeatsourceType": str(dataAC2[5]),
+                                "Number": float(dataAC2[6]),
+                                "SupplyWaterTempSummer": set_default(dataAC2[7], None, "float"),
+                                "SupplyWaterTempMiddle": set_default(dataAC2[8], None, "float"),
+                                "SupplyWaterTempWinter": set_default(dataAC2[9], None, "float"),
+                                "HeatsourceRatedCapacity": float(dataAC2[10]),
+                                "HeatsourceRatedPowerConsumption": set_default(dataAC2[11], 0, "float"),
+                                "HeatsourceRatedFuelConsumption": set_default(dataAC2[12], 0, "float"),
+                                "PrimaryPumpPowerConsumption": set_default(dataAC2[13], 0, "float"),
+                                "PrimaryPumpContolType": set_default(dataAC2[14], "無", "str"),
+                                "CoolingTowerCapacity": set_default(dataAC2[15], 0, "float"),
+                                "CoolingTowerFanPowerConsumption": set_default(dataAC2[16], 0, "float"),
+                                "CoolingTowerPumpPowerConsumption": set_default(dataAC2[17], 0, "float"),
+                                "CoolingTowerContolType": set_default(dataAC2[18], "無", "str"),
+                                "Info": str(dataAC2[19])
+                            }
+                        ]
+                    }
+                }
+
+            elif (dataAC2[1] == "") and (dataAC2[5] != ""):  # 熱源機種を追加（複数台設置されている場合）
+
+                data["HeatsourceSystem"][unitKey][modeKey]["Heatsource"].append(
+                    {
+                        "HeatsourceType": str(dataAC2[5]),
+                        "Number": float(dataAC2[6]),
+                        "SupplyWaterTempSummer": set_default(dataAC2[7], None, "float"),
+                        "SupplyWaterTempMiddle": set_default(dataAC2[8], None, "float"),
+                        "SupplyWaterTempWinter": set_default(dataAC2[9], None, "float"),
+                        "HeatsourceRatedCapacity": float(dataAC2[10]),
+                        "HeatsourceRatedPowerConsumption": set_default(dataAC2[11], 0, "float"),
+                        "HeatsourceRatedFuelConsumption": set_default(dataAC2[12], 0, "float"),
+                        "PrimaryPumpPowerConsumption": set_default(dataAC2[13], 0, "float"),
+                        "PrimaryPumpContolType": set_default(dataAC2[14], "無", "str"),
+                        "CoolingTowerCapacity": set_default(dataAC2[15], 0, "float"),
+                        "CoolingTowerFanPowerConsumption": set_default(dataAC2[16], 0, "float"),
+                        "CoolingTowerPumpPowerConsumption": set_default(dataAC2[17], 0, "float"),
+                        "CoolingTowerContolType": set_default(dataAC2[18], "無", "str"),
+                        "Info": str(dataAC2[19])
+                    }
+                )
+
+            elif (dataAC2[1] != ""):  # 熱源機種を追加（複数のモードがある場合）
+
+                modeKey = str(dataAC2[1])
+
+                data["HeatsourceSystem"][unitKey][modeKey] = {
+                    "StorageType": set_default(dataAC2[2], None, "str"),
+                    "StorageSize": set_default(dataAC2[3], None, "float"),
+                    "isStagingControl": set_default(dataAC2[4], "無", "str"),
+                    "Heatsource" :[
+                        {
+                            "HeatsourceType": str(dataAC2[5]),
+                            "Number": float(dataAC2[6]),
+                            "SupplyWaterTempSummer": set_default(dataAC2[7], None, "float"),
+                            "SupplyWaterTempMiddle": set_default(dataAC2[8], None, "float"),
+                            "SupplyWaterTempWinter": set_default(dataAC2[9], None, "float"),
+                            "HeatsourceRatedCapacity": float(dataAC2[10]),
+                            "HeatsourceRatedPowerConsumption": set_default(dataAC2[11], 0, "float"),
+                            "HeatsourceRatedFuelConsumption": set_default(dataAC2[12], 0, "float"),
+                            "PrimaryPumpPowerConsumption": set_default(dataAC2[13], 0, "float"),
+                            "PrimaryPumpContolType": set_default(dataAC2[14], "無", "str"),
+                            "CoolingTowerCapacity": set_default(dataAC2[15], 0, "float"),
+                            "CoolingTowerFanPowerConsumption": set_default(dataAC2[16], 0, "float"),
+                            "CoolingTowerPumpPowerConsumption": set_default(dataAC2[17], 0, "float"),
+                            "CoolingTowerContolType": set_default(dataAC2[18], "無", "str"),
+                            "Info": str(dataAC2[19])
+                        }
+                    ]
+                }
 
 
 

@@ -15,6 +15,14 @@
     },
     "ShadingConfigure":{
     },
+    "AirConditioningZone":{
+    },
+    "HeatsourceSystem":{
+    },
+    "SecondaryPumpSystem":{
+    },
+    "AirHandlingSystem":{
+    },
     "VentilationRoom":{
     },
     "VentilationUnit":{

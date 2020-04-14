@@ -50,6 +50,21 @@
                 "$ref": "#/definitions/AirConditioningZone"
             }
         },
+        "HeatsourceSystem":{
+            "description": "様式AC2",
+            "type": "object",
+            "additionalProperties":{
+                "$ref": "#/definitions/HeatsourceSystem"
+            }
+        },
+        "SecondaryPumpSystem":{
+            "description": "様式AC3",
+            "type": "object"
+        },
+        "AirHandlingSystem":{
+            "description": "様式AC4",
+            "type": "object"
+        },
         "VentilationRoom":{
             "description": "様式V1",
             "type": "object",
@@ -839,6 +854,228 @@
                 "Info": {
                     "description": "AC1-14:備考",
                     "type": "string"
+                }
+            }
+        },
+        "HeatsourceSystem":{
+            "properties": {
+                "冷房": {
+                    "type": "object",
+                    "$ref": "#/definitions/Heatsource"
+                },
+                "冷房(蓄熱)": {
+                    "type": "object",
+                    "$ref": "#/definitions/Heatsource"
+                },
+                "暖房": {
+                    "type": "object",
+                    "$ref": "#/definitions/Heatsource"
+                },
+                "暖房(蓄熱)": {
+                    "type": "object",
+                    "$ref": "#/definitions/Heatsource"
+                }
+            }
+        },
+        "Heatsource":{
+            "properties": {
+                "StorageType": {
+                    "description": "AC2-3:蓄熱の種類",
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "enum":[
+                                "水蓄熱(混合型)",
+                                "水蓄熱(成層型)",
+                                "氷蓄熱"
+                            ]
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "StorageSize":{
+                    "description": "AC2-4:蓄熱容量",
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 100000
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "isStagingControl":{
+                    "description": "AC2-5:台数制御",
+                    "type": "string",
+                    "enum":[
+                        "有",
+                        "無"
+                    ]
+                },
+                "Heatsource":{
+                    "type": "array",
+                    "items":{
+                        "type": "object",
+                        "properties": {
+                            "HeatsourceType": {
+                                "description": "AC2-6:熱源機種",
+                                "type": "string"
+                            },
+                            "Number": {
+                                "description": "AC2-7:台数",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100000
+                            },
+                            "SupplyWaterTempSummer": {
+                                "description": "AC2-8:送水温度 夏期",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": -50,
+                                        "maximum": 100
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "SupplyWaterTempMiddle": {
+                                "description": "AC2-9:送水温度 中間期",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": -50,
+                                        "maximum": 100
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "SupplyWaterTempWinter": {
+                                "description": "AC2-10:送水温度 冬期",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": -50,
+                                        "maximum": 100
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "HeatsourceRatedCapacity": {
+                                "description": "AC2-11:熱源本体 定格能力",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1000000
+                            },
+                            "HeatsourceRatedPowerConsumption": {
+                                "description": "AC2-12:熱源本体 定格消費電力",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1000000
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "HeatsourceRatedFuelConsumption": {
+                                "description": "AC2-13:熱源本体 定格燃料消費量",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1000000
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "PrimaryPumpPowerConsumption": {
+                                "description": "AC2-14:一次ポンプ 定格消費電力",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1000000
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "PrimaryPumpContolType": {
+                                "description": "AC2-15:一次ポンプ 制御方式",
+                                "type": "string",
+                                "enum":[
+                                    "有",
+                                    "無"
+                                ]
+                            },
+                            "CoolingTowerCapacity": {
+                                "description": "AC2-16:冷却塔 定格能力",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1000000
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "CoolingTowerFanPowerConsumption": {
+                                "description": "AC2-17:冷却塔 ファン消費電力",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1000000
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "CoolingTowerPumpPowerConsumption": {
+                                "description": "AC2-18:冷却塔 ポンプ消費電力",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1000000
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "CoolingTowerContolType": {
+                                "description": "AC2-19:冷却塔 制御方式",
+                                "type": "string",
+                                "enum":[
+                                    "有",
+                                    "無"
+                                ]
+                            },
+                            "Info": {
+                                "description": "AC2-20:備考",
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
