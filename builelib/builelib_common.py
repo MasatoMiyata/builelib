@@ -1,24 +1,70 @@
 #-----------------------------
 # builelie 共通関数
 #-----------------------------
+import sys
 import json
 import jsonschema
 import numpy as np
 
-# 電気の量1キロワット時を熱量に換算する係数
+# 電気の量 1kWh を熱量に換算する係数
 fprime = 9760
 
+if 'ipykernel' in sys.modules:
+    directory = "./database/"
+else:
+    directory = "./builelib/database/"
+
+
 # 基準値データベースの読み込み
-with open('./builelib/database/ROOM_STANDARDVALUE.json', 'r') as f:
+with open(directory + 'ROOM_STANDARDVALUE.json', 'r') as f:
     RoomStandardValue = json.load(f)
 
 # 室使用条件データの読み込み
-with open('./builelib/database/RoomUsageSchedule.json', 'r') as f:
+with open(directory + 'RoomUsageSchedule.json', 'r') as f:
     RoomUsageSchedule = json.load(f)
 
 # カレンダーパターンの読み込み
-with open('./builelib/database/CALENDAR.json', 'r') as f:
+with open(directory + 'CALENDAR.json', 'r') as f:
     Calendar = json.load(f)
+
+
+
+# 時刻別のスケジュールを読み込む関数（空調）
+def get_roomUsageSchedule(buildingType, roomType):
+    
+    # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
+    opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
+
+    # 各日時における運転状態（365×24の行列）
+    roomScheduleLight = []
+    roomSchedulePerson = []
+    roomScheduleOAapp = []
+
+    for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
+
+        # 照明発熱密度比率
+        roomScheduleLight.append(
+            RoomUsageSchedule[buildingType][roomType]["スケジュール"]["照明発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
+        )
+
+        # 人体発熱密度比率
+        roomSchedulePerson.append(
+            RoomUsageSchedule[buildingType][roomType]["スケジュール"]["人体発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
+        )
+        # 人体発熱機器発熱密度比率密度比率
+        roomScheduleOAapp.append(
+            RoomUsageSchedule[buildingType][roomType]["スケジュール"]["機器発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
+        )
+
+    # np.array型に変換
+    roomScheduleLight  = np.array(roomScheduleLight)
+    roomSchedulePerson = np.array(roomSchedulePerson)
+    roomScheduleOAapp  = np.array(roomScheduleOAapp)
+
+    return roomScheduleLight, roomSchedulePerson, roomScheduleOAapp
+
+
+
 
 
 # 時刻別のスケジュールを読み込む関数（照明器具）
@@ -55,22 +101,7 @@ def get_dailyOpeSchedule_lighting(buildingType, roomType):
 
 
 
-# # 「roomsdata」から該当する室の情報（建物用途。室用途、床面積）を取得する関数
-# def get_roomSpec(floorName,roomName,roomsdata):
 
-#     check = False
-#     for room in roomsdata:
-#         if room["floorName"] == floorName and room["roomName"] == roomName:
-#             buildingType = room["buildingType"]
-#             roomType = room["roomType"]
-#             roomArea = room["roomArea"]
-#             check = True
-#             break
-    
-#     if check == False:
-#         print('該当する室が見つかりません')
-    
-#     return (buildingType,roomType,roomArea)
 
 
 # 入力データのバリデーション
