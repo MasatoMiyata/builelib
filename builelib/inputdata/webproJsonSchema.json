@@ -498,7 +498,7 @@
                         }
                     ]
                 },
-                "Rvalue":{
+                "conductivity":{
                     "description": "BE2-5:熱伝導率",
                     "anyOf":[
                         {
@@ -550,7 +550,7 @@
                                     }
                                 ]
                             },
-                            "Rvalue":{
+                            "conductivity":{
                                 "description": "BE2-8:熱伝導率",
                                 "anyOf":[
                                     {

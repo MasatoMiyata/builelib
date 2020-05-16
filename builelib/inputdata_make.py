@@ -260,7 +260,7 @@ def inputdata_make(inputfileName):
                             "layers": [
                                 {
                                 "materialID": set_default(dataBE2[6], None, "str"),
-                                "Rvalue": set_default(dataBE2[7], None, "float"),
+                                "conductivity": set_default(dataBE2[7], None, "float"),
                                 "thickness": set_default(dataBE2[8], None, "float"),
                                 "Info": set_default(dataBE2[10], "無", "str")
                                 }
@@ -274,7 +274,7 @@ def inputdata_make(inputfileName):
                             "solarAbsorptionRatio": set_default(dataBE2[2], None, "float"),
                             "inputMethod": inputMethod,
                             "materialID": set_default(dataBE2[3], None, "str"),
-                            "Rvalue": set_default(dataBE2[4], None, "float"),
+                            "conductivity": set_default(dataBE2[4], None, "float"),
                             "thickness": set_default(dataBE2[5], None, "float"),
                             "Info": set_default(dataBE2[10], "無","str"),
                         }
@@ -285,7 +285,7 @@ def inputdata_make(inputfileName):
                     data["WallConfigure"][eltKey]["layers"].append(
                         {
                             "materialID": set_default(dataBE2[6], None, "str"),
-                            "Rvalue": set_default(dataBE2[7], None, "float"),
+                            "conductivity": set_default(dataBE2[7], None, "float"),
                             "thickness": set_default(dataBE2[8], None, "float"),
                             "Info": set_default(dataBE2[10], "無", "str")
                         }
@@ -330,6 +330,9 @@ def inputdata_make(inputfileName):
                             "inputMethod": inputMethod,
                             "windowUvalue": set_default(dataBE3[9], None, "float"),
                             "windowIvalue": set_default(dataBE3[10], None, "float"),
+                            "layerType": set_default(dataBE3[6], "単層", "str"),
+                            "glassUvalue": set_default(dataBE3[7], None, "float"),
+                            "glassIvalue": set_default(dataBE3[8], None, "float"),
                             "Info": set_default(dataBE3[11], "無","str"),
                         }
 
@@ -996,6 +999,7 @@ def inputdata_make(inputfileName):
 if __name__ == '__main__':
     
     inputfileName = './sample/WEBPRO_inputSheet_for_Ver3.xlsx'
+    # inputfileName = './sample/空調のサンプル.xlsx'
 
     inputdata = inputdata_make(inputfileName)
 
