@@ -277,13 +277,43 @@ for roomID in inputdata["Rooms"].keys():
 
 
 
-
-
-
 #%%
+##----------------------------------------------------------------------------------
+## 建物用途・室用途、ゾーン面積等の取得
+##----------------------------------------------------------------------------------
 
-# % 空調面積の合計
-# roomAreaTotal = sum(roomArea);
+roomAreaTotal = 0
+
+# 空調ゾーン毎にループ
+for room_zone_name in inputdata["AirConditioningZone"].keys():
+
+    if room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
+
+        inputdata["AirConditioningZone"][room_zone_name]["buildingType"] = inputdata["Rooms"][room_zone_name]["buildingType"]
+        inputdata["AirConditioningZone"][room_zone_name]["roomType"]     = inputdata["Rooms"][room_zone_name]["roomType"]
+        inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]     = inputdata["Rooms"][room_zone_name]["roomArea"]
+
+    else:
+
+        # 各室のゾーンを検索
+        for room_name in inputdata["Rooms"]:
+            if inputdata["Rooms"][room_name]["zone"] != None:   # ゾーンがあれば
+                for zone_name  in inputdata["Rooms"][room_name]["zone"]:   # ゾーン名を検索
+                    if room_zone_name == (room_name+"_"+zone_name):
+
+                        inputdata["AirConditioningZone"][room_zone_name]["buildingType"] = inputdata["Rooms"][room_name]["buildingType"]
+                        inputdata["AirConditioningZone"][room_zone_name]["roomType"]     = inputdata["Rooms"][room_name]["roomType"]
+                        inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]     = inputdata["Rooms"][room_name]["zone"][zone_name]["zoneArea"]
+
+                        break
+
+    # 空調対象面積の合計
+    roomAreaTotal += inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+    
+
+debugValues(roomAreaTotal)
+
+
 
 # % 空調機群の設定（今後、関数化）
 # func_setSpec_AHU;
@@ -352,21 +382,7 @@ for roomID in inputdata["Rooms"].keys():
 
 
 
-# disp('システム情報作成完了')
-# toc
-
-
 #%%
-## １）室負荷の計算
-
-
-
-# % 外皮の熱貫流率、日射熱取得率の計算 (庇の効果は見込んでいない)（関数：func_calc_envelopPerformance）
-# [WallNameList,WallUvalueList,WindowNameList,WindowUvalueList,WindowMyuList,WindowSCCList,WindowSCRList] ...
-#     = func_calc_envelopPerformance(DBWCONMODE,perDB_WCON,perDB_WIND,confW,confG,WallUvalue,WindowUvalue,WindowMvalue);
-
-
-
 ##----------------------------------------------------------------------------------
 ## 外皮のU値の計算（解説書 附属書A.1）
 ##----------------------------------------------------------------------------------
@@ -567,11 +583,14 @@ if "WindowConfigure" in inputdata:
                              0.8258 * inputdata["WindowConfigure"][window_name]["glassIvalue"] )
 
 
-
+#%%
 ##----------------------------------------------------------------------------------
 ## 負荷計算用の係数の読み込み
 ##----------------------------------------------------------------------------------
 
+# 窓データの読み込み
+with open(directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
+    QROOM_COEFFI = json.load(f)
 
 
 
