@@ -585,12 +585,77 @@ if "WindowConfigure" in inputdata:
 
 #%%
 ##----------------------------------------------------------------------------------
-## 負荷計算用の係数の読み込み
+## 外皮面積等の計算（解説書 2.4.2.1）
 ##----------------------------------------------------------------------------------
 
-# 窓データの読み込み
+# 外皮面積の算出
+for room_zone_name in inputdata["EnvelopeSet"]:
+
+    for wall_id, wall_configure in enumerate(inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
+        
+        if inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["EnvelopeArea"] == None:  # 外皮面積が空欄であれば、外皮の寸法から面積を計算。
+
+            inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["EnvelopeArea"] = \
+                wall_configure["EnvelopeWidth"] * wall_configure["EnvelopeHeight"]
+
+# 窓面積の算出
+for window_id in inputdata["WindowConfigure"]:
+    if inputdata["WindowConfigure"][window_id]["windowArea"] == None:  # 窓面積が空欄であれば、窓寸法から面積を計算。
+        inputdata["WindowConfigure"][window_id]["windowArea"] = \
+            inputdata["WindowConfigure"][window_id]["windowWidth"] * inputdata["WindowConfigure"][window_id]["windowHeight"]
+
+
+# 外壁面積の算出
+for room_zone_name in inputdata["EnvelopeSet"]:
+
+    for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"] ):
+
+        window_total = 0  # 窓面積の集計用
+
+        if "WindowList" in wall_configure:   # 窓がある場合
+
+            # 窓面積の合計を求める（Σ{窓面積×枚数}）
+            for (window_id, window_configure) in enumerate(wall_configure["WindowList"]):
+
+                if window_configure["WindowID"] != "無":
+
+                    window_total += \
+                        inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * window_configure["WindowNumber"]
+
+
+        # 壁のみの面積（窓がない場合は、window_total = 0）
+        if wall_configure["EnvelopeArea"] > window_total:
+            inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["EnvelopeArea"] - window_total
+        else:
+            print(room_zone_name)
+            print(wall_configure)
+            raise Exception('窓面積が外皮面積よりも大きくなっています')
+
+
+
+
+#%%
+##----------------------------------------------------------------------------------
+## 室負荷の計算（解説書 2.4）
+##----------------------------------------------------------------------------------
+
+# 負荷計算用の係数の読み込み
 with open(directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
     QROOM_COEFFI = json.load(f)
+
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    # 外壁があれば以下を実行
+    if room_zone_name in inputdata["EnvelopeSet"]:
+
+        
+
+
+
+
+    print(  QROOM_COEFFI[ inputdata["AirConditioningZone"][room_zone_name]["buildingType"] ][ inputdata["AirConditioningZone"][room_zone_name]["roomType"] ]\
+        ["前日空調"]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] )
+
 
 
 
