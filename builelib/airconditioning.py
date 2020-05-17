@@ -3,13 +3,17 @@ import sys
 import json
 import jsonschema
 import numpy as np
+import math
 
 if 'ipykernel' in sys.modules:
     import builelib_common as bc
+    import climate
 elif __name__ == '__main__':
     import builelib_common as bc
+    import climate
 else:
     import builelib.builelib_common as bc
+    import bulielib.climate as climate
 
 
 if 'ipykernel' in sys.modules:
@@ -176,12 +180,6 @@ with open(directory + 'AREA.json', 'r') as f:
 # 空調運転モード
 with open(directory + 'ACoperationMode.json', 'r') as f:
     ACoperationMode = json.load(f)
-
-
-climateDatabase = Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"]
-
-phi             = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
-longi           = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
 
 
 mxTH_min = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温下限"]
@@ -366,19 +364,41 @@ debugValues(roomAreaTotal)
 
 
 
-# %% 気象データの読み込み
+#%%
+##----------------------------------------------------------------------------------
+## 気象データの読み込み
+##----------------------------------------------------------------------------------
 
-# % ファイル名の指定
-# eval(['climatedatafile  = ''./weathdat/C1_',cell2mat(climateDatabase),''';'])
-# % 気象データ（HASP形式）読み込み
-# [ToutALL,XouALL,IodALL,IosALL,InnALL] = func_read_HASPclimatedata(climatedatafile);
+# 気象データ（HASP形式）読み込み ＜365×24の行列＞
+[ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
+    climate.readHaspClimateData( directory + "climatedata/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
 
-# % 日平均気象データ等を算出（関数：func_set_climatedata）
-# [ Toa_ave, Toa_day, Toa_ngt, Xoa_ave,Xoa_day,Xoa_ngt, ...
-#     DSR_S,DSR_SW,DSR_W,DSR_NW,DSR_N,DSR_NE,DSR_E,DSR_SE,DSR_H,...
-#     DSRita_S,DSRita_SW,DSRita_W,DSRita_NW,DSRita_N,DSRita_NE,DSRita_E,DSRita_SE,DSRita_H,...
-#     ISR_V, ISR_H, NSR_V, NSR_H, OAdataAll, OAdataDay, OAdataNgt ] ...
-#     = func_set_climatedata(phi,longi,ToutALL,XouALL,IodALL,IosALL,InnALL);
+# 緯度
+phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
+# 経度
+longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
+
+# 日平均外気温
+Toa_ave = np.mean(ToutALL,1)
+Toa_day = np.mean(ToutALL[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)
+Toa_ngt = np.mean(ToutALL[:,[0,1,2,3,4,5,18,19,20,21,22,23]],1)
+
+# 日平均外気絶対湿度 [kg/kgDA]
+Xoa_ave = np.mean(XoutALL,1)
+Xoa_day = np.mean(XoutALL[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)
+Xoa_ngt = np.mean(XoutALL[:,[0,1,2,3,4,5,18,19,20,21,22,23]],1)
+
+
+# 方位角別の日射量
+(DSR_S, DSRita_S, ISR_V, NSR_V)  = climate.solarRadiationByAzimuth(  0, 90, phi, longi, IodALL, IosALL, InnALL)
+(DSR_SW,DSRita_SW, _, _) = climate.solarRadiationByAzimuth( 45, 90, phi, longi, IodALL, IosALL, InnALL)
+(DSR_W, DSRita_W, _, _)  = climate.solarRadiationByAzimuth( 90, 90, phi, longi, IodALL, IosALL, InnALL)
+(DSR_NW,DSRita_NW, _, _) = climate.solarRadiationByAzimuth(135, 90, phi, longi, IodALL, IosALL, InnALL)
+(DSR_N, DSRita_N, _, _)  = climate.solarRadiationByAzimuth(180, 90, phi, longi, IodALL, IosALL, InnALL)
+(DSR_NE,DSRita_NE, _, _) = climate.solarRadiationByAzimuth(225, 90, phi, longi, IodALL, IosALL, InnALL)
+(DSR_E, DSRita_E, _, _)  = climate.solarRadiationByAzimuth(270, 90, phi, longi, IodALL, IosALL, InnALL)
+(DSR_SE,DSRita_SE, _, _) = climate.solarRadiationByAzimuth(315, 90, phi, longi, IodALL, IosALL, InnALL)
+(DSR_H, DSRita_H, ISR_H, NSR_H)  = climate.solarRadiationByAzimuth(  0,  0, phi, longi, IodALL, IosALL, InnALL)
 
 
 
