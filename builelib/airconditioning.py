@@ -48,7 +48,7 @@ def debugValues(*args):
 
 print('----- airconditioning.py -----')
 # filename = '../sample/inputdata_AC.json'
-filename = '../sample/Case01_単室モデル_外皮2枚.json'
+filename = '../sample/Case01_単室モデル_外皮1枚.json'
 
 
 # 入力データ（json）の読み込み
@@ -167,8 +167,6 @@ numOfRoooms = len(inputdata["AirConditioningZone"])
 mxL = np.arange(1/divL, 1.01, 1/divL)
 mxL = np.append(mxL,1.2)
 
-debugValues(mxL)
-
 # 平均負荷率帯マトリックス aveL
 aveL = np.zeros(len(mxL))
 
@@ -179,8 +177,6 @@ for iL in range(0,len(mxL)):
         aveL[iL] = 1.2
     else:
         aveL[iL] = mxL[iL-1] + (mxL[iL]-mxL[iL-1])/2
-
-debugValues(aveL)
 
 # 地域別データの読み込み
 with open(directory + 'AREA.json', 'r') as f:
@@ -243,15 +239,15 @@ for dd in range(0,365):
 
 #%%
 ## 計算に必要となるデータの生成
-
+roomScheduleRoom = {}
 roomScheduleLight = {}
 roomSchedulePerson = {}
 roomScheduleOAapp = {}
-for roomID in inputdata["Rooms"].keys():
+for room_zone_name in inputdata["Rooms"]:
 
-    # 365日分のスケジュール
-    roomScheduleLight[roomID], roomSchedulePerson[roomID], roomScheduleOAapp[roomID] = \
-        bc.get_roomUsageSchedule(inputdata["Rooms"][roomID]["buildingType"], inputdata["Rooms"][roomID]["roomType"])
+    # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
+    roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name] = \
+        bc.get_roomUsageSchedule(inputdata["Rooms"][room_zone_name]["buildingType"], inputdata["Rooms"][room_zone_name]["roomType"])
 
 
 # % 標準室使用条件の抽出
@@ -891,12 +887,12 @@ for room_zone_name in inputdata["AirConditioningZone"]:
                         Qwind_N = Qwind_N - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"]["水平"]
 
 
-        resultJson["Qroom"][room_zone_name]["Qwall_T"] = Qwall_T / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwall_S"] = Qwall_S / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwall_N"] = Qwall_N / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwind_T"] = Qwind_T / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwind_S"] = Qwind_S / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwind_N"] = Qwind_N / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+    resultJson["Qroom"][room_zone_name]["Qwall_T"] = Qwall_T / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+    resultJson["Qroom"][room_zone_name]["Qwall_S"] = Qwall_S / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+    resultJson["Qroom"][room_zone_name]["Qwall_N"] = Qwall_N / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+    resultJson["Qroom"][room_zone_name]["Qwind_T"] = Qwind_T / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+    resultJson["Qroom"][room_zone_name]["Qwind_S"] = Qwind_S / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+    resultJson["Qroom"][room_zone_name]["Qwind_N"] = Qwind_N / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
 
 
@@ -905,104 +901,126 @@ for room_zone_name in inputdata["AirConditioningZone"]:
 ## 室負荷の計算（解説書 2.4）
 ##----------------------------------------------------------------------------------
 
-
 # 負荷計算用の係数の読み込み
 with open(directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
     QROOM_COEFFI = json.load(f)
 
 for room_zone_name in inputdata["AirConditioningZone"]:
 
-    # 外壁があれば以下を実行
-    if room_zone_name in inputdata["EnvelopeSet"]:
+    Qroom_CTC = np.zeros(365)
+    Qroom_CTH = np.zeros(365)
+    Qroom_CSR = np.zeros(365)
 
-        print(  QROOM_COEFFI[ inputdata["AirConditioningZone"][room_zone_name]["buildingType"] ][ inputdata["AirConditioningZone"][room_zone_name]["roomType"] ]["前日空調"]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] )
+    Qcool     = np.zeros(365)
+    Qheat     = np.zeros(365)
 
+    # 室が使用されているか否か＝空調運転時間（365日分）
+    room_usage = np.sum(roomScheduleRoom[room_zone_name],1)
 
+    btype = inputdata["Rooms"][room_zone_name]["buildingType"]
+    rtype = inputdata["Rooms"][room_zone_name]["roomType"]
 
+    # 発熱量参照値を読み込む関数（空調）
+    (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp) = bc.get_roomHeatGain(btype, rtype)
 
+    Heat_light_daily  = np.sum(roomScheduleLight[room_zone_name],1) * roomHeatGain_Light   # 照明からの発熱（日積算）（365日分）
+    Heat_person_daily = np.sum(roomSchedulePerson[room_zone_name],1) * roomHeatGain_Person # 人体からの発熱（日積算）（365日分）
+    Heat_OAapp_daily  = np.sum(roomScheduleOAapp[room_zone_name],1) * roomHeatGain_OAapp   # 機器からの発熱（日積算）（365日分）
 
+    for dd in range(0,365):
 
+        if room_usage[dd] > 0:
 
+            # 前日の空調の有無
+            if (dd > 0) and (room_usage[dd-1] > 0):
+                onoff = "前日空調"
+            else:
+                onoff = "前日休み"
 
+            if ac_mode[dd] == "冷房":
 
+                Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
+                    resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["補正切片"]
 
-# % 初期化
-# QroomHour = zeros(8760,numOfRoooms);
+                Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
+                    resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["補正切片"]
 
-# switch MODE
-    
-#     case {0,1,2}
-        
-#         % newHASP設定ファイル(newHASPinput_室名.txt)自動生成
-#         mytscript_newHASPinputGen_MATLAB_run;
-        
-#         % 負荷計算実行(newHASP)
-#         [QroomDc,QroomDh,QroomHour] = ...
-#             mytfunc_newHASPrun(roomID,climateDatabase,roomClarendarNum,roomArea,OutputOptionVar,LoadMode);
-        
-#         % 気象データ読み込み
-#         [OAdataAll,OAdataDay,OAdataNgt,OAdataHourly] = mytfunc_weathdataRead('weath.dat');
-#         delete weath.dat
-        
-#     case {3,4}
-        
-#         if strcmp(loadcalcmethod, 'web')
-#             % 負荷計算用係数の読み込み（関数：func_get_loadCalc_parameters）
-#             [C_sta2dyn_CTC, C_sta2dyn_CTH, C_sta2dyn_CSR, C_sta2dyn_HTC, C_sta2dyn_HTH, ...
-#                 C_sta2dyn_HSR, C_sta2dyn_MTC, C_sta2dyn_MTH, C_sta2dyn_MSR, ...
-#                 C_sta2dyn_CTC_off, C_sta2dyn_CTH_off, C_sta2dyn_CSR_off, C_sta2dyn_HTC_off, C_sta2dyn_HTH_off,...
-#                 C_sta2dyn_HSR_off, C_sta2dyn_MTC_off, C_sta2dyn_MTH_off, C_sta2dyn_MSR_off] ...
-#                 = func_get_loadCalc_parameters(perDB_COEFFI, climateAREA, buildingType, roomType, numOfRoooms);
+                Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["切片"]
+
+            elif ac_mode[dd] == "暖房":
+
+                Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
+                    resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["切片"]
+
+                Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
+                    resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["切片"]
+
+                Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["切片"]
+                    
+            elif ac_mode[dd] == "中間":
+
+                Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
+                    resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["冷房負荷"]["補正切片"]
+
+                Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
+                    resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["暖房負荷"]["補正切片"]
+
+                Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
+                    QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["日射量変動"]["冷房負荷"]["切片"]
+
+            if Qroom_CTC[dd] < 0:
+                Qroom_CTC[dd] = 0
+
+            if Qroom_CTH[dd] > 0:
+                Qroom_CTH[dd] = 0
+
+            if Qroom_CSR[dd] < 0:
+                Qroom_CSR[dd] = 0
+
+            # 日射負荷 Qroom_CSR を暖房負荷 Qroom_CTH に足す
+            Qcool[dd] = Qroom_CTC[dd]
+            Qheat[dd] = Qroom_CTH[dd] + Qroom_CSR[dd]
+
+            # 日射負荷によって暖房負荷がプラスになった場合は、超過分を冷房負荷に加算
+            if Qheat[dd] > 0:
+                Qcool[dd] = Qcool[dd] + Qheat[dd]
+                Qheat[dd] = 0
             
-#             % 初期化
-#             Qwall_T  = zeros(365,numOfRoooms);
-#             Qwall_S  = zeros(365,numOfRoooms);
-#             Qwall_N  = zeros(365,numOfRoooms);
-#             Qwind_T  = zeros(365,numOfRoooms);
-#             Qwind_S  = zeros(365,numOfRoooms);
-#             Qwind_N  = zeros(365,numOfRoooms);
-#             QroomDc  = zeros(365,numOfRoooms);
-#             QroomDh  = zeros(365,numOfRoooms);
+            # 内部発熱を暖房負荷 Qheat に足す
+            Qheat[dd] = Qheat[dd] + ( Heat_light_daily[dd] + Heat_person_daily[dd] + Heat_OAapp_daily[dd] )
             
-#             for iROOM = 1:numOfRoooms
-                
-#                 % 室の熱取得の計算（関数：func_calc_roomHeatGain）
-#                 [Qwall_T(:,iROOM),Qwall_S(:,iROOM),Qwall_N(:,iROOM),Qwind_T(:,iROOM),Qwind_S(:,iROOM),Qwind_N(:,iROOM)] ...
-#                     = func_calc_roomHeatGain( numOfENVs, numOfWalls, EnvelopeRef{iROOM}, envelopeID, ...
-#                     WallConfigure, WallNameList, WallUvalueList, EnvelopeArea, WindowArea, Direction, ...
-#                     WallTypeNum, TroomSP, Toa_ave, ...
-#                     DSR_S,DSR_SW,DSR_W,DSR_NW,DSR_N,DSR_NE,DSR_E,DSR_SE,DSR_H,...
-#                     DSRita_S,DSRita_SW,DSRita_W,DSRita_NW,DSRita_N,DSRita_NE,DSRita_E,DSRita_SE,DSRita_H,...
-#                     ISR_V, ISR_H, NSR_V, NSR_H, OAdataAll, OAdataDay, OAdataNgt, ...
-#                     WindowType,WindowNameList,WindowUvalueList, ...
-#                     WindowSCCList,WindowSCRList,WindowEavesC,WindowEavesH,roomArea(iROOM),SeasonMode);
-                
-#                 % 簡易負荷計算の実行（関数：func_calc_heatLoad_simple）
-#                 [QroomDc(:,iROOM),QroomDh(:,iROOM)] ...
-#                     = func_calc_heatLoad_simple(roomArea(iROOM), roomDailyOpePattern(:,iROOM), ...
-#                     roomScheduleOAapp(iROOM,:,:), roomEnergyOAappUnit(iROOM), roomScheduleLight(iROOM,:,:), ...
-#                     roomEnergyLight(iROOM), roomSchedulePerson(iROOM,:,:), roomEnergyPerson(iROOM), ...
-#                     SeasonMode, roomTime_start(:,iROOM), roomTime_stop(:,iROOM), ...
-#                     Qwall_T(:,iROOM), Qwall_S(:,iROOM), Qwall_N(:,iROOM), Qwind_T(:,iROOM), Qwind_S(:,iROOM), Qwind_N(:,iROOM), ...
-#                     C_sta2dyn_CTC(iROOM,:), C_sta2dyn_CTH(iROOM,:), C_sta2dyn_CSR(iROOM,:), C_sta2dyn_HTC(iROOM,:), C_sta2dyn_HTH(iROOM,:), ...
-#                     C_sta2dyn_HSR(iROOM,:), C_sta2dyn_MTC(iROOM,:), C_sta2dyn_MTH(iROOM,:), C_sta2dyn_MSR(iROOM,:), ...
-#                     C_sta2dyn_CTC_off(iROOM,:), C_sta2dyn_CTH_off(iROOM,:), C_sta2dyn_CSR_off(iROOM,:), C_sta2dyn_HTC_off(iROOM,:), C_sta2dyn_HTH_off(iROOM,:),...
-#                     C_sta2dyn_HSR_off(iROOM,:), C_sta2dyn_MTC_off(iROOM,:), C_sta2dyn_MTH_off(iROOM,:), C_sta2dyn_MSR_off(iROOM,:));
-#             end
-            
-#         elseif strcmp(loadcalcmethod, 'python')
-            
-#             [QroomDc,QroomDh] = ...
-#                 func_calc_heatLoad_hourly(numOfRoooms,roomName, roomArea, roomHeight,TroomSP, RroomSP, ...
-#                 numOfENVs, EnvelopeRef, envelopeID, numOfWalls, Direction, WallConfigure,EnvelopeArea,WindowArea, WallNameList, WallUvalueList,...
-#                 WindowType, WindowNameList,WindowUvalueList,WindowMyuList,...
-#                 roomDailyOpePattern,roomScheduleOAapp,roomEnergyOAappUnit,...
-#                 roomScheduleLight,roomEnergyLight,roomSchedulePerson,roomEnergyPerson,HourlySchedule_AC);
-            
-#         end
+            # 内部発熱によって暖房負荷がプラスになった場合は、超過分を冷房負荷に加算
+            if Qheat[dd] > 0:
+                Qcool[dd] = Qcool[dd] + Qheat[dd]
+                Qheat[dd] = 0
         
-        
-# end
+        else:
+
+            # 空調OFF時は 0 とする
+            Qcool[dd] = 0
+            Qheat[dd] = 0
+
+
+    resultJson["Qroom"][room_zone_name]["QroomDc"] = Qcool * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+    resultJson["Qroom"][room_zone_name]["QroomDh"] = Qheat * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+
 
 
 print('室負荷計算完了')
