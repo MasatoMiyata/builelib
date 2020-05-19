@@ -1,15 +1,20 @@
 # 日除け効果係数を求めるプログラム
 #%%
 import numpy as np
+import sys
 import math
 import json
 import matplotlib.pyplot as plt
 
-if __name__ == '__main__':
+if 'ipykernel' in sys.modules:
     import climate
+    database_directory = "./database/"
+elif __name__ == '__main__':
+    import climate
+    database_directory = "./builelib/database/"
 else:
     import builelib.climate as climate
-
+    database_directory = "./builelib/database/"
 
 # 定数（deg→radへの変換係数）
 deg2rad = math.pi/180 
@@ -295,7 +300,7 @@ def func_25(x1,x2,x3,y3,y2,zxp,zxm,zym):
     return r_isr_j_ym
 
 
-def shading(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym):
+def calc_shadingCoefficient(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym):
 
     ## 入力チェック
     if x1 < 0 or x2 < 0 or x3 < 0:
@@ -306,9 +311,10 @@ def shading(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym):
         raise Exception('Error!')
 
     ## 地域別データ読み込み
-    with open('./builelib/database/AREA.json', 'r') as f:
+
+    with open(database_directory + 'AREA.json', 'r') as f:
         areaDB = json.load(f)
-    climatefilename = './builelib/climatedata/C1_' + areaDB[AREA+"地域"]["気象データファイル名"] # 気象データ
+    climatefilename = database_directory + 'climatedata/C1_' + areaDB[AREA+"地域"]["気象データファイル名"] # 気象データ
 
     # 気象データ読み込み
     # IodALL : 法線面直達日射量[W/m2]
@@ -631,7 +637,7 @@ if __name__ == '__main__':
     zyp=0.2
     zym=0.35
     
-    r_wind_SUM, r_wind_WIN = shading(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym)
+    r_wind_SUM, r_wind_WIN = calc_shadingCoefficient(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym)
 
     print("日よけ効果係数（冷房）：" + str(r_wind_SUM))
     print("日よけ効果係数（暖房）：" + str(r_wind_WIN))
