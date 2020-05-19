@@ -8,12 +8,15 @@ import math
 if 'ipykernel' in sys.modules:
     import builelib_common as bc
     import climate
+    import shading
 elif __name__ == '__main__':
     import builelib_common as bc
     import climate
+    import shading
 else:
     import builelib.builelib_common as bc
     import bulielib.climate as climate
+    import builelib.shading as shading
 
 
 if 'ipykernel' in sys.modules:
@@ -98,12 +101,7 @@ aexCoeffiModifyOn = 1
 # perDB_refCurve = func_readDBfile(filename_performanceCurve, 'str');
 # % 搬送系制御の効果係数の読み込み
 # perDB_flowControl = func_readDBfile(filename_flowControl, 'str');
-# % 建材物性値データベースの読み込み(材料番号、材料名、熱伝導率、容積比熱、比熱、密度)
-# perDB_WCON = func_readDBfile(filename_ThermalConductivity, 'str2double');
-# % 窓性能値データベースの読み込み(材料番号、単位、熱伝導率、容積比熱)
-# perDB_WIND = func_readDBfile(filename_WindowPerformance, 'str');
-# % 負荷計算係数の読み込み
-# perDB_COEFFI = func_readDBfile(filename_QROOM_coeffi, 'str');
+
 
 
 
@@ -116,6 +114,10 @@ BuildingArea = inputdata["Building"]["BuildingFloorArea"]
 # [numOfRoooms,roomID,roomFloor,roomName,EnvelopeRef,roomAHU_Qroom,roomAHU_Qoa,...
 #     buildingType,roomType,roomArea,roomFloorHeight,roomHeight] ...
 #     = func_readXML_ACzone(INPUT);
+
+# 計算対象ゾーンの数
+numOfRoooms = len(inputdata["AirConditioningZone"])
+
 
 # % 外壁に関する情報
 # [confW, WallType, WallUvalue] ...
@@ -389,16 +391,29 @@ Xoa_day = np.mean(XoutALL[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)
 Xoa_ngt = np.mean(XoutALL[:,[0,1,2,3,4,5,18,19,20,21,22,23]],1)
 
 
+solor_radiation = {
+    "直達":{
+    },
+    "直達_入射角特性込":{
+    },
+    "天空":{
+    },
+    "夜間":{
+    }
+}
+
 # 方位角別の日射量
-(DSR_S, DSRita_S, ISR_V, NSR_V)  = climate.solarRadiationByAzimuth(  0, 90, phi, longi, IodALL, IosALL, InnALL)
-(DSR_SW,DSRita_SW, _, _) = climate.solarRadiationByAzimuth( 45, 90, phi, longi, IodALL, IosALL, InnALL)
-(DSR_W, DSRita_W, _, _)  = climate.solarRadiationByAzimuth( 90, 90, phi, longi, IodALL, IosALL, InnALL)
-(DSR_NW,DSRita_NW, _, _) = climate.solarRadiationByAzimuth(135, 90, phi, longi, IodALL, IosALL, InnALL)
-(DSR_N, DSRita_N, _, _)  = climate.solarRadiationByAzimuth(180, 90, phi, longi, IodALL, IosALL, InnALL)
-(DSR_NE,DSRita_NE, _, _) = climate.solarRadiationByAzimuth(225, 90, phi, longi, IodALL, IosALL, InnALL)
-(DSR_E, DSRita_E, _, _)  = climate.solarRadiationByAzimuth(270, 90, phi, longi, IodALL, IosALL, InnALL)
-(DSR_SE,DSRita_SE, _, _) = climate.solarRadiationByAzimuth(315, 90, phi, longi, IodALL, IosALL, InnALL)
-(DSR_H, DSRita_H, ISR_H, NSR_H)  = climate.solarRadiationByAzimuth(  0,  0, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["南"],  solor_radiation["直達_入射角特性込"]["南"], solor_radiation["天空"]["垂直"], solor_radiation["夜間"]["垂直"])  = \
+    climate.solarRadiationByAzimuth(  0, 90, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["南西"], solor_radiation["直達_入射角特性込"]["南西"], _, _) = climate.solarRadiationByAzimuth( 45, 90, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["西"],  solor_radiation["直達_入射角特性込"]["西"], _, _)  = climate.solarRadiationByAzimuth( 90, 90, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["北西"], solor_radiation["直達_入射角特性込"]["北西"], _, _) = climate.solarRadiationByAzimuth(135, 90, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["北"],  solor_radiation["直達_入射角特性込"]["北"], _, _)  = climate.solarRadiationByAzimuth(180, 90, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["北東"], solor_radiation["直達_入射角特性込"]["北東"], _, _) = climate.solarRadiationByAzimuth(225, 90, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["東"],  solor_radiation["直達_入射角特性込"]["東"], _, _)  = climate.solarRadiationByAzimuth(270, 90, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["南東"], solor_radiation["直達_入射角特性込"]["南東"], _, _) = climate.solarRadiationByAzimuth(315, 90, phi, longi, IodALL, IosALL, InnALL)
+(solor_radiation["直達"]["水平"], solor_radiation["直達_入射角特性込"]["水平"], solor_radiation["天空"]["水平"], solor_radiation["夜間"]["水平"])  = \
+    climate.solarRadiationByAzimuth(  0,  0, phi, longi, IodALL, IosALL, InnALL)
 
 
 
@@ -654,10 +669,225 @@ for room_zone_name in inputdata["EnvelopeSet"]:
 
 
 
+
+
+#%%
+##----------------------------------------------------------------------------------
+## EnvelopeSet に WallConfigure, WindowConfigure の情報を貼り付ける。
+##----------------------------------------------------------------------------------
+
+for room_zone_name in inputdata["EnvelopeSet"]:
+
+    # 壁毎にループ
+    for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
+
+        if inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["inputMethod"] == "断熱材種類を入力":
+
+            if wall_configure["Direction"] == "水平（上）":  # 天井と見なす。
+
+                # 外壁のUA（熱貫流率×面積）を計算
+                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
+                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_roof"] * wall_configure["EnvelopeArea"]
+
+            elif wall_configure["Direction"] == "水平（下）":  # 床と見なす。
+
+                # 外壁のUA（熱貫流率×面積）を計算
+                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
+                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_floor"] * wall_configure["EnvelopeArea"]
+
+            else:
+
+                # 外壁のUA（熱貫流率×面積）を計算
+                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
+                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_wall"] * wall_configure["EnvelopeArea"]
+
+        else:
+
+            # 外壁のUA（熱貫流率×面積）を計算
+            inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
+                inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"] * wall_configure["EnvelopeArea"]
+
+
+        for (window_id, window_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"]):
+
+            if window_configure["WindowID"] != "無":
+
+                # 日よけ効果係数の算出
+                if window_configure["EavesID"] == "無":
+
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_C"] = 1
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_H"] = 1
+
+                else:
+
+                    if inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["shadingEffect_C"] != None and \
+                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["shadingEffect_H"] != None :
+
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_C"] = \
+                            inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["shadingEffect_C"]
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_H"] = \
+                            inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["shadingEffect_H"]
+
+                    else:
+
+                        # 関数 shading.calc_shadingCoefficient で日よけ効果係数を算出。
+                        (inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_C"], \
+                            inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_H"] ) =  \
+                                shading.calc_shadingCoefficient(inputdata["Building"]["Region"],\
+                                    wall_configure["Direction"], \
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["x1"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["x2"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["x3"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["y1"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["y2"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["y3"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["zxPlus"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["zxMinus"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["zyPlus"],\
+                                    inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["zyMinus"])
+
+
+                # 窓のUA（熱貫流率×面積）を計算
+                if window_configure["isBlind"] == "無":  # ブラインドがない場合
+
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["UA_window"] = \
+                        window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
+                        inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Uvalue"]
+
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["IA_window"] = \
+                        window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
+                        inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue"]
+
+
+                elif window_configure["isBlind"] == "有": # ブラインドがある場合
+
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["UA_window"] = \
+                        window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
+                        inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Uvalue_blind"]
+
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["IA_window"] = \
+                        window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
+                        inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue_blind"]
+
+
+
+#%%
+##----------------------------------------------------------------------------------
+## 室の熱取得の計算
+##----------------------------------------------------------------------------------
+
+Qwall_T  = np.zeros(365)  # 壁からの温度差による熱取得
+Qwall_S  = np.zeros(365)  # 壁からの日射による熱取得
+Qwall_N  = np.zeros(365)  # 壁からの夜間放射による熱取得（マイナス）
+Qwind_T  = np.zeros(365)  # 窓からの温度差による熱取得
+Qwind_S  = np.zeros(365)  # 窓からの日射による熱取得
+Qwind_N  = np.zeros(365)  # 窓からの夜間放射による熱取得（マイナス）
+
+
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    # 外壁があれば以下を実行
+    if room_zone_name in inputdata["EnvelopeSet"]:
+
+        # 壁毎にループ
+        for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
+
+            if wall_configure["WallType"] == "日の当たる外壁":
+            
+                ## ① 温度差による熱取得
+                Qwall_T = Qwall_T + wall_configure["UA_wall"] * (Toa_ave - TroomSP) * 24
+
+                ## ② 日射による熱取得
+                if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
+                    Qwall_S = Qwall_S + wall_configure["UA_wall"] * 0.8 * 0.04 * \
+                        (solor_radiation["直達"]["水平"]+solor_radiation["天空"]["水平"])
+                else:
+                    Qwall_S = Qwall_S + wall_configure["UA_wall"] * 0.8 * 0.04 * \
+                        (solor_radiation["直達"][ wall_configure["Direction"] ]+solor_radiation["天空"]["垂直"])
+
+                ## ③ 夜間放射による熱取得（マイナス）
+                if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
+                    Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
+                        (solor_radiation["夜間"]["水平"])
+                else:
+                    Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
+                        (solor_radiation["夜間"]["垂直"])                    
+
+            elif wall_configure["WallType"] == "日の当たらない外壁":
+
+                ## ① 温度差による熱取得
+                Qwall_T = Qwall_T + wall_configure["UA_wall"] * (Toa_ave - TroomSP) * 24
+
+                ## ③ 夜間放射による熱取得（マイナス）
+                if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
+                    Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
+                        (solor_radiation["夜間"]["水平"])
+                else:
+                    Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
+                        (solor_radiation["夜間"]["垂直"])                    
+
+            elif wall_configure["WallType"] == "地盤に接する外壁":
+            
+                ## ① 温度差による熱取得
+                Qwall_T = Qwall_T + wall_configure["UA_wall"] * (np.mean(Toa_ave)* np.ones(365) - TroomSP) * 24
+
+
+            # 窓毎にループ
+            for (window_id, window_configure) in enumerate( wall_configure["WindowList"]):
+
+                if window_configure["WindowID"] != "無":  # 窓がある場合
+
+                    if wall_configure["WallType"] == "日の当たる外壁":
+                    
+                        ## ① 温度差による熱取得
+                        Qwind_T = Qwind_T + window_configure["UA_window"]*(Toa_ave-TroomSP)*24
+
+                        ## ② 日射による熱取得
+
+                        shading_daily = np.zeros(365)
+
+                        for dd in range(0,365):
+
+                            if ac_mode[dd] == "冷房":
+                                shading_daily[dd] = window_configure["shadingEffect_C"]
+                            elif ac_mode[dd] == "中間":
+                                shading_daily[dd] = window_configure["shadingEffect_C"]
+                            elif ac_mode[dd] == "暖房":
+                                shading_daily[dd] = window_configure["shadingEffect_H"]
+                                
+                        if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
+
+                            Qwind_S = Qwind_S + shading_daily * \
+                                (window_configure["IA_window"] / 0.88) * \
+                                (solor_radiation["直達_入射角特性込"]["水平"]*0.89 + solor_radiation["天空"]["水平"]*0.808)
+
+                        else:
+
+                            Qwind_S = Qwind_S + shading_daily * \
+                                (window_configure["IA_window"] / 0.88) * \
+                                (solor_radiation["直達_入射角特性込"][ wall_configure["Direction"] ]*0.89 + solor_radiation["天空"]["水平"]*0.808)
+
+
+                        ## ③ 夜間放射による熱取得（マイナス）
+                        if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
+                            Qwind_N = Qwind_N - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"]["水平"]
+                        else:
+                            Qwind_N = Qwind_N - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"]["垂直"]
+
+
+                    elif wall_configure["WallType"] == "日の当たらない外壁":
+
+                        ## ③ 夜間放射による熱取得（マイナス）
+                        Qwind_N = Qwind_N - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"]["水平"]
+
+
+
+
 #%%
 ##----------------------------------------------------------------------------------
 ## 室負荷の計算（解説書 2.4）
 ##----------------------------------------------------------------------------------
+
 
 # 負荷計算用の係数の読み込み
 with open(directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
@@ -668,14 +898,7 @@ for room_zone_name in inputdata["AirConditioningZone"]:
     # 外壁があれば以下を実行
     if room_zone_name in inputdata["EnvelopeSet"]:
 
-        
-
-
-
-
-    print(  QROOM_COEFFI[ inputdata["AirConditioningZone"][room_zone_name]["buildingType"] ][ inputdata["AirConditioningZone"][room_zone_name]["roomType"] ]\
-        ["前日空調"]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] )
-
+        print(  QROOM_COEFFI[ inputdata["AirConditioningZone"][room_zone_name]["buildingType"] ][ inputdata["AirConditioningZone"][room_zone_name]["roomType"] ]["前日空調"]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] )
 
 
 
@@ -764,10 +987,10 @@ for room_zone_name in inputdata["AirConditioningZone"]:
         
 # end
 
-# disp('室負荷計算完了')
-# toc
 
-# %%
+print('室負荷計算完了')
+
+
 
 # %%-----------------------------------------------------------------------------------------------------------
 # %% ２）空調負荷計算
