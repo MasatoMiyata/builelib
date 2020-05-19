@@ -28,6 +28,27 @@ with open(directory + 'CALENDAR.json', 'r') as f:
     Calendar = json.load(f)
 
 
+# 発熱量参照値を読み込む関数（空調）
+def get_roomHeatGain(buildingType, roomType):
+
+    roomHeatGain_Light  = RoomUsageSchedule[buildingType][roomType]["照明発熱参照値"]
+
+    # 人体発熱量参照値 [人/m2 * W/人 = W/m2]
+    if RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 1:
+        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 92
+    elif RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 2:
+        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 106
+    elif RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 3:
+        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 119
+    elif RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 4:
+        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 131
+    elif RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 5:
+        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 145
+    
+    roomHeatGain_OAapp  = RoomUsageSchedule[buildingType][roomType]["機器発熱参照値"]
+
+    return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp
+
 
 # 時刻別のスケジュールを読み込む関数（空調）
 def get_roomUsageSchedule(buildingType, roomType):
@@ -36,11 +57,17 @@ def get_roomUsageSchedule(buildingType, roomType):
     opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
 
     # 各日時における運転状態（365×24の行列）
+    roomScheduleRoom = []
     roomScheduleLight = []
     roomSchedulePerson = []
     roomScheduleOAapp = []
 
     for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
+
+        # 室の同時使用率
+        roomScheduleRoom.append(
+            RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン" + str(opePattern_Daily[dd])]
+        )
 
         # 照明発熱密度比率
         roomScheduleLight.append(
@@ -56,14 +83,14 @@ def get_roomUsageSchedule(buildingType, roomType):
             RoomUsageSchedule[buildingType][roomType]["スケジュール"]["機器発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
         )
 
-    # np.array型に変換
+    # np.array型に変換（365×24の行列）
+    # np.shape(roomScheduleRoom["1F_事務室"]) = (365, 24)
+    roomScheduleRoom   = np.array(roomScheduleRoom)
     roomScheduleLight  = np.array(roomScheduleLight)
     roomSchedulePerson = np.array(roomSchedulePerson)
     roomScheduleOAapp  = np.array(roomScheduleOAapp)
 
-    return roomScheduleLight, roomSchedulePerson, roomScheduleOAapp
-
-
+    return roomScheduleRoom, roomScheduleLight, roomSchedulePerson, roomScheduleOAapp
 
 
 
