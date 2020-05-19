@@ -48,15 +48,22 @@ def debugValues(*args):
 
 print('----- airconditioning.py -----')
 # filename = '../sample/inputdata_AC.json'
-filename = '../sample/inputdata_test.json'
+filename = '../sample/Case01_単室モデル_外皮2枚.json'
 
 
-# テンプレートjsonの読み込み
+# 入力データ（json）の読み込み
 with open(filename, 'r') as f:
     inputdata = json.load(f)
 
 # 入力ファイルの検証
 # bc.inputdata_validation(inputdata)
+
+
+# 計算結果を格納する変数
+resultJson = {
+    "Qroom": {
+    }
+}
 
 
 #%%
@@ -687,25 +694,25 @@ for room_zone_name in inputdata["EnvelopeSet"]:
 
                 # 外壁のUA（熱貫流率×面積）を計算
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
-                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_roof"] * wall_configure["EnvelopeArea"]
+                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_roof"] * wall_configure["WallArea"]
 
             elif wall_configure["Direction"] == "水平（下）":  # 床と見なす。
 
                 # 外壁のUA（熱貫流率×面積）を計算
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
-                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_floor"] * wall_configure["EnvelopeArea"]
+                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_floor"] * wall_configure["WallArea"]
 
             else:
 
                 # 外壁のUA（熱貫流率×面積）を計算
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
-                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_wall"] * wall_configure["EnvelopeArea"]
+                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_wall"] * wall_configure["WallArea"]
 
         else:
 
             # 外壁のUA（熱貫流率×面積）を計算
             inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
-                inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"] * wall_configure["EnvelopeArea"]
+                inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"] * wall_configure["WallArea"]
 
 
         for (window_id, window_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"]):
@@ -776,21 +783,24 @@ for room_zone_name in inputdata["EnvelopeSet"]:
 ## 室の熱取得の計算
 ##----------------------------------------------------------------------------------
 
-Qwall_T  = np.zeros(365)  # 壁からの温度差による熱取得
-Qwall_S  = np.zeros(365)  # 壁からの日射による熱取得
-Qwall_N  = np.zeros(365)  # 壁からの夜間放射による熱取得（マイナス）
-Qwind_T  = np.zeros(365)  # 窓からの温度差による熱取得
-Qwind_S  = np.zeros(365)  # 窓からの日射による熱取得
-Qwind_N  = np.zeros(365)  # 窓からの夜間放射による熱取得（マイナス）
-
-
 for room_zone_name in inputdata["AirConditioningZone"]:
+
+    Qwall_T  = np.zeros(365)  # 壁からの温度差による熱取得 [W/m2]
+    Qwall_S  = np.zeros(365)  # 壁からの日射による熱取得 [W/m2]
+    Qwall_N  = np.zeros(365)  # 壁からの夜間放射による熱取得（マイナス）[W/m2]
+    Qwind_T  = np.zeros(365)  # 窓からの温度差による熱取得 [W/m2]
+    Qwind_S  = np.zeros(365)  # 窓からの日射による熱取得 [W/m2]
+    Qwind_N  = np.zeros(365)  # 窓からの夜間放射による熱取得（マイナス）[W/m2]
 
     # 外壁があれば以下を実行
     if room_zone_name in inputdata["EnvelopeSet"]:
 
+        resultJson["Qroom"][room_zone_name] = {}
+
         # 壁毎にループ
         for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
+
+            print(wall_configure["UA_wall"])
 
             if wall_configure["WallType"] == "日の当たる外壁":
             
@@ -865,7 +875,7 @@ for room_zone_name in inputdata["AirConditioningZone"]:
 
                             Qwind_S = Qwind_S + shading_daily * \
                                 (window_configure["IA_window"] / 0.88) * \
-                                (solor_radiation["直達_入射角特性込"][ wall_configure["Direction"] ]*0.89 + solor_radiation["天空"]["水平"]*0.808)
+                                (solor_radiation["直達_入射角特性込"][ wall_configure["Direction"] ]*0.89 + solor_radiation["天空"]["垂直"]*0.808)
 
 
                         ## ③ 夜間放射による熱取得（マイナス）
@@ -880,6 +890,13 @@ for room_zone_name in inputdata["AirConditioningZone"]:
                         ## ③ 夜間放射による熱取得（マイナス）
                         Qwind_N = Qwind_N - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"]["水平"]
 
+
+        resultJson["Qroom"][room_zone_name]["Qwall_T"] = Qwall_T / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+        resultJson["Qroom"][room_zone_name]["Qwall_S"] = Qwall_S / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+        resultJson["Qroom"][room_zone_name]["Qwall_N"] = Qwall_N / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+        resultJson["Qroom"][room_zone_name]["Qwind_T"] = Qwind_T / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+        resultJson["Qroom"][room_zone_name]["Qwind_S"] = Qwind_S / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+        resultJson["Qroom"][room_zone_name]["Qwind_N"] = Qwind_N / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
 
 
