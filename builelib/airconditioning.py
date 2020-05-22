@@ -57,8 +57,8 @@ resultJson = {
 ## 入力ファイル（jsonファイル）の指定
 ##----------------------------------------------------------------------------------
 
-# filename = '../sample/inputdata_AC.json'
-filename = '../sample/Case01_単室モデル_外皮1枚.json'
+filename = '../sample/inputdata_test.json'
+# filename = '../sample/Case01_単室モデル_外皮1枚.json'
 
 
 # 入力データ（json）の読み込み
@@ -215,35 +215,23 @@ for dd in range(0,365):
 ## 空調機の稼働状態、内部発熱量（解説書 2.3.3、2.3.4）
 ##----------------------------------------------------------------------------------
 
-roomScheduleRoom = {}
-roomScheduleLight = {}
-roomSchedulePerson = {}
-roomScheduleOAapp = {}
-
-for room_zone_name in inputdata["Rooms"]:
-
-    # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
-    roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name] = \
-        bc.get_roomUsageSchedule(inputdata["Rooms"][room_zone_name]["buildingType"], inputdata["Rooms"][room_zone_name]["roomType"])
-
-
-
-#%%
-##----------------------------------------------------------------------------------
-## 建物用途・室用途、ゾーン面積等の取得
-##----------------------------------------------------------------------------------
-
 roomAreaTotal = 0
+roomScheduleRoom   = {}
+roomScheduleLight  = {}
+roomSchedulePerson = {}
+roomScheduleOAapp  = {}
+roomDayMode        = {}
 
 # 空調ゾーン毎にループ
 for room_zone_name in inputdata["AirConditioningZone"].keys():
 
     if room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
 
+        # 建物用途・室用途、ゾーン面積等の取得
         inputdata["AirConditioningZone"][room_zone_name]["buildingType"] = inputdata["Rooms"][room_zone_name]["buildingType"]
         inputdata["AirConditioningZone"][room_zone_name]["roomType"]     = inputdata["Rooms"][room_zone_name]["roomType"]
         inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]     = inputdata["Rooms"][room_zone_name]["roomArea"]
-
+            
     else:
 
         # 各室のゾーンを検索
@@ -258,9 +246,18 @@ for room_zone_name in inputdata["AirConditioningZone"].keys():
 
                         break
 
+    # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
+    roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name], roomDayMode[room_zone_name] = \
+        bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"])
+
+
     # 空調対象面積の合計
     roomAreaTotal += inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-    
+
+
+
+
+
 
 
 #%%
@@ -655,10 +652,10 @@ for room_zone_name in inputdata["AirConditioningZone"]:
     Qwind_S  = np.zeros(365)  # 窓からの日射による熱取得 [W/m2]
     Qwind_N  = np.zeros(365)  # 窓からの夜間放射による熱取得（マイナス）[W/m2]
 
+    resultJson["Qroom"][room_zone_name] = {}
+
     # 外壁があれば以下を実行
     if room_zone_name in inputdata["EnvelopeSet"]:
-
-        resultJson["Qroom"][room_zone_name] = {}
 
         # 壁毎にループ
         for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
@@ -781,8 +778,8 @@ for room_zone_name in inputdata["AirConditioningZone"]:
     # 室が使用されているか否か＝空調運転時間（365日分）
     room_usage = np.sum(roomScheduleRoom[room_zone_name],1)
 
-    btype = inputdata["Rooms"][room_zone_name]["buildingType"]
-    rtype = inputdata["Rooms"][room_zone_name]["roomType"]
+    btype = inputdata["AirConditioningZone"][room_zone_name]["buildingType"]
+    rtype = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
 
     # 発熱量参照値を読み込む関数（空調）
     (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp) = bc.get_roomHeatGain(btype, rtype)
@@ -796,7 +793,9 @@ for room_zone_name in inputdata["AirConditioningZone"]:
         if room_usage[dd] > 0:
 
             # 前日の空調の有無
-            if (dd > 0) and (room_usage[dd-1] > 0):
+            if "終日空調" in QROOM_COEFFI[ btype ][ rtype ]:
+                onoff = "終日空調"
+            elif (dd > 0) and (room_usage[dd-1] > 0):
                 onoff = "前日空調"
             else:
                 onoff = "前日休み"
@@ -889,127 +888,164 @@ for room_zone_name in inputdata["AirConditioningZone"]:
 print('室負荷計算完了')
 
 
+#%%
+##----------------------------------------------------------------------------------
+## 空調負荷の計算（解説書 2.5.1 〜 2.5.5）
+##----------------------------------------------------------------------------------
 
-# %%-----------------------------------------------------------------------------------------------------------
-# %% ２）空調負荷計算
+## 結果格納用変数
+resultJson["AHU"] = {}
 
-# QroomAHUc     = zeros(365,numOfAHUSET);  % 日積算室負荷（冷房）[MJ/day]
-# QroomAHUh     = zeros(365,numOfAHUSET);  % 日積算室負荷（暖房）[MJ/day]
-# Qahu_hour     = zeros(365,numOfAHUSET);  % 時刻別空調負荷[MJ/day]
-# Tahu_c        = zeros(365,numOfAHUSET);  % 日積算冷房運転時間 [h]
-# Tahu_h        = zeros(365,numOfAHUSET);  % 日積算暖房運転時間 [h]
+for ahu_name in inputdata["AirHandlingSystem"]:
+
+    resultJson["AHU"][ahu_name] = {
+        "schedule": np.zeros((365,24)),    # 時刻別の運転スケジュール（365×24）
+        "day_mode": [],                    # 運転時間帯（昼、夜、終日）
+        "Tahu_total": 0,                   # 空調機の日積算運転時間（冷暖合計）
+        "cooling":{
+            "Tahu": np.zeros(365),         # 空調機（冷房）運転時間
+            "qoaAHU": np.zeros(365),       # 日平均外気負荷 [kW]
+            "AHUVovc": np.zeros(365),      # 外気冷房風量 [kg/s]
+            "Qahu_oac": np.zeros(365),     # 外気冷房効果 [MJ/day]
+            "QroomAHU": np.zeros(365),     # 日積算室負荷 [MJ/day]
+            "Qahu": np.zeros(365)          # 日積算空調負荷 [MJ/day]
+        },
+        "heating":{
+            "Tahu": np.zeros(365),         # 空調機（暖房）運転時間
+            "qoaAHU": np.zeros(365),       # 日平均外気負荷 [kW]
+            "AHUVovc": np.zeros(365),      # 外気冷房風量 [kg/s]
+            "Qahu_oac": np.zeros(365),     # 外気冷房効果 [MJ/day]
+            "QroomAHU": np.zeros(365),     # 日積算室負荷 [MJ/day]
+            "Qahu": np.zeros(365)          # 日積算空調負荷 [MJ/day]
+        }
+    }
 
 
-# % 日毎の空調運転時間(ahuDayMode: 1昼，2夜，0終日) （関数：mytfunc_AHUOpeTIME）
-# [AHUsystemT,AHUsystemOpeTime,ahuDayMode] ...
-#     = mytfunc_AHUOpeTIME(ahuSetName,roomID,ahuQallSet,roomTime_start,roomTime_stop,roomDayMode);
+## 各時刻における運転の有無（365×24の行列）
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    # 室の空調有無 roomScheduleRoom（365×24）を加算
+    resultJson["AHU"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["schedule"] += \
+        roomScheduleRoom[room_zone_name]
+
+    # 運転時間帯
+    resultJson["AHU"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["day_mode"].append( roomDayMode[room_zone_name] )
 
 
-# switch MODE
-#     case {0,1}  % 毎時計算
+# 各空調機群の運転時間
+for ahu_name in inputdata["AirHandlingSystem"]:
+
+    # 運転スケジュールの和が「1以上（どこか一部屋は動いている）」であれば、空調機は稼働しているとする。
+    resultJson["AHU"][ahu_name]["schedule"][   resultJson["AHU"][ahu_name]["schedule"] > 1   ] = 1
+
+    # 空調機群の日積算運転時間（冷暖合計）
+    resultJson["AHU"][ahu_name]["Tahu_total"] = np.sum(resultJson["AHU"][ahu_name]["schedule"],1)
+
+    # 空調機の運転モード
+    if "終日" in resultJson["AHU"][ahu_name]["day_mode"]:
+        resultJson["AHU"][ahu_name]["day_mode"] = "終日"
+    elif resultJson["AHU"][ahu_name]["day_mode"].count("昼") == len(resultJson["AHU"][ahu_name]["day_mode"]):
+        resultJson["AHU"][ahu_name]["day_mode"] = "昼"
+    elif resultJson["AHU"][ahu_name]["day_mode"].count("夜") == len(resultJson["AHU"][ahu_name]["day_mode"]):
+        resultJson["AHU"][ahu_name]["day_mode"] = "夜"
+    else:
+        resultJson["AHU"][ahu_name]["day_mode"] = "終日"
+    
+    # print(resultJson["AHU"][ahu_name]["day_mode"])
+
+
+# 室負荷の積算
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    # 室負荷（冷房）
+    resultJson["AHU"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["cooling"]["QroomAHU"] += \
+        resultJson["Qroom"][room_zone_name]["QroomDc"]
+
+    # 室負荷（暖房）
+    resultJson["AHU"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["heating"]["QroomAHU"] += \
+        resultJson["Qroom"][room_zone_name]["QroomDh"]
+
+
+# 空調運転時間の振り分け
+for ahu_name in inputdata["AirHandlingSystem"]:
+    
+    for dd in range(0,365):
+
+        if resultJson["AHU"][ahu_name]["Tahu_total"][dd] == 0:
+
+            # 日空調時間が0であれば、冷暖房空調時間は0とする。
+            resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = 0
+            resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
+
+        else:
+
+            if (resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd] == 0) and \
+                (resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd] == 0):
+
+                # 外調機を想定
+                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]   # 外調機の場合は「冷房側」に運転時間を押しつける。
+                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
         
-#         QroomAHUhour  = zeros(8760,numOfAHUSET); % 時刻別室負荷 [MJ/h]
-#         Qahu_oac_hour = zeros(8760,numOfAHUSET); % 外気冷房効果 [kW]
-#         qoaAHUhour    = zeros(8760,numOfAHUSET); % 外気負荷 [kW]
-#         AHUVovc_hour  = zeros(8760,numOfAHUSET); % 外気冷房時風量 [kg/s]
-#         qoaAHU_CEC_hour = zeros(8760,numOfAHUSET); % 仮想外気負荷 [kW]
-#         Qahu_hour_CEC =  zeros(8760,numOfAHUSET); % 仮想空調負荷 [MJ/h]
-        
-#         % 日積算室負荷を空調系統ごとに集計
-#         for iROOM=1:numOfRoooms
-#             for iAHU=1:numOfAHUSET
-#                 switch roomID{iROOM}
-#                     case ahuQroomSet{iAHU,:}
-#                         QroomAHUc(:,iAHU)    = QroomAHUc(:,iAHU)    + QroomDc(:,iROOM);   % 室数かける
-#                         QroomAHUh(:,iAHU)    = QroomAHUh(:,iAHU)    + QroomDh(:,iROOM);   % 室数かける
-#                         QroomAHUhour(:,iAHU) = QroomAHUhour(:,iAHU) + QroomHour(:,iROOM); % 室数かける
-#                 end
-#             end
-#         end
-        
-#         for iAHU = 1:numOfAHUSET
-#             for dd = 1:365
-#                 for hh = 1:24
+            elif resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd] == 0:
+
+                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = 0
+                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
+    
+            elif resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd] == 0:
+
+                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
+                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
+
+            else:
+
+                if abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) < resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]:
                     
-#                     % 1月1日0時からの時間数
-#                     num = 24*(dd-1)+hh;
-                    
-#                     % 時刻別の外気負荷[kW]を求める．
-#                     [qoaAHUhour(num,iAHU),AHUVovc_hour(num,iAHU),Qahu_oac_hour(num,iAHU),qoaAHU_CEC_hour(num,iAHU)]...
-#                         = mytfunc_calcOALoad_hourly(hh,ModeOpe(dd),...
-#                         AHUsystemOpeTime(iAHU,dd,:),OAdataHourly(num,3),...
-#                         Hroom(dd,1),ahuVoa(iAHU),ahuOAcut(iAHU),AEXbypass(iAHU),...
-#                         ahuaexeff(iAHU),ahuOAcool(iAHU),ahuaexV(iAHU),QroomAHUhour(num,iAHU),ahuVsa(iAHU));
-                    
-#                     % 空調負荷を求める．[kW] = [MJ/h]*1000/3600 + [kW]
-#                     Qahu_hour(num,iAHU) = QroomAHUhour(num,iAHU)*1000/3600 + qoaAHUhour(num,iAHU);
-                    
-#                     % 仮想空調負荷を求める。 [MJ/h]
-#                     Qahu_hour_CEC(num,iAHU) = abs(QroomAHUhour(num,iAHU)) + abs(qoaAHU_CEC_hour(num,iAHU)*3600/1000);
-                    
-#                     % 冷暖房空調時間（日積算）を求める．
-#                     if Qahu_hour(num,iAHU) > 0
-#                         Tahu_c(dd,iAHU) = Tahu_c(dd,iAHU) + 1;
-#                     elseif Qahu_hour(num,iAHU) < 0
-#                         Tahu_h(dd,iAHU) = Tahu_h(dd,iAHU) + 1;
-#                     end
-                    
-#                 end
-#             end
-#         end
+                    # 暖房負荷の方が大きい場合
+                    ratio = abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) / \
+                        ( abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) + abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) )
+
+                    resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = math.ceil( resultJson["AHU"][ahu_name]["Tahu_total"][dd] * ratio )
+                    resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd]
+
+                else:
+
+                    # 冷房負荷の方が大きい場合
+                    ratio = abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) / \
+                        ( abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) + abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) )
+
+                    resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = math.ceil( resultJson["AHU"][ahu_name]["Tahu_total"][dd] * ratio )
+                    resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd]
+
+
+
+
+
+# for iAHU=1:numOfAHUSET
+
+#     % 外気エンタルピー
+#     HoaDayAve = [];
+#     if ahuDayMode(iAHU) == 1
+#         HoaDayAve = OAdataDay(:,3);
+#     elseif ahuDayMode(iAHU) == 2
+#         HoaDayAve = OAdataNgt(:,3);
+#     elseif ahuDayMode(iAHU) == 0
+#         HoaDayAve = OAdataAll(:,3);
+#     end
+    
+#     % 日別のループ
+#     for dd = 1:365
         
+#         % 外気負荷 qoaAHU、外冷時風量 AHUVovc、外冷効果 Qahu_oac の算出
+#         [qoaAHU(dd,iAHU),AHUVovc(dd,iAHU),Qahu_oac(dd,iAHU),qoaAHU_CEC(dd,iAHU)] = ...
+#             mytfunc_calcOALoad(ModeOpe(dd),QroomAHUc(dd,iAHU),Tahu_c(dd,iAHU),ahuVoa(iAHU),ahuVsa(iAHU),...
+#             HoaDayAve(dd,1),Hroom(dd,1),AHUsystemT(dd,iAHU),ahuaexeff(iAHU),AEXbypass(iAHU),ahuOAcool(iAHU),ahuaexV(iAHU));
         
-#     case {2,3,4}  % 日単位の計算
+#         % 日積算空調負荷 Qahu_c, Qahu_h の算出
+#         [Qahu_c(dd,iAHU),Qahu_h(dd,iAHU),Qahu_CEC(dd,iAHU)] = mytfunc_calcDailyQahu(AHUsystemT(dd,iAHU),...
+#             Tahu_c(dd,iAHU),Tahu_h(dd,iAHU),QroomAHUc(dd,iAHU),QroomAHUh(dd,iAHU),...
+#             qoaAHU(dd,iAHU),qoaAHU_CEC(dd,iAHU),ahuOAcut(iAHU));
         
-#         % 変数定義
-#         qoaAHU     = zeros(365,numOfAHUSET);  % 日平均外気負荷 [kW]
-#         qoaAHU_CEC = zeros(365,numOfAHUSET);  % 日平均仮想外気負荷 [kW]
-#         AHUVovc   = zeros(365,numOfAHUSET);  % 外気冷房風量 [kg/s]
-#         Qahu_oac  = zeros(365,numOfAHUSET);  % 外気冷房効果 [MJ/day]
-#         Qahu_c    = zeros(365,numOfAHUSET);  % 日積算空調負荷(冷房) [MJ/day]
-#         Qahu_h    = zeros(365,numOfAHUSET);  % 日積算空調負荷(暖房) [MJ/day]
-#         Qahu_CEC  = zeros(365,numOfAHUSET);  % CECの仮想空調負荷 [MJ/day]
-        
-#         for iAHU=1:numOfAHUSET
-            
-#             % 日積算室負荷を空調系統ごとに集計（QroomAHUc,QroomAHUhを求める）
-#             for iROOM=1:numOfRoooms
-#                 switch roomID{iROOM}
-#                     case ahuQroomSet{iAHU,:}
-#                         QroomAHUc(:,iAHU) = QroomAHUc(:,iAHU) + QroomDc(:,iROOM);   % 室数かける
-#                         QroomAHUh(:,iAHU) = QroomAHUh(:,iAHU) + QroomDh(:,iROOM);   % 室数かける
-#                 end
-#             end
-            
-#             % 外気エンタルピー
-#             HoaDayAve = [];
-#             if ahuDayMode(iAHU) == 1
-#                 HoaDayAve = OAdataDay(:,3);
-#             elseif ahuDayMode(iAHU) == 2
-#                 HoaDayAve = OAdataNgt(:,3);
-#             elseif ahuDayMode(iAHU) == 0
-#                 HoaDayAve = OAdataAll(:,3);
-#             end
-            
-#             % 日別のループ
-#             for dd = 1:365
-                
-#                 % 空調運転時間の振り分け（冷房 Tahu_c・暖房 Tahu_h）
-#                 [Tahu_c(dd,iAHU),Tahu_h(dd,iAHU)] = ...
-#                     mytfunc_AHUOpeTimeSplit(QroomAHUc(dd,iAHU),QroomAHUh(dd,iAHU),AHUsystemT(dd,iAHU));
-                
-#                 % 外気負荷 qoaAHU、外冷時風量 AHUVovc、外冷効果 Qahu_oac の算出
-#                 [qoaAHU(dd,iAHU),AHUVovc(dd,iAHU),Qahu_oac(dd,iAHU),qoaAHU_CEC(dd,iAHU)] = ...
-#                     mytfunc_calcOALoad(ModeOpe(dd),QroomAHUc(dd,iAHU),Tahu_c(dd,iAHU),ahuVoa(iAHU),ahuVsa(iAHU),...
-#                     HoaDayAve(dd,1),Hroom(dd,1),AHUsystemT(dd,iAHU),ahuaexeff(iAHU),AEXbypass(iAHU),ahuOAcool(iAHU),ahuaexV(iAHU));
-                
-#                 % 日積算空調負荷 Qahu_c, Qahu_h の算出
-#                 [Qahu_c(dd,iAHU),Qahu_h(dd,iAHU),Qahu_CEC(dd,iAHU)] = mytfunc_calcDailyQahu(AHUsystemT(dd,iAHU),...
-#                     Tahu_c(dd,iAHU),Tahu_h(dd,iAHU),QroomAHUc(dd,iAHU),QroomAHUh(dd,iAHU),...
-#                     qoaAHU(dd,iAHU),qoaAHU_CEC(dd,iAHU),ahuOAcut(iAHU));
-                
-#             end
-#         end
+#     end
 # end
 
 
