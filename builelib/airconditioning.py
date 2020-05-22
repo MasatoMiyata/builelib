@@ -45,8 +45,18 @@ def debugValues(*args):
         print(out, type(obj))
 
 
+# 計算結果を格納する変数
+resultJson = {
+    "Qroom": {
+    }
+}
 
-print('----- airconditioning.py -----')
+
+#%%
+##----------------------------------------------------------------------------------
+## 入力ファイル（jsonファイル）の指定
+##----------------------------------------------------------------------------------
+
 # filename = '../sample/inputdata_AC.json'
 filename = '../sample/Case01_単室モデル_外皮1枚.json'
 
@@ -59,109 +69,24 @@ with open(filename, 'r') as f:
 # bc.inputdata_validation(inputdata)
 
 
-# 計算結果を格納する変数
-resultJson = {
-    "Qroom": {
-    }
-}
-
 
 #%%
-# マトリックス分割数
+##----------------------------------------------------------------------------------
+## 計算条件（定数等）の設定
+##----------------------------------------------------------------------------------
+
+# 地域の区分
+climateAREA  = inputdata["Building"]["Region"]
+
+
 divL = 10;             # 負荷帯マトリックス分割数
 divT =  6;             # 温度帯マトリックス分割数
 
-# 各季節の空調運転モード
-SeasonMODE = [1,1,-1]   # 夏、中間期、冬の順番、-1：暖房、+1：冷房
-
-# 定数
 k_heatup = 0.84;        # ファン・ポンプの発熱比率
 Cw = 4.186;             # 水の比熱 [kJ/kg・K]
 copDHC_cooling = 1.36;  # 他人から供給された熱の換算係数 20170913追加
 copDHC_heating = 1.36;  # 他人から供給された熱の換算係数 20170913追加
-
-# 全熱交換器の効率補正（１：あり、０：なし）
-aexCoeffiModifyOn = 1
-
-
-# % データベースファイル名
-
-# filename_RoomTypeList         = './database/ROOM_SPEC.csv';        % 室用途リスト
-# filename_roomOperateCondition = './database/ROOM_COND.csv';        % 標準室使用条件
-# filename_calendar             = './database/CALENDAR.csv';         % カレンダー
-# filename_ThermalConductivity  = './database/HeatThermalConductivity.csv';        % 建材物性値
-# filename_WindowPerformance    = './database/WindowHeatTransferPerformance.csv';  % 窓の物性値
-# filename_QROOM_coeffi         = './database/QROOM_COEFFI.csv';     % 負荷計算係数
-# filename_flowControl          = './database/FLOWCONTROL.csv';      % 搬送系の効果係数
-# filename_refList              = './database/REFLIST.csv';          % 熱源機器リスト
-# filename_performanceCurve     = './database/REFCURVE.csv';         % 熱源特性
-
-# % カレンダーファイルの読み込み
-# perDB_calendar = func_readDBfile(filename_calendar, 'str');
-# % 標準室使用条件の読み込み
-# perDB_RoomOpeCondition = func_readDBfile(filename_roomOperateCondition, 'str');
-# % 室用途リストの読み込み
-# perDB_RoomType = func_readDBfile(filename_RoomTypeList, 'str');
-# % 熱源リストの読み込み
-# perDB_refList = func_readDBfile(filename_refList, 'str');
-# % 熱源部分負荷特性の読み込み
-# perDB_refCurve = func_readDBfile(filename_performanceCurve, 'str');
-# % 搬送系制御の効果係数の読み込み
-# perDB_flowControl = func_readDBfile(filename_flowControl, 'str');
-
-
-
-
-# % 地域の区分
-climateAREA  = inputdata["Building"]["Region"]
-# % 延べ面積 [m2]
-BuildingArea = inputdata["Building"]["BuildingFloorArea"]
-
-# % 空調ゾーンに関する情報
-# [numOfRoooms,roomID,roomFloor,roomName,EnvelopeRef,roomAHU_Qroom,roomAHU_Qoa,...
-#     buildingType,roomType,roomArea,roomFloorHeight,roomHeight] ...
-#     = func_readXML_ACzone(INPUT);
-
-# 計算対象ゾーンの数
-numOfRoooms = len(inputdata["AirConditioningZone"])
-
-
-# % 外壁に関する情報
-# [confW, WallType, WallUvalue] ...
-#     = func_readXML_ACwall(INPUT);
-
-# % 窓に関する情報
-# [confG, WindowUvalue, WindowMvalue] ...
-#     = func_readXML_ACwindow(INPUT);
-
-# % 外皮 に関する情報
-# [numOfENVs,envelopeID,numOfWalls,WallConfigure,EnvelopeArea,WindowArea,...
-#     Direction,Blind,Eaves_Cooling,Eaves_Heating,WallTypeNum,WindowType,EXPSdata,...
-#     WindowEavesC, WindowEavesH] ...
-#     = func_readXML_ACenvelope(INPUT,confW,WallType);
-
-# % 空調機群に関する情報
-# [numOfAHUSET,ahuSetName,numOfAHUele,ahuRef_cooling,ahuRef_heating,ahuPump_cooling,ahuPump_heating,...
-#     ahueleType, ahueleCount, ahueleQcmax, ahueleQhmax, ahueleVsa, ahueleEfsa, ahueleEfra, ahueleEfoa, ahueleEfex,...
-#     ahueleFlowControl, ahueleMinDamperOpening, ahueleOACutCtrl, ahueleFreeCoolingCtrl, ...
-#     ahueleHeatExchangeCtrl, ahueleHeatExchangeBypass, ahueleHeatExchangeEff, ahueleHeatExchangePower, ahueleHeatExchangeVolume] ...
-#     = func_readXML_ACahus(INPUT);
-
-# % 二次ポンプ群に関する情報
-# [numOfPumps,pumpsetPnum,pumpMode,pumpName,pumpdelT,pumpQuantityCtrl,...
-#     pumpFlow,pumpPower,pumpFlowCtrl,pumpMinValveOpening] ...
-#     = func_readXML_ACpumps(INPUT);
-
-# % 熱源群に関する情報
-# [numOfRefs,refsetID,refsetMode,refsetSupplyMode,...
-#     refsetStorage,refsetStorageSize,refsetQuantityCtrl,refsetRnum,...
-#     refset_Count,refset_Type,refset_Capacity,refset_MainPower,refset_SubPower,refset_PrimaryPumpPower,...
-#     refset_CTCapacity,refset_CTFanPower,refset_CTPumpPower,refset_SupplyTemp,storageEffratio]...
-#     = func_readXML_ACrefs(INPUT);
-
-
-#%%
-# マトリックスの設定
+aexCoeffiModifyOn = 1   # 全熱交換器の効率補正（１：あり、０：なし）
 
 # 負荷率帯マトリックス mxL
 mxL = np.arange(1/divL, 1.01, 1/divL)
@@ -177,6 +102,7 @@ for iL in range(0,len(mxL)):
         aveL[iL] = 1.2
     else:
         aveL[iL] = mxL[iL-1] + (mxL[iL]-mxL[iL-1])/2
+
 
 # 地域別データの読み込み
 with open(directory + 'AREA.json', 'r') as f:
@@ -211,13 +137,61 @@ TctwH  = 15.5 * np.ones(6)  #  水冷式の暖房時熱源水温度（暫定） 
 
 
 #%%
-# 季節依存変数の定義（室内エンタルピー、運転モード）
+##----------------------------------------------------------------------------------
+## 気象データ（解説書 2.2.1）
+##----------------------------------------------------------------------------------
 
+# 気象データ（HASP形式）読み込み ＜365×24の行列＞
+[ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
+    climate.readHaspClimateData( directory + "climatedata/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
+
+# 緯度
+phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
+# 経度
+longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
+
+
+##----------------------------------------------------------------------------------
+## 冷暖房期間（解説書 2.2.2）
+##----------------------------------------------------------------------------------
+
+# 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
 ac_mode = ACoperationMode[ Area[inputdata["Building"]["Region"]+"地域"]["空調運転モードタイプ"] ]
 
-TroomSP = np.zeros(365)
-RroomSP = np.zeros(365)
-Hroom   = np.zeros(365)
+
+##----------------------------------------------------------------------------------
+## 平均外気温（解説書 2.2.3）
+##----------------------------------------------------------------------------------
+
+# 日平均外気温[℃]（365×1）
+Toa_ave = np.mean(ToutALL,1)
+Toa_day = np.mean(ToutALL[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)
+Toa_ngt = np.mean(ToutALL[:,[0,1,2,3,4,5,18,19,20,21,22,23]],1)
+
+# 日平均外気絶対湿度 [kg/kgDA]（365×1）
+Xoa_ave = np.mean(XoutALL,1)
+Xoa_day = np.mean(XoutALL[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)
+Xoa_ngt = np.mean(XoutALL[:,[0,1,2,3,4,5,18,19,20,21,22,23]],1)
+
+
+##----------------------------------------------------------------------------------
+## 外気エンタルピー（解説書 2.2.4）
+##----------------------------------------------------------------------------------
+
+Hoa_ave = bc.air_enenthalpy(Toa_ave, Xoa_ave)
+Hoa_day = bc.air_enenthalpy(Toa_day, Xoa_day)
+Hoa_ngt = bc.air_enenthalpy(Toa_ngt, Xoa_ngt)
+
+
+
+#%%
+##----------------------------------------------------------------------------------
+## 空調室の設定温度、室内エンタルピー（解説書 2.3.1、2.3.2）
+##----------------------------------------------------------------------------------
+
+TroomSP = np.zeros(365)    # 室内設定温度
+RroomSP = np.zeros(365)    # 室内設定湿度
+Hroom   = np.zeros(365)    # 室内設定エンタルピー
 
 for dd in range(0,365):
 
@@ -237,46 +211,20 @@ for dd in range(0,365):
         Hroom[dd] = 38.81
 
 
-#%%
-## 計算に必要となるデータの生成
+##----------------------------------------------------------------------------------
+## 空調機の稼働状態、内部発熱量（解説書 2.3.3、2.3.4）
+##----------------------------------------------------------------------------------
+
 roomScheduleRoom = {}
 roomScheduleLight = {}
 roomSchedulePerson = {}
 roomScheduleOAapp = {}
+
 for room_zone_name in inputdata["Rooms"]:
 
     # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
     roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name] = \
         bc.get_roomUsageSchedule(inputdata["Rooms"][room_zone_name]["buildingType"], inputdata["Rooms"][room_zone_name]["roomType"])
-
-
-# % 標準室使用条件の抽出
-# roomDayMode          = zeros(numOfRoooms,1);
-# roomTime_start       = zeros(365, numOfRoooms);
-# roomTime_stop        = zeros(365, numOfRoooms);
-# roomDailyOpePattern  = zeros(365, numOfRoooms);
-# roomVoa              = zeros(numOfRoooms,1);
-# roomScheduleOAapp    = zeros(numOfRoooms,3,24);
-# roomScheduleLight    = zeros(numOfRoooms,3,24);
-# roomSchedulePerson   = zeros(numOfRoooms,3,24);
-# roomEnergyOAappUnit  = zeros(numOfRoooms,1);
-# roomEnergyLight      = zeros(numOfRoooms,1);
-# roomEnergyPerson     = zeros(numOfRoooms,1);
-# HourlySchedule_AC    = zeros(8760,numOfRoooms);
-# HourlySchedule_LT    = zeros(8760,numOfRoooms);
-# HourlySchedule_HM    = zeros(8760,numOfRoooms);
-# HourlySchedule_OA    = zeros(8760,numOfRoooms);
-
-# for iROOM = 1:numOfRoooms
-    
-#     % 関数 func_roomUsageSchedule
-#     [roomDayMode(iROOM),roomTime_start(:,iROOM),roomTime_stop(:,iROOM),roomDailyOpePattern(:,iROOM),...
-#         roomEnergyOAappUnit(iROOM), roomEnergyLight(iROOM), roomEnergyPerson(iROOM), ...
-#         roomScheduleOAapp(iROOM,:,:), roomScheduleLight(iROOM,:,:), roomSchedulePerson(iROOM,:,:), roomVoa(iROOM), ...
-#         HourlySchedule_AC(:,iROOM),HourlySchedule_LT(:,iROOM), HourlySchedule_HM(:,iROOM),HourlySchedule_OA(:,iROOM)] ...
-#         = func_roomUsageSchedule(buildingType{iROOM},roomType{iROOM},roomArea(iROOM),perDB_RoomType,perDB_RoomOpeCondition,perDB_calendar);
-    
-
 
 
 
@@ -314,85 +262,11 @@ for room_zone_name in inputdata["AirConditioningZone"].keys():
     roomAreaTotal += inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
     
 
-debugValues(roomAreaTotal)
-
-
-
-# % 空調機群の設定（今後、関数化）
-# func_setSpec_AHU;
-
-# % 二次ポンプ群の設定
-# PUMPtype   = zeros(1,numOfPumps);
-# PUMPnumctr = zeros(1,numOfPumps);
-# PUMPvwv    = zeros(numOfPumps,max(pumpsetPnum));
-# Pump_VWVcoeffi = zeros(numOfPumps,max(pumpsetPnum),5);
-# pumpVWVmin     = zeros(numOfPumps,max(pumpsetPnum));
-
-# for iPUMP = 1:numOfPumps
-    
-#     % 二次ポンプ群の設定
-#     [PUMPtype(iPUMP),PUMPnumctr(iPUMP),PUMPvwv(iPUMP,:),Pump_VWVcoeffi(iPUMP,:,:),pumpVWVmin(iPUMP,:)] ...
-#         = func_setSpec_PUMP(pumpMode{iPUMP},pumpQuantityCtrl{iPUMP},pumpsetPnum(iPUMP),pumpFlowCtrl(iPUMP,:),perDB_flowControl,pumpMinValveOpening(iPUMP,:),max(pumpsetPnum));
-    
-#     % 二次ポンプ群に接続する空調機群
-#     [tmpAHUSet,pumpS(iPUMP)] ...
-#         = func_connection_PUMP2AHU(numOfAHUSET,ahuS,pumpName{iPUMP},PUMPtype(iPUMP),ahuSetName,ahuPump_cooling,ahuPump_heating);
-    
-#     PUMPahuSet{iPUMP,:} = tmpAHUSet;
-    
-# end
-
-# % 熱源群の設定
-# QrefrMax   = zeros(1,numOfRefs);  % 各群の定格最大能力（全台数合計）
-# REFtype    = zeros(1,numOfRefs);  % 熱源群の運転モード（１：冷房、２：暖房）
-# REFnumctr  = zeros(1,numOfRefs);  % 台数制御の有無（０：なし、１：あり）
-# REFstorage = zeros(1,numOfRefs);  % 蓄熱制御の有無（０：なし、１：あり）
-# REFCHmode  = zeros(1,numOfRefs);  % 冷暖同時運転の有無（０：なし、１：あり）
-# refS       = zeros(1,numOfRefs);  % 熱源群別の空調面積
-
-# for iREF = 1:numOfRefs
-    
-#     % 熱源群の設定
-#     [QrefrMax(iREF),REFtype(iREF),REFnumctr(iREF),REFstorage(iREF),REFCHmode(iREF)]  = ...
-#         func_setSpec_REF(refset_Capacity(iREF,:),refsetMode{iREF},refsetSupplyMode{iREF},refsetQuantityCtrl{iREF},refsetStorage{iREF});
-    
-#     % 熱源群に接続する二次ポンプ群
-#     [tmpPUMPSet,refS(iREF)] = ...
-#         func_connection_REF2PUMP(numOfAHUSET,ahuS,REFtype(iREF),refsetID(iREF),ahuRef_cooling,ahuPump_cooling,ahuRef_heating,ahuPump_heating);
-#     REFpumpSet{iREF,:} = tmpPUMPSet;
-    
-# end
-
-# % 各空調機が何管式か(0なら冷暖切替、1なら冷暖同時)
-# [AHUCHmode,AHUCHmode_C,AHUCHmode_H] = ...
-#     func_setAHUCHmode(numOfAHUSET,numOfRefs,ahuRef_cooling,ahuRef_heating,refsetID,REFCHmode);
-
-
 
 #%%
 ##----------------------------------------------------------------------------------
-## 気象データの読み込み
+## 外皮面への入射日射量（解説書 2.4.1）
 ##----------------------------------------------------------------------------------
-
-# 気象データ（HASP形式）読み込み ＜365×24の行列＞
-[ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
-    climate.readHaspClimateData( directory + "climatedata/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
-
-# 緯度
-phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
-# 経度
-longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
-
-# 日平均外気温
-Toa_ave = np.mean(ToutALL,1)
-Toa_day = np.mean(ToutALL[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)
-Toa_ngt = np.mean(ToutALL[:,[0,1,2,3,4,5,18,19,20,21,22,23]],1)
-
-# 日平均外気絶対湿度 [kg/kgDA]
-Xoa_ave = np.mean(XoutALL,1)
-Xoa_day = np.mean(XoutALL[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)
-Xoa_ngt = np.mean(XoutALL[:,[0,1,2,3,4,5,18,19,20,21,22,23]],1)
-
 
 solor_radiation = {
     "直達":{
@@ -422,7 +296,7 @@ solor_radiation = {
 
 #%%
 ##----------------------------------------------------------------------------------
-## 外皮のU値の計算（解説書 附属書A.1）
+## 外壁等の熱貫流率の算出（解説書 附属書A.1）
 ##----------------------------------------------------------------------------------
 
 ### ISSUE : 二つのデータベースにわかれてしまっているので統一する。###
@@ -494,7 +368,7 @@ if "WallConfigure" in inputdata:  # WallConfigure があれば以下を実行
 
 #%%
 ##----------------------------------------------------------------------------------
-## 窓のU値、η値の読み込み（解説書 附属書A.2）
+## 窓の熱貫流率及び日射熱取得率の算出（解説書 附属書A.2）
 ##----------------------------------------------------------------------------------
 
 # 窓データの読み込み
@@ -623,7 +497,7 @@ if "WindowConfigure" in inputdata:
 
 #%%
 ##----------------------------------------------------------------------------------
-## 外皮面積等の計算（解説書 2.4.2.1）
+## 外壁の面積の計算（解説書 2.4.2.1）
 ##----------------------------------------------------------------------------------
 
 # 外皮面積の算出
@@ -671,14 +545,12 @@ for room_zone_name in inputdata["EnvelopeSet"]:
 
 
 
-
-
-
 #%%
 ##----------------------------------------------------------------------------------
-## EnvelopeSet に WallConfigure, WindowConfigure の情報を貼り付ける。
+## 室の定常熱取得の計算（解説書 2.4.2.2〜2.4.2.7）
 ##----------------------------------------------------------------------------------
 
+## EnvelopeSet に WallConfigure, WindowConfigure の情報を貼り付ける。
 for room_zone_name in inputdata["EnvelopeSet"]:
 
     # 壁毎にループ
@@ -774,11 +646,6 @@ for room_zone_name in inputdata["EnvelopeSet"]:
 
 
 
-#%%
-##----------------------------------------------------------------------------------
-## 室の熱取得の計算
-##----------------------------------------------------------------------------------
-
 for room_zone_name in inputdata["AirConditioningZone"]:
 
     Qwall_T  = np.zeros(365)  # 壁からの温度差による熱取得 [W/m2]
@@ -795,8 +662,6 @@ for room_zone_name in inputdata["AirConditioningZone"]:
 
         # 壁毎にループ
         for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
-
-            print(wall_configure["UA_wall"])
 
             if wall_configure["WallType"] == "日の当たる外壁":
             
@@ -849,7 +714,6 @@ for room_zone_name in inputdata["AirConditioningZone"]:
                         Qwind_T = Qwind_T + window_configure["UA_window"]*(Toa_ave-TroomSP)*24
 
                         ## ② 日射による熱取得
-
                         shading_daily = np.zeros(365)
 
                         for dd in range(0,365):
@@ -896,14 +760,14 @@ for room_zone_name in inputdata["AirConditioningZone"]:
 
 
 
-#%%
 ##----------------------------------------------------------------------------------
-## 室負荷の計算（解説書 2.4）
+## 室負荷の計算（解説書 2.4.3、2.4.4）
 ##----------------------------------------------------------------------------------
 
-# 負荷計算用の係数の読み込み
+## 室負荷計算のための係数（解説書 A.3）
 with open(directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
     QROOM_COEFFI = json.load(f)
+
 
 for room_zone_name in inputdata["AirConditioningZone"]:
 
@@ -1020,7 +884,6 @@ for room_zone_name in inputdata["AirConditioningZone"]:
 
     resultJson["Qroom"][room_zone_name]["QroomDc"] = Qcool * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
     resultJson["Qroom"][room_zone_name]["QroomDh"] = Qheat * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-
 
 
 print('室負荷計算完了')

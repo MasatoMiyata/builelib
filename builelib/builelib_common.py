@@ -28,6 +28,24 @@ with open(directory + 'CALENDAR.json', 'r') as f:
     Calendar = json.load(f)
 
 
+def air_enenthalpy(Tdb, X):
+    """
+    空気のエンタルピーを算出する関数
+    """
+    
+    Ca = 1.006  # 乾き空気の定圧比熱 [kJ/kg･K]
+    Cw = 1.805  # 水蒸気の定圧比熱 [kJ/kg･K]
+    Lw = 2502   # 水の蒸発潜熱 [kJ/kg]
+
+    if len(Tdb) != len(X):
+        raise Exception('窓面積が外皮面積よりも大きくなっています')
+    else:
+        H = (Ca*Tdb + (Cw*Tdb+Lw)*X)
+
+    return H   
+
+
+
 # 発熱量参照値を読み込む関数（空調）
 def get_roomHeatGain(buildingType, roomType):
 
