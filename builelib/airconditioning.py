@@ -57,8 +57,8 @@ resultJson = {
 ## 入力ファイル（jsonファイル）の指定
 ##----------------------------------------------------------------------------------
 
-filename = '../sample/inputdata_test.json'
-# filename = '../sample/Case01_単室モデル_外皮1枚.json'
+# filename = '../sample/inputdata_test.json'
+filename = '../sample/Case01_単室モデル_外皮1枚_大きめ.json'
 
 
 # 入力データ（json）の読み込み
@@ -899,22 +899,21 @@ resultJson["AHU"] = {}
 for ahu_name in inputdata["AirHandlingSystem"]:
 
     resultJson["AHU"][ahu_name] = {
-        "HoaDayAve": 0,                   
+        "HoaDayAve": np.zeros(365),                   
         "schedule": np.zeros((365,24)),    # 時刻別の運転スケジュール（365×24）
         "day_mode": [],                    # 運転時間帯（昼、夜、終日）
+        "qoaAHU": np.zeros(365),        # 日平均外気負荷 [kW]
         "Tahu_total": np.zeros(365),       # 空調機の日積算運転時間（冷暖合計）
         "cooling":{
-            "Tahu": np.zeros(365),         # 空調機（冷房）運転時間
             "QroomAHU": np.zeros(365),     # 日積算室負荷 [MJ/day]
-            "qoaAHU": np.zeros(365),       # 日平均外気負荷 [kW]
+            "Tahu": np.zeros(365),         # 空調機（冷房）運転時間
             "AHUVovc": np.zeros(365),      # 外気冷房風量 [kg/s]
             "Qahu_oac": np.zeros(365),     # 外気冷房効果 [MJ/day]
             "Qahu": np.zeros(365)          # 日積算空調負荷 [MJ/day]
         },
         "heating":{
-            "Tahu": np.zeros(365),         # 空調機（暖房）運転時間
-            "qoaAHU": np.zeros(365),       # 日平均外気負荷 [kW]
             "QroomAHU": np.zeros(365),     # 日積算室負荷 [MJ/day]
+            "Tahu": np.zeros(365),         # 空調機（暖房）運転時間
             "Qahu": np.zeros(365)          # 日積算空調負荷 [MJ/day]
         }
     }
@@ -1005,7 +1004,7 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
             else:
 
-                if abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) < resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]:
+                if abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) < abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]):
                     
                     # 暖房負荷の方が大きい場合
                     ratio = abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) / \
@@ -1185,7 +1184,7 @@ for ahu_name in inputdata["AirHandlingSystem"]:
                 # 外気負荷の算出
                 if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] == None:   # 全熱交換器がない場合
 
-                    resultJson["AHU"][ahu_name]["heating"]["qoaAHU"][dd] = \
+                    resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                         (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] *1.293/3600
 
                 else:  # 全熱交換器がある場合
@@ -1193,13 +1192,13 @@ for ahu_name in inputdata["AirHandlingSystem"]:
                     if (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] > Hroom[dd]) and (inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] == "有"):
 
                         # バイパス有の場合はそのまま外気導入する。
-                        resultJson["AHU"][ahu_name]["heating"]["qoaAHU"][dd] = \
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] *1.293/3600
 
                     else:
 
                         # 全熱交換器による外気負荷削減を見込む。
-                        resultJson["AHU"][ahu_name]["heating"]["qoaAHU"][dd] = \
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * \
                             (inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] - \
                                 inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"] * inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] ) *1.293/3600
@@ -1221,7 +1220,7 @@ for ahu_name in inputdata["AirHandlingSystem"]:
                 # 外気負荷の算出
                 if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] == None:   # 全熱交換器がない場合
 
-                    resultJson["AHU"][ahu_name]["cooling"]["qoaAHU"][dd] = \
+                    resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                         (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
                         
                 else:  # 全熱交換器がある場合
@@ -1229,13 +1228,13 @@ for ahu_name in inputdata["AirHandlingSystem"]:
                     if (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] < Hroom[dd]) and  (inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] == "有"):
 
                         # バイパス有の場合はそのまま外気導入する。
-                        resultJson["AHU"][ahu_name]["cooling"]["qoaAHU"][dd] = \
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
 
                     else:  # 全熱交換器がある場合
 
                         # 全熱交換器による外気負荷削減を見込む。
-                        resultJson["AHU"][ahu_name]["cooling"]["qoaAHU"][dd] = \
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * \
                             (inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] - \
                                 inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"] * inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] ) *1.293/3600
@@ -1295,18 +1294,18 @@ for ahu_name in inputdata["AirHandlingSystem"]:
             if (inputdata["AirHandlingSystem"][ahu_name]["isOutdoorAirCut"] == "無"):
 
                 resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = \
-                    resultJson["AHU"][ahu_name]["cooling"]["qoaAHU"][dd] * resultJson["AHU"][ahu_name]["Tahu_total"][dd] * 3600/1000
+                    resultJson["AHU"][ahu_name]["qoaAHU"][dd] * resultJson["AHU"][ahu_name]["Tahu_total"][dd] * 3600/1000
 
             else:
 
                 if resultJson["AHU"][ahu_name]["Tahu_total"][dd] > 1:
                     resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = \
-                        resultJson["AHU"][ahu_name]["cooling"]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["Tahu_total"][dd]-1) * 3600/1000
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["Tahu_total"][dd]-1) * 3600/1000
 
                 else:
 
                     resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = \
-                        resultJson["AHU"][ahu_name]["cooling"]["qoaAHU"][dd] * resultJson["AHU"][ahu_name]["Tahu_total"][dd] * 3600/1000
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] * resultJson["AHU"][ahu_name]["Tahu_total"][dd] * 3600/1000
 
             resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] = 0
 
@@ -1321,13 +1320,13 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
                     resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = \
                         resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd] + \
-                        resultJson["AHU"][ahu_name]["cooling"]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] - 1) * 3600/1000
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] - 1) * 3600/1000
     
                 else:
 
                     resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = \
                         resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd] + \
-                        resultJson["AHU"][ahu_name]["cooling"]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd]) * 3600/1000
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd]) * 3600/1000
 
             # 暖房負荷
             if resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] > 0:
@@ -1338,13 +1337,13 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
                     resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] = \
                         resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd] + \
-                        resultJson["AHU"][ahu_name]["heating"]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] - 1) * 3600/1000
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] - 1) * 3600/1000
     
                 else:
 
                     resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] = \
                         resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd] + \
-                        resultJson["AHU"][ahu_name]["heating"]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd]) * 3600/1000
+                        resultJson["AHU"][ahu_name]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd]) * 3600/1000
 
 
 print('空調負荷計算完了')
