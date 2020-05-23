@@ -45,6 +45,14 @@ def air_enenthalpy(Tdb, X):
     return H   
 
 
+# 発熱量参照値を読み込む関数（空調）
+def get_roomOutdoorAirVolume(buildingType, roomType):
+
+    # 外気導入量 [m3/h/m2]
+    roomOutdoorAirVolume  = RoomUsageSchedule[buildingType][roomType]["外気導入量"]
+
+    return roomOutdoorAirVolume
+
 
 # 発熱量参照値を読み込む関数（空調）
 def get_roomHeatGain(buildingType, roomType):
@@ -104,11 +112,31 @@ def get_roomUsageSchedule(buildingType, roomType):
     # np.array型に変換（365×24の行列）
     # np.shape(roomScheduleRoom["1F_事務室"]) = (365, 24)
     roomScheduleRoom   = np.array(roomScheduleRoom)
+    roomScheduleRoom[(roomScheduleRoom > 0)] = 1    # 同時使用率は考えない
     roomScheduleLight  = np.array(roomScheduleLight)
     roomSchedulePerson = np.array(roomSchedulePerson)
     roomScheduleOAapp  = np.array(roomScheduleOAapp)
 
-    return roomScheduleRoom, roomScheduleLight, roomSchedulePerson, roomScheduleOAapp
+    # パターン１で 使用時間帯（１：昼、２：夜、０：終日） を判断
+    roomDayMode  = 0
+    
+    schedule_oneday  = np.array(RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン1"])
+    schedule_oneday[(schedule_oneday > 0)] = 1
+
+    opetime_oneday = np.sum(schedule_oneday)
+    opetime_daytime = np.sum(schedule_oneday[[6,7,8,9,10,11,12,13,14,15,16,17]])
+    opetime_night   = np.sum(schedule_oneday[[0,1,2,3,4,5,18,19,20,21,22,23]])
+
+    if opetime_oneday == 24:
+        roomDayMode = "終日"
+    elif opetime_daytime >= opetime_night:
+        roomDayMode = "昼"
+    elif opetime_daytime < opetime_night:
+        roomDayMode = "夜"
+    else:
+        raise Exception('室の使用時間帯が特定できませんでした。')
+
+    return roomScheduleRoom, roomScheduleLight, roomSchedulePerson, roomScheduleOAapp, roomDayMode
 
 
 
