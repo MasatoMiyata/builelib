@@ -25,24 +25,26 @@ else:
     directory = "./builelib/database/"
 
 
-debugmode = True
+def count_Matrix(x, mxL):
+    """
+    負荷率 X がマトリックス mxL の何番目（ix）のセルに入るかをカウント
+    """
 
-# デバッグ用の関数
-def debugValues(*args):
-    if debugmode:
-        flg = 1
-        for obj in args:
-            for k, v in globals().items():
-                if id(v) == id(obj):
-                    target = k
-                    break
-            if flg == 1:
-                out = target+' = '+str(obj)
-                flg = 0
-            else:
-                out += ', '+target+' = '+str(obj) 
+    # 初期値
+    ix = 0
 
-        print(out, type(obj))
+    # C#の処理に合わせる。
+    x = math.floor(x*10+0.00001)/10+0.05
+
+    # 該当するマトリックスを探査
+    while x > mxL[ix]:
+        ix += 1
+
+        if ix == len(mxL)-1:
+            break
+
+    return ix+1
+
 
 
 # 計算結果を格納する変数
@@ -58,7 +60,8 @@ resultJson = {
 ##----------------------------------------------------------------------------------
 
 # filename = '../sample/inputdata_test.json'
-filename = '../sample/Case01_単室モデル_外皮1枚_大きめ.json'
+# filename = '../sample/Case01_単室モデル_外皮1枚_大きめ.json'
+filename = '../sample/Case01_単室モデル_外皮1枚_中央式_VAV.json'
 
 
 # 入力データ（json）の読み込み
@@ -881,6 +884,8 @@ for room_zone_name in inputdata["AirConditioningZone"]:
     resultJson["Qroom"][room_zone_name]["QroomDh"] = Qheat * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
 
+np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"],0)
+np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)
 print('室負荷計算完了')
 
 
@@ -910,6 +915,10 @@ for ahu_name in inputdata["AirHandlingSystem"]:
         "E_AHUaex_day": np.zeros(365),     # 全熱交換器のエネルギー消費量
         "TdAHUc_total": np.zeros(365),     # AHUの冷房運転時間の合計
         "TdAHUh_total": np.zeros(365),     # AHUの暖房運転時間の合計
+
+        "Qahu_remainC": np.zeros(365),     # 未処理負荷（冷房）[MJ/day]
+        "Qahu_remainH": np.zeros(365),     # 未処理負荷（暖房）[MJ/day]
+
         "cooling":{
             "QroomAHU": np.zeros(365),     # 日積算室負荷 [MJ/day]
             "Tahu": np.zeros(365),         # 空調機（冷房）運転時間
@@ -1031,6 +1040,10 @@ for ahu_name in inputdata["AirHandlingSystem"]:
                     resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd]
 
 
+print( f'空調機群の運転時間（冷房期間）： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Tahu"],0)} 時間' )
+print( f'空調機群の運転時間（暖房期間）： {np.sum(resultJson["AHU"][ahu_name]["heating"]["Tahu"],0)} 時間' )
+
+
 #%%
 ##----------------------------------------------------------------------------------
 ## 空調機群全体のスペックを整理する。
@@ -1142,6 +1155,8 @@ for room_zone_name in inputdata["AirConditioningZone"]:
 
 for ahu_name in inputdata["AirHandlingSystem"]:
     inputdata["AirHandlingSystem"][ ahu_name ]["isSimultaneousSupply"] = "無"
+    inputdata["AirHandlingSystem"][ ahu_name ]["isSimultaneousSupply_cooling"] = "無"
+    inputdata["AirHandlingSystem"][ ahu_name ]["isSimultaneousSupply_heating"] = "無"
 for pump_name in inputdata["SecondaryPumpSystem"]:
     inputdata["SecondaryPumpSystem"][ pump_name ]["isSimultaneousSupply"] = "無"
 for hs_name in inputdata["HeatsourceSystem"]:
@@ -1160,10 +1175,20 @@ for room_zone_name in inputdata["AirConditioningZone"]:
         inputdata["SecondaryPumpSystem"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] ]["isSimultaneousSupply"] = "有"
 
         # 空調機群
-        inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["isSimultaneousSupply"] = "有"
-        inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"]]["isSimultaneousSupply"] = "有"
-        inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"] ]["isSimultaneousSupply"] = "有"
-        inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"]]["isSimultaneousSupply"] = "有"
+        inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["isSimultaneousSupply_cooling"] = "有"
+        inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"]]["isSimultaneousSupply_cooling"] = "有"
+        inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"] ]["isSimultaneousSupply_heating"] = "有"
+        inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"]]["isSimultaneousSupply_heating"] = "有"
+
+
+# 両方とも冷暖同時なら、その空調機群は冷暖同時運転可能とする。
+for ahu_name in inputdata["AirHandlingSystem"]:
+
+    if (inputdata["AirHandlingSystem"][ ahu_name ]["isSimultaneousSupply_cooling"] == "有") and \
+        (inputdata["AirHandlingSystem"][ ahu_name ]["isSimultaneousSupply_heating"] == "有"):
+
+        inputdata["AirHandlingSystem"][ ahu_name ]["isSimultaneousSupply"] = "有"
+
 
 
 ##----------------------------------------------------------------------------------
@@ -1175,7 +1200,7 @@ for ahu_name in inputdata["AirHandlingSystem"]:
     # 冷房の補正
     if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] != None:
 
-        ahuaexeff = inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"]
+        ahuaexeff = inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"]/100
         aexCeff = 1 - ((1/0.85)-1) * (1-ahuaexeff)/ahuaexeff
         aexCtol = 0.95
         aexCbal = 0.67
@@ -1185,7 +1210,7 @@ for ahu_name in inputdata["AirHandlingSystem"]:
     # 暖房の補正
     if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] != None:
 
-        ahuaexeff = inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"]
+        ahuaexeff = inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"]/100
         aexCeff = 1 - ((1/0.85)-1) * (1-ahuaexeff)/ahuaexeff
         aexCtol = 0.95
         aexCbal = 0.67
@@ -1387,44 +1412,9 @@ print('空調負荷計算完了')
 
 
 
-#%%
-def count_Matrix(x, mxL):
-    """
-    負荷率 X がマトリックス mxL の何番目（ix）のセルに入るかをカウント
-    """
-
-    # 初期値
-    ix = 0
-
-    # C#の処理に合わせる。
-    x = math.floor(x*10+0.00001)/10+0.05
-
-    # 該当するマトリックスを探査
-    while x > mxL[ix]:
-        ix += 1
-
-        if ix == len(mxL)-1:
-            break
-
-    return ix+1
-
-
 ##----------------------------------------------------------------------------------
 ## 空調機群の一次エネルギー消費量（解説書 2.5 の続き）
 ##----------------------------------------------------------------------------------
-
-# LdAHUc        = zeros(365,2,numOfAHUSET);  % AHUの冷房負荷率帯
-# LdAHUh        = zeros(365,2,numOfAHUSET);  % AHUの暖房負荷率帯
-# TdAHUc        = zeros(365,2,numOfAHUSET);  % AHUの冷房運転時間
-# TdAHUh        = zeros(365,2,numOfAHUSET);  % AHUの暖房運転時間
-# TdAHUc_total  = zeros(365,numOfAHUSET);  % AHUの冷房運転時間
-# TdAHUh_total  = zeros(365,numOfAHUSET);  % AHUの冷房運転時間
-# E_fan_day     = zeros(365,numOfAHUSET);  % AHUのエネルギー消費量
-# E_fan_c_day   = zeros(365,numOfAHUSET);  % AHUのエネルギー消費量（冷房）
-# E_fan_h_day   = zeros(365,numOfAHUSET);  % AHUのエネルギー消費量（暖房）
-# E_AHUaex_day  = zeros(365,numOfAHUSET);  % 全熱交換器のエネルギー消費量
-
-
 
 for ahu_name in inputdata["AirHandlingSystem"]:
 
@@ -1664,9 +1654,9 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
         resultJson["AHU"][ahu_name]["E_fan_day"][dd] = resultJson["AHU"][ahu_name]["E_fan_c_day"][dd] + resultJson["AHU"][ahu_name]["E_fan_h_day"][dd]
 
-
+#%%
 ##----------------------------------------------------------------------------------
-## 空調機のエネルギー消費量 [MWh] 及び 積算運転時間(システム毎)
+## 空調機群の年間一次エネルギー消費量（解説書 2.5.12）
 ##----------------------------------------------------------------------------------
 
 resultJson["AHU"]["E_fan"] = 0
@@ -1680,710 +1670,644 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
     resultJson["AHU"]["E_fan"] += np.sum(resultJson["AHU"][ahu_name]["E_fan_day"],0)
     resultJson["AHU"]["E_aex"] += np.sum(resultJson["AHU"][ahu_name]["E_AHUaex_day"],0)
-    resultJson["AHU"]["TcAHU"] += np.sum(resultJson["AHU"][ahu_name]["TdAHUc_total"],0)
-    resultJson["AHU"]["ThAHU"] += np.sum(resultJson["AHU"][ahu_name]["TdAHUh_total"],0)
-    resultJson["AHU"]["MxAHUcE"] += np.sum(resultJson["AHU"][ahu_name]["E_fan_c_day"],0)
-    resultJson["AHU"]["MxAHUhE"] += np.sum(resultJson["AHU"][ahu_name]["E_fan_h_day"],0)
+    resultJson["AHU"][ahu_name]["TcAHU"] = np.sum(resultJson["AHU"][ahu_name]["TdAHUc_total"],0)
+    resultJson["AHU"][ahu_name]["ThAHU"] = np.sum(resultJson["AHU"][ahu_name]["TdAHUh_total"],0)
+    resultJson["AHU"][ahu_name]["MxAHUcE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_c_day"],0)
+    resultJson["AHU"][ahu_name]["MxAHUhE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_h_day"],0)
 
 
+print( f'空調機群（送風機）のエネルギー消費量: {resultJson["AHU"]["E_fan"]} MWh' )
+print( f'空調機群（全熱交換器）のエネルギー消費量: {resultJson["AHU"]["E_aex"]} MWh' )
 
 
-#%%
-# %------------------------------
-# % 二管式/四管式の処理（未処理負荷を0にする）
-
-# % 未処理負荷 [MJ/day] の集計
-# switch MODE
-#     case {0,1}
-        
-#         Qahu_remainChour = zeros(8760,numOfAHUSET);
-#         Qahu_remainHhour = zeros(8760,numOfAHUSET);
-        
-#         for iAHU = 1:numOfAHUSET
-#             for dd = 1:365
-#                 for hh = 1:24
-                    
-#                     num = 24*(dd-1)+hh;
-                    
-#                     if ModeOpe(dd,1) == -1  % 暖房モード
-#                         if Qahu_hour(num,iAHU) > 0  && AHUCHmode_H(iAHU) == 0
-#                             Qahu_remainChour(num,iAHU) = Qahu_remainChour(num,iAHU) + Qahu_hour(num,iAHU);
-#                             Qahu_hour(num,iAHU) = 0;
-#                         end
-#                     elseif ModeOpe(dd,1) == 1  % 冷房モード
-#                         if Qahu_hour(num,iAHU) < 0  && AHUCHmode_C(iAHU) == 0
-#                             Qahu_remainHhour(num,iAHU) = Qahu_remainHhour(num,iAHU) + Qahu_hour(num,iAHU);
-#                             Qahu_hour(num,iAHU) = 0;
-#                         end
-#                     else
-#                         error('運転モード ModeOpe が不正です。')
-#                     end
-                    
-#                 end
-#             end
-#         end
-        
-#     case {2,3,4}
-        
-#         Qahu_remainC = zeros(365,numOfAHUSET);
-#         Qahu_remainH = zeros(365,numOfAHUSET);
-        
-#         for iAHU = 1:numOfAHUSET
-#             for dd = 1:365
-#                 if ModeOpe(dd,1) == -1  % 暖房モード
-#                     if Qahu_c(dd,iAHU) > 0 && AHUCHmode_H(iAHU) == 0
-#                         Qahu_remainC(dd,iAHU) = Qahu_remainC(dd,iAHU) + abs(Qahu_c(dd,iAHU));
-#                         Qahu_c(dd,iAHU) = 0;
-#                     end
-#                     if Qahu_h(dd,iAHU) > 0 && AHUCHmode_H(iAHU) == 0
-#                         Qahu_remainC(dd,iAHU) = Qahu_remainC(dd,iAHU) + abs(Qahu_h(dd,iAHU));
-#                         Qahu_h(dd,iAHU) = 0;
-#                     end
-#                 elseif ModeOpe(dd,1) == 1  % 冷房モード
-#                     if Qahu_c(dd,iAHU) < 0  && AHUCHmode_C(iAHU) == 0
-#                         Qahu_remainH(dd,iAHU) = Qahu_remainH(dd,iAHU) + abs(Qahu_c(dd,iAHU));
-#                         Qahu_c(dd,iAHU) = 0;
-#                     end
-#                     if Qahu_h(dd,iAHU) < 0   && AHUCHmode_C(iAHU) == 0
-#                         Qahu_remainH(dd,iAHU) = Qahu_remainH(dd,iAHU) + abs(Qahu_h(dd,iAHU));
-#                         Qahu_h(dd,iAHU) = 0;
-#                     end
-#                 else
-#                     error('運転モード ModeOpe が不正です。')
-#                 end
-                
-#             end
-#         end
-# end
+print('空調機群のエネルギー消費量計算完了')
 
 
-# disp('空調エネルギー計算完了')
-# toc
+#%% 
+##----------------------------------------------------------------------------------
+## 二次ポンプ群の一次エネルギー消費量（解説書 2.6）
+##----------------------------------------------------------------------------------
+
+## 結果格納用変数
+resultJson["PUMP"] = {}
+
+# 冷房と暖房の二次ポンプ群に分ける。
+for pump_original_name in inputdata["SecondaryPumpSystem"]:
+
+    if "冷房" in inputdata["SecondaryPumpSystem"][pump_original_name]:
+        resultJson["PUMP"][ pump_original_name + "_冷房"] = inputdata["SecondaryPumpSystem"][pump_original_name]["冷房"]
+        resultJson["PUMP"][ pump_original_name + "_冷房"]["mode"] = "cooling"
+
+    if "暖房" in inputdata["SecondaryPumpSystem"][pump_original_name]:
+        resultJson["PUMP"][ pump_original_name + "_暖房"] = inputdata["SecondaryPumpSystem"][pump_original_name]["暖房"]
+        resultJson["PUMP"][ pump_original_name + "_暖房"]["mode"] = "heating"
 
 
-# %%-----------------------------------------------------------------------------------------------------------
-# %% 二次搬送系の負荷計算
+for pump_name in resultJson["PUMP"]:
 
-# switch MODE
+    resultJson["PUMP"][pump_name]["AHU_list"] = set()        # 接続される空調機群
+    resultJson["PUMP"][pump_name]["Qpsr"] = 0        # ポンプ定格能力
+    resultJson["PUMP"][pump_name]["Qpsahu_fan"]       = np.zeros(365)   # ファン発熱量 [MJ/day]
+    resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_C"] = np.zeros(365)   # ファン発熱量 [MJ/day]
+    resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_H"] = np.zeros(365)   # ファン発熱量 [MJ/day]
+    resultJson["PUMP"][pump_name]["pumpTime_Start"]   = np.zeros(365)
+    resultJson["PUMP"][pump_name]["pumpTime_Stop"]    = np.zeros(365)
+    resultJson["PUMP"][pump_name]["Qps"] = np.zeros(365)  # ポンプ負荷 [MJ/day]
+    resultJson["PUMP"][pump_name]["Tps"] = np.zeros(365)  # ポンプ運転時間 [時間/day]
+    resultJson["PUMP"][pump_name]["schedule"] = np.zeros((365,24))  # ポンプ時刻別運転スケジュール
+    resultJson["PUMP"][pump_name]["LdPUMP"] = np.zeros(365)    # 負荷率帯
+    resultJson["PUMP"][pump_name]["TdPUMP"] = np.zeros(365)    # 運転時間
+    resultJson["PUMP"][pump_name]["ContolType"] = set()        # 全台回転数制御かどうか（台数制御がない場合のみ有効）
+    resultJson["PUMP"][pump_name]["MinOpeningRate"] = 100      # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
+
+
+##----------------------------------------------------------------------------------
+## 二次ポンプ機群全体のスペックを整理する。
+##----------------------------------------------------------------------------------
+
+for pump_name in resultJson["PUMP"]:
+
+    # ポンプの台数
+    resultJson["PUMP"][pump_name]["number_of_pumps"] = len(resultJson["PUMP"][pump_name]["SecondaryPump"])
+
+    # 二次ポンプの能力のリスト
+    resultJson["PUMP"][pump_name]["Qpsr_list"] = []
+
+    # 二次ポンプ群全体の定格消費電力の合計
+    resultJson["PUMP"][pump_name]["RatedPowerConsumption_total"] = 0
+
+    for unit_id, unit_configure in enumerate(resultJson["PUMP"][pump_name]["SecondaryPump"]):
+
+        # 流量の合計（台数×流量）
+        resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate_total"] = \
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate"] * \
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["Number"]
+
+        # 消費電力の合計（消費電力×流量）
+        resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"] = \
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption"] * \
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["Number"]
     
-#     case {0,1}
-        
-#         Qpsahu_fan_hour = zeros(8760,numOfPumps);  % ファン発熱量 [kW]
-#         Qpsahu_hour     = zeros(8760,numOfPumps);  % ポンプ負荷 [kW]
-        
-#         for iPUMP = 1:numOfPumps
-            
-#             % ポンプ負荷の積算
-#             for iAHU = 1:numOfAHUSET
-#                 switch ahuSetName{iAHU}  % 属する空調機を見つける
-#                     case PUMPahuSet{iPUMP}
-                        
-#                         % ポンプ負荷[kW]
-#                         for num= 1:8760
-                            
-#                             if PUMPtype(iPUMP) == 1 % 冷水ポンプ
-                                
-#                                 % ファン発熱量 [kW]
-#                                 fanHeatup = 0;
-#                                 if ahuTypeNum(iAHU) == 1  % 空調機であれば
-#                                     if Qahu_hour(num,iAHU) > 0
-#                                         switch MODE
-#                                             case {0}
-#                                                 fanHeatup = E_fan_hour(num,iAHU) * k_heatup .* 1000;
-#                                             case {1}
-#                                                 fanHeatup = sum(MxAHUcE(iAHU,:))*(k_heatup)./TcAHU(iAHU,1).*1000;
-#                                         end
-                                        
-#                                         Qpsahu_fan_hour(num,iPUMP) = Qpsahu_fan_hour(num,iPUMP) + fanHeatup;
-#                                     end
-#                                 end
-                                
-#                                 if Qahu_hour(num,iAHU) > 0
-#                                     if ahuOAcool(iAHU) == 1 % 外冷あり
-#                                         if abs(Qahu_hour(num,iAHU) - Qahu_oac_hour(num,iAHU)) < 1
-#                                             Qpsahu_hour(num,iPUMP) = Qpsahu_hour(num,iPUMP) + 0;
-#                                         else
-#                                             Qpsahu_hour(num,iPUMP) = Qpsahu_hour(num,iPUMP) + Qahu_hour(num,iAHU) - Qahu_oac_hour(num,iAHU);
-#                                         end
-#                                     else
-#                                         Qpsahu_hour(num,iPUMP) = Qpsahu_hour(num,iPUMP) + Qahu_hour(num,iAHU) - Qahu_oac_hour(num,iAHU) + fanHeatup;
-#                                     end
-#                                 end
-                                
-#                             elseif PUMPtype(iPUMP) == 2 % 温水ポンプ
-                                
-#                                 % ファン発熱量 [kW]
-#                                 fanHeatup = 0;
-#                                 if ahuTypeNum(iAHU) == 1  % 空調機であれば
-#                                     if Qahu_hour(num,iAHU) < 0
-#                                         switch MODE
-#                                             case {0}
-#                                                 fanHeatup = E_fan_hour(num,iAHU) * k_heatup .* 1000;
-#                                             case {1}
-#                                                 fanHeatup = sum(MxAHUhE(iAHU,:))*(k_heatup)./ThAHU(iAHU,1).*1000;
-#                                         end
-                                        
-#                                         Qpsahu_fan_hour(num,iPUMP) = Qpsahu_fan_hour(num,iPUMP) + fanHeatup;
-#                                     end
-#                                 end
-                                
-#                                 if Qahu_hour(num,iAHU) < 0
-#                                     Qpsahu_hour(num,iPUMP) = Qpsahu_hour(num,iPUMP) + (-1)*(Qahu_hour(num,iAHU)+fanHeatup);
-#                                 end
-#                             end
-#                         end
-#                 end
-#             end
-#         end
-        
-        
-#     case {2,3,4}
-        
-#         Qpsahu_fan = zeros(365,numOfPumps);   % ファン発熱量 [MJ/day]
-#         Qpsahu_fan_AHU_C = zeros(365,numOfAHUSET);   % ファン発熱量 [MJ/day]
-#         Qpsahu_fan_AHU_H = zeros(365,numOfAHUSET);   % ファン発熱量 [MJ/day]
-#         pumpTime_Start = zeros(365,numOfPumps);
-#         pumpTime_Stop  = zeros(365,numOfPumps);
-#         Qps = zeros(365,numOfPumps); % ポンプ負荷 [MJ/day]
-#         Tps = zeros(365,numOfPumps);
-        
-#         for iPUMP = 1:numOfPumps
-            
-#             % ポンプ負荷の積算
-#             for iAHU = 1:numOfAHUSET
-                
-#                 if isempty(PUMPahuSet{iPUMP}) == 0
-                    
-#                     switch ahuSetName{iAHU}
-#                         case PUMPahuSet{iPUMP}
-                            
-#                             for dd = 1:365
-                                
-#                                 if PUMPtype(iPUMP) == 1 % 冷水ポンプ
-                                    
-#                                     % ファン発熱量 Qpsahu_fan [MJ/day] の算出
-#                                     tmpC = 0;
-#                                     tmpH = 0;
-#                                     if ahuTypeNum(iAHU) == 1  % 空調機であれば
-#                                         if Qahu_c(dd,iAHU) > 0
-#                                             tmpC = sum(MxAHUcE(iAHU,:))*(k_heatup)./TcAHU(iAHU,1).*Tahu_c(dd,iAHU).*3600;
-#                                             Qpsahu_fan(dd,iPUMP) = Qpsahu_fan(dd,iPUMP) + tmpC;
-#                                             Qpsahu_fan_AHU_C(dd,iAHU) = Qpsahu_fan_AHU_C(dd,iAHU) + tmpC;
-#                                         end
-#                                         if Qahu_h(dd,iAHU) > 0
-#                                             tmpH = sum(MxAHUhE(iAHU,:))*(k_heatup)./ThAHU(iAHU,1).*Tahu_h(dd,iAHU).*3600;
-#                                             Qpsahu_fan(dd,iPUMP) = Qpsahu_fan(dd,iPUMP) + tmpH;
-#                                             Qpsahu_fan_AHU_C(dd,iAHU) = Qpsahu_fan_AHU_C(dd,iAHU) + tmpH;
-#                                         end
-#                                     end
-                                    
-#                                     % 日積算ポンプ負荷 Qps [MJ/day] の算出
-#                                     if Qahu_c(dd,iAHU) > 0
-#                                         if Qahu_oac(dd,iAHU) > 0 % 外冷時はファン発熱量足さない　⇒　小さな負荷が出てしまう
-#                                             if abs(Qahu_c(dd,iAHU) - Qahu_oac(dd,iAHU)) < 1  % 計算誤差まるめ
-#                                                 Qps(dd,iPUMP) = Qps(dd,iPUMP) + 0;
-#                                             else
-#                                                 Qps(dd,iPUMP) = Qps(dd,iPUMP) + Qahu_c(dd,iAHU) - Qahu_oac(dd,iAHU);
-#                                             end
-#                                         else
-#                                             Qps(dd,iPUMP) = Qps(dd,iPUMP) + Qahu_c(dd,iAHU) - Qahu_oac(dd,iAHU) + tmpC + tmpH;
-#                                         end
-#                                     end
-#                                     if Qahu_h(dd,iAHU) > 0
-#                                         Qps(dd,iPUMP) = Qps(dd,iPUMP) + Qahu_h(dd,iAHU) - Qahu_oac(dd,iAHU) + tmpC + tmpH;
-#                                     end
-                                    
-#                                 elseif PUMPtype(iPUMP) == 2 % 温水ポンプ
-                                    
-#                                     % ファン発熱量 Qpsahu_fan [MJ/day] の算出
-#                                     tmpC = 0;
-#                                     tmpH = 0;
-#                                     if ahuTypeNum(iAHU) == 1  % 空調機であれば
-#                                         if Qahu_c(dd,iAHU) < 0
-#                                             tmpC = sum(MxAHUcE(iAHU,:))*(k_heatup)./TcAHU(iAHU,1).*Tahu_c(dd,iAHU).*3600;
-#                                             Qpsahu_fan(dd,iPUMP) = Qpsahu_fan(dd,iPUMP) + tmpC;
-#                                             Qpsahu_fan_AHU_H(dd,iAHU) = Qpsahu_fan_AHU_H(dd,iAHU) + tmpC;
-#                                         end
-#                                         if Qahu_h(dd,iAHU) < 0
-#                                             tmpH = sum(MxAHUhE(iAHU,:))*(k_heatup)./ThAHU(iAHU,1).*Tahu_h(dd,iAHU).*3600;
-#                                             Qpsahu_fan(dd,iPUMP) = Qpsahu_fan(dd,iPUMP) + tmpH;
-#                                             Qpsahu_fan_AHU_H(dd,iAHU) = Qpsahu_fan_AHU_H(dd,iAHU) + tmpH;
-#                                         end
-#                                     end
-                                    
-#                                     % 日積算ポンプ負荷 Qps [MJ/day] の算出<符号逆転させる>
-#                                     if Qahu_c(dd,iAHU) < 0
-#                                         Qps(dd,iPUMP) = Qps(dd,iPUMP) + (-1).*(Qahu_c(dd,iAHU) + tmpC + tmpH);
-#                                     end
-#                                     if Qahu_h(dd,iAHU) < 0
-#                                         Qps(dd,iPUMP) = Qps(dd,iPUMP) + (-1).*(Qahu_h(dd,iAHU) + tmpC + tmpH);
-#                                     end
-                                    
-#                                 end
-#                             end
-#                     end
-                    
-#                 end
-#             end
-            
-#             % ポンプ運転時間
-#             [Tps(:,iPUMP),pumpsystemOpeTime(iPUMP,:,:)]...
-#                 = mytfunc_PUMPOpeTIME(Qps(:,iPUMP),ahuSetName,PUMPahuSet{iPUMP},AHUsystemOpeTime);
-            
-#         end
-# end
+        # 二次ポンプ群全体の定格消費電力の合計
+        resultJson["PUMP"][pump_name]["RatedPowerConsumption_total"] += \
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"]
 
-# disp('ポンプ負荷計算完了')
-# toc;
+        # 二次ポンプの定格処理能力[kW] = [K] * [m3/h] * [kJ/kg・K] * [kg/m2] * [h/s]
+        resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"] = \
+            resultJson["PUMP"][pump_name]["TempelatureDifference"]* unit_configure["RatedWaterFlowRate_total"] *4.1860*1000/3600
+        resultJson["PUMP"][pump_name]["Qpsr"] += resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"]
+
+        resultJson["PUMP"][pump_name]["Qpsr_list"].append( resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"] )
+
+        # 制御方式
+        resultJson["PUMP"][pump_name]["ContolType"].add( resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["ContolType"] )
+
+        # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
+        if unit_configure["MinOpeningRate"] == None or np.isnan( unit_configure["MinOpeningRate"] ) == True:
+            resultJson["PUMP"][pump_name]["MinOpeningRate"] = 100
+        elif resultJson["PUMP"][pump_name]["MinOpeningRate"] > unit_configure["MinOpeningRate"]:
+            resultJson["PUMP"][pump_name]["MinOpeningRate"] = unit_configure["MinOpeningRate"]
+
+
+    # 全台回転数制御かどうか（台数制御がない場合のみ有効）
+    if "無" in resultJson["PUMP"][pump_name]["ContolType"]:
+        resultJson["PUMP"][pump_name]["ContolType"] = "無"
+    elif "定流量制御" in resultJson["PUMP"][pump_name]["ContolType"]:
+        resultJson["PUMP"][pump_name]["ContolType"] = "定流量制御"
+    elif "回転数制御" in resultJson["PUMP"][pump_name]["ContolType"]:
+        resultJson["PUMP"][pump_name]["ContolType"] = "回転数制御"
+    else:
+        raise Exception('制御方式が対応していません。')
+
+
+# 接続される空調機群
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    # 冷房（室内負荷処理用空調機）
+    resultJson["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add( \
+        inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"])
+    # 冷房（外気負荷処理用空調機）
+    resultJson["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add( \
+        inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"])
+
+    # 暖房（室内負荷処理用空調機）
+    resultJson["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add( \
+        inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"])
+    # 暖房（外気負荷処理用空調機）
+    resultJson["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add( \
+        inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"])
+
+
+
+##----------------------------------------------------------------------------------
+## 二次ポンプ負荷（解説書 2.6.1）
+##----------------------------------------------------------------------------------
+
+# 未処理負荷の算出
+for ahu_name in inputdata["AirHandlingSystem"]:
+
+    for dd in range(0,365):
+
+        if ac_mode[dd] == "暖房":
+
+            # 暖房期に冷房負荷の処理ができない場合
+            if (resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] > 0) and \
+                (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):   
+
+                resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += abs( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] )
+                resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = 0
+
+            if (resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] > 0) and \
+                (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):
+
+                resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += abs( resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] )
+                resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] = 0
+
+        elif (ac_mode[dd] == "冷房") or (ac_mode[dd] == "中間"):
+
+            # 冷房期に暖房負荷の処理ができない場合
+            if (resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] < 0) and \
+                (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):   
+
+                resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += abs( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] )
+                resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = 0
+
+            if (resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] < 0) and \
+                (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):
+
+                resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += abs( resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] )
+                resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] = 0
+
+
+print( f'未処理負荷（冷房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainC"])} MJ' )
+print( f'未処理負荷（暖房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainH"])} MJ' )
+
+
+# ポンプ負荷の積算
+for pump_name in resultJson["PUMP"]:
+
+    for ahu_name in resultJson["PUMP"][pump_name]["AHU_list"]:
+
+        for dd in range(0,365):
+
+            if resultJson["PUMP"][pump_name]["mode"] == "cooling":  # 冷水ポンプの場合
+
+                # ファン発熱量 Qpsahu_fan [MJ/day] の算出
+                tmpC = 0
+                tmpH = 0
+
+                if inputdata["AirHandlingSystem"][ahu_name]["AHU_type"] == "空調機":
+
+                    if resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] > 0:
+                        tmpC = k_heatup * resultJson["AHU"][ahu_name]["MxAHUcE"] * \
+                            resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["TcAHU"] * 3600
+
+                        resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpC
+                        resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_C"] += tmpC
+
+                    if resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] > 0:
+                        tmpH = k_heatup * resultJson["AHU"][ahu_name]["MxAHUhE"] * \
+                            resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["ThAHU"] * 3600
+
+                        resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpC
+                        resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_C"] += tmpC
+
+
+                # 日積算ポンプ負荷 Qps [MJ/day] の算出
+                if resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] > 0:
+                    if resultJson["AHU"][ahu_name]["cooling"]["Qahu_oac"][dd] > 0: # 外冷時はファン発熱量足さない ⇒ 小さな負荷が出てしまう
+                        if abs(resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] - resultJson["AHU"][ahu_name]["cooling"]["Qahu_oac"][dd]) < 1:
+                            resultJson["PUMP"][pump_name]["Qps"][dd] += 0
+                        else:
+                            resultJson["PUMP"][pump_name]["Qps"][dd] += \
+                                resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] - resultJson["AHU"][ahu_name]["cooling"]["Qahu_oac"][dd]
+                    else:
+                        resultJson["PUMP"][pump_name]["Qps"][dd] += \
+                            resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] - resultJson["AHU"][ahu_name]["cooling"]["Qahu_oac"][dd] + tmpC + tmpH
+
+                if resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] > 0:
+                    resultJson["PUMP"][pump_name]["Qps"][dd] += \
+                        resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] - resultJson["AHU"][ahu_name]["cooling"]["Qahu_oac"][dd] + tmpC + tmpH
+
+
+            elif resultJson["PUMP"][pump_name]["mode"] == "heating":
+
+                # ファン発熱量 Qpsahu_fan [MJ/day] の算出
+                tmpC = 0
+                tmpH = 0
+
+                if inputdata["AirHandlingSystem"][ahu_name]["AHU_type"] == "空調機":
+
+                    if resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] < 0:
+                        tmpC = k_heatup * resultJson["AHU"][ahu_name]["MxAHUcE"] * \
+                            resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["TcAHU"] * 3600
+
+                        resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpC
+                        resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_H"] += tmpC
+
+                    if resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] < 0:
+                        tmpH = k_heatup * resultJson["AHU"][ahu_name]["MxAHUhE"] * \
+                            resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["ThAHU"] * 3600
+
+                        resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpC
+                        resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_H"] += tmpC
+
+
+                # 日積算ポンプ負荷 Qps [MJ/day] の算出<符号逆転させる>
+                if resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] < 0:
+
+                    resultJson["PUMP"][pump_name]["Qps"][dd] += \
+                        (-1) * ( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] + tmpC + tmpH )
+
+                if resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] < 0:
+
+                    resultJson["PUMP"][pump_name]["Qps"][dd] += \
+                        (-1) * ( resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] + tmpC + tmpH )
+
+
+print( sum(resultJson["PUMP"]["PUMP1_冷房"]["Qps"],0) )
+print( sum(resultJson["PUMP"]["PUMP1_暖房"]["Qps"],0) )
+
+
+##----------------------------------------------------------------------------------
+## 二次ポンプ群の運転時間（解説書 2.6.2）
+##----------------------------------------------------------------------------------
+
+for pump_name in resultJson["PUMP"]:
+    
+    for ahu_name in resultJson["PUMP"][pump_name]["AHU_list"]:
+
+        resultJson["PUMP"][ pump_name ]["schedule"] += resultJson["AHU"][ ahu_name ]["schedule"]
+
+    # 運転スケジュールの和が「1以上（接続されている空調機群の1つは動いている）」であれば、二次ポンプは稼働しているとする。
+    resultJson["PUMP"][ pump_name ]["schedule"][ resultJson["PUMP"][ pump_name ]["schedule"] > 1 ] = 1
+
+    # 日積算運転時間
+    resultJson["PUMP"][pump_name]["Tps"] = np.sum(resultJson["PUMP"][ pump_name ]["schedule"],1)
+
+
+print( sum(resultJson["PUMP"]["PUMP1_冷房"]["Tps"],0) )
+print( sum(resultJson["PUMP"]["PUMP1_暖房"]["Tps"],0) )
+
+print('ポンプ負荷計算完了')
+
 
 
 # %% ポンプエネルギー計算
 
-# % 負荷マトリックス
-# MxPUMP    = zeros(numOfPumps,length(mxL));
-# % 運転台数マトリックス
-# MxPUMPNum = zeros(numOfPumps,length(mxL));
-# MxPUMPPower = zeros(numOfPumps,length(mxL));
-# % 消費電力マトリックス
-# MxPUMPE   = zeros(numOfPumps,length(mxL));
-# % 部分負荷特性
-# PUMPvwvfac = ones(numOfPumps,length(mxL));
+# 運転負荷率帯を算出する。
 
-# % 時刻別計算用（MODE = 0）
-# LtPUMP = zeros(8760,numOfPumps);  % ポンプの負荷率区分
-# E_pump_hour = zeros(8760,numOfPumps);  % ポンプのエネルギー消費量
+for pump_name in resultJson["PUMP"]:
 
-# % 日別計算用（MODE = 4）
-# LdPUMP = zeros(365,numOfPumps);  % ポンプの負荷率区分
-# TdPUMP = zeros(365,numOfPumps);  % ポンプの運転時間
-# E_pump_day = zeros(365,numOfPumps);  % ポンプのエネルギー消費量
-
-
-# % ポンプ群i及び群に属するポンプjの仮想定格能力[kW]　（温度差×流量合計値）
-# [Qpsr, Qpsr_sub] = func_PUMPCapacity(pumpdelT',pumpFlow,Cw);
-
-# for iPUMP = 1:numOfPumps
+    Lpump = np.zeros(365) 
+    Mxc = np.zeros(365)  # ポンプの負荷率区分
+    Tdc = np.zeros(365)  # ポンプの運転時間
     
-#     if Qpsr(iPUMP) ~= 0 % ビルマル用仮想ポンプは除く
+    if resultJson["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
+
+        for dd in range(0,365):
+
+            # 負荷率 Lpump[-] = [MJ/day] / [h/day] * [kJ/MJ] / [s/h] / [KJ/s]
+            Lpump[dd] = (resultJson["PUMP"][pump_name]["Qps"][dd] / resultJson["PUMP"][pump_name]["Tps"][dd] *1000/3600) \
+                /resultJson["PUMP"][pump_name]["Qpsr"]
+
+        for dd in range(0,365):
         
-#         % ポンプ負荷マトリックス作成（仕様書 2.7.2.2 二次ポンプ群の負荷率）
-#         switch MODE
-#             case {0}
-#                 [LtPUMP(:,iPUMP),~] = func_matrixPUMP(MODE,Qpsahu_hour(:,iPUMP),Qpsr(iPUMP),[],mxL);
-#             case {1}
-#                 [MxPUMP(iPUMP,:),~] = func_matrixPUMP(MODE,Qpsahu_hour(:,iPUMP),Qpsr(iPUMP),[],mxL);
-#             case {2,3}
-#                 [MxPUMP(iPUMP,:),~] = func_matrixPUMP(MODE,Qps(:,iPUMP),Qpsr(iPUMP),Tps(:,iPUMP),mxL);
-#             case {4}
-#                 [LdPUMP(:,iPUMP),TdPUMP(:,iPUMP)] = func_matrixPUMP(MODE,Qps(:,iPUMP),Qpsr(iPUMP),Tps(:,iPUMP),mxL);
-#         end
-        
-        
-#         % ポンプ運転台数 [台] と　消費電力 [kW]
-#         if PUMPnumctr(iPUMP) == 0   % 台数制御なし
-            
-#             % 運転台数（全台運転）
-#             MxPUMPNum(iPUMP,:)   = pumpsetPnum(iPUMP).*ones(1,length(mxL));
-            
-#             % 流量制御方式
-#             if prod(PUMPvwv(iPUMP,1:pumpsetPnum(iPUMP))) == 1  % 全台VWVであれば
+            if (resultJson["PUMP"][pump_name]["Tps"][dd] > 0) and (resultJson["PUMP"][pump_name]["Qpsr"] > 0):  # ゼロ割でNaNになっている値を飛ばす
                 
-#                 for iL = 1:length(mxL)
-#                     if aveL(iL) < max(pumpVWVmin(iPUMP,1:pumpsetPnum(iPUMP)))
-#                         tmpL = max(pumpVWVmin(iPUMP,1:pumpsetPnum(iPUMP)));
-#                     else
-#                         tmpL = aveL(iL);
-#                     end
+                if Lpump[dd] > 0:
+
+                    # 出現時間マトリックスを作成
+                    ix = count_Matrix(Lpump[dd],mxL)
+
+                    Mxc[dd] = ix
+                    Tdc[dd] = resultJson["PUMP"][pump_name]["Tps"][dd]
+
+    resultJson["PUMP"][pump_name]["LdPUMP"] = Mxc
+    resultJson["PUMP"][pump_name]["TdPUMP"] = Tdc
+    
+print( sum(resultJson["PUMP"]["PUMP1_冷房"]["LdPUMP"],0) )
+print( sum(resultJson["PUMP"]["PUMP1_冷房"]["TdPUMP"],0) )
+print( sum(resultJson["PUMP"]["PUMP1_暖房"]["LdPUMP"],0) )
+print( sum(resultJson["PUMP"]["PUMP1_暖房"]["TdPUMP"],0) )
+
+
+#%%
+##----------------------------------------------------------------------------------
+## 流量制御方式によって定まる係数
+##----------------------------------------------------------------------------------
+
+for pump_name in resultJson["PUMP"]:
+
+    for unit_id, unit_configure in enumerate(resultJson["PUMP"][pump_name]["SecondaryPump"]):
+
+        if unit_configure["ContolType"] in FLOWCONTROL.keys():
+
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a4"]
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a3"]
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a2"]
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a1"]
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a0"]
+
+        elif unit_configure["FanControlType"] == "無":
+
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = 0
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = 0
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = 0
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = 0
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = 1
+            resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["MinOpeningRate"] = 100
+
+        else:
+            raise Exception('制御方式が不正です')
+
+
+
+#%%
+##----------------------------------------------------------------------------------
+## 二次ポンプのエネルギー消費量
+##----------------------------------------------------------------------------------
+
+for pump_name in resultJson["PUMP"]:
+
+    MxPUMPNum = np.zeros(len(mxL))
+    MxPUMPPower = np.zeros(len(mxL))
+    PUMPvwvfac = np.zeros(len(mxL))
+
+    if resultJson["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
+
+        if resultJson["PUMP"][pump_name]["isStagingControl"] == "無":    # 台数制御なし
+        
+            # 運転台数
+            MxPUMPNum = np.ones(len(mxL)) * resultJson["PUMP"][pump_name]["number_of_pumps"]
+
+            # 流量制御方式
+            if resultJson["PUMP"][pump_name]["ContolType"] == "回転数制御":  # 全台VWVであれば
+
+                for iL in range(0,len(mxL)):
+
+                    # 最小負荷率による下限を設ける。
+                    if aveL[iL] < (resultJson["PUMP"][pump_name]["MinOpeningRate"] /100):
+                        tmpL = resultJson["PUMP"][pump_name]["MinOpeningRate"] / 100
+                    else:
+                        tmpL = aveL[iL]
+
+                    # VWVの効果率曲線(1番目の特性を代表して使う)
                     
-#                     % VWVの効果率曲線(1番目の特性を代表して使う)
-#                     if iL == length(mxL)
-#                         PUMPvwvfac(iPUMP,iL) = 1.2;
-#                     else
-#                         PUMPvwvfac(iPUMP,iL) = ...
-#                             Pump_VWVcoeffi(iPUMP,1,1).*tmpL.^4 + ...
-#                             Pump_VWVcoeffi(iPUMP,1,2).*tmpL.^3 + ...
-#                             Pump_VWVcoeffi(iPUMP,1,3).*tmpL.^2 + ...
-#                             Pump_VWVcoeffi(iPUMP,1,4).*tmpL + ...
-#                             Pump_VWVcoeffi(iPUMP,1,5);
-#                     end
+                    if iL == len(mxL):
+                        PUMPvwvfac[iL] = 1.2
+                    else:
+                        PUMPvwvfac[iL] = \
+                            resultJson["PUMP"][pump_name]["SecondaryPump"][0]["a4"] * tmpL ** 4 + \
+                            resultJson["PUMP"][pump_name]["SecondaryPump"][0]["a3"] * tmpL ** 3 + \
+                            resultJson["PUMP"][pump_name]["SecondaryPump"][0]["a2"] * tmpL ** 2 + \
+                            resultJson["PUMP"][pump_name]["SecondaryPump"][0]["a1"] * tmpL + \
+                            resultJson["PUMP"][pump_name]["SecondaryPump"][0]["a0"]
+
+            else: # 全台VWVであれば、定流量とみなす。
+                PUMPvwvfac = np.ones(len(mxL))
+                PUMPvwvfac[len(mxL)] = 1.2
+
+
+            # 消費電力（部分負荷特性×定格消費電力）[kW]
+            MxPUMPPower = PUMPvwvfac * resultJson["PUMP"][pump_name]["RatedPowerConsumption_total"]
+
+
+        elif resultJson["PUMP"][pump_name]["isStagingControl"] == "有":   # 台数制御あり
+
+            for iL in range(0,len(mxL)):
+
+                # 負荷区分 iL における処理負荷 [kW]
+                Qpsr_iL  = resultJson["PUMP"][pump_name]["Qpsr"] * aveL[iL]
+
+                # 運転台数 MxPUMPNum
+                for rr in range(0, resultJson["PUMP"][pump_name]["number_of_pumps"]):
+
+                    # 1台～rr台までの最大能力合計値
+                    tmpQmax = np.sum( resultJson["PUMP"][pump_name]["Qpsr_list"][0:rr+1] )
+
+                    if Qpsr_iL < tmpQmax:
+                        break
+                
+                MxPUMPNum[iL] = rr+1   # pythonのインデックスと実台数は「1」ずれることに注意。
+
+
+                # 定流量ポンプの処理熱量合計、VWVポンプの台数
+                Qtmp_CWV = 0
+                numVWV = MxPUMPNum[iL]  # MxPUMPNum[iL]は、変流量時の最大運転台数
+
+                for rr in range(0, int(MxPUMPNum[iL])):
                     
-#                 end
-#             else
-#                 % 全台VWVでなければ、CWVとみなす
-#                 PUMPvwvfac(iPUMP,:) = ones(1,11);
-#                 PUMPvwvfac(iPUMP,end) = 1.2;
+                    if (resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "無") or \
+                        (resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
+
+                        Qtmp_CWV += resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["Qpsr"]
+                        numVWV = numVWV -1
+
+
+                # 制御を加味した消費エネルギー MxPUMPPower [kW]
+                for rr in range(0, int(MxPUMPNum[iL])):
+
+                    if (resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "無") or \
+                        (resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
+
+                        if aveL[iL] > 1.0:
+                            MxPUMPPower[iL] += resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * 1.2
+                        else:
+                            MxPUMPPower[iL] += resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"]
+
+
+                    elif resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "回転数制御":
+
+                        # 変流量ポンプjの負荷率 [-]
+                        tmpL = ( (Qpsr_iL - Qtmp_CWV)/numVWV ) / resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["Qpsr"]
+
+                        # 最小流量の制限
+                        if tmpL < resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100:
+                            tmpL = resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100
+                        
+                        # 変流量制御による省エネ効果
+                        if aveL[iL] > 1.0:
+                            PUMPvwvfac[iL] = 1.2
+                        else:
+                            PUMPvwvfac[iL] = \
+                                resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["a4"] * tmpL ** 4 + \
+                                resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["a3"] * tmpL ** 3 + \
+                                resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["a2"] * tmpL ** 2 + \
+                                resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["a1"] * tmpL + \
+                                resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["a0"]
+
+                        MxPUMPPower[iL] +=  resultJson["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
+
+
+    resultJson["PUMP"][pump_name]["MxPUMPNum"]   = MxPUMPNum
+    resultJson["PUMP"][pump_name]["MxPUMPPower"] = MxPUMPPower
+    resultJson["PUMP"][pump_name]["PUMPvwvfac"]  = PUMPvwvfac
+
+
+##----------------------------------------------------------------------------------
+## 二次ポンプ群の消費電力（解説書 2.6.9）
+##----------------------------------------------------------------------------------
+
+for pump_name in resultJson["PUMP"]:
+
+    # 二次ポンプ群の電力消費量（消費電力×運転時間）[MWh]
+    resultJson["PUMP"][pump_name]["E_pump_day"] = np.zeros(365)  # ポンプのエネルギー消費量
+
+    for dd in range(0,365):
+
+        if resultJson["PUMP"][pump_name]["TdPUMP"][dd] > 0:
+
+            resultJson["PUMP"][pump_name]["E_pump_day"][dd] = \
+                resultJson["PUMP"][pump_name]["MxPUMPPower"][ int(resultJson["PUMP"][pump_name]["LdPUMP"][dd]) ] / 1000 * \
+                resultJson["PUMP"][pump_name]["TdPUMP"][dd]
+
+
+##----------------------------------------------------------------------------------
+## 二次ポンプ群の年間一次エネルギー消費量（解説書 2.6.10）
+##----------------------------------------------------------------------------------
+
+E_pump = 0
+
+for pump_name in resultJson["PUMP"]:
+
+    E_pump += np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
+    resultJson["PUMP"][pump_name]["E_pump"]  = np.sum(resultJson["PUMP"][pump_name]["TdPUMP"], 0)
+    resultJson["PUMP"][pump_name]["MxPUMPE"]  = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
+
+
+print('二次ポンプ群のエネルギー消費量計算完了')
+
+
+
+# #%%
+# ##----------------------------------------------------------------------------------
+# ## 熱源群の一次エネルギー消費量（解説書 2.7）
+# ##----------------------------------------------------------------------------------
+
+# # xXratioMX  = ones(numOfRefs,3,3).*NaN;
+
+# # モデル格納用変数
+# model["REF"] = {}
+
+# # 冷房と暖房の二次ポンプ群に分ける。
+# for ref_original_name in inputdata["HeatsourceSystem"]:
+
+#     if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
+#         model["REF"][ ref_original_name + "_冷房"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房"]
+#         model["REF"][ ref_original_name + "_冷房"]["mode"] = "cooling"
+
+#         if "冷房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
+#             model["REF"][ ref_original_name + "_冷房"]["蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]
+#             model["REF"][ ref_original_name + "_冷房"]["isStorage"] = "有"
+#         else:
+#             model["REF"][ ref_original_name + "_冷房"]["isStorage"] = "無"
+
+
+#     if "暖房" in inputdata["HeatsourceSystem"][ref_original_name]:
+#         model["REF"][ ref_original_name + "_暖房"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房"]
+#         model["REF"][ ref_original_name + "_暖房"]["mode"] = "heating"
+
+#         if "暖房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
+#             model["REF"][ ref_original_name + "_暖房"]["蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]
+#             model["REF"][ ref_original_name + "_暖房"]["isStorage"] = "有"
+#         else:
+#             model["REF"][ ref_original_name + "_暖房"]["isStorage"] = "無"
+
+
+
+# #%%
+# ##----------------------------------------------------------------------------------
+# ## 熱源群全体のスペックを整理する。
+# ##----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+# # for ref_name in inputdata["HeatsourceSystem"]:
+
+# #     Qref          = np.zeros(365,numOfRefs)   # 日積算熱源負荷 [MJ/day]
+# #     Qref_kW       = np.zeros(365,numOfRefs)   # 日平均熱源負荷 [kW]
+# #     Qref_OVER     = np.zeros(365,numOfRefs)   # 日積算過負荷 [MJ/day]
+# #     Qpsahu_pump   = 0                         # ポンプ発熱量 [kW]
+# #     Tref          = np.zeros(365,numOfRefs)
+# #     refTime_Start = np.zeros(365,numOfRefs)
+# #     refTime_Stop  = np.zeros(365,numOfRefs)
+# #     Qpsahu_pump_save =  zeros(365,numOfRefs)  # ポンプ発熱量 保存 [MJ]
+
+
+# #     # 日積算熱源負荷 [MJ/Day]
+# #     for iPUMP = 1:numOfPumps
+# #         switch pumpName{iPUMP}
+# #             case REFpumpSet{iREF}
+            
+# #                 % 二次ポンプ発熱量 [kW]
+# #                 if TcPUMP(iPUMP,1) > 0
+# #                     Qpsahu_pump(iPUMP) = sum(MxPUMPE(iPUMP,:)).*(k_heatup)./TcPUMP(iPUMP,1).*1000;
+# #                 end
+            
+# #                 for dd = 1:365
+                
+# #                     if REFtype(iREF) == 1  % 冷熱生成モード
+# #                         % 日積算熱源負荷  [MJ/day]
+# #                         if Qps(dd,iPUMP) > 0
+# #                             Qref(dd,iREF)  = Qref(dd,iREF) + Qps(dd,iPUMP) + Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
+# #                             % ポンプ発熱保存
+# #                             Qpsahu_pump_save(dd,iREF) = Qpsahu_pump_save(dd,iREF) + Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
+# #                         end
+# #                     elseif REFtype(iREF) == 2 % 温熱生成モード
+# #                         % 日積算熱源負荷  [MJ/day] (Qpsの符号が変わっていることに注意)
+# #                         if Qps(dd,iPUMP) + (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000 > 0
+# #                             Qref(dd,iREF)  = Qref(dd,iREF) + Qps(dd,iPUMP) + (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
+# #                             % ポンプ発熱保存
+# #                             Qpsahu_pump_save(dd,iREF) = Qpsahu_pump_save(dd,iREF) - (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
+# #                         end
+# #                     end
+                
+# #                 end
+# #         end
+# #     end
+
+#     % 熱源運転時間（ポンプ運転時間の和集合）
+#     [Tref(:,iREF),refsystemOpeTime(iREF,:,:)] =...
+#         mytfunc_REFOpeTIME(Qref(:,iREF),pumpName,REFpumpSet{iREF},pumpsystemOpeTime);
+
+
+#     % 平均負荷[kW]と過負荷量を求める。
+#     for dd = 1:365
+    
+#         % 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
+#         if Tref(dd,iREF) > 0  && REFstorage(iREF) == 1
+#             Qref(dd,iREF) = Qref(dd,iREF) + refsetStorageSize(iREF)*0.03;  % 2014/1/10修正
+        
+#             % 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする） 2013/12/16
+#             if Qref(dd,iREF) > storageEffratio(iREF)*refsetStorageSize(iREF)
+#                 Qref(dd,iREF) = storageEffratio(iREF)*refsetStorageSize(iREF);
 #             end
-            
-#             % 消費電力（部分負荷特性×定格消費電力）[kW]
-#             MxPUMPPower(iPUMP,:) = PUMPvwvfac(iPUMP,:) .* sum(pumpPower(iPUMP,:),2);
-            
-            
-#         elseif PUMPnumctr(iPUMP) == 1  % 台数制御あり
-            
-#             for iL = 1:length(mxL)
-                
-#                 % 負荷区分 iL における処理負荷 [kW]
-#                 Qpsr_iL  = Qpsr(iPUMP)*aveL(iL);
-                
-#                 % 運転台数 MxPUMPNum
-#                 for rr = 1:pumpsetPnum(iPUMP)
-#                     % 1台～rr台までの最大能力合計値
-#                     tmpQmax = sum(Qpsr_sub(iPUMP,1:rr),2);
-                    
-#                     if Qpsr_iL < tmpQmax
-#                         break
-#                     end
-#                 end
-#                 MxPUMPNum(iPUMP,iL) = rr;
-                
-#                 % 定流量ポンプの処理熱量合計、VWVポンプの台数
-#                 Qtmp_CWV = 0;
-#                 numVWV = MxPUMPNum(iPUMP,iL);
-#                 for iPUMPSUB = 1:MxPUMPNum(iPUMP,iL)
-#                     if PUMPvwv(iPUMP,iPUMPSUB) == 0  % 定流量ポンプであれば
-#                         % 定流量ポンプの処理熱量合計
-#                         Qtmp_CWV = Qtmp_CWV + Qpsr_sub(iPUMP,iPUMPSUB);
-#                         % 全体台数から定流量ポンプの台数を差し引いていく
-#                         numVWV = numVWV - 1;
-#                     end
-#                 end
-                
-#                 % 制御を加味した消費エネルギー MxPUMPPower [kW]
-#                 for iPUMPSUB = 1:MxPUMPNum(iPUMP,iL)
-                    
-#                     if PUMPvwv(iPUMP,iPUMPSUB) == 0 % 定流量
-                        
-#                         if aveL(iL) > 1.0
-#                             MxPUMPPower(iPUMP,iL) = MxPUMPPower(iPUMP,iL)  + pumpPower(iPUMP,iPUMPSUB)*1.2;
-#                         else
-#                             MxPUMPPower(iPUMP,iL) = MxPUMPPower(iPUMP,iL)  + pumpPower(iPUMP,iPUMPSUB);
-#                         end
-                        
-#                     elseif PUMPvwv(iPUMP,iPUMPSUB) == 1 % 変流量
-                        
-#                         % 変流量ポンプjの負荷率 [-]
-#                         tmpL = ( (Qpsr_iL - Qtmp_CWV)/numVWV ) / Qpsr_sub(iPUMP,iPUMPSUB);
-                        
-#                         % 最小流量の制限
-#                         if tmpL < pumpMinValveOpening(iPUMP,iPUMPSUB)
-#                             tmpL = pumpMinValveOpening(iPUMP,iPUMPSUB);
-#                         end
-                        
-#                         % 変流量制御による省エネ効果
-#                         if aveL(iL) > 1.0
-#                             PUMPvwvfac(iPUMP,iL) = 1.2;
-#                         else
-#                             PUMPvwvfac(iPUMP,iL) = ...
-#                                 Pump_VWVcoeffi(iPUMP,iPUMPSUB,1).*tmpL.^4 + ...
-#                                 Pump_VWVcoeffi(iPUMP,iPUMPSUB,2).*tmpL.^3 + ...
-#                                 Pump_VWVcoeffi(iPUMP,iPUMPSUB,3).*tmpL.^2 + ...
-#                                 Pump_VWVcoeffi(iPUMP,iPUMPSUB,4).*tmpL + ...
-#                                 Pump_VWVcoeffi(iPUMP,iPUMPSUB,5);
-#                         end
-                        
-#                         MxPUMPPower(iPUMP,iL) = MxPUMPPower(iPUMP,iL)  + pumpPower(iPUMP,iPUMPSUB).*PUMPvwvfac(iPUMP,iL);
-                        
-#                     end
-#                 end
-#             end
-            
+        
 #         end
-        
-        
-#         % 二次ポンプ群の電力消費量（消費電力×運転時間）[MWh]
-#         switch MODE
-            
-#             case {0}
-                
-#                 for dd = 1:365
-#                     for hh = 1:24
-                        
-#                         % 1月1日0時からの時間数
-#                         num = 24*(dd-1)+hh;
-                        
-#                         % ポンプのエネルギー消費量 [MWh]
-#                         if LtPUMP(num,iPUMP) == 0
-#                             E_pump_hour(num,iPUMP) = 0;
-#                         else
-#                             E_pump_hour(num,iPUMP) =  MxPUMPPower(iPUMP,LtPUMP(num,iPUMP))./1000;   % ポンプエネルギー消費量  MWh
-#                         end
-#                     end
-#                 end
-                
-#             case {1,2,3}
-#                 % ポンプエネルギー消費量 [MWh]
-#                 MxPUMPE(iPUMP,:) = MxPUMP(iPUMP,:).*MxPUMPPower(iPUMP,:)./1000;
-                
-#             case {4}
-                
-#                 for dd = 1:365
-                    
-#                     % ポンプのエネルギー消費量 [MWh]
-#                     if TdPUMP(dd,iPUMP) == 0
-#                         E_pump_day(dd,iPUMP) = 0;
-#                     else
-#                         E_pump_day(dd,iPUMP) =  MxPUMPPower(iPUMP,LdPUMP(dd,iPUMP))./1000.*TdPUMP(dd,iPUMP);   % ポンプエネルギー消費量  MWh
-#                     end
-#                 end
-                
+    
+#         % 平均負荷 [kW]
+#         if Tref(dd,iREF) == 0
+#             Qref_kW(dd,iREF) = 0;
+#         else
+#             Qref_kW(dd,iREF) = Qref(dd,iREF)./Tref(dd,iREF).*1000./3600;
 #         end
-        
+    
+#         % 過負荷分を集計 [MJ/day]
+#         if Qref_kW(dd,iREF) > QrefrMax(iREF)
+#             Qref_OVER(dd,iREF) = (Qref_kW(dd,iREF)-QrefrMax(iREF)).*Tref(dd,iREF)*3600/1000;
+#         end
 #     end
-# end
 
-# % 二次ポンプのエネルギー消費量 [MWh] 及び 積算運転時間(システム毎)
-# switch MODE
-#     case {0}
-#         E_pump = sum(sum(E_pump_hour));
-#         TcPUMP = sum(E_pump_hour>0,1)';
-#     case {1,2,3}
-#         E_pump = sum(sum(MxPUMPE));  % エネルギー消費量 [MWh]
-#         TcPUMP = sum(MxPUMP,2); % 積算運転時間(システム毎)
-#     case {4}
-#         E_pump = sum(sum(E_pump_day));  % エネルギー消費量 [MWh]
-#         TcPUMP = sum(TdPUMP,1)'; % 積算運転時間(システム毎)
-#         MxPUMPE = sum(E_pump_day,1)';
-# end
 
-# disp('ポンプエネルギー計算完了')
-# toc
 
-# %%-----------------------------------------------------------------------------------------------------------
-# %% 熱源系統の計算
-
-# xXratioMX  = ones(numOfRefs,3,3).*NaN;
-
-# switch MODE
-#     case {0,1}
-        
-#         Qref_hour = zeros(8760,numOfRefs);   % 時刻別熱源負荷 [kW]
-#         Qref_OVER_hour = zeros(8760,numOfRefs);   % 過負荷 [MJ/h]
-        
-#         for iREF = 1:numOfRefs
-            
-#             % 日積算熱源負荷 [MJ/Day]
-#             for iPUMP = 1:numOfPumps
-#                 switch pumpName{iPUMP}
-#                     case REFpumpSet{iREF}
-                        
-#                         for num=1:8760
-                            
-#                             % ポンプ発熱量 [kW]
-#                             pumpHeatup = 0;
-                            
-#                             if TcPUMP(iPUMP,1) ~= 0
-#                                 switch MODE
-#                                     case {0}
-#                                         pumpHeatup = E_pump_hour(num,iPUMP) .* k_heatup .*1000;
-#                                     case {1}
-#                                         pumpHeatup = sum(MxPUMPE(iPUMP,:)).*(k_heatup)./TcPUMP(iPUMP,1).*1000;
-#                                 end
-#                             else
-#                                 pumpHeatup = 0;  % 仮想ポンプ用
-#                             end
-                            
-                            
-#                             if Qpsahu_hour(num,iPUMP) ~= 0  % 停止時除く
-                                
-#                                 if REFtype(iREF) == 1 % 冷房負荷→冷房熱源に
-                                    
-#                                     tmp = Qpsahu_hour(num,iPUMP) + pumpHeatup;
-#                                     Qref_hour(num,iREF) = Qref_hour(num,iREF) + tmp;
-                                    
-#                                 elseif REFtype(iREF) == 2 % 暖房負荷→暖房熱源に
-                                    
-#                                     tmp = Qpsahu_hour(num,iPUMP) - pumpHeatup;
-#                                     if tmp<0
-#                                         tmp = 0;
-#                                     end
-#                                     Qref_hour(num,iREF) = Qref_hour(num,iREF) + tmp;
-                                    
-#                                 end
-                                
-#                             end
-#                         end
-#                 end
-#             end
-            
-#             % 熱源運転時間を求める
-#             opetimeTemp = zeros(365,1);
-#             for dd = 1:365
-#                 count = 0;
-#                 for hh = 1:24
-#                     if Qref_hour(24*(dd-1)+hh,iREF) > 0
-#                         count = count + 1;
-#                     end
-#                 end
-#                 opetimeTemp(dd) = count;
-#             end
-            
-#             for dd = 1:365
-#                 for hh = 1:24
-#                     num = 24*(dd-1) + hh;
-                    
-#                     % 過負荷分を抜き出す [MJ/hour]
-#                     if Qref_hour(num,iREF) > QrefrMax(iREF)
-#                         Qref_OVER_hour(num,iREF) = (Qref_hour(num,iREF)-QrefrMax(iREF)) *3600/1000;
-#                     end
-                    
-#                 end
-#             end
-#         end
-        
-#         % 蓄熱の処理(2016/01/11追加)
-#         [Qref_hour,Qref_hour_discharge] = mytfunc_thermalstorage_Qrefhour(Qref_hour,REFstorage,storageEffratio,refsetStorageSize,numOfRefs,refset_Capacity,refsetID,QrefrMax);
-        
-#         % 放熱用熱交換器を削除
-#         for iREF = 1:numOfRefs
-#             if REFstorage(iREF) == -1  % 採熱＋追掛け
-                
-#                 % 放熱運転時の補機
-#                 refset_PrimaryPumpPower_discharge(iREF,1) = refset_PrimaryPumpPower(iREF,1);
-                
-#                 % 熱交換器を削除
-#                 refset_Count(iREF,1:10)       = [refset_Count(iREF,2:10),0];
-#                 refset_Type(iREF,1:10)        = [refset_Type(iREF,2:10),0];
-#                 refset_Capacity(iREF,1:10)    = [refset_Capacity(iREF,2:10),0];
-#                 refset_MainPower(iREF,1:10)   = [refset_MainPower(iREF,2:10),0];
-#                 refset_SubPower(iREF,1:10)    = [refset_SubPower(iREF,2:10),0];
-#                 refset_PrimaryPumpPower(iREF,1:10) = [refset_PrimaryPumpPower(iREF,2:10),0];
-#                 refset_CTCapacity(iREF,1:10)  = [refset_CTCapacity(iREF,2:10),0];
-#                 refset_CTFanPower(iREF,1:10)  = [refset_CTFanPower(iREF,2:10),0];
-#                 refset_CTPumpPower(iREF,1:10) = [refset_CTPumpPower(iREF,2:10),0];
-#                 refset_SupplyTemp(iREF,1:10)  = [refset_SupplyTemp(iREF,2:10),0];
-                
-#                 for iREFSUB = 1:refsetRnum(iREF)
-#                     if iREFSUB ~= refsetRnum(iREF)
-                        
-#                         refInputType(iREF,iREFSUB) = refInputType(iREF,iREFSUB+1);
-#                         refset_MainPowerELE(iREF,iREFSUB) = refset_MainPowerELE(iREF,iREFSUB+1);
-#                         refHeatSourceType(iREF,iREFSUB) = refHeatSourceType(iREF,iREFSUB+1);
-                        
-#                         xTALL(iREF,iREFSUB,:) =  xTALL(iREF,iREFSUB+1,:);
-#                         xQratio(iREF,iREFSUB,:) = xQratio(iREF,iREFSUB+1,:);
-#                         xPratio(iREF,iREFSUB,:) = xPratio(iREF,iREFSUB+1,:);
-#                         xXratioMX(iREF,iREFSUB,:) = xXratioMX(iREF,iREFSUB+1,:);
-                        
-#                         RerPerC_x_min(iREF,iREFSUB,:) = RerPerC_x_min(iREF,iREFSUB+1,:);
-#                         RerPerC_x_max(iREF,iREFSUB,:) = RerPerC_x_max(iREF,iREFSUB+1,:);
-#                         RerPerC_x_coeffi(iREF,iREFSUB,:,:) = RerPerC_x_coeffi(iREF,iREFSUB+1,:,:);
-                        
-#                         RerPerC_w_min(iREF,iREFSUB,:) = RerPerC_w_min(iREF,iREFSUB+1,:);
-#                         RerPerC_w_max(iREF,iREFSUB,:) = RerPerC_w_max(iREF,iREFSUB+1,:);
-#                         RerPerC_w_coeffi(iREF,iREFSUB,:,:) = RerPerC_w_coeffi(iREF,iREFSUB+1,:,:);
-                        
-#                     else
-                        
-#                         refInputType(iREF,refsetRnum(iREF)) = 0;
-#                         refset_MainPowerELE(iREF,refsetRnum(iREF)) = 0;
-#                         refHeatSourceType(iREF,refsetRnum(iREF)) = 0;
-                        
-#                         xTALL(iREF,refsetRnum(iREF),:) = zeros(1,1,size(xTALL,3));
-#                         xQratio(iREF,refsetRnum(iREF),:) = zeros(1,1,size(xQratio,3));
-#                         xPratio(iREF,refsetRnum(iREF),:) = zeros(1,1,size(xPratio,3));
-#                         xXratioMX(iREF,refsetRnum(iREF),:) = zeros(1,1,size(xXratioMX,3));
-                        
-#                         RerPerC_x_min(iREF,refsetRnum(iREF),:) = zeros(1,1,size(RerPerC_x_min,3));
-#                         RerPerC_x_max(iREF,refsetRnum(iREF),:) = zeros(1,1,size(RerPerC_x_max,3));
-#                         RerPerC_x_coeffi(iREF,refsetRnum(iREF),:,:) = zeros(1,1,size(RerPerC_x_max,3),size(RerPerC_x_max,4));
-                        
-#                         RerPerC_w_min(iREF,refsetRnum(iREF),:) = zeros(1,1,size(RerPerC_w_min,3));
-#                         RerPerC_w_max(iREF,refsetRnum(iREF),:) = zeros(1,1,size(RerPerC_w_max,3));
-#                         RerPerC_w_coeffi(iREF,refsetRnum(iREF),:,:) = zeros(1,1,size(RerPerC_w_coeffi,3),size(RerPerC_w_coeffi,4));
-                        
-#                     end
-#                 end
-                
-#                 % 台数を減じる
-#                 refsetRnum(iREF) = refsetRnum(iREF) - 1;
-                
-#             end
-#         end
-        
-        
-#     case {2,3,4}
-        
-#         Qref          = zeros(365,numOfRefs);    % 日積算熱源負荷 [MJ/day]
-#         Qref_kW       = zeros(365,numOfRefs);    % 日平均熱源負荷 [kW]
-#         Qref_OVER     = zeros(365,numOfRefs);    % 日積算過負荷 [MJ/day]
-#         Qpsahu_pump   = zeros(1,numOfPumps);     % ポンプ発熱量 [kW]
-#         Tref          = zeros(365,numOfRefs);
-#         refTime_Start = zeros(365,numOfRefs);
-#         refTime_Stop  = zeros(365,numOfRefs);
-#         Qpsahu_pump_save =  zeros(365,numOfRefs); % ポンプ発熱量 保存 [MJ]
-        
-#         for iREF = 1:numOfRefs
-            
-#             % 日積算熱源負荷 [MJ/Day]
-#             for iPUMP = 1:numOfPumps
-#                 switch pumpName{iPUMP}
-#                     case REFpumpSet{iREF}
-                        
-#                         % 二次ポンプ発熱量 [kW]
-#                         if TcPUMP(iPUMP,1) > 0
-#                             Qpsahu_pump(iPUMP) = sum(MxPUMPE(iPUMP,:)).*(k_heatup)./TcPUMP(iPUMP,1).*1000;
-#                         end
-                        
-#                         for dd = 1:365
-                            
-#                             if REFtype(iREF) == 1  % 冷熱生成モード
-#                                 % 日積算熱源負荷  [MJ/day]
-#                                 if Qps(dd,iPUMP) > 0
-#                                     Qref(dd,iREF)  = Qref(dd,iREF) + Qps(dd,iPUMP) + Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
-#                                     % ポンプ発熱保存
-#                                     Qpsahu_pump_save(dd,iREF) = Qpsahu_pump_save(dd,iREF) + Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
-#                                 end
-#                             elseif REFtype(iREF) == 2 % 温熱生成モード
-#                                 % 日積算熱源負荷  [MJ/day] (Qpsの符号が変わっていることに注意)
-#                                 if Qps(dd,iPUMP) + (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000 > 0
-#                                     Qref(dd,iREF)  = Qref(dd,iREF) + Qps(dd,iPUMP) + (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
-#                                     % ポンプ発熱保存
-#                                     Qpsahu_pump_save(dd,iREF) = Qpsahu_pump_save(dd,iREF) - (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
-#                                 end
-#                             end
-                            
-#                         end
-#                 end
-#             end
-            
-#             % 熱源運転時間（ポンプ運転時間の和集合）
-#             [Tref(:,iREF),refsystemOpeTime(iREF,:,:)] =...
-#                 mytfunc_REFOpeTIME(Qref(:,iREF),pumpName,REFpumpSet{iREF},pumpsystemOpeTime);
-            
-            
-#             % 平均負荷[kW]と過負荷量を求める。
-#             for dd = 1:365
-                
-#                 % 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
-#                 if Tref(dd,iREF) > 0  && REFstorage(iREF) == 1
-#                     Qref(dd,iREF) = Qref(dd,iREF) + refsetStorageSize(iREF)*0.03;  % 2014/1/10修正
-                    
-#                     % 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする） 2013/12/16
-#                     if Qref(dd,iREF) > storageEffratio(iREF)*refsetStorageSize(iREF)
-#                         Qref(dd,iREF) = storageEffratio(iREF)*refsetStorageSize(iREF);
-#                     end
-                    
-#                 end
-                
-#                 % 平均負荷 [kW]
-#                 if Tref(dd,iREF) == 0
-#                     Qref_kW(dd,iREF) = 0;
-#                 else
-#                     Qref_kW(dd,iREF) = Qref(dd,iREF)./Tref(dd,iREF).*1000./3600;
-#                 end
-                
-#                 % 過負荷分を集計 [MJ/day]
-#                 if Qref_kW(dd,iREF) > QrefrMax(iREF)
-#                     Qref_OVER(dd,iREF) = (Qref_kW(dd,iREF)-QrefrMax(iREF)).*Tref(dd,iREF)*3600/1000;
-#                 end
-#             end
-            
-#         end
-        
-# end
-
-# disp('熱源負荷計算完了')
-# toc
+print('熱源負荷計算完了')
 
 
 # %% 熱源特性を抜き出す
@@ -2765,32 +2689,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
     
 #     % 熱源負荷マトリックス
 #     switch MODE
-#         case {0}
-            
-#             % 時刻別の外気温度に変更（2016/2/3）
-#             if REFtype(iREF) == 1
-#                 [tmp,~] = mytfunc_matrixREF(MODE,Qref_hour(:,iREF),QrefrMax(iREF),[],OAdataHourly,mxTC,mxL);  % 冷房
-#                 LtREF(:,iREF) = tmp(:,1);
-#                 TtREF(:,iREF) = tmp(:,2);
-#             else
-#                 [tmp,~] = mytfunc_matrixREF(MODE,Qref_hour(:,iREF),QrefrMax(iREF),[],OAdataHourly,mxTH,mxL);  % 暖房
-#                 LtREF(:,iREF) = tmp(:,1);
-#                 TtREF(:,iREF) = tmp(:,2);
-#             end
-            
-#         case {1}
-#             if REFtype(iREF) == 1
-#                 [MxREF(:,:,iREF),~]  = mytfunc_matrixREF(MODE,Qref_hour(:,iREF),QrefrMax(iREF),[],OAdataAll,mxTC,mxL);  % 冷房
-#             else
-#                 [MxREF(:,:,iREF),~]  = mytfunc_matrixREF(MODE,Qref_hour(:,iREF),QrefrMax(iREF),[],OAdataAll,mxTH,mxL);  % 暖房
-#             end
-            
-#         case {2,3}
-#             if REFtype(iREF) == 1
-#                 [MxREF(:,:,iREF),~]  = mytfunc_matrixREF(MODE,Qref(:,iREF),QrefrMax(iREF),Tref(:,iREF),OAdataAll,mxTC,mxL);  % 冷房
-#             else
-#                 [MxREF(:,:,iREF),~]  = mytfunc_matrixREF(MODE,Qref(:,iREF),QrefrMax(iREF),Tref(:,iREF),OAdataAll,mxTH,mxL);  % 暖房
-#             end
             
 #         case {4}
 #             if REFtype(iREF) == 1
@@ -2825,44 +2723,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
     
 #     % 蓄熱の場合のマトリックス操作（負荷率１に集約＋外気温を１レベル変える）
 #     switch MODE
-#         case {0}
-            
-#             % 外気温をシフト（負荷率帯の集約は今後の課題）
-#             if REFstorage(iREF) == 1
-#                 for hh = 1:8760
-#                     if TtREF(hh,iREF) > 1
-#                         TtREF(hh,iREF) = TtREF(hh,iREF) - 1;
-#                     end
-#                 end
-#             end
-            
-#         case {1,2,3}
-#             if REFstorage(iREF) == 1
-#                 for iX = 1:length(ToadbC)
-#                     timeQmax = 0;
-#                     for iY = 1:length(aveL)
-#                         timeQmax = timeQmax + aveL(iY)*MxREF(iX,iY,iREF)*QrefrMax(iREF);
-#                         MxREF(iX,iY,iREF) = 0;
-#                     end
-#                     % 全負荷相当運転時間 [hour] →　各外気温帯の最大能力で運転時間を出すように変更（H25.12.25）
-#                     if iX ~=1
-#                         MxREF(iX,length(aveL)-1,iREF) = timeQmax./( sum(Qrefr_mod(iREF,:,iX-1)) );
-#                     else
-#                         MxREF(iX,length(aveL)-1,iREF) = timeQmax./( sum(Qrefr_mod(iREF,:,iX)) );
-#                     end
-#                 end
-                
-#                 % 外気温をシフト
-#                 for iX = 1:length(ToadbC)
-#                     if iX == 1
-#                         MxREF(iX,:,iREF) = MxREF(iX,:,iREF) + MxREF(iX+1,:,iREF);
-#                     elseif iX == length(ToadbC)
-#                         MxREF(iX,:,iREF) = zeros(1,length(aveL));
-#                     else
-#                         MxREF(iX,:,iREF) = MxREF(iX+1,:,iREF);
-#                     end
-#                 end
-#             end
             
 #         case {4}
             
@@ -3009,14 +2869,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
             
 #             % エネルギー消費量 [kW] (1次エネルギー換算後の値であることに注意）
 #             switch MODE
-                
-#                 case {0}
-#                     for rr = 1:MxREFnum(ioa,iL,iREF)
-#                         % エネルギー消費量
-#                         MxREFSUBperE(ioa,iL,iREF,rr) = Erefr_mod(iREF,rr,ioa).*coeff_x(rr).*coeff_tw(rr);
-#                         % 処理熱量
-#                         MxREFSUBperQ(ioa,iL,iREF,rr) = Qrefr_mod(iREF,rr,ioa).* MxREFxL_real(ioa,iL,iREF);
-#                     end
                     
 #                 case {1,2,3,4}
 #                     for rr = 1:MxREFnum(ioa,iL,iREF)
@@ -3137,70 +2989,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 #     end
     
 #     switch MODE
-#         case {0}
-            
-#             for dd = 1:365
-#                 for hh = 1:24
-                    
-#                     % 1月1日0時からの時間数
-#                     num = 24*(dd-1)+hh;
-                    
-#                     % 熱源のエネルギー消費量 [MJ]（一次エネ換算値）
-#                     if LtREF(num,iREF) == 0 && (REFstorage(iREF) == -1 && Qref_hour_discharge(num,iREF) > 0) % 放熱のみ
-#                         E_ref_hour(num,iREF)     =  0;
-#                         E_ref_ACc_hour(num,iREF) =  0;   % 補機電力 [MWh]
-#                         E_PPc_hour(num,iREF)     =  refset_PrimaryPumpPower_discharge(iREF,1)./1000;   % 一次ポンプ電力 [MWh]
-#                         E_CTfan_hour(num,iREF)   =  0;   % 冷却塔ファン電力 [MWh]
-#                         E_CTpump_hour(num,iREF)  =  0;   % 冷却水ポンプ電力 [MWh]
-                        
-#                     elseif LtREF(num,iREF) == 0
-#                         E_ref_hour(num,iREF)     =  0;
-#                         E_ref_ACc_hour(num,iREF) =  0;   % 補機電力 [MWh]
-#                         E_PPc_hour(num,iREF)     =  0;   % 一次ポンプ電力 [MWh]
-#                         E_CTfan_hour(num,iREF)   =  0;   % 冷却塔ファン電力 [MWh]
-#                         E_CTpump_hour(num,iREF)  =  0;   % 冷却水ポンプ電力 [MWh]
-                        
-#                     else
-                        
-#                         % サブ機器ごとに解くように変更　2016/02/04
-#                         % 熱源群エネルギー消費量  MJ
-#                         %  E_ref_hour(num,iREF)     =  MxREFperE(TtREF(num,iREF),LtREF(num,iREF),iREF).*3600/1000;
-#                         for rr = 1:refsetRnum(iREF)
-#                             E_refsys_hour(num,iREF,rr) = MxREFSUBperE(TtREF(num,iREF),LtREF(num,iREF),iREF,rr).*3600./1000;
-#                             E_ref_hour(num,iREF)       = E_ref_hour(num,iREF) + E_refsys_hour(num,iREF,rr);
-                            
-#                             % サブ機器ごとの熱負荷　←　マトリックスを使っているので、厳密にQrefと一致しないので注意
-#                             Q_refsys_hour(num,iREF,rr) = MxREFSUBperQ(TtREF(num,iREF),LtREF(num,iREF),iREF,rr);
-#                         end
-                        
-#                         E_ref_ACc_hour(num,iREF) =  ErefaprALL(TtREF(num,iREF),LtREF(num,iREF),iREF)./1000;   % 補機電力 [MWh]
-#                         E_PPc_hour(num,iREF) =  EpprALL(TtREF(num,iREF),LtREF(num,iREF),iREF)./1000;   % 一次ポンプ電力 [MWh]
-                        
-#                         if REFstorage(iREF) == -1 && Qref_hour_discharge(num,iREF) > 0  % 放熱運転時
-#                             E_PPc_hour(num,iREF) =  E_PPc_hour(num,iREF) + refset_PrimaryPumpPower_discharge(iREF,1)./1000;  % 放熱用ポンプ
-#                         end
-                        
-#                         E_CTfan_hour(num,iREF) =  EctfanrALL(TtREF(num,iREF),LtREF(num,iREF),iREF)./1000;   % 冷却塔ファン電力 [MWh]
-#                         E_CTpump_hour(num,iREF) =  EctpumprALL(TtREF(num,iREF),LtREF(num,iREF),iREF)./1000;   % 冷却水ポンプ電力 [MWh]
-#                     end
-                    
-                    
-#                 end
-#             end
-            
-            
-#         case {1,2,3}
-            
-#             MxREF_E(iREF,:)   = nansum(MxREF(:,:,iREF) .* MxREFperE(:,:,iREF)).*3600/1000;  % 熱源群エネルギー消費量  [MJ]
-#             MxREFACcE(iREF,:) = nansum(MxREF(:,:,iREF) .* ErefaprALL(:,:,iREF)./1000);  % 補機電力 [MWh]
-#             MxPPcE(iREF,:)    = nansum(MxREF(:,:,iREF) .* EpprALL(:,:,iREF)./1000);     % 一次ポンプ電力 [MWh]
-#             MxCTfan(iREF,:)   = nansum(MxREF(:,:,iREF) .* EctfanrALL(:,:,iREF)./1000);  % 冷却塔ファン電力 [MWh]
-#             MxCTpump(iREF,:)  = nansum(MxREF(:,:,iREF) .* EctpumprALL(:,:,iREF)./1000); % 冷却水ポンプ電力 [MWh]
-            
-#             % 熱源別エネルギー消費量 [MJ]
-#             for iREFSUB = 1:refsetRnum(iREF)
-#                 MxREFSUBE(iREF,iREFSUB,:) = nansum(MxREF(:,:,iREF) .* MxREFSUBperE(:,:,iREF,iREFSUB).*3600)./1000;
-#             end
             
 #         case {4}
             
@@ -3241,90 +3029,7 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
 # % 熱源群のエネルギー消費量
 # switch MODE
-#     case {0}
-        
-#         % 熱源主機のエネルギー消費量 [MJ]
-#         E_refsysr = sum(E_ref_hour,1);
-        
-#         % 熱源主機のエネルギー消費量 [*] （各燃料の単位に戻す）
-#         E_ref_source_hour = zeros(8760,8);
-        
-#         for iREF = 1:numOfRefs
-#             for iREFSUB = 1:refsetRnum(iREF)
-                
-#                 if refInputType(iREF,iREFSUB) == 1
-#                     E_ref_source_hour(:,refInputType(iREF,iREFSUB)) = E_ref_source_hour(:,refInputType(iREF,iREFSUB)) + E_refsys_hour(:,iREF,iREFSUB)./(9760);      % [MWh]
-#                 elseif refInputType(iREF,iREFSUB) == 2
-#                     E_ref_source_hour(:,refInputType(iREF,iREFSUB)) = E_ref_source_hour(:,refInputType(iREF,iREFSUB)) + E_refsys_hour(:,iREF,iREFSUB)./(45000/1000); % [m3/h]
-#                 elseif refInputType(iREF,iREFSUB) == 3
-#                     E_ref_source_hour(:,refInputType(iREF,iREFSUB)) = E_ref_source_hour(:,refInputType(iREF,iREFSUB)) + E_refsys_hour(:,iREF,iREFSUB)./(41000/1000);
-#                 elseif refInputType(iREF,iREFSUB) == 4
-#                     E_ref_source_hour(:,refInputType(iREF,iREFSUB)) = E_ref_source_hour(:,refInputType(iREF,iREFSUB)) + E_refsys_hour(:,iREF,iREFSUB)./(37000/1000);
-#                 elseif refInputType(iREF,iREFSUB) == 5
-#                     E_ref_source_hour(:,refInputType(iREF,iREFSUB)) = E_ref_source_hour(:,refInputType(iREF,iREFSUB)) + E_refsys_hour(:,iREF,iREFSUB)./(50000/1000);
-#                 elseif refInputType(iREF,iREFSUB) == 6
-#                     E_ref_source_hour(:,refInputType(iREF,iREFSUB)) = E_ref_source_hour(:,refInputType(iREF,iREFSUB)) + E_refsys_hour(:,iREF,iREFSUB)./(copDHC_heating);   % [MJ]
-#                 elseif refInputType(iREF,iREFSUB) == 7
-#                     E_ref_source_hour(:,refInputType(iREF,iREFSUB)) = E_ref_source_hour(:,refInputType(iREF,iREFSUB)) + E_refsys_hour(:,iREF,iREFSUB)./(copDHC_heating);   % [MJ]
-#                 elseif refInputType(iREF,iREFSUB) == 8
-#                     E_ref_source_hour(:,refInputType(iREF,iREFSUB)) = E_ref_source_hour(:,refInputType(iREF,iREFSUB)) + E_refsys_hour(:,iREF,iREFSUB)./(copDHC_cooling);   % [MJ]
-#                 end
-                
-#             end
-#         end
-        
-#         E_ref = sum(E_ref_source_hour,1); % 使わない
-        
-#         % 熱源補機電力消費量 [MWh]
-#         E_refac = sum(sum(E_ref_ACc_hour));
-#         % 一次ポンプ電力消費量 [MWh]
-#         E_pumpP = sum(sum(E_PPc_hour));
-#         % 冷却塔ファン電力消費量 [MWh]
-#         E_ctfan = sum(sum(E_CTfan_hour));
-#         % 冷却水ポンプ電力消費量 [MWh]
-#         E_ctpump = sum(sum(E_CTpump_hour));
-        
-#     case {1,2,3}
-        
-#         % 熱源主機のエネルギー消費量 [MJ]
-#         E_refsysr = sum(MxREF_E,2);
-        
-#         % 熱源主機のエネルギー消費量 [*] （各燃料の単位に戻す）
-#         E_ref = zeros(1,8);
-        
-#         for iREF = 1:numOfRefs
-#             for iREFSUB = 1:refsetRnum(iREF)
-                
-#                 if refInputType(iREF,iREFSUB) == 1
-#                     E_ref(1,refInputType(iREF,iREFSUB)) = E_ref(1,refInputType(iREF,iREFSUB)) + sum(sum(MxREFSUBE(iREF,iREFSUB,:)))./(9760);      % [MWh]
-#                 elseif refInputType(iREF,iREFSUB) == 2
-#                     E_ref(1,refInputType(iREF,iREFSUB)) = E_ref(1,refInputType(iREF,iREFSUB)) + sum(sum(MxREFSUBE(iREF,iREFSUB,:)))./(45000/1000); % [m3/h]
-#                 elseif refInputType(iREF,iREFSUB) == 3
-#                     E_ref(1,refInputType(iREF,iREFSUB)) = E_ref(1,refInputType(iREF,iREFSUB)) + sum(sum(MxREFSUBE(iREF,iREFSUB,:)))./(41000/1000);
-#                 elseif refInputType(iREF,iREFSUB) == 4
-#                     E_ref(1,refInputType(iREF,iREFSUB)) = E_ref(1,refInputType(iREF,iREFSUB)) + sum(sum(MxREFSUBE(iREF,iREFSUB,:)))./(37000/1000);
-#                 elseif refInputType(iREF,iREFSUB) == 5
-#                     E_ref(1,refInputType(iREF,iREFSUB)) = E_ref(1,refInputType(iREF,iREFSUB)) + sum(sum(MxREFSUBE(iREF,iREFSUB,:)))./(50000/1000);
-#                 elseif refInputType(iREF,iREFSUB) == 6
-#                     E_ref(1,refInputType(iREF,iREFSUB)) = E_ref(1,refInputType(iREF,iREFSUB)) + sum(sum(MxREFSUBE(iREF,iREFSUB,:)))./(copDHC_heating);   % [MJ]
-#                 elseif refInputType(iREF,iREFSUB) == 7
-#                     E_ref(1,refInputType(iREF,iREFSUB)) = E_ref(1,refInputType(iREF,iREFSUB)) + sum(sum(MxREFSUBE(iREF,iREFSUB,:)))./(copDHC_heating);   % [MJ]
-#                 elseif refInputType(iREF,iREFSUB) == 8
-#                     E_ref(1,refInputType(iREF,iREFSUB)) = E_ref(1,refInputType(iREF,iREFSUB)) + sum(sum(MxREFSUBE(iREF,iREFSUB,:)))./(copDHC_cooling);   % [MJ]
-#                 end
-                
-#             end
-#         end
-        
-#         % 熱源補機電力消費量 [MWh]
-#         E_refac = sum(sum(MxREFACcE));
-#         % 一次ポンプ電力消費量 [MWh]
-#         E_pumpP = sum(sum(MxPPcE));
-#         % 冷却塔ファン電力消費量 [MWh]
-#         E_ctfan = sum(sum(MxCTfan));
-#         % 冷却水ポンプ電力消費量 [MWh]
-#         E_ctpump = sum(sum(MxCTpump));
-        
+#         
 #     case {4}
         
 #         % 熱源主機のエネルギー消費量 [MJ]
@@ -3405,36 +3110,7 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 # Qhover = 0;
 
 # switch MODE
-#     case {0}
-#         tmpQcpeak = zeros(8760,1);
-#         tmpQhpeak = zeros(8760,1);
-#         for iREF = 1:numOfRefs
-#             if REFtype(iREF) == 1 % 冷房 [kW]→[MJ/day]
-#                 Qctotal = Qctotal + sum(Qref_hour(:,iREF)).*3600./1000;
-#                 Qcover = Qcover + sum(Qref_OVER_hour(:,iREF));
-#                 tmpQcpeak = tmpQcpeak + Qref_hour(:,iREF);
-#             elseif REFtype(iREF) == 2
-#                 Qhtotal = Qhtotal + sum(Qref_hour(:,iREF)).*3600./1000;
-#                 Qhover = Qhover + sum(Qref_OVER_hour(:,iREF));
-#                 tmpQhpeak = tmpQhpeak + Qref_hour(:,iREF);
-#             end
-#         end
-        
-#     case {1}
-#         tmpQcpeak = zeros(8760,1);
-#         tmpQhpeak = zeros(8760,1);
-#         for iREF = 1:numOfRefs
-#             if REFtype(iREF) == 1 &&  REFstorage(iREF) ~= -1 % 冷房 [kW]→[MJ/day]
-#                 Qctotal = Qctotal + sum(Qref_hour(:,iREF)).*3600./1000;
-#                 Qcover = Qcover + sum(Qref_OVER_hour(:,iREF));
-#                 tmpQcpeak = tmpQcpeak + Qref_hour(:,iREF);
-#             elseif REFtype(iREF) == 2 &&  REFstorage(iREF) ~= -1
-#                 Qhtotal = Qhtotal + sum(Qref_hour(:,iREF)).*3600./1000;
-#                 Qhover = Qhover + sum(Qref_OVER_hour(:,iREF));
-#                 tmpQhpeak = tmpQhpeak + Qref_hour(:,iREF);
-#             end
-#         end
-        
+
 #     case {2,3,4}
         
 #         tmpQcpeak = zeros(365,1);
@@ -3514,25 +3190,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 # y(9)  = E1st_total(6,end)/roomAreaTotal;  % 一次ポンプ [MJ/m2]
 # y(10) = E1st_total(7,end)/roomAreaTotal;  % 冷却塔ファン [MJ/m2]
 # y(11) = E1st_total(8,end)/roomAreaTotal;  % 冷却水ポンプ [MJ/m2]
-
-
-# % CEC/ACのようなもの（未処理負荷は差し引く）
-# switch MODE
-#     case {0,1}
-#         % 未処理負荷[MJ/m2]
-#         y(12) = nansum(sum(abs(Qahu_remainChour)))./roomAreaTotal;
-#         y(13) = nansum(sum(abs(Qahu_remainHhour)))./roomAreaTotal;
-#         y(14) = nansum(Qcover)./roomAreaTotal;
-#         y(15) = nansum(Qhover)./roomAreaTotal;
-#         y(16) = y(1)./( ((sum(sum(Qahu_hour_CEC))))./roomAreaTotal -y(12) -y(13) );
-#     case {2,3,4}
-#         % 未処理負荷[MJ/m2]
-#         y(12) = nansum(sum(abs(Qahu_remainC)))./roomAreaTotal;
-#         y(13) = nansum(sum(abs(Qahu_remainH)))./roomAreaTotal;
-#         y(14) = nansum(Qcover)./roomAreaTotal;
-#         y(15) = nansum(Qhover)./roomAreaTotal;
-#         y(16) = y(1)./( ((sum(sum(Qahu_CEC))))./roomAreaTotal -y(12) -y(13) );
-# end
 
 # y(17) = standardValue;
 # y(18) = y(1)/y(17);
