@@ -87,9 +87,16 @@ divT =  6;             # 温度帯マトリックス分割数
 
 k_heatup = 0.84;        # ファン・ポンプの発熱比率
 Cw = 4.186;             # 水の比熱 [kJ/kg・K]
-copDHC_cooling = 1.36;  # 他人から供給された熱の換算係数 20170913追加
-copDHC_heating = 1.36;  # 他人から供給された熱の換算係数 20170913追加
-aexCoeffiModifyOn = 1   # 全熱交換器の効率補正（１：あり、０：なし）
+
+if inputdata["Building"]["Coefficient_DHC"]["Cooling"] == None:
+    copDHC_cooling = 1.36
+else:
+    copDHC_cooling = inputdata["Building"]["Coefficient_DHC"]["Cooling"]
+
+if inputdata["Building"]["Coefficient_DHC"]["Heating"] == None:
+    copDHC_heating = 1.36
+else:
+    copDHC_heating = inputdata["Building"]["Coefficient_DHC"]["Heating"]
 
 # 負荷率帯マトリックス mxL
 mxL = np.arange(1/divL, 1.01, 1/divL)
@@ -1061,7 +1068,9 @@ for ahu_name in inputdata["AirHandlingSystem"]:
     # 空調機の消費電力
     inputdata["AirHandlingSystem"][ahu_name]["PowerConsumption"] = 0
     for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-        if unit_configure["FanPowerConsumption"] != None:
+        if unit_configure["FanPowerConsumption"] == None:
+            inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption"] = 0
+        else:
             inputdata["AirHandlingSystem"][ahu_name]["PowerConsumption"] += \
                 unit_configure["FanPowerConsumption"] * unit_configure["Number"]
 
@@ -1691,6 +1700,55 @@ print('空調機群のエネルギー消費量計算完了')
 ## 結果格納用変数
 resultJson["PUMP"] = {}
 
+# 二次ポンプが空欄であった場合、ダミーの仮想ポンプを追加する。
+number = 0
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    if inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] == None:
+
+        inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] = "dummyPump_" + str(number)
+
+        inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
+            "冷房":{
+                "TempelatureDifference": 0,
+                "isStagingControl": "無",
+                "SecondaryPump": [
+                    {
+                        "Number": 0,
+                        "RatedWaterFlowRate": 0,
+                        "RatedPowerConsumption": 0,
+                        "ContolType": "無",
+                        "MinOpeningRate": 100,
+                    }
+                ]
+            }
+        }
+
+        number += 1
+
+    if inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] == None:
+        
+        inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] = "dummyPump_" + str(number)
+
+        inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
+            "暖房":{
+                "TempelatureDifference": 0,
+                "isStagingControl": "無",
+                "SecondaryPump": [
+                    {
+                        "Number": 0,
+                        "RatedWaterFlowRate": 0,
+                        "RatedPowerConsumption": 0,
+                        "ContolType": "無",
+                        "MinOpeningRate": 100,
+                    }
+                ]
+            }
+        }
+
+        number += 1
+
+
 # 冷房と暖房の二次ポンプ群に分ける。
 for pump_original_name in inputdata["SecondaryPumpSystem"]:
 
@@ -1719,6 +1777,7 @@ for pump_name in resultJson["PUMP"]:
     resultJson["PUMP"][pump_name]["TdPUMP"] = np.zeros(365)    # 運転時間
     resultJson["PUMP"][pump_name]["ContolType"] = set()        # 全台回転数制御かどうか（台数制御がない場合のみ有効）
     resultJson["PUMP"][pump_name]["MinOpeningRate"] = 100      # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
+    resultJson["PUMP"][pump_name]["Qpsahu_pump"] = 0           # ポンプの発熱量 [kW]
 
 
 ##----------------------------------------------------------------------------------
@@ -1925,10 +1984,6 @@ for pump_name in resultJson["PUMP"]:
                         (-1) * ( resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] + tmpC + tmpH )
 
 
-print( sum(resultJson["PUMP"]["PUMP1_冷房"]["Qps"],0) )
-print( sum(resultJson["PUMP"]["PUMP1_暖房"]["Qps"],0) )
-
-
 ##----------------------------------------------------------------------------------
 ## 二次ポンプ群の運転時間（解説書 2.6.2）
 ##----------------------------------------------------------------------------------
@@ -1945,9 +2000,6 @@ for pump_name in resultJson["PUMP"]:
     # 日積算運転時間
     resultJson["PUMP"][pump_name]["Tps"] = np.sum(resultJson["PUMP"][ pump_name ]["schedule"],1)
 
-
-print( sum(resultJson["PUMP"]["PUMP1_冷房"]["Tps"],0) )
-print( sum(resultJson["PUMP"]["PUMP1_暖房"]["Tps"],0) )
 
 print('ポンプ負荷計算完了')
 
@@ -1986,10 +2038,7 @@ for pump_name in resultJson["PUMP"]:
     resultJson["PUMP"][pump_name]["LdPUMP"] = Mxc
     resultJson["PUMP"][pump_name]["TdPUMP"] = Tdc
     
-print( sum(resultJson["PUMP"]["PUMP1_冷房"]["LdPUMP"],0) )
-print( sum(resultJson["PUMP"]["PUMP1_冷房"]["TdPUMP"],0) )
-print( sum(resultJson["PUMP"]["PUMP1_暖房"]["LdPUMP"],0) )
-print( sum(resultJson["PUMP"]["PUMP1_暖房"]["TdPUMP"],0) )
+
 
 
 #%%
@@ -2009,7 +2058,7 @@ for pump_name in resultJson["PUMP"]:
             resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a1"]
             resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a0"]
 
-        elif unit_configure["FanControlType"] == "無":
+        elif unit_configure["ContolType"] == "無":
 
             resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = 0
             resultJson["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = 0
@@ -2172,344 +2221,429 @@ E_pump = 0
 for pump_name in resultJson["PUMP"]:
 
     E_pump += np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
-    resultJson["PUMP"][pump_name]["E_pump"]  = np.sum(resultJson["PUMP"][pump_name]["TdPUMP"], 0)
+    resultJson["PUMP"][pump_name]["TcPUMP"]  = np.sum(resultJson["PUMP"][pump_name]["TdPUMP"], 0)
     resultJson["PUMP"][pump_name]["MxPUMPE"]  = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
 
 print('二次ポンプ群のエネルギー消費量計算完了')
 
 
+#%%
+##----------------------------------------------------------------------------------
+## 二次ポンプ群の発熱量
+##----------------------------------------------------------------------------------
 
-# #%%
-# ##----------------------------------------------------------------------------------
-# ## 熱源群の一次エネルギー消費量（解説書 2.7）
-# ##----------------------------------------------------------------------------------
+for pump_name in resultJson["PUMP"]:
 
-# # xXratioMX  = ones(numOfRefs,3,3).*NaN;
+    if resultJson["PUMP"][pump_name]["TcPUMP"] > 0:
 
-# # モデル格納用変数
-# model["REF"] = {}
-
-# # 冷房と暖房の二次ポンプ群に分ける。
-# for ref_original_name in inputdata["HeatsourceSystem"]:
-
-#     if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
-#         model["REF"][ ref_original_name + "_冷房"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房"]
-#         model["REF"][ ref_original_name + "_冷房"]["mode"] = "cooling"
-
-#         if "冷房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
-#             model["REF"][ ref_original_name + "_冷房"]["蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]
-#             model["REF"][ ref_original_name + "_冷房"]["isStorage"] = "有"
-#         else:
-#             model["REF"][ ref_original_name + "_冷房"]["isStorage"] = "無"
-
-
-#     if "暖房" in inputdata["HeatsourceSystem"][ref_original_name]:
-#         model["REF"][ ref_original_name + "_暖房"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房"]
-#         model["REF"][ ref_original_name + "_暖房"]["mode"] = "heating"
-
-#         if "暖房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
-#             model["REF"][ ref_original_name + "_暖房"]["蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]
-#             model["REF"][ ref_original_name + "_暖房"]["isStorage"] = "有"
-#         else:
-#             model["REF"][ ref_original_name + "_暖房"]["isStorage"] = "無"
-
-
-
-# #%%
-# ##----------------------------------------------------------------------------------
-# ## 熱源群全体のスペックを整理する。
-# ##----------------------------------------------------------------------------------
+        resultJson["PUMP"][pump_name]["Qpsahu_pump"] = \
+            resultJson["PUMP"][pump_name]["MxPUMPE"] * k_heatup / resultJson["PUMP"][pump_name]["TcPUMP"] * 1000
 
 
 
 
+#%%
+##----------------------------------------------------------------------------------
+## 熱源群の一次エネルギー消費量（解説書 2.7）
+##----------------------------------------------------------------------------------
+
+# xXratioMX  = ones(numOfRefs,3,3).*NaN;
+
+# モデル格納用変数
+model = {}
+model["REF"] = {}
+
+# 冷房と暖房の二次ポンプ群に分ける。
+for ref_original_name in inputdata["HeatsourceSystem"]:
+
+    if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
+        model["REF"][ ref_original_name + "_冷房"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房"]
+        model["REF"][ ref_original_name + "_冷房"]["mode"] = "cooling"
+
+        if "冷房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
+            model["REF"][ ref_original_name + "_冷房"]["蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]
+            model["REF"][ ref_original_name + "_冷房"]["isStorage"] = "有"
+
+        else:
+            model["REF"][ ref_original_name + "_冷房"]["isStorage"] = "無"
+
+
+    if "暖房" in inputdata["HeatsourceSystem"][ref_original_name]:
+        model["REF"][ ref_original_name + "_暖房"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房"]
+        model["REF"][ ref_original_name + "_暖房"]["mode"] = "heating"
+
+        if "暖房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
+            model["REF"][ ref_original_name + "_暖房"]["蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]
+            model["REF"][ ref_original_name + "_暖房"]["isStorage"] = "有"
+        else:
+            model["REF"][ ref_original_name + "_暖房"]["isStorage"] = "無"
 
 
 
+##----------------------------------------------------------------------------------
+## 熱源群全体のスペックを整理する。
+##----------------------------------------------------------------------------------
+
+for ref_name in model["REF"]:
+
+    model["REF"][ref_name]["pump_list"] = set()
+
+    # 熱源群全体の性能
+    model["REF"][ref_name]["QrefrMax"] = 0
+    for unit_id, unit_configure in enumerate(model["REF"][ref_name]["Heatsource"]):
+
+        # 定格能力（台数×能力）
+        model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] = \
+            unit_configure["HeatsourceRatedCapacity"] * unit_configure["Number"]
+
+        # 定格消費電力（台数×消費電力）
+        model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] = \
+            unit_configure["HeatsourceRatedPowerConsumption"] * unit_configure["Number"]
+
+        # 定格燃料消費量（台数×燃料消費量）
+        model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = \
+            unit_configure["HeatsourceRatedFuelConsumption"] * unit_configure["Number"]
+
+        # 熱源群の合計定格能力
+        model["REF"][ref_name]["QrefrMax"] += model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
 
 
-# # for ref_name in inputdata["HeatsourceSystem"]:
+    # 蓄熱システムの性能
+    if "蓄熱" in model["REF"][ref_name]:
 
-# #     Qref          = np.zeros(365,numOfRefs)   # 日積算熱源負荷 [MJ/day]
-# #     Qref_kW       = np.zeros(365,numOfRefs)   # 日平均熱源負荷 [kW]
-# #     Qref_OVER     = np.zeros(365,numOfRefs)   # 日積算過負荷 [MJ/day]
-# #     Qpsahu_pump   = 0                         # ポンプ発熱量 [kW]
-# #     Tref          = np.zeros(365,numOfRefs)
-# #     refTime_Start = np.zeros(365,numOfRefs)
-# #     refTime_Stop  = np.zeros(365,numOfRefs)
-# #     Qpsahu_pump_save =  zeros(365,numOfRefs)  # ポンプ発熱量 保存 [MJ]
+        # 蓄熱槽効率
+        model["REF"][ref_name]["蓄熱"]["storageEffratio"] = 0.8
+        if model["REF"][ref_name]["蓄熱"]["StorageType"] == "水蓄熱(混合型)":
+            model["REF"][ref_name]["蓄熱"]["storageEffratio"] = 0.8
+        elif model["REF"][ref_name]["蓄熱"]["StorageType"] == "水蓄熱(成層型)":
+            model["REF"][ref_name]["蓄熱"]["storageEffratio"] = 0.9
+        elif model["REF"][ref_name]["蓄熱"]["StorageType"] == "氷蓄熱":
+            model["REF"][ref_name]["蓄熱"]["storageEffratio"] = 1.0
+        else:
+            raise Exception("蓄熱槽タイプが不正です")
 
-
-# #     # 日積算熱源負荷 [MJ/Day]
-# #     for iPUMP = 1:numOfPumps
-# #         switch pumpName{iPUMP}
-# #             case REFpumpSet{iREF}
-            
-# #                 % 二次ポンプ発熱量 [kW]
-# #                 if TcPUMP(iPUMP,1) > 0
-# #                     Qpsahu_pump(iPUMP) = sum(MxPUMPE(iPUMP,:)).*(k_heatup)./TcPUMP(iPUMP,1).*1000;
-# #                 end
-            
-# #                 for dd = 1:365
-                
-# #                     if REFtype(iREF) == 1  % 冷熱生成モード
-# #                         % 日積算熱源負荷  [MJ/day]
-# #                         if Qps(dd,iPUMP) > 0
-# #                             Qref(dd,iREF)  = Qref(dd,iREF) + Qps(dd,iPUMP) + Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
-# #                             % ポンプ発熱保存
-# #                             Qpsahu_pump_save(dd,iREF) = Qpsahu_pump_save(dd,iREF) + Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
-# #                         end
-# #                     elseif REFtype(iREF) == 2 % 温熱生成モード
-# #                         % 日積算熱源負荷  [MJ/day] (Qpsの符号が変わっていることに注意)
-# #                         if Qps(dd,iPUMP) + (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000 > 0
-# #                             Qref(dd,iREF)  = Qref(dd,iREF) + Qps(dd,iPUMP) + (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
-# #                             % ポンプ発熱保存
-# #                             Qpsahu_pump_save(dd,iREF) = Qpsahu_pump_save(dd,iREF) - (-1).*Qpsahu_pump(iPUMP).*Tps(dd,iPUMP).*3600/1000;
-# #                         end
-# #                     end
-                
-# #                 end
-# #         end
-# #     end
-
-#     % 熱源運転時間（ポンプ運転時間の和集合）
-#     [Tref(:,iREF),refsystemOpeTime(iREF,:,:)] =...
-#         mytfunc_REFOpeTIME(Qref(:,iREF),pumpName,REFpumpSet{iREF},pumpsystemOpeTime);
-
-
-#     % 平均負荷[kW]と過負荷量を求める。
-#     for dd = 1:365
-    
-#         % 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
-#         if Tref(dd,iREF) > 0  && REFstorage(iREF) == 1
-#             Qref(dd,iREF) = Qref(dd,iREF) + refsetStorageSize(iREF)*0.03;  % 2014/1/10修正
+        model["REF"][ref_name]["蓄熱"]["QrefrMax"] = 0
+        for unit_id, unit_configure in enumerate(model["REF"][ref_name]["蓄熱"]["Heatsource"]):
         
-#             % 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする） 2013/12/16
-#             if Qref(dd,iREF) > storageEffratio(iREF)*refsetStorageSize(iREF)
-#                 Qref(dd,iREF) = storageEffratio(iREF)*refsetStorageSize(iREF);
-#             end
-        
-#         end
-    
-#         % 平均負荷 [kW]
-#         if Tref(dd,iREF) == 0
-#             Qref_kW(dd,iREF) = 0;
-#         else
-#             Qref_kW(dd,iREF) = Qref(dd,iREF)./Tref(dd,iREF).*1000./3600;
-#         end
-    
-#         % 過負荷分を集計 [MJ/day]
-#         if Qref_kW(dd,iREF) > QrefrMax(iREF)
-#             Qref_OVER(dd,iREF) = (Qref_kW(dd,iREF)-QrefrMax(iREF)).*Tref(dd,iREF)*3600/1000;
-#         end
-#     end
+            # 定格能力（台数×能力）
+            model["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] = \
+               unit_configure["HeatsourceRatedCapacity"] * unit_configure["Number"]
 
+            # 定格消費電力（台数×消費電力）
+            model["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] = \
+                unit_configure["HeatsourceRatedPowerConsumption"] * unit_configure["Number"]
+
+            # 定格燃料消費量（台数×燃料消費量）
+            model["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = \
+                unit_configure["HeatsourceRatedFuelConsumption"] * unit_configure["Number"]
+
+            # 熱源群の合計定格能力
+            model["REF"][ref_name]["蓄熱"]["QrefrMax"] += model["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
+
+
+# 接続される二次ポンプ群
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    # 冷房
+    model["REF"][ inputdata["AirConditioningZone"][room_zone_name]["HeatSorce_cooling"] + "_冷房" ]["pump_list"].add( \
+        inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"]+ "_冷房")
+    # 暖房
+    model["REF"][ inputdata["AirConditioningZone"][room_zone_name]["HeatSorce_heating"] + "_暖房" ]["pump_list"].add( \
+        inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"]+ "_暖房")
+
+
+##----------------------------------------------------------------------------------
+## 結果格納用変数
+##----------------------------------------------------------------------------------
+
+resultJson["REF"] = {}
+
+for ref_name in model["REF"]:
+
+    resultJson["REF"][ref_name] = {}
+    resultJson["REF"][ref_name]["Qref"] = np.zeros(365)    # 日積算熱源負荷 [MJ/Day]
+    resultJson["REF"][ref_name]["schedule"] = np.zeros((365,24))    # 運転スケジュール
+    resultJson["REF"][ref_name]["Tref"] = np.zeros(365)     # 日積算運転時間
+    resultJson["REF"][ref_name]["Qref_kW"] = np.zeros(365)     # 熱源平均負荷 kW
+    resultJson["REF"][ref_name]["Qref_OVER"] = np.zeros(365)     # 過負荷分
+    resultJson["REF"][ref_name]["ghsp_Rq"] = 0    # 冷房負荷と暖房負荷の比率（地中熱ヒートポンプ用）← 冷房用と暖房用熱源は順に並んでいる
+
+
+##----------------------------------------------------------------------------------
+## 熱源負荷の算出（解説書 2.7.2）
+##----------------------------------------------------------------------------------
+
+for ref_name in model["REF"]:
+
+    Qref_kW       = np.zeros(365)   # 日平均熱源負荷 [kW]
+    Qref_OVER     = np.zeros(365)   # 日積算過負荷 [MJ/day]
+    Tref          = np.zeros(365)
+    refTime_Start = np.zeros(365)
+    refTime_Stop  = np.zeros(365)
+
+    
+    if model["REF"][ref_name]["mode"] == "cooling": # 冷熱生成用熱源
+
+        for dd in range(0,365):
+            
+            for pump_name in model["REF"][ref_name]["pump_list"]:
+
+                if resultJson["PUMP"][pump_name]["Qps"][dd] > 0:
+
+                    # 日積算熱源負荷  [MJ/day]
+                    resultJson["REF"][ref_name]["Qref"][dd] += resultJson["PUMP"][pump_name]["Qps"][dd] + \
+                        resultJson["PUMP"][pump_name]["Qpsahu_pump"] * resultJson["PUMP"][pump_name]["Tps"][dd] * 3600/1000
+
+
+    elif model["REF"][ref_name]["mode"] == "heating": # 温熱生成用熱源
+
+        for dd in range(0,365):
+            
+            for pump_name in model["REF"][ref_name]["pump_list"]:
+                
+                if ( resultJson["PUMP"][pump_name]["Qps"][dd] + \
+                    (-1) * resultJson["PUMP"][pump_name]["Qpsahu_pump"] * resultJson["PUMP"][pump_name]["Tps"][dd] * 3600/1000 ) > 0:
+
+                    resultJson["REF"][ref_name]["Qref"][dd] += resultJson["PUMP"][pump_name]["Qps"][dd] + \
+                        (-1) * resultJson["PUMP"][pump_name]["Qpsahu_pump"] * resultJson["PUMP"][pump_name]["Tps"][dd] * 3600/1000
+
+    
+print( np.sum(resultJson["REF"]["PAC1_冷房"]["Qref"],0) )
+print( np.sum(resultJson["REF"]["PAC1_暖房"]["Qref"],0) )
+
+
+
+##----------------------------------------------------------------------------------
+## 熱源群の運転時間（解説書 2.7.3）
+##----------------------------------------------------------------------------------
+
+for ref_name in model["REF"]:
+
+    for pump_name in model["REF"][ref_name]["pump_list"]:
+
+        resultJson["REF"][ref_name]["schedule"] += resultJson["PUMP"][ pump_name ]["schedule"]
+
+    # 運転スケジュールの和が「1以上（接続されている二次ポンプ群の1つは動いている）」であれば、熱源群は稼働しているとする。
+    resultJson["REF"][ref_name]["schedule"][ resultJson["REF"][ref_name]["schedule"] > 1 ] = 1
+
+    # 日積算運転時間（熱源負荷が0より大きい場合のみ積算する）
+    for dd in range(0,365):
+        if resultJson["REF"][ref_name]["Qref"][dd] > 0:
+            resultJson["REF"][ref_name]["Tref"][dd] = np.sum(resultJson["REF"][ref_name]["schedule"][dd])
+
+
+print( np.sum(resultJson["REF"]["PAC1_冷房"]["Tref"],0) )
+print( np.sum(resultJson["REF"]["PAC1_暖房"]["Tref"],0) )
+
+
+
+##----------------------------------------------------------------------------------
+## 熱源群の負荷率帯（解説書 2.7.7）
+##----------------------------------------------------------------------------------
+
+for ref_name in model["REF"]:
+
+    # 平均負荷[kW]と過負荷量を求める。
+    for dd in range(0,365):
+    
+        # 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
+        if (resultJson["REF"][ref_name]["Tref"][dd] > 0) and (model["REF"][ref_name]["isStorage"] == "有"):
+
+            resultJson["REF"][ref_name]["Qref"][dd] += model["REF"][ref_name]["isStorage"]["蓄熱"]["StorageSize"] * 0.03
+        
+            # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
+            if resultJson["REF"][ref_name]["Qref"][dd] > \
+                model["REF"][ref_name]["蓄熱"]["storageEffratio"] * model["REF"][ref_name]["isStorage"]["蓄熱"]["StorageSize"]:
+
+                resultJson["REF"][ref_name]["Qref"][dd] = \
+                    model["REF"][ref_name]["蓄熱"]["storageEffratio"] * model["REF"][ref_name]["isStorage"]["蓄熱"]["StorageSize"]
+
+        # 平均負荷 [kW]
+        if resultJson["REF"][ref_name]["Tref"][dd] == 0:
+            resultJson["REF"][ref_name]["Qref_kW"][dd] = 0
+        else:
+            resultJson["REF"][ref_name]["Qref_kW"][dd] = resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000 /3600
+
+    
+        # 過負荷分を集計 [MJ/day]
+        if resultJson["REF"][ref_name]["Qref_kW"][dd] > model["REF"][ref_name]["QrefrMax"]:
+
+            resultJson["REF"][ref_name]["Qref_OVER"][dd] = \
+                (resultJson["REF"][ref_name]["Qref_kW"][dd] -model["REF"][ref_name]["QrefrMax"] ) * \
+                resultJson["REF"][ref_name]["Tref"][dd]*3600/1000
+
+
+
+print( np.sum(resultJson["REF"]["PAC1_冷房"]["Qref_kW"],0) )
+print( np.sum(resultJson["REF"]["PAC1_暖房"]["Qref_kW"],0) )
+
+print( np.sum(resultJson["REF"]["PAC1_冷房"]["Qref_OVER"],0) )
+print( np.sum(resultJson["REF"]["PAC1_暖房"]["Qref_OVER"],0) )
 
 
 print('熱源負荷計算完了')
 
 
-# %% 熱源特性を抜き出す
+#%% 
+##----------------------------------------------------------------------------------
+## 地中熱ヒートポンプの設定（解説書 2.7.4.4）
+##----------------------------------------------------------------------------------
 
-# switch MODE
-#     case {2,3,4}
-        
-#         % 地中熱ヒートポンプ用係数
-#         gshp_ah = [8.0278, 13.0253, 16.7424, 19.3145, 21.2833];   % 地盤モデル：暖房時パラメータa
-#         gshp_bh = [-1.1462, -1.8689, -2.4651, -3.091, -3.8325];   % 地盤モデル：暖房時パラメータb
-#         gshp_ch = [-0.1128, -0.1846, -0.2643, -0.2926, -0.3474];  % 地盤モデル：暖房時パラメータc
-#         gshp_dh = [0.1256, 0.2023, 0.2623, 0.3085, 0.3629];       % 地盤モデル：暖房時パラメータd
-#         gshp_ac = [8.0633, 12.6226, 16.1703, 19.6565, 21.8702];   % 地盤モデル：冷房時パラメータa
-#         gshp_bc = [2.9083, 4.7711, 6.3128, 7.8071, 9.148];        % 地盤モデル：冷房時パラメータb
-#         gshp_cc = [0.0613, 0.0568, 0.1027, 0.1984, 0.249];        % 地盤モデル：冷房時パラメータc
-#         gshp_dc = [0.2178, 0.3509, 0.4697, 0.5903, 0.7154];       % 地盤モデル：冷房時パラメータd
-        
-#         ghspToa_ave = [5.8, 7.5, 10.2, 11.6, 13.3, 15.7, 17.4, 22.7]; % 地盤モデル：年平均外気温
-#         gshpToa_h   = [-3, -0.8, 0, 1.1, 3.6, 6, 9.3, 17.5];          % 地盤モデル：暖房時平均外気温
-#         gshpToa_c   = [16.8,17,18.9,19.6,20.5,22.4,22.1,24.6];        % 地盤モデル：冷房時平均外気温
-        
-#         % 冷房負荷と暖房負荷の比率（地中熱ヒートポンプ用）　← 冷房用と暖房用熱源は順に並んでいる
-#         ghsp_Rq = zeros(1,numOfRefs);
-#         for iREFc = 1:numOfRefs/2
-#             Qcmax = abs( max(Qref(:,2*iREFc-1))); % 先に冷房
-#             Qhmax = abs( max(Qref(:,2*iREFc)));   % 次に暖房
-            
-#             % 冷熱・温熱に分けて熱源群を作成したときの例外処理（2017/3/7）
-#             if Qcmax == 0
-#                 Qcmax = Qhmax;
-#             elseif Qhmax == 0
-#                 Qhmax = Qcmax;
-#             end
-            
-#             ghsp_Rq(2*iREFc-1) = (Qcmax-Qhmax)/(Qcmax+Qhmax); % 冷房
-#             ghsp_Rq(2*iREFc)   = (Qcmax-Qhmax)/(Qcmax+Qhmax); % 暖房
-#         end
-        
-#         switch climateAREA
-#             case {'Ia','1'}
-#                 iAREA = 1;
-#             case {'Ib','2'}
-#                 iAREA = 2;
-#             case {'II','3'}
-#                 iAREA = 3;
-#             case {'III','4'}
-#                 iAREA = 4;
-#             case {'IVa','5'}
-#                 iAREA = 5;
-#             case {'IVb','6'}
-#                 iAREA = 6;
-#             case {'V','7'}
-#                 iAREA = 7;
-#             case {'VI','8'}
-#                 iAREA = 8;
-#             otherwise
-#                 error('地域区分が不正です')
-#         end
-        
-# end
+# 地中熱ヒートポンプ用係数
+gshp_ah = [8.0278, 13.0253, 16.7424, 19.3145, 21.2833]   # 地盤モデル：暖房時パラメータa
+gshp_bh = [-1.1462, -1.8689, -2.4651, -3.091, -3.8325]   # 地盤モデル：暖房時パラメータb
+gshp_ch = [-0.1128, -0.1846, -0.2643, -0.2926, -0.3474]  # 地盤モデル：暖房時パラメータc
+gshp_dh = [0.1256, 0.2023, 0.2623, 0.3085, 0.3629]       # 地盤モデル：暖房時パラメータd
+gshp_ac = [8.0633, 12.6226, 16.1703, 19.6565, 21.8702]   # 地盤モデル：冷房時パラメータa
+gshp_bc = [2.9083, 4.7711, 6.3128, 7.8071, 9.148]        # 地盤モデル：冷房時パラメータb
+gshp_cc = [0.0613, 0.0568, 0.1027, 0.1984, 0.249]        # 地盤モデル：冷房時パラメータc
+gshp_dc = [0.2178, 0.3509, 0.4697, 0.5903, 0.7154]       # 地盤モデル：冷房時パラメータd
 
-# for iREF = 1:numOfRefs
-#     % 熱源機器別の設定
-#     for iREFSUB = 1:refsetRnum(iREF)
-        
-#         % 熱源種類
-#         tmprefset = refset_Type{iREF,iREFSUB};
-        
-#         if isempty( tmprefset ) == 0
+ghspToa_ave = [5.8, 7.5, 10.2, 11.6, 13.3, 15.7, 17.4, 22.7] # 地盤モデル：年平均外気温
+gshpToa_h   = [-3, -0.8, 0, 1.1, 3.6, 6, 9.3, 17.5]          # 地盤モデル：暖房時平均外気温
+gshpToa_c   = [16.8,17,18.9,19.6,20.5,22.4,22.1,24.6]        # 地盤モデル：冷房時平均外気温
+
+
+# 冷暖房比率 ghsp_Rq
+for ref_original_name in inputdata["HeatsourceSystem"]:
+
+    Qcmax = 0
+    if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
+        Qcmax = abs( np.max( resultJson["REF"][ref_original_name + "_冷房"]["Qref"] , 0) )
+
+    Qhmax = 0
+    if "暖房" in inputdata["HeatsourceSystem"][ref_original_name]:
+        Qhmax = abs( np.max( resultJson["REF"][ref_original_name + "_暖房"]["Qref"] , 0) )
+
+    if Qcmax == 0:
+        Qcmax = Qhmax
+
+    if Qhmax == 0:
+        Qhmax = Qcmax
+
+    resultJson["REF"][ref_original_name + "_冷房"]["ghsp_Rq"] = (Qcmax-Qhmax)/(Qcmax+Qhmax)
+    resultJson["REF"][ref_original_name + "_暖房"]["ghsp_Rq"] = (Qcmax-Qhmax)/(Qcmax+Qhmax)
+
+
+print(resultJson["REF"]["PAC1_冷房"]["ghsp_Rq"])
+print(resultJson["REF"]["PAC1_暖房"]["ghsp_Rq"])
+
+
+
+#%% 
+##----------------------------------------------------------------------------------
+## 熱源機器の特性
+##----------------------------------------------------------------------------------
+
+## 熱源機器特性
+with open(directory + "HeatSourcePerformance.json", 'r') as f:
+    HeatSourcePerformance = json.load(f)
+
+for ref_name in model["REF"]:
+
+    for unit_id, unit_configure in enumerate(model["REF"][ref_name]["Heatsource"]):
+
+        if "冷却水変流量" in unit_configure["HeatsourceType"]:
+            model["REF"][ref_name]["Heatsource"][unit_id]["checkCTVWV"] = 1
+        else:
+            model["REF"][ref_name]["Heatsource"][unit_id]["checkCTVWV"] = 0
+
+        if "消費電力自給装置" in unit_configure["HeatsourceType"]:
+            model["REF"][ref_name]["Heatsource"][unit_id]["checkGEGHP"] = 1
+        else:
+            model["REF"][ref_name]["Heatsource"][unit_id]["checkGEGHP"] = 0
+
+        # 特性を全て抜き出す。
+        refParaSetALL = HeatSourcePerformance[ unit_configure["HeatsourceType"] ]
+
+        # 燃料種類に応じて、一次エネルギー換算を行う。
+        if model["REF"][ref_name]["mode"] == "cooling":
+            fuel_type = refParaSetALL["冷房時の特性"]["燃料種類"]
+            model["REF"][ref_name]["Heatsource"][unit_id]["refHeatSourceType"] = refParaSetALL["冷房時の特性"]["熱源種類"]
+
+        elif model["REF"][ref_name]["mode"] == "heating":
+            fuel_type = refParaSetALL["暖房時の特性"]["燃料種類"]
+            model["REF"][ref_name]["Heatsource"][unit_id]["refHeatSourceType"] = refParaSetALL["暖房時の特性"]["熱源種類"]
+
+        # 燃料種類＋一次エネルギー換算 [kW]
+        if fuel_type == "電力":
+            model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 1
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (9760/3600) * model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
+        elif fuel_type == "ガス":
+            model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 2
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] 
+        elif fuel_type == "重油":
+            model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 3
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] 
+        elif fuel_type == "灯油":
+            model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 4
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]        
+        elif fuel_type == "液化石油ガス":
+            model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 5
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]     
+        elif fuel_type == "蒸気":
+            model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 6
+            model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (copDHC_heating)*model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+        elif fuel_type == "温水":
+            model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 7
+            model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (copDHC_heating)*model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+        elif fuel_type == "冷水":
+            model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 8
+            model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (copDHC_cooling)*model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+
+
+##----------------------------------------------------------------------------------
+## 熱源水温度
+##----------------------------------------------------------------------------------
+
+for ref_name in model["REF"]:
+
+    for unit_id, unit_configure in enumerate(model["REF"][ref_name]["Heatsource"]):
+
+        if unit_configure["refHeatSourceType"] == "水" and model["REF"][ref_name]["mode"] == "cooling":
+            xT = TctwC   # 冷却水温度
+        elif unit_configure["refHeatSourceType"] == "水" and model["REF"][ref_name]["mode"] == "heating":
+            xT = TctwH   # 冷却水温度
+        elif unit_configure["refHeatSourceType"] == "空気" and model["REF"][ref_name]["mode"] == "cooling":
+            xT = ToadbC  # 乾球温度
+        elif unit_configure["refHeatSourceType"] == "空気" and model["REF"][ref_name]["mode"] == "heating":
+            xT = ToawbH  # 湿球温度
+        elif unit_configure["refHeatSourceType"] == "不要" and model["REF"][ref_name]["mode"] == "cooling":
+            xT = ToadbC  # 乾球温度
+        elif unit_configure["refHeatSourceType"] == "不要" and model["REF"][ref_name]["mode"] == "heating":
+            xT = ToadbH  # 乾球温度
+
+        for gound_type in range(1,6):
+
+            if unit_configure["refHeatSourceType"] == "地盤"+int(gound_type) and model["REF"][ref_name]["mode"] == "cooling":
+                igsType = int(gound_type)-1
+                iAREA = int(climateAREA)-1
+                # 地盤からの還り温度（冷房）
+                xT = ( gshp_cc[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dc[igsType] ) * ( ToadbC - gshpToa_c[iAREA] ) + \
+                    (ghspToa_ave[iAREA] + gshp_ac[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bc[igsType])
             
-#             % 冷却水変流量制御の有無
-#             if endsWith(tmprefset, '_CTVWV')
-#                 checkCTVWV(iREF,iREFSUB) = 1;
-#             else
-#                 checkCTVWV(iREF,iREFSUB) = 0;
-#             end
-            
-#             % 発電機能の有無
-#             switch tmprefset
-#                 case {'GasHeatPumpAirConditioner_GE_CityGas','GasHeatPumpAirConditioner_GE_LPG'}
-#                     checkGEGHP(iREF,iREFSUB) = 1;
-#                 otherwise
-#                     checkGEGHP(iREF,iREFSUB) = 0;
-#             end
-            
-#             refmatch = 0; % チェック用
-            
-#             % データベースを検索
-#             if isempty(tmprefset) == 0
-                
-#                 % 該当する箇所をすべて抜き出す
-#                 refParaSetALL = {};
-#                 for iDB = 2:size(perDB_refList,1)
-#                     if strcmp(perDB_refList(iDB,1),tmprefset)
-#                         refParaSetALL = [refParaSetALL;perDB_refList(iDB,:)];
-#                     end
-#                 end
-                
-#                 % データベースファイルに熱源機器の特性がない場合
-#                 if isempty(refParaSetALL)
-#                     error('熱源 %s の特性が見つかりません',tmprefset)
-#                 end
-                
-#                 % 燃料種類＋一次エネルギー換算 [kW]
-#                 switch refParaSetALL{1,3}
-#                     case '電力'
-#                         refInputType(iREF,iREFSUB) = 1;
-#                         refset_MainPowerELE(iREF,iREFSUB) = (9760/3600)*refset_MainPower(iREF,iREFSUB);
-#                     case 'ガス'
-#                         refInputType(iREF,iREFSUB) = 2;
-#                         % refset_MainPowerELE(iREF,iREFSUB) = (45000/3600)*refset_MainPower(iREF,iREFSUB);  % 20130607 燃料消費量に変更
-#                         refset_MainPowerELE(iREF,iREFSUB) = refset_MainPower(iREF,iREFSUB);
-#                     case '重油'
-#                         refInputType(iREF,iREFSUB) = 3;
-#                         % refset_MainPowerELE(iREF,iREFSUB) = (41000/3600)*refset_MainPower(iREF,iREFSUB);  % 20130607 燃料消費量に変更
-#                         refset_MainPowerELE(iREF,iREFSUB) = refset_MainPower(iREF,iREFSUB);
-#                     case '灯油'
-#                         refInputType(iREF,iREFSUB) = 4;
-#                         % refset_MainPowerELE(iREF,iREFSUB) = (37000/3600)*refset_MainPower(iREF,iREFSUB);  % 20130607 燃料消費量に変更
-#                         refset_MainPowerELE(iREF,iREFSUB) = refset_MainPower(iREF,iREFSUB);
-#                     case '液化石油ガス'
-#                         refInputType(iREF,iREFSUB) = 5;
-#                         % refset_MainPowerELE(iREF,iREFSUB) = (50000/3600)*refset_MainPower(iREF,iREFSUB);  % 20130607 燃料消費量に変更
-#                         refset_MainPowerELE(iREF,iREFSUB) = refset_MainPower(iREF,iREFSUB);
-#                     case '蒸気'
-#                         refInputType(iREF,iREFSUB) = 6;
-#                         % エネルギー消費量＝生成熱量とする。
-#                         refset_MainPower(iREF,iREFSUB) = refset_Capacity(iREF,iREFSUB);
-#                         refset_MainPowerELE(iREF,iREFSUB) = (copDHC_heating)*refset_MainPower(iREF,iREFSUB);
-#                     case '温水'
-#                         refInputType(iREF,iREFSUB) = 7;
-#                         % エネルギー消費量＝生成熱量とする。
-#                         refset_MainPower(iREF,iREFSUB) = refset_Capacity(iREF,iREFSUB);
-#                         refset_MainPowerELE(iREF,iREFSUB) = (copDHC_heating)*refset_MainPower(iREF,iREFSUB);
-#                     case '冷水'
-#                         refInputType(iREF,iREFSUB) = 8;
-#                         % エネルギー消費量＝生成熱量とする。
-#                         refset_MainPower(iREF,iREFSUB) = refset_Capacity(iREF,iREFSUB);
-#                         refset_MainPowerELE(iREF,iREFSUB) = (copDHC_cooling)*refset_MainPower(iREF,iREFSUB);
-#                     otherwise
-#                         error('熱源 %s の燃料種別が不正です',tmprefset)
-#                 end
-                
-#                 % 冷却方式
-#                 switch refParaSetALL{1,4}
-#                     case '水'
-#                         refHeatSourceType(iREF,iREFSUB) = 1;
-#                     case '空気'
-#                         refHeatSourceType(iREF,iREFSUB) = 2;
-#                     case '不要'
-#                         refHeatSourceType(iREF,iREFSUB) = 4;
-#                     case {'地盤1'}
-#                         refHeatSourceType(iREF,iREFSUB) = 3;
-#                         igsType = 1;
-#                     case {'地盤2'}
-#                         refHeatSourceType(iREF,iREFSUB) = 3;
-#                         igsType = 2;
-#                     case {'地盤3'}
-#                         refHeatSourceType(iREF,iREFSUB) = 3;
-#                         igsType = 3;
-#                     case {'地盤4'}
-#                         refHeatSourceType(iREF,iREFSUB) = 3;
-#                         igsType = 4;
-#                     case {'地盤5'}
-#                         refHeatSourceType(iREF,iREFSUB) = 3;
-#                         igsType = 5;
-#                     otherwise
-#                         error('熱源 %s の冷却方式が不正です',tmprefset)
-#                 end
-                
-#                 % 能力比、入力比の変数
-#                 if refHeatSourceType(iREF,iREFSUB) == 1 && REFtype(iREF) == 1   % 水冷／冷房
-#                     xT = TctwC;   % 冷却水温度
-#                 elseif refHeatSourceType(iREF,iREFSUB) == 1 && REFtype(iREF) == 2   % 水冷／暖房
-#                     xT = TctwH;   % 冷却水温度
-                    
-#                 elseif refHeatSourceType(iREF,iREFSUB) == 2 && REFtype(iREF) == 1   % 空冷／冷房
-#                     xT = ToadbC;  % 乾球温度
-#                 elseif refHeatSourceType(iREF,iREFSUB) == 2 && REFtype(iREF) == 2   % 空冷／暖房
-#                     xT = ToawbH;  % 湿球温度
-                    
-#                 elseif refHeatSourceType(iREF,iREFSUB) == 4 && REFtype(iREF) == 1   % 不要／冷房
-#                     xT = ToadbC;  % 乾球温度
-#                 elseif refHeatSourceType(iREF,iREFSUB) == 4 && REFtype(iREF) == 2   % 不要／暖房
-#                     xT = ToadbH;  % 乾球温度
-                    
-#                 elseif refHeatSourceType(iREF,iREFSUB) == 3 && REFtype(iREF) == 1   % 地中熱／冷房
-                    
-#                     % 地盤からの還り温度（冷房）
-#                     xT = ( gshp_cc(igsType) * ghsp_Rq(iREF) + gshp_dc(igsType) ) .* ( ToadbC - gshpToa_c(iAREA) ) + ...
-#                         (ghspToa_ave(iAREA) + gshp_ac(igsType) * ghsp_Rq(iREF) + gshp_bc(igsType));
-                    
-#                 elseif refHeatSourceType(iREF,iREFSUB) == 3 && REFtype(iREF) == 2   % 地中熱／暖房
-                    
-#                     % 地盤からの還り温度（暖房）
-#                     xT = ( gshp_ch(igsType) * ghsp_Rq(iREF) + gshp_dh(igsType) ) .* ( ToadbH - gshpToa_h(iAREA) ) + ...
-#                         (ghspToa_ave(iAREA) + gshp_ah(igsType) * ghsp_Rq(iREF) + gshp_bh(igsType));
-                    
-#                 else
-#                     error('モードが不正です')
-#                 end
-                
+            elif unit_configure["refHeatSourceType"] == "地盤"+int(gound_type) and model["REF"][ref_name]["mode"] == "heating":
+                igsType = int(gound_type)-1
+                iAREA = int(climateAREA)-1
+                # 地盤からの還り温度（暖房）
+                xT = ( gshp_ch[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dh[igsType] ) * ( ToadbH - gshpToa_h[iAREA] ) + \
+                    (ghspToa_ave[iAREA] + gshp_ah[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bh[igsType])
+
+
+##----------------------------------------------------------------------------------
+## 熱源機器特性（解説書 附属書A.4）
+##----------------------------------------------------------------------------------
+
+# for ref_name in model["REF"]:
+
+#     for unit_id, unit_configure in enumerate(model["REF"][ref_name]["Heatsource"]):
+
+
+
 #                 % 外気温度の軸（マトリックスの縦軸）
 #                 xTALL(iREF,iREFSUB,:) = xT;
                 
@@ -2519,11 +2653,14 @@ print('熱源負荷計算完了')
 #                     if iPQXW == 1
 #                         PQname = '能力比';
 #                         Vname  = 'xQratio';
+
 #                     elseif iPQXW == 2
 #                         PQname = '入力比';
 #                         Vname  = 'xPratio';
+
 #                     elseif iPQXW == 3
 #                         PQname = '部分負荷特性';
+
 #                     elseif iPQXW == 4
 #                         PQname = '送水温度特性';
 #                     end
@@ -2617,17 +2754,17 @@ print('熱源負荷計算完了')
 #                 refmatch = 1; % 処理済みの証拠
                 
 #             end
-            
-#             if isempty(tmprefset)== 0 && refmatch == 0
-#                 error('熱源名称 %s は不正です',tmprefset);
-#             end
-            
+
 #         end
 #     end
 # end
 
 
-# %% 熱源エネルギー計算
+
+#%% 
+##----------------------------------------------------------------------------------
+## 熱源群の負荷率帯（解説書 2.7.7）
+##----------------------------------------------------------------------------------
 
 # MxREF     = zeros(length(ToadbC),length(mxL),numOfRefs);  % 熱源負荷の出現頻度マトリックス（縦軸：外気温度、横軸：負荷率）
 # MxREFnum  = zeros(length(ToadbC),length(mxL),numOfRefs);
@@ -2642,17 +2779,6 @@ print('熱源負荷計算完了')
 # Erefr_mod = zeros(numOfRefs,10,length(ToadbC));
 
 # hoseiStorage = ones(length(ToadbC),length(mxL),numOfRefs);  % 蓄熱槽があるシステムの追い掛け時の補正係数 2014/1/10
-
-# % 時刻別計算用
-# LtREF = zeros(8760,numOfRefs);  % 熱源の負荷率区分
-# TtREF = zeros(8760,numOfRefs);  % 熱源の温度区分
-# E_ref_hour = zeros(8760,numOfRefs);      % 熱源主機のエネルギー消費量
-# E_ref_ACc_hour = zeros(8760,numOfRefs);  % 補機電力 [MWh]
-# E_PPc_hour = zeros(8760,numOfRefs);      % 一次ポンプ電力 [MWh]
-# E_CTfan_hour = zeros(8760,numOfRefs);    % 冷却塔ファン電力 [MWh]
-# E_CTpump_hour = zeros(8760,numOfRefs);   % 冷却水ポンプ電力 [MWh]
-# E_refsys_hour = zeros(8760,numOfRefs,max(refsetRnum));      % 熱源機器ごとのエネルギー消費量
-# Q_refsys_hour = zeros(8760,numOfRefs,max(refsetRnum));      % 熱源機器ごとの処理熱量[kW]
 
 # % 日別計算用
 # LdREF = zeros(365,numOfRefs);  % 熱源の負荷率区分
@@ -2670,8 +2796,11 @@ print('熱源負荷計算完了')
 # EctpumprALL = zeros(length(ToadbC),length(mxL),numOfRefs);
 # ErefaprALL = zeros(length(ToadbC),length(mxL),numOfRefs);
 
+for ref_name in model["REF"]:
+
+
 # for iREF = 1:numOfRefs
-    
+
 #     % 蓄熱槽がある場合の放熱用熱交換器の容量の補正（mytstcript_readXML_Setting.mでは8時間を想定）
 #     switch MODE
 #         case {2,3,4}
@@ -2686,10 +2815,10 @@ print('熱源負荷計算完了')
 #                 end
 #             end
 #     end
-    
+
 #     % 熱源負荷マトリックス
 #     switch MODE
-            
+
 #         case {4}
 #             if REFtype(iREF) == 1
 #                 [tmp,TimedREF(:,iREF)]  = mytfunc_matrixREF(MODE,Qref(:,iREF),QrefrMax(iREF),Tref(:,iREF),OAdataAll,mxTC,mxL);  % 冷房
@@ -2702,7 +2831,12 @@ print('熱源負荷計算完了')
 #             end
 #     end
     
-    
+
+
+##----------------------------------------------------------------------------------
+## 最大能力（解説書 2.7.8）
+##----------------------------------------------------------------------------------
+
 #     % 最大能力、最大入力の設定
 #     for iREFSUB = 1:refsetRnum(iREF)   % 熱源台数分だけ繰り返す
         
@@ -2759,7 +2893,10 @@ print('熱源負荷計算完了')
             
 #     end
     
-    
+##----------------------------------------------------------------------------------
+## 熱源機器の運転台数（解説書 2.7.9）
+##----------------------------------------------------------------------------------
+
 #     % 運転台数
 #     if REFnumctr(iREF) == 0  % 台数制御なし
         
@@ -2787,7 +2924,11 @@ print('熱源負荷計算完了')
 #         end
 #     end
     
-    
+
+##----------------------------------------------------------------------------------
+## 熱源群の運転負荷率（解説書 2.7.12 〜 2.7.14）
+##----------------------------------------------------------------------------------
+
 #     % 部分負荷率
     
 #     for ioa = 1:length(ToadbC)
@@ -2807,7 +2948,7 @@ print('熱源負荷計算完了')
 #                         MxREFxL(ioa,iL,iREF) = 1;
 #                     end
 #             end
-            
+
             
 #             % 部分負荷特性と送水温度特性（各負荷率・各温度帯について）
 #             for iREFSUB = 1:MxREFnum(ioa,iL,iREF)
@@ -2881,7 +3022,11 @@ print('熱源負荷計算完了')
 #         end
         
 #     end
-    
+
+##----------------------------------------------------------------------------------
+## 熱源機器の一次エネルギー消費量（解説書 2.7.16）
+##----------------------------------------------------------------------------------
+
 #     % 補機群のエネルギー消費量
 #     for ioa = 1:length(ToadbC)
 #         for iL = 1:length(mxL)
@@ -2961,7 +3106,11 @@ print('熱源負荷計算完了')
             
 #         end
 #     end
-    
+
+##----------------------------------------------------------------------------------
+## 蓄熱システムによる運転時間の補正（解説書 2.7.15）
+##----------------------------------------------------------------------------------
+
 #     % 蓄熱槽を持つシステムの追い掛け時運転時間補正（追い掛け運転開始時に蓄熱量がすべて使われない問題を解消） 2014/1/10
 #     switch MODE
 #         case {1,2,3,4}
@@ -2987,7 +3136,12 @@ print('熱源負荷計算完了')
 #                 end
 #             end
 #     end
-    
+
+
+##----------------------------------------------------------------------------------
+## 熱熱源群の一次エネルギー消費量および消費電力（解説書 2.7.17）
+##----------------------------------------------------------------------------------
+
 #     switch MODE
             
 #         case {4}
@@ -3027,7 +3181,10 @@ print('熱源負荷計算完了')
     
 # end
 
-# % 熱源群のエネルギー消費量
+##----------------------------------------------------------------------------------
+## 熱源群のエネルギー消費量（解説書 2.7.18）
+##----------------------------------------------------------------------------------
+
 # switch MODE
 #         
 #     case {4}
@@ -3078,12 +3235,13 @@ print('熱源負荷計算完了')
         
 # end
 
-# disp('熱源エネルギー計算完了')
-# toc
+print('熱源エネルギー計算完了')
 
 
-# %%-----------------------------------------------------------------------------------------------------------
-# %% エネルギー消費量合計
+#%%
+##----------------------------------------------------------------------------------
+## 設計一次エネルギー消費量（解説書 2.8）
+##----------------------------------------------------------------------------------
 
 # % 2次エネルギー
 # E2nd_total =[E_aex,zeros(1,7);E_fan,zeros(1,7);E_pump,zeros(1,7);E_ref;E_refac,zeros(1,7);...
