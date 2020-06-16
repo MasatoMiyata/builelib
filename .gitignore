@@ -10,6 +10,8 @@ builelib/common.py
 builelib/core.py
 builelib/helpers.py
 builelib/database/make/
+builelib/database/climatedata/*
+sample/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
