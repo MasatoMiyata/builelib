@@ -18,6 +18,18 @@ else:
     import bulielib.climate as climate
     import builelib.shading as shading
 
+# json.dump用のクラス
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(MyEncoder, self).default(obj)
+
 
 if 'ipykernel' in sys.modules:
     directory = "./database/"
@@ -34,10 +46,10 @@ def count_Matrix(x, mxL):
     ix = 0
 
     # C#の処理に合わせる。
-    x = math.floor(x*10+0.00001)/10+0.05
+    x = math.floor(x*10)/10+0.05
 
     # 該当するマトリックスを探査
-    while x > mxL[ix]:
+    while x >= mxL[ix]:
         ix += 1
 
         if ix == len(mxL)-1:
@@ -46,21 +58,25 @@ def count_Matrix(x, mxL):
     return ix+1
 
 
-
 # 計算結果を格納する変数
 resultJson = {
     "Qroom": {
+    },
+    "AHU":{
+    },
+    "PUMP":{
     }
 }
+
+filename = '../sample/Case001_単室モデル_基本モデル.json'
+
+DEBUG = True
 
 
 #%%
 ##----------------------------------------------------------------------------------
 ## 入力ファイル（jsonファイル）の指定
 ##----------------------------------------------------------------------------------
-
-filename = '../sample/inputdata_test.json'
-
 
 # 入力データ（json）の読み込み
 with open(filename, 'r') as f:
@@ -70,39 +86,30 @@ with open(filename, 'r') as f:
 # bc.inputdata_validation(inputdata)
 
 
-
-#%%
 ##----------------------------------------------------------------------------------
-## 計算条件（定数等）の設定
+## 定数の設定
+##----------------------------------------------------------------------------------
+k_heatup = 0.84        # ファン・ポンプの発熱比率
+Cw = 4.186             # 水の比熱 [kJ/kg・K]
+
+
+##----------------------------------------------------------------------------------
+## マトリックスの設定
 ##----------------------------------------------------------------------------------
 
-# 地域の区分
-climateAREA  = inputdata["Building"]["Region"]
-
+# 地域別データの読み込み
+with open(directory + 'AREA.json', 'r') as f:
+    Area = json.load(f)
 
 divL = 10             # 負荷帯マトリックス分割数
 divT =  6             # 温度帯マトリックス分割数
 
-k_heatup = 0.84        # ファン・ポンプの発熱比率
-Cw = 4.186             # 水の比熱 [kJ/kg・K]
-
-if inputdata["Building"]["Coefficient_DHC"]["Cooling"] == None:
-    copDHC_cooling = 1.36
-else:
-    copDHC_cooling = inputdata["Building"]["Coefficient_DHC"]["Cooling"]
-
-if inputdata["Building"]["Coefficient_DHC"]["Heating"] == None:
-    copDHC_heating = 1.36
-else:
-    copDHC_heating = inputdata["Building"]["Coefficient_DHC"]["Heating"]
-
-# 負荷率帯マトリックス mxL
+# 負荷率帯マトリックス mxL = array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2])
 mxL = np.arange(1/divL, 1.01, 1/divL)
 mxL = np.append(mxL,1.2)
 
-# 平均負荷率帯マトリックス aveL
+# 負荷率帯マトリックス（平均） aveL = array([0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95, 1.2 ])
 aveL = np.zeros(len(mxL))
-
 for iL in range(0,len(mxL)):
     if iL == 0:
         aveL[0] = mxL[0]/2
@@ -111,16 +118,7 @@ for iL in range(0,len(mxL)):
     else:
         aveL[iL] = mxL[iL-1] + (mxL[iL]-mxL[iL-1])/2
 
-
-# 地域別データの読み込み
-with open(directory + 'AREA.json', 'r') as f:
-    Area = json.load(f)
-
-# 空調運転モード
-with open(directory + 'ACoperationMode.json', 'r') as f:
-    ACoperationMode = json.load(f)
-
-
+# 外気温度帯の上限・下限
 mxTH_min = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温下限"]
 mxTH_max = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温上限"]
 mxTC_min = Area[inputdata["Building"]["Region"]+"地域"]["冷房時外気温下限"]
@@ -143,8 +141,17 @@ TctwC  = ToawbC + 3  # 冷却水温度 [℃]
 TctwH  = 15.5 * np.ones(6)  #  水冷式の暖房時熱源水温度（暫定） [℃]
 
 
+##----------------------------------------------------------------------------------
+## 他人から供給された熱の一次エネルギー換算係数（デフォルト）
+##----------------------------------------------------------------------------------
 
-#%%
+if inputdata["Building"]["Coefficient_DHC"]["Cooling"] == None:
+    inputdata["Building"]["Coefficient_DHC"]["Cooling"] = 1.36
+
+if inputdata["Building"]["Coefficient_DHC"]["Heating"] == None:
+    inputdata["Building"]["Coefficient_DHC"]["Heating"] = 1.36
+
+
 ##----------------------------------------------------------------------------------
 ## 気象データ（解説書 2.2.1）
 ##----------------------------------------------------------------------------------
@@ -162,6 +169,10 @@ longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
 ##----------------------------------------------------------------------------------
 ## 冷暖房期間（解説書 2.2.2）
 ##----------------------------------------------------------------------------------
+
+# 空調運転モード
+with open(directory + 'ACoperationMode.json', 'r') as f:
+    ACoperationMode = json.load(f)
 
 # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
 ac_mode = ACoperationMode[ Area[inputdata["Building"]["Region"]+"地域"]["空調運転モードタイプ"] ]
@@ -266,6 +277,25 @@ for room_zone_name in inputdata["AirConditioningZone"].keys():
 
 #%%
 ##----------------------------------------------------------------------------------
+## 室負荷計算（解説書 2.4）
+##----------------------------------------------------------------------------------
+
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    resultJson["Qroom"][room_zone_name] = {
+        "Qwall_T": np.zeros(365),  # 壁からの温度差による熱取得 [W/m2]
+        "Qwall_T": np.zeros(365),  # 壁からの温度差による熱取得 [W/m2]
+        "Qwall_S": np.zeros(365),  # 壁からの日射による熱取得 [W/m2]
+        "Qwall_N": np.zeros(365),  # 壁からの夜間放射による熱取得（マイナス）[W/m2]
+        "Qwind_T": np.zeros(365),  # 窓からの温度差による熱取得 [W/m2]
+        "Qwind_S": np.zeros(365),  # 窓からの日射による熱取得 [W/m2]
+        "Qwind_N": np.zeros(365),  # 窓からの夜間放射による熱取得（マイナス）[W/m2]
+        "QroomDc": np.zeros(365),  # 冷房熱取得　[MJ/day]
+        "QroomDh": np.zeros(365)   # 暖房熱取得　[MJ/day]
+    }
+
+
+##----------------------------------------------------------------------------------
 ## 外皮面への入射日射量（解説書 2.4.1）
 ##----------------------------------------------------------------------------------
 
@@ -295,7 +325,6 @@ solor_radiation = {
 
 
 
-#%%
 ##----------------------------------------------------------------------------------
 ## 外壁等の熱貫流率の算出（解説書 附属書A.1）
 ##----------------------------------------------------------------------------------
@@ -367,7 +396,6 @@ if "WallConfigure" in inputdata:  # WallConfigure があれば以下を実行
             inputdata["WallConfigure"][wall_name]["Uvalue"] = 1/Rvalue
 
 
-#%%
 ##----------------------------------------------------------------------------------
 ## 窓の熱貫流率及び日射熱取得率の算出（解説書 附属書A.2）
 ##----------------------------------------------------------------------------------
@@ -496,7 +524,6 @@ if "WindowConfigure" in inputdata:
                              0.8258 * inputdata["WindowConfigure"][window_name]["glassIvalue"] )
 
 
-#%%
 ##----------------------------------------------------------------------------------
 ## 外壁の面積の計算（解説書 2.4.2.1）
 ##----------------------------------------------------------------------------------
@@ -545,8 +572,6 @@ for room_zone_name in inputdata["EnvelopeSet"]:
             raise Exception('窓面積が外皮面積よりも大きくなっています')
 
 
-
-#%%
 ##----------------------------------------------------------------------------------
 ## 室の定常熱取得の計算（解説書 2.4.2.2〜2.4.2.7）
 ##----------------------------------------------------------------------------------
@@ -655,8 +680,6 @@ for room_zone_name in inputdata["AirConditioningZone"]:
     Qwind_T  = np.zeros(365)  # 窓からの温度差による熱取得 [W/m2]
     Qwind_S  = np.zeros(365)  # 窓からの日射による熱取得 [W/m2]
     Qwind_N  = np.zeros(365)  # 窓からの夜間放射による熱取得（マイナス）[W/m2]
-
-    resultJson["Qroom"][room_zone_name] = {}
 
     # 外壁があれば以下を実行
     if room_zone_name in inputdata["EnvelopeSet"]:
@@ -889,9 +912,26 @@ for room_zone_name in inputdata["AirConditioningZone"]:
     resultJson["Qroom"][room_zone_name]["QroomDh"] = Qheat * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
 
-np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"],0)
-np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)
-print('室負荷計算完了')
+print('--- 室負荷計算完了 ---')
+
+if DEBUG:
+
+    with open("resultJson.json",'w') as fw:
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+    for room_zone_name in inputdata["AirConditioningZone"]:
+
+        print( f'--- ゾーン名 {room_zone_name} ---')
+
+        print( f'熱取得_壁温度 Qwall_T: {np.sum(resultJson["Qroom"][room_zone_name]["Qwall_T"],0)}' )
+        print( f'熱取得_壁日射 Qwall_S: {np.sum(resultJson["Qroom"][room_zone_name]["Qwall_S"],0)}' )
+        print( f'熱取得_壁放射 Qwall_N: {np.sum(resultJson["Qroom"][room_zone_name]["Qwall_N"],0)}' )
+        print( f'熱取得_窓温度 Qwind_T: {np.sum(resultJson["Qroom"][room_zone_name]["Qwind_T"],0)}' )
+        print( f'熱取得_窓日射 Qwind_S: {np.sum(resultJson["Qroom"][room_zone_name]["Qwind_S"],0)}' )
+        print( f'熱取得_窓放射 Qwind_N: {np.sum(resultJson["Qroom"][room_zone_name]["Qwind_N"],0)}' )
+        print( f'室負荷（冷房要求）の合計 QroomDc: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"],0)}' )
+        print( f'室負荷（暖房要求）の合計 QroomDh: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)}' )
+
 
 
 #%%
@@ -899,30 +939,34 @@ print('室負荷計算完了')
 ## 空調機群の一次エネルギー消費量（解説書 2.5）
 ##----------------------------------------------------------------------------------
 
-## 結果格納用変数
-resultJson["AHU"] = {}
-
+## 結果格納用の変数
 for ahu_name in inputdata["AirHandlingSystem"]:
 
     resultJson["AHU"][ahu_name] = {
-        "HoaDayAve": np.zeros(365),                   
-        "schedule": np.zeros((365,24)),    # 時刻別の運転スケジュール（365×24）
-        "day_mode": [],                    # 運転時間帯（昼、夜、終日）
-        "qoaAHU": np.zeros(365),           # 日平均外気負荷 [kW]
-        "Tahu_total": np.zeros(365),       # 空調機の日積算運転時間（冷暖合計）
-        "LdAHUc": np.zeros((365,2)),       # AHUの冷房負荷率帯
-        "TdAHUc": np.zeros((365,2)),       # AHUの冷房運転時間
-        "LdAHUh": np.zeros((365,2)),       # AHUの暖房負荷率帯
-        "TdAHUh": np.zeros((365,2)),       # AHUの暖房運転時間
-        "E_fan_day": np.zeros(365),        # AHUのエネルギー消費量
-        "E_fan_c_day": np.zeros(365),      # AHUのエネルギー消費量（冷房）
-        "E_fan_h_day": np.zeros(365),      # AHUのエネルギー消費量（暖房）
-        "E_AHUaex_day": np.zeros(365),     # 全熱交換器のエネルギー消費量
-        "TdAHUc_total": np.zeros(365),     # AHUの冷房運転時間の合計
-        "TdAHUh_total": np.zeros(365),     # AHUの暖房運転時間の合計
 
-        "Qahu_remainC": np.zeros(365),     # 未処理負荷（冷房）[MJ/day]
-        "Qahu_remainH": np.zeros(365),     # 未処理負荷（暖房）[MJ/day]
+        "day_mode": [],                    # 空調機群の運転時間帯（昼、夜、終日）
+        "schedule": np.zeros((365,24)),    # 時刻別の運転スケジュール（365×24）
+        "HoaDayAve": np.zeros(365),        # 空調運転時間帯の外気エンタルピー
+
+        "qoaAHU": np.zeros(365),           # 日平均外気負荷 [kW]
+        "Tahu_total": np.zeros(365),       # 空調機群の日積算運転時間（冷暖合計）
+        "LdAHUc": np.zeros((365,2)),       # 空調機群の冷房負荷率帯
+        "TdAHUc": np.zeros((365,2)),       # 空調機群の冷房運転時間
+        "LdAHUh": np.zeros((365,2)),       # 空調機群の暖房負荷率帯
+        "TdAHUh": np.zeros((365,2)),       # 空調機群の暖房運転時間
+
+        "E_fan_day": np.zeros(365),        # 空調機群のエネルギー消費量
+        "E_fan_c_day": np.zeros(365),      # 空調機群のエネルギー消費量（冷房）
+        "E_fan_h_day": np.zeros(365),      # 空調機群のエネルギー消費量（暖房）
+        "E_AHUaex_day": np.zeros(365),     # 全熱交換器のエネルギー消費量
+        
+        "TdAHUc_total": np.zeros(365),     # 空調機群の冷房運転時間の合計
+        "TdAHUh_total": np.zeros(365),     # 空調機群の暖房運転時間の合計
+
+        "Qahu_remainC": np.zeros(365),     # 空調機群の未処理負荷（冷房）[MJ/day]
+        "Qahu_remainH": np.zeros(365),     # 空調機群の未処理負荷（暖房）[MJ/day]
+
+        "energy_consumption_each_LF": np.zeros(len(aveL)), 
 
         "cooling":{
             "QroomAHU": np.zeros(365),     # 日積算室負荷 [MJ/day]
@@ -935,123 +979,11 @@ for ahu_name in inputdata["AirHandlingSystem"]:
             "QroomAHU": np.zeros(365),     # 日積算室負荷 [MJ/day]
             "Tahu": np.zeros(365),         # 空調機（暖房）運転時間
             "Qahu": np.zeros(365)          # 日積算空調負荷 [MJ/day]
-            
         }
     }
 
-
 ##----------------------------------------------------------------------------------
-## 空調機群が処理する日積算室負荷（解説書 2.5.1）
-##----------------------------------------------------------------------------------
-for room_zone_name in inputdata["AirConditioningZone"]:
-
-    # 室負荷（冷房）
-    resultJson["AHU"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["cooling"]["QroomAHU"] += \
-        resultJson["Qroom"][room_zone_name]["QroomDc"]
-
-    # 室負荷（暖房）
-    resultJson["AHU"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["heating"]["QroomAHU"] += \
-        resultJson["Qroom"][room_zone_name]["QroomDh"]
-
-
-##----------------------------------------------------------------------------------
-## 空調機群の運転時間（解説書 2.5.2）
-##----------------------------------------------------------------------------------
-
-## 各時刻における運転の有無（365×24の行列）
-for room_zone_name in inputdata["AirConditioningZone"]:
-
-    # 室の空調有無 roomScheduleRoom（365×24）を加算
-    resultJson["AHU"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["schedule"] += \
-        roomScheduleRoom[room_zone_name]
-
-    # 運転時間帯
-    resultJson["AHU"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["day_mode"].append( roomDayMode[room_zone_name] )
-
-
-# 各空調機群の運転時間
-for ahu_name in inputdata["AirHandlingSystem"]:
-
-    # 運転スケジュールの和が「1以上（どこか一部屋は動いている）」であれば、空調機は稼働しているとする。
-    resultJson["AHU"][ahu_name]["schedule"][   resultJson["AHU"][ahu_name]["schedule"] > 1   ] = 1
-
-    # 空調機群の日積算運転時間（冷暖合計）
-    resultJson["AHU"][ahu_name]["Tahu_total"] = np.sum(resultJson["AHU"][ahu_name]["schedule"],1)
-
-    # 空調機の運転モード と　外気エンタルピー
-    if "終日" in resultJson["AHU"][ahu_name]["day_mode"]:
-        resultJson["AHU"][ahu_name]["day_mode"] = "終日"
-        resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave
-    elif resultJson["AHU"][ahu_name]["day_mode"].count("昼") == len(resultJson["AHU"][ahu_name]["day_mode"]):
-        resultJson["AHU"][ahu_name]["day_mode"] = "昼"
-        resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_day
-    elif resultJson["AHU"][ahu_name]["day_mode"].count("夜") == len(resultJson["AHU"][ahu_name]["day_mode"]):
-        resultJson["AHU"][ahu_name]["day_mode"] = "夜"
-        resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ngt
-    else:
-        resultJson["AHU"][ahu_name]["day_mode"]  = "終日"
-        resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave
-
-    # print(resultJson["AHU"][ahu_name]["day_mode"])
-
-
-for ahu_name in inputdata["AirHandlingSystem"]:
-
-    for dd in range(0,365):
-
-        if resultJson["AHU"][ahu_name]["Tahu_total"][dd] == 0:
-
-            # 日空調時間が0であれば、冷暖房空調時間は0とする。
-            resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = 0
-            resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
-
-        else:
-
-            if (resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd] == 0) and \
-                (resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd] == 0):
-
-                # 外調機を想定（空調機は動いているが、冷房のTahuも暖房のTahuも0である場合）
-                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]   # 外調機の場合は「冷房側」に運転時間を押しつける。
-                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
-        
-            elif resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd] == 0:
-
-                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = 0
-                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
-    
-            elif resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd] == 0:
-
-                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
-                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
-
-            else:
-
-                if abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) < abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]):
-                    
-                    # 暖房負荷の方が大きい場合
-                    ratio = abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) / \
-                        ( abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) + abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) )
-
-                    resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = math.ceil( resultJson["AHU"][ahu_name]["Tahu_total"][dd] * ratio )
-                    resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd]
-
-                else:
-
-                    # 冷房負荷の方が大きい場合
-                    ratio = abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) / \
-                        ( abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) + abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) )
-
-                    resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = math.ceil( resultJson["AHU"][ahu_name]["Tahu_total"][dd] * ratio )
-                    resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd]
-
-
-print( f'空調機群の運転時間（冷房期間）： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Tahu"],0)} 時間' )
-print( f'空調機群の運転時間（暖房期間）： {np.sum(resultJson["AHU"][ahu_name]["heating"]["Tahu"],0)} 時間' )
-
-
-#%%
-##----------------------------------------------------------------------------------
-## 空調機群全体のスペックを整理する。
+## 空調機群全体のスペックを整理
 ##----------------------------------------------------------------------------------
 
 for ahu_name in inputdata["AirHandlingSystem"]:
@@ -1133,30 +1065,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
 
 ##----------------------------------------------------------------------------------
-## 各ゾーンの外気導入量を取得
-##----------------------------------------------------------------------------------
-# 外気導入量 [m3/h]
-for ahu_name in inputdata["AirHandlingSystem"]:
-    inputdata["AirHandlingSystem"][ ahu_name ]["outdoorAirVolume_cooling"] = 0
-    inputdata["AirHandlingSystem"][ ahu_name ]["outdoorAirVolume_heating"] = 0
-
-for room_zone_name in inputdata["AirConditioningZone"]:
-
-    # 各部屋の外気導入量 [m3/h]
-    inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
-        bc.get_roomOutdoorAirVolume( inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"] ) * \
-        inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-
-    # 冷房運転時用 [m3/h]
-    inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"] ]["outdoorAirVolume_cooling"] += \
-        inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"]
-
-    # 暖房運転時用 [m3/h]
-    inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"] ]["outdoorAirVolume_heating"] += \
-        inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"]
-
-
-##----------------------------------------------------------------------------------
 ## 冷暖同時供給の有無
 ##----------------------------------------------------------------------------------
 
@@ -1197,6 +1105,109 @@ for ahu_name in inputdata["AirHandlingSystem"]:
         inputdata["AirHandlingSystem"][ ahu_name ]["isSimultaneousSupply"] = "有"
 
 
+##----------------------------------------------------------------------------------
+## 空調機群が処理する日積算室負荷（解説書 2.5.1）
+##----------------------------------------------------------------------------------
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    ahu_name = inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"]
+
+    # 室負荷（冷房要求）
+    resultJson["AHU"][ ahu_name ]["cooling"]["QroomAHU"] += \
+        resultJson["Qroom"][room_zone_name]["QroomDc"]
+
+    # 室負荷（暖房要求）
+    resultJson["AHU"][ ahu_name ]["heating"]["QroomAHU"] += \
+        resultJson["Qroom"][room_zone_name]["QroomDh"]
+
+
+##----------------------------------------------------------------------------------
+## 空調機群の運転時間（解説書 2.5.2）
+##----------------------------------------------------------------------------------
+
+## 各時刻における運転の有無（365×24の行列）
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    ahu_name = inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"]
+
+    # 室の空調有無 roomScheduleRoom（365×24）を加算
+    resultJson["AHU"][ ahu_name ]["schedule"] += roomScheduleRoom[room_zone_name]
+
+    # 運転時間帯
+    resultJson["AHU"][ ahu_name ]["day_mode"].append( roomDayMode[room_zone_name] )
+
+
+# 各空調機群の運転時間
+for ahu_name in inputdata["AirHandlingSystem"]:
+
+    # 運転スケジュールの和が「1以上（どこか一部屋は動いている）」であれば、空調機は稼働しているとする。
+    resultJson["AHU"][ahu_name]["schedule"][   resultJson["AHU"][ahu_name]["schedule"] > 1   ] = 1
+
+    # 空調機群の日積算運転時間（冷暖合計）
+    resultJson["AHU"][ahu_name]["Tahu_total"] = np.sum(resultJson["AHU"][ahu_name]["schedule"], 1)
+
+    # 空調機の運転モード と　外気エンタルピー
+    if "終日" in resultJson["AHU"][ahu_name]["day_mode"]:
+        resultJson["AHU"][ahu_name]["day_mode"] = "終日"
+        resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave
+    elif resultJson["AHU"][ahu_name]["day_mode"].count("昼") == len(resultJson["AHU"][ahu_name]["day_mode"]):
+        resultJson["AHU"][ahu_name]["day_mode"] = "昼"
+        resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_day
+    elif resultJson["AHU"][ahu_name]["day_mode"].count("夜") == len(resultJson["AHU"][ahu_name]["day_mode"]):
+        resultJson["AHU"][ahu_name]["day_mode"] = "夜"
+        resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ngt
+    else:
+        resultJson["AHU"][ahu_name]["day_mode"]  = "終日"
+        resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave
+
+
+    for dd in range(0,365):
+
+        if resultJson["AHU"][ahu_name]["Tahu_total"][dd] == 0:
+
+            # 日空調時間が0であれば、冷暖房空調時間は0とする。
+            resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = 0
+            resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
+
+        else:
+
+            if (resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd] == 0) and \
+                (resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd] == 0):
+
+                # 外調機を想定（空調機は動いているが、冷房のTahuも暖房のTahuも0である場合）
+                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]   # 外調機の場合は「冷房側」に運転時間を押しつける。
+                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
+        
+            elif resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd] == 0:
+
+                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = 0
+                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
+    
+            elif resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd] == 0:
+
+                resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
+                resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = 0
+
+            else:
+
+                if abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) < abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]):
+                    
+                    # 暖房負荷の方が大きい場合
+                    ratio = abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) / \
+                        ( abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) + abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) )
+
+                    resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = math.ceil( resultJson["AHU"][ahu_name]["Tahu_total"][dd] * ratio )
+                    resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd]
+
+                else:
+
+                    # 冷房負荷の方が大きい場合
+                    ratio = abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) / \
+                        ( abs(resultJson["AHU"][ahu_name]["cooling"]["QroomAHU"][dd]) + abs(resultJson["AHU"][ahu_name]["heating"]["QroomAHU"][dd]) )
+
+                    resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] = math.ceil( resultJson["AHU"][ahu_name]["Tahu_total"][dd] * ratio )
+                    resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd]
+
 
 ##----------------------------------------------------------------------------------
 ## 全熱交換効率の補正（解説書 2.5.3）
@@ -1229,6 +1240,28 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 ## 外気負荷[kW]の算出（解説書 2.5.3）
 ##----------------------------------------------------------------------------------
 
+# 外気導入量 [m3/h]
+for ahu_name in inputdata["AirHandlingSystem"]:
+    inputdata["AirHandlingSystem"][ ahu_name ]["outdoorAirVolume_cooling"] = 0
+    inputdata["AirHandlingSystem"][ ahu_name ]["outdoorAirVolume_heating"] = 0
+
+for room_zone_name in inputdata["AirConditioningZone"]:
+
+    # 各部屋の外気導入量 [m3/h]
+    inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
+        bc.get_roomOutdoorAirVolume( inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"] ) * \
+        inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+
+    # 冷房運転時用 [m3/h]
+    inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"] ]["outdoorAirVolume_cooling"] += \
+        inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"]
+
+    # 暖房運転時用 [m3/h]
+    inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"] ]["outdoorAirVolume_heating"] += \
+        inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"]
+
+
+# 外気負荷[kW]
 for ahu_name in inputdata["AirHandlingSystem"]:
 
     for dd in range(0,365):
@@ -1306,7 +1339,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * \
                             (inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] - \
                                 inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"] * inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] ) *1.293/3600
-
 
 
 ##----------------------------------------------------------------------------------
@@ -1416,9 +1448,24 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
 print('空調負荷計算完了')
 
+if DEBUG:
+
+    with open("resultJson.json",'w') as fw:
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        print( f'外気負荷 qoaAHU {np.sum(resultJson["AHU"][ahu_name]["qoaAHU"],0)}' )
+        print( f'外気冷房効果 Qahu_oac： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Qahu_oac"],0)}' )
+        print( f'空調機群の運転時間（冷房期間）Tahu： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Tahu"],0)} 時間' )
+        print( f'空調機群の運転時間（暖房期間）Tahu： {np.sum(resultJson["AHU"][ahu_name]["heating"]["Tahu"],0)} 時間' )
+        print( f'空調負荷（冷房期間）Qahu： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Qahu"],0)}' )
+        print( f'空調負荷（暖房期間）Qahu： {np.sum(resultJson["AHU"][ahu_name]["heating"]["Qahu"],0)}' )
 
 
 
+
+#%%
 ##----------------------------------------------------------------------------------
 ## 空調機群の一次エネルギー消費量（解説書 2.5 の続き）
 ##----------------------------------------------------------------------------------
@@ -1522,7 +1569,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
     resultJson["AHU"][ahu_name]["TdAHUh"] = Tdh
 
 
-#%%
 ##----------------------------------------------------------------------------------
 ## 風量制御方式によって定まる係数（解説書 2.5.7）
 ##----------------------------------------------------------------------------------
@@ -1590,17 +1636,12 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 # 空調機群毎に、負荷率帯とエネルギー消費量[kW]の関係を算出
 for ahu_name in inputdata["AirHandlingSystem"]:
 
-    resultJson["AHU"][ahu_name]["energy_consumption_each_LF"] = np.zeros(len(aveL))
-
     for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
 
         for iL in range(0,len(aveL)):
             resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] += \
                 unit_configure["energy_consumption_ratio"][iL] * unit_configure["FanPowerConsumption"]
 
-
-
-for ahu_name in inputdata["AirHandlingSystem"]:
 
     for dd in range(0,365):
         
@@ -1661,7 +1702,7 @@ for ahu_name in inputdata["AirHandlingSystem"]:
 
         resultJson["AHU"][ahu_name]["E_fan_day"][dd] = resultJson["AHU"][ahu_name]["E_fan_c_day"][dd] + resultJson["AHU"][ahu_name]["E_fan_h_day"][dd]
 
-#%%
+
 ##----------------------------------------------------------------------------------
 ## 空調機群の年間一次エネルギー消費量（解説書 2.5.12）
 ##----------------------------------------------------------------------------------
@@ -1683,20 +1724,29 @@ for ahu_name in inputdata["AirHandlingSystem"]:
     resultJson["AHU"][ahu_name]["MxAHUhE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_h_day"],0)
 
 
-print( f'空調機群（送風機）のエネルギー消費量: {resultJson["AHU"]["E_fan"]} MWh' )
-print( f'空調機群（全熱交換器）のエネルギー消費量: {resultJson["AHU"]["E_aex"]} MWh' )
-
-
 print('空調機群のエネルギー消費量計算完了')
+
+if DEBUG:
+
+    with open("resultJson.json",'w') as fw:
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        print( f'空調機群運転時間（冷房） TcAHU {np.sum(resultJson["AHU"][ahu_name]["TcAHU"],0)}' )
+        print( f'空調機群運転時間（暖房） ThAHU {np.sum(resultJson["AHU"][ahu_name]["ThAHU"],0)}' )
+
+        print( f'空調機群エネルギー消費量（冷房） MxAHUcE {np.sum(resultJson["AHU"][ahu_name]["MxAHUcE"],0)}' )
+        print( f'空調機群エネルギー消費量（暖房） MxAHUcE {np.sum(resultJson["AHU"][ahu_name]["MxAHUhE"],0)}' )
+
+    print( f'空調機群（送風機）のエネルギー消費量: {resultJson["AHU"]["E_fan"]} MWh' )
+    print( f'空調機群（全熱交換器）のエネルギー消費量: {resultJson["AHU"]["E_aex"]} MWh' )
 
 
 #%% 
 ##----------------------------------------------------------------------------------
 ## 二次ポンプ群の一次エネルギー消費量（解説書 2.6）
 ##----------------------------------------------------------------------------------
-
-## 結果格納用変数
-resultJson["PUMP"] = {}
 
 # 二次ポンプが空欄であった場合、ダミーの仮想ポンプを追加する。
 number = 0
@@ -1745,6 +1795,7 @@ for room_zone_name in inputdata["AirConditioningZone"]:
         }
 
         number += 1
+
 
 
 # 冷房と暖房の二次ポンプ群に分ける。
@@ -1896,10 +1947,6 @@ for ahu_name in inputdata["AirHandlingSystem"]:
                 resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] = 0
 
 
-print( f'未処理負荷（冷房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainC"])} MJ' )
-print( f'未処理負荷（暖房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainH"])} MJ' )
-
-
 # ポンプ負荷の積算
 for pump_name in resultJson["PUMP"]:
 
@@ -2000,6 +2047,27 @@ for pump_name in resultJson["PUMP"]:
 
 
 print('ポンプ負荷計算完了')
+
+
+if DEBUG:
+
+    with open("resultJson.json",'w') as fw:
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        print( f'--- 空調機群名 {ahu_name} ---')
+
+        print( f'未処理負荷（冷房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainC"])} MJ' )
+        print( f'未処理負荷（暖房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainH"])} MJ' )
+
+    for pump_name in resultJson["PUMP"]:
+
+        print( f'--- 二次ポンプ群名 {pump_name} ---')
+
+        print( f'二次ポンプ負荷 Tps: {np.sum(resultJson["PUMP"][pump_name]["Qps"],0)}' )
+        print( f'二次ポンプ運転時間 Tps: {np.sum(resultJson["PUMP"][pump_name]["Tps"],0)}' )
+ 
 
 
 
@@ -2224,6 +2292,29 @@ for pump_name in resultJson["PUMP"]:
 
 
 print('二次ポンプ群のエネルギー消費量計算完了')
+
+
+if DEBUG:
+
+    with open("resultJson.json",'w') as fw:
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        print( f'--- 空調機群名 {ahu_name} ---')
+
+        print( f'未処理負荷（冷房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainC"])} MJ' )
+        print( f'未処理負荷（暖房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainH"])} MJ' )
+
+    for pump_name in resultJson["PUMP"]:
+
+        print( f'--- 二次ポンプ群名 {pump_name} ---')
+
+        print( f'熱取得_壁温度 Qwall_T: {np.sum(resultJson["Qroom"][room_zone_name]["Qwall_T"],0)}' )
+        print( f'熱取得_壁日射 Qwall_S: {np.sum(resultJson["Qroom"][room_zone_name]["Qwall_S"],0)}' )
+
+
+
 
 
 #%%
@@ -2635,15 +2726,18 @@ for ref_name in model["REF"]:
         elif fuel_type == "蒸気":
             model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 6
             model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
-            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (copDHC_heating)*model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = \
+                (inputdata["Building"]["Coefficient_DHC"]["Heating"]) * model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
         elif fuel_type == "温水":
             model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 7
             model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
-            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (copDHC_heating)*model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = \
+                (inputdata["Building"]["Coefficient_DHC"]["Heating"])*model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
         elif fuel_type == "冷水":
             model["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 8
             model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
-            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (copDHC_cooling)*model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+            model["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = \
+                (inputdata["Building"]["Coefficient_DHC"]["Cooling"])*model["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
 
 
 ##----------------------------------------------------------------------------------
@@ -2673,7 +2767,7 @@ for ref_name in model["REF"]:
 
             if unit_configure["parameter"]["熱源種類"] == "地盤"+str(int(gound_type)) and model["REF"][ref_name]["mode"] == "cooling":
                 igsType = int(gound_type)-1
-                iAREA = int(climateAREA)-1
+                iAREA = int(inputdata["Building"]["Region"])-1
                 # 地盤からの還り温度（冷房）
                 model["REF"][ref_name]["Heatsource"][unit_id]["xTALL"] = \
                      ( gshp_cc[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dc[igsType] ) * ( ToadbC - gshpToa_c[iAREA] ) + \
@@ -2681,7 +2775,7 @@ for ref_name in model["REF"]:
             
             elif unit_configure["parameter"]["熱源種類"] == "地盤"+str(int(gound_type)) and model["REF"][ref_name]["mode"] == "heating":
                 igsType = int(gound_type)-1
-                iAREA = int(climateAREA)-1
+                iAREA = int(inputdata["Building"]["Region"])-1
                 # 地盤からの還り温度（暖房）
                 model["REF"][ref_name]["Heatsource"][unit_id]["xTALL"] = \
                     ( gshp_ch[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dh[igsType] ) * ( ToadbH - gshpToa_h[iAREA] ) + \
