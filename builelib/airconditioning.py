@@ -27,6 +27,8 @@ class MyEncoder(json.JSONEncoder):
             return float(obj)
         elif isinstance(obj, np.ndarray):
             return obj.tolist()
+        elif isinstance(obj, set):
+            return list(obj)
         else:
             return super(MyEncoder, self).default(obj)
 
@@ -2310,10 +2312,12 @@ if DEBUG:
 
         print( f'--- 二次ポンプ群名 {pump_name} ---')
 
-        print( f'熱取得_壁温度 Qwall_T: {np.sum(resultJson["Qroom"][room_zone_name]["Qwall_T"],0)}' )
-        print( f'熱取得_壁日射 Qwall_S: {np.sum(resultJson["Qroom"][room_zone_name]["Qwall_S"],0)}' )
-
-
+        print( f'二次ポンプ群のファン発熱量 Qpsahu_fan: {np.sum(resultJson["PUMP"][pump_name]["Qpsahu_fan"],0)}' )
+        print( f'二次ポンプ群の負荷 Qps: {np.sum(resultJson["PUMP"][pump_name]["Qps"],0)}' )
+        print( f'二次ポンプ群の運転時間 Tps: {np.sum(resultJson["PUMP"][pump_name]["Tps"],0)}' )
+        print( f'二次ポンプ群の電力消費量 E_pump_day: {np.sum(resultJson["PUMP"][pump_name]["E_pump_day"],0)}' )
+    
+    print( f'二次ポンプ群の年間一次エネルギー消費量 E_pump: {E_pump}' )
 
 
 
