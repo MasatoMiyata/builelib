@@ -103,3 +103,4 @@ ENV/
 
 # Rope project settings
 .ropeproject
+sample/inputdata.json
