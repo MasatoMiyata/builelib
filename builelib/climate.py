@@ -3,6 +3,30 @@ import csv
 import math
 import numpy as np
 
+def readDatClimateData(filename):
+    """
+    気象データ（datファイル）を読み込む関数。給湯用。
+    8760の行列
+    """
+
+    with open(filename) as f:
+        reader = csv.reader(f)
+        data = [row for row in reader]
+
+    npArrayData = np.array(data)
+    Tout = npArrayData[1:8761, 6].astype('float')
+
+    Tout_hourly = np.zeros((365,24))
+    i = 0
+    for dd in range(365):
+        for hh in range(24):
+            Tout_hourly[dd][hh] = Tout[i]
+            i += 1
+
+    Tout_daily = np.mean(Tout_hourly,1)
+
+    return Tout_daily
+
 
 def readHaspClimateData(filename):
     """
@@ -210,7 +234,12 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
                     Is[DN,hour] = 0.5*Ios + 0.1*0.5*(Ios + Iod*sinh)
                 elif bet == 0:
                     Is[DN,hour] = Ios
-            
+                else:
+                    # 太陽熱利用の計算用：要検証
+                    rhoG = 0.8
+                    Is[DN,hour] = (1+cosBet)/2*Ios + (1-cosBet)/2*rhoG*(Ios + Iod*sinh)
+
+
             # 日数カウント
             DN += 1
 
@@ -220,6 +249,8 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
         Insr = np.sum(InnALL,1)/2
     elif bet == 0:
         Insr = np.sum(InnALL,1)
+    else:
+        Insr = None
 
     return np.sum(Id,1), np.sum(Id_ita,1), np.sum(Is,1), Insr
 

@@ -53,6 +53,38 @@ def get_roomOutdoorAirVolume(buildingType, roomType):
 
     return roomOutdoorAirVolume
 
+# 湯使用量を読み込む関数（給湯）
+def get_roomHotwaterDemand(buildingType, roomType):
+
+    # 年間湯使用量
+    if RoomUsageSchedule[buildingType][roomType]["年間湯使用量の単位"] == "[L/人日]" or \
+        RoomUsageSchedule[buildingType][roomType]["年間湯使用量の単位"] == "[L/床日]":
+
+        hotwater_demand  = RoomUsageSchedule[buildingType][roomType]["年間湯使用量"] \
+            * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
+        hotwater_demand_washroom = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（洗面）"]\
+            * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
+        hotwater_demand_shower = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（シャワー）"]\
+            * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
+        hotwater_demand_kitchen = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（厨房）"]\
+            * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
+        hotwater_demand_other = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（その他）"]\
+            * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
+    
+    elif RoomUsageSchedule[buildingType][roomType]["年間湯使用量の単位"] == "[L/m2日]":
+
+        hotwater_demand  = RoomUsageSchedule[buildingType][roomType]["年間湯使用量"]
+        hotwater_demand_washroom = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（洗面）"]
+        hotwater_demand_shower = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（シャワー）"]
+        hotwater_demand_kitchen = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（厨房）"]
+        hotwater_demand_other = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（その他）"]
+
+    else:
+
+        raise Exception('給湯負荷が設定されていません')
+
+    return hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other
+
 
 # 発熱量参照値を読み込む関数（空調）
 def get_roomHeatGain(buildingType, roomType):
@@ -104,6 +136,7 @@ def get_roomUsageSchedule(buildingType, roomType):
         roomSchedulePerson.append(
             RoomUsageSchedule[buildingType][roomType]["スケジュール"]["人体発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
         )
+
         # 人体発熱機器発熱密度比率密度比率
         roomScheduleOAapp.append(
             RoomUsageSchedule[buildingType][roomType]["スケジュール"]["機器発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
@@ -171,10 +204,6 @@ def get_dailyOpeSchedule_lighting(buildingType, roomType):
         opePattern_hourly_lighting = np.where(opePattern_hourly_lighting > 0, 1, 0)
 
     return opePattern_hourly_lighting
-
-
-
-
 
 
 # 入力データのバリデーション
