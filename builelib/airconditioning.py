@@ -2312,7 +2312,7 @@ if DEBUG:
 
         print( f'--- 二次ポンプ群名 {pump_name} ---')
 
-        print( f'二次ポンプ群のファン発熱量 Qpsahu_fan: {np.sum(resultJson["PUMP"][pump_name]["Qpsahu_fan"],0)}' )
+        print( f'二次ポンプ群に加算されるファン発熱量 Qpsahu_fan: {np.sum(resultJson["PUMP"][pump_name]["Qpsahu_fan"],0)}' )
         print( f'二次ポンプ群の負荷 Qps: {np.sum(resultJson["PUMP"][pump_name]["Qps"],0)}' )
         print( f'二次ポンプ群の運転時間 Tps: {np.sum(resultJson["PUMP"][pump_name]["Tps"],0)}' )
         print( f'二次ポンプ群の電力消費量 E_pump_day: {np.sum(resultJson["PUMP"][pump_name]["E_pump_day"],0)}' )
@@ -2340,8 +2340,6 @@ for pump_name in resultJson["PUMP"]:
 ##----------------------------------------------------------------------------------
 ## 熱源群の一次エネルギー消費量（解説書 2.7）
 ##----------------------------------------------------------------------------------
-
-# xXratioMX  = ones(numOfRefs,3,3).*NaN;
 
 # モデル格納用変数
 model = {}
@@ -2371,7 +2369,6 @@ for ref_original_name in inputdata["HeatsourceSystem"]:
             model["REF"][ ref_original_name + "_暖房"]["isStorage"] = "有"
         else:
             model["REF"][ ref_original_name + "_暖房"]["isStorage"] = "無"
-
 
 
 ##----------------------------------------------------------------------------------
@@ -2487,14 +2484,9 @@ for ref_name in model["REF"]:
     resultJson["REF"][ref_name]["E_CTfan_day"]   =  np.zeros(365)    # 冷却塔ファン電力 [MWh]
     resultJson["REF"][ref_name]["E_CTpump_day"]  =  np.zeros(365)    # 冷却水ポンプ電力 [MWh]
 
-# E_ref_day     =  zeros(365,numOfRefs);
-# E_ref_ACc_day =  zeros(365,numOfRefs);   % 補機電力 [MWh]
-# E_PPc_day     =  zeros(365,numOfRefs);   % 一次ポンプ電力 [MWh]
-# E_CTfan_day   =  zeros(365,numOfRefs);   % 冷却塔ファン電力 [MWh]
-# E_CTpump_day  =  zeros(365,numOfRefs);   % 冷却水ポンプ電力 [MWh]
+
 # E_refsys_day  = zeros(365,numOfRefs,max(refsetRnum));      % 熱源機器ごとのエネルギー消費量
 # Q_refsys_day  = zeros(365,numOfRefs,max(refsetRnum));      % 熱源機器ごとの処理熱量[kW]
-
 
 # EctpumprALL = zeros(length(ToadbC),length(mxL),numOfRefs);
 # ErefaprALL = zeros(length(ToadbC),length(mxL),numOfRefs);
@@ -2553,11 +2545,6 @@ for ref_name in model["REF"]:
                     resultJson["REF"][ref_name]["Qref"][dd] += resultJson["PUMP"][pump_name]["Qps"][dd] + \
                         (-1) * resultJson["PUMP"][pump_name]["Qpsahu_pump"] * resultJson["PUMP"][pump_name]["Tps"][dd] * 3600/1000
 
-    
-print( np.sum(resultJson["REF"]["PAC1_冷房"]["Qref"],0) )
-print( np.sum(resultJson["REF"]["PAC1_暖房"]["Qref"],0) )
-
-
 
 ##----------------------------------------------------------------------------------
 ## 熱源群の運転時間（解説書 2.7.3）
@@ -2576,11 +2563,6 @@ for ref_name in model["REF"]:
     for dd in range(0,365):
         if resultJson["REF"][ref_name]["Qref"][dd] > 0:
             resultJson["REF"][ref_name]["Tref"][dd] = np.sum(resultJson["REF"][ref_name]["schedule"][dd])
-
-
-print( np.sum(resultJson["REF"]["PAC1_冷房"]["Tref"],0) )
-print( np.sum(resultJson["REF"]["PAC1_暖房"]["Tref"],0) )
-
 
 
 ##----------------------------------------------------------------------------------
@@ -2619,15 +2601,27 @@ for ref_name in model["REF"]:
                 resultJson["REF"][ref_name]["Tref"][dd]*3600/1000
 
 
-
-print( np.sum(resultJson["REF"]["PAC1_冷房"]["Qref_kW"],0) )
-print( np.sum(resultJson["REF"]["PAC1_暖房"]["Qref_kW"],0) )
-
-print( np.sum(resultJson["REF"]["PAC1_冷房"]["Qref_OVER"],0) )
-print( np.sum(resultJson["REF"]["PAC1_暖房"]["Qref_OVER"],0) )
-
-
 print('熱源負荷計算完了')
+
+if DEBUG:
+
+    for pump_name in resultJson["PUMP"]:
+
+        print( f'--- 二次ポンプ群名 {pump_name} ---')
+
+        print( f'二次ポンプ群のポンプ発熱量 Qpsahu_fan: {np.sum(resultJson["PUMP"][pump_name]["Qpsahu_pump"],0)}' )
+
+
+    for ref_name in model["REF"]:
+
+        print( f'--- 熱源群名 {ref_name} ---')
+
+        print( f'熱源群の熱源負荷 Qref: {np.sum(resultJson["REF"][ref_name]["Qref"],0)}' )
+        print( f'熱源群の平均負荷 Qref_kW: {np.sum(resultJson["REF"][ref_name]["Qref_kW"],0)}' )
+        print( f'熱源群の過負荷 Qref_OVER: {np.sum(resultJson["REF"][ref_name]["Qref_OVER"],0)}' )
+        print( f'熱源群の運転時間 Tref: {np.sum(resultJson["REF"][ref_name]["Tref"],0)}' )
+
+
 
 
 #%% 
@@ -2670,13 +2664,7 @@ for ref_original_name in inputdata["HeatsourceSystem"]:
     resultJson["REF"][ref_original_name + "_冷房"]["ghsp_Rq"] = (Qcmax-Qhmax)/(Qcmax+Qhmax)
     resultJson["REF"][ref_original_name + "_暖房"]["ghsp_Rq"] = (Qcmax-Qhmax)/(Qcmax+Qhmax)
 
-
-print(resultJson["REF"]["PAC1_冷房"]["ghsp_Rq"])
-print(resultJson["REF"]["PAC1_暖房"]["ghsp_Rq"])
-
-
-
-#%% 
+#%%
 ##----------------------------------------------------------------------------------
 ## 熱源機器の特性
 ##----------------------------------------------------------------------------------
@@ -2786,7 +2774,6 @@ for ref_name in model["REF"]:
                     (ghspToa_ave[iAREA] + gshp_ah[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bh[igsType])
 
 
-#%%
 ##----------------------------------------------------------------------------------
 ## 最大能力比
 ##----------------------------------------------------------------------------------
@@ -2830,8 +2817,6 @@ for ref_name in model["REF"]:
                         unit_configure["parameter"]["能力比"][j]["係数"]["a2"] * x ** 2 + \
                         unit_configure["parameter"]["能力比"][j]["係数"]["a1"] * x  + \
                         unit_configure["parameter"]["能力比"][j]["係数"]["a0"] )
-
-        print(model["REF"][ref_name]["Heatsource"][unit_id]["xQratio"])
 
 
 ##----------------------------------------------------------------------------------
@@ -2878,8 +2863,6 @@ for ref_name in model["REF"]:
                         unit_configure["parameter"]["入力比"][j]["係数"]["a1"] * x  + \
                         unit_configure["parameter"]["入力比"][j]["係数"]["a0"] )
 
-        print(model["REF"][ref_name]["Heatsource"][unit_id]["xPratio"])
-
 
 
 #%% 
@@ -2908,6 +2891,7 @@ for ref_name in model["REF"]:
             raise Exception('熱交換機が設定されていません')
 
 
+#%%
 ##----------------------------------------------------------------------------------
 ## 熱源群の運転負荷率（解説書 2.7.12）
 ##----------------------------------------------------------------------------------
@@ -2942,9 +2926,14 @@ for ref_name in model["REF"]:
             resultJson["REF"][ref_name]["TdREF"][dd] = noa
             resultJson["REF"][ref_name]["TimedREF"][dd] = resultJson["REF"][ref_name]["Tref"][dd]
 
+    if DEBUG:
 
-print(np.sum(resultJson["REF"]["PAC1_冷房"]["LdREF"]),0)
-print(np.sum(resultJson["REF"]["PAC1_暖房"]["LdREF"]),0)
+        print( f'--- 熱源群名 {ref_name} ---')
+
+        print( f'熱源群の負荷率帯の番号 LdREF: {np.sum(resultJson["REF"][ref_name]["LdREF"],0)}' )
+        print( f'熱源群の負荷率帯の時間 LdREF: {np.sum(resultJson["REF"][ref_name]["TdREF"],0)}' )
+
+
 
 #%%
 ##----------------------------------------------------------------------------------
@@ -2971,6 +2960,12 @@ for ref_name in model["REF"]:
                 model["REF"][ref_name]["Heatsource"][unit_id]["xPratio"][iX]
 
 
+        if DEBUG:
+            print( f'--- 熱源群名 {ref_name} の {unit_id+1} 台目---')
+            print( f'各外気温区分における最大能力 Qrefr_mod: {np.sum(model["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"],0)}' )
+            print( f'各外気温区分における最大入力 Erefr_mod: {np.sum(model["REF"][ref_name]["Heatsource"][unit_id]["Erefr_mod"],0)}' )
+                
+
     if model["REF"][ref_name]["isStorage"] == "有":
 
         # 外気温帯毎に最大能力の合計値を求める。
@@ -2995,7 +2990,6 @@ for ref_name in model["REF"]:
                 model["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["Erefr_mod"][iX] = \
                     model["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["refset_MainPowerELE"] * \
                     model["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["xPratio"][iX]
-
 
 
 #%%
@@ -3071,12 +3065,27 @@ for ref_name in model["REF"]:
                 
                 model["REF"][ref_name]["MxREFnum"][ioa][iL] = rr
 
+
+    if DEBUG:
+
+        print( f'--- 熱源群名 {ref_name} ---')
+        print( f'各外気温区分における運転台数 MxREFnum: {np.sum(model["REF"][ref_name]["MxREFnum"],0)}' )
+
+
 #%%
 ##----------------------------------------------------------------------------------
 ## 熱源群の運転負荷率（解説書 2.7.12 〜 2.7.14）
 ##----------------------------------------------------------------------------------
 
 # 運転負荷率マトリックス
+
+
+for ref_name in model["REF"]:
+    # # 運転負荷率マトリックス
+    for unit_id in range(0, int(model["REF"][ref_name]["MxREFnum"][ioa][iL])):
+        model["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"] = np.zeros( [len(mxT), len(mxL)] ) 
+
+
 for ref_name in model["REF"]:
 
     model["REF"][ref_name]["MxREFxL"] = np.zeros( [len(mxT), len(mxL)] ) 
@@ -3101,8 +3110,6 @@ for ref_name in model["REF"]:
 
             # 部分負荷特性（各負荷率・各温度帯について）
             for unit_id in range(0, int(model["REF"][ref_name]["MxREFnum"][ioa][iL])):
-
-                model["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"] = np.zeros( [len(mxT), len(mxL)] ) 
 
                 # どの部分負荷特性を使うか（インバータターボなど、冷却水温度によって特性が異なる場合がある）
                 xCurveNum = 0
@@ -3137,7 +3144,21 @@ for ref_name in model["REF"]:
                     model["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][ioa][iL] = model["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][ioa][iL] * 1.2
 
 
+    if DEBUG:
+        print( f'--- 熱源群名 {ref_name} ---')
+        print( f'熱源群の運転負荷率 MxREFxL: {np.sum(model["REF"][ref_name]["MxREFxL"],0)}' )
+        print( f'熱源群の運転負荷率 MxREFxL_real: {np.sum(model["REF"][ref_name]["MxREFxL_real"],0)}' )
+
+
+
+#%%
 # 送水温度特性
+
+for ref_name in model["REF"]:
+    # 送水温度特性（各負荷率・各温度帯について）
+    for unit_id in range(0, int(model["REF"][ref_name]["MxREFnum"][ioa][iL])):
+        model["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"] = np.zeros( [len(mxT), len(mxL)] ) 
+
 
 for ref_name in model["REF"]:
 
@@ -3147,17 +3168,15 @@ for ref_name in model["REF"]:
             # 送水温度特性（各負荷率・各温度帯について）
             for unit_id in range(0, int(model["REF"][ref_name]["MxREFnum"][ioa][iL])):
 
-                model["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"] = np.zeros( [len(mxT), len(mxL)] ) 
-
                 # 送水温度 TCtmp
                 if model["REF"][ref_name]["mode"] == "cooling":
                     if model["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"] is None:
-                        TCtmp = 7
+                        TCtmp = 5
                     else:
                         TCtmp = model["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"]
                 elif model["REF"][ref_name]["mode"] == "heating":
                     if model["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"] is None:
-                        TCtmp = 45
+                        TCtmp = 50
                     else:
                         TCtmp = model["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"]
 
@@ -3169,19 +3188,30 @@ for ref_name in model["REF"]:
 
                 # 送水温度特性
                 model["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"][ioa][iL] = \
-                    model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a4"] * tmpL ** 4 +  \
-                    model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a3"] * tmpL ** 3 +  \
-                    model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a2"] * tmpL ** 2 +  \
-                    model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a1"] * tmpL + \
+                    model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a4"] * TCtmp ** 4 +  \
+                    model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a3"] * TCtmp ** 3 +  \
+                    model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a2"] * TCtmp ** 2 +  \
+                    model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a1"] * TCtmp + \
                     model["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a0"]
 
 
-# エネルギー消費量
 
+#%%
+# エネルギー消費量のマトリックス MxREFSUBperE 作成
+
+
+# 変数初期化
 for ref_name in model["REF"]:
+
+    # 熱源群全体で集計した値
     model["REF"][ref_name]["MxREFperE"] = np.zeros( [len(mxT), len(mxL)] ) 
+
     for unit_id in range(0, int(model["REF"][ref_name]["MxREFnum"][ioa][iL])):
+
+        # 熱源群に属する各熱源機器の値
         model["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"] = np.zeros( [len(mxT), len(mxL)] ) 
+
+
 
 for ref_name in model["REF"]:
 
@@ -3198,6 +3228,15 @@ for ref_name in model["REF"]:
                 model["REF"][ref_name]["MxREFperE"][ioa][iL] += model["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"][ioa][iL]
 
 
+if DEBUG:
+    for ref_name in model["REF"]:
+
+        print( f'--- 熱源群名 {ref_name} ---')
+        print( model["REF"][ref_name]["MxREFperE"] )
+
+        for unit_id in range(0, int(model["REF"][ref_name]["MxREFnum"][ioa][iL])):
+
+            print( f'熱源群のエネルギー消費量 MxREFSUBperE: {np.sum(model["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"],0)}' )
 
 
 #%% 
@@ -3332,6 +3371,7 @@ for ref_name in model["REF"]:
 #     end
 
 
+#%%
 ##----------------------------------------------------------------------------------
 ## 熱熱源群の一次エネルギー消費量および消費電力（解説書 2.7.17）
 ##----------------------------------------------------------------------------------
@@ -3349,8 +3389,8 @@ for ref_name in model["REF"]:
             
         else:
 
-            iT = int(resultJson["REF"][ref_name]["TdREF"][dd])
-            iL = int(resultJson["REF"][ref_name]["LdREF"][dd])
+            iT = int(resultJson["REF"][ref_name]["TdREF"][dd]) -1
+            iL = int(resultJson["REF"][ref_name]["LdREF"][dd]) -1
             
             for unit_id in range(0,len(model["REF"][ref_name]["Heatsource"])):
 
@@ -3454,6 +3494,14 @@ for ref_name in model["REF"]:
 
 print('熱源エネルギー計算完了')
 
+if DEBUG:
+
+    print( f'熱源主機エネルギー消費量 E_refsysr: {resultJson["REF"]["E_refsysr"]}' )
+    print( f'熱源補機電力消費量 E_refac: {resultJson["REF"]["E_refac"]}' )
+    print( f'一次ポンプ電力消費量 E_pumpP: {resultJson["REF"]["E_pumpP"]}' )
+    print( f'冷却塔ファン電力消費量 E_ctfan: {resultJson["REF"]["E_ctfan"]}' )
+    print( f'冷却水ポンプ電力消費量 E_ctpump: {resultJson["REF"]["E_ctpump"]}' )
+
 
 #%%
 ##----------------------------------------------------------------------------------
@@ -3461,11 +3509,16 @@ print('熱源エネルギー計算完了')
 ##----------------------------------------------------------------------------------
 
 resultJson["airconditioning"] = \
-    resultJson["REF"]["E_refsysr"] \
-    + resultJson["REF"]["E_refac"] * 9.760 \
-    + resultJson["REF"]["E_pumpP"] * 9.760 \
-    + resultJson["REF"]["E_ctfan"] * 9.760 \
-    + resultJson["REF"]["E_ctpump"] * 9.760
+    + resultJson["AHU"]["E_fan"] * 9760 \
+    + resultJson["AHU"]["E_aex"] * 9760 \
+    + E_pump  * 9760 \
+    + resultJson["REF"]["E_refsysr"] \
+    + resultJson["REF"]["E_refac"] * 9760 \
+    + resultJson["REF"]["E_pumpP"] * 9760 \
+    + resultJson["REF"]["E_ctfan"] * 9760 \
+    + resultJson["REF"]["E_ctpump"] * 9760
+
+print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["airconditioning"]/roomAreaTotal}' )
 
 
 
