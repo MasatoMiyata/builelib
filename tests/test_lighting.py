@@ -80,8 +80,8 @@ def calculation(filename):
             resultJson["expectedDesignValue"]   = convert2number(data[20],0)
             resultJson["expectedStandardValue"] = convert2number(data[21],0)
 
-            assert (resultJson["E_lighting"] - resultJson["expectedDesignValue"])   < 0.000001
-            assert (resultJson["Es_lighting"] - resultJson["expectedStandardValue"]) < 0.000001
+            assert abs(resultJson["E_lighting"] - resultJson["expectedDesignValue"])   < 0.0001
+            assert abs(resultJson["Es_lighting"] - resultJson["expectedStandardValue"]) < 0.0001
 
         except:
         
