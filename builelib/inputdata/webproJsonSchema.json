@@ -827,38 +827,8 @@
                     "description": "AC1-9:空調機群名称 暖房 外気負荷処理",
                     "type": "string"
                 },
-                "Pump_cooling": {
-                    "description": "AC1-10:二次ポンプ群名称 冷房",
-                    "anyOf":[
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "Pump_heating": {
-                    "description": "AC1-11:二次ポンプ群名称 暖房",
-                    "anyOf":[
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "HeatSorce_cooling": {
-                    "description": "AC1-12:熱源群名称 冷房",
-                    "type": "string"
-                },
-                "HeatSorce_heating": {
-                    "description": "AC1-13:熱源群名称 暖房",
-                    "type": "string"
-                },
                 "Info": {
-                    "description": "AC1-14:備考",
+                    "description": "AC1-10:備考",
                     "type": "string"
                 }
             }
@@ -1169,7 +1139,7 @@
         "AirHandlingSystem":{
             "properties": {
                 "isEconomizer": {
-                    "description": "AC4-2:外気冷房制御の有無",
+                    "description": "AC4-16:外気冷房制御の有無",
                     "type": "string",
                     "enum":[
                         "無",
@@ -1177,7 +1147,7 @@
                     ]
                 },
                 "EconomizerMaxAirVolume": {
-                    "description": "AC4-2:外気冷房制御 最大外気取入量",
+                    "description": "AC4-17:外気冷房制御 最大外気取入量",
                     "anyOf":[
                         {
                             "type": "number",
@@ -1190,12 +1160,42 @@
                     ]
                 },
                 "isOutdoorAirCut": {
-                    "description": "AC4-3:予熱時外気取入量制御の有無",
+                    "description": "AC4-18:予熱時外気取入量制御の有無",
                     "type": "string",
                     "enum":[
                         "無",
                         "有"
                     ]
+                },
+                "Pump_cooling": {
+                    "description": "AC4-19:二次ポンプ群名称 冷房",
+                    "anyOf":[
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "Pump_heating": {
+                    "description": "AC4-20:二次ポンプ群名称 暖房",
+                    "anyOf":[
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "HeatSorce_cooling": {
+                    "description": "AC4-21:熱源群名称 冷房",
+                    "type": "string"
+                },
+                "HeatSorce_heating": {
+                    "description": "AC4-22:熱源群名称 暖房",
+                    "type": "string"
                 },
                 "AirHandlingUnit":{
                     "type": "array",
@@ -1203,7 +1203,7 @@
                         "type": "object",
                         "properties": {
                             "Type":{
-                                "description": "AC4-5:構成機種",
+                                "description": "AC4-2:構成機種",
                                 "enum":[
                                     "空調機",
                                     "FCU",
@@ -1215,13 +1215,13 @@
                                 ]
                             },
                             "Number": {
-                                "description": "AC4-6:台数",
+                                "description": "AC4-3:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 100000
                             },
                             "RatedCapacityCooling": {
-                                "description": "AC4-7:定格能力（冷却）",
+                                "description": "AC4-4:定格能力（冷却）",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1234,7 +1234,7 @@
                                 ]
                             },
                             "RatedCapacityHeating": {
-                                "description": "AC4-8:定格能力（暖房）",
+                                "description": "AC4-5:定格能力（暖房）",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1247,7 +1247,7 @@
                                 ]
                             },
                             "FanType":{
-                                "description": "AC4-9:送風機種類",
+                                "description": "AC4-6:送風機種類",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1266,7 +1266,7 @@
                                 ]
                             },
                             "FanAirVolume": {
-                                "description": "AC4-10:設計風量",
+                                "description": "AC4-7:設計風量",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1279,7 +1279,7 @@
                                 ]
                             },
                             "FanPowerConsumption": {
-                                "description": "AC4-11:定格消費電力",
+                                "description": "AC4-8:定格消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1292,7 +1292,7 @@
                                 ]
                             },
                             "FanControlType":{
-                                "description": "AC4-12:風量制御方式",
+                                "description": "AC4-9:風量制御方式",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1308,7 +1308,7 @@
                                 ]
                             },
                             "FanMinOpeningRate":{
-                                "description": "AC4-13:最小風量比",
+                                "description": "AC4-10:最小風量比",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1321,7 +1321,7 @@
                                 ]
                             },
                             "AirHeatExchangeRatioCooling":{
-                                "description": "AC4-14:全熱交換効率 冷房時",
+                                "description": "AC4-11:全熱交換効率 冷房時",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1334,7 +1334,7 @@
                                 ]
                             },
                             "AirHeatExchangeRatioHeating":{
-                                "description": "AC4-15:全熱交換効率 暖房時",
+                                "description": "AC4-12:全熱交換効率 暖房時",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1347,7 +1347,7 @@
                                 ]
                             },
                             "AirHeatExchangerEffectiveAirVolume":{
-                                "description": "AC4-16:全熱交換器 有効換気量率",
+                                "description": "AC4-13:全熱交換器 有効換気量率",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1360,7 +1360,7 @@
                                 ]
                             },
                             "AirHeatExchangerControl":{
-                                "description": "AC4-17:自動換気切替機能の有無",
+                                "description": "AC4-14:自動換気切替機能の有無",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1375,7 +1375,7 @@
                                 ]
                             },
                             "AirHeatExchangerPowerConsumption":{
-                                "description": "AC4-18:ローター回転用電動機消費電力",
+                                "description": "AC4-15:ローター回転用電動機消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1388,7 +1388,7 @@
                                 ]
                             },
                             "Info": {
-                                "description": "AC4-19:備考",
+                                "description": "AC4-23:備考",
                                 "type": "string"
                             }
                         }

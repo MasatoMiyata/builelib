@@ -427,11 +427,7 @@ def inputdata_make(inputfileName):
                     "AHU_cooling_outdoorLoad": set_default(dataAC1[6], None, "str"),
                     "AHU_heating_insideLoad": set_default(dataAC1[7], None, "str"),
                     "AHU_heating_outdoorLoad": set_default(dataAC1[8], None, "str"),
-                    "Pump_cooling": set_default(dataAC1[9], None, "str"),
-                    "Pump_heating": set_default(dataAC1[10], None, "str"),
-                    "HeatSorce_cooling": set_default(dataAC1[11], None, "str"),
-                    "HeatSorce_heating": set_default(dataAC1[12], None, "str"),
-                    "Info": str(dataAC1[13])
+                    "Info": str(dataAC1[9])
                 }
 
     if "様式AC2" in wb.sheet_names():
@@ -621,26 +617,30 @@ def inputdata_make(inputfileName):
                 unitKey = str(dataAC4[0])
 
                 data["AirHandlingSystem"][unitKey] = {
-                    "isEconomizer": set_default(dataAC4[1], "無", "str"),
-                    "EconomizerMaxAirVolume": set_default(dataAC4[2], None, "float"),
-                    "isOutdoorAirCut": set_default(dataAC4[3], "無", "str"),
+                    "isEconomizer": set_default(dataAC4[15], "無", "str"),
+                    "EconomizerMaxAirVolume": set_default(dataAC4[16], None, "float"),
+                    "isOutdoorAirCut": set_default(dataAC4[17], "無", "str"),
+                    "Pump_cooling": set_default(dataAC4[18], None, "str"),
+                    "Pump_heating": set_default(dataAC4[19], None, "str"),
+                    "HeatSorce_cooling": set_default(dataAC4[20], None, "str"),
+                    "HeatSorce_heating": set_default(dataAC4[21], None, "str"),
                     "AirHandlingUnit" :[
                         {
-                            "Type": str(dataAC4[4]),
-                            "Number": float(dataAC4[5]),
-                            "RatedCapacityCooling": set_default(dataAC4[6], None, "float"),
-                            "RatedCapacityHeating": set_default(dataAC4[7], None, "float"),
-                            "FanType": set_default(dataAC4[8], None, "str"),
-                            "FanAirVolume": set_default(dataAC4[9], None, "float"),
-                            "FanPowerConsumption": set_default(dataAC4[10], None, "float"),
-                            "FanControlType": set_default(dataAC4[11], "無", "str"),
-                            "FanMinOpeningRate": set_default(dataAC4[12], None, "float"),
-                            "AirHeatExchangeRatioCooling": set_default(dataAC4[13], None, "float"),
-                            "AirHeatExchangeRatioHeating": set_default(dataAC4[14], None, "float"),
-                            "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[15], None, "float"),
-                            "AirHeatExchangerControl": set_default(dataAC4[16], "無", "str"),
-                            "AirHeatExchangerPowerConsumption": set_default(dataAC4[17], None, "float"),
-                            "Info": str(dataAC4[18])
+                            "Type": str(dataAC4[1]),
+                            "Number": float(dataAC4[2]),
+                            "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
+                            "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
+                            "FanType": set_default(dataAC4[5], None, "str"),
+                            "FanAirVolume": set_default(dataAC4[6], None, "float"),
+                            "FanPowerConsumption": set_default(dataAC4[7], None, "float"),
+                            "FanControlType": set_default(dataAC4[8], "無", "str"),
+                            "FanMinOpeningRate": set_default(dataAC4[9], None, "float"),
+                            "AirHeatExchangeRatioCooling": set_default(dataAC4[10], None, "float"),
+                            "AirHeatExchangeRatioHeating": set_default(dataAC4[11], None, "float"),
+                            "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[12], None, "float"),
+                            "AirHeatExchangerControl": set_default(dataAC4[13], "無", "str"),
+                            "AirHeatExchangerPowerConsumption": set_default(dataAC4[14], None, "float"),
+                            "Info": str(dataAC4[22])
                         }
                     ]
                 }
@@ -649,21 +649,21 @@ def inputdata_make(inputfileName):
 
                 data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
                     {
-                        "Type": str(dataAC4[4]),
-                        "Number": float(dataAC4[5]),
-                        "RatedCapacityCooling": set_default(dataAC4[6], None, "float"),
-                        "RatedCapacityHeating": set_default(dataAC4[7], None, "float"),
-                        "FanType": set_default(dataAC4[8], None, "str"),
-                        "FanAirVolume": set_default(dataAC4[9], None, "float"),
-                        "FanPowerConsumption": set_default(dataAC4[10], None, "float"),
-                        "FanControlType": set_default(dataAC4[11], "無", "str"),
-                        "FanMinOpeningRate": set_default(dataAC4[12], None, "float"),
-                        "AirHeatExchangeRatioCooling": set_default(dataAC4[13], None, "float"),
-                        "AirHeatExchangeRatioHeating": set_default(dataAC4[14], None, "float"),
-                        "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[15], None, "float"),
-                        "AirHeatExchangerControl": set_default(dataAC4[16], "無", "str"),
-                        "AirHeatExchangerPowerConsumption": set_default(dataAC4[17], None, "float"),
-                        "Info": str(dataAC4[18])
+                        "Type": str(dataAC4[1]),
+                        "Number": float(dataAC4[2]),
+                        "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
+                        "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
+                        "FanType": set_default(dataAC4[5], None, "str"),
+                        "FanAirVolume": set_default(dataAC4[6], None, "float"),
+                        "FanPowerConsumption": set_default(dataAC4[7], None, "float"),
+                        "FanControlType": set_default(dataAC4[8], "無", "str"),
+                        "FanMinOpeningRate": set_default(dataAC4[9], None, "float"),
+                        "AirHeatExchangeRatioCooling": set_default(dataAC4[10], None, "float"),
+                        "AirHeatExchangeRatioHeating": set_default(dataAC4[11], None, "float"),
+                        "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[12], None, "float"),
+                        "AirHeatExchangerControl": set_default(dataAC4[13], "無", "str"),
+                        "AirHeatExchangerPowerConsumption": set_default(dataAC4[14], None, "float"),
+                        "Info": str(dataAC4[22])
                     }
                 )
 
@@ -997,12 +997,12 @@ def inputdata_make(inputfileName):
 
 
 if __name__ == '__main__':
-    
-    inputfileName = './sample/WEBPRO_inputSheet_for_Ver3.xlsx'
-    # inputfileName = './sample/空調のサンプル.xlsx'
 
-    inputdata = inputdata_make(inputfileName)
+    directory = "./sample/"
+    case_name = 'WEBPRO_inputSheet_for_Ver3'
+
+    inputdata = inputdata_make(directory + case_name + ".xlsx")
 
     # json出力
-    fw = open('./sample/inputdata_test.json','w')
-    json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    with open(directory + case_name + ".json",'w') as fw:
+        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
