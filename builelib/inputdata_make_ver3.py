@@ -999,7 +999,7 @@ def inputdata_make(inputfileName):
 if __name__ == '__main__':
 
     directory = "./sample/"
-    case_name = 'WEBPRO_inputSheet_for_Ver3'
+    case_name = 'Case001_単室モデル_基本モデル'
 
     inputdata = inputdata_make(directory + case_name + ".xlsx")
 
