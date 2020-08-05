@@ -1773,11 +1773,11 @@ if DEBUG:
 
 # 二次ポンプが空欄であった場合、ダミーの仮想ポンプを追加する。
 number = 0
-for room_zone_name in inputdata["AirConditioningZone"]:
+for ahu_name in inputdata["AirHandlingSystem"]:
 
-    if inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] == None:
+    if inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] == None:
 
-        inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] = "dummyPump_" + str(number)
+        inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] = "dummyPump_" + str(number)
 
         inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
             "冷房":{
@@ -1797,9 +1797,9 @@ for room_zone_name in inputdata["AirConditioningZone"]:
 
         number += 1
 
-    if inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] == None:
+    if inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] == None:
         
-        inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] = "dummyPump_" + str(number)
+        inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] = "dummyPump_" + str(number)
 
         inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
             "暖房":{
@@ -1923,21 +1923,26 @@ for pump_name in inputdata["PUMP"]:
 
 
 # 接続される空調機群
-for room_zone_name in inputdata["AirConditioningZone"]:
+# for room_zone_name in inputdata["AirConditioningZone"]:
 
-    # 冷房（室内負荷処理用空調機）
-    inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add( \
-        inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"])
-    # 冷房（外気負荷処理用空調機）
-    inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add( \
-        inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"])
+#     # 冷房（室内負荷処理用空調機）
+#     inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add( \
+#         inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"])
+#     # 冷房（外気負荷処理用空調機）
+#     inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add( \
+#         inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"])
 
-    # 暖房（室内負荷処理用空調機）
-    inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add( \
-        inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"])
-    # 暖房（外気負荷処理用空調機）
-    inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add( \
-        inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"])
+#     # 暖房（室内負荷処理用空調機）
+#     inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add( \
+#         inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"])
+#     # 暖房（外気負荷処理用空調機）
+#     inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add( \
+#         inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"])
+
+for ahu_name in inputdata["AirHandlingSystem"]:
+
+    inputdata["PUMP"][ inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add(ahu_name)
+    inputdata["PUMP"][ inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add(ahu_name)
 
 
 
@@ -2477,14 +2482,21 @@ for ref_name in inputdata["REF"]:
 
 
 # 接続される二次ポンプ群
-for room_zone_name in inputdata["AirConditioningZone"]:
+# for room_zone_name in inputdata["AirConditioningZone"]:
 
-    # 冷房
-    inputdata["REF"][ inputdata["AirConditioningZone"][room_zone_name]["HeatSorce_cooling"] + "_冷房" ]["pump_list"].add( \
-        inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"]+ "_冷房")
-    # 暖房
-    inputdata["REF"][ inputdata["AirConditioningZone"][room_zone_name]["HeatSorce_heating"] + "_暖房" ]["pump_list"].add( \
-        inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"]+ "_暖房")
+#     # 冷房
+#     inputdata["REF"][ inputdata["AirConditioningZone"][room_zone_name]["HeatSorce_cooling"] + "_冷房" ]["pump_list"].add( \
+#         inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"]+ "_冷房")
+#     # 暖房
+#     inputdata["REF"][ inputdata["AirConditioningZone"][room_zone_name]["HeatSorce_heating"] + "_暖房" ]["pump_list"].add( \
+#         inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"]+ "_暖房")
+
+for ahu_name in inputdata["AirHandlingSystem"]:
+
+    inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_cooling"] + "_冷房" ]["pump_list"].add( \
+        inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房")
+    inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_heating"] + "_暖房" ]["pump_list"].add( \
+        inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房")
 
 
 ##----------------------------------------------------------------------------------
@@ -3516,6 +3528,7 @@ resultJson["airconditioning"] = \
     + resultJson["ENERGY"]["E_ctpump"] * 9760
 
 print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["airconditioning"]/roomAreaTotal}' )
+print( f'空調設備の設計一次エネルギー消費量 GJ : {resultJson["airconditioning"]/1000}' )
 
 
 
