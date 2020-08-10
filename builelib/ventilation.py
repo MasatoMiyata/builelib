@@ -7,6 +7,20 @@ if __name__ == '__main__':
 else:
     import builelib.builelib_common as bc
 
+# json.dump用のクラス
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, set):
+            return list(obj)
+        else:
+            return super(MyEncoder, self).default(obj)
+
 ## 中間期平均外気温（附属書B.1）
 def set_OutdoorTemperature(region):
     if region == "1":
@@ -30,44 +44,23 @@ def set_OutdoorTemperature(region):
 
     return Toa_ave_design
 
-## 負荷率
-def set_HeatLoadRatio(VentilationRoomType):
-    if VentilationRoomType == "エレベータ機械室":
-        xL = 0.3
-    elif VentilationRoomType == "電気室":
-        xL = 0.6
-    elif VentilationRoomType == "機械室":
-        xL = 0.6
-    elif VentilationRoomType == "その他":
-        xL = 1.0
-    else:
-        raise Exception('Error!')
-
-    return xL
-
+DEBUG = True
 
 def ventilation(inputdata):
 
-    # 入力ファイルの検証
-    bc.inputdata_validation(inputdata)
-
-    # データベースjsonの読み込み（仕様書 3.2）
-    with open('./builelib/database/ventilationControl.json', 'r') as f:
-        ventilationCtrl = json.load(f)
+    # bc.inputdata_validation(inputdata)
     
     # 計算結果を格納する変数
     resultJson = {
-        "E_ventilation": None,
-        "Es_ventilation": None,
-        "BEI_V": None,
-        "E_ventilation_hourly": None,
+        "E_ventilation": 0,
+        "Es_ventilation": 0,
+        "BEI_V": 0,
         "ventilation":{   
         }
     }
 
     # 変数初期化
     E_ventilation = 0    # 設計一次エネルギー消費量 [GJ]
-    E_ventilation_hourly = np.zeros((365,24))  # 設計一次エネルギー消費量（時刻別） [GJ]
     Es_ventilation = 0   # 基準一次エネルギー消費量 [GJ]
 
 
@@ -83,14 +76,18 @@ def ventilation(inputdata):
         # 室面積
         inputdata["VentilationRoom"][roomID]["roomArea"] = inputdata["Rooms"][roomID]["roomArea"]
 
-        # 年間換気運転時間 [時間]
+        ##----------------------------------------------------------------------------------
+        ## 年間換気運転時間 （解説書 B.2）
+        ##----------------------------------------------------------------------------------
         inputdata["VentilationRoom"][roomID]["opeTime"] = bc.RoomUsageSchedule[buildingType][roomType]["年間換気時間"]
 
         # 接続されている換気機器の種類に応じて集計処理を実行
         inputdata["VentilationRoom"][roomID]["isVentilationUsingAC"] = False
+        inputdata["VentilationRoom"][roomID]["AC_CoolingCapacity_total"] = 0
         inputdata["VentilationRoom"][roomID]["totalAirVolume_supply"] = 0
         inputdata["VentilationRoom"][roomID]["totalAirVolume_exhaust"] = 0
-        inputdata["VentilationRoom"][roomID]["AC_CoolingCapacity_total"] = 0
+
+        # 換気代替空調機があるかどうかを判定
         for unitID, iunit in inputdata["VentilationRoom"][roomID]["VentilationUnitRef"].items():
             
             if iunit["UnitType"] == "空調":
@@ -140,7 +137,32 @@ def ventilation(inputdata):
                 inputdata["VentilationUnit"][unitID]["isVentilationUsingAC"] = [inputdata["VentilationRoom"][roomID]["isVentilationUsingAC"]]
 
 
-    # 換気機器毎のループ
+        if DEBUG:
+            print( f'室名称　{roomID}')
+            print( f'　- 換気代替空調の有無 {inputdata["VentilationRoom"][roomID]["isVentilationUsingAC"]}')
+            print( f'　- 換換気代替空調系統の熱源容量の合計容量 {inputdata["VentilationRoom"][roomID]["AC_CoolingCapacity_total"]}')
+            print( f'　- 換気代替空調系統の給気風量の合計容量 {inputdata["VentilationRoom"][roomID]["totalAirVolume_supply"]}')
+            print( f'　- 換気代替空調系統の排気風量の合計容量 {inputdata["VentilationRoom"][roomID]["totalAirVolume_exhaust"]}')
+
+    if DEBUG:
+        for unitID, iunit in inputdata["VentilationUnit"].items():
+            print( f'換気名称　{unitID}')
+            print( f'　- 室リスト {inputdata["VentilationUnit"][unitID]["roomList"]}')
+            print( f'　- 床面積リスト {inputdata["VentilationUnit"][unitID]["roomAreaList"]}')
+            print( f'　- 運転時間リスト {inputdata["VentilationUnit"][unitID]["opeTimeList"]}')
+            print( f'　- 換気代替空調機の有無 {inputdata["VentilationUnit"][unitID]["isVentilationUsingAC"]}')
+
+
+    ##----------------------------------------------------------------------------------
+    ## 送風機の制御方式に応じて定められる係数（解説書 3.2）
+    ##----------------------------------------------------------------------------------
+    with open('./builelib/database/ventilationControl.json', 'r') as f:
+        ventilationCtrl = json.load(f)
+
+    
+    ##----------------------------------------------------------------------------------
+    ## 換気送風機の年間電力消費量（解説書 3.3）
+    ##----------------------------------------------------------------------------------
     for unitID, iunit in inputdata["VentilationUnit"].items():
 
         # 電動機定格出力[kW]から消費電力[kW]を計算（1台あたり、制御なし）
@@ -171,6 +193,15 @@ def ventilation(inputdata):
     # 再度、室毎（換気系統毎）のループ
     for roomID, isys in inputdata["VentilationRoom"].items():
 
+        # 各室の計算結果を格納
+        resultJson["ventilation"][roomID] = {
+                "PrimaryEnergy": 0,
+                "StandardEnergy": 0
+        }
+
+        ##----------------------------------------------------------------------------------
+        ## 換気代替空調機の年間電力消費量（解説書 3.4）
+        ##----------------------------------------------------------------------------------
         if isys["isVentilationUsingAC"]:  ## 換気代替空調機の場合（仕様書 3.4）
 
             # 外気取り込み量
@@ -184,7 +215,7 @@ def ventilation(inputdata):
             # 外気冷房に必要な外気導入量
             requiredOAVolume = 1000 * isys["AC_CoolingCapacity_total"] / (0.33 * (40 - set_OutdoorTemperature( inputdata["Building"]["Region"] )))
 
-            # 年間稼働率
+            # 年間稼働率（表.20）
             if OutdoorVolume > requiredOAVolume:
                 Cac = 0.35
                 Cfan = 0.65
@@ -192,7 +223,14 @@ def ventilation(inputdata):
                 Cac = 1.00
                 Cfan = 1.00               
 
-            E_room = 0
+            if DEBUG:
+                print( f'室名称　{roomID}')
+                print( f'　- 外気取り込み量 {OutdoorVolume}')
+                print( f'　- 外気冷房に必要な外気導入量 {requiredOAVolume}')
+                print( f'　- 年間稼働率 Cac {Cac}')
+                print( f'　- 年間稼働率 Cfan {Cfan}')
+
+
             for unitID, iunit in inputdata["VentilationRoom"][roomID]["VentilationUnitRef"].items():
                 
                 if iunit["UnitType"] == "空調":  ## 換気代替空調機
@@ -200,64 +238,78 @@ def ventilation(inputdata):
                     # 熱源機とポンプ
                     if inputdata["VentilationUnit"][unitID]["VentilationRoomType"] != "":
 
-                        # 負荷率
-                        xL = set_HeatLoadRatio( inputdata["VentilationUnit"][unitID]["VentilationRoomType"] )
+                        # 負荷率（表.19）
+                        if inputdata["VentilationUnit"][unitID]["VentilationRoomType"] == "エレベータ機械室":
+                            xL = 0.3
+                        elif inputdata["VentilationUnit"][unitID]["VentilationRoomType"] == "電気室":
+                            xL = 0.6
+                        elif inputdata["VentilationUnit"][unitID]["VentilationRoomType"] == "機械室":
+                            xL = 0.6
+                        elif inputdata["VentilationUnit"][unitID]["VentilationRoomType"] == "その他":
+                            xL = 1.0
+                        else:
+                            raise Exception('Error!')
 
-                        E_room += \
+                        resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
                             ( inputdata["VentilationUnit"][unitID]["AC_CoolingCapacity"] * xL / (2.71 * inputdata["VentilationUnit"][unitID]["AC_RefEfficiency"] )  \
                             + inputdata["VentilationUnit"][unitID]["AC_PumpPower"] /0.75 ) \
                             * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cac
 
                     # 空調機に付属するファン
-                    E_room += \
+                    resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
                         inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
                         * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                        * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cfan
+                        * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cac
+
+                    print(inputdata["VentilationUnit"][unitID]["Energy_kW"])
 
                 else: ## 換気代替空調機と併設される送風機
 
-                    E_room += \
+                    resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
                         inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
                         * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
                         * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cfan
+
+
+                if DEBUG:
+                    print( f'室名称 {roomID}, 機器名称 {unitID}')
+                    print( f'　- 運転時間 {inputdata["VentilationUnit"][unitID]["maxopeTime"] }')
+                    print( f'　- 消費電力[W/m2] {inputdata["VentilationUnit"][unitID]["Energy_kW"]/inputdata["VentilationRoom"][roomID]["roomArea"]*1000}')
 
 
         else: ## 換気送風機の場合（仕様書 3.3）
 
-            E_room = 0
             for unitID, iunit in inputdata["VentilationRoom"][roomID]["VentilationUnitRef"].items():
                 
                 # エネルギー消費量 [kW * hour * m2/m2 * kJ/KWh]
-                E_room += inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
+                resultJson["ventilation"][roomID]["PrimaryEnergy"] += inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
                     * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
                     * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3)
 
-        # 結果を積算
-        E_ventilation += E_room
-    
-        # 基準一次エネルギー消費量 [MJ]
-        Es_room = bc.RoomStandardValue[buildingType][roomType]["換気"] * inputdata["VentilationRoom"][roomID]["roomArea"]
-        Es_ventilation += Es_room  # 出力用に積算
 
-        # 各室の計算結果を格納
-        resultJson["ventilation"][roomID] = {
-                "PrimaryEnergy": E_room,
-                "StandardEnergy": Es_room
-            }
+        ##----------------------------------------------------------------------------------
+        ## 基準一次エネルギー消費量 [MJ] （解説書 10）
+        ##----------------------------------------------------------------------------------
+        resultJson["ventilation"][roomID]["StandardEnergy"] = bc.RoomStandardValue[buildingType][roomType]["換気"] * inputdata["VentilationRoom"][roomID]["roomArea"]
 
-    # 結果の格納
-    resultJson["E_ventilation"]  = E_ventilation
-    resultJson["Es_ventilation"] = Es_ventilation
+
+    # 結果の集計
+    for roomID, isys in inputdata["VentilationRoom"].items():
+        resultJson["E_ventilation"]  += resultJson["ventilation"][roomID]["PrimaryEnergy"]
+        resultJson["Es_ventilation"] += resultJson["ventilation"][roomID]["StandardEnergy"]
 
     # BEI/V [-]
     if Es_ventilation <= 0:
         resultJson["BEI_V"]  = None
     else:
-        resultJson["BEI_V"]  = E_ventilation / Es_ventilation
+        resultJson["BEI_V"]  = resultJson["E_ventilation"] / resultJson["Es_ventilation"]
 
-    # # json出力
-    # fw = open('model.json','w')
-    # json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    if DEBUG:
+        # with open("resultJson.json",'w') as fw:
+        #     json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+        print( f'設計一次エネルギー消費量[MJ] {resultJson["E_ventilation"]}')
+        print( f'基準一次エネルギー消費量[MJ] {resultJson["Es_ventilation"]}')
 
     return resultJson
 
@@ -265,7 +317,7 @@ def ventilation(inputdata):
 if __name__ == '__main__':
 
     print('----- ventilation.py -----')
-    filename = './sample/inputdata.json'
+    filename = './sample/WEBPRO_inputSheet_for_Ver3.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
