@@ -11,6 +11,7 @@ builelib/core.py
 builelib/helpers.py
 builelib/database/make/
 builelib/database/climatedata/*
+builelib/resultJson.json
 sample/*
 
 # Byte-compiled / optimized / DLL files
