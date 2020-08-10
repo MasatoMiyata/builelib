@@ -11,7 +11,7 @@ DEBUG = True
 
 def elevetor(inputdata):
 
-   # 計算結果を格納する変数
+    # 計算結果を格納する変数
     resultJson = {
         "E_elevetor": 0
     }
@@ -26,18 +26,20 @@ def elevetor(inputdata):
             if unit_configure["ControlType"] ==  "交流帰還制御":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/20
 
-            elif unit_configure["ControlType"] ==  "VVVF（電力回生なし）":
+            elif unit_configure["ControlType"] ==  "VVVF(電力回生なし)":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/40
 
-            elif unit_configure["ControlType"] ==  "VVVF（電力回生あり）":
+            elif unit_configure["ControlType"] ==  "VVVF(電力回生あり)":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/45
 
-            elif unit_configure["ControlType"] ==  "VVVF（電力回生なし、ギアレス）":
+            elif unit_configure["ControlType"] ==  "VVVF(電力回生なし、ギアレス)":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/45
 
-            elif unit_configure["ControlType"] ==  "VVVF（電力回生あり、ギアレス）":
+            elif unit_configure["ControlType"] ==  "VVVF(電力回生あり、ギアレス)":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/50
-
+            
+            else:
+                raise Exception("速度制御方式 が不正です。")
 
     #----------------------------------------------------------------------------------
     # 解説書 6.3 昇降機系統に属する昇降機1台あたりの年間電力消費量
@@ -86,6 +88,9 @@ def elevetor(inputdata):
         for unit_id, unit_configure in enumerate(inputdata["Elevators"][room_name]["Elevator"]):
 
             resultJson["E_elevetor"] += unit_configure["energy_consumption"] * 9760 / 1000
+
+    if DEBUG:
+        print(f'昇降機の一次エネルギー消費量  {resultJson["E_elevetor"]}  MJ/年')
 
 
     return resultJson
