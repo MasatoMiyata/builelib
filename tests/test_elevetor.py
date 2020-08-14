@@ -29,9 +29,9 @@ def calculation(filename):
 
         print(data) # 確認用
 
-        if (data[11] == ""):
+        if (data[11] == "") and (data[16] == ""):
 
-            # 計算モデルの作成（一部屋の場合）
+            # 計算モデルの作成（1室1系統）
             inputdata = {
                 "Building":{
                     "Region": "6"
@@ -62,9 +62,51 @@ def calculation(filename):
                 }
             }
 
+        elif (data[11] == ""):
+
+            # 計算モデルの作成（1室2系統）
+            inputdata = {
+                "Building":{
+                    "Region": "6"
+                },
+                "Rooms": {
+                    "1F_室": {
+                        "floorName": data[1],
+                        "roomName": data[2],
+                        "buildingType": data[3],
+                        "roomType": data[4],
+                        "roomArea": 100,
+                    }
+                },
+                "Elevators": {
+                    "1F_室": {
+                        "Elevator": [
+                            {
+                                "ElevatorName": data[5],
+                                "Number": convert2number(data[6],0),
+                                "LoadLimit": convert2number(data[7],0),
+                                "Velocity": convert2number(data[8],0),
+                                "TransportCapacityFactor": convert2number(data[9],0),
+                                "ControlType": data[10],
+                                "Info": ""
+                            },
+                            {
+                                "ElevatorName": data[15],
+                                "Number": convert2number(data[16],0),
+                                "LoadLimit": convert2number(data[17],0),
+                                "Velocity": convert2number(data[18],0),
+                                "TransportCapacityFactor": convert2number(data[19],0),
+                                "ControlType": data[20],
+                                "Info": ""
+                            }
+                        ]
+                    }
+                }
+            }
+
         else:
 
-            # 計算モデルの作成（二部屋の場合）
+            # 計算モデルの作成（2室の場合）
             inputdata = {
                 "Building":{
                     "Region": "6"
@@ -133,8 +175,11 @@ def calculation(filename):
 
 #### テスト実行 ####
 
-def test_basic_condition():
-    calculation('./tests/elevetor/基本テスト.txt')
+def test_office_basic():
+    calculation('./tests/elevetor/◇事務所テスト.txt')
+
+def test_office_1room2elevetors():
+    calculation('./tests/elevetor/◇事務所テスト1室2系.txt')
 
 
 if __name__ == '__main__':
