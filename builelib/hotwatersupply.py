@@ -12,8 +12,8 @@ elif __name__ == '__main__':
     import builelib_common as bc
     import climate
 else:
+    import builelib.climate as climate
     import builelib.builelib_common as bc
-    import bulielib.climate as climate
 
 if 'ipykernel' in sys.modules:
     directory = "./database/"
