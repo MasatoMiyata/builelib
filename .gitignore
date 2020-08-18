@@ -10,7 +10,6 @@ builelib/common.py
 builelib/core.py
 builelib/helpers.py
 builelib/database/make/
-builelib/database/climatedata/*
 builelib/resultJson.json
 sample/*
 
