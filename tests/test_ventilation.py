@@ -8,7 +8,22 @@ import pytest
 # 辞書型 テスト名とファイル名
 
 testcase_dict_fan = {
-    "fan_basic": "./tests/ventilation/換気送風機_仮テスト.txt",
+    "fan_1unit_2rooms": "./tests/ventilation/◇1台2室.txt",
+    "fan_2units_1room": "./tests/ventilation/◇2台1室.txt",
+    "fan_2units_2rooms": "./tests/ventilation/◇2台2室.txt",
+    "fan_inverter":"./tests/ventilation/◇インバータ.txt",
+    "fan_moter":"./tests/ventilation/◇高効率電動機.txt",
+    "fan_volume_ctrl":"./tests/ventilation/◇送風量制御.txt",
+    "fan_power":"./tests/ventilation/◇定格出力.txt",
+    "fan_hotel":"./tests/ventilation/◇用途別_ホテル等.txt",
+    "fan_restraunt":"./tests/ventilation/◇用途別_飲食店等.txt",
+    "fan_school":"./tests/ventilation/◇用途別_学校等.txt",
+    "fan_apartment":"./tests/ventilation/◇用途別_共同住宅.txt",
+    "fan_factory":"./tests/ventilation/◇用途別_工場等.txt",
+    "fan_office":"./tests/ventilation/◇用途別_事務所等.txt",
+    "fan_meeting":"./tests/ventilation/◇用途別_集会所等.txt",
+    "fan_hospital":"./tests/ventilation/◇用途別_病院等.txt",
+    "fan_shop":"./tests/ventilation/◇用途別_物品販売業を営む店舗等.txt",
 }
 testcase_dict_ac = {
     "AC_basic": "./tests/ventilation/換気代替空調機_仮テスト.txt"
@@ -38,6 +53,9 @@ def read_testcasefile(filename):
 
 def make_inputdata_fan(data):
 
+    if data[3] == "物品販売業を営む店舗等":
+        data[3] = "物販店舗等"
+
     inputdata = {
         "Building":{
             "Region": "6"
@@ -49,13 +67,6 @@ def make_inputdata_fan(data):
                 "buildingType": data[3],
                 "roomType": data[4],
                 "roomArea": convert2number(data[5],None)
-            },
-            data[10]+"_"+data[11]: {
-                "floorName": data[10],
-                "roomName": data[11],
-                "buildingType": data[12],
-                "roomType": data[13],
-                "roomArea": convert2number(data[14],None)
             }
         },
         "VentilationRoom": {
@@ -64,23 +75,6 @@ def make_inputdata_fan(data):
                 "VentilationUnitRef": {
                     data[7]: {
                         "UnitType": data[6],
-                        "Info": ""
-                    },
-                    data[9]: {
-                        "UnitType": data[8],
-                        "Info": ""
-                    }
-                }
-            },
-            data[10]+"_"+data[11]: {
-                "VentilationType": "一種換気",
-                "VentilationUnitRef": {
-                    data[16]: {
-                        "UnitType": data[15],
-                        "Info": ""
-                    },
-                    data[18]: {
-                        "UnitType": data[17],
                         "Info": ""
                     }
                 }
@@ -100,8 +94,48 @@ def make_inputdata_fan(data):
                 "AC_RefEfficiency": None,
                 "AC_PumpPower": None,
                 "Info": ""
-            },
-            data[25]: {
+            }
+        }
+    }
+
+    # 1室目の2台目追加
+    if data[9] != "":
+        inputdata["VentilationRoom"][data[1]+"_"+data[2]]["VentilationUnitRef"][data[9]] = {
+                "UnitType": data[8],
+                "Info": ""
+            }
+
+    # 2室目追加
+    if data[11] != "":
+
+        inputdata["Rooms"][data[10]+"_"+data[11]] = {
+                "floorName": data[10],
+                "roomName": data[11],
+                "buildingType": data[12],
+                "roomType": data[13],
+                "roomArea": convert2number(data[14],None)
+            }
+
+        inputdata["VentilationRoom"][data[10]+"_"+data[11]] = {
+                "VentilationType": "一種換気",
+                "VentilationUnitRef": {
+                    data[16]: {
+                        "UnitType": data[15],
+                        "Info": ""
+                    }
+                }
+            }
+
+    # 2室目の2台目追加
+    if data[18] != "":
+        inputdata["VentilationRoom"][data[10]+"_"+data[11]]["VentilationUnitRef"][data[18]] = {
+                "UnitType": data[17],
+                "Info": ""
+            }
+
+    # 2機種目の追加
+    if data[25] != "":
+        inputdata["VentilationUnit"][data[25]] = {
                 "Number": 1,
                 "FanAirVolume": convert2number(data[26],None),
                 "MoterRatedPower": convert2number(data[27],None),
@@ -114,9 +148,7 @@ def make_inputdata_fan(data):
                 "AC_RefEfficiency": None,
                 "AC_PumpPower": None,
                 "Info": ""
-            },
-        }
-    }
+            }
 
     return inputdata
 
