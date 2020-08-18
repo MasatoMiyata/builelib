@@ -201,11 +201,18 @@ for case_name in testcase_dict:
 @pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
 def test_calc(inputdata, expectedvalue):
 
-    # 計算実行        
-    resultJson = elevetor(inputdata)
+    if expectedvalue != "err":  # passが期待されるテスト
+        # 計算実行        
+        resultJson = elevetor(inputdata)
 
-    # 比較
-    assert abs(resultJson["E_elevetor"] - expectedvalue)   < 0.0001
+        # 比較
+        assert abs(resultJson["E_elevetor"] - expectedvalue)   < 0.0001
+
+    else:
+
+        # エラーが期待される場合
+        with pytest.raises(Exception):
+            resultJson = elevetor(inputdata)
 
 
 if __name__ == '__main__':
