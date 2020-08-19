@@ -26,7 +26,8 @@ testcase_dict_fan = {
     "fan_shop":"./tests/ventilation/◇用途別_物品販売業を営む店舗等.txt",
 }
 testcase_dict_ac = {
-    "AC_basic": "./tests/ventilation/換気代替空調機_仮テスト.txt"
+    "AC_office": "./tests/ventilation/換気代替空調機_事務所テスト.txt",
+    "AC_spec": "./tests/ventilation/換気代替空調機_仕様.txt"
 }
 
 
@@ -55,6 +56,8 @@ def make_inputdata_fan(data):
 
     if data[3] == "物品販売業を営む店舗等":
         data[3] = "物販店舗等"
+    if data[12] == "物品販売業を営む店舗等":
+        data[12] = "物販店舗等"
 
     inputdata = {
         "Building":{
@@ -155,6 +158,13 @@ def make_inputdata_fan(data):
 
 def make_inputdata_ac(data):
 
+    print(data)
+
+    if data[4] == "物品販売業を営む店舗等":
+        data[4] = "物販店舗等"
+    if data[12] == "物品販売業を営む店舗等":
+        data[12] = "物販店舗等"
+
     inputdata = {
         "Building":{
             "Region": str(data[53])
@@ -172,19 +182,60 @@ def make_inputdata_ac(data):
             data[1]+"_"+data[2]: {
                 "VentilationType": "一種換気",
                 "VentilationUnitRef": {
-                    "PAC1": {
-                        "UnitType": data[24],
-                        "Info": ""
-                    },
-                    "FAN": {
-                        "UnitType": data[30],
+                    data[7]: {
+                        "UnitType": data[6],
                         "Info": ""
                     }
                 }
             }
         },
         "VentilationUnit": {
-            "PAC1": {
+        }
+    }
+
+    # 1室目の2台目追加
+    if data[9] != "":
+
+        inputdata["VentilationRoom"][data[1]+"_"+data[2]]["VentilationUnitRef"][data[9]] = {
+                "UnitType": data[8],
+                "Info": ""
+            }
+
+    # 2室目追加
+    if data[11] != "":
+
+        inputdata["Rooms"][data[10]+"_"+data[11]] = {
+                "floorName": data[10],
+                "roomName": data[11],
+                "buildingType": data[12],
+                "roomType": data[13],
+                "roomArea": convert2number(data[14],None)
+            }
+
+        inputdata["VentilationRoom"][data[10]+"_"+data[11]] = {
+                "VentilationType": "一種換気",
+                "VentilationUnitRef": {
+                    data[16]: {
+                        "UnitType": data[15],
+                        "Info": ""
+                    }
+                }
+            }
+
+    # 2室目の2台目追加
+    if data[18] != "":
+
+        inputdata["VentilationRoom"][data[10]+"_"+data[11]]["VentilationUnitRef"][data[18]] = {
+                "UnitType": data[17],
+                "Info": ""
+            }
+
+    # 換気代替空調機1台目
+    if data[19] != "":
+
+        if data[24] == "空調":
+
+            inputdata["VentilationUnit"][data[19]] = {
                 "Number": 1,
                 "FanAirVolume": convert2number(data[25],None),
                 "MoterRatedPower": convert2number(data[26],None),
@@ -197,8 +248,68 @@ def make_inputdata_ac(data):
                 "AC_RefEfficiency": convert2number(data[22],None),
                 "AC_PumpPower": convert2number(data[23],None),
                 "Info": ""
-            },
-            "FAN": {
+            }
+        
+        elif data[30] == "空調":
+
+            inputdata["VentilationUnit"][data[19]] = {
+                "Number": 1,
+                "FanAirVolume": convert2number(data[31],None),
+                "MoterRatedPower": convert2number(data[32],None),
+                "PowerConsumption": None,
+                "HighEfficiencyMotor": data[33],
+                "Inverter": data[34],
+                "AirVolumeControl": data[35],
+                "VentilationRoomType": data[20],
+                "AC_CoolingCapacity": convert2number(data[21],None),
+                "AC_RefEfficiency": convert2number(data[22],None),
+                "AC_PumpPower": convert2number(data[23],None),
+                "Info": ""
+            }
+
+        else:
+            raise Exception("換気代替空調機には種類「空調」の要素が必要です")
+
+        # ファンの追加
+        if data[24] != "" and data[24] != "空調":
+
+            inputdata["VentilationUnit"][data[19]+"_fan"] = {
+                "Number": 1,
+                "FanAirVolume": convert2number(data[25],None),
+                "MoterRatedPower": convert2number(data[26],None),
+                "PowerConsumption": None,
+                "HighEfficiencyMotor": data[27],
+                "Inverter": data[28],
+                "AirVolumeControl": data[29],
+                "VentilationRoomType": None,
+                "AC_CoolingCapacity": None,
+                "AC_RefEfficiency": None,
+                "AC_PumpPower": None,
+                "Info": ""
+            }
+
+            # VentilationRoom要素に追加
+            if data[19] == data[7] or data[19] == data[9]:
+
+                inputdata["VentilationRoom"][data[1]+"_"+data[2]]["VentilationUnitRef"][data[19]+"_fan"] = {
+                    "UnitType": data[24],
+                    "Info": ""
+                }
+
+            elif data[19] == data[16] or data[19] == data[18]:
+
+                inputdata["VentilationRoom"][data[10]+"_"+data[11]]["VentilationUnitRef"][data[19]+"_fan"] = {
+                    "UnitType": data[24],
+                    "Info": ""
+                }
+
+            else:
+                raise Exception("室と換気代替空調機が適切にリンクされていません")
+
+
+        elif data[30] != "" and data[30] != "空調":
+
+            inputdata["VentilationUnit"][data[19]+"_fan"] = {
                 "Number": 1,
                 "FanAirVolume": convert2number(data[31],None),
                 "MoterRatedPower": convert2number(data[32],None),
@@ -212,10 +323,140 @@ def make_inputdata_ac(data):
                 "AC_PumpPower": None,
                 "Info": ""
             }
-        }
-    }
+
+            # VentilationRoom要素に追加
+            if data[19] == data[7] or data[19] == data[9]:
+
+                inputdata["VentilationRoom"][data[1]+"_"+data[2]]["VentilationUnitRef"][data[19]+"_fan"] = {
+                    "UnitType": data[30],
+                    "Info": ""
+                }
+
+            elif data[19] == data[16] or data[19] == data[18]:
+
+                inputdata["VentilationRoom"][data[10]+"_"+data[11]]["VentilationUnitRef"][data[19]+"_fan"] = {
+                    "UnitType": data[30],
+                    "Info": ""
+                }
+
+            else:
+                raise Exception("室と換気代替空調機が適切にリンクされていません")
+    
+
+    # 換気代替空調機2台目
+    if data[36] != "":
+
+        if data[41] == "空調":
+
+            inputdata["VentilationUnit"][data[36]] = {
+                "Number": 1,
+                "FanAirVolume": convert2number(data[42],None),
+                "MoterRatedPower": convert2number(data[43],None),
+                "PowerConsumption": None,
+                "HighEfficiencyMotor": data[44],
+                "Inverter": data[45],
+                "AirVolumeControl": data[46],
+                "VentilationRoomType": data[37],
+                "AC_CoolingCapacity": convert2number(data[38],None),
+                "AC_RefEfficiency": convert2number(data[39],None),
+                "AC_PumpPower": convert2number(data[40],None),
+                "Info": ""
+            }
+        
+        elif data[47] == "空調":
+
+            inputdata["VentilationUnit"][data[36]] = {
+                "Number": 1,
+                "FanAirVolume": convert2number(data[48],None),
+                "MoterRatedPower": convert2number(data[49],None),
+                "PowerConsumption": None,
+                "HighEfficiencyMotor": data[50],
+                "Inverter": data[51],
+                "AirVolumeControl": data[52],
+                "VentilationRoomType": data[37],
+                "AC_CoolingCapacity": convert2number(data[38],None),
+                "AC_RefEfficiency": convert2number(data[39],None),
+                "AC_PumpPower": convert2number(data[40],None),
+                "Info": ""
+            }
+
+        else:
+            raise Exception("換気代替空調機には種類「空調」の要素が必要です")
+
+        # ファンの追加
+        if data[41] != "" and data[41] != "空調":
+
+            inputdata["VentilationUnit"][data[36]+"_fan"] = {
+                "Number": 1,
+                "FanAirVolume": convert2number(data[42],None),
+                "MoterRatedPower": convert2number(data[43],None),
+                "PowerConsumption": None,
+                "HighEfficiencyMotor": data[44],
+                "Inverter": data[45],
+                "AirVolumeControl": data[46],
+                "VentilationRoomType": None,
+                "AC_CoolingCapacity": None,
+                "AC_RefEfficiency": None,
+                "AC_PumpPower": None,
+                "Info": ""
+            }
+
+            # VentilationRoom要素に追加
+            if data[36] == data[7] or data[36] == data[9]:
+
+                inputdata["VentilationRoom"][data[1]+"_"+data[2]]["VentilationUnitRef"][data[36]+"_fan"] = {
+                    "UnitType": data[41],
+                    "Info": ""
+                }
+
+            elif data[36] == data[16] or data[36] == data[18]:
+
+                inputdata["VentilationRoom"][data[10]+"_"+data[11]]["VentilationUnitRef"][data[36]+"_fan"] = {
+                    "UnitType": data[41],
+                    "Info": ""
+                }
+
+            else:
+                raise Exception("室と換気代替空調機が適切にリンクされていません")
+
+
+        elif data[47] != "" and data[47] != "空調":
+
+            inputdata["VentilationUnit"][data[36]+"_fan"] = {
+                "Number": 1,
+                "FanAirVolume": convert2number(data[48],None),
+                "MoterRatedPower": convert2number(data[49],None),
+                "PowerConsumption": None,
+                "HighEfficiencyMotor": data[50],
+                "Inverter": data[51],
+                "AirVolumeControl": data[52],
+                "VentilationRoomType": None,
+                "AC_CoolingCapacity": None,
+                "AC_RefEfficiency": None,
+                "AC_PumpPower": None,
+                "Info": ""
+            }
+
+            # VentilationRoom要素に追加
+            if data[36] == data[7] or data[36] == data[9]:
+
+                inputdata["VentilationRoom"][data[1]+"_"+data[2]]["VentilationUnitRef"][data[36]+"_fan"] = {
+                    "UnitType": data[47],
+                    "Info": ""
+                }
+
+            elif data[36] == data[16] or data[36] == data[18]:
+
+                inputdata["VentilationRoom"][data[10]+"_"+data[11]]["VentilationUnitRef"][data[36]+"_fan"] = {
+                    "UnitType": data[47],
+                    "Info": ""
+                }
+
+            else:
+                raise Exception("室と換気代替空調機が適切にリンクされていません")
 
     return inputdata
+
 
 #### テストケースファイルの読み込み（換気送風機）
 
