@@ -150,13 +150,13 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
     入力 bet : 傾斜角（0が水平、90が垂直）
     入力 phi : 緯度
     入力 longi : 経度
-    入力 IodALL : 直達日射量（365×24、np.array）
-    入力 IosALL : 天空日射量（365×24、np.array）
-    入力 InnALL : 夜間日射量（365×24、np.array）
-    出力 DSR    : 方位別の積算直達日射量（365日）
-    出力 DSRita : 方位別の積算直達日射量、入射角特性込み（365日分）
-    出力 ISR    : 積算天空日射量（365日分）
-    出力 NSR    : 積算夜間日射量（365日分）
+    入力 IodALL : 直達日射量（365×24、np.array） [W/m2]
+    入力 IosALL : 天空日射量（365×24、np.array） [W/m2]
+    入力 InnALL : 夜間日射量（365×24、np.array） [W/m2]
+    出力 DSR    : 方位別の積算直達日射量（365日分） [Wh/m2/day]
+    出力 DSRita : 方位別の積算直達日射量、入射角特性込み（365日分）[Wh/m2/day]
+    出力 ISR    : 積算天空日射量（365日分）[Wh/m2/day]
+    出力 NSR    : 積算夜間日射量（365日分）[Wh/m2/day]
     """
 
     # 度からラジアンへの変換係数
