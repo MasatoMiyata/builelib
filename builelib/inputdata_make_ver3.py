@@ -812,7 +812,7 @@ def inputdata_make(inputfileName):
                         {
                             "UsageType": str(dataHW1[2]),
                             "SystemName": str(dataHW1[3]),
-                            "HotWaterSavingSystem": set_default(str(dataHW1[4]),"裸管","str"),
+                            "HotWaterSavingSystem": set_default(str(dataHW1[4]),"無","str"),
                             "Info": str(dataHW1[5])
                         }
                     ]
@@ -824,7 +824,7 @@ def inputdata_make(inputfileName):
                     {
                         "UsageType": str(dataHW1[2]),
                         "SystemName": str(dataHW1[3]),
-                        "HotWaterSavingSystem": set_default(str(dataHW1[4]),"裸管","str"),
+                        "HotWaterSavingSystem": set_default(str(dataHW1[4]),"無","str"),
                         "Info": str(dataHW1[5])
                     }
                 )
@@ -845,7 +845,7 @@ def inputdata_make(inputfileName):
             # 給湯システム名称が空欄でない場合
             if (dataHW2[0] != ""):
 
-                # 階＋室をkeyとする
+                # 給湯システム名称をkeyとする
                 unitKey = str(dataHW2[0])
 
                 data["HotwaterSupplySystems"][unitKey] = {
