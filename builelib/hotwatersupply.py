@@ -140,6 +140,12 @@ def hotwatersupply(inputdata):
             print(f'  - 日別給湯使用量（厨房） {np.sum(inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"])}')
             print(f'  - 日別給湯使用量（その他） {np.sum(inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"])}')
 
+            np.savetxt("日別給湯使用量（手洗い）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_washroom_daily"]/inputdata["Rooms"][room_name]["roomArea"])
+            np.savetxt("日別給湯使用量（シャワー）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_shower_daily"]/inputdata["Rooms"][room_name]["roomArea"])
+            np.savetxt("日別給湯使用量（厨房）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"]/inputdata["Rooms"][room_name]["roomArea"])
+            np.savetxt("日別給湯使用量（その他）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"]/inputdata["Rooms"][room_name]["roomArea"])
+
+
 
     #----------------------------------------------------------------------------------
     # 解説書 D.5 給湯配管の線熱損失係数
@@ -215,6 +221,10 @@ def hotwatersupply(inputdata):
     elif inputdata["Building"]["Region"] == '8':
         TWdata = 0.6921*Toa_ave + 7.167
 
+    if DEBUG:
+        np.savetxt("日平均外気温度.txt", Toa_ave)
+        np.savetxt("日平均給水温度.txt", TWdata)
+
 
     #----------------------------------------------------------------------------------
     # 解説書 5.2 日積算湯使用量
@@ -289,6 +299,8 @@ def hotwatersupply(inputdata):
             print(f'  - 日積算湯供給量 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qsr_eqp_daily"])}')
             print(f'  - 日積算湯供給量（節湯込み） {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qs_eqp_daily"])}')
 
+            np.savetxt("日積算湯供給量（節湯込み）_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["Qs_eqp_daily"])
+            
 
     #----------------------------------------------------------------------------------
     # 解説書 5.3 配管長さ
@@ -310,6 +322,7 @@ def hotwatersupply(inputdata):
 
     # 室内設定温度
     Troom = np.zeros(365)
+    Taround = np.zeros(365)
 
     for dd in range(0, 365):
         if ac_mode[dd] == "冷房":
@@ -326,6 +339,9 @@ def hotwatersupply(inputdata):
 
         for dd in range(0,365):
 
+            # デバッグ出力用
+            Taround[dd] = (Toa_ave[dd]+Troom[dd])/2
+            
             if inputdata["HotwaterSupplySystems"][unit_name]["Qs_eqp_daily"][dd] > 0:
 
                 inputdata["HotwaterSupplySystems"][unit_name]["Qp_eqp"][dd] = \
@@ -336,6 +352,9 @@ def hotwatersupply(inputdata):
         if DEBUG:
             print(f'機器名称 {unit_name}')
             print(f'  - 配管熱損失 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qp_eqp"])}')
+            print(f'  - 配管熱損失係数 {inputdata["HotwaterSupplySystems"][unit_name]["heatloss_coefficient"]}')
+
+            np.savetxt("配管周囲温度.txt", Taround)
 
 
     # ----------------------------------------------------------------------------------
@@ -353,7 +372,7 @@ def hotwatersupply(inputdata):
 
         if inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemArea"] != None:
 
-            # 日積算日射量 [MJ/m2/day]
+            # 日積算日射量 [Wh/m2/day]
             Id, _, Is, _ = climate.solarRadiationByAzimuth( \
                 inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemDirection"], \
                 inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemAngle"], \
@@ -361,6 +380,7 @@ def hotwatersupply(inputdata):
                 Area[inputdata["Building"]["Region"]+"地域"]["経度"], \
                 Iod, Ios, Inn)
 
+            # 太陽熱利用量 [KJ/day]
             inputdata["HotwaterSupplySystems"][unit_name]["Qs_solargain"] = \
                 (inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemArea"]*0.4*0.85)*\
                     (Id + Is)*3600/1000000 * 1000
@@ -369,6 +389,7 @@ def hotwatersupply(inputdata):
             print(f'機器名称 {unit_name}')
             print(f'  - 太陽熱利用システムの熱利用量 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qs_solargain"])}')
 
+            np.savetxt("太陽熱利用システムの熱利用量_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["Qs_solargain"])
 
     #----------------------------------------------------------------------------------
     # 解説書 5.6 年間給湯負荷
@@ -406,8 +427,9 @@ def hotwatersupply(inputdata):
 
         if DEBUG:
             print(f'機器名称 {unit_name}')
-            print(f'  - 日積算湯使用量 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qh_eqp_daily"])}')
+            print(f'  - 日積算給湯負荷 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qh_eqp_daily"])}')
 
+            np.savetxt("日積算給湯負荷_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["Qh_eqp_daily"])
 
     #----------------------------------------------------------------------------------
     # 解説書 5.7 給湯設備の設計一次エネルギー消費量
@@ -415,7 +437,7 @@ def hotwatersupply(inputdata):
 
     for unit_name in inputdata["HotwaterSupplySystems"]:
 
-        # 日別給湯負荷 [kJ/day]
+        # 日別給湯負荷＋配管熱損失 [kJ/day]
         inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"] = \
             inputdata["HotwaterSupplySystems"][unit_name]["Qh_eqp_daily"] + \
             inputdata["HotwaterSupplySystems"][unit_name]["Qp_eqp"] * 2.5
@@ -429,9 +451,11 @@ def hotwatersupply(inputdata):
 
         if DEBUG:
             print(f'機器名称 {unit_name}')
-            print(f'  - 日別給湯負荷 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"])}')
+            print(f'  - 日別給湯負荷と配管熱損失 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"])}')
             print(f'  - 日別消費エネルギー消費量 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"])}')
 
+            np.savetxt("日別給湯負荷と配管熱損失_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"])
+            np.savetxt("日別消費エネルギー消費量_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"])
 
     if DEBUG:
         print(f'設計一次エネルギー消費量 {resultJson["E_hotwatersupply"]} MJ/年')
@@ -444,7 +468,7 @@ def hotwatersupply(inputdata):
 if __name__ == '__main__':
 
     print('----- hotwatersupply.py -----')
-    filename = './sample/給湯のサンプル.json'
+    filename = './sample/hotwater_C1_節湯.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r') as f:
