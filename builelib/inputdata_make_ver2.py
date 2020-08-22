@@ -961,287 +961,405 @@ def inputdata_make(inputfileName):
                     )
     
     
-    # if "様式AC4" in wb.sheet_names():
+    if "2-7) 空調機" in wb.sheet_names():
         
-    #     # シートの読み込み
-    #     sheet_AC4 = wb.sheet_by_name("様式AC4")
-    #     # 初期化
-    #     unitKey = None
+        # シートの読み込み
+        sheet_AC4 = wb.sheet_by_name("2-7) 空調機")
+        # 初期化
+        unitKey = None
 
-    #     # 行のループ
-    #     for i in range(10,sheet_AC4.nrows):
+        # 行のループ
+        for i in range(10,sheet_AC4.nrows):
 
-    #         # シートから「行」の読み込み
-    #         dataAC4 = sheet_AC4.row_values(i)
+            # シートから「行」の読み込み
+            dataAC4 = sheet_AC4.row_values(i)
 
-    #         # 空調機群名称が空欄でない場合
-    #         if (dataAC4[0] != ""):      
+            # 空調機群名称が空欄でない場合
+            if (dataAC4[0] != ""):      
                 
-    #             unitKey = str(dataAC4[0])
+                unitKey = str(dataAC4[0])
 
-    #             data["AirHandlingSystem"][unitKey] = {
-    #                 "isEconomizer": set_default(dataAC4[15], "無", "str"),
-    #                 "EconomizerMaxAirVolume": set_default(dataAC4[16], None, "float"),
-    #                 "isOutdoorAirCut": set_default(dataAC4[17], "無", "str"),
-    #                 "Pump_cooling": set_default(dataAC4[18], None, "str"),
-    #                 "Pump_heating": set_default(dataAC4[19], None, "str"),
-    #                 "HeatSorce_cooling": set_default(dataAC4[20], None, "str"),
-    #                 "HeatSorce_heating": set_default(dataAC4[21], None, "str"),
-    #                 "AirHandlingUnit" :[
-    #                     {
-    #                         "Type": str(dataAC4[1]),
-    #                         "Number": float(dataAC4[2]),
-    #                         "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
-    #                         "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
-    #                         "FanType": set_default(dataAC4[5], None, "str"),
-    #                         "FanAirVolume": set_default(dataAC4[6], None, "float"),
-    #                         "FanPowerConsumption": set_default(dataAC4[7], None, "float"),
-    #                         "FanControlType": set_default(dataAC4[8], "無", "str"),
-    #                         "FanMinOpeningRate": set_default(dataAC4[9], None, "float"),
-    #                         "AirHeatExchangeRatioCooling": set_default(dataAC4[10], None, "float"),
-    #                         "AirHeatExchangeRatioHeating": set_default(dataAC4[11], None, "float"),
-    #                         "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[12], None, "float"),
-    #                         "AirHeatExchangerControl": set_default(dataAC4[13], "無", "str"),
-    #                         "AirHeatExchangerPowerConsumption": set_default(dataAC4[14], None, "float"),
-    #                         "Info": str(dataAC4[22])
-    #                     }
-    #                 ]
-    #             }
+                E_fan1 = set_default(dataAC4[6], 0, "float")
+                E_fan2 = set_default(dataAC4[7], 0, "float")
+                E_fan3 = set_default(dataAC4[8], 0, "float")
+                E_fan4 = set_default(dataAC4[9], 0, "float")
 
-    #         elif (dataAC4[4] != ""):      
+                data["AirHandlingSystem"][unitKey] = {
+                    "isEconomizer": set_default(dataAC4[13], "無", "str"),
+                    "EconomizerMaxAirVolume": set_default(dataAC4[5], None, "float"),
+                    "isOutdoorAirCut": set_default(dataAC4[12], "無", "str"),
+                    "Pump_cooling": set_default(dataAC4[19], None, "str"),
+                    "Pump_heating": set_default(dataAC4[20], None, "str"),
+                    "HeatSorce_cooling": set_default(dataAC4[21], None, "str"),
+                    "HeatSorce_heating": set_default(dataAC4[22], None, "str"),
+                    "AirHandlingUnit" :[
+                        {
+                            "Type": str(dataAC4[2]),
+                            "Number": float(dataAC4[1]),
+                            "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
+                            "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
+                            "FanType": None,
+                            "FanAirVolume": None,
+                            "FanPowerConsumption": set_default(E_fan1+E_fan2+E_fan3+E_fan4, None, "float"),
+                            "FanControlType": set_default(dataAC4[10], "無", "str"),
+                            "FanMinOpeningRate": set_default(dataAC4[11], None, "float"),
+                            "AirHeatExchangeRatioCooling": set_default(dataAC4[16], None, "float"),
+                            "AirHeatExchangeRatioHeating": set_default(dataAC4[16], None, "float"),
+                            "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[15], None, "float"),
+                            "AirHeatExchangerControl": set_default(dataAC4[17], "無", "str"),
+                            "AirHeatExchangerPowerConsumption": set_default(dataAC4[18], None, "float"),
+                            "Info": str(dataAC4[22])
+                        }
+                    ]
+                }
 
-    #             data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
-    #                 {
-    #                     "Type": str(dataAC4[1]),
-    #                     "Number": float(dataAC4[2]),
-    #                     "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
-    #                     "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
-    #                     "FanType": set_default(dataAC4[5], None, "str"),
-    #                     "FanAirVolume": set_default(dataAC4[6], None, "float"),
-    #                     "FanPowerConsumption": set_default(dataAC4[7], None, "float"),
-    #                     "FanControlType": set_default(dataAC4[8], "無", "str"),
-    #                     "FanMinOpeningRate": set_default(dataAC4[9], None, "float"),
-    #                     "AirHeatExchangeRatioCooling": set_default(dataAC4[10], None, "float"),
-    #                     "AirHeatExchangeRatioHeating": set_default(dataAC4[11], None, "float"),
-    #                     "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[12], None, "float"),
-    #                     "AirHeatExchangerControl": set_default(dataAC4[13], "無", "str"),
-    #                     "AirHeatExchangerPowerConsumption": set_default(dataAC4[14], None, "float"),
-    #                     "Info": str(dataAC4[22])
-    #                 }
-    #             )
 
-    # ## 機械換気設備
-    # if "様式V1" in wb.sheet_names():
+            elif (dataAC4[2] != ""):     
+
+                E_fan1 = set_default(dataAC4[6], 0, "float")
+                E_fan2 = set_default(dataAC4[7], 0, "float")
+                E_fan3 = set_default(dataAC4[8], 0, "float")
+                E_fan4 = set_default(dataAC4[9], 0, "float")
+
+                data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
+                    {
+                        "Type": str(dataAC4[2]),
+                        "Number": float(dataAC4[1]),
+                        "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
+                        "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
+                        "FanType": None,
+                        "FanAirVolume": None,
+                        "FanPowerConsumption": set_default(E_fan1+E_fan2+E_fan3+E_fan4, None, "float"),
+                        "FanControlType": set_default(dataAC4[10], "無", "str"),
+                        "FanMinOpeningRate": set_default(dataAC4[11], None, "float"),
+                        "AirHeatExchangeRatioCooling": set_default(dataAC4[16], None, "float"),
+                        "AirHeatExchangeRatioHeating": set_default(dataAC4[16], None, "float"),
+                        "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[15], None, "float"),
+                        "AirHeatExchangerControl": set_default(dataAC4[17], "無", "str"),
+                        "AirHeatExchangerPowerConsumption": set_default(dataAC4[18], None, "float"),
+                        "Info": str(dataAC4[22])
+                    }
+                )
+
+                # 外気冷房制御等
+                if dataAC4[13] == "有" and dataAC4[5] != "":
+                    data["AirHandlingSystem"][unitKey]["isEconomizer"] = dataAC4[13]
+                    data["AirHandlingSystem"][unitKey]["EconomizerMaxAirVolume"] = set_default(dataAC4[5], None, "float")
+                if dataAC4[12] == "有":
+                    data["AirHandlingSystem"][unitKey]["isOutdoorAirCut"] = dataAC4[12]
+
+
+
+    ## 機械換気設備
+    if "3-1) 換気室" in wb.sheet_names():
         
-    #     # シートの読み込み
-    #     sheet_V1 = wb.sheet_by_name("様式V1")
-    #     # 初期化
-    #     roomKey = None
+        # シートの読み込み
+        sheet_V1 = wb.sheet_by_name("3-1) 換気室")
+        # 初期化
+        roomKey = None
 
-    #     # 行のループ
-    #     for i in range(10,sheet_V1.nrows):
+        # 行のループ
+        for i in range(10,sheet_V1.nrows):
 
-    #         # シートから「行」の読み込み
-    #         dataV = sheet_V1.row_values(i)
+            # シートから「行」の読み込み
+            dataV = sheet_V1.row_values(i)
 
-    #         # 階と室名が空欄でない場合
-    #         if (dataV[0] != "") and (dataV[1] != ""):
+            # 階と室名が空欄でない場合
+            if (dataV[0] != "") and (dataV[1] != ""):
 
-    #             # 階＋室をkeyとする
-    #             roomKey = str(dataV[0]) + '_' + str(dataV[1])
+                # 階＋室をkeyとする
+                roomKey = str(dataV[0]) + '_' + str(dataV[1])
 
-    #             data["VentilationRoom"][roomKey] = {
-    #                     "VentilationType": str(dataV[2]),
-    #                     "VentilationUnitRef":{
-    #                         str(dataV[4]):{
-    #                             "UnitType": str(dataV[3]),
-    #                             "Info": str(dataV[5])
-    #                         }
-    #                     }
-    #             }
+                data["VentilationRoom"][roomKey] = {
+                        "VentilationType": None,
+                        "VentilationUnitRef":{
+                            str(dataV[6]):{
+                                "UnitType": str(dataV[5]),
+                                "Info": str(dataV[7])
+                            }
+                        }
+                }
 
-    #         # 階と室名が空欄であり、かつ、機器名称に入力がある場合
-    #         # 上記 if文 内で定義された roomKey をkeyとして、機器を追加する。
-    #         elif (dataV[0] == "") and (dataV[1] == "") and (dataV[4] != ""):
+            # 階と室名が空欄であり、かつ、機器名称に入力がある場合
+            # 上記 if文 内で定義された roomKey をkeyとして、機器を追加する。
+            elif (dataV[0] == "") and (dataV[1] == "") and (dataV[6] != ""):
 
-    #             data["VentilationRoom"][roomKey]["VentilationUnitRef"][str(dataV[4])]  = {
-    #                 "UnitType": str(dataV[3]),
-    #                 "Info": str(dataV[5])
-    #             }               
+                data["VentilationRoom"][roomKey]["VentilationUnitRef"][str(dataV[6])]  = {
+                    "UnitType": str(dataV[5]),
+                    "Info": str(dataV[7])
+                }               
 
-    # if "様式V2" in wb.sheet_names():
+    if "3-2) 換気送風機" in wb.sheet_names():
         
-    #     # シートの読み込み
-    #     sheet_V2 = wb.sheet_by_name("様式V2")
-    #     # 初期化
-    #     unitKey = None
+        # シートの読み込み
+        sheet_V2 = wb.sheet_by_name("3-2) 換気送風機")
+        # 初期化
+        unitKey = None
 
-    #     # 行のループ
-    #     for i in range(10,sheet_V2.nrows):
+        # 行のループ
+        for i in range(10,sheet_V2.nrows):
 
-    #         # シートから「行」の読み込み
-    #         dataV = sheet_V2.row_values(i)
+            # シートから「行」の読み込み
+            dataV = sheet_V2.row_values(i)
 
-    #         # 換気機器名称が空欄でない場合
-    #         if (dataV[0] != ""):
+            # 換気機器名称が空欄でない場合
+            if (dataV[0] != ""):
+
+                unitKey = str(dataV[0])
                 
-    #             data["VentilationUnit"][str(dataV[0])] = {
-    #                 "Number": set_default(dataV[1], 1, "float"),
-    #                 "FanAirVolume": set_default(dataV[2], None, "float"),
-    #                 "MoterRatedPower": set_default(dataV[3], None, "float"),
-    #                 "PowerConsumption": set_default(dataV[4], None, "float"),
-    #                 "HighEfficiencyMotor": set_default(str(dataV[5]),'無', "str"),
-    #                 "Inverter": set_default(str(dataV[6]),'無', "str"),
-    #                 "AirVolumeControl": set_default(str(dataV[7]),'無', "str"),
-    #                 "VentilationRoomType": set_default(str(dataV[8]),None, "str"),
-    #                 "AC_CoolingCapacity": set_default(dataV[9], None, "float"),
-    #                 "AC_RefEfficiency": set_default(dataV[10], None, "float"),
-    #                 "AC_PumpPower": set_default(dataV[11], None, "float"),
-    #                 "Info": str(dataV[12])
-    #             }
+                data["VentilationUnit"][unitKey] = {
+                    "Number": 1,
+                    "FanAirVolume": set_default(dataV[1], None, "float"),
+                    "MoterRatedPower": set_default(dataV[2], None, "float"),
+                    "PowerConsumption": None,
+                    "HighEfficiencyMotor": set_default(str(dataV[3]),'無', "str"),
+                    "Inverter": set_default(str(dataV[4]),'無', "str"),
+                    "AirVolumeControl": set_default(str(dataV[5]),'無', "str"),
+                    "VentilationRoomType": None,
+                    "AC_CoolingCapacity": None,
+                    "AC_RefEfficiency": None,
+                    "AC_PumpPower": None,
+                    "Info": str(dataV[6])
+                }
 
-    # if "様式L" in wb.sheet_names():
+
+    if "3-3) 換気空調機" in wb.sheet_names():
         
-    #     # シートの読み込み
-    #     sheet_L = wb.sheet_by_name("様式L")
-    #     # 初期化
-    #     roomKey = None
+        # シートの読み込み
+        sheet_V3 = wb.sheet_by_name("3-3) 換気空調機")
+        # 初期化
+        unitKey = None
+        unitNum = 0
 
-    #     # 行のループ
-    #     for i in range(10,sheet_L.nrows):
+        # 行のループ
+        for i in range(10,sheet_V3.nrows):
 
-    #         # シートから「行」の読み込み
-    #         dataL = sheet_L.row_values(i)
+            # シートから「行」の読み込み
+            dataV = sheet_V3.row_values(i)
 
-    #         # 階と室名が空欄でない場合
-    #         if (dataL[0] != "") and (dataL[1] != ""):
+            # 換気機器名称が空欄でない場合
+            if (dataV[0] != ""):
 
-    #             # 階＋室+ゾーン名をkeyとする
-    #             if (dataL[2] != ""):
-    #                 roomKey = str(dataL[0]) + '_' + str(dataL[1]) + '_' + str(dataL[2])
-    #             else:
-    #                 roomKey = str(dataL[0]) + '_' + str(dataL[1])
+                unitKey = str(dataV[0])
+                unitNum = 0
 
-    #             data["LightingSystems"][roomKey] = {
-    #                 "roomWidth": set_default(dataL[3],None, "float"),
-    #                 "roomDepth": set_default(dataL[4],None, "float"),
-    #                 "unitHeight": set_default(dataL[5],None, "float"),
-    #                 "roomIndex": set_default(dataL[6],None, "float"),
-    #                 "lightingUnit": {
-    #                     str(dataL[7]): {
-    #                         "RatedPower": float(dataL[8]),
-    #                         "Number": float(dataL[9]),
-    #                         "OccupantSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
-    #                         "IlluminanceSensingCTRL": set_default(str(dataL[11]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
-    #                         "TimeScheduleCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
-    #                         "InitialIlluminationCorrectionCTRL": set_default(str(dataL[13]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
-    #                     }
-    #                 }
-    #             }
+                if dataV[5] == "空調":
+                    
+                    data["VentilationUnit"][unitKey] = {
+                        "Number": 1,
+                        "FanAirVolume": set_default(dataV[6], None, "float"),
+                        "MoterRatedPower": set_default(dataV[7], None, "float"),
+                        "PowerConsumption": None,
+                        "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
+                        "Inverter": set_default(str(dataV[9]),'無', "str"),
+                        "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
+                        "VentilationRoomType": set_default(dataV[1],'無', "str"),
+                        "AC_CoolingCapacity": set_default(dataV[2], 0, "float"),
+                        "AC_RefEfficiency": set_default(dataV[3], 0, "float"),
+                        "AC_PumpPower": set_default(dataV[4], 0, "float"),
+                        "Info": str(dataV[11])
+                    }
+                
+                else:
 
-    #         # 階と室名が空欄であり、かつ、消費電力の入力がある場合
-    #         elif (dataL[0] == "") and (dataL[1] == "") and (dataL[8] != ""):
+                    unitNum += 1
 
-    #             data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[7])] = {
-    #                 "RatedPower": float(dataL[8]),
-    #                 "Number": float(dataL[9]),
-    #                 "OccupantSensingCTRL": set_default(str(dataL[10]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
-    #                 "IlluminanceSensingCTRL": set_default(str(dataL[11]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
-    #                 "TimeScheduleCTRL": set_default(str(dataL[12]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
-    #                 "InitialIlluminationCorrectionCTRL": set_default(str(dataL[13]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
-    #             }
+                    data["VentilationUnit"][unitKey + "_fan" + str(unitNum)] = {
+                        "Number": 1,
+                        "FanAirVolume": set_default(dataV[6], None, "float"),
+                        "MoterRatedPower": set_default(dataV[7], None, "float"),
+                        "PowerConsumption": None,
+                        "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
+                        "Inverter": set_default(str(dataV[9]),'無', "str"),
+                        "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
+                        "VentilationRoomType": None,
+                        "AC_CoolingCapacity": None,
+                        "AC_RefEfficiency": None,
+                        "AC_PumpPower": None,
+                        "Info": str(dataV[11])
+                    }
 
-    # if "様式HW1" in wb.sheet_names():
+                    for room_name in data["VentilationRoom"]:
+                        if unitKey in data["VentilationRoom"][room_name]["VentilationUnitRef"]:
+                            data["VentilationRoom"][room_name]["VentilationUnitRef"][unitKey + "_fan" + str(unitNum)] = {
+                                "UnitType": dataV[5],
+                                "Info": ""
+                            }
 
-    #     # シートの読み込み
-    #     sheet_HW1 = wb.sheet_by_name("様式HW1")
-    #     # 初期化
-    #     roomKey = None
+            else:
 
-    #     # 行のループ
-    #     for i in range(10,sheet_HW1.nrows):
 
-    #         # シートから「行」の読み込み
-    #         dataHW1 = sheet_HW1.row_values(i)
+                if dataV[5] == "空調":
+                    
+                    data["VentilationUnit"][unitKey] = {
+                        "Number": 1,
+                        "FanAirVolume": set_default(dataV[6], None, "float"),
+                        "MoterRatedPower": set_default(dataV[7], None, "float"),
+                        "PowerConsumption": None,
+                        "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
+                        "Inverter": set_default(str(dataV[9]),'無', "str"),
+                        "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
+                        "VentilationRoomType": set_default(dataV[1],'無', "str"),
+                        "AC_CoolingCapacity": set_default(dataV[2], 0, "float"),
+                        "AC_RefEfficiency": set_default(dataV[3], 0, "float"),
+                        "AC_PumpPower": set_default(dataV[4], 0, "float"),
+                        "Info": str(dataV[11])
+                    }
+                
+                else:
 
-    #         # 階と室名が空欄でない場合
-    #         if (dataHW1[0] != "") and (dataHW1[1] != "") :
+                    unitNum += 1
 
-    #             # 階＋室をkeyとする
-    #             roomKey = str(dataHW1[0]) + '_' + str(dataHW1[1])
+                    data["VentilationUnit"][unitKey + "_fan" + str(unitNum)] = {
+                        "Number": 1,
+                        "FanAirVolume": set_default(dataV[6], None, "float"),
+                        "MoterRatedPower": set_default(dataV[7], None, "float"),
+                        "PowerConsumption": None,
+                        "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
+                        "Inverter": set_default(str(dataV[9]),'無', "str"),
+                        "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
+                        "VentilationRoomType": None,
+                        "AC_CoolingCapacity": None,
+                        "AC_RefEfficiency": None,
+                        "AC_PumpPower": None,
+                        "Info": str(dataV[11])
+                    }
 
-    #             data["HotwaterRoom"][roomKey] = {
-    #                 "HotwaterSystem":[
-    #                     {
-    #                         "UsageType": str(dataHW1[2]),
-    #                         "SystemName": str(dataHW1[3]),
-    #                         "HotWaterSavingSystem": set_default(str(dataHW1[4]),"裸管","str"),
-    #                         "Info": str(dataHW1[5])
-    #                     }
-    #                 ]
-    #             }
+                    for room_name in data["VentilationRoom"]:
+                        if unitKey in data["VentilationRoom"][room_name]["VentilationUnitRef"]:
+                            data["VentilationRoom"][room_name]["VentilationUnitRef"][unitKey + "_fan" + str(unitNum)] = {
+                                "UnitType": dataV[5],
+                                "Info": ""
+                            }
 
-    #         elif (dataHW1[2] != "") and (dataHW1[3] != "") :
 
-    #             data["HotwaterRoom"][roomKey]["HotwaterSystem"].append(
-    #                 {
-    #                     "UsageType": str(dataHW1[2]),
-    #                     "SystemName": str(dataHW1[3]),
-    #                     "HotWaterSavingSystem": set_default(str(dataHW1[4]),"裸管","str"),
-    #                     "Info": str(dataHW1[5])
-    #                 }
-    #             )
+    if "4) 照明" in wb.sheet_names():
+        
+        # シートの読み込み
+        sheet_L = wb.sheet_by_name("4) 照明")
+        # 初期化
+        roomKey = None
 
-    # if "様式HW2" in wb.sheet_names():
+        # 行のループ
+        for i in range(10,sheet_L.nrows):
 
-    #     # シートの読み込み
-    #     sheet_HW2 = wb.sheet_by_name("様式HW2")
-    #     # 初期化
-    #     unitKey = None
+            # シートから「行」の読み込み
+            dataL = sheet_L.row_values(i)
 
-    #     # 行のループ
-    #     for i in range(10,sheet_HW2.nrows):
+            # 階と室名が空欄でない場合
+            if (dataL[0] != "") and (dataL[1] != ""):
 
-    #         # シートから「行」の読み込み
-    #         dataHW2 = sheet_HW2.row_values(i)
+                roomKey = str(dataL[0]) + '_' + str(dataL[1])
 
-    #         # 給湯システム名称が空欄でない場合
-    #         if (dataHW2[0] != ""):
+                data["LightingSystems"][roomKey] = {
+                    "roomWidth": set_default(dataL[7],None, "float"),
+                    "roomDepth": set_default(dataL[8],None, "float"),
+                    "unitHeight": set_default(dataL[6],None, "float"),
+                    "roomIndex": set_default(dataL[9],None, "float"),
+                    "lightingUnit": {
+                        str(dataL[10]): {
+                            "RatedPower": float(dataL[11]),
+                            "Number": float(dataL[12]),
+                            "OccupantSensingCTRL": set_default(str(dataL[13]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
+                            "IlluminanceSensingCTRL": set_default(str(dataL[14]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
+                            "TimeScheduleCTRL": set_default(str(dataL[15]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
+                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
+                        }
+                    }
+                }
 
-    #             # 階＋室をkeyとする
-    #             unitKey = str(dataHW2[0])
+            # 階と室名が空欄であり、かつ、消費電力の入力がある場合
+            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[10] != ""):
 
-    #             data["HotwaterSupplySystems"][unitKey] = {
-    #                 "HeatSourceUnit":[
-    #                     {
-    #                         "UsageType": str(dataHW2[1]),
-    #                         "HeatSourceType": str(dataHW2[2]),
-    #                         "Number": float(dataHW2[3]),
-    #                         "RatedCapacity": float(dataHW2[4]),
-    #                         "RatedPowerConsumption": float(dataHW2[5]),
-    #                         "RatedFuelConsumption": float(dataHW2[6]),
-    #                     }
-    #                 ],
-    #                 "InsulationType": str(dataHW2[7]),
-    #                 "PipeSize": float(dataHW2[8]),
-    #                 "SolarSystemArea": set_default(dataHW2[9], None, "float"),
-    #                 "SolarSystemDirection": set_default(dataHW2[10], None, "float"),
-    #                 "SolarSystemAngle": set_default(dataHW2[11], None, "float"),
-    #                 "Info": str(dataHW2[12])
-    #             }
+                data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[10])] = {
+                    "RatedPower": float(dataL[11]),
+                    "Number": float(dataL[12]),
+                    "OccupantSensingCTRL": set_default(str(dataL[13]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
+                    "IlluminanceSensingCTRL": set_default(str(dataL[14]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
+                    "TimeScheduleCTRL": set_default(str(dataL[15]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
+                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
+                }
 
-    #         elif (dataHW2[1] != "") and (dataHW2[2] != ""):
 
-    #             data["HotwaterSupplySystems"][unitKey]["HeatSourceUnit"].append(
-    #                 {
-    #                     "UsageType": str(dataHW2[1]),
-    #                     "HeatSourceType": str(dataHW2[2]),
-    #                     "Number": float(dataHW2[3]),
-    #                     "RatedCapacity": float(dataHW2[4]),
-    #                     "RatedPowerConsumption": float(dataHW2[5]),
-    #                     "RatedFuelConsumption": float(dataHW2[6]),
-    #                 }
-    #             )
+    if "5-1) 給湯室" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_HW1 = wb.sheet_by_name("5-1) 給湯室")
+        # 初期化
+        roomKey = None
+
+        # 行のループ
+        for i in range(10,sheet_HW1.nrows):
+
+            # シートから「行」の読み込み
+            dataHW1 = sheet_HW1.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataHW1[0] != "") and (dataHW1[1] != "") :
+
+                # 階＋室をkeyとする
+                roomKey = str(dataHW1[0]) + '_' + str(dataHW1[1])
+
+                data["HotwaterRoom"][roomKey] = {
+                    "HotwaterSystem":[
+                        {
+                            "UsageType": None,
+                            "SystemName": str(dataHW1[7]),
+                            "HotWaterSavingSystem": set_default(str(dataHW1[6]),"無","str"),
+                            "Info": str(dataHW1[8])
+                        }
+                    ]
+                }
+
+            elif (dataHW1[5] != "") and (dataHW1[7] != "") :
+
+                data["HotwaterRoom"][roomKey]["HotwaterSystem"].append(
+                    {
+                        "UsageType": None,
+                        "SystemName": str(dataHW1[7]),
+                        "HotWaterSavingSystem": set_default(str(dataHW1[6]),"無","str"),
+                        "Info": str(dataHW1[8])
+                    }
+                )
+
+    if "5-2) 給湯機器" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_HW2 = wb.sheet_by_name("5-2) 給湯機器")
+        # 初期化
+        unitKey = None
+
+        # 行のループ
+        for i in range(10,sheet_HW2.nrows):
+
+            # シートから「行」の読み込み
+            dataHW2 = sheet_HW2.row_values(i)
+
+            # 給湯システム名称が空欄でない場合
+            if (dataHW2[0] != ""):
+
+                # 給湯システム名称をkeyとする
+                unitKey = str(dataHW2[0])
+
+                data["HotwaterSupplySystems"][unitKey] = {
+                    "HeatSourceUnit":[
+                        {
+                            "UsageType": None,
+                            "HeatSourceType": None,
+                            "Number": 1,
+                            "RatedCapacity": float(dataHW2[2]),
+                            "RatedPowerConsumption": 0,
+                            "RatedFuelConsumption": float(dataHW2[2]/dataHW2[3]),
+                        }
+                    ],
+                    "InsulationType": str(dataHW2[4]),
+                    "PipeSize": float(dataHW2[5]),
+                    "SolarSystemArea": set_default(dataHW2[6], None, "float"),
+                    "SolarSystemDirection": set_default(dataHW2[7], None, "float"),
+                    "SolarSystemAngle": set_default(dataHW2[8], None, "float"),
+                    "Info": str(dataHW2[9])
+                }
+
 
     if "6) 昇降機" in wb.sheet_names():
 
