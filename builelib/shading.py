@@ -9,12 +9,13 @@ import matplotlib.pyplot as plt
 if 'ipykernel' in sys.modules:
     import climate
     database_directory = "./database/"
-elif __name__ == '__main__':
-    import climate
-    database_directory = "./builelib/database/"
 else:
     import builelib.climate as climate
     database_directory = "./builelib/database/"
+
+# import climate
+# database_directory = "./database/"
+
 
 # 定数（deg→radへの変換係数）
 deg2rad = math.pi/180 
