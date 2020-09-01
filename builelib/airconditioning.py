@@ -1101,7 +1101,7 @@ def airconditioning(inputdata):
         for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
             if (unit_configure["AirHeatExchangeRatioCooling"] != None) and (unit_configure["AirHeatExchangeRatioHeating"] != None):
                 inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"]  += \
-                    unit_configure["FanAirVolume"] * unit_configure["Number"]
+                    unit_configure["AirHeatExchangerEffectiveAirVolume"] * unit_configure["Number"]
 
 
     ##----------------------------------------------------------------------------------
@@ -1175,6 +1175,17 @@ def airconditioning(inputdata):
 
         # 運転時間帯
         resultJson["AHU"][ ahu_name ]["day_mode"].append( roomDayMode[room_zone_name] )
+
+    for room_zone_name in inputdata["AirConditioningZone"]:
+
+        ahu_name = inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"]
+
+        # 室の空調有無 roomScheduleRoom（365×24）を加算
+        resultJson["AHU"][ ahu_name ]["schedule"] += roomScheduleRoom[room_zone_name]
+
+        # 運転時間帯
+        resultJson["AHU"][ ahu_name ]["day_mode"].append( roomDayMode[room_zone_name] )
+
 
 
     # 各空調機群の運転時間
@@ -1407,7 +1418,7 @@ def airconditioning(inputdata):
                     
                     # 追加すべき外気量（外気冷房用の追加分のみ）[kg/s]
                     resultJson["AHU"][ahu_name]["cooling"]["AHUVovc"][dd] = \
-                        resultJson["AHU"][ahu_name]["cooling"]["AHUVovc"][dd] - inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"]
+                        resultJson["AHU"][ahu_name]["cooling"]["AHUVovc"][dd] - inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
 
                 # 外気冷房効果 [MJ/day]
                 if (inputdata["AirHandlingSystem"][ahu_name]["isEconomizer"] == "有"): # 外気冷房があれば
@@ -1417,7 +1428,6 @@ def airconditioning(inputdata):
                         resultJson["AHU"][ahu_name]["cooling"]["Qahu_oac"][dd] = \
                             resultJson["AHU"][ahu_name]["cooling"]["AHUVovc"][dd] * (Hroom[dd]-resultJson["AHU"][ahu_name]["HoaDayAve"][dd])*3600/1000*\
                             resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd]
-
 
 
     ##----------------------------------------------------------------------------------
@@ -1495,14 +1505,17 @@ def airconditioning(inputdata):
 
         for ahu_name in inputdata["AirHandlingSystem"]:
 
+            print( f'--- 空調機群名 {ahu_name} ---')
+
             print( f'外気負荷 qoaAHU {np.sum(resultJson["AHU"][ahu_name]["qoaAHU"],0)}' )
+            print( f'外気導入量 outdoorAirVolume_cooling {inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"]} m3/h' )
+            print( f'外気冷房時最大風量 EconomizerMaxAirVolume {inputdata["AirHandlingSystem"][ahu_name]["EconomizerMaxAirVolume"]} m3/h' )
+            print( f'外気冷房時風量 AHUVovc {np.sum(resultJson["AHU"][ahu_name]["cooling"]["AHUVovc"],0)}' )
             print( f'外気冷房効果 Qahu_oac： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Qahu_oac"],0)}' )
             print( f'空調機群の運転時間（冷房期間）Tahu： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Tahu"],0)} 時間' )
             print( f'空調機群の運転時間（暖房期間）Tahu： {np.sum(resultJson["AHU"][ahu_name]["heating"]["Tahu"],0)} 時間' )
             print( f'空調負荷（冷房期間）Qahu： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Qahu"],0)}' )
             print( f'空調負荷（暖房期間）Qahu： {np.sum(resultJson["AHU"][ahu_name]["heating"]["Qahu"],0)}' )
-
-
 
 
     #%%
@@ -3539,7 +3552,7 @@ def airconditioning(inputdata):
 
     if DEBUG:
         print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["airconditioning"]/roomAreaTotal}' )
-        print( f'空調設備の設計一次エネルギー消費量 GJ : {resultJson["airconditioning"]/1000}' )
+        print( f'空調設備の設計一次エネルギー消費量 MJ : {resultJson["airconditioning"]}' )
 
 
     return resultJson
@@ -3548,8 +3561,8 @@ def airconditioning(inputdata):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    # filename = './sample/Case001_単室モデル_基本モデル.json'
-    filename = 'inputdata.json'
+    filename = './sample/ACtest_Case012.json'
+    # filename = 'inputdata.json'
 
 
     # テンプレートjsonの読み込み
@@ -3557,3 +3570,16 @@ if __name__ == '__main__':
         inputdata = json.load(f)
 
     resultJson = airconditioning(inputdata)
+
+    print( f'一次エネルギー消費量 全体: {resultJson["airconditioning"]}')
+    print( f'一次エネルギー消費量 空調ファン: {resultJson["ENERGY"]["E_fan"] * 9760}')
+    print( f'一次エネルギー消費量 空調全熱交換器: {resultJson["ENERGY"]["E_aex"] * 9760}')
+    print( f'一次エネルギー消費量 二次ポンプ: {resultJson["ENERGY"]["E_pump"] * 9760}')
+    print( f'一次エネルギー消費量 熱源主機: {resultJson["ENERGY"]["E_refsysr"]}')
+    print( f'一次エネルギー消費量 熱源補機: {resultJson["ENERGY"]["E_refac"] * 9760}')
+    print( f'一次エネルギー消費量 一次ポンプ: {resultJson["ENERGY"]["E_pumpP"] * 9760}')
+    print( f'一次エネルギー消費量 冷却塔ファン: {resultJson["ENERGY"]["E_ctfan"] * 9760}')
+    print( f'一次エネルギー消費量 冷却水ポンプ: {resultJson["ENERGY"]["E_ctpump"] * 9760}')
+
+    print( f'{resultJson["airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * 9760}, {resultJson["ENERGY"]["E_aex"] * 9760}, {resultJson["ENERGY"]["E_pump"] * 9760}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * 9760}, {resultJson["ENERGY"]["E_pumpP"] * 9760}, {resultJson["ENERGY"]["E_ctfan"] * 9760}, {resultJson["ENERGY"]["E_ctpump"] * 9760}')
+
