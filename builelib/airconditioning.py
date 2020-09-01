@@ -2332,8 +2332,10 @@ def airconditioning(inputdata):
 
             if resultJson["PUMP"][pump_name]["TdPUMP"][dd] > 0:
 
+                print(int(resultJson["PUMP"][pump_name]["LdPUMP"][dd]))
+
                 resultJson["PUMP"][pump_name]["E_pump_day"][dd] = \
-                    resultJson["PUMP"][pump_name]["MxPUMPPower"][ int(resultJson["PUMP"][pump_name]["LdPUMP"][dd]) ] / 1000 * \
+                    resultJson["PUMP"][pump_name]["MxPUMPPower"][ int(resultJson["PUMP"][pump_name]["LdPUMP"][dd])-1 ] / 1000 * \
                     resultJson["PUMP"][pump_name]["TdPUMP"][dd]
 
 
@@ -3561,7 +3563,7 @@ def airconditioning(inputdata):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './sample/ACtest_Case012.json'
+    filename = './tests/airconditioning/ACtest_Case020.json'
     # filename = 'inputdata.json'
 
 
