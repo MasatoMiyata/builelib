@@ -2377,7 +2377,6 @@ def airconditioning(inputdata):
 
 
 
-
     #%%
     ##----------------------------------------------------------------------------------
     ## 熱源群の一次エネルギー消費量（解説書 2.7）
@@ -2385,7 +2384,7 @@ def airconditioning(inputdata):
 
     # モデル格納用変数
 
-    # 冷房と暖房の二次ポンプ群に分ける。
+    # 冷房と暖房の熱源群に分ける。
     for ref_original_name in inputdata["HeatsourceSystem"]:
 
         if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
@@ -2393,9 +2392,12 @@ def airconditioning(inputdata):
             inputdata["REF"][ ref_original_name + "_冷房"]["mode"] = "cooling"
 
             if "冷房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
-                inputdata["REF"][ ref_original_name + "_冷房"]["蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]
-                inputdata["REF"][ ref_original_name + "_冷房"]["isStorage"] = "有"
-
+                inputdata["REF"][ ref_original_name + "_冷房_蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]
+                inputdata["REF"][ ref_original_name + "_冷房_蓄熱"]["isStorage"] = "蓄熱"
+                inputdata["REF"][ ref_original_name + "_冷房_蓄熱"]["mode"] = "cooling"
+                inputdata["REF"][ ref_original_name + "_冷房"]["isStorage"] = "追掛"
+                inputdata["REF"][ ref_original_name + "_冷房"]["StorageType"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]["StorageType"]
+                inputdata["REF"][ ref_original_name + "_冷房"]["StorageSize"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]["StorageSize"]
             else:
                 inputdata["REF"][ ref_original_name + "_冷房"]["isStorage"] = "無"
 
@@ -2405,8 +2407,12 @@ def airconditioning(inputdata):
             inputdata["REF"][ ref_original_name + "_暖房"]["mode"] = "heating"
 
             if "暖房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
-                inputdata["REF"][ ref_original_name + "_暖房"]["蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]
-                inputdata["REF"][ ref_original_name + "_暖房"]["isStorage"] = "有"
+                inputdata["REF"][ ref_original_name + "_暖房_蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]
+                inputdata["REF"][ ref_original_name + "_暖房_蓄熱"]["isStorage"] = "蓄熱"
+                inputdata["REF"][ ref_original_name + "_暖房_蓄熱"]["mode"] = "heating"
+                inputdata["REF"][ ref_original_name + "_暖房"]["isStorage"] = "追掛"
+                inputdata["REF"][ ref_original_name + "_暖房"]["StorageType"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]["StorageType"]
+                inputdata["REF"][ ref_original_name + "_暖房"]["StorageSize"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]["StorageSize"]
             else:
                 inputdata["REF"][ ref_original_name + "_暖房"]["isStorage"] = "無"
 
@@ -2437,9 +2443,6 @@ def airconditioning(inputdata):
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = \
                 unit_configure["HeatsourceRatedFuelConsumption"] * unit_configure["Number"]
 
-            # 熱源群の合計定格能力
-            inputdata["REF"][ref_name]["QrefrMax"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
-
             # 熱源機器の台数
             inputdata["REF"][ref_name]["refsetRnum"] += 1
 
@@ -2456,48 +2459,56 @@ def airconditioning(inputdata):
                 unit_configure["CoolingTowerPumpPowerConsumption"] * unit_configure["Number"]
 
 
-        # 蓄熱システムの性能
-        if "蓄熱" in inputdata["REF"][ref_name]:
+        # 蓄熱槽効率
+        if inputdata["REF"][ref_name]["isStorage"] == "蓄熱" or inputdata["REF"][ref_name]["isStorage"] == "追掛":
 
-            # 蓄熱槽効率
-            inputdata["REF"][ref_name]["蓄熱"]["storageEffratio"] = 0.8
-            if inputdata["REF"][ref_name]["蓄熱"]["StorageType"] == "水蓄熱(混合型)":
-                inputdata["REF"][ref_name]["蓄熱"]["storageEffratio"] = 0.8
-            elif inputdata["REF"][ref_name]["蓄熱"]["StorageType"] == "水蓄熱(成層型)":
-                inputdata["REF"][ref_name]["蓄熱"]["storageEffratio"] = 0.9
-            elif inputdata["REF"][ref_name]["蓄熱"]["StorageType"] == "氷蓄熱":
-                inputdata["REF"][ref_name]["蓄熱"]["storageEffratio"] = 1.0
+            inputdata["REF"][ref_name]["storageEffratio"] = 0.8
+            if inputdata["REF"][ref_name]["StorageType"] == "水蓄熱(混合型)":
+                inputdata["REF"][ref_name]["storageEffratio"] = 0.8
+            elif inputdata["REF"][ref_name]["StorageType"] == "水蓄熱(成層型)":
+                inputdata["REF"][ref_name]["storageEffratio"] = 0.9
+            elif inputdata["REF"][ref_name]["StorageType"] == "氷蓄熱":
+                inputdata["REF"][ref_name]["storageEffratio"] = 1.0
             else:
                 raise Exception("蓄熱槽タイプが不正です")
+        
+        # 放熱器の制約
+        if inputdata["REF"][ref_name]["isStorage"] == "追掛":
 
-            inputdata["REF"][ref_name]["蓄熱"]["QrefrMax"] = 0
-            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["蓄熱"]["Heatsource"]):
-            
-                # 定格能力（台数×能力）
-                inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] = \
-                unit_configure["HeatsourceRatedCapacity"] * unit_configure["Number"]
+            tmpCapacity = inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]/8*(1000/3600)
 
-                # 定格消費電力（台数×消費電力）
-                inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] = \
-                    unit_configure["HeatsourceRatedPowerConsumption"] * unit_configure["Number"]
+            if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] > tmpCapacity:
+                inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = tmpCapacity
 
-                # 定格燃料消費量（台数×燃料消費量）
-                inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = \
-                    unit_configure["HeatsourceRatedFuelConsumption"] * unit_configure["Number"]
 
-                # 熱源群の合計定格能力
-                inputdata["REF"][ref_name]["蓄熱"]["QrefrMax"] += inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
+        # 熱源群の合計定格能力
+        inputdata["REF"][ref_name]["QrefrMax"] = 0
+        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):    
+            inputdata["REF"][ref_name]["QrefrMax"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
+
 
 
     # 接続される二次ポンプ群
 
     for ahu_name in inputdata["AirHandlingSystem"]:
 
+        # 冷房熱源群（蓄熱なし）
         inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_cooling"] + "_冷房" ]["pump_list"].add( \
             inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房")
+
+        # 冷房熱源群（蓄熱あり）
+        if inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_cooling"] + "_冷房" ]["isStorage"] == "追掛":
+            inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_cooling"] + "_冷房_蓄熱" ]["pump_list"].add( \
+                inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房")
+        
+        # 暖房熱源群（蓄熱なし）
         inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_heating"] + "_暖房" ]["pump_list"].add( \
             inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房")
 
+        # 暖房熱源群（蓄熱なし）
+        if inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_heating"] + "_暖房" ]["isStorage"] == "追掛":
+            inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_heating"] + "_暖房_蓄熱" ]["pump_list"].add( \
+                inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房")
 
     ##----------------------------------------------------------------------------------
     ## 結果格納用変数
@@ -2549,9 +2560,6 @@ def airconditioning(inputdata):
     # MxREFSUBE = zeros(numOfRefs,10,length(mxL));
     # Qrefr_mod = zeros(numOfRefs,10,length(ToadbC));
     # Erefr_mod = zeros(numOfRefs,10,length(ToadbC));
-
-    # hoseiStorage = ones(length(ToadbC),length(mxL),numOfRefs);  % 蓄熱槽があるシステムの追い掛け時の補正係数 2014/1/10
-
 
 
     ##----------------------------------------------------------------------------------
@@ -2615,16 +2623,16 @@ def airconditioning(inputdata):
         for dd in range(0,365):
         
             # 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
-            if (resultJson["REF"][ref_name]["Tref"][dd] > 0) and (inputdata["REF"][ref_name]["isStorage"] == "有"):
+            if (resultJson["REF"][ref_name]["Tref"][dd] > 0) and (inputdata["REF"][ref_name]["isStorage"] == "蓄熱"):
 
-                resultJson["REF"][ref_name]["Qref"][dd] += inputdata["REF"][ref_name]["isStorage"]["蓄熱"]["StorageSize"] * 0.03
+                resultJson["REF"][ref_name]["Qref"][dd] += inputdata["REF"][ref_name]["StorageSize"] * 0.03
             
                 # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
                 if resultJson["REF"][ref_name]["Qref"][dd] > \
-                    inputdata["REF"][ref_name]["蓄熱"]["storageEffratio"] * inputdata["REF"][ref_name]["isStorage"]["蓄熱"]["StorageSize"]:
+                    inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
 
                     resultJson["REF"][ref_name]["Qref"][dd] = \
-                        inputdata["REF"][ref_name]["蓄熱"]["storageEffratio"] * inputdata["REF"][ref_name]["isStorage"]["蓄熱"]["StorageSize"]
+                        inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]
 
             # 平均負荷 [kW]
             if resultJson["REF"][ref_name]["Tref"][dd] == 0:
@@ -2658,8 +2666,6 @@ def airconditioning(inputdata):
             print( f'熱源群の平均負荷 Qref_kW: {np.sum(resultJson["REF"][ref_name]["Qref_kW"],0)}' )
             print( f'熱源群の過負荷 Qref_OVER: {np.sum(resultJson["REF"][ref_name]["Qref_OVER"],0)}' )
             print( f'熱源群の運転時間 Tref: {np.sum(resultJson["REF"][ref_name]["Tref"],0)}' )
-
-
 
 
     #%% 
@@ -2908,8 +2914,6 @@ def airconditioning(inputdata):
                             unit_configure["parameter"]["入力比"][j]["係数"]["a1"] * x  + \
                             unit_configure["parameter"]["入力比"][j]["係数"]["a0"] )
 
-
-
     #%% 
     ##----------------------------------------------------------------------------------
     ## 蓄熱を加味した仮想定格能力（解説書 2.7.6）
@@ -2920,21 +2924,26 @@ def airconditioning(inputdata):
 
         tmpCapacityHEX = 0
 
-        if "蓄熱" in inputdata["REF"][ref_name]:
-            if inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][0]["HeatsourceType"] == "熱交換器":
+        if inputdata["REF"][ref_name]["isStorage"] == "追掛":
+            if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceType"] == "熱交換器":
 
                 # 熱源運転時間の最大値で補正した容量
-                tmpCapacityHEX = inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][0]["HeatsourceRatedCapacity_total"] * (8/np.max(resultJson["REF"][ref_name]["Tref"]))
+                tmpCapacityHEX = inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] * (8 / np.max(resultJson["REF"][ref_name]["Tref"]))
 
                 # 定格容量の合計値を更新
-                inputdata["REF"][ref_name]["QrefrMax"] = inputdata["REF"][ref_name]["QrefrMax"] +  tmpCapacityHEX - inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][0]["HeatsourceRatedCapacity_total"]
+                inputdata["REF"][ref_name]["QrefrMax"] = inputdata["REF"][ref_name]["QrefrMax"] +  tmpCapacityHEX - inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]
 
                 # 熱交換器の容量を修正
-                inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = tmpCapacityHEX
+                inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = tmpCapacityHEX
 
             else:
                 raise Exception('熱交換機が設定されていません')
 
+        if DEBUG:
+                
+            print( f'--- 熱源群名 {ref_name} ---')
+            print( f'熱交換器の容量: {inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]}')
+            print( f'熱源群の定格能力の合計 QrefrMax: {inputdata["REF"][ref_name]["QrefrMax"]}' )
 
     #%%
     ##----------------------------------------------------------------------------------
@@ -2969,12 +2978,12 @@ def airconditioning(inputdata):
                 # 外気温帯マトリックス
                 resultJson["REF"][ref_name]["TdREF"][dd] = count_Matrix(Toa_ave[dd], mxT) 
 
-        if DEBUG:
+        # if DEBUG:
+                
+        #     print( f'--- 熱源群名 {ref_name} ---')
 
-            print( f'--- 熱源群名 {ref_name} ---')
-
-            print( f'熱源群の負荷率帯の番号 LdREF: {np.sum(resultJson["REF"][ref_name]["LdREF"],0)}' )
-            print( f'熱源群の外気温帯の番号 TdREF: {np.sum(resultJson["REF"][ref_name]["TdREF"],0)}' )
+        #     print( f'熱源群の負荷率帯の番号 LdREF: {np.sum(resultJson["REF"][ref_name]["LdREF"],0)}' )
+        #     print( f'熱源群の外気温帯の番号 TdREF: {np.sum(resultJson["REF"][ref_name]["TdREF"],0)}' )
 
 
 
@@ -3005,73 +3014,72 @@ def airconditioning(inputdata):
 
             if DEBUG:
                 print( f'--- 熱源群名 {ref_name} の {unit_id+1} 台目---')
-                print( f'各外気温区分における最大能力 Qrefr_mod: {np.sum(inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"],0)}' )
-                print( f'各外気温区分における最大入力 Erefr_mod: {np.sum(inputdata["REF"][ref_name]["Heatsource"][unit_id]["Erefr_mod"],0)}' )
+                print( f'各外気温区分における最大能力 Qrefr_mod: \n {inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"]}' )
+                print( f'各外気温区分における最大入力 Erefr_mod: \n {inputdata["REF"][ref_name]["Heatsource"][unit_id]["Erefr_mod"]}' )
                     
 
-        if inputdata["REF"][ref_name]["isStorage"] == "有":
 
-            # 外気温帯毎に最大能力の合計値を求める。
-            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["蓄熱"]["Heatsource"]):
+    for ref_name in inputdata["REF"]:
 
-                inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["Qrefr_mod"] = np.zeros(len(ToadbC))
-                inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["Erefr_mod"] = np.zeros(len(ToadbC))
-                inputdata["REF"][ref_name]["蓄熱"]["Heatsource"]["Qrefr_mod_sum"] = np.zeros(len(ToadbC))
+        inputdata["REF"][ref_name]["Qrefr_mod_sum"] = np.zeros(len(ToadbC))
+
+        if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
+
+            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
                 for iX in range(0,len(ToadbC)):
-                    
-                    # 各外気温区分における最大能力 [kW]
-                    inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["Qrefr_mod"][iX] = \
-                        inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] * \
-                        inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["xQratio"][iX]
-                    
+
                     # 各外気温区分における最大能力の合計を算出[kW]
-                    inputdata["REF"][ref_name]["蓄熱"]["Heatsource"]["Qrefr_mod_sum"][iX] += \
-                        inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["Qrefr_mod"][iX]
+                    inputdata["REF"][ref_name]["Qrefr_mod_sum"][iX] += \
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"][iX]
 
-                    # 各外気温区分における最大入力 [kW]  (1次エネルギー換算値であることに注意）
-                    inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["Erefr_mod"][iX] = \
-                        inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["refset_MainPowerELE"] * \
-                        inputdata["REF"][ref_name]["蓄熱"]["Heatsource"][unit_id]["xPratio"][iX]
-
-
+            if DEBUG:
+                print( f'--- 熱源群名 {ref_name} ---')
+                print( f'各外気温区分における最大能力の合計 Qrefr_mod_sum: \n {inputdata["REF"][ref_name]["Qrefr_mod_sum"]}' )
+                    
     #%%
-    ##----------------------------------------------------------------------------------
-    ## 蓄熱システムによる運転時間の補正（解説書 2.7.15）
-    ##----------------------------------------------------------------------------------
-
+    #----------------------------------------------------------------------------------
+    # 蓄熱システムによる運転時間の補正（解説書 2.7.15）
+    #----------------------------------------------------------------------------------
     # 蓄熱の場合のマトリックス操作（負荷率１に集約＋外気温を１レベル変える）
 
-    # for ref_name in inputdata["REF"]:
+    for ref_name in inputdata["REF"]:
 
-    #     if inputdata["REF"][ref_name]["isStorage"] == "有":
+        if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
 
-    #         for dd in range(0,365):
+            for dd in range(0,365):
             
-    #             if resultJson["REF"][ref_name]["LdREF"][dd] > 0:   # これを入れないと aveL(LdREF)でエラーとなる。
+                if resultJson["REF"][ref_name]["LdREF"][dd] > 0:   # これを入れないと aveL(LdREF)でエラーとなる。
                 
-    #                 # 負荷率帯 LdREF のときの熱負荷
-    #                 timeQmax =  aveL[ resultJson["REF"][ref_name]["LdREF"][dd] ] * resultJson["REF"][ref_name]["Tref"][dd] \
-    #                     * inputdata["REF"][ref_name]["QrefrMax"]
+                    # 負荷率帯 LdREF のときの熱負荷
+                    timeQmax =  aveL[ int(resultJson["REF"][ref_name]["LdREF"][dd]) - 1 ] \
+                        * resultJson["REF"][ref_name]["Tref"][dd] * inputdata["REF"][ref_name]["QrefrMax"]
                 
-    #                 # 全負荷相当運転時間（熱負荷を最大負荷で除す）
-    #                 if resultJson["REF"][ref_name]["TdREF"][dd] > 1:
+                    # 全負荷相当運転時間（熱負荷を最大負荷で除す）
+                    if resultJson["REF"][ref_name]["TdREF"][dd] > 1:
 
-    #                     resultJson["REF"][ref_name]["Tref"][dd] = timeQmax / ( inputdata["REF"][ref_name]["蓄熱"]["Heatsource"]["Qrefr_mod_sum"][ resultJson["REF"][ref_name]["TdREF"][dd] - 2] )
+                        resultJson["REF"][ref_name]["Tref"][dd] = timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["TdREF"][dd]) - 2] )
 
-    #                 elif resultJson["REF"][ref_name]["TdREF"][dd] == 1:
+                    elif resultJson["REF"][ref_name]["TdREF"][dd] == 1:
 
-    #                     resultJson["REF"][ref_name]["Tref"][dd] = timeQmax / ( inputdata["REF"][ref_name]["蓄熱"]["Heatsource"]["Qrefr_mod_sum"][ resultJson["REF"][ref_name]["TdREF"][dd] - 1] ) 
+                        resultJson["REF"][ref_name]["Tref"][dd] = timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["TdREF"][dd]) - 1] )                 
+
+                    # 最大負荷率帯（負荷率帯 10）にする。
+                    resultJson["REF"][ref_name]["LdREF"][dd] = len(aveL) - 1 
                 
-                
-    #                 if resultJson["REF"][ref_name]["LdREF"][dd] > 0:
-    #                     resultJson["REF"][ref_name]["LdREF"][dd] = len(aveL)-1   # 最大負荷率帯にする。
-                    
-    #                     if resultJson["REF"][ref_name]["TdREF"][dd] > 1:
-    #                         resultJson["REF"][ref_name]["TdREF"][dd] = resultJson["REF"][ref_name]["TdREF"][dd] - 1   # 外気温帯を1つ下げる。
-    #                     elif resultJson["REF"][ref_name]["TdREF"][dd] == 1:
-    #                         resultJson["REF"][ref_name]["TdREF"][dd] = resultJson["REF"][ref_name]["TdREF"][dd]
+                    if resultJson["REF"][ref_name]["TdREF"][dd] > 1:
+                        resultJson["REF"][ref_name]["TdREF"][dd] = resultJson["REF"][ref_name]["TdREF"][dd] - 1   # 外気温帯を1つ下げる。
+                    elif resultJson["REF"][ref_name]["TdREF"][dd] == 1:
+                        resultJson["REF"][ref_name]["TdREF"][dd] = resultJson["REF"][ref_name]["TdREF"][dd]
 
+        # if DEBUG:
+            # print( f'--- 熱源群名 {ref_name} ---')
+            # print( f'外気温帯マトリックス TdREF: \n {resultJson["REF"][ref_name]["TdREF"]}' )
+            # print( f'負荷率帯マトリックス LdREF: \n {resultJson["REF"][ref_name]["LdREF"]}' )
+            # np.savetxt( "debug" + ref_name + "_TdREF.txt", resultJson["REF"][ref_name]["TdREF"])
+            # np.savetxt( "debug" + ref_name + "_LdREF.txt", resultJson["REF"][ref_name]["LdREF"])
+
+            
 
     #%%
     ##----------------------------------------------------------------------------------
@@ -3145,7 +3153,7 @@ def airconditioning(inputdata):
                 # [ioa,iL]における負荷率
                 resultJson["REF"][ref_name]["MxREFxL"][ioa][iL] = tmpQ / Qrefr_mod_max
 
-                if inputdata["REF"][ref_name]["isStorage"] == "有":
+                if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
                     resultJson["REF"][ref_name]["MxREFxL"][ioa][iL] = 1.0
 
 
@@ -3187,15 +3195,15 @@ def airconditioning(inputdata):
 
         if DEBUG:
             print( f'--- 熱源群名 {ref_name} ---')
-            print( f'熱源群の運転負荷率 MxREFxL: {np.sum(resultJson["REF"][ref_name]["MxREFxL"],0)}' )
-            print( f'熱源群の運転負荷率 MxREFxL_real: {np.sum(resultJson["REF"][ref_name]["MxREFxL_real"],0)}' )
-
+            print( f'熱源群の運転負荷率 MxREFxL: \n {resultJson["REF"][ref_name]["MxREFxL"]}' )
+            print( f'熱源群の運転負荷率 MxREFxL_real: \n {resultJson["REF"][ref_name]["MxREFxL_real"]}' )
 
 
     #%%
     # 送水温度特性
 
     for ref_name in inputdata["REF"]:
+
         # 送水温度特性（各負荷率・各温度帯について）
         for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"] = np.ones( [len(mxT), len(mxL)] ) 
@@ -3203,39 +3211,39 @@ def airconditioning(inputdata):
 
     for ref_name in inputdata["REF"]:
 
-            for ioa in range(0, len(mxT)):
-                for iL in range(0, len(mxL)):
+        for ioa in range(0, len(mxT)):
+            for iL in range(0, len(mxL)):
 
-                    # 送水温度特性（各負荷率・各温度帯について）
-                    for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
+                # 送水温度特性（各負荷率・各温度帯について）
+                for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
 
-                        # 送水温度 TCtmp
-                        if inputdata["REF"][ref_name]["mode"] == "cooling":
-                            if inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"] is None:
-                                TCtmp = 5
-                            else:
-                                TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"]
-                        elif inputdata["REF"][ref_name]["mode"] == "heating":
-                            if inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"] is None:
-                                TCtmp = 50
-                            else:
-                                TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"]
+                    # 送水温度 TCtmp
+                    if inputdata["REF"][ref_name]["mode"] == "cooling":
+                        if inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"] is None:
+                            TCtmp = 5
+                        else:
+                            TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"]
+                    elif inputdata["REF"][ref_name]["mode"] == "heating":
+                        if inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"] is None:
+                            TCtmp = 50
+                        else:
+                            TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"]
 
-                        if inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"] != []:
+                    if inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"] != []:
 
-                            # 送水温度特性の上下限
-                            if TCtmp < inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["下限"]:
-                                TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["下限"]
-                            elif TCtmp > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["上限"]:
-                                TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["上限"]
+                        # 送水温度特性の上下限
+                        if TCtmp < inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["下限"]:
+                            TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["下限"]
+                        elif TCtmp > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["上限"]:
+                            TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["上限"]
 
-                            # 送水温度特性
-                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"][ioa][iL] = \
-                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a4"] * TCtmp ** 4 +  \
-                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a3"] * TCtmp ** 3 +  \
-                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a2"] * TCtmp ** 2 +  \
-                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a1"] * TCtmp + \
-                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a0"]
+                        # 送水温度特性
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"][ioa][iL] = \
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a4"] * TCtmp ** 4 +  \
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a3"] * TCtmp ** 3 +  \
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a2"] * TCtmp ** 2 +  \
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a1"] * TCtmp + \
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a0"]
 
 
 
@@ -3264,11 +3272,8 @@ def airconditioning(inputdata):
             
             for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
-                print( f'熱源群のエネルギー消費量 MxREFSUBperE: {np.sum(resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"] ,0)}' )
+                print( f'熱源群のエネルギー消費量 MxREFSUBperE: \n {resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"]}' )
 
-
-    with open("inputJson.json",'w') as fw:
-        json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
     #%% 
     ##----------------------------------------------------------------------------------
@@ -3382,35 +3387,43 @@ def airconditioning(inputdata):
 
 
     #%%
-    ##----------------------------------------------------------------------------------
-    ## 蓄熱システムによる運転時間の補正（解説書 2.7.15）
-    ##----------------------------------------------------------------------------------
-
+    #----------------------------------------------------------------------------------
+    # 蓄熱システムによる運転時間の補正（解説書 2.7.15）
+    #----------------------------------------------------------------------------------
     # 蓄熱槽を持つシステムの追い掛け時運転時間補正（追い掛け運転開始時に蓄熱量がすべて使われない問題を解消） 2014/1/10
 
-    #             if REFstorage(iREF) == -1 && refsetStorageSize(iREF)>0
-    #                 for ioa = 1:length(ToadbC)
-    #                     for iL = 1:length(mxL)
-    #                         if MxREFnum(ioa,iL,iREF) >= 2
-    #                             % hoseiStorage(ioa,iL,iREF) = 1 - ( Qrefr_mod(iREF,1,ioa)*(1-MxREFxL(ioa,iL,iREF)) / (MxREFxL(ioa,iL,iREF)*sum( Qrefr_mod(iREF,2:MxREFnum(ioa,iL,iREF),ioa) )) );
-    #                             hoseiStorage(ioa,iL,iREF) = 1 - ( Qrefr_mod(iREF,1,ioa)*(1-MxREFxL_real(ioa,iL,iREF)) / (MxREFxL_real(ioa,iL,iREF)*sum( Qrefr_mod(iREF,2:MxREFnum(ioa,iL,iREF),ioa) )) );
-    #                         else
-    #                             hoseiStorage(ioa,iL,iREF) = 1.0;
-    #                         end
-    #                     end
-    #                 end
-                    
-    #                 switch MODE
-    #                     case {1,2,3}
-    #                         MxREF(:,:,iREF) = MxREF(:,:,iREF) .* hoseiStorage(:,:,iREF);  % 運転時間を補正
-    #                     case {4}
-    #                         for dd = 1:365
-    #                             Tref(dd,iREF) = Tref(dd,iREF) .* hoseiStorage(TdREF(dd,iREF),LdREF(dd,iREF),iREF);  % 運転時間を補正
-    #                         end
-    #                 end
-    #             end
-    #     end
+    for ref_name in inputdata["REF"]:
 
+        resultJson["REF"][ref_name]["hoseiStorage"] = np.ones( [len(mxT), len(mxL)] ) 
+
+        if inputdata["REF"][ref_name]["isStorage"] == "追掛":
+
+            for ioa in range(0, len(mxT)):
+                for iL in range(0, len(mxL)):
+
+                    if int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL]) >= 2:
+
+                        # 2台目以降の合計最大能力（＝熱交換器以外の能力）
+                        Qrefr_mod_except_HEX = 0
+                        for unit_id in range(1, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
+                            Qrefr_mod_except_HEX += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"][ioa]
+
+                        resultJson["REF"][ref_name]["hoseiStorage"][ioa][iL] = \
+                            1 - ( inputdata["REF"][ref_name]["Heatsource"][0]["Qrefr_mod"][ioa] * \
+                                    (1 - resultJson["REF"][ref_name]["MxREFxL_real"][ioa][iL]) / \
+                                    (resultJson["REF"][ref_name]["MxREFxL_real"][ioa][iL] * Qrefr_mod_except_HEX) )
+
+            # 運転時間を補正
+            for dd in range(0,365):
+                if resultJson["REF"][ref_name]["Tref"][dd] > 0:
+                    resultJson["REF"][ref_name]["Tref"][dd] = \
+                        resultJson["REF"][ref_name]["Tref"][dd] * \
+                        resultJson["REF"][ref_name]["hoseiStorage"][ int(resultJson["REF"][ref_name]["TdREF"][dd])-1 ][ int(resultJson["REF"][ref_name]["LdREF"][dd])-1 ]
+
+        if DEBUG:
+
+            print( f'--- 熱源群名 {ref_name} ---')
+            print( f'蓄熱補正係数 hoseiStorage: {resultJson["REF"][ref_name]["hoseiStorage"]}' )
 
     #%%
     ##----------------------------------------------------------------------------------
@@ -3553,7 +3566,7 @@ def airconditioning(inputdata):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case032.json'
+    filename = './tests/airconditioning/ACtest_Case035.json'
     # filename = 'inputdata.json'
 
 
