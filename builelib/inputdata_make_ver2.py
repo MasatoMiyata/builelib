@@ -1485,8 +1485,12 @@ def inputdata_make(inputfileName):
 
 if __name__ == '__main__':
 
-    directory = "./tests/airconditioning/"
-    case_name = 'ACtest_Case033'
+    # directory = "./tests/airconditioning/"
+    # case_name = 'ACtest_Case035'
+
+
+    directory = "./sample/"
+    case_name = 'WEBPRO_inputSheet_for_Ver2'
 
     inputdata = inputdata_make(directory + case_name + ".xlsm")
 

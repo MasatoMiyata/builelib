@@ -6,15 +6,12 @@ import math
 import json
 import matplotlib.pyplot as plt
 
-if 'ipykernel' in sys.modules:
-    import climate
-    database_directory = "./database/"
-elif __name__ == '__main__':
+if __name__ == '__main__':
     import climate
     database_directory = "./builelib/database/"
 else:
-    import climate
-    database_directory = "./database/"
+    import builelib.climate as climate
+    database_directory = "./builelib/database/"
 
 
 # 定数（deg→radへの変換係数）

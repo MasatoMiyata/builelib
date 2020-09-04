@@ -5,20 +5,14 @@ import jsonschema
 import numpy as np
 import math
 
-if 'ipykernel' in sys.modules:
-    import builelib_common as bc
-    import climate
-elif __name__ == '__main__':
+if __name__ == '__main__':
     import builelib_common as bc
     import climate
 else:
     import builelib.climate as climate
     import builelib.builelib_common as bc
 
-if 'ipykernel' in sys.modules:
-    directory = "./database/"
-else:
-    directory = "./builelib/database/"
+directory = "./builelib/database/"
 
 
 DEBUG = False

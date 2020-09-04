@@ -37,7 +37,7 @@ def set_roomIndexCoeff(roomIndex):
 def lighting(inputdata):
 
     # 入力ファイルの検証
-    bc.inputdata_validation(inputdata)
+    # bc.inputdata_validation(inputdata)
 
     # データベースjsonの読み込み
     with open('./builelib/database/lightingControl.json', 'r') as f:
@@ -161,7 +161,7 @@ def lighting(inputdata):
 if __name__ == '__main__':
 
     print('----- lighting.py -----')
-    filename = './sample/inputdata.json'
+    filename = './sample/WEBPRO_inputSheet_for_Ver3.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:

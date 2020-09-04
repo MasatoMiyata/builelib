@@ -5,12 +5,7 @@ import jsonschema
 import numpy as np
 import math
 
-if 'ipykernel' in sys.modules:
-    import builelib_common as bc
-    import climate
-    import shading
-    directory = "./database/"
-elif __name__ == '__main__':
+if __name__ == '__main__':
     import builelib_common as bc
     import climate
     import shading
@@ -1639,7 +1634,11 @@ def airconditioning(inputdata):
                 a2 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a2"]
                 a1 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a1"]
                 a0 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a0"]
-                Vmin = unit_configure["FanMinOpeningRate"]/100
+
+                if unit_configure["FanMinOpeningRate"] == None:
+                    Vmin = 1
+                else:
+                    Vmin = unit_configure["FanMinOpeningRate"]/100
 
             elif unit_configure["FanControlType"] == "無":
 
@@ -3566,8 +3565,8 @@ def airconditioning(inputdata):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case035.json'
-    # filename = 'inputdata.json'
+    # filename = './tests/airconditioning/ACtest_Case035.json'
+    filename = './sample/WEBPRO_inputSheet_for_Ver2.json'
 
 
     # テンプレートjsonの読み込み

@@ -9,10 +9,10 @@ import numpy as np
 # 電気の量 1kWh を熱量に換算する係数
 fprime = 9760
 
-if 'ipykernel' in sys.modules:
-    directory = "./database/"
-else:
-    directory = "./builelib/database/"
+# if 'ipykernel' in sys.modules:
+#     directory = "./database/"
+# else:
+directory = "./builelib/database/"
 
 
 # 基準値データベースの読み込み
