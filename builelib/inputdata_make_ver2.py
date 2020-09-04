@@ -513,6 +513,12 @@ def inputdata_make(inputfileName):
                 else:
                     storage_flag = False
 
+                # 台数制御の有無
+                if dataAC2[2] == "有":
+                    staging_control_flag = "有"
+                else:
+                    staging_control_flag = "無"
+
                 if (dataAC2[5] != "") and (dataAC2[6] != ""):     # 冷熱源
                 
                     if storage_flag:
@@ -536,7 +542,7 @@ def inputdata_make(inputfileName):
                         modeKey_C : {
                             "StorageType": StorageType,
                             "StorageSize": StorageSize,
-                            "isStagingControl": set_default(dataAC2[2], "無", "str"),
+                            "isStagingControl": staging_control_flag,
                             "Heatsource" :[
                                 {
                                     "HeatsourceType": str(dataAC2[5]),
@@ -583,7 +589,7 @@ def inputdata_make(inputfileName):
                             {
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
-                                "isStagingControl": set_default(dataAC2[2], "無", "str"),
+                                "isStagingControl": staging_control_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -727,7 +733,7 @@ def inputdata_make(inputfileName):
                             {
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
-                                "isStagingControl": set_default(dataAC2[2], "無", "str"),
+                                "isStagingControl": staging_control_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -754,7 +760,7 @@ def inputdata_make(inputfileName):
                             modeKey_C : {
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
-                                "isStagingControl": set_default(dataAC2[2], "無", "str"),
+                                "isStagingControl": staging_control_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -801,7 +807,7 @@ def inputdata_make(inputfileName):
                             {
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
-                                "isStagingControl": set_default(dataAC2[2], "無", "str"),
+                                "isStagingControl": staging_control_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -828,7 +834,7 @@ def inputdata_make(inputfileName):
                             modeKey_H : {
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
-                                "isStagingControl": set_default(dataAC2[2], "無", "str"),
+                                "isStagingControl": staging_control_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -1479,8 +1485,8 @@ def inputdata_make(inputfileName):
 
 if __name__ == '__main__':
 
-    directory = "./sample/"
-    case_name = 'WEBPRO_inputSheet_for_Ver2'
+    directory = "./tests/airconditioning/"
+    case_name = 'ACtest_Case033'
 
     inputdata = inputdata_make(directory + case_name + ".xlsm")
 
