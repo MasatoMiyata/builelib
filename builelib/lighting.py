@@ -1,16 +1,17 @@
-#%%
 import json
-import jsonschema
 import numpy as np
+import os
 
-if __name__ == '__main__':
-    import builelib_common as bc
-else:
-    import builelib.builelib_common as bc
+import commons as bc
+
+# データベースファイルの保存場所
+database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
 
-## 室の形状に応じて定められる係数（仕様書4.4）
 def set_roomIndexCoeff(roomIndex):
+    '''
+    室の形状に応じて定められる係数（仕様書4.4）
+    '''
 
     if roomIndex == None:
         roomIndexCoeff = 1
@@ -33,14 +34,10 @@ def set_roomIndexCoeff(roomIndex):
     return roomIndexCoeff
 
 
-#%%
-def lighting(inputdata):
-
-    # 入力ファイルの検証
-    # bc.inputdata_validation(inputdata)
+def calc_energy(inputdata, DEBUG = False):
 
     # データベースjsonの読み込み
-    with open('./builelib/database/lightingControl.json', 'r') as f:
+    with open( database_directory + 'lightingControl.json', 'r') as f:
         lightingCtrl = json.load(f)
 
     # 計算結果を格納する変数
@@ -142,6 +139,11 @@ def lighting(inputdata):
                 "StandardEnergy": Es_room
             }
 
+        if DEBUG:
+            print( f'室名称　{ikey}')
+            print( f'　- 設計一次エネルギー消費量  {E_room} MJ')
+            print( f'　- 基準一次エネルギー消費量  {Es_room} MJ')
+            
     # BEI/L [-]
     if Es_lighting <= 0:
         BEI_L = None
@@ -157,7 +159,6 @@ def lighting(inputdata):
     return resultJson
 
 
-#%%
 if __name__ == '__main__':
 
     print('----- lighting.py -----')
@@ -167,7 +168,5 @@ if __name__ == '__main__':
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
-    resultJson = lighting(inputdata)
+    resultJson = calc_energy(inputdata, DEBUG = True)
     print(resultJson)
-
-# %%
