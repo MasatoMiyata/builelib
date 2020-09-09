@@ -4,6 +4,8 @@ memo.md
 sample/*
 .vscode
 .pypirc
+inputdata.json
+resultJson.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
