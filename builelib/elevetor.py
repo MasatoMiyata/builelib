@@ -1,15 +1,10 @@
 import json
-import jsonschema
 import numpy as np
 
-if __name__ == '__main__':
-    import builelib_common as bc
-else:
-    import builelib.builelib_common as bc
+import commons as bc
 
-DEBUG = True
 
-def elevetor(inputdata):
+def calc_energy(inputdata, DEBUG = False):
 
     # 計算結果を格納する変数
     resultJson = {
@@ -26,16 +21,16 @@ def elevetor(inputdata):
             if unit_configure["ControlType"] ==  "交流帰還制御":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/20
 
-            elif unit_configure["ControlType"] ==  "VVVF(電力回生なし)":
+            elif unit_configure["ControlType"] ==  "VVVF(電力回生なし)" or unit_configure["ControlType"] ==  "VVVF（電力回生なし）":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/40
 
-            elif unit_configure["ControlType"] ==  "VVVF(電力回生あり)":
+            elif unit_configure["ControlType"] ==  "VVVF(電力回生あり)" or unit_configure["ControlType"] ==  "VVVF（電力回生あり）":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/45
 
-            elif unit_configure["ControlType"] ==  "VVVF(電力回生なし、ギアレス)":
+            elif unit_configure["ControlType"] ==  "VVVF(電力回生なし、ギアレス)" or unit_configure["ControlType"] ==  "VVVF（電力回生なし、ギアレス）":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/45
 
-            elif unit_configure["ControlType"] ==  "VVVF(電力回生あり、ギアレス)":
+            elif unit_configure["ControlType"] ==  "VVVF(電力回生あり、ギアレス)" or unit_configure["ControlType"] ==  "VVVF（電力回生あり、ギアレス）":
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["ControlTypeCoefficient"] = 1/50
             
             else:
@@ -99,11 +94,11 @@ def elevetor(inputdata):
 if __name__ == '__main__':
 
     print('----- elevetor.py -----')
-    filename = './sample/給湯のサンプル.json'
+    filename = './sample/WEBPRO_inputSheet_for_Ver3.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
-    resultJson = elevetor(inputdata)
+    resultJson = calc_energy(inputdata)
     print(resultJson)
