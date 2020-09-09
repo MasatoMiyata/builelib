@@ -1,8 +1,8 @@
 import jsonschema
 import json
 
-targetFile = 'QROOM_COEFFI_AREA1.json'
-schemaFile = 'QROOM_COEFFI_schema.json'
+targetFile = 'REFLIST.json'
+schemaFile = './builelib/database_make/schema/QROOM_COEFFI_schema.json'
 
 # スキーマの読み込み
 with open(schemaFile) as file_obj:

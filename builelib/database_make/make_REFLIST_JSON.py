@@ -3,11 +3,11 @@ import csv
 import json
 
 # CSVファイル読み込み
-with open('./builelib/database/make/REFLIST.csv',encoding='Shift_JIS') as f:
+with open('./builelib/database_make/csv/REFLIST.csv',encoding='Shift_JIS') as f:
     reader = csv.reader(f)
     REFLIST = [row for row in reader]
 
-with open('./builelib/database/make/REFCURVE.csv',encoding='Shift_JIS') as f:
+with open('./builelib/database_make/csv/REFCURVE.csv',encoding='Shift_JIS') as f:
     reader = csv.reader(f)
     REFCURVE = [row for row in reader]
 
@@ -119,5 +119,5 @@ for d in REFLIST:
 
 
 # JSONに書き込み
-fw = open('REFLIST.json','w')
+fw = open('HeatSourcePerformance.json','w')
 json.dump(DictData, fw, indent=4, ensure_ascii=False)
