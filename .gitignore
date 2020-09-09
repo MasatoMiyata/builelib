@@ -1,16 +1,6 @@
 docs/*
-MANIFEST.in
 Makefile
-README.rst
-requirements.txt
-setup.py
 memo.md
-builelib/__init__.py
-builelib/common.py
-builelib/core.py
-builelib/helpers.py
-builelib/database/make/
-builelib/resultJson.json
 sample/*
 .vscode
 
