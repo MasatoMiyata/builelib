@@ -1,11 +1,14 @@
 import json
-import pprint as pp
 import numpy as np
+import os
 
-if __name__ == '__main__':
-    import builelib_common as bc
-else:
-    import builelib.builelib_common as bc
+import commons as bc
+
+# データベースファイルの保存場所
+database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
+# 気象データファイルの保存場所
+climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
+
 
 # json.dump用のクラス
 class MyEncoder(json.JSONEncoder):
@@ -44,11 +47,8 @@ def set_OutdoorTemperature(region):
 
     return Toa_ave_design
 
-DEBUG = True
 
-def ventilation(inputdata):
-
-    # bc.inputdata_validation(inputdata)
+def calc_energy(inputdata, DEBUG = False):
     
     # 計算結果を格納する変数
     resultJson = {
@@ -156,7 +156,7 @@ def ventilation(inputdata):
     ##----------------------------------------------------------------------------------
     ## 送風機の制御方式に応じて定められる係数（解説書 3.2）
     ##----------------------------------------------------------------------------------
-    with open('./builelib/database/ventilationControl.json', 'r') as f:
+    with open( database_directory + '/ventilationControl.json', 'r') as f:
         ventilationCtrl = json.load(f)
 
     
@@ -311,6 +311,7 @@ def ventilation(inputdata):
         print( f'設計一次エネルギー消費量[MJ] {resultJson["E_ventilation"]}')
         print( f'基準一次エネルギー消費量[MJ] {resultJson["Es_ventilation"]}')
 
+
     return resultJson
 
 
@@ -323,5 +324,5 @@ if __name__ == '__main__':
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
-    resultJson = ventilation(inputdata)
+    resultJson = calc_energy(inputdata, DEBUG = True)
     print(resultJson)
