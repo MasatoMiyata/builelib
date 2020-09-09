@@ -1268,7 +1268,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                 "inputMethod": inputMethod,
                                 "layers": [
                                     {
-                                    "materialID": set_default(dataBE2[4], None, "str"),
+                                    "materialID": set_default(dataBE2[4].replace(' ', ''), None, "str"),
                                     "conductivity": None,
                                     "thickness": set_default(dataBE2[5], None, "float"),
                                     "Info": set_default(dataBE2[6], "無", "str")
@@ -2482,13 +2482,13 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    # directory = "./tests/airconditioning/"
-    # case_name = 'ACtest_Case035'
+    directory = "./sample/"
+    case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
 
-    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
-    # # json出力
-    # with open(directory + case_name + ".json",'w') as fw:
-    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # json出力
+    with open(directory + case_name + ".json",'w') as fw:
+        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 

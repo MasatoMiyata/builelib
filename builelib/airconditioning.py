@@ -386,7 +386,9 @@ def calc_energy(inputdata, DEBUG = False):
                         else:
 
                             # 空気層以外の断熱材を指定している場合
-                            Rvalue += (layer[1]["thickness"]/1000) / HeatThermalConductivity[layer[1]["materialID"]]["熱伝導率"]
+                            if layer[1]["thickness"] != None:
+                                material_name = layer[1]["materialID"].replace('\u3000', '')
+                                Rvalue += (layer[1]["thickness"]/1000) / HeatThermalConductivity[material_name]["熱伝導率"]
 
                     else:
 
@@ -3564,7 +3566,7 @@ if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case035.json'
-    filename = './sample/inputdata_AC01.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
     # テンプレートjsonの読み込み
