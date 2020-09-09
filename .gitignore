@@ -12,6 +12,7 @@ builelib/helpers.py
 builelib/database/make/
 builelib/resultJson.json
 sample/*
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
