@@ -258,7 +258,7 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
 #%%
 if __name__ == '__main__':
 
-    filename = "./builelib/database/climatedata/C1_0598195.has"
+    filename = "./builelib/climatedata/C1_0598195.has"
     
     [Tout, Xout, Iod, Ios, Inn] = readHaspClimateData(filename)
 

@@ -5,26 +5,24 @@ import sys
 import json
 import jsonschema
 import numpy as np
+import os
 
 # 電気の量 1kWh を熱量に換算する係数
 fprime = 9760
 
-# if 'ipykernel' in sys.modules:
-#     directory = "./database/"
-# else:
-directory = "./builelib/database/"
-
+# データベースファイルの保存場所
+database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
 # 基準値データベースの読み込み
-with open(directory + 'ROOM_STANDARDVALUE.json', 'r') as f:
+with open(database_directory + 'ROOM_STANDARDVALUE.json', 'r') as f:
     RoomStandardValue = json.load(f)
 
 # 室使用条件データの読み込み
-with open(directory + 'RoomUsageSchedule.json', 'r') as f:
+with open(database_directory + 'RoomUsageSchedule.json', 'r') as f:
     RoomUsageSchedule = json.load(f)
 
 # カレンダーパターンの読み込み
-with open(directory + 'CALENDAR.json', 'r') as f:
+with open(database_directory + 'CALENDAR.json', 'r') as f:
     Calendar = json.load(f)
 
 
@@ -38,7 +36,7 @@ def air_enenthalpy(Tdb, X):
     Lw = 2502   # 水の蒸発潜熱 [kJ/kg]
 
     if len(Tdb) != len(X):
-        raise Exception('窓面積が外皮面積よりも大きくなっています')
+        raise Exception('温度と湿度のリストの長さが異なります。')
     else:
         H = (Ca*Tdb + (Cw*Tdb+Lw)*X)
 

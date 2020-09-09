@@ -1,20 +1,16 @@
-#%%
-import sys
 import json
-import jsonschema
 import numpy as np
 import math
+import os
 
-if __name__ == '__main__':
-    import builelib_common as bc
-    import climate
-    import shading
-    directory = "./builelib/database/"
-else:
-    import builelib.climate as climate
-    import builelib.builelib_common as bc
-    import builelib.shading as shading
-    directory = "./builelib/database/"
+import commons as bc
+import climate
+import shading
+
+# データベースファイルの保存場所
+database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
+# 気象データファイルの保存場所
+climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 
 # json.dump用のクラス
@@ -53,9 +49,7 @@ def count_Matrix(x, mxL):
     return ix+1
 
 
-DEBUG = True
-
-def airconditioning(inputdata):
+def calc_energy(inputdata, DEBUG = False):
 
     inputdata["PUMP"] = {}
     inputdata["REF"] = {}
@@ -105,7 +99,7 @@ def airconditioning(inputdata):
     ##----------------------------------------------------------------------------------
 
     # 地域別データの読み込み
-    with open(directory + 'AREA.json', 'r') as f:
+    with open(database_directory + 'AREA.json', 'r') as f:
         Area = json.load(f)
 
     # 負荷率帯マトリックス mxL = array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2])
@@ -162,7 +156,7 @@ def airconditioning(inputdata):
 
     # 気象データ（HASP形式）読み込み ＜365×24の行列＞
     [ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
-        climate.readHaspClimateData( directory + "climatedata/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
+        climate.readHaspClimateData( climatedata_directory + "/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
 
     # 緯度
     phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
@@ -175,7 +169,7 @@ def airconditioning(inputdata):
     ##----------------------------------------------------------------------------------
 
     # 空調運転モード
-    with open(directory + 'ACoperationMode.json', 'r') as f:
+    with open(database_directory + 'ACoperationMode.json', 'r') as f:
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
@@ -335,11 +329,11 @@ def airconditioning(inputdata):
     ### ISSUE : 二つのデータベースにわかれてしまっているので統一する。###
 
     # 標準入力法建材データの読み込み
-    with open(directory + 'HeatThermalConductivity.json', 'r') as f:
+    with open(database_directory + 'HeatThermalConductivity.json', 'r') as f:
         HeatThermalConductivity = json.load(f)
 
     # モデル建物法建材データの読み込み
-    with open(directory + 'HeatThermalConductivity_model.json', 'r') as f:
+    with open(database_directory + 'HeatThermalConductivity_model.json', 'r') as f:
         HeatThermalConductivity_model = json.load(f)
 
 
@@ -404,10 +398,10 @@ def airconditioning(inputdata):
     ##----------------------------------------------------------------------------------
 
     # 窓データの読み込み
-    with open(directory + 'WindowHeatTransferPerformance.json', 'r') as f:
+    with open(database_directory + 'WindowHeatTransferPerformance.json', 'r') as f:
         WindowHeatTransferPerformance = json.load(f)
 
-    with open(directory + 'glass2window.json', 'r') as f:
+    with open(database_directory + 'glass2window.json', 'r') as f:
         glass2window = json.load(f)
 
 
@@ -816,7 +810,7 @@ def airconditioning(inputdata):
     ##----------------------------------------------------------------------------------
 
     ## 室負荷計算のための係数（解説書 A.3）
-    with open(directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
+    with open(database_directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
         QROOM_COEFFI = json.load(f)
 
 
@@ -958,7 +952,8 @@ def airconditioning(inputdata):
             print( f'熱取得_窓放射 Qwind_N: {np.sum(resultJson["Qroom"][room_zone_name]["Qwind_N"],0)}' )
             print( f'室負荷（冷房要求）の合計 QroomDc: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"],0)}' )
             print( f'室負荷（暖房要求）の合計 QroomDh: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)}' )
-
+            print( f'室負荷（冷房要求）の合計 QroomDc_anual: {resultJson["Qroom"][room_zone_name]["QroomDc_anual"]}' )
+            print( f'室負荷（暖房要求）の合計 QroomDh_anual: {resultJson["Qroom"][room_zone_name]["QroomDh_anual"]}' )
 
 
     #%%
@@ -1616,7 +1611,7 @@ def airconditioning(inputdata):
     ##----------------------------------------------------------------------------------
 
     ## 搬送系制御に関する係数
-    with open(directory + 'FLOWCONTROL.json', 'r') as f:
+    with open(database_directory + 'FLOWCONTROL.json', 'r') as f:
         FLOWCONTROL = json.load(f)
 
     for ahu_name in inputdata["AirHandlingSystem"]:
@@ -2719,7 +2714,7 @@ def airconditioning(inputdata):
     ##----------------------------------------------------------------------------------
 
     ## 熱源機器特性
-    with open(directory + "HeatSourcePerformance.json", 'r') as f:
+    with open(database_directory + "HeatSourcePerformance.json", 'r') as f:
         HeatSourcePerformance = json.load(f)
 
     for ref_name in inputdata["REF"]:
@@ -3566,14 +3561,14 @@ if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case035.json'
-    filename = './sample/WEBPRO_inputSheet_for_Ver2.json'
+    filename = './sample/inputdata_AC01.json'
 
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
-    resultJson = airconditioning(inputdata)
+    resultJson = calc_energy(inputdata, DEBUG=True)
 
     with open("resultJson.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
