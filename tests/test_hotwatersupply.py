@@ -1,9 +1,9 @@
-from tests.test_ventilation import testcase_dict_fan
 import pandas as pd
 import csv
 import pprint as pp
-from builelib.hotwatersupply import hotwatersupply
 import pytest
+
+from builelib import hotwatersupply
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -193,7 +193,7 @@ def test_calc(inputdata, expectedvalue):
 
     if expectedvalue != "err":  # passが期待されるテスト
         # 計算実行        
-        resultJson = hotwatersupply(inputdata)
+        resultJson = hotwatersupply.calc_energy(inputdata)
 
         # 比較
         assert abs(resultJson["E_hotwatersupply"] - convert2number(expectedvalue,0))   < 0.0001
@@ -202,7 +202,7 @@ def test_calc(inputdata, expectedvalue):
 
         # エラーが期待される場合
         with pytest.raises(Exception):
-            resultJson = hotwatersupply(inputdata)
+            resultJson = hotwatersupply.calc_energy(inputdata)
 
 
 if __name__ == '__main__':

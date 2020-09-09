@@ -1,8 +1,9 @@
 import pandas as pd
 import csv
 import pprint as pp
-from builelib.lighting import lighting
 import pytest
+
+from builelib import lighting
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -131,16 +132,18 @@ def test_calc(inputdata, expectedvalue):
     if expectedvalue[0] != "err":  # passが期待されるテスト
 
         # 計算実行        
-        resultJson = lighting(inputdata)
+        resultJson = lighting.calc_energy(inputdata)
         # 比較
         assert abs(resultJson["E_lighting"] - convert2number(expectedvalue[0],0))   < 0.0001
         assert abs(resultJson["Es_lighting"] - convert2number(expectedvalue[1],0))   < 0.0001
 
     else:
 
+        print(expectedvalue[0])
+
         # エラーが期待される場合
         with pytest.raises(Exception):
-            resultJson = lighting(inputdata)
+            resultJson = lighting.calc_energy(inputdata)
 
 
 if __name__ == '__main__':

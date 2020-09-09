@@ -1,6 +1,6 @@
 import pandas as pd
 import csv
-from builelib.airconditioning import airconditioning
+from builelib import airconditioning
 import pytest
 import json
 import xlrd
@@ -51,8 +51,6 @@ for case_name in testcase_dict:
     # テストケース（行）に対するループ
     for testdata in testfiledata:
 
-        print(testdata)
-
         filename = "./tests/airconditioning/ACtest_" + testdata[0] + ".json"
         # 入力データの作成
         with open(filename, 'r') as f:
@@ -76,7 +74,7 @@ def test_calc(inputdata, expectedvalue):
         json.dump(inputdata, fw, indent=4, ensure_ascii=False)
 
     # 計算実行        
-    resultJson = airconditioning(inputdata)
+    resultJson = airconditioning.calc_energy(inputdata)
 
     diff_Eac = (abs(resultJson["airconditioning"] - expectedvalue)) / abs( expectedvalue )
 

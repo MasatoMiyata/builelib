@@ -1,14 +1,15 @@
 import pandas as pd
 import csv
-from builelib.airconditioning import airconditioning
 import pytest
 import json
+
+from builelib import airconditioning
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
 
 testcase_dict = {
-    # "basic_test": "./tests/airconditioning_load/負荷_基本テスト.txt",
+    "basic_test": "./tests/airconditioning_load/負荷_基本テスト.txt",
     "detail_test": "./tests/airconditioning_load/負荷_詳細テスト.txt",
 }
 
@@ -331,7 +332,7 @@ def test_calc(inputdata, expectedvalue):
     if expectedvalue[0] != "err":  # passが期待されるテスト
 
         # 計算実行        
-        resultJson = airconditioning(inputdata)
+        resultJson = airconditioning.calc_energy(inputdata)
 
         if convert2number(expectedvalue[0],0) == 0:
             diff_Dc = 0
@@ -351,7 +352,7 @@ def test_calc(inputdata, expectedvalue):
 
         # エラーが期待される場合
         with pytest.raises(Exception):
-            resultJson = airconditioning(inputdata)
+            resultJson = airconditioning.calc_energy(inputdata)
 
 
 if __name__ == '__main__':

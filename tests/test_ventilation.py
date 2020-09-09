@@ -1,8 +1,9 @@
 import pandas as pd
 import csv
 import pprint as pp
-from builelib.ventilation import ventilation
 import pytest
+
+from builelib import ventilation
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -514,7 +515,7 @@ def test_calc(inputdata, expectedvalue):
 
     if expectedvalue != "err":  # passが期待されるテスト
         # 計算実行        
-        resultJson = ventilation(inputdata)
+        resultJson = ventilation.calc_energy(inputdata)
 
         # 比較
         assert abs(resultJson["E_ventilation"] - expectedvalue)   < 0.0001
@@ -523,7 +524,7 @@ def test_calc(inputdata, expectedvalue):
 
         # エラーが期待される場合
         with pytest.raises(Exception):
-            resultJson = ventilation(inputdata)
+            resultJson = ventilation.calc_energy(inputdata)
 
 
 

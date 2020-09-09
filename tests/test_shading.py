@@ -1,5 +1,5 @@
 import csv
-from builelib.shading import shading
+from builelib import shading
 
 # 計算の実行
 def calculation(filename):
@@ -34,7 +34,7 @@ def calculation(filename):
         try:
 
             # 計算実行        
-            r_wind_SUM, r_wind_WIN = shading(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym)
+            r_wind_SUM, r_wind_WIN = shading.calc_shadingCoefficient(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym)
 
             # 期待値
             expected_r_wind_SUM = float(data[14])

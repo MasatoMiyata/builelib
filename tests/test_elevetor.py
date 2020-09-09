@@ -1,8 +1,9 @@
 import pandas as pd
 import csv
 import pprint as pp
-from builelib.elevetor import elevetor
 import pytest
+
+from builelib import elevetor
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -203,7 +204,7 @@ def test_calc(inputdata, expectedvalue):
 
     if expectedvalue != "err":  # passが期待されるテスト
         # 計算実行        
-        resultJson = elevetor(inputdata)
+        resultJson = elevetor.calc_energy(inputdata)
 
         # 比較
         assert abs(resultJson["E_elevetor"] - expectedvalue)   < 0.0001

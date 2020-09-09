@@ -1,10 +1,11 @@
 import pandas as pd
 import csv
 import pprint as pp
-import builelib.climate as climate
 import pytest
 import json
 import numpy as np
+
+from builelib import climate
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -82,14 +83,15 @@ def caclulation(inputdata):
     print(alp)
     print(bet)
 
-    directory = "./builelib/database/"
+    database_directory = "./builelib/database/"
+    climate_directory = "./builelib/climatedata/"
 
     # 地域別データの読み込み
-    with open(directory + 'AREA.json', 'r') as f:
+    with open(database_directory + 'AREA.json', 'r') as f:
         Area = json.load(f)
 
     # 直達日射量、天空日射量 [W/m2]
-    _, _, Iod, Ios, Inn = climate.readHaspClimateData(directory + "climatedata/C1_" +
+    _, _, Iod, Ios, Inn = climate.readHaspClimateData(climate_directory + "C1_" +
                                     Area[climate_area+"地域"]["気象データファイル名"])
 
     # np.savetxt("直達日射量.txt", Iod)
@@ -126,4 +128,4 @@ def test_calc(inputdata, expectedvalue):
     assert abs(Is - expectedvalue[3]) < 0.0001
 
 if __name__ == '__main__':
-    print('--- test_elevetor.py ---')
+    print('--- test_climate.py ---')
