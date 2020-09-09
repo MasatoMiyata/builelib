@@ -36,6 +36,9 @@ def set_roomIndexCoeff(roomIndex):
 
 def calc_energy(inputdata, DEBUG = False):
 
+    # バリデーションの実施
+    bc.inputdata_validation(inputdata)
+
     # データベースjsonの読み込み
     with open( database_directory + 'lightingControl.json', 'r') as f:
         lightingCtrl = json.load(f)
