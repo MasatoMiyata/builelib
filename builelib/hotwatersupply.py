@@ -1,25 +1,17 @@
-# %%
 import sys
 import json
-import jsonschema
 import numpy as np
-import math
+import os
 
-if __name__ == '__main__':
-    import builelib_common as bc
-    import climate
-else:
-    import builelib.climate as climate
-    import builelib.builelib_common as bc
+import commons as bc
+import climate
 
-directory = "./builelib/database/"
+# データベースファイルの保存場所
+database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
+# 気象データファイルの保存場所
+climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
-
-DEBUG = False
-
-
-#%%
-def hotwatersupply(inputdata):
+def calc_energy(inputdata, DEBUG = False):
 
     # 計算結果を格納する変数
     resultJson = {
@@ -29,7 +21,7 @@ def hotwatersupply(inputdata):
     }
     
     # 地域別データの読み込み
-    with open(directory + 'AREA.json', 'r') as f:
+    with open(database_directory + 'AREA.json', 'r') as f:
         Area = json.load(f)
 
 
@@ -146,7 +138,7 @@ def hotwatersupply(inputdata):
     #----------------------------------------------------------------------------------
 
     # 給湯配管の線熱損失係数の読み込み
-    with open(directory + 'ThermalConductivityPiping.json', 'r') as f:
+    with open(database_directory + 'ThermalConductivityPiping.json', 'r') as f:
         thermal_conductivity_dict = json.load(f)
 
     for unit_name in inputdata["HotwaterSupplySystems"]:
@@ -192,11 +184,11 @@ def hotwatersupply(inputdata):
     #----------------------------------------------------------------------------------
 
     # 外気温データ（DAT形式）読み込み ＜365の行列＞
-    Toa_ave = climate.readDatClimateData(directory + "climatedata/" +
+    Toa_ave = climate.readDatClimateData(climatedata_directory + "/" +
                                     Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名（給湯）"])
 
     # 空調運転モード
-    with open(directory + 'ACoperationMode.json', 'r') as f:
+    with open(database_directory + 'ACoperationMode.json', 'r') as f:
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
@@ -356,7 +348,7 @@ def hotwatersupply(inputdata):
     # ----------------------------------------------------------------------------------
 
     # 日射量の計算
-    _, _, Iod, Ios, Inn = climate.readHaspClimateData(directory + "climatedata/C1_" +
+    _, _, Iod, Ios, Inn = climate.readHaspClimateData(climatedata_directory + "/C1_" +
                                     Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"])
 
     for unit_name in inputdata["HotwaterSupplySystems"]:
@@ -468,6 +460,6 @@ if __name__ == '__main__':
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
-    resultJson = hotwatersupply(inputdata)
+    resultJson = calc_energy(inputdata, DEBUG = True)
     print(resultJson)
 
