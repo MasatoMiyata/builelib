@@ -10,7 +10,6 @@ setup(
     name='builelib',
     version='0.0.1',
     description='builelib: Building Energy-modeling Library',
-    long_description=readme,
     author='Masato Miyata',
     author_email='builelib@gmail.com',
     url='https://github.com/MasatoMiyata/builelib',
