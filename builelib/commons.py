@@ -12,6 +12,8 @@ fprime = 9760
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
+# テンプレートファイルの保存場所
+template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
 
 # 基準値データベースの読み込み
 with open(database_directory + 'ROOM_STANDARDVALUE.json', 'r') as f:
@@ -208,7 +210,7 @@ def get_dailyOpeSchedule_lighting(buildingType, roomType):
 def inputdata_validation(inputdata):
 
     # スキーマの読み込み
-    with open('./builelib/inputdata/webproJsonSchema.json') as f:
+    with open( template_directory + '/webproJsonSchema.json') as f:
         schema_data = json.load(f)    
 
     # バリデーションの実行

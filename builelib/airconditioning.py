@@ -3,6 +3,9 @@ import numpy as np
 import math
 import os
 
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import commons as bc
 import climate
 import shading
