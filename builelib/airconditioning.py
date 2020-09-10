@@ -2568,6 +2568,19 @@ def calc_energy(inputdata, DEBUG = False):
                             resultJson["PUMP"][pump_name]["Qps"][dd] + (-1) * resultJson["PUMP"][pump_name]["Qpsahu_pump"][dd]
 
 
+            # 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。（MATLAB版では Tref>0で判定）
+            if (resultJson["REF"][ref_name]["Qref"][dd] != 0) and (inputdata["REF"][ref_name]["isStorage"] == "蓄熱"):
+
+                resultJson["REF"][ref_name]["Qref"][dd] += resultJson["REF"][ref_name]["Qref_thermal_loss"]
+            
+                # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
+                if resultJson["REF"][ref_name]["Qref"][dd] > \
+                    inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
+
+                    resultJson["REF"][ref_name]["Qref"][dd] = \
+                        inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]
+
+
     ##----------------------------------------------------------------------------------
     ## 熱源群の運転時間（解説書 2.7.3）
     ##----------------------------------------------------------------------------------
@@ -2584,26 +2597,8 @@ def calc_energy(inputdata, DEBUG = False):
         # 日積算運転時間（熱源負荷が0より大きい場合のみ積算する）
         for dd in range(0,365):
             if resultJson["REF"][ref_name]["Qref"][dd] > 0:
-                resultJson["REF"][ref_name]["Tref"][dd] = np.sum(resultJson["REF"][ref_name]["schedule"][dd])
+                resultJson["REF"][ref_name]["Tref"][dd] = np.sum(resultJson["REF"][ref_name]["schedule"][dd])        
 
-
-    ##----------------------------------------------------------------------------------
-    ## 蓄熱槽からの熱損失の加算（解説書 2.7.2）
-    ##----------------------------------------------------------------------------------
-    for ref_name in inputdata["REF"]:
-        for dd in range(0,365):
-        
-            # 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
-            if (resultJson["REF"][ref_name]["Tref"][dd] > 0) and (inputdata["REF"][ref_name]["isStorage"] == "蓄熱"):
-
-                resultJson["REF"][ref_name]["Qref"][dd] += resultJson["REF"][ref_name]["Qref_thermal_loss"]
-            
-                # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
-                if resultJson["REF"][ref_name]["Qref"][dd] > \
-                    inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
-
-                    resultJson["REF"][ref_name]["Qref"][dd] = \
-                        inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]
 
         # 日平均負荷[kW] と 過負荷[MJ/day] を求める。（検証用）
         for dd in range(0,365):
