@@ -2567,19 +2567,6 @@ def calc_energy(inputdata, DEBUG = False):
                         resultJson["REF"][ref_name]["Qref"][dd] += \
                             resultJson["PUMP"][pump_name]["Qps"][dd] + (-1) * resultJson["PUMP"][pump_name]["Qpsahu_pump"][dd]
 
-        
-            # 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
-            if (resultJson["REF"][ref_name]["Tref"][dd] > 0) and (inputdata["REF"][ref_name]["isStorage"] == "蓄熱"):
-
-                resultJson["REF"][ref_name]["Qref"][dd] += resultJson["REF"][ref_name]["Qref_thermal_loss"]
-            
-                # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
-                if resultJson["REF"][ref_name]["Qref"][dd] > \
-                    inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
-
-                    resultJson["REF"][ref_name]["Qref"][dd] = \
-                        inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]
-
 
     ##----------------------------------------------------------------------------------
     ## 熱源群の運転時間（解説書 2.7.3）
@@ -2600,9 +2587,26 @@ def calc_energy(inputdata, DEBUG = False):
                 resultJson["REF"][ref_name]["Tref"][dd] = np.sum(resultJson["REF"][ref_name]["schedule"][dd])
 
 
-        # 日平均負荷[kW] と 過負荷[MJ/day] を求める。（検証用）
+    ##----------------------------------------------------------------------------------
+    ## 蓄熱槽からの熱損失の加算（解説書 2.7.2）
+    ##----------------------------------------------------------------------------------
+    for ref_name in inputdata["REF"]:
         for dd in range(0,365):
         
+            # 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
+            if (resultJson["REF"][ref_name]["Tref"][dd] > 0) and (inputdata["REF"][ref_name]["isStorage"] == "蓄熱"):
+
+                resultJson["REF"][ref_name]["Qref"][dd] += resultJson["REF"][ref_name]["Qref_thermal_loss"]
+            
+                # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
+                if resultJson["REF"][ref_name]["Qref"][dd] > \
+                    inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
+
+                    resultJson["REF"][ref_name]["Qref"][dd] = \
+                        inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]
+
+        # 日平均負荷[kW] と 過負荷[MJ/day] を求める。（検証用）
+        for dd in range(0,365):
             # 平均負荷 [kW]
             if resultJson["REF"][ref_name]["Tref"][dd] == 0:
                 resultJson["REF"][ref_name]["Qref_kW"][dd] = 0
@@ -2883,12 +2887,6 @@ def calc_energy(inputdata, DEBUG = False):
                 resultJson["REF"][ref_name]["LdREF"][dd] = count_Matrix(resultJson["REF"][ref_name]["Lref"][dd], mxL)
                 # 外気温帯マトリックス
                 resultJson["REF"][ref_name]["TdREF"][dd] = count_Matrix(Toa_ave[dd], mxT) 
-
-        if DEBUG:
-
-            print( f'--- 熱源群名 {ref_name} ---')
-            print( f'負荷率帯マトリックス LdREF: \n {resultJson["REF"][ref_name]["LdREF"]}' )
-            print( f'外気温帯マトリックス TdREF: \n {resultJson["REF"][ref_name]["TdREF"]}' )
 
 
     ##----------------------------------------------------------------------------------
@@ -3260,7 +3258,10 @@ def calc_energy(inputdata, DEBUG = False):
 
             print( f'--- 熱源群名 {ref_name} ---')
             print( f'蓄熱補正係数 hoseiStorage: {resultJson["REF"][ref_name]["hoseiStorage"]}' )
-        
+            print( f'負荷率帯マトリックス（蓄熱補正後） LdREF: \n {resultJson["REF"][ref_name]["LdREF"]}' )
+            print( f'外気温帯マトリックス（蓄熱補正後） TdREF: \n {resultJson["REF"][ref_name]["TdREF"]}' )
+            print( f'運転時間（蓄熱補正後） Tref:  {np.sum(resultJson["REF"][ref_name]["Tref"])}' )
+
 
     ##----------------------------------------------------------------------------------
     ## 熱源機器の一次エネルギー消費量（解説書 2.7.16）
@@ -3427,6 +3428,17 @@ def calc_energy(inputdata, DEBUG = False):
                     resultJson["REF"][ref_name]["EctpumprALL"][ iT ][ iL ] /1000 * resultJson["REF"][ref_name]["Tref"][dd]
 
 
+        if DEBUG:
+
+            print( f'--- 熱源群名 {ref_name} ---')
+
+            print( f'熱源主機のエネルギー消費量 E_ref_day: {np.sum(resultJson["REF"][ref_name]["E_ref_day"])}' )
+            print( f'熱源補機の消費電力 E_ref_ACc_day: {np.sum(resultJson["REF"][ref_name]["E_ref_ACc_day"])}' )
+            print( f'一次ポンプの消費電力 E_PPc_day: {np.sum(resultJson["REF"][ref_name]["E_PPc_day"])}' )
+            print( f'冷却塔ファンの消費電力 E_CTfan_day: {np.sum(resultJson["REF"][ref_name]["E_CTfan_day"])}' )
+            print( f'冷却塔ポンプの消費電力 E_CTpump_day: {np.sum(resultJson["REF"][ref_name]["E_CTpump_day"])}' )
+
+
     ##----------------------------------------------------------------------------------
     ## 熱源群のエネルギー消費量（解説書 2.7.18）
     ##----------------------------------------------------------------------------------
@@ -3485,8 +3497,8 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    # filename = './tests/airconditioning/ACtest_Case035.json'
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './tests/airconditioning/ACtest_Case033.json'
+    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
     # テンプレートjsonの読み込み
