@@ -1083,19 +1083,33 @@ def calc_energy(inputdata, DEBUG = False):
 
         if inputdata["AirConditioningZone"][room_zone_name]["isSimultaneousSupply"] == "有":
 
-            # 熱源群
-            inputdata["HeatsourceSystem"][ inputdata["AirConditioningZone"][room_zone_name]["HeatSorce_cooling"] ]["isSimultaneousSupply"] = "有"
-            inputdata["HeatsourceSystem"][ inputdata["AirConditioningZone"][room_zone_name]["HeatSorce_heating"] ]["isSimultaneousSupply"] = "有"
-
-            # 二次ポンプ群
-            inputdata["SecondaryPumpSystem"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] ]["isSimultaneousSupply"] = "有"
-            inputdata["SecondaryPumpSystem"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] ]["isSimultaneousSupply"] = "有"
-
             # 空調機群
             inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["isSimultaneousSupply_cooling"] = "有"
             inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"]]["isSimultaneousSupply_cooling"] = "有"
             inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"] ]["isSimultaneousSupply_heating"] = "有"
             inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"]]["isSimultaneousSupply_heating"] = "有"
+
+            # 熱源群
+            id_ref_c1 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"]  ]["HeatSource_cooling"]
+            id_ref_c2 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"] ]["HeatSource_cooling"]
+            id_ref_h1 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"]  ]["HeatSource_heating"]
+            id_ref_h2 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"] ]["HeatSource_heating"]
+
+            inputdata["HeatsourceSystem"][ id_ref_c1 ]["isSimultaneousSupply"] = "有"
+            inputdata["HeatsourceSystem"][ id_ref_c2 ]["isSimultaneousSupply"] = "有"
+            inputdata["HeatsourceSystem"][ id_ref_h1 ]["isSimultaneousSupply"] = "有"
+            inputdata["HeatsourceSystem"][ id_ref_h2 ]["isSimultaneousSupply"] = "有"
+
+            # 二次ポンプ群
+            id_pump_c1 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"]  ]["Pump_cooling"]
+            id_pump_c2 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"] ]["Pump_cooling"]
+            id_pump_h1 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"]  ]["Pump_heating"]
+            id_pump_h2 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"] ]["Pump_heating"]
+
+            inputdata["SecondaryPumpSystem"][ id_pump_c1 ]["isSimultaneousSupply"] = "有"
+            inputdata["SecondaryPumpSystem"][ id_pump_c2 ]["isSimultaneousSupply"] = "有"
+            inputdata["SecondaryPumpSystem"][ id_pump_h1 ]["isSimultaneousSupply"] = "有"
+            inputdata["SecondaryPumpSystem"][ id_pump_h2 ]["isSimultaneousSupply"] = "有"
 
 
     # 両方とも冷暖同時なら、その空調機群は冷暖同時運転可能とする。
@@ -1473,6 +1487,7 @@ def calc_energy(inputdata, DEBUG = False):
             print( f'空調負荷（冷房期間）Qahu： {np.sum(resultJson["AHU"][ahu_name]["cooling"]["Qahu"],0)}' )
             print( f'空調負荷（暖房期間）Qahu： {np.sum(resultJson["AHU"][ahu_name]["heating"]["Qahu"],0)}' )
 
+            print( f'空調機群 冷暖同時供給の有無： {inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"]}' )
 
     ##----------------------------------------------------------------------------------
     ## 空調機群の負荷率（解説書 2.5.6）
@@ -1484,9 +1499,10 @@ def calc_energy(inputdata, DEBUG = False):
         Tdh = np.zeros((365,2))
         Mxc = np.zeros((365,2)) # 日別データ
         Mxh = np.zeros((365,2)) # 日別データ
-        La  = np.zeros(365)
 
         for requirement_type in ["cooling", "heating"]:
+
+            La  = np.zeros(365)
 
             # 負荷率の算出
             if requirement_type == "cooling": # 室負荷が「冷房要求」である場合
@@ -1506,7 +1522,8 @@ def calc_energy(inputdata, DEBUG = False):
                 Ta = resultJson["AHU"][ahu_name]["cooling"]["Tahu"]
                 
                 if DEBUG:
-                    resultJson["AHU"][ahu_name]["La_"+requirement_type] = copy.deepcopy(La)
+                    resultJson["AHU"][ahu_name]["Ta_cooling"] = copy.deepcopy(Ta)
+
 
             elif requirement_type == "heating": # 室負荷が「暖房要求」である場合
                 
@@ -1525,7 +1542,7 @@ def calc_energy(inputdata, DEBUG = False):
                 Ta = resultJson["AHU"][ahu_name]["heating"]["Tahu"]
 
                 if DEBUG:
-                    resultJson["AHU"][ahu_name]["La_"+requirement_type] = copy.deepcopy(La)
+                    resultJson["AHU"][ahu_name]["Ta_heating"] = copy.deepcopy(Ta)
                     
 
             # 定格能力＞０　→　AHU or FCU があれば
@@ -1538,19 +1555,28 @@ def calc_energy(inputdata, DEBUG = False):
                         if np.isnan(La[dd]) == False:
 
                             if La[dd] > 0:    # 正の値は「冷房負荷」とみなす。
+                                
                                 ix = count_Matrix(La[dd], mxL)
                                 
-                                Mxc[dd] = ix           # 負荷率帯マトリックスの番号
-                                Tdc[dd,0] += Ta[dd]    # 運転時間
+                                if requirement_type == "cooling":     # 冷房期間中の冷房負荷（0列目）
+                                    Mxc[dd,0] = ix
+                                    Tdc[dd,0] += Ta[dd]
+                                elif requirement_type == "heating":   # 冷房期間中の暖房負荷（1列目）
+                                    Mxc[dd,1] = ix
+                                    Tdc[dd,1] += Ta[dd]
                                 
-                            elif La[dd] < 0:  # 負の値は」暖房負荷」とみなす。
+                            elif La[dd] < 0:  # 負の値は「暖房負荷」とみなす。
 
                                 ix = count_Matrix((-1)*La[dd], mxL)
                                 
-                                Mxh[dd] = ix           # 負荷率帯マトリックスの番号
-                                Tdh[dd,0] += Ta[dd]    # 運転時間
+                                if requirement_type == "cooling":     # 暖房期間中の冷房負荷（0列目）
+                                    Mxh[dd,0] = ix
+                                    Tdh[dd,0] += Ta[dd]
+                                elif requirement_type == "heating":   # 暖房期間中の暖房負荷（1列目）
+                                    Mxh[dd,1] = ix
+                                    Tdh[dd,1] += Ta[dd]
 
-                    
+
                 elif inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "無":  # 冷暖切替（季節ごと）
 
                     for dd in range(0,365):
@@ -1584,6 +1610,35 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["AHU"][ahu_name]["TdAHUc"] = Tdc   # 冷房期間の負荷率帯マトリックス（出現時間）
         resultJson["AHU"][ahu_name]["LdAHUh"] = Mxh   # 暖房期間の負荷率帯マトリックス（負荷率帯の番号）
         resultJson["AHU"][ahu_name]["TdAHUh"] = Tdh   # 暖房期間の負荷率帯マトリックス（出現時間）
+
+
+    if DEBUG:
+
+        for ahu_name in inputdata["AirHandlingSystem"]:
+
+            print( f'冷房期間の負荷率帯マトリックス（負荷率帯の番号） LdAHUc {np.sum(resultJson["AHU"][ahu_name]["LdAHUc"],0)}' )
+            print( f'冷房期間の負荷率帯マトリックス（出現時間） TdAHUc {np.sum(resultJson["AHU"][ahu_name]["TdAHUc"],0)}' )
+            print( f'暖房期間の負荷率帯マトリックス（負荷率帯の番号） LdAHUh {np.sum(resultJson["AHU"][ahu_name]["LdAHUh"],0)}' )
+            print( f'暖房期間の負荷率帯マトリックス（出現時間） TdAHUh {np.sum(resultJson["AHU"][ahu_name]["TdAHUh"],0)}' )
+
+
+            # マトリックスの再現
+            LAHUc0 = np.zeros(11)
+            LAHUc1 = np.zeros(11)
+            LAHUh0 = np.zeros(11)
+            LAHUh1 = np.zeros(11)
+            for dd in range(0,365):
+                LAHUc0[ int(resultJson["AHU"][ahu_name]["LdAHUc"][dd][0]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"][dd][0]
+                LAHUc1[ int(resultJson["AHU"][ahu_name]["LdAHUc"][dd][1]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"][dd][1]
+                LAHUh0[ int(resultJson["AHU"][ahu_name]["LdAHUh"][dd][0]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"][dd][0]
+                LAHUh1[ int(resultJson["AHU"][ahu_name]["LdAHUh"][dd][1]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"][dd][1]
+
+
+            np.savetxt("Tac.txt", resultJson["AHU"][ahu_name]["Ta_cooling"])
+            np.savetxt("Tah.txt", resultJson["AHU"][ahu_name]["Ta_heating"])
+
+
+
 
 
     ##----------------------------------------------------------------------------------
@@ -2516,23 +2571,27 @@ def calc_energy(inputdata, DEBUG = False):
 
     for ahu_name in inputdata["AirHandlingSystem"]:
 
-        # 冷房熱源群（蓄熱なし）
-        inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_cooling"] + "_冷房" ]["pump_list"].add( \
-            inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房")
+        if inputdata["AirHandlingSystem"][ahu_name]["HeatSource_cooling"] + "_冷房" in inputdata["REF"]:
 
-        # 冷房熱源群（蓄熱あり）
-        if inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_cooling"] + "_冷房" ]["isStorage"] == "追掛":
-            inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_cooling"] + "_冷房_蓄熱" ]["pump_list"].add( \
+            # 冷房熱源群（蓄熱なし）
+            inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSource_cooling"] + "_冷房" ]["pump_list"].add( \
                 inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房")
-        
-        # 暖房熱源群（蓄熱なし）
-        inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_heating"] + "_暖房" ]["pump_list"].add( \
-            inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房")
 
-        # 暖房熱源群（蓄熱なし）
-        if inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_heating"] + "_暖房" ]["isStorage"] == "追掛":
-            inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSorce_heating"] + "_暖房_蓄熱" ]["pump_list"].add( \
+            # 冷房熱源群（蓄熱あり）
+            if inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSource_cooling"] + "_冷房" ]["isStorage"] == "追掛":
+                inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSource_cooling"] + "_冷房_蓄熱" ]["pump_list"].add( \
+                    inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房")
+
+        if inputdata["AirHandlingSystem"][ahu_name]["HeatSource_heating"] + "_暖房" in inputdata["REF"]:
+
+            # 暖房熱源群（蓄熱なし）
+            inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSource_heating"] + "_暖房" ]["pump_list"].add( \
                 inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房")
+
+            # 暖房熱源群（蓄熱あり）
+            if inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSource_heating"] + "_暖房" ]["isStorage"] == "追掛":
+                inputdata["REF"][ inputdata["AirHandlingSystem"][ahu_name]["HeatSource_heating"] + "_暖房_蓄熱" ]["pump_list"].add( \
+                    inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房")
 
     ##----------------------------------------------------------------------------------
     ## 結果格納用変数
@@ -3540,7 +3599,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case037.json'
+    filename = './tests/airconditioning/ACtest_Case030.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
