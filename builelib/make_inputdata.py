@@ -629,8 +629,8 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
                     "isOutdoorAirCut": set_default(dataAC4[17], "無", "str"),
                     "Pump_cooling": set_default(dataAC4[18], None, "str"),
                     "Pump_heating": set_default(dataAC4[19], None, "str"),
-                    "HeatSorce_cooling": set_default(dataAC4[20], None, "str"),
-                    "HeatSorce_heating": set_default(dataAC4[21], None, "str"),
+                    "HeatSource_cooling": set_default(dataAC4[20], None, "str"),
+                    "HeatSource_heating": set_default(dataAC4[21], None, "str"),
                     "AirHandlingUnit" :[
                         {
                             "Type": str(dataAC4[1]),
@@ -1975,8 +1975,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     "isOutdoorAirCut": set_default(dataAC4[12], "無", "str"),
                     "Pump_cooling": set_default(dataAC4[19], None, "str"),
                     "Pump_heating": set_default(dataAC4[20], None, "str"),
-                    "HeatSorce_cooling": set_default(dataAC4[21], None, "str"),
-                    "HeatSorce_heating": set_default(dataAC4[22], None, "str"),
+                    "HeatSource_cooling": set_default(dataAC4[21], None, "str"),
+                    "HeatSource_heating": set_default(dataAC4[22], None, "str"),
                     "AirHandlingUnit" :[
                         {
                             "Type": str(dataAC4[2]),
@@ -2482,13 +2482,15 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./sample/"
-    case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
+    directory = "./tests/airconditioning/"
 
-    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+    for id in range(10,37):
+        case_name = 'ACtest_Case0' + str(int(id))
 
-    # json出力
-    with open(directory + case_name + ".json",'w') as fw:
-        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+
+        # json出力
+        with open(directory + case_name + ".json",'w') as fw:
+            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
