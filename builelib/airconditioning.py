@@ -1493,11 +1493,11 @@ def calc_energy(inputdata, DEBUG = False):
 
                 # 日平均負荷率 La [-]
                 for dd in range(0,365):
-                    if resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] >= 0:
+                    if resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] >= 0 and resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] != 0:
                         # 正の値の場合
                         La[dd] = (resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] / resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] *1000/3600) / \
                             inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]   
-                    else:
+                    elif resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] != 0:
                         # 負の値の場合
                         La[dd] = (resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] / resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] *1000/3600) / \
                             inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]
@@ -1512,11 +1512,11 @@ def calc_energy(inputdata, DEBUG = False):
                 
                 # 日平均負荷率 La [-]
                 for dd in range(0,365):
-                    if resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] <= 0:
+                    if resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] <= 0 and resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] != 0:
                         # 負の値の場合
                         La[dd] = (resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] / resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] *1000/3600) / \
                             inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]   
-                    else:
+                    elif resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] != 0:
                         # 正の値の場合
                         La[dd] = (resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] / resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] *1000/3600) / \
                             inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]
@@ -1666,6 +1666,9 @@ def calc_energy(inputdata, DEBUG = False):
                 inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"] = \
                     unit_configure["FanPowerConsumption"] * unit_configure["Number"]
 
+            if DEBUG:
+                print( f'送風機単体の定格消費電力: {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"]}')
+
                     
     ##----------------------------------------------------------------------------------
     ## 送風機の消費電力 （解説書 2.5.9）
@@ -1680,8 +1683,10 @@ def calc_energy(inputdata, DEBUG = False):
 
                 # 各負荷率帯における消費電力（制御の効果込み） [kW]
                 resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] += \
-                    unit_configure["energy_consumption_ratio"][iL] * unit_configure["FanPowerConsumption"]
+                    unit_configure["energy_consumption_ratio"][iL] * unit_configure["FanPowerConsumption_total"]
 
+            if DEBUG:
+                print( f'負荷率帯別の送風機消費電力: \n {resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]}')
 
     ##----------------------------------------------------------------------------------
     ## 全熱交換器の消費電力 （解説書 2.5.11）
@@ -3535,7 +3540,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case001.json'
+    filename = './tests/airconditioning/ACtest_Case037.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
