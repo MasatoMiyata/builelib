@@ -25,6 +25,17 @@
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
             "Info": ""
+        },
+        "2F_事務室": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 250.0,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
         }
     },
     "EnvelopeSet": {
@@ -42,6 +53,28 @@
                         {
                             "WindowID": "WIND1",
                             "WindowNumber": 60.0,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "2F_事務室": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "東",
+                    "EnvelopeArea": 250.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WIND1",
+                            "WindowNumber": 100.0,
                             "isBlind": "無",
                             "EavesID": "無",
                             "Info": "無"
@@ -84,6 +117,15 @@
             "AHU_heating_insideLoad": "ACP1",
             "AHU_heating_outdoorLoad": "ACP1",
             "Info": "ACP1"
+        },
+        "2F_事務室": {
+            "isNatualVentilation": null,
+            "isSimultaneousSupply": null,
+            "AHU_cooling_insideLoad": "ACP1",
+            "AHU_cooling_outdoorLoad": "ACP1",
+            "AHU_heating_insideLoad": "ACP1",
+            "AHU_heating_outdoorLoad": "ACP1",
+            "Info": "ACP1"
         }
     },
     "HeatsourceSystem": {
@@ -95,12 +137,12 @@
                 "Heatsource": [
                     {
                         "HeatsourceType": "ウォータチリングユニット(空冷式)",
-                        "Number": 2.0,
+                        "Number": 1.0,
                         "SupplyWaterTempSummer": null,
                         "SupplyWaterTempMiddle": null,
                         "SupplyWaterTempWinter": null,
-                        "HeatsourceRatedCapacity": 8.0,
-                        "HeatsourceRatedPowerConsumption": 4.0,
+                        "HeatsourceRatedCapacity": 16.0,
+                        "HeatsourceRatedPowerConsumption": 12.0,
                         "HeatsourceRatedFuelConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
@@ -119,12 +161,12 @@
                 "Heatsource": [
                     {
                         "HeatsourceType": "ウォータチリングユニット(空冷式)",
-                        "Number": 3.0,
+                        "Number": 1.0,
                         "SupplyWaterTempSummer": null,
                         "SupplyWaterTempMiddle": null,
                         "SupplyWaterTempWinter": null,
-                        "HeatsourceRatedCapacity": 3.0,
-                        "HeatsourceRatedPowerConsumption": 1.0,
+                        "HeatsourceRatedCapacity": 16.0,
+                        "HeatsourceRatedPowerConsumption": 12.0,
                         "HeatsourceRatedFuelConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
@@ -198,20 +240,37 @@
             "AirHandlingUnit": [
                 {
                     "Type": "空調機",
-                    "Number": 1.0,
+                    "Number": 2.0,
                     "RatedCapacityCooling": 16.0,
                     "RatedCapacityHeating": 16.0,
                     "FanType": null,
                     "FanAirVolume": null,
                     "FanPowerConsumption": 3.7,
-                    "FanControlType": "無",
-                    "FanMinOpeningRate": null,
+                    "FanControlType": "回転数制御",
+                    "FanMinOpeningRate": 30.0,
                     "AirHeatExchangeRatioCooling": null,
                     "AirHeatExchangeRatioHeating": null,
                     "AirHeatExchangerEffectiveAirVolume": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
                     "Info": "PAC1"
+                },
+                {
+                    "Type": "全熱交ユニット",
+                    "Number": 5.0,
+                    "RatedCapacityCooling": null,
+                    "RatedCapacityHeating": null,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 0.75,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": 60.0,
+                    "AirHeatExchangeRatioHeating": 60.0,
+                    "AirHeatExchangerEffectiveAirVolume": 1000.0,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": 0.5,
+                    "Info": ""
                 }
             ]
         }

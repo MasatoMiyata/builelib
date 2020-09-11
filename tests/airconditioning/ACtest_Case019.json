@@ -239,8 +239,8 @@
             "isOutdoorAirCut": "無",
             "Pump_cooling": "PUMP1",
             "Pump_heating": "PUMP2",
-            "HeatSorce_cooling": "PAC1",
-            "HeatSorce_heating": "PAC1",
+            "HeatSource_cooling": "PAC1",
+            "HeatSource_heating": "PAC1",
             "AirHandlingUnit": [
                 {
                     "Type": "空調機",
