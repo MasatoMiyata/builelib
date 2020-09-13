@@ -1451,18 +1451,17 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                 # 階＋室+ゾーン名をkeyとする
                 roomKey = str(dataAC1[7]) + '_' + str(dataAC1[8])
-                    
+                
+                # 冷暖同時供給については、暫定で「無」を入れておく。後に再度判定。
                 data["AirConditioningZone"][roomKey] = {
                     "isNatualVentilation": None,
-                    "isSimultaneousSupply": None,
+                    "isSimultaneousSupply": "無",
                     "AHU_cooling_insideLoad": set_default(dataAC1[9], None, "str"),
                     "AHU_cooling_outdoorLoad": set_default(dataAC1[10], None, "str"),
                     "AHU_heating_insideLoad": set_default(dataAC1[9], None, "str"),
                     "AHU_heating_outdoorLoad": set_default(dataAC1[10], None, "str"),
                     "Info": str(dataAC1[9])
                 }
-
-    # 冷暖同時供給の有無　の反映
 
     if "2-5) 熱源" in wb.sheet_names():
         
@@ -1498,6 +1497,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 else:
                     staging_control_flag = "無"
 
+                # 冷暖同時供給の有無
+                if dataAC2[1] == "有":
+                    isSimultaneous_flag = "有"
+                else:
+                    isSimultaneous_flag = "無"
+
+
                 if (dataAC2[5] != "") and (dataAC2[6] != ""):     # 冷熱源
                 
                     if storage_flag:
@@ -1522,6 +1528,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             "StorageType": StorageType,
                             "StorageSize": StorageSize,
                             "isStagingControl": staging_control_flag,
+                            "isSimultaneous_for_ver2" : isSimultaneous_flag,
                             "Heatsource" :[
                                 {
                                     "HeatsourceType": str(dataAC2[5]),
@@ -1569,6 +1576,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
                                 "isStagingControl": staging_control_flag,
+                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -1596,6 +1604,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
                                 "isStagingControl": set_default(dataAC2[2], "無", "str"),
+                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -1713,6 +1722,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
                                 "isStagingControl": staging_control_flag,
+                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -1740,6 +1750,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
                                 "isStagingControl": staging_control_flag,
+                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -1787,6 +1798,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
                                 "isStagingControl": staging_control_flag,
+                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -1809,11 +1821,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             }
 
                     else:
+                        
                         data["HeatsourceSystem"][unitKey] = {
                             modeKey_H : {
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
                                 "isStagingControl": staging_control_flag,
+                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
                                 "Heatsource" :[
                                     {
                                         "HeatsourceType": str(dataAC2[5]),
@@ -2033,6 +2047,39 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 if dataAC4[12] == "有":
                     data["AirHandlingSystem"][unitKey]["isOutdoorAirCut"] = dataAC4[12]
 
+
+    # 冷暖同時供給の有無の判定（冷房暖房ともに「有」であれば「有」とする）
+
+    for iZONE in data["AirConditioningZone"]:
+
+        # 接続している空調機群
+        AHU_c_insideload  = data["AirConditioningZone"][iZONE]["AHU_cooling_insideLoad"]
+        AHU_c_outdoorload = data["AirConditioningZone"][iZONE]["AHU_cooling_outdoorLoad"]
+        AHU_h_insideload  = data["AirConditioningZone"][iZONE]["AHU_heating_insideLoad"]
+        AHU_h_outdoorload = data["AirConditioningZone"][iZONE]["AHU_heating_outdoorLoad"]
+
+        # 冷熱源機群
+        iREF_c_i = data["AirHandlingSystem"][AHU_c_insideload]["HeatSource_cooling"]
+        iREF_c_o = data["AirHandlingSystem"][AHU_c_outdoorload]["HeatSource_cooling"]
+
+        # 温熱源機群
+        iREF_h_i = data["AirHandlingSystem"][AHU_h_insideload]["HeatSource_heating"]
+        iREF_h_o = data["AirHandlingSystem"][AHU_h_outdoorload]["HeatSource_heating"]
+
+        # 両方とも冷暖同時供給有無が「有」であったら
+        if data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+            data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+            data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
+            data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
+
+            data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有"
+
+    # isSimultaneous_for_ver2 要素　を削除
+    for iREF in data["HeatsourceSystem"]:
+        if "冷房" in data["HeatsourceSystem"][iREF]:
+            del data["HeatsourceSystem"][iREF]["冷房"]["isSimultaneous_for_ver2"]
+        if "暖房" in data["HeatsourceSystem"][iREF]:
+            del data["HeatsourceSystem"][iREF]["暖房"]["isSimultaneous_for_ver2"]
 
 
     ## 機械換気設備
@@ -2478,19 +2525,34 @@ if __name__ == '__main__':
     # with open(directory + case_name + ".json",'w') as fw:
     #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
-
     #-----------------------
-    # WEBPRO Ver2シートの例
+    # WEBPRO Ver2シートの例（連続）
     #-----------------------
     directory = "./tests/airconditioning/"
 
-    for id in range(10,37):
-        case_name = 'ACtest_Case0' + str(int(id))
+    case_name = 'ACtest_Case001'
 
-        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
-        # json出力
-        with open(directory + case_name + ".json",'w') as fw:
-            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # json出力
+    with open(directory + case_name + ".json",'w') as fw:
+        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
+    # #-----------------------
+    # # WEBPRO Ver2シートの例（連続）
+    # #-----------------------
+    # directory = "./tests/airconditioning/"
+
+    # for id in range(10,37):
+    #     case_name = 'ACtest_Case0' + str(int(id))
+
+    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+
+    #     # json出力
+    #     with open(directory + case_name + ".json",'w') as fw:
+    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+
+
+
+# %%
