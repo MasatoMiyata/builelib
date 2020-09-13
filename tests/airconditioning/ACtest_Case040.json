@@ -25,6 +25,17 @@
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
             "Info": ""
+        },
+        "2F_事務室": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 250.0,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
         }
     },
     "EnvelopeSet": {
@@ -42,6 +53,28 @@
                         {
                             "WindowID": "WIND1",
                             "WindowNumber": 60.0,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "2F_事務室": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "東",
+                    "EnvelopeArea": 250.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WIND1",
+                            "WindowNumber": 100.0,
                             "isBlind": "無",
                             "EavesID": "無",
                             "Info": "無"
@@ -78,11 +111,20 @@
     "AirConditioningZone": {
         "1F_事務室": {
             "isNatualVentilation": null,
-            "isSimultaneousSupply": "無",
+            "isSimultaneousSupply": "有",
             "AHU_cooling_insideLoad": "ACP1",
-            "AHU_cooling_outdoorLoad": "ACP1",
+            "AHU_cooling_outdoorLoad": "OAHU",
             "AHU_heating_insideLoad": "ACP1",
-            "AHU_heating_outdoorLoad": "ACP1",
+            "AHU_heating_outdoorLoad": "OAHU",
+            "Info": "ACP1"
+        },
+        "2F_事務室": {
+            "isNatualVentilation": null,
+            "isSimultaneousSupply": "有",
+            "AHU_cooling_insideLoad": "ACP1",
+            "AHU_cooling_outdoorLoad": "OAHU",
+            "AHU_heating_insideLoad": "ACP1",
+            "AHU_heating_outdoorLoad": "OAHU",
             "Info": "ACP1"
         }
     },
@@ -148,16 +190,16 @@
                         "Number": 1.0,
                         "RatedWaterFlowRate": 150.0,
                         "RatedPowerConsumption": 1.5,
-                        "ContolType": "定流量制御",
-                        "MinOpeningRate": null,
+                        "ContolType": "回転数制御",
+                        "MinOpeningRate": 30.0,
                         "Info": ""
                     },
                     {
                         "Number": 1.0,
                         "RatedWaterFlowRate": 150.0,
                         "RatedPowerConsumption": 1.5,
-                        "ContolType": "回転数制御",
-                        "MinOpeningRate": 30.0,
+                        "ContolType": "定流量制御",
+                        "MinOpeningRate": null,
                         "Info": ""
                     }
                 ]
@@ -170,13 +212,59 @@
                         "Number": 1.0,
                         "RatedWaterFlowRate": 150.0,
                         "RatedPowerConsumption": 1.5,
-                        "ContolType": "定流量制御",
-                        "MinOpeningRate": null,
+                        "ContolType": "回転数制御",
+                        "MinOpeningRate": 30.0,
                         "Info": ""
                     },
                     {
                         "Number": 1.0,
                         "RatedWaterFlowRate": 150.0,
+                        "RatedPowerConsumption": 1.5,
+                        "ContolType": "定流量制御",
+                        "MinOpeningRate": null,
+                        "Info": ""
+                    }
+                ]
+            }
+        },
+        "PUMP2": {
+            "冷房": {
+                "TempelatureDifference": 7.0,
+                "isStagingControl": "有",
+                "SecondaryPump": [
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 0.75,
+                        "RatedPowerConsumption": 1.5,
+                        "ContolType": "回転数制御",
+                        "MinOpeningRate": 30.0,
+                        "Info": ""
+                    },
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 0.75,
+                        "RatedPowerConsumption": 1.5,
+                        "ContolType": "回転数制御",
+                        "MinOpeningRate": 30.0,
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房": {
+                "TempelatureDifference": 7.0,
+                "isStagingControl": "有",
+                "SecondaryPump": [
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 0.75,
+                        "RatedPowerConsumption": 1.5,
+                        "ContolType": "回転数制御",
+                        "MinOpeningRate": 30.0,
+                        "Info": ""
+                    },
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 0.75,
                         "RatedPowerConsumption": 1.5,
                         "ContolType": "回転数制御",
                         "MinOpeningRate": 30.0,
@@ -204,13 +292,41 @@
                     "FanType": null,
                     "FanAirVolume": null,
                     "FanPowerConsumption": 3.7,
-                    "FanControlType": "無",
-                    "FanMinOpeningRate": null,
+                    "FanControlType": "回転数制御",
+                    "FanMinOpeningRate": 50.0,
                     "AirHeatExchangeRatioCooling": null,
                     "AirHeatExchangeRatioHeating": null,
                     "AirHeatExchangerEffectiveAirVolume": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
+                    "Info": "PAC1"
+                }
+            ]
+        },
+        "OAHU": {
+            "isEconomizer": "有",
+            "EconomizerMaxAirVolume": 2000.0,
+            "isOutdoorAirCut": "有",
+            "Pump_cooling": "PUMP2",
+            "Pump_heating": "PUMP2",
+            "HeatSource_cooling": "PAC1",
+            "HeatSource_heating": "PAC1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "空調機",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": 16.0,
+                    "RatedCapacityHeating": 16.0,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 2.25,
+                    "FanControlType": "回転数制御",
+                    "FanMinOpeningRate": 30.0,
+                    "AirHeatExchangeRatioCooling": 80.0,
+                    "AirHeatExchangeRatioHeating": 80.0,
+                    "AirHeatExchangerEffectiveAirVolume": 2000.0,
+                    "AirHeatExchangerControl": "有",
+                    "AirHeatExchangerPowerConsumption": 0.4,
                     "Info": "PAC1"
                 }
             ]

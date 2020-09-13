@@ -25,6 +25,17 @@
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
             "Info": ""
+        },
+        "2F_事務室": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 250.0,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
         }
     },
     "EnvelopeSet": {
@@ -42,6 +53,28 @@
                         {
                             "WindowID": "WIND1",
                             "WindowNumber": 60.0,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "2F_事務室": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "東",
+                    "EnvelopeArea": 250.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WIND1",
+                            "WindowNumber": 100.0,
                             "isBlind": "無",
                             "EavesID": "無",
                             "Info": "無"
@@ -78,7 +111,16 @@
     "AirConditioningZone": {
         "1F_事務室": {
             "isNatualVentilation": null,
-            "isSimultaneousSupply": "無",
+            "isSimultaneousSupply": "有",
+            "AHU_cooling_insideLoad": "ACP1",
+            "AHU_cooling_outdoorLoad": "ACP1",
+            "AHU_heating_insideLoad": "ACP1",
+            "AHU_heating_outdoorLoad": "ACP1",
+            "Info": "ACP1"
+        },
+        "2F_事務室": {
+            "isNatualVentilation": null,
+            "isSimultaneousSupply": "有",
             "AHU_cooling_insideLoad": "ACP1",
             "AHU_cooling_outdoorLoad": "ACP1",
             "AHU_heating_insideLoad": "ACP1",
@@ -188,9 +230,9 @@
     },
     "AirHandlingSystem": {
         "ACP1": {
-            "isEconomizer": "無",
-            "EconomizerMaxAirVolume": null,
-            "isOutdoorAirCut": "無",
+            "isEconomizer": "有",
+            "EconomizerMaxAirVolume": 2000.0,
+            "isOutdoorAirCut": "有",
             "Pump_cooling": "PUMP1",
             "Pump_heating": "PUMP1",
             "HeatSource_cooling": "PAC1",
@@ -204,14 +246,31 @@
                     "FanType": null,
                     "FanAirVolume": null,
                     "FanPowerConsumption": 3.7,
-                    "FanControlType": "無",
-                    "FanMinOpeningRate": null,
+                    "FanControlType": "回転数制御",
+                    "FanMinOpeningRate": 50.0,
                     "AirHeatExchangeRatioCooling": null,
                     "AirHeatExchangeRatioHeating": null,
                     "AirHeatExchangerEffectiveAirVolume": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
                     "Info": "PAC1"
+                },
+                {
+                    "Type": "全熱交ユニット",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": null,
+                    "RatedCapacityHeating": null,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 0.0,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": 80.0,
+                    "AirHeatExchangeRatioHeating": 80.0,
+                    "AirHeatExchangerEffectiveAirVolume": 2000.0,
+                    "AirHeatExchangerControl": "有",
+                    "AirHeatExchangerPowerConsumption": 0.4,
+                    "Info": ""
                 }
             ]
         }
