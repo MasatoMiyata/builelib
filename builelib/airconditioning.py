@@ -1633,12 +1633,8 @@ def calc_energy(inputdata, DEBUG = False):
                 LAHUh0[ int(resultJson["AHU"][ahu_name]["LdAHUh"][dd][0]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"][dd][0]
                 LAHUh1[ int(resultJson["AHU"][ahu_name]["LdAHUh"][dd][1]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"][dd][1]
 
-
-            np.savetxt("Tac.txt", resultJson["AHU"][ahu_name]["Ta_cooling"])
-            np.savetxt("Tah.txt", resultJson["AHU"][ahu_name]["Ta_heating"])
-
-
-
+            # np.savetxt("Tac.txt", resultJson["AHU"][ahu_name]["Ta_cooling"])
+            # np.savetxt("Tah.txt", resultJson["AHU"][ahu_name]["Ta_heating"])
 
 
     ##----------------------------------------------------------------------------------
@@ -2220,9 +2216,10 @@ def calc_energy(inputdata, DEBUG = False):
 
             for dd in range(0,365):
 
-                # 負荷率 Lpump[-] = [MJ/day] / [h/day] * [kJ/MJ] / [s/h] / [KJ/s]
-                Lpump[dd] = (resultJson["PUMP"][pump_name]["Qps"][dd] / resultJson["PUMP"][pump_name]["Tps"][dd] *1000/3600) \
-                    /inputdata["PUMP"][pump_name]["Qpsr"]
+                if resultJson["PUMP"][pump_name]["Tps"][dd] > 0:
+                    # 負荷率 Lpump[-] = [MJ/day] / [h/day] * [kJ/MJ] / [s/h] / [KJ/s]
+                    Lpump[dd] = (resultJson["PUMP"][pump_name]["Qps"][dd] / resultJson["PUMP"][pump_name]["Tps"][dd] *1000/3600) \
+                        /inputdata["PUMP"][pump_name]["Qpsr"]
 
             for dd in range(0,365):
             
@@ -2978,9 +2975,10 @@ def calc_energy(inputdata, DEBUG = False):
         for dd in range(0,365):
             
             # 負荷率算出 [-]
-            resultJson["REF"][ref_name]["Lref"][dd] = \
-                (resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000/3600) / \
-                inputdata["REF"][ref_name]["QrefrMax"]
+            if resultJson["REF"][ref_name]["Tref"][dd] > 0:
+                resultJson["REF"][ref_name]["Lref"][dd] = \
+                    (resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000/3600) / \
+                    inputdata["REF"][ref_name]["QrefrMax"]
         
             if np.isnan(resultJson["REF"][ref_name]["Lref"][dd]) == True:
                 resultJson["REF"][ref_name]["Lref"][dd] = 0
@@ -3599,7 +3597,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case030.json'
+    filename = './tests/airconditioning/ACtest_Case022.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
