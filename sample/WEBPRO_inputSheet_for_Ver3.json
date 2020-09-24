@@ -1,0 +1,1702 @@
+{
+    "Building": {
+        "BuildingAddress": {
+            "Prefecture": "茨城県",
+            "City": "つくば市（旧つくば市）",
+            "Address": "吾妻"
+        },
+        "Coefficient_DHC": {
+            "Cooling": 0.98,
+            "Heating": 1.22
+        },
+        "Name": "●●●●ビルディング",
+        "Region": "5",
+        "AnnualSolarRegion": "A3",
+        "BuildingFloorArea": 2340.97
+    },
+    "Rooms": {
+        "1F_事務室1": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 352.5,
+            "zone": {
+                "インテリアゾーン": {
+                    "zoneArea": 140.0,
+                    "Info": ""
+                },
+                "ペリメータゾーン": {
+                    "zoneArea": 212.5,
+                    "Info": ""
+                }
+            },
+            "modelBuildingType": "事務所モデル",
+            "buildingGroup": "A棟"
+        },
+        "1F_事務室2": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 100.0,
+            "zone": {
+                "インテリアゾーン": {
+                    "zoneArea": 50.0,
+                    "Info": ""
+                },
+                "ペリメータゾーン": {
+                    "zoneArea": 50.0,
+                    "Info": ""
+                }
+            },
+            "modelBuildingType": "事務所モデル",
+            "buildingGroup": "A棟"
+        },
+        "2F_事務室1": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 200.0,
+            "zone": null,
+            "modelBuildingType": "事務所モデル",
+            "buildingGroup": "A棟",
+            "Info": ""
+        },
+        "2F_事務室2": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 300.0,
+            "zone": null,
+            "modelBuildingType": "事務所モデル",
+            "buildingGroup": "A棟",
+            "Info": ""
+        },
+        "3F_事務室1": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 400.0,
+            "zone": null,
+            "modelBuildingType": "事務所モデル",
+            "buildingGroup": "A棟",
+            "Info": ""
+        },
+        "3F_事務室2": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 500.0,
+            "zone": null,
+            "modelBuildingType": "事務所モデル",
+            "buildingGroup": "A棟",
+            "Info": ""
+        },
+        "1F_駐車場": {
+            "buildingType": "ホテル等",
+            "roomType": "屋内駐車場",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 1000.0,
+            "zone": null,
+            "modelBuildingType": "事務所モデル",
+            "buildingGroup": "A棟",
+            "Info": ""
+        },
+        "1F_便所": {
+            "buildingType": "病院等",
+            "roomType": "終日利用される共用部の便所",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 200.0,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": "",
+            "Info": ""
+        },
+        "1F_機械室": {
+            "buildingType": "飲食店等",
+            "roomType": "機械室",
+            "floorHeight": 5.0,
+            "ceilingHeight": 2.6,
+            "roomArea": 300.0,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": "",
+            "Info": ""
+        }
+    },
+    "EnvelopeSet": {
+        "1F_事務室1_ペリメータゾーン": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "北",
+                    "EnvelopeArea": 200.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "断熱材1",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "窓A",
+                            "WindowNumber": 1.0,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "15.0"
+                        },
+                        {
+                            "WindowID": "窓A",
+                            "WindowNumber": 4.0,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "60.0"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "北東",
+                    "EnvelopeArea": 400.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "断熱材2",
+                    "WallType": "日の当たらない外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "1F_事務室2_ペリメータゾーン": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "東",
+                    "EnvelopeArea": 80.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "断熱材3",
+                    "WallType": "地盤に接する外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "窓B",
+                            "WindowNumber": 2.0,
+                            "isBlind": "無",
+                            "EavesID": "日よけ1",
+                            "Info": "69.36"
+                        }
+                    ]
+                }
+            ]
+        },
+        "2F_事務室1": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "南東",
+                    "EnvelopeArea": 65.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "断熱材4",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "南",
+                    "EnvelopeArea": null,
+                    "EnvelopeWidth": 10.0,
+                    "EnvelopeHeight": 5.0,
+                    "WallSpec": "断熱材2",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "南西",
+                    "EnvelopeArea": null,
+                    "EnvelopeWidth": 20.0,
+                    "EnvelopeHeight": 5.0,
+                    "WallSpec": "断熱材3",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "窓C",
+                            "WindowNumber": 1.0,
+                            "isBlind": "有",
+                            "EavesID": "日よけ2",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "西",
+                    "EnvelopeArea": null,
+                    "EnvelopeWidth": 20.0,
+                    "EnvelopeHeight": 5.0,
+                    "WallSpec": "断熱材4",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "窓C",
+                            "WindowNumber": 2.0,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "2F_事務室2": {
+            "isAirconditioned": "無",
+            "WallList": [
+                {
+                    "Direction": "北西",
+                    "EnvelopeArea": 230.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "断熱材1",
+                    "WallType": "内壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "3F_事務室1": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "水平（上）",
+                    "EnvelopeArea": 1300.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "断熱材3",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "水平（下）",
+                    "EnvelopeArea": 1300.0,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "断熱材3",
+                    "WallType": "日の当たらない外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "WallConfigure": {
+        "断熱材1": {
+            "structureType": "木造",
+            "solarAbsorptionRatio": 0.8,
+            "inputMethod": "断熱材種類を入力",
+            "materialID": "押出法ポリスチレンフォーム断熱材",
+            "conductivity": null,
+            "thickness": 20.0,
+            "Info": "無"
+        },
+        "断熱材2": {
+            "structureType": "鉄筋コンクリート造等",
+            "solarAbsorptionRatio": null,
+            "inputMethod": "断熱材種類を入力",
+            "materialID": null,
+            "conductivity": 0.023,
+            "thickness": 20.0,
+            "Info": "無"
+        },
+        "断熱材3": {
+            "structureType": "鉄骨造",
+            "solarAbsorptionRatio": null,
+            "inputMethod": "建材構成を入力",
+            "layers": [
+                {
+                    "materialID": "せっこうボード",
+                    "conductivity": null,
+                    "thickness": 12.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "非密閉中空層",
+                    "conductivity": null,
+                    "thickness": null,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "押出法ポリスチレンフォーム保温板1種",
+                    "conductivity": null,
+                    "thickness": 25.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "コンクリート",
+                    "conductivity": null,
+                    "thickness": 170.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": null,
+                    "conductivity": 0.023,
+                    "thickness": 20.0,
+                    "Info": "無"
+                }
+            ]
+        },
+        "断熱材4": {
+            "structureType": "その他",
+            "solarAbsorptionRatio": 0.9,
+            "inputMethod": "熱貫流率を入力",
+            "Uvalue": 0.35,
+            "Info": "無"
+        }
+    },
+    "WindowConfigure": {
+        "窓A": {
+            "windowArea": null,
+            "windowWidth": 5.0,
+            "windowHeight": 3.0,
+            "inputMethod": "ガラスの種類を入力",
+            "frameType": "木製",
+            "glassID": "T",
+            "Info": "無"
+        },
+        "窓B": {
+            "windowArea": 5.32,
+            "windowWidth": null,
+            "windowHeight": null,
+            "inputMethod": "性能値を入力",
+            "windowUvalue": 5.95,
+            "windowIvalue": 0.78,
+            "layerType": "複層",
+            "glassUvalue": 2.45,
+            "glassIvalue": 0.32,
+            "Info": "ガラスの入力も必要"
+        },
+        "窓C": {
+            "windowArea": null,
+            "windowWidth": 5.0,
+            "windowHeight": 3.0,
+            "inputMethod": "ガラスの性能を入力",
+            "frameType": "金属製",
+            "layerType": "複層",
+            "glassUvalue": 2.45,
+            "glassIvalue": 0.32,
+            "Info": "無"
+        }
+    },
+    "ShadingConfigure": {
+        "日よけ1": {
+            "shadingEffect_C": 0.94,
+            "shadingEffect_H": 0.43,
+            "x1": null,
+            "x2": null,
+            "x3": null,
+            "y1": null,
+            "y2": null,
+            "y3": null,
+            "zxPlus": null,
+            "zxMinus": null,
+            "zyPlus": null,
+            "zyMinus": null,
+            "Info": "無"
+        },
+        "日よけ2": {
+            "shadingEffect_C": null,
+            "shadingEffect_H": null,
+            "x1": 1.0,
+            "x2": 2.0,
+            "x3": 1.0,
+            "y1": 1.0,
+            "y2": 2.0,
+            "y3": 1.0,
+            "zxPlus": 1.0,
+            "zxMinus": 0.0,
+            "zyPlus": 1.0,
+            "zyMinus": 0.0,
+            "Info": "無"
+        }
+    },
+    "AirConditioningZone": {
+        "1F_事務室1_インテリアゾーン": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "有",
+            "AHU_cooling_insideLoad": "AHU1",
+            "AHU_cooling_outdoorLoad": "AHU1",
+            "AHU_heating_insideLoad": "AHU1",
+            "AHU_heating_outdoorLoad": "AHU1",
+            "Info": ""
+        },
+        "1F_事務室1_ペリメータゾーン": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "AHU2",
+            "AHU_cooling_outdoorLoad": "AHU2",
+            "AHU_heating_insideLoad": "AHU2",
+            "AHU_heating_outdoorLoad": "AHU2",
+            "Info": ""
+        },
+        "1F_事務室2": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "AHU3",
+            "AHU_cooling_outdoorLoad": "AHU4",
+            "AHU_heating_insideLoad": "AHU3",
+            "AHU_heating_outdoorLoad": "AHU4",
+            "Info": ""
+        },
+        "2F_事務室1": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "AHU3",
+            "AHU_cooling_outdoorLoad": "AHU4",
+            "AHU_heating_insideLoad": "AHU3",
+            "AHU_heating_outdoorLoad": "AHU4",
+            "Info": ""
+        },
+        "2F_事務室2": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "IU1",
+            "AHU_cooling_outdoorLoad": "IU1",
+            "AHU_heating_insideLoad": "IU1",
+            "AHU_heating_outdoorLoad": "IU1",
+            "Info": ""
+        }
+    },
+    "HeatsourceSystem": {
+        "RC1": {
+            "冷房(蓄熱)": {
+                "StorageType": "水蓄熱(混合型)",
+                "StorageSize": 1200.0,
+                "isStagingControl": "有",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "吸収式冷凍機",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": 7.0,
+                        "SupplyWaterTempMiddle": 11.0,
+                        "SupplyWaterTempWinter": 16.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 1233.0,
+                        "CoolingTowerFanPowerConsumption": 7.4,
+                        "CoolingTowerPumpPowerConsumption": 15.0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    },
+                    {
+                        "HeatsourceType": "ウォータチリングユニット(空冷式)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": 7.0,
+                        "SupplyWaterTempMiddle": 11.0,
+                        "SupplyWaterTempWinter": 16.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            },
+            "冷房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "有",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "ウォータチリングユニット(水冷式地中熱タイプ1)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": 7.0,
+                        "SupplyWaterTempMiddle": 11.0,
+                        "SupplyWaterTempWinter": 16.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    },
+                    {
+                        "HeatsourceType": "ターボ冷凍機",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": 7.0,
+                        "SupplyWaterTempMiddle": 11.0,
+                        "SupplyWaterTempWinter": 16.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 1233.0,
+                        "CoolingTowerFanPowerConsumption": 7.4,
+                        "CoolingTowerPumpPowerConsumption": 15.0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "有",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "吸収式冷凍機",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": 32.0,
+                        "SupplyWaterTempWinter": 40.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 1233.0,
+                        "CoolingTowerFanPowerConsumption": 7.4,
+                        "CoolingTowerPumpPowerConsumption": 15.0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    },
+                    {
+                        "HeatsourceType": "吸収式冷凍機(一重二重併用形、都市ガス)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": 32.0,
+                        "SupplyWaterTempWinter": 40.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 1233.0,
+                        "CoolingTowerFanPowerConsumption": 7.4,
+                        "CoolingTowerPumpPowerConsumption": 15.0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房(蓄熱)": {
+                "StorageType": "水蓄熱(成層型)",
+                "StorageSize": 300.0,
+                "isStagingControl": "有",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "吸収式冷凍機",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": 32.0,
+                        "SupplyWaterTempWinter": 40.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 1233.0,
+                        "CoolingTowerFanPowerConsumption": 7.4,
+                        "CoolingTowerPumpPowerConsumption": 15.0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    },
+                    {
+                        "HeatsourceType": "貫流ボイラ(LPG)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": 32.0,
+                        "SupplyWaterTempWinter": 40.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            }
+        },
+        "PAC1": {
+            "冷房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "有",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "ウォータチリングユニット(水冷式地中熱タイプ1)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": 7.0,
+                        "SupplyWaterTempMiddle": 11.0,
+                        "SupplyWaterTempWinter": 16.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    },
+                    {
+                        "HeatsourceType": "ターボ冷凍機",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": 7.0,
+                        "SupplyWaterTempMiddle": 11.0,
+                        "SupplyWaterTempWinter": 16.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 1233.0,
+                        "CoolingTowerFanPowerConsumption": 7.4,
+                        "CoolingTowerPumpPowerConsumption": 15.0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "有",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "吸収式冷凍機",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": 32.0,
+                        "SupplyWaterTempWinter": 40.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 1233.0,
+                        "CoolingTowerFanPowerConsumption": 7.4,
+                        "CoolingTowerPumpPowerConsumption": 15.0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    },
+                    {
+                        "HeatsourceType": "吸収式冷凍機(一重二重併用形、都市ガス)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": 32.0,
+                        "SupplyWaterTempWinter": 40.0,
+                        "HeatsourceRatedCapacity": 703.0,
+                        "HeatsourceRatedPowerConsumption": 0,
+                        "HeatsourceRatedFuelConsumption": 639.0,
+                        "PrimaryPumpPowerConsumption": 7.5,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 1233.0,
+                        "CoolingTowerFanPowerConsumption": 7.4,
+                        "CoolingTowerPumpPowerConsumption": 15.0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            }
+        }
+    },
+    "SecondaryPumpSystem": {
+        "CHP1": {
+            "冷房": {
+                "TempelatureDifference": 5.0,
+                "isStagingControl": "有",
+                "SecondaryPump": [
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 89.0,
+                        "RatedPowerConsumption": 7.5,
+                        "ContolType": "無",
+                        "MinOpeningRate": null,
+                        "Info": ""
+                    },
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 89.0,
+                        "RatedPowerConsumption": 7.5,
+                        "ContolType": "無",
+                        "MinOpeningRate": null,
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房": {
+                "TempelatureDifference": 5.0,
+                "isStagingControl": "有",
+                "SecondaryPump": [
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 89.0,
+                        "RatedPowerConsumption": 7.5,
+                        "ContolType": "回転数制御",
+                        "MinOpeningRate": 30.0,
+                        "Info": ""
+                    },
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 89.0,
+                        "RatedPowerConsumption": 7.5,
+                        "ContolType": "無",
+                        "MinOpeningRate": null,
+                        "Info": ""
+                    }
+                ]
+            }
+        },
+        "CHP2": {
+            "冷房": {
+                "TempelatureDifference": 5.0,
+                "isStagingControl": "有",
+                "SecondaryPump": [
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 89.0,
+                        "RatedPowerConsumption": 7.5,
+                        "ContolType": "無",
+                        "MinOpeningRate": null,
+                        "Info": ""
+                    },
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 89.0,
+                        "RatedPowerConsumption": 7.5,
+                        "ContolType": "無",
+                        "MinOpeningRate": null,
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房": {
+                "TempelatureDifference": 5.0,
+                "isStagingControl": "有",
+                "SecondaryPump": [
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 89.0,
+                        "RatedPowerConsumption": 7.5,
+                        "ContolType": "回転数制御",
+                        "MinOpeningRate": 30.0,
+                        "Info": ""
+                    },
+                    {
+                        "Number": 1.0,
+                        "RatedWaterFlowRate": 89.0,
+                        "RatedPowerConsumption": 7.5,
+                        "ContolType": "無",
+                        "MinOpeningRate": null,
+                        "Info": ""
+                    }
+                ]
+            }
+        }
+    },
+    "AirHandlingSystem": {
+        "AHU1": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": "CHP1",
+            "Pump_heating": "CHP1",
+            "HeatSorce_cooling": "RC1",
+            "HeatSorce_heating": "RC1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "空調機",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": 6.3,
+                    "RatedCapacityHeating": 5.6,
+                    "FanType": "給気",
+                    "FanAirVolume": 3000.0,
+                    "FanPowerConsumption": 2.2,
+                    "FanControlType": "回転数制御",
+                    "FanMinOpeningRate": 40.0,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                }
+            ]
+        },
+        "AHU2": {
+            "isEconomizer": "有",
+            "EconomizerMaxAirVolume": 12000.0,
+            "isOutdoorAirCut": "有",
+            "Pump_cooling": "CHP1",
+            "Pump_heating": "CHP1",
+            "HeatSorce_cooling": "RC1",
+            "HeatSorce_heating": "RC1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "FCU",
+                    "Number": 12.0,
+                    "RatedCapacityCooling": 2.2,
+                    "RatedCapacityHeating": 2.8,
+                    "FanType": "循環",
+                    "FanAirVolume": 3000.0,
+                    "FanPowerConsumption": 2.2,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                }
+            ]
+        },
+        "AHU3": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": "CHP2",
+            "Pump_heating": "CHP2",
+            "HeatSorce_cooling": "RC1",
+            "HeatSorce_heating": "RC1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "室内機",
+                    "Number": 6.0,
+                    "RatedCapacityCooling": 2.2,
+                    "RatedCapacityHeating": 2.2,
+                    "FanType": "循環",
+                    "FanAirVolume": 1200.0,
+                    "FanPowerConsumption": 0.08,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                },
+                {
+                    "Type": "室内機",
+                    "Number": 6.0,
+                    "RatedCapacityCooling": 3.7,
+                    "RatedCapacityHeating": 4.5,
+                    "FanType": "循環",
+                    "FanAirVolume": 1200.0,
+                    "FanPowerConsumption": 0.08,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                },
+                {
+                    "Type": "全熱交ユニット",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": 2.2,
+                    "RatedCapacityHeating": 2.2,
+                    "FanType": "外気",
+                    "FanAirVolume": 500.0,
+                    "FanPowerConsumption": 2.2,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                }
+            ]
+        },
+        "AHU4": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": "CHP2",
+            "Pump_heating": "CHP2",
+            "HeatSorce_cooling": "RC1",
+            "HeatSorce_heating": "RC1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "放熱器",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": null,
+                    "RatedCapacityHeating": 32.0,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": null,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                }
+            ]
+        },
+        "IU1": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": null,
+            "Pump_heating": null,
+            "HeatSorce_cooling": "PAC1",
+            "HeatSorce_heating": "PAC1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "天井放射冷暖房パネル",
+                    "Number": 18.0,
+                    "RatedCapacityCooling": 2.2,
+                    "RatedCapacityHeating": 2.2,
+                    "FanType": "ポンプ",
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 3.7,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                }
+            ]
+        }
+    },
+    "VentilationRoom": {
+        "1F_駐車場": {
+            "VentilationType": "一種換気",
+            "VentilationUnitRef": {
+                "SF-1": {
+                    "UnitType": "給気",
+                    "Info": ""
+                },
+                "EF-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "1F_便所": {
+            "VentilationType": "三種換気",
+            "VentilationUnitRef": {
+                "EF-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "1F_機械室": {
+            "VentilationType": "一種換気",
+            "VentilationUnitRef": {
+                "AC-1": {
+                    "UnitType": "空調",
+                    "Info": ""
+                },
+                "SF-2": {
+                    "UnitType": "給気",
+                    "Info": ""
+                },
+                "EF-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                },
+                "FF-1": {
+                    "UnitType": "循環",
+                    "Info": ""
+                }
+            }
+        }
+    },
+    "VentilationUnit": {
+        "SF-1": {
+            "Number": 1.0,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.154,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "CO濃度制御",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        "EF-1": {
+            "Number": 2.0,
+            "FanAirVolume": 150.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.154,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        "AC-1": {
+            "Number": 1.0,
+            "FanAirVolume": 1000.0,
+            "MoterRatedPower": 0.75,
+            "PowerConsumption": null,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": "エレベータ機械室",
+            "AC_CoolingCapacity": 20.0,
+            "AC_RefEfficiency": 1.25,
+            "AC_PumpPower": 2.2,
+            "Info": ""
+        },
+        "SF-2": {
+            "Number": 1.0,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.088,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        "EF-3": {
+            "Number": 1.0,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.902,
+            "HighEfficiencyMotor": "有",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        "FF-1": {
+            "Number": 2.0,
+            "FanAirVolume": 150.0,
+            "MoterRatedPower": null,
+            "PowerConsumption": 0.022,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "有",
+            "AirVolumeControl": "温度制御",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        }
+    },
+    "LightingSystems": {
+        "1F_事務室1": {
+            "roomWidth": 12.0,
+            "roomDepth": 3.2,
+            "unitHeight": 1.2,
+            "roomIndex": null,
+            "lightingUnit": {
+                "照明1": {
+                    "RatedPower": 88.0,
+                    "Number": 35.0,
+                    "OccupantSensingCTRL": "下限調光方式",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "照明2": {
+                    "RatedPower": 92.0,
+                    "Number": 25.0,
+                    "OccupantSensingCTRL": "点滅方式",
+                    "IlluminanceSensingCTRL": "調光方式",
+                    "TimeScheduleCTRL": "減光",
+                    "InitialIlluminationCorrectionCTRL": "タイマ方式(LED)"
+                }
+            }
+        },
+        "1F_事務室2": {
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 2.1,
+            "lightingUnit": {
+                "照明3": {
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "減光方式",
+                    "IlluminanceSensingCTRL": "調光方式BL",
+                    "TimeScheduleCTRL": "消灯",
+                    "InitialIlluminationCorrectionCTRL": "タイマ方式(蛍光灯)"
+                },
+                "照明4": {
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W15",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "センサ方式(LED)"
+                }
+            }
+        },
+        "2F_事務室1": {
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 1.1,
+            "lightingUnit": {
+                "照明1": {
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W15BL",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "センサ方式(蛍光灯)"
+                },
+                "照明2": {
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W20",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_事務室2": {
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 1.0,
+            "lightingUnit": {
+                "照明3": {
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W20BL",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "照明4": {
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W25",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "3F_事務室1": {
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 2.0,
+            "lightingUnit": {
+                "照明1": {
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式W25BL",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "照明2": {
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "点滅方式",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "3F_事務室2": {
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": null,
+            "roomIndex": 3.0,
+            "lightingUnit": {
+                "照明3": {
+                    "RatedPower": 88.0,
+                    "Number": 22.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "照明4": {
+                    "RatedPower": 92.0,
+                    "Number": 18.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        }
+    },
+    "HotwaterRoom": {
+        "1F_事務室1": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": "便所",
+                    "SystemName": "給湯システム1",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": "便所",
+                    "SystemName": "給湯システム2",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                }
+            ]
+        },
+        "1F_事務室2": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": "浴室",
+                    "SystemName": "給湯システム3",
+                    "HotWaterSavingSystem": "自動給湯栓",
+                    "Info": ""
+                }
+            ]
+        },
+        "2F_事務室1": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": "厨房",
+                    "SystemName": "給湯システム4",
+                    "HotWaterSavingSystem": "節湯B1",
+                    "Info": ""
+                }
+            ]
+        },
+        "2F_事務室2": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": "便所",
+                    "SystemName": "給湯システム5",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                }
+            ]
+        },
+        "3F_事務室1": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": "その他",
+                    "SystemName": "給湯システム6",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                }
+            ]
+        },
+        "3F_事務室2": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": "便所",
+                    "SystemName": "給湯システム7",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                }
+            ]
+        }
+    },
+    "HotwaterSupplySystems": {
+        "給湯システム1": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "ガス給湯機",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                },
+                {
+                    "UsageType": "配管保温用",
+                    "HeatSourceType": "ガス給湯暖房機",
+                    "Number": 1.0,
+                    "RatedCapacity": 32.0,
+                    "RatedPowerConsumption": 0.8,
+                    "RatedFuelConsumption": 35.0
+                },
+                {
+                    "UsageType": "貯湯槽保温用",
+                    "HeatSourceType": "ボイラ",
+                    "Number": 1.0,
+                    "RatedCapacity": 8.0,
+                    "RatedPowerConsumption": 0.12,
+                    "RatedFuelConsumption": 10.0
+                }
+            ],
+            "InsulationType": "保温仕様2",
+            "PipeSize": 20.0,
+            "SolarSystemArea": 120.0,
+            "SolarSystemDirection": 270.0,
+            "SolarSystemAngle": 35.0,
+            "Info": ""
+        },
+        "給湯システム2": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "石油給湯機(給湯単機能)",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "保温仕様3",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "給湯システム3": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "石油給湯機(給湯機付ふろがま)",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "保温仕様1",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "給湯システム4": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "家庭用ヒートポンプ給湯機",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "保温仕様1",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "給湯システム5": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "業務用ヒートポンプ給湯機",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "裸管",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "給湯システム6": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "貯湯式電気温水器",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "保温仕様1",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "給湯システム7": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "保温仕様1",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "給湯システム8": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "真空式温水発生機",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "保温仕様1",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "給湯システム9": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "無圧式温水発生機",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "裸管",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "給湯システム10": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "地域熱供給",
+                    "Number": 1.0,
+                    "RatedCapacity": 20.0,
+                    "RatedPowerConsumption": 0.4,
+                    "RatedFuelConsumption": 22.0
+                }
+            ],
+            "InsulationType": "保温仕様1",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        }
+    },
+    "Elevators": {
+        "1F_事務室1": {
+            "Elevator": [
+                {
+                    "ElevatorName": "常用系統",
+                    "Number": 2.0,
+                    "LoadLimit": 800.0,
+                    "Velocity": 60.0,
+                    "TransportCapacityFactor": 1.0,
+                    "ControlType": "VVVF（電力回生なし）",
+                    "Info": ""
+                },
+                {
+                    "ElevatorName": "常用系統",
+                    "Number": 2.0,
+                    "LoadLimit": 800.0,
+                    "Velocity": 60.0,
+                    "TransportCapacityFactor": 1.0,
+                    "ControlType": "VVVF（電力回生なし）",
+                    "Info": ""
+                }
+            ]
+        },
+        "1F_事務室2": {
+            "Elevator": [
+                {
+                    "ElevatorName": "常用系統",
+                    "Number": 2.0,
+                    "LoadLimit": 300.0,
+                    "Velocity": 60.0,
+                    "TransportCapacityFactor": 1.0,
+                    "ControlType": "VVVF（電力回生なし、ギアレス）",
+                    "Info": ""
+                },
+                {
+                    "ElevatorName": "常用系統",
+                    "Number": 1.0,
+                    "LoadLimit": 600.0,
+                    "Velocity": 45.0,
+                    "TransportCapacityFactor": 1.0,
+                    "ControlType": "VVVF（電力回生あり、ギアレス）",
+                    "Info": ""
+                },
+                {
+                    "ElevatorName": "常用系統",
+                    "Number": 1.0,
+                    "LoadLimit": 600.0,
+                    "Velocity": 45.0,
+                    "TransportCapacityFactor": 1.0,
+                    "ControlType": "交流帰還制御",
+                    "Info": ""
+                }
+            ]
+        }
+    },
+    "PhotovoltaicSystems": {
+        "システムA": {
+            "PowerConditionerEfficiency": 0.94,
+            "CellType": "結晶系",
+            "ArraySetupType": "架台設置形",
+            "ArrayCapacity": 12.2,
+            "Direction": 0.0,
+            "Angle": 30.0,
+            "Info": ""
+        },
+        "システムB": {
+            "PowerConditionerEfficiency": 0.94,
+            "CellType": "結晶系以外",
+            "ArraySetupType": "屋根置き形",
+            "ArrayCapacity": 12.2,
+            "Direction": 90.0,
+            "Angle": 30.0,
+            "Info": ""
+        },
+        "システムC": {
+            "PowerConditionerEfficiency": 0.94,
+            "CellType": "結晶系",
+            "ArraySetupType": "その他",
+            "ArrayCapacity": 12.2,
+            "Direction": 270.0,
+            "Angle": 30.0,
+            "Info": ""
+        }
+    },
+    "CogenerationSystems": {
+        "CGS01": {
+            "RatedCapacity": 370.0,
+            "Number": 1.0,
+            "PowerGenerationEfficiency_100": 0.405,
+            "PowerGenerationEfficiency_75": 0.39,
+            "PowerGenerationEfficiency_50": 0.349,
+            "HeatGenerationEfficiency_100": 0.332,
+            "HeatGenerationEfficiency_75": 0.337,
+            "HeatGenerationEfficiency_50": 0.369,
+            "HeatRecoveryPriorityCooling": "3番目",
+            "HeatRecoveryPriorityHeating": "2番目",
+            "HeatRecoveryPriorityHotWater": "1番目",
+            "24hourOperation": "無",
+            "CoolingSystem": "AR1",
+            "HeatingSystem": "AR1",
+            "HowWaterSystem": "EB1-11",
+            "Info": ""
+        },
+        "CGS02": {
+            "RatedCapacity": 370.0,
+            "Number": 1.0,
+            "PowerGenerationEfficiency_100": 0.405,
+            "PowerGenerationEfficiency_75": 0.39,
+            "PowerGenerationEfficiency_50": 0.349,
+            "HeatGenerationEfficiency_100": 0.332,
+            "HeatGenerationEfficiency_75": 0.337,
+            "HeatGenerationEfficiency_50": 0.369,
+            "HeatRecoveryPriorityCooling": null,
+            "HeatRecoveryPriorityHeating": null,
+            "HeatRecoveryPriorityHotWater": "1番目",
+            "24hourOperation": "有",
+            "CoolingSystem": null,
+            "HeatingSystem": null,
+            "HowWaterSystem": "EB1-11",
+            "Info": ""
+        }
+    }
+}
