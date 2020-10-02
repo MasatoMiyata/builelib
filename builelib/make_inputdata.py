@@ -644,7 +644,7 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
                             "FanMinOpeningRate": set_default(dataAC4[9], None, "float"),
                             "AirHeatExchangeRatioCooling": set_default(dataAC4[10], None, "float"),
                             "AirHeatExchangeRatioHeating": set_default(dataAC4[11], None, "float"),
-                            "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[12], None, "float"),
+                            "AirHeatExchangerEffectiveAirVolumeRatio": set_default(dataAC4[12], None, "float"),
                             "AirHeatExchangerControl": set_default(dataAC4[13], "無", "str"),
                             "AirHeatExchangerPowerConsumption": set_default(dataAC4[14], None, "float"),
                             "Info": str(dataAC4[22])
@@ -667,7 +667,7 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
                         "FanMinOpeningRate": set_default(dataAC4[9], None, "float"),
                         "AirHeatExchangeRatioCooling": set_default(dataAC4[10], None, "float"),
                         "AirHeatExchangeRatioHeating": set_default(dataAC4[11], None, "float"),
-                        "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[12], None, "float"),
+                        "AirHeatExchangerEffectiveAirVolumeRatio": set_default(dataAC4[12], None, "float"),
                         "AirHeatExchangerControl": set_default(dataAC4[13], "無", "str"),
                         "AirHeatExchangerPowerConsumption": set_default(dataAC4[14], None, "float"),
                         "Info": str(dataAC4[22])
@@ -1108,9 +1108,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 roomKey = str(dataBE1[0]) + '_' + str(dataBE1[1])
 
                 # 外壁の種類の判定（Ver.2のみ）
-                if str(dataBE1[5]) == "日陰":
-                    dataBE1[5] = "北"
+                if str(dataBE1[2]) == "日陰":
+                    dataBE1[2] = "北"
                     wallType = "日の当たらない外壁"
+                elif str(dataBE1[2]) == "水平":
+                    dataBE1[2] = "水平（下）"
+                    wallType = "日の当たる外壁"
                 else:
                     wallType = "日の当たる外壁"
 
@@ -1163,9 +1166,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
             else: # 階と室名が空欄である場合
 
                 # 外壁の種類の判定（Ver.2のみ）
-                if str(dataBE1[5]) == "日陰":
-                    dataBE1[5] = "南"
+                if str(dataBE1[2]) == "日陰":
+                    dataBE1[2] = "南"
                     wallType = "日の当たらない外壁"
+                elif str(dataBE1[2]) == "水平":
+                    dataBE1[2] = "水平（下）"
+                    wallType = "日の当たる外壁"
                 else:
                     wallType = "日の当たる外壁"
 
@@ -1454,7 +1460,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 
                 # 冷暖同時供給については、暫定で「無」を入れておく。後に再度判定。
                 data["AirConditioningZone"][roomKey] = {
-                    "isNatualVentilation": None,
+                    "isNatualVentilation": "無",
                     "isSimultaneousSupply": "無",
                     "AHU_cooling_insideLoad": set_default(dataAC1[9], None, "str"),
                     "AHU_cooling_outdoorLoad": set_default(dataAC1[10], None, "str"),
@@ -1998,13 +2004,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
                             "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
                             "FanType": None,
-                            "FanAirVolume": None,
+                            "FanAirVolume": set_default(dataAC4[15], None, "float"),
                             "FanPowerConsumption": set_default(E_fan1+E_fan2+E_fan3+E_fan4, None, "float"),
                             "FanControlType": set_default(dataAC4[10], "無", "str"),
                             "FanMinOpeningRate": set_default(dataAC4[11], None, "float"),
                             "AirHeatExchangeRatioCooling": set_default(dataAC4[16], None, "float"),
                             "AirHeatExchangeRatioHeating": set_default(dataAC4[16], None, "float"),
-                            "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[15], None, "float"),
+                            "AirHeatExchangerEffectiveAirVolumeRatio": None,
                             "AirHeatExchangerControl": set_default(dataAC4[17], "無", "str"),
                             "AirHeatExchangerPowerConsumption": set_default(dataAC4[18], None, "float"),
                             "Info": str(dataAC4[22])
@@ -2027,13 +2033,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
                         "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
                         "FanType": None,
-                        "FanAirVolume": None,
+                        "FanAirVolume": set_default(dataAC4[15], None, "float"),
                         "FanPowerConsumption": set_default(E_fan1+E_fan2+E_fan3+E_fan4, None, "float"),
                         "FanControlType": set_default(dataAC4[10], "無", "str"),
                         "FanMinOpeningRate": set_default(dataAC4[11], None, "float"),
                         "AirHeatExchangeRatioCooling": set_default(dataAC4[16], None, "float"),
                         "AirHeatExchangeRatioHeating": set_default(dataAC4[16], None, "float"),
-                        "AirHeatExchangerEffectiveAirVolume": set_default(dataAC4[15], None, "float"),
+                        "AirHeatExchangerEffectiveAirVolumeRatio": None,
                         "AirHeatExchangerControl": set_default(dataAC4[17], "無", "str"),
                         "AirHeatExchangerPowerConsumption": set_default(dataAC4[18], None, "float"),
                         "Info": str(dataAC4[22])
@@ -2406,6 +2412,16 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
             # シートから「行」の読み込み
             dataEV = sheet_EV.row_values(i)
 
+            # 全角括弧と半角括弧の置換
+            if str(dataEV[9]) == "VVVF（電力回生なし）":
+                dataEV[9] = "VVVF(電力回生なし)"
+            elif str(dataEV[9]) == "VVVF（電力回生あり）":
+                dataEV[9] = "VVVF(電力回生なし)"
+            elif str(dataEV[9]) == "VVVF（電力回生なし、ギアレス）":
+                dataEV[9] = "VVVF(電力回生なし)"
+            elif str(dataEV[9]) == "VVVF（電力回生あり、ギアレス）":
+                dataEV[9] = "VVVF(電力回生なし)"
+            
             # 階と室名が空欄でない場合
             if (dataEV[0] != "") and (dataEV[1] != "") :
 
@@ -2517,7 +2533,7 @@ if __name__ == '__main__':
     # WEBPRO Ver3シートの例
     #-----------------------
     # directory = "./sample/"
-    # case_name = 'Case001_単室モデル_基本モデル'
+    # case_name = 'Builelib_inputSheet'
 
     # inputdata = make_jsondata_from_Ver4_sheet(directory + case_name + ".xlsx")
 
@@ -2525,33 +2541,36 @@ if __name__ == '__main__':
     # with open(directory + case_name + ".json",'w') as fw:
     #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
+    # #-----------------------
+    # # WEBPRO Ver2シートの例
+    # #-----------------------
+    # directory = "./sample/"
+
+    # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
+
+    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+
+    # # json出力
+    # with open(directory + case_name + ".json",'w') as fw:
+    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+
+
     #-----------------------
     # WEBPRO Ver2シートの例（連続）
     #-----------------------
     directory = "./tests/airconditioning/"
 
-    case_name = 'ACtest_Case001'
+    for id in range(1,44):
+        if id < 10:
+            case_name = 'ACtest_Case00' + str(int(id))
+        else:
+            case_name = 'ACtest_Case0' + str(int(id))
 
-    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    # json出力
-    with open(directory + case_name + ".json",'w') as fw:
-        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
-
-
-    # #-----------------------
-    # # WEBPRO Ver2シートの例（連続）
-    # #-----------------------
-    # directory = "./tests/airconditioning/"
-
-    # for id in range(10,37):
-    #     case_name = 'ACtest_Case0' + str(int(id))
-
-    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
-
-    #     # json出力
-    #     with open(directory + case_name + ".json",'w') as fw:
-    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+        # json出力
+        with open(directory + case_name + ".json",'w') as fw:
+            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
 
