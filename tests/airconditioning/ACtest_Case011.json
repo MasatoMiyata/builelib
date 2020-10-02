@@ -110,8 +110,8 @@
     "ShadingConfigure": {},
     "AirConditioningZone": {
         "1F_事務室": {
-            "isNatualVentilation": null,
-            "isSimultaneousSupply": null,
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
             "AHU_cooling_insideLoad": "ACP1",
             "AHU_cooling_outdoorLoad": "ACP1",
             "AHU_heating_insideLoad": "ACP1",
@@ -119,8 +119,8 @@
             "Info": "ACP1"
         },
         "2F_事務室": {
-            "isNatualVentilation": null,
-            "isSimultaneousSupply": null,
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
             "AHU_cooling_insideLoad": "ACP1",
             "AHU_cooling_outdoorLoad": "ACP1",
             "AHU_heating_insideLoad": "ACP1",
@@ -250,7 +250,7 @@
                     "FanMinOpeningRate": 50.0,
                     "AirHeatExchangeRatioCooling": null,
                     "AirHeatExchangeRatioHeating": null,
-                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
                     "Info": "PAC1"
@@ -261,13 +261,13 @@
                     "RatedCapacityCooling": null,
                     "RatedCapacityHeating": null,
                     "FanType": null,
-                    "FanAirVolume": null,
+                    "FanAirVolume": 2000.0,
                     "FanPowerConsumption": 0.0,
                     "FanControlType": "無",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": 80.0,
                     "AirHeatExchangeRatioHeating": 80.0,
-                    "AirHeatExchangerEffectiveAirVolume": 2000.0,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "有",
                     "AirHeatExchangerPowerConsumption": 0.4,
                     "Info": ""

@@ -77,8 +77,8 @@
     "ShadingConfigure": {},
     "AirConditioningZone": {
         "1F_事務室": {
-            "isNatualVentilation": null,
-            "isSimultaneousSupply": null,
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
             "AHU_cooling_insideLoad": "ACP1",
             "AHU_cooling_outdoorLoad": "ACP1",
             "AHU_heating_insideLoad": "ACP1",
@@ -92,6 +92,7 @@
                 "StorageType": "水蓄熱(成層型)",
                 "StorageSize": 600.0,
                 "isStagingControl": "有",
+                "isSimultaneous_for_ver2": "無",
                 "Heatsource": [
                     {
                         "HeatsourceType": "ウォータチリングユニット(空冷式)",
@@ -116,6 +117,7 @@
                 "StorageType": "水蓄熱(成層型)",
                 "StorageSize": 600.0,
                 "isStagingControl": "有",
+                "isSimultaneous_for_ver2": "無",
                 "Heatsource": [
                     {
                         "HeatsourceType": "ウォータチリングユニット(空冷式)",
@@ -290,7 +292,7 @@
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
                     "AirHeatExchangeRatioHeating": null,
-                    "AirHeatExchangerEffectiveAirVolume": null,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
                     "Info": "PAC1"

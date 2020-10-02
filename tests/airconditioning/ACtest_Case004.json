@@ -110,8 +110,8 @@
     "ShadingConfigure": {},
     "AirConditioningZone": {
         "1F_事務室": {
-            "isNatualVentilation": null,
-            "isSimultaneousSupply": null,
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
             "AHU_cooling_insideLoad": "ACP1",
             "AHU_cooling_outdoorLoad": "ACP1",
             "AHU_heating_insideLoad": "ACP1",
@@ -119,8 +119,8 @@
             "Info": "ACP1"
         },
         "2F_事務室": {
-            "isNatualVentilation": null,
-            "isSimultaneousSupply": null,
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
             "AHU_cooling_insideLoad": "ACP1",
             "AHU_cooling_outdoorLoad": "ACP1",
             "AHU_heating_insideLoad": "ACP1",
@@ -244,13 +244,13 @@
                     "RatedCapacityCooling": 16.0,
                     "RatedCapacityHeating": 16.0,
                     "FanType": null,
-                    "FanAirVolume": null,
+                    "FanAirVolume": 1000.0,
                     "FanPowerConsumption": 3.7,
                     "FanControlType": "回転数制御",
                     "FanMinOpeningRate": 30.0,
                     "AirHeatExchangeRatioCooling": 60.0,
                     "AirHeatExchangeRatioHeating": 60.0,
-                    "AirHeatExchangerEffectiveAirVolume": 1000.0,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": 0.5,
                     "Info": "PAC1"
