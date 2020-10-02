@@ -1,7 +1,7 @@
 docs/*
 Makefile
 memo.md
-sample/*
+sample/backup/*
 .vscode
 .pypirc
 inputdata.json
