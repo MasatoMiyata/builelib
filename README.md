@@ -20,6 +20,16 @@ https://github.com/WEBPRO-NR/BESJP_EngineeringReference
 ```
 python3 -m pip install builelib
 ```
+最新のコードをgithubからインストールする場合は以下のコマンドをご利用ください。
+```
+python3 -m pip install "git+https://github.com/MasatoMiyata/builelib.git#egg=builelib"
+```
+## How to uninstall?
+
+次のコマンドでアンインストールできます。
+```
+python3 -m pip uninstall builelib
+```
 
 ## How to run?
 
