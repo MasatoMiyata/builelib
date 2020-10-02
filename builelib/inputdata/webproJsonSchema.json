@@ -41,7 +41,7 @@
             "type": "object",
             "additionalProperties":{
                 "$ref": "#/definitions/ShadingConfigure"
-            }  
+            }
         },
         "AirConditioningZone":{
             "description": "様式AC1",
@@ -136,7 +136,8 @@
         "Elevators": ["Building","Rooms"]
     },
     "required": [
-        "Building", "Rooms"
+        "Building",
+        "Rooms"
     ],
     "definitions": {
         "Building": {
@@ -315,11 +316,11 @@
                 },
                 "modelBuildingType":{
                     "description": "RM-10:モデル建物",
-                    "type": "string"
+                    "type": [ "string", "null" ]
                 },
                 "buildingGroup":{
                     "description": "RM-11:建物群名称",
-                    "type": "string"
+                    "type": [ "string", "null" ]
                 }
             }
         },
@@ -659,7 +660,7 @@
                     ]
                 },
                 "glassUvalue":{
-                    "description": "BE3-8:ガラスの熱伝導率",
+                    "description": "BE3-8:ガラスの熱貫流率",
                     "anyOf":[
                         {
                             "type": "number",
@@ -685,7 +686,7 @@
                     ]
                 }, 
                 "windowUvalue":{
-                    "description": "BE3-10:窓の熱伝導率",
+                    "description": "BE3-10:窓の熱貫流率",
                     "anyOf":[
                         {
                             "type": "number",
@@ -1346,7 +1347,7 @@
                                     }
                                 ]
                             },
-                            "AirHeatExchangerEffectiveAirVolume":{
+                            "AirHeatExchangerEffectiveAirVolumeRatio":{
                                 "description": "AC4-13:全熱交換器 有効換気量率",
                                 "anyOf":[
                                     {
@@ -1400,11 +1401,18 @@
             "properties": {
                 "VentilationType": {
                     "description": "V1-3:換気方式",
-                    "type": "string",
-                    "enum":[
-                        "一種換気",
-                        "二種換気",
-                        "三種換気"
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "enum":[
+                                "一種換気",
+                                "二種換気",
+                                "三種換気"
+                            ]
+                        },
+                        {
+                            "type": "null"
+                        }
                     ]
                 },
                 "VentilationUnitRef": {
@@ -1741,12 +1749,19 @@
                         "properties": {
                             "UsageType":{
                                 "description": "HW1-3:給湯用途",
-                                "type": "string",
-                                "enum":[
-                                    "便所",
-                                    "浴室",
-                                    "厨房",
-                                    "その他"
+                                "anyOf":[
+                                    {
+                                        "type": "string",
+                                        "enum":[
+                                            "便所",
+                                            "浴室",
+                                            "厨房",
+                                            "その他"
+                                        ]
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
                                 ]
                             },
                             "SystemName":{
@@ -1780,30 +1795,44 @@
                         "properties": {
                             "UsageType":{
                                 "description": "HW2-2:給湯用途",
-                                "type": "string",
-                                "enum":[
-                                    "給湯負荷用",
-                                    "配管保温用",
-                                    "貯湯槽保温用",
-                                    "その他"
+                                "anyOf":[
+                                    {
+                                        "type": "string",
+                                        "enum":[
+                                            "給湯負荷用",
+                                            "配管保温用",
+                                            "貯湯槽保温用",
+                                            "その他"
+                                        ]
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
                                 ]
                             },
                             "HeatSourceType":{
                                 "description": "HW2-3:熱源機種",
-                                "type": "string",
-                                "enum":[
-                                    "ガス給湯機",
-                                    "ガス給湯暖房機",
-                                    "ボイラ",
-                                    "石油給湯機(給湯単機能)",
-                                    "石油給湯機(給湯機付ふろがま)",
-                                    "家庭用ヒートポンプ給湯機",
-                                    "業務用ヒートポンプ給湯機",
-                                    "貯湯式電気温水器",
-                                    "電気瞬間湯沸器",
-                                    "真空式温水発生機",
-                                    "無圧式温水発生機",
-                                    "地域熱供給"
+                                "anyOf":[
+                                    {
+                                        "type": "string",
+                                        "enum":[
+                                            "ガス給湯機",
+                                            "ガス給湯暖房機",
+                                            "ボイラ",
+                                            "石油給湯機(給湯単機能)",
+                                            "石油給湯機(給湯機付ふろがま)",
+                                            "家庭用ヒートポンプ給湯機",
+                                            "業務用ヒートポンプ給湯機",
+                                            "貯湯式電気温水器",
+                                            "電気瞬間湯沸器",
+                                            "真空式温水発生機",
+                                            "無圧式温水発生機",
+                                            "地域熱供給"
+                                        ]
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
                                 ]
                             },
                             "Number":{
