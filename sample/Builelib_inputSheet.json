@@ -865,8 +865,8 @@
             "isOutdoorAirCut": "無",
             "Pump_cooling": "CHP1",
             "Pump_heating": "CHP1",
-            "HeatSorce_cooling": "RC1",
-            "HeatSorce_heating": "RC1",
+            "HeatSource_cooling": "RC1",
+            "HeatSource_heating": "RC1",
             "AirHandlingUnit": [
                 {
                     "Type": "空調機",
@@ -893,8 +893,8 @@
             "isOutdoorAirCut": "有",
             "Pump_cooling": "CHP1",
             "Pump_heating": "CHP1",
-            "HeatSorce_cooling": "RC1",
-            "HeatSorce_heating": "RC1",
+            "HeatSource_cooling": "RC1",
+            "HeatSource_heating": "RC1",
             "AirHandlingUnit": [
                 {
                     "Type": "FCU",
@@ -921,8 +921,8 @@
             "isOutdoorAirCut": "無",
             "Pump_cooling": "CHP2",
             "Pump_heating": "CHP2",
-            "HeatSorce_cooling": "RC1",
-            "HeatSorce_heating": "RC1",
+            "HeatSource_cooling": "RC1",
+            "HeatSource_heating": "RC1",
             "AirHandlingUnit": [
                 {
                     "Type": "室内機",
@@ -983,8 +983,8 @@
             "isOutdoorAirCut": "無",
             "Pump_cooling": "CHP2",
             "Pump_heating": "CHP2",
-            "HeatSorce_cooling": "RC1",
-            "HeatSorce_heating": "RC1",
+            "HeatSource_cooling": "RC1",
+            "HeatSource_heating": "RC1",
             "AirHandlingUnit": [
                 {
                     "Type": "放熱器",
@@ -1011,8 +1011,8 @@
             "isOutdoorAirCut": "無",
             "Pump_cooling": null,
             "Pump_heating": null,
-            "HeatSorce_cooling": "PAC1",
-            "HeatSorce_heating": "PAC1",
+            "HeatSource_cooling": "PAC1",
+            "HeatSource_heating": "PAC1",
             "AirHandlingUnit": [
                 {
                     "Type": "天井放射冷暖房パネル",
@@ -1586,7 +1586,7 @@
                     "LoadLimit": 800.0,
                     "Velocity": 60.0,
                     "TransportCapacityFactor": 1.0,
-                    "ControlType": "VVVF（電力回生なし）",
+                    "ControlType": "VVVF(電力回生なし)",
                     "Info": ""
                 },
                 {
@@ -1595,7 +1595,7 @@
                     "LoadLimit": 800.0,
                     "Velocity": 60.0,
                     "TransportCapacityFactor": 1.0,
-                    "ControlType": "VVVF（電力回生なし）",
+                    "ControlType": "VVVF(電力回生なし)",
                     "Info": ""
                 }
             ]
@@ -1608,7 +1608,7 @@
                     "LoadLimit": 300.0,
                     "Velocity": 60.0,
                     "TransportCapacityFactor": 1.0,
-                    "ControlType": "VVVF（電力回生なし、ギアレス）",
+                    "ControlType": "VVVF(電力回生なし、ギアレス)",
                     "Info": ""
                 },
                 {
@@ -1617,7 +1617,7 @@
                     "LoadLimit": 600.0,
                     "Velocity": 45.0,
                     "TransportCapacityFactor": 1.0,
-                    "ControlType": "VVVF（電力回生あり、ギアレス）",
+                    "ControlType": "VVVF(電力回生あり、ギアレス)",
                     "Info": ""
                 },
                 {
