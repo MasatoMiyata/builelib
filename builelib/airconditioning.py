@@ -707,6 +707,9 @@ def calc_energy(inputdata, DEBUG = False):
                     ## ① 温度差による熱取得
                     Qwall_T = Qwall_T + wall_configure["UA_wall"] * (np.mean(Toa_ave)* np.ones(365) - TroomSP) * 24
 
+                    ## ③ 夜間放射による熱取得（マイナス） ：　本当はこれは不要。Webproの実装と合わせるために追加。
+                    Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * (solor_radiation["夜間"]["垂直"])   
+
                 elif wall_configure["WallType"] == "地盤に接する外壁_Ver2":  # Webpro Ver2の互換のための処理
                 
                     ## ① 温度差による熱取得
@@ -3598,9 +3601,12 @@ def calc_energy(inputdata, DEBUG = False):
 
 if __name__ == '__main__':
 
+    import sys
+    sys.stdout = open("tmep.txt","w")
+
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case001.json'
-    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    # filename = './tests/airconditioning/ACtest_Case001.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
     # テンプレートjsonの読み込み
