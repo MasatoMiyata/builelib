@@ -55,17 +55,12 @@ def calc_energy(inputdata, DEBUG = False):
     
     # 計算結果を格納する変数
     resultJson = {
-        "E_ventilation": 0,
-        "Es_ventilation": 0,
+        "E_ventilation": 0,  # 設計一次エネルギー消費量 [GJ]
+        "Es_ventilation": 0, # 基準一次エネルギー消費量 [GJ]
         "BEI_V": 0,
         "ventilation":{   
         }
     }
-
-    # 変数初期化
-    E_ventilation = 0    # 設計一次エネルギー消費量 [GJ]
-    Es_ventilation = 0   # 基準一次エネルギー消費量 [GJ]
-
 
     # 室毎（換気系統毎）のループ
     for roomID, isys in inputdata["VentilationRoom"].items():
@@ -290,10 +285,17 @@ def calc_energy(inputdata, DEBUG = False):
                     * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3)
 
 
-        ##----------------------------------------------------------------------------------
-        ## 基準一次エネルギー消費量 [MJ] （解説書 10）
-        ##----------------------------------------------------------------------------------
-        resultJson["ventilation"][roomID]["StandardEnergy"] = bc.RoomStandardValue[buildingType][roomType]["換気"] * inputdata["VentilationRoom"][roomID]["roomArea"]
+    ##----------------------------------------------------------------------------------
+    ## 基準一次エネルギー消費量 [MJ] （解説書 10）
+    ##----------------------------------------------------------------------------------
+    for roomID, isys in inputdata["VentilationRoom"].items():
+
+        # 建物用途、室用途（可読性重視で一旦変数に代入する）
+        buildingType = inputdata["Rooms"][roomID]["buildingType"]
+        roomType     = inputdata["Rooms"][roomID]["roomType"]
+    
+        resultJson["ventilation"][roomID]["StandardEnergy"] = \
+            bc.RoomStandardValue[buildingType][roomType]["換気"] * inputdata["Rooms"][roomID]["roomArea"]
 
 
     # 結果の集計
@@ -301,15 +303,17 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["E_ventilation"]  += resultJson["ventilation"][roomID]["PrimaryEnergy"]
         resultJson["Es_ventilation"] += resultJson["ventilation"][roomID]["StandardEnergy"]
 
+
+
     # BEI/V [-]
-    if Es_ventilation <= 0:
+    if resultJson["Es_ventilation"] <= 0:
         resultJson["BEI_V"]  = None
     else:
         resultJson["BEI_V"]  = resultJson["E_ventilation"] / resultJson["Es_ventilation"]
 
     if DEBUG:
-        # with open("resultJson.json",'w') as fw:
-        #     json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+        with open("resultJson_V.json",'w') as fw:
+            json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
         print( f'設計一次エネルギー消費量[MJ] {resultJson["E_ventilation"]}')
         print( f'基準一次エネルギー消費量[MJ] {resultJson["Es_ventilation"]}')
@@ -321,7 +325,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- ventilation.py -----')
-    filename = './sample/WEBPRO_inputSheet_for_Ver3.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
