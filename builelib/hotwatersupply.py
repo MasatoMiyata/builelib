@@ -18,7 +18,9 @@ def calc_energy(inputdata, DEBUG = False):
 
     # 計算結果を格納する変数
     resultJson = {
-        "E_hotwatersupply": 0,   # 給湯設備の設計一次エネルギー消費量
+        "E_hotwatersupply": 0,    # 給湯設備の設計一次エネルギー消費量 [MJ/年]
+        "Es_hotwatersupply": 0,   # 給湯設備の基準一次エネルギー消費量 [MJ/年]
+        "BEI_HW": 0,
         "hotwatersupply":{
         }
     }
@@ -450,6 +452,23 @@ def calc_energy(inputdata, DEBUG = False):
         print(f'設計一次エネルギー消費量 {resultJson["E_hotwatersupply"]} MJ/年')
 
 
+    #----------------------------------------------------------------------------------
+    # 解説書 10.4 給湯設備の基準一次エネルギー消費量
+    #----------------------------------------------------------------------------------
+
+    for room_name in inputdata["HotwaterRoom"]:
+
+        # 建物用途、室用途（可読性重視で一旦変数に代入する）
+        buildingType = inputdata["Rooms"][room_name]["buildingType"]
+        roomType     = inputdata["Rooms"][room_name]["roomType"]
+    
+        resultJson["Es_hotwatersupply"] += \
+            bc.RoomStandardValue[buildingType][roomType]["給湯"][inputdata["Building"]["Region"]+"地域"] * \
+            inputdata["Rooms"][room_name]["roomArea"]
+
+    # BEI/HW
+    resultJson["BEI_HW"] = resultJson["E_hotwatersupply"] / resultJson["Es_hotwatersupply"]
+
     return resultJson
 
 
@@ -457,7 +476,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- hotwatersupply.py -----')
-    filename = './sample/hotwater_C1_節湯.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r') as f:
