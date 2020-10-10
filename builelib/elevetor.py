@@ -124,7 +124,7 @@ def calc_energy(inputdata, DEBUG = False):
     resultJson["Elevetors"] = inputdata["Elevators"]
 
     # BEI/Vの計算
-    resultJson["BEI_V"] = resultJson["E_elevetor"] / resultJson["Es_elevetor"]
+    resultJson["BEI_EV"] = resultJson["E_elevetor"] / resultJson["Es_elevetor"]
 
     return resultJson
 
