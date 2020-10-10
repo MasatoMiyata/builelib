@@ -10,9 +10,14 @@ import commons as bc
 
 def calc_energy(inputdata, DEBUG = False):
 
+
+    #----------------------------------------------------------------------------------
     # 計算結果を格納する変数
+    #----------------------------------------------------------------------------------
     resultJson = {
-        "E_elevetor": 0
+        "E_elevetor": 0,
+        "Es_elevetor": 0,
+        "Elevators": {}
     }
 
     #----------------------------------------------------------------------------------
@@ -78,19 +83,44 @@ def calc_energy(inputdata, DEBUG = False):
                 print(f'　- 速度制御方式による係数  {unit_configure["ControlTypeCoefficient"]}')
                 print(f'　- エネルギー消費量 kWh/年 {inputdata["Elevators"][room_name]["Elevator"][unit_id]["energy_consumption"]}')
 
+
     #----------------------------------------------------------------------------------
     # 解説書 6.4 昇降機の設計一次エネルギー消費量
     #----------------------------------------------------------------------------------
 
-    # エネルギー消費量計算 [MJ/年]
+    # 設計一次エネルギー消費量計算 [MJ/年]
     for room_name in inputdata["Elevators"]:
         for unit_id, unit_configure in enumerate(inputdata["Elevators"][room_name]["Elevator"]):
 
             resultJson["E_elevetor"] += unit_configure["energy_consumption"] * 9760 / 1000
 
     if DEBUG:
-        print(f'昇降機の一次エネルギー消費量  {resultJson["E_elevetor"]}  MJ/年')
+        print(f'昇降機の設計一次エネルギー消費量  {resultJson["E_elevetor"]}  MJ/年')
 
+
+    #----------------------------------------------------------------------------------
+    # 解説書 10.5 昇降機の基準一次エネルギー消費量
+    #----------------------------------------------------------------------------------
+
+    # エネルギー消費量計算 [kWh/年]
+    for room_name in inputdata["Elevators"]:
+        for unit_id, unit_configure in enumerate(inputdata["Elevators"][room_name]["Elevator"]):
+
+            inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] = \
+                unit_configure["Number"] * \
+                unit_configure["Velocity"] * unit_configure["LoadLimit"] * (1/40) * \
+                unit_configure["TransportCapacityFactor"] * \
+                inputdata["Elevators"][room_name]["operation_time"] / 860 
+
+            # 基準一次エネルギー消費量計算 [MJ/年]
+            resultJson["Es_elevetor"] += inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] * 9760 / 1000
+
+    if DEBUG:
+        print(f'昇降機の基準一次エネルギー消費量  {resultJson["Es_elevetor"]}  MJ/年')
+
+
+    # 入力データも出力
+    resultJson["Elevetors"] = inputdata["Elevators"]
 
     return resultJson
 
@@ -98,9 +128,9 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- elevetor.py -----')
-    filename = './sample/WEBPRO_inputSheet_for_Ver3.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
-    # テンプレートjsonの読み込み
+    # 入力ファイルの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
