@@ -62,6 +62,7 @@ def calc_energy(inputdata, DEBUG = False):
     resultJson = {
         "E_airconditioning": 0,
         "Es_airconditioning": 0,
+        "BEI_AC": 0,
         "Qroom": {
         },
         "AHU":{
@@ -3638,6 +3639,8 @@ def calc_energy(inputdata, DEBUG = False):
         print( f'空調設備の基準一次エネルギー消費量 MJ/m2 : {resultJson["Es_airconditioning"]/roomAreaTotal}' )
         print( f'空調設備の基準一次エネルギー消費量 MJ : {resultJson["Es_airconditioning"]}' )
 
+    # BEI/ACの算出
+    resultJson["BEI_AC"] = resultJson["E_airconditioning"] / resultJson["Es_airconditioning"]
 
     return resultJson
 
@@ -3657,7 +3660,8 @@ if __name__ == '__main__':
 
     with open("resultJson.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
-        
+
+    print( f'BEI/AC: {resultJson["BEI_AC"]}')        
     print( f'設計一次エネルギー消費量 全体: {resultJson["Es_airconditioning"]}')
     print( f'設計一次エネルギー消費量 空調ファン: {resultJson["ENERGY"]["E_fan"] * 9760}')
     print( f'設計一次エネルギー消費量 空調全熱交換器: {resultJson["ENERGY"]["E_aex"] * 9760}')
