@@ -259,8 +259,6 @@ def calc_energy(inputdata, DEBUG = False):
                         * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
                         * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cac
 
-                    print(inputdata["VentilationUnit"][unitID]["Energy_kW"])
-
                 else: ## 換気代替空調機と併設される送風機
 
                     resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
@@ -332,4 +330,3 @@ if __name__ == '__main__':
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
-    print(resultJson)

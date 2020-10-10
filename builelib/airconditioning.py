@@ -924,7 +924,7 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["Qroom"][room_zone_name]["QroomDh_anual"] = np.sum(Qheat,0)
 
 
-    print('--- 室負荷計算完了 ---')
+    print('室負荷計算完了')
 
     if DEBUG:
 
