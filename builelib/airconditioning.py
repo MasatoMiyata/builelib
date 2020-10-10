@@ -60,6 +60,8 @@ def calc_energy(inputdata, DEBUG = False):
 
     # 計算結果を格納する変数
     resultJson = {
+        "E_airconditioning": 0,
+        "Es_airconditioning": 0,
         "Qroom": {
         },
         "AHU":{
@@ -222,7 +224,7 @@ def calc_energy(inputdata, DEBUG = False):
     roomDayMode        = {}
 
     # 空調ゾーン毎にループ
-    for room_zone_name in inputdata["AirConditioningZone"].keys():
+    for room_zone_name in inputdata["AirConditioningZone"]:
 
         if room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
 
@@ -1722,6 +1724,14 @@ def calc_energy(inputdata, DEBUG = False):
                         a2 * (aveL[iL])**2 + \
                         a1 * (aveL[iL])**1 + \
                         a0    
+
+    if DEBUG:
+
+        for ahu_name in inputdata["AirHandlingSystem"]:
+            print( f'--- 空調機群名 {ahu_name} ---')
+            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+                print( f'--- {unit_id+1} 台目の送風機 ---')
+                print(f'負荷率帯毎のエネルギー消費量 energy_consumption_ratio {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"]}')
 
 
     ##----------------------------------------------------------------------------------
@@ -3598,7 +3608,7 @@ def calc_energy(inputdata, DEBUG = False):
     ## 設計一次エネルギー消費量（解説書 2.8）
     ##----------------------------------------------------------------------------------
 
-    resultJson["airconditioning"] = \
+    resultJson["E_airconditioning"] = \
         + resultJson["ENERGY"]["E_fan"] * 9760 \
         + resultJson["ENERGY"]["E_aex"] * 9760 \
         + resultJson["ENERGY"]["E_pump"]  * 9760 \
@@ -3609,8 +3619,26 @@ def calc_energy(inputdata, DEBUG = False):
         + resultJson["ENERGY"]["E_ctpump"] * 9760
 
     if DEBUG:
-        print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["airconditioning"]/roomAreaTotal}' )
-        print( f'空調設備の設計一次エネルギー消費量 MJ : {resultJson["airconditioning"]}' )
+        print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["E_airconditioning"]/roomAreaTotal}' )
+        print( f'空調設備の設計一次エネルギー消費量 MJ : {resultJson["E_airconditioning"]}' )
+
+
+    ##----------------------------------------------------------------------------------
+    ## 基準一次エネルギー消費量 （解説書 10.1）
+    ##----------------------------------------------------------------------------------    
+    for room_zone_name in inputdata["AirConditioningZone"]:
+    
+        # 建物用途・室用途、ゾーン面積等の取得
+        buildingType = inputdata["Rooms"][room_zone_name]["buildingType"]
+        roomType     = inputdata["Rooms"][room_zone_name]["roomType"]
+        zoneArea     = inputdata["Rooms"][room_zone_name]["roomArea"]
+
+        resultJson["Es_airconditioning"] += \
+            bc.RoomStandardValue[buildingType][roomType]["空調"][inputdata["Building"]["Region"]+"地域"] * zoneArea
+
+    if DEBUG:
+        print( f'空調設備の基準一次エネルギー消費量 MJ/m2 : {resultJson["Es_airconditioning"]/roomAreaTotal}' )
+        print( f'空調設備の基準一次エネルギー消費量 MJ : {resultJson["Es_airconditioning"]}' )
 
 
     return resultJson
@@ -3632,15 +3660,16 @@ if __name__ == '__main__':
     with open("resultJson.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
         
-    print( f'一次エネルギー消費量 全体: {resultJson["airconditioning"]}')
-    print( f'一次エネルギー消費量 空調ファン: {resultJson["ENERGY"]["E_fan"] * 9760}')
-    print( f'一次エネルギー消費量 空調全熱交換器: {resultJson["ENERGY"]["E_aex"] * 9760}')
-    print( f'一次エネルギー消費量 二次ポンプ: {resultJson["ENERGY"]["E_pump"] * 9760}')
-    print( f'一次エネルギー消費量 熱源主機: {resultJson["ENERGY"]["E_refsysr"]}')
-    print( f'一次エネルギー消費量 熱源補機: {resultJson["ENERGY"]["E_refac"] * 9760}')
-    print( f'一次エネルギー消費量 一次ポンプ: {resultJson["ENERGY"]["E_pumpP"] * 9760}')
-    print( f'一次エネルギー消費量 冷却塔ファン: {resultJson["ENERGY"]["E_ctfan"] * 9760}')
-    print( f'一次エネルギー消費量 冷却水ポンプ: {resultJson["ENERGY"]["E_ctpump"] * 9760}')
+    print( f'設計一次エネルギー消費量 全体: {resultJson["Es_airconditioning"]}')
+    print( f'設計一次エネルギー消費量 空調ファン: {resultJson["ENERGY"]["E_fan"] * 9760}')
+    print( f'設計一次エネルギー消費量 空調全熱交換器: {resultJson["ENERGY"]["E_aex"] * 9760}')
+    print( f'設計一次エネルギー消費量 二次ポンプ: {resultJson["ENERGY"]["E_pump"] * 9760}')
+    print( f'設計一次エネルギー消費量 熱源主機: {resultJson["ENERGY"]["E_refsysr"]}')
+    print( f'設計一次エネルギー消費量 熱源補機: {resultJson["ENERGY"]["E_refac"] * 9760}')
+    print( f'設計一次エネルギー消費量 一次ポンプ: {resultJson["ENERGY"]["E_pumpP"] * 9760}')
+    print( f'設計一次エネルギー消費量 冷却塔ファン: {resultJson["ENERGY"]["E_ctfan"] * 9760}')
+    print( f'設計一次エネルギー消費量 冷却水ポンプ: {resultJson["ENERGY"]["E_ctpump"] * 9760}')
 
-    print( f'{resultJson["airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * 9760}, {resultJson["ENERGY"]["E_aex"] * 9760}, {resultJson["ENERGY"]["E_pump"] * 9760}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * 9760}, {resultJson["ENERGY"]["E_pumpP"] * 9760}, {resultJson["ENERGY"]["E_ctfan"] * 9760}, {resultJson["ENERGY"]["E_ctpump"] * 9760}')
+    # デバッグ用
+    print( f'{resultJson["Es_airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * 9760}, {resultJson["ENERGY"]["E_aex"] * 9760}, {resultJson["ENERGY"]["E_pump"] * 9760}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * 9760}, {resultJson["ENERGY"]["E_pumpP"] * 9760}, {resultJson["ENERGY"]["E_ctfan"] * 9760}, {resultJson["ENERGY"]["E_ctpump"] * 9760}')
 
