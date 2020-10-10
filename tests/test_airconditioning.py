@@ -76,7 +76,7 @@ def test_calc(inputdata, expectedvalue):
     # 計算実行        
     resultJson = airconditioning.calc_energy(inputdata)
 
-    diff_Eac = (abs(resultJson["airconditioning"] - expectedvalue)) / abs( expectedvalue )
+    diff_Eac = (abs(resultJson["E_airconditioning"] - expectedvalue)) / abs( expectedvalue )
 
     # 比較（0.01%まで）
     assert diff_Eac < 0.0001
