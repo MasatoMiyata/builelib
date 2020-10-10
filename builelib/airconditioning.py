@@ -184,8 +184,6 @@ def calc_energy(inputdata, DEBUG = False):
     Hoa_ngt = bc.air_enenthalpy(Toa_ngt, Xoa_ngt)
 
 
-
-    #%%
     ##----------------------------------------------------------------------------------
     ## 空調室の設定温度、室内エンタルピー（解説書 2.3.1、2.3.2）
     ##----------------------------------------------------------------------------------
@@ -3651,7 +3649,7 @@ if __name__ == '__main__':
     filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
-    # テンプレートjsonの読み込み
+    # 入力ファイルの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
