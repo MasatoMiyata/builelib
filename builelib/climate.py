@@ -3,6 +3,34 @@ import csv
 import math
 import numpy as np
 
+def readCsvClimateData(filename):
+    """
+    気象データ（csvファイル）を読み込む関数。太陽光発電用。
+    8760の行列
+    """
+
+    # CSVファイルの読み込み
+    with open(filename, encoding='cp932') as f:
+        reader = csv.reader(f)
+        data = [row for row in reader]
+
+    # numpy array型に変換(8760,5)
+    npArrayData = np.array(data)
+
+    # 外気温 [℃]
+    Tout = npArrayData[2:8762, 0].astype('float')
+    # 法線面直達日射量 [MJ/m2h]
+    Iod = npArrayData[2:8762, 1].astype('float')
+    # 水平面天空日射量 [MJ/m2h]
+    Ios = npArrayData[2:8762, 2].astype('float')
+    # 太陽高度[°]
+    sun_altitude = npArrayData[2:8762, 3].astype('float')
+    # 太陽方位角[°]
+    sun_azimuth = npArrayData[2:8762, 4].astype('float')
+    
+    return Tout, Iod, Ios, sun_altitude, sun_azimuth
+
+
 def readDatClimateData(filename):
     """
     気象データ（datファイル）を読み込む関数。給湯用。
