@@ -1,3 +1,9 @@
+#-------------------------------------------------------------------------
+# このプログラムは、
+# 平成28年省エネルギー基準に準拠したエネルギー消費性能の評価に関する技術情報（住宅）
+# https://www.kenken.go.jp/becc/house.html
+# の 第九章　自然エネルギー利用設備 第一節　太陽光発電設備 を基に作成しました。
+#-------------------------------------------------------------------------
 import json
 import numpy as np
 import os
@@ -11,7 +17,6 @@ import climate
 
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
-
 
 # json.dump用のクラス
 class MyEncoder(json.JSONEncoder):
@@ -100,6 +105,7 @@ def calc_energy(inputdata, DEBUG = False):
     for system_name in inputdata["PhotovoltaicSystems"]:
 
         resultJson["PhotovoltaicSystems"][system_name] = {
+            "Ep_kWh": 0,
             "Ep" : np.zeros(8760)
         }
 
@@ -120,7 +126,7 @@ def calc_energy(inputdata, DEBUG = False):
         ## 付録 A 傾斜面における単位面積当たりの平均日射量
         ##----------------------------------------------------------------------------------
 
-        # 気象データの読み込み
+        # 気象データの読み込み（日射量は MJ/m2h）
         if climate_data_file[ inputdata["Building"]["Region"]+"地域" ][ inputdata["Building"]["AnnualSolarRegion"] ] != None:
             [Tout, Iod, Ios, sun_altitude, sun_azimuth] = \
             climate.readCsvClimateData( climatedata_directory + climate_data_file[ inputdata["Building"]["Region"]+"地域" ][ inputdata["Building"]["AnnualSolarRegion"] ] )
@@ -130,15 +136,25 @@ def calc_energy(inputdata, DEBUG = False):
         # 傾斜面における単位面積あたりの直達・天空日射量 [W/m2]
         Iod_slope = np.zeros(8760)
         Ios_slope = np.zeros(8760)
+        sun_altitude_rad = np.zeros(8760)
+        sun_azimuth_rad  = np.zeros(8760)
         for hh in range(0,8760):
 
+            sun_altitude_rad[hh] = math.radians(sun_altitude[hh])
+
+            if sun_azimuth[hh] < 0:
+                sun_azimuth_rad[hh]  = math.radians(sun_azimuth[hh]+360)
+            else:
+                sun_azimuth_rad[hh]  = math.radians(sun_azimuth[hh])
+
             # 傾斜面の単位面積当たりの直達日射量 [W/m2]
-            Iod_slope[hh] = Iod[hh] * \
-                math.sin( sun_altitude[hh] ) * math.cos( slope_angle ) + \
-                math.cos( sun_altitude[hh] ) * math.sin( slope_angle ) * math.cos( slope_azimuth - sun_azimuth[hh] )
+            Iod_slope[hh] = Iod[hh] / 3.6 * 10**3 * \
+                (math.sin( sun_altitude_rad[hh] ) * math.cos( math.radians(slope_angle) ) + \
+                math.cos( sun_altitude_rad[hh] ) * math.sin( math.radians(slope_angle) ) * \
+                math.cos( math.radians(slope_azimuth) - sun_azimuth_rad[hh] ))
 
             # 傾斜面の単位面積当たりの天空日射量 [W/m2]
-            Ios_slope[hh] = Ios[hh] * (1 + math.cos(slope_angle)) / 2
+            Ios_slope[hh] = Ios[hh] / 3.6 * 10**3 * (1 + math.cos( math.radians(slope_angle) )) / 2
 
 
         # 傾斜面における単位面積あたりの平均日射量 [W/m2]
@@ -153,11 +169,15 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 結果を保存
         resultJson["PhotovoltaicSystems"][system_name]["Tout"] = Tout
-        resultJson["PhotovoltaicSystems"][system_name]["Iod"] = Iod
-        resultJson["PhotovoltaicSystems"][system_name]["Ios"] = Ios
-        resultJson["PhotovoltaicSystems"][system_name]["Is_slope"] = Is_slope
-        resultJson["PhotovoltaicSystems"][system_name]["Iod_slope"] = Iod_slope
-        resultJson["PhotovoltaicSystems"][system_name]["Ios_slope"] = Ios_slope
+        resultJson["PhotovoltaicSystems"][system_name]["Iod_W/m2"] = Iod / 3.6 * 10**3
+        resultJson["PhotovoltaicSystems"][system_name]["Ios_W/m2"] = Ios / 3.6 * 10**3
+        resultJson["PhotovoltaicSystems"][system_name]["slope_azimuth_rad"] = math.radians(slope_azimuth)
+        resultJson["PhotovoltaicSystems"][system_name]["slope_angle_rad"] = math.radians(slope_angle)
+        resultJson["PhotovoltaicSystems"][system_name]["sun_altitude_rad"] = sun_altitude_rad
+        resultJson["PhotovoltaicSystems"][system_name]["sun_azimuth_rad"] = sun_azimuth_rad
+        resultJson["PhotovoltaicSystems"][system_name]["Is_slope_W/m2"] = Is_slope
+        resultJson["PhotovoltaicSystems"][system_name]["Iod_slope_W/m2"] = Iod_slope
+        resultJson["PhotovoltaicSystems"][system_name]["Ios_slope_W/m2"] = Ios_slope
 
 
         ##----------------------------------------------------------------------------------
@@ -210,6 +230,7 @@ def calc_energy(inputdata, DEBUG = False):
             # 太陽電池アレイ𝑖の温度補正係数
             K_pt[hh] = 1 + alpha_p_max * (T_cr[hh] - 25)
 
+            # 太陽電池アレイの総合設計係数
             K_pi[hh] = K_hs * K_pd * K_pt[hh] * K_pa * K_pm * K_in
 
 
@@ -222,13 +243,13 @@ def calc_energy(inputdata, DEBUG = False):
         # 結果を保存
         resultJson["PhotovoltaicSystems"][system_name]["Ep"] = Ep
         resultJson["PhotovoltaicSystems"][system_name]["T_cr"] = T_cr
+        resultJson["PhotovoltaicSystems"][system_name]["K_pi"] = K_pi
         
+        # 発電量（一次エネ換算） [kWh]
+        resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] = np.sum(resultJson["PhotovoltaicSystems"][system_name]["Ep"],0)
+
         # 発電量（一次エネ換算） [kWh] * [kJ/kWh] / 1000 = [MJ]
-        resultJson["E_photovoltaic"] += np.sum(resultJson["PhotovoltaicSystems"][system_name]["Ep"],0) * bc.fprime / 1000
-
-
-
-    # 発電量
+        resultJson["E_photovoltaic"] += resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] * bc.fprime / 1000
 
 
     return resultJson
@@ -237,7 +258,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- photovoltaic.py -----')
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './sample/太陽光発電.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
