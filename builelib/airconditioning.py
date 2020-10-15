@@ -3649,8 +3649,8 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    # filename = './tests/airconditioning/ACtest_Case001.json'
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './tests/airconditioning/ACtest_Case044.json'
+    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
     # 入力ファイルの読み込み
@@ -3663,7 +3663,7 @@ if __name__ == '__main__':
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
     print( f'BEI/AC: {resultJson["BEI_AC"]}')        
-    print( f'設計一次エネルギー消費量 全体: {resultJson["Es_airconditioning"]}')
+    print( f'設計一次エネルギー消費量 全体: {resultJson["E_airconditioning"]}')
     print( f'設計一次エネルギー消費量 空調ファン: {resultJson["ENERGY"]["E_fan"] * 9760}')
     print( f'設計一次エネルギー消費量 空調全熱交換器: {resultJson["ENERGY"]["E_aex"] * 9760}')
     print( f'設計一次エネルギー消費量 二次ポンプ: {resultJson["ENERGY"]["E_pump"] * 9760}')
@@ -3674,5 +3674,5 @@ if __name__ == '__main__':
     print( f'設計一次エネルギー消費量 冷却水ポンプ: {resultJson["ENERGY"]["E_ctpump"] * 9760}')
 
     # デバッグ用
-    print( f'{resultJson["Es_airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * 9760}, {resultJson["ENERGY"]["E_aex"] * 9760}, {resultJson["ENERGY"]["E_pump"] * 9760}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * 9760}, {resultJson["ENERGY"]["E_pumpP"] * 9760}, {resultJson["ENERGY"]["E_ctfan"] * 9760}, {resultJson["ENERGY"]["E_ctpump"] * 9760}')
+    print( f'{resultJson["E_airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * 9760}, {resultJson["ENERGY"]["E_aex"] * 9760}, {resultJson["ENERGY"]["E_pump"] * 9760}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * 9760}, {resultJson["ENERGY"]["E_pumpP"] * 9760}, {resultJson["ENERGY"]["E_ctfan"] * 9760}, {resultJson["ENERGY"]["E_ctpump"] * 9760}')
 
