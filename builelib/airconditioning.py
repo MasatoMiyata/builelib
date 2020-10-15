@@ -2068,15 +2068,16 @@ def calc_energy(inputdata, DEBUG = False):
 
         for dd in range(0,365):
 
-            if ac_mode[dd] == "暖房":
+            if ac_mode[dd] == "暖房":  ## 暖房期である場合
 
-                # 暖房期に冷房負荷の処理ができない場合
+                # 室負荷が冷房要求である場合の空調負荷が正の値である場合、かつ、冷暖同時供給が無い場合
                 if (resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] > 0) and \
                     (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):   
 
                     resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += abs( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] )
                     resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = 0
 
+                # 室負荷が暖房要求である場合の空調負荷が正の値である場合、かつ、冷暖同時供給が無い場合
                 if (resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] > 0) and \
                     (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):
 
@@ -2085,13 +2086,14 @@ def calc_energy(inputdata, DEBUG = False):
 
             elif (ac_mode[dd] == "冷房") or (ac_mode[dd] == "中間"):
 
-                # 冷房期に暖房負荷の処理ができない場合
+                # 室負荷が冷房要求である場合の空調負荷が負の値である場合、かつ、冷暖同時供給が無い場合
                 if (resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] < 0) and \
                     (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):   
 
                     resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += abs( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] )
                     resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = 0
 
+                # 室負荷が暖房要求である場合の空調負荷が負の値である場合、かつ、冷暖同時供給が無い場合
                 if (resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] < 0) and \
                     (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):
 
