@@ -1963,8 +1963,6 @@ def calc_energy(inputdata, DEBUG = False):
 
         resultJson["PUMP"][pump_name] = {}
         resultJson["PUMP"][pump_name]["Qpsahu_fan"]       = np.zeros(365)   # ファン発熱量 [MJ/day]
-        resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_C"] = np.zeros(365)   # ファン発熱量 [MJ/day]
-        resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_H"] = np.zeros(365)   # ファン発熱量 [MJ/day]
         resultJson["PUMP"][pump_name]["pumpTime_Start"]   = np.zeros(365)
         resultJson["PUMP"][pump_name]["pumpTime_Stop"]    = np.zeros(365)
         resultJson["PUMP"][pump_name]["Qps"] = np.zeros(365)  # ポンプ負荷 [MJ/day]
@@ -2121,14 +2119,12 @@ def calc_energy(inputdata, DEBUG = False):
                                 resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["TcAHU"] * 3600
 
                             resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpC
-                            resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_C"] += tmpC
 
                         if resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] > 0:
                             tmpH = k_heatup * resultJson["AHU"][ahu_name]["MxAHUhE"] * \
                                 resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["ThAHU"] * 3600
 
-                            resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpC
-                            resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_C"] += tmpC
+                            resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpH
 
 
                     # 日積算ポンプ負荷 Qps [MJ/day] の算出
@@ -2161,14 +2157,12 @@ def calc_energy(inputdata, DEBUG = False):
                                 resultJson["AHU"][ahu_name]["cooling"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["TcAHU"] * 3600
 
                             resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpC
-                            resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_H"] += tmpC
 
                         if resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] < 0:
                             tmpH = k_heatup * resultJson["AHU"][ahu_name]["MxAHUhE"] * \
                                 resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["ThAHU"] * 3600
 
-                            resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpC
-                            resultJson["PUMP"][pump_name]["Qpsahu_fan_AHU_H"] += tmpC
+                            resultJson["PUMP"][pump_name]["Qpsahu_fan"]  += tmpH
 
 
                     # 日積算ポンプ負荷 Qps [MJ/day] の算出<符号逆転させる>
