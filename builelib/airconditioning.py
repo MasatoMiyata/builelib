@@ -2072,14 +2072,14 @@ def calc_energy(inputdata, DEBUG = False):
                 if (resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] > 0) and \
                     (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):   
 
-                    resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += abs( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] )
+                    resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += ( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] )
                     resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = 0
 
                 # 室負荷が暖房要求である場合において空調負荷が正の値である場合、かつ、冷暖同時供給が無い場合
                 if (resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] > 0) and \
                     (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):
 
-                    resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += abs( resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] )
+                    resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += ( resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] )
                     resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] = 0
 
             elif (ac_mode[dd] == "冷房") or (ac_mode[dd] == "中間"):
@@ -2088,14 +2088,14 @@ def calc_energy(inputdata, DEBUG = False):
                 if (resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] < 0) and \
                     (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):   
 
-                    resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += abs( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] )
+                    resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += (-1)*( resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] )
                     resultJson["AHU"][ahu_name]["cooling"]["Qahu"][dd] = 0
 
                 # 室負荷が暖房要求である場合において空調負荷が負の値である場合、かつ、冷暖同時供給が無い場合
                 if (resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] < 0) and \
                     (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):
 
-                    resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += abs( resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] )
+                    resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += (-1)*( resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] )
                     resultJson["AHU"][ahu_name]["heating"]["Qahu"][dd] = 0
 
 
@@ -3649,7 +3649,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case044.json'
+    filename = './tests/airconditioning/ACtest_Case001-a.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
