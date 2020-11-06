@@ -2338,7 +2338,7 @@ def calc_energy(inputdata, DEBUG = False):
                                 inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a1"] * tmpL + \
                                 inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a0"]
 
-                else: # 全台VWVであれば、定流量とみなす。
+                else: # 全台VWVでなければ、定流量とみなす。
                     PUMPvwvfac = np.ones(len(mxL))
                     PUMPvwvfac[len(mxL)] = 1.2
 
@@ -2368,7 +2368,7 @@ def calc_energy(inputdata, DEBUG = False):
 
                     # 定流量ポンプの処理熱量合計、VWVポンプの台数
                     Qtmp_CWV = 0
-                    numVWV = MxPUMPNum[iL]  # MxPUMPNum[iL]は、変流量時の最大運転台数
+                    numVWV = MxPUMPNum[iL]  # MxPUMPNum[iL]は、負荷率帯 iL のときの運転台数（定流量＋流量）
 
                     for rr in range(0, int(MxPUMPNum[iL])):
                         
