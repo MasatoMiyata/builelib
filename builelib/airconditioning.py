@@ -2306,7 +2306,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         MxPUMPNum = np.zeros(len(mxL))
         MxPUMPPower = np.zeros(len(mxL))
-        PUMPvwvfac = np.zeros(len(mxL))
+        PUMPvwvfac = np.ones(len(mxL))
 
         if inputdata["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
 
@@ -2327,8 +2327,7 @@ def calc_energy(inputdata, DEBUG = False):
                             tmpL = aveL[iL]
 
                         # VWVの効果率曲線(1番目の特性を代表して使う)
-                        
-                        if iL == len(mxL):
+                        if aveL[iL] > 1.0:
                             PUMPvwvfac[iL] = 1.2
                         else:
                             PUMPvwvfac[iL] = \
@@ -2368,7 +2367,7 @@ def calc_energy(inputdata, DEBUG = False):
 
                     # 定流量ポンプの処理熱量合計、VWVポンプの台数
                     Qtmp_CWV = 0
-                    numVWV = MxPUMPNum[iL]  # MxPUMPNum[iL]は、負荷率帯 iL のときの運転台数（定流量＋流量）
+                    numVWV = MxPUMPNum[iL]  # MxPUMPNum[iL]は、負荷率帯 iL のときの運転台数（定流量＋変流量）
 
                     for rr in range(0, int(MxPUMPNum[iL])):
                         
@@ -2385,10 +2384,15 @@ def calc_energy(inputdata, DEBUG = False):
                         if (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "無") or \
                             (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
 
+                            # 変流量制御の効果率
+                            PUMPvwvfac = np.ones(len(mxL))
                             if aveL[iL] > 1.0:
-                                MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * 1.2
+                                PUMPvwvfac[iL] = 1.2
+                            
+                            if aveL[iL] > 1.0:
+                                MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
                             else:
-                                MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"]
+                                MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
 
 
                         elif inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "回転数制御":
@@ -2420,7 +2424,7 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## 二次ポンプ群の消費電力（解説書 2.6.8）
+    ## 二次ポンプ群ごとの消費電力（解説書 2.6.8）
     ##----------------------------------------------------------------------------------
 
     for pump_name in inputdata["PUMP"]:
@@ -2435,7 +2439,7 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## 二次ポンプ群の年間一次エネルギー消費量（解説書 2.6.10）
+    ## 二次ポンプ群全体の年間一次エネルギー消費量（解説書 2.6.10）
     ##----------------------------------------------------------------------------------
 
     resultJson["ENERGY"]["E_pump"] = 0
