@@ -7,7 +7,7 @@ import jsonschema
 import numpy as np
 import os
 
-# 電気の量 1kWh を熱量 kJに換算する係数
+# 電気の量 1kWh を熱量 kJ に換算する係数
 fprime = 9760
 
 # データベースファイルの保存場所

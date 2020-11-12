@@ -2544,9 +2544,9 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./sample/"
+    directory = "./tests/airconditioning/"
 
-    case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
+    case_name = 'ACtest_Case001-a'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
@@ -2560,7 +2560,7 @@ if __name__ == '__main__':
     #-----------------------
     # directory = "./tests/airconditioning/"
 
-    # for id in range(1,44):
+    # for id in range(44,46):
     #     if id < 10:
     #         case_name = 'ACtest_Case00' + str(int(id))
     #     else:

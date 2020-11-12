@@ -2327,6 +2327,7 @@ def calc_energy(inputdata, DEBUG = False):
                             tmpL = aveL[iL]
 
                         # VWVの効果率曲線(1番目の特性を代表して使う)
+                        PUMPvwvfac = np.ones(len(mxL))
                         if aveL[iL] > 1.0:
                             PUMPvwvfac[iL] = 1.2
                         else:
@@ -2405,6 +2406,7 @@ def calc_energy(inputdata, DEBUG = False):
                                 tmpL = inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100
                             
                             # 変流量制御による省エネ効果
+                            PUMPvwvfac = np.ones(len(mxL))
                             if aveL[iL] > 1.0:
                                 PUMPvwvfac[iL] = 1.2
                             else:
@@ -3653,7 +3655,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case001-a.json'
+    filename = './tests/airconditioning/ACtest_Case013.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
 
