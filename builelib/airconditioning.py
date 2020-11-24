@@ -90,6 +90,8 @@ def calc_energy(inputdata, DEBUG = False):
                 "温水": 0,
                 "冷水": 0,
             }
+        },
+        "for_CGS":{
         }
     }
 
@@ -464,6 +466,14 @@ def calc_energy(inputdata, DEBUG = False):
                     / glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b2"]
                 kita  = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["kita"]            
 
+                # print(ku_a)
+                # print(ku_b)
+                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a1"] )
+                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a2"] )
+                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b1"] )
+                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b2"] )
+                # print(inputdata["WindowConfigure"][window_name]["glassUvalue"])
+
                 inputdata["WindowConfigure"][window_name]["Uvalue"] = ku_a * inputdata["WindowConfigure"][window_name]["glassUvalue"] + ku_b
                 inputdata["WindowConfigure"][window_name]["Ivalue"] = kita * inputdata["WindowConfigure"][window_name]["glassIvalue"]
 
@@ -505,6 +515,11 @@ def calc_energy(inputdata, DEBUG = False):
                             * (-0.1331 * inputdata["WindowConfigure"][window_name]["glassIvalue"] ** 2 +\
                                 0.8258 * inputdata["WindowConfigure"][window_name]["glassIvalue"] )
 
+
+            if DEBUG:
+                print(f'--- 窓名称 {window_name} ---')
+                print(f'窓の熱貫流率 Uvalue : {inputdata["WindowConfigure"][window_name]["Uvalue"]}')
+                print(f'窓+BLの熱貫流率 Uvalue_blind : {inputdata["WindowConfigure"][window_name]["Uvalue_blind"]}')
 
     ##----------------------------------------------------------------------------------
     ## 外壁の面積の計算（解説書 2.4.2.1）
@@ -2124,7 +2139,7 @@ def calc_energy(inputdata, DEBUG = False):
                             tmpH = k_heatup * resultJson["AHU"][ahu_name]["MxAHUhE"] * \
                                 resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["ThAHU"] * 3600
 
-                        resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd] = tmpC + tmpH
+                    resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd] = tmpC + tmpH
 
 
                     ## 日積算ポンプ負荷 Qps [MJ/day] の算出
@@ -2165,7 +2180,7 @@ def calc_energy(inputdata, DEBUG = False):
                             tmpH = k_heatup * resultJson["AHU"][ahu_name]["MxAHUhE"] * \
                                 resultJson["AHU"][ahu_name]["heating"]["Tahu"][dd] / resultJson["AHU"][ahu_name]["ThAHU"] * 3600
 
-                        resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd] = tmpC + tmpH
+                    resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd] = tmpC + tmpH
 
 
                     ## 日積算ポンプ負荷 Qps [MJ/day] の算出<符号逆転させる>
@@ -2215,7 +2230,7 @@ def calc_energy(inputdata, DEBUG = False):
 
             print( f'--- 二次ポンプ群名 {pump_name} ---')
 
-            print( f'二次ポンプ負荷 Tps: {np.sum(resultJson["PUMP"][pump_name]["Qps"],0)}' )
+            print( f'二次ポンプ負荷 Qps: {np.sum(resultJson["PUMP"][pump_name]["Qps"],0)}' )
             print( f'二次ポンプ運転時間 Tps: {np.sum(resultJson["PUMP"][pump_name]["Tps"],0)}' )
 
 
@@ -2422,7 +2437,6 @@ def calc_energy(inputdata, DEBUG = False):
 
         resultJson["PUMP"][pump_name]["MxPUMPNum"]   = MxPUMPNum
         resultJson["PUMP"][pump_name]["MxPUMPPower"] = MxPUMPPower
-        resultJson["PUMP"][pump_name]["PUMPvwvfac"]  = PUMPvwvfac
 
 
     ##----------------------------------------------------------------------------------
@@ -2774,7 +2788,6 @@ def calc_energy(inputdata, DEBUG = False):
             print( f'熱源群の平均負荷 Qref_kW: {np.sum(resultJson["REF"][ref_name]["Qref_kW"],0)}' )
             print( f'熱源群の過負荷 Qref_OVER: {np.sum(resultJson["REF"][ref_name]["Qref_OVER"],0)}' )
             print( f'熱源群の運転時間 Tref: {np.sum(resultJson["REF"][ref_name]["Tref"],0)}' )
-
 
     ##----------------------------------------------------------------------------------
     ## 熱源機器の特性の読み込み（解説書 附属書A.4）
@@ -3649,14 +3662,21 @@ def calc_energy(inputdata, DEBUG = False):
     # BEI/ACの算出
     resultJson["BEI_AC"] = resultJson["E_airconditioning"] / resultJson["Es_airconditioning"]
 
+
+    ##----------------------------------------------------------------------------------
+    ## CGS計算用変数
+    ##----------------------------------------------------------------------------------    
+
+    resultJson["for_CGS"] = 0
+
     return resultJson
 
 
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case013.json'
-    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    # filename = './tests/airconditioning/ACtest_Case013.json'
+    filename = './sample/CGS_case_office_00.json'
 
 
     # 入力ファイルの読み込み
