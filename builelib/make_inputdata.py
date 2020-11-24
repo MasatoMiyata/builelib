@@ -1354,7 +1354,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     elif dataBE3[3] == "樹脂製(単板ガラス)":
                         frameType = "樹脂製"
                         layerType = "単層"
-                    elif dataBE3[3] == "樹脂製(複層ガラス)":
+                    elif dataBE3[3] == "樹脂製(複層ガラス)" or dataBE3[3] == "樹脂":
                         frameType = "樹脂製"
                         layerType = "複層"
                     elif dataBE3[3] == "金属木複合製(単板ガラス)":
@@ -1366,13 +1366,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     elif dataBE3[3] == "金属樹脂複合製(単板ガラス)":
                         frameType = "金属樹脂複合製"
                         layerType = "単層"
-                    elif dataBE3[3] == "金属樹脂複合製(複層ガラス)":
+                    elif dataBE3[3] == "金属樹脂複合製(複層ガラス)" or dataBE3[3] == "アルミ樹脂複合":
                         frameType = "金属樹脂複合製"
                         layerType = "複層"
                     elif dataBE3[3] == "金属製(単板ガラス)":
                         frameType = "金属製"
                         layerType = "単層"
-                    elif dataBE3[3] == "金属製(複層ガラス)":
+                    elif dataBE3[3] == "金属製(複層ガラス)" or dataBE3[3] == "アルミ":
                         frameType = "金属製"
                         layerType = "複層"
                     else:
@@ -1402,7 +1402,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     elif dataBE3[3] == "樹脂製(単板ガラス)":
                         frameType = "樹脂製"
                         layerType = "単層"
-                    elif dataBE3[3] == "樹脂製(複層ガラス)":
+                    elif dataBE3[3] == "樹脂製(複層ガラス)" or dataBE3[3] == "樹脂":
                         frameType = "樹脂製"
                         layerType = "複層"
                     elif dataBE3[3] == "金属木複合製(単板ガラス)":
@@ -1414,13 +1414,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     elif dataBE3[3] == "金属樹脂複合製(単板ガラス)":
                         frameType = "金属樹脂複合製"
                         layerType = "単層"
-                    elif dataBE3[3] == "金属樹脂複合製(複層ガラス)":
+                    elif dataBE3[3] == "金属樹脂複合製(複層ガラス)" or dataBE3[3] == "アルミ樹脂複合":
                         frameType = "金属樹脂複合製"
                         layerType = "複層"
                     elif dataBE3[3] == "金属製(単板ガラス)":
                         frameType = "金属製"
                         layerType = "単層"
-                    elif dataBE3[3] == "金属製(複層ガラス)":
+                    elif dataBE3[3] == "金属製(複層ガラス)" or dataBE3[3] == "アルミ":
                         frameType = "金属製"
                         layerType = "複層"
                     else:
@@ -1471,6 +1471,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
     if "2-5) 熱源" in wb.sheet_names():
         
+        # データベースファイルの保存場所
+        database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
+        ## 熱源機器特性
+        with open(database_directory + "HeatSourcePerformance.json", 'r') as f:
+            HeatSourcePerformance = json.load(f)
+
         # シートの読み込み
         sheet_AC2 = wb.sheet_by_name("2-5) 熱源")
         # 初期化
@@ -1521,7 +1527,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         StorageType = None
                         StorageSize = None
 
-                    if dataAC2[11] == "" or dataAC2[11] == 0:   # 補機電力が0であれば
+                    if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
@@ -1568,7 +1574,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         StorageType = None
                         StorageSize = None
 
-                    if dataAC2[21] == "" or dataAC2[21] == 0:   # 補機電力が0であれば
+                    if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
@@ -1637,7 +1643,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                 if (dataAC2[5] != "") and (dataAC2[6] != ""):     # 冷熱源
     
-                    if dataAC2[11] == "" or dataAC2[11] == 0:   # 補機電力が0であれば
+                    if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
@@ -1666,7 +1672,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                 if (dataAC2[5] != "") and (dataAC2[16] != ""):     # 温熱源
                     
-                    if dataAC2[21] == "" or dataAC2[21] == 0:   # 補機電力が0であれば
+                    if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
@@ -1714,7 +1720,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         StorageType = None
                         StorageSize = None
 
-                    if dataAC2[11] == "" or dataAC2[11] == 0:   # 補機電力が0であれば
+                    if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
@@ -1790,7 +1796,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         StorageType = None
                         StorageSize = None
 
-                    if dataAC2[21] == "" or dataAC2[21] == 0:   # 補機電力が0であれば
+                    if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
@@ -2544,9 +2550,9 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./tests/airconditioning/"
+    directory = "./sample/"
 
-    case_name = 'ACtest_Case001-a'
+    case_name = 'CGS_case_office_00'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
