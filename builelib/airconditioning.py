@@ -80,16 +80,6 @@ def calc_energy(inputdata, DEBUG = False):
             "E_pumpP": 0,   # 熱源群一次ポンプの一次エネルギー消費量 [GJ]
             "E_ctfan": 0,   # 熱源群冷却塔ファンの一次エネルギー消費量 [GJ]
             "E_ctpump": 0,  # 熱源群冷却水ポンプの一次エネルギー消費量 [GJ]
-            "E_ref_source_day": {
-                "電力": 0,
-                "ガス": 0,
-                "重油": 0,
-                "灯油": 0,
-                "液化石油ガス": 0,
-                "蒸気": 0,
-                "温水": 0,
-                "冷水": 0,
-            }
         },
         "for_CGS":{
         }
@@ -1870,6 +1860,9 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     # 合計
+
+    resultJson["ENERGY"]["E_fan_MWh_day"] = np.zeros(365)
+
     for ahu_name in inputdata["AirHandlingSystem"]:
 
         # 空調機群（送風機）のエネルギー消費量 MWh
@@ -1877,6 +1870,10 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 空調機群（全熱交換器）のエネルギー消費量 MWh
         resultJson["ENERGY"]["E_aex"] += np.sum(resultJson["AHU"][ahu_name]["E_AHUaex_day"],0)
+
+        # 空調機群（送風機+全熱交換器）のエネルギー消費量 MWh/day
+        resultJson["ENERGY"]["E_fan_MWh_day"] += resultJson["AHU"][ahu_name]["E_fan_day"] + \
+            resultJson["AHU"][ahu_name]["E_AHUaex_day"]
 
         # ファン発熱量計算用
         resultJson["AHU"][ahu_name]["TcAHU"] = np.sum(resultJson["AHU"][ahu_name]["TdAHUc_total"],0)
@@ -2459,10 +2456,14 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     resultJson["ENERGY"]["E_pump"] = 0
+    resultJson["ENERGY"]["E_pump_MWh_day"] = np.zeros(365)
 
     for pump_name in inputdata["PUMP"]:
 
         resultJson["ENERGY"]["E_pump"] += np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
+
+        resultJson["ENERGY"]["E_pump_MWh_day"] += resultJson["PUMP"][pump_name]["E_pump_day"]
+    
         resultJson["PUMP"][pump_name]["TcPUMP"]  = np.sum(resultJson["PUMP"][pump_name]["TdPUMP"], 0)
         resultJson["PUMP"][pump_name]["MxPUMPE"]  = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
@@ -2659,6 +2660,7 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["REF"][ref_name]["LdREF"]         = np.zeros(365)      # 熱源の負荷率区分
         resultJson["REF"][ref_name]["TdREF"]         = np.zeros(365)      # 熱源の温度区分
         resultJson["REF"][ref_name]["E_ref_day"]     =  np.zeros(365)     # 熱源群エネルギー消費量 [MJ]
+        resultJson["REF"][ref_name]["E_ref_day_MWh"] =  np.zeros(365)     # 熱源主機電力消費量 [MWh]
         resultJson["REF"][ref_name]["E_ref_ACc_day"] =  np.zeros(365)     # 補機電力 [MWh]
         resultJson["REF"][ref_name]["E_PPc_day"]     =  np.zeros(365)     # 一次ポンプ電力 [MWh]
         resultJson["REF"][ref_name]["E_CTfan_day"]   =  np.zeros(365)     # 冷却塔ファン電力 [MWh]
@@ -2671,7 +2673,8 @@ def calc_energy(inputdata, DEBUG = False):
             # 熱源群に属する各熱源機器の値
             resultJson["REF"][ref_name]["Heatsource"][unit_id] = {}
             resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"]  = np.zeros( [divT, divL+1] ) 
-
+            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit"] = np.zeros(365)
+            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"] = np.zeros(365)
 
     ##----------------------------------------------------------------------------------
     ## 熱源群の定格能力 （解説書 2.7.5）
@@ -2826,7 +2829,7 @@ def calc_energy(inputdata, DEBUG = False):
             # 燃料種類＋一次エネルギー換算 [kW]
             if fuel_type == "電力":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 1
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (9760/3600) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = (bc.fprime/3600) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
             elif fuel_type == "ガス":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 2
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refset_MainPowerELE"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] 
@@ -3440,7 +3443,6 @@ def calc_energy(inputdata, DEBUG = False):
 
                     resultJson["REF"][ref_name]["MxREFperE"][ioa][iL] += resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"][ioa][iL]
 
-
                 # 一台あたりの負荷率（熱源機器の負荷率＝最大能力を考慮した負荷率・ただし、熱源特性の上限・下限は考慮せず）
                 aveLperU = resultJson["REF"][ref_name]["MxREFxL_real"][ioa][iL]
 
@@ -3546,7 +3548,9 @@ def calc_energy(inputdata, DEBUG = False):
 
             if resultJson["REF"][ref_name]["LdREF"][dd] == 0:
                 
-                resultJson["REF"][ref_name]["E_ref_ACc_day"][dd] =  0   # 補機電力 [MWh]
+                resultJson["REF"][ref_name]["E_ref_day"][dd]     =  0   # 熱源主機エネルギー消費量 [MJ]
+                resultJson["REF"][ref_name]["E_ref_day_MWh"][dd] =  0   # 熱源主機電力消費量 [MWh]
+                resultJson["REF"][ref_name]["E_ref_ACc_day"][dd] =  0   # 熱源補機電力 [MWh]
                 resultJson["REF"][ref_name]["E_PPc_day"][dd]     =  0   # 一次ポンプ電力 [MWh]
                 resultJson["REF"][ref_name]["E_CTfan_day"][dd]   =  0   # 冷却塔ファン電力 [MWh]
                 resultJson["REF"][ref_name]["E_CTpump_day"][dd]  =  0   # 冷却水ポンプ電力 [MWh]
@@ -3560,7 +3564,20 @@ def calc_energy(inputdata, DEBUG = False):
                 for unit_id in range(0,len(inputdata["REF"][ref_name]["Heatsource"])):
 
                     resultJson["REF"][ref_name]["E_ref_day"][dd]  += \
-                        resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"] [ iT ][ iL ] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd]
+                        resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"][ iT ][ iL ] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd]
+
+                    # CGSの計算用に機種別に一次エネルギー消費量を積算 [MJ/day]
+                    resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit"][dd] = \
+                        resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"][ iT ][ iL ] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd]
+
+                    # CGSの計算用に電力のみ積算 [MWh]
+                    if inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] == 1:  # 燃料種類が「電力」であれば、CGS計算用に集計を行う。
+
+                        resultJson["REF"][ref_name]["E_ref_day_MWh"][dd]  += \
+                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"][ iT ][ iL ] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / bc.fprime
+
+                        resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"][dd] = \
+                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"][ iT ][ iL ] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / bc.fprime
 
                 # 補機電力 [MWh]
                 resultJson["REF"][ref_name]["E_ref_ACc_day"][dd] += \
@@ -3594,9 +3611,19 @@ def calc_energy(inputdata, DEBUG = False):
     ## 熱源群のエネルギー消費量（解説書 2.7.18）
     ##----------------------------------------------------------------------------------
 
+    # 熱源主機の電力消費量 [MWh]
+    resultJson["ENERGY"]["E_ref_main_MWh_day"] = np.zeros(365)
+    # 熱源主機以外の電力消費量 [MWh]
+    resultJson["ENERGY"]["E_ref_sub_MWh_day"] = np.zeros(365)
+
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["E_ref_source_Ele_day"] = np.zeros(365)
+        # 熱源主機の電力消費量 [MWh/day]
+        resultJson["ENERGY"]["E_ref_main_MWh_day"]  += resultJson["REF"][ref_name]["E_ref_day_MWh"]
+        # 熱源主機以外の電力消費量 [MWh/day]
+        resultJson["ENERGY"]["E_ref_sub_MWh_day"]  += resultJson["REF"][ref_name]["E_ref_ACc_day"] \
+                + resultJson["REF"][ref_name]["E_PPc_day"] + resultJson["REF"][ref_name]["E_CTfan_day"] \
+                + resultJson["REF"][ref_name]["E_CTpump_day"]
 
         for dd in range(0,365):
 
@@ -3610,7 +3637,6 @@ def calc_energy(inputdata, DEBUG = False):
             resultJson["ENERGY"]["E_ctfan"]  += resultJson["REF"][ref_name]["E_CTfan_day"][dd]
             # 冷却水ポンプ電力消費量 [MWh]
             resultJson["ENERGY"]["E_ctpump"] += resultJson["REF"][ref_name]["E_CTpump_day"][dd]
-
 
     print('熱源エネルギー計算完了')
 
@@ -3628,14 +3654,14 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     resultJson["E_airconditioning"] = \
-        + resultJson["ENERGY"]["E_fan"] * 9760 \
-        + resultJson["ENERGY"]["E_aex"] * 9760 \
-        + resultJson["ENERGY"]["E_pump"]  * 9760 \
+        + resultJson["ENERGY"]["E_fan"] * bc.fprime \
+        + resultJson["ENERGY"]["E_aex"] * bc.fprime \
+        + resultJson["ENERGY"]["E_pump"]  * bc.fprime \
         + resultJson["ENERGY"]["E_refsysr"] \
-        + resultJson["ENERGY"]["E_refac"] * 9760 \
-        + resultJson["ENERGY"]["E_pumpP"] * 9760 \
-        + resultJson["ENERGY"]["E_ctfan"] * 9760 \
-        + resultJson["ENERGY"]["E_ctpump"] * 9760
+        + resultJson["ENERGY"]["E_refac"] * bc.fprime \
+        + resultJson["ENERGY"]["E_pumpP"] * bc.fprime \
+        + resultJson["ENERGY"]["E_ctfan"] * bc.fprime \
+        + resultJson["ENERGY"]["E_ctpump"] * bc.fprime
 
     if DEBUG:
         print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["E_airconditioning"]/roomAreaTotal}' )
@@ -3664,10 +3690,108 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## CGS計算用変数
+    ## CGS計算用変数 （解説書 ８章 附属書 G.10 他の設備の計算結果の読み込み）
     ##----------------------------------------------------------------------------------    
 
-    resultJson["for_CGS"] = 0
+    if len(inputdata["CogenerationSystems"]) == 1: # コジェネがあれば実行
+    
+        for cgs_name in inputdata["CogenerationSystems"]:
+
+            # 排熱利用機器（冷房）
+            resultJson["for_CGS"]["CGS_refName_C"] = inputdata["CogenerationSystems"][cgs_name]["CoolingSystem"] + "_冷房"
+            # 排熱利用機器（暖房）
+            resultJson["for_CGS"]["CGS_refName_H"] = inputdata["CogenerationSystems"][cgs_name]["HeatingSystem"] + "_暖房"
+
+        # 熱源主機の電力消費量 [MWh/day]
+        resultJson["for_CGS"]["E_ref_main_MWh_day"] =  resultJson["ENERGY"]["E_ref_main_MWh_day"]  # 後半でCGSから排熱供給を受ける熱源群の電力消費量を差し引く。
+
+        # 熱源補機の電力消費量 [MWh/day]
+        resultJson["for_CGS"]["E_ref_sub_MWh_day"] = resultJson["ENERGY"]["E_ref_sub_MWh_day"]
+
+        # 二次ポンプ群の電力消費量 [MWh/day]
+        resultJson["for_CGS"]["E_pump_MWh_day"] = resultJson["ENERGY"]["E_pump_MWh_day"]
+
+        # 空調機群の電力消費量 [MWh/day]
+        resultJson["for_CGS"]["E_fan_MWh_day"] = resultJson["ENERGY"]["E_fan_MWh_day"]
+
+        ## 排熱利用熱源系統
+        resultJson["for_CGS"]["E_ref_cgsC_ABS_day"] = np.zeros(365)
+        resultJson["for_CGS"]["Lt_ref_cgsC_day"]    = np.zeros(365)
+        resultJson["for_CGS"]["E_ref_cgsH_day"]     = np.zeros(365)
+        resultJson["for_CGS"]["Q_ref_cgsH_day"]     = np.zeros(365)
+        resultJson["for_CGS"]["T_ref_cgsC_day"]     = np.zeros(365)
+        resultJson["for_CGS"]["T_ref_cgsH_day"]     = np.zeros(365)
+        resultJson["for_CGS"]["NAC_ref_link"] = 0
+        resultJson["for_CGS"]["qAC_link_c_j_rated"] = 0
+        resultJson["for_CGS"]["EAC_link_c_j_rated"] = 0
+
+        for ref_name in inputdata["REF"]:
+            
+            # CGS系統の「排熱利用する冷熱源」　。　蓄熱がある場合は「追い掛け運転」を採用（2020/7/6変更）
+            if ref_name == resultJson["for_CGS"]["CGS_refName_C"]:
+                
+                for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+
+                    heatsource_using_exhaust_heat = [
+                        "吸収式冷凍機(蒸気)",
+                        "吸収式冷凍機(冷却水変流量、蒸気)",
+                        "吸収式冷凍機(温水)",
+                        "吸収式冷凍機(一重二重併用形、都市ガス)",
+                        "吸収式冷凍機(一重二重併用形、冷却水変流量、都市ガス)",
+                        "吸収式冷凍機(一重二重併用形、LPG)",
+                        "吸収式冷凍機(一重二重併用形、冷却水変流量、LPG)",
+                        "吸収式冷凍機(一重二重併用形、蒸気)",
+                        "吸収式冷凍機(一重二重併用形、冷却水変流量、蒸気)"
+                    ]
+
+                    if unit_configure["HeatsourceType"] in heatsource_using_exhaust_heat:
+
+                        # CGS系統の「排熱利用する冷熱源」の「吸収式冷凍機（都市ガス）」の一次エネルギー消費量 [MJ]
+                        resultJson["for_CGS"]["E_ref_cgsC_ABS_day"] += resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit"]
+            
+                        # 排熱投入型吸収式冷温水機jの定格冷却能力
+                        resultJson["for_CGS"]["qAC_link_c_j_rated"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
+
+                        # 排熱投入型吸収式冷温水機jの主機定格消費エネルギー
+                        resultJson["for_CGS"]["EAC_link_c_j_rated"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]
+                        
+                        resultJson["for_CGS"]["NAC_ref_link"] += 1
+
+                # CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての負荷率 [-]
+                for dd in range(0,365):
+
+                    if resultJson["REF"][ref_name]["LdREF"][dd] == 0:
+                        resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 0;
+                    elif resultJson["REF"][ref_name]["LdREF"][dd] == 11:
+                        resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 1.2
+                    else:
+                        resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = round(0.1*resultJson["REF"][ref_name]["LdREF"][dd]-0.05,2)
+
+                # CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の運転時間 [h/日]
+                resultJson["for_CGS"]["T_ref_cgsC_day"] = resultJson["REF"][ref_name]["Tref"]
+            
+            # CGS系統の「排熱利用する温熱源」
+            if ref_name == resultJson["for_CGS"]["CGS_refName_H"]:
+                
+                # 当該温熱源群の主機の消費電力を差し引く。
+                resultJson["for_CGS"]["E_ref_main_MWh_day"] = \
+                    resultJson["for_CGS"]["E_ref_main_MWh_day"] - resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"]
+                
+                # CGSの排熱利用が可能な温熱源群の主機の一次エネルギー消費量 [MJ/日]
+                resultJson["for_CGS"]["E_ref_cgsH_day"] = resultJson["REF"][ref_name]["E_ref_day"]
+
+                # CGSの排熱利用が可能な温熱源群の熱源負荷 [MJ/日]
+                resultJson["for_CGS"]["Q_ref_cgsH_day"] = resultJson["REF"][ref_name]["Qref"]
+
+                # CGSの排熱利用が可能な温熱源群の運転時間 [h/日]
+                resultJson["for_CGS"]["T_ref_cgsH_day"] = resultJson["REF"][ref_name]["Tref"]
+
+        # 空気調和設備の電力消費量 [MWh/day]
+        resultJson["for_CGS"]["electric_power_comsumption"] = \
+            + resultJson["for_CGS"]["E_ref_main_MWh_day"] \
+            + resultJson["for_CGS"]["E_ref_sub_MWh_day"] \
+            + resultJson["for_CGS"]["E_pump_MWh_day"] \
+            + resultJson["for_CGS"]["E_fan_MWh_day"]
 
     return resultJson
 
@@ -3690,15 +3814,15 @@ if __name__ == '__main__':
 
     print( f'BEI/AC: {resultJson["BEI_AC"]}')        
     print( f'設計一次エネルギー消費量 全体: {resultJson["E_airconditioning"]}')
-    print( f'設計一次エネルギー消費量 空調ファン: {resultJson["ENERGY"]["E_fan"] * 9760}')
-    print( f'設計一次エネルギー消費量 空調全熱交換器: {resultJson["ENERGY"]["E_aex"] * 9760}')
-    print( f'設計一次エネルギー消費量 二次ポンプ: {resultJson["ENERGY"]["E_pump"] * 9760}')
+    print( f'設計一次エネルギー消費量 空調ファン: {resultJson["ENERGY"]["E_fan"] * bc.fprime}')
+    print( f'設計一次エネルギー消費量 空調全熱交換器: {resultJson["ENERGY"]["E_aex"] * bc.fprime}')
+    print( f'設計一次エネルギー消費量 二次ポンプ: {resultJson["ENERGY"]["E_pump"] * bc.fprime}')
     print( f'設計一次エネルギー消費量 熱源主機: {resultJson["ENERGY"]["E_refsysr"]}')
-    print( f'設計一次エネルギー消費量 熱源補機: {resultJson["ENERGY"]["E_refac"] * 9760}')
-    print( f'設計一次エネルギー消費量 一次ポンプ: {resultJson["ENERGY"]["E_pumpP"] * 9760}')
-    print( f'設計一次エネルギー消費量 冷却塔ファン: {resultJson["ENERGY"]["E_ctfan"] * 9760}')
-    print( f'設計一次エネルギー消費量 冷却水ポンプ: {resultJson["ENERGY"]["E_ctpump"] * 9760}')
+    print( f'設計一次エネルギー消費量 熱源補機: {resultJson["ENERGY"]["E_refac"] * bc.fprime}')
+    print( f'設計一次エネルギー消費量 一次ポンプ: {resultJson["ENERGY"]["E_pumpP"] * bc.fprime}')
+    print( f'設計一次エネルギー消費量 冷却塔ファン: {resultJson["ENERGY"]["E_ctfan"] * bc.fprime}')
+    print( f'設計一次エネルギー消費量 冷却水ポンプ: {resultJson["ENERGY"]["E_ctpump"] * bc.fprime}')
 
     # デバッグ用
-    print( f'{resultJson["E_airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * 9760}, {resultJson["ENERGY"]["E_aex"] * 9760}, {resultJson["ENERGY"]["E_pump"] * 9760}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * 9760}, {resultJson["ENERGY"]["E_pumpP"] * 9760}, {resultJson["ENERGY"]["E_ctfan"] * 9760}, {resultJson["ENERGY"]["E_ctpump"] * 9760}')
+    print( f'{resultJson["E_airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * bc.fprime}, {resultJson["ENERGY"]["E_aex"] * bc.fprime}, {resultJson["ENERGY"]["E_pump"] * bc.fprime}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * bc.fprime}, {resultJson["ENERGY"]["E_pumpP"] * bc.fprime}, {resultJson["ENERGY"]["E_ctfan"] * bc.fprime}, {resultJson["ENERGY"]["E_ctpump"] * bc.fprime}')
 
