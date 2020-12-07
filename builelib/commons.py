@@ -45,8 +45,10 @@ def air_enenthalpy(Tdb, X):
     return H   
 
 
-# 発熱量参照値を読み込む関数（空調）
 def get_roomOutdoorAirVolume(buildingType, roomType):
+    """
+    発熱量参照値を読み込む関数（空調）
+    """
 
     # 外気導入量 [m3/h/m2]
     roomOutdoorAirVolume  = RoomUsageSchedule[buildingType][roomType]["外気導入量"]
@@ -86,8 +88,10 @@ def get_roomHotwaterDemand(buildingType, roomType):
     return hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other
 
 
-# 発熱量参照値を読み込む関数（空調）
 def get_roomHeatGain(buildingType, roomType):
+    """
+    発熱量参照値を読み込む関数（空調）
+    """
 
     roomHeatGain_Light  = RoomUsageSchedule[buildingType][roomType]["照明発熱参照値"]
 
@@ -110,9 +114,11 @@ def get_roomHeatGain(buildingType, roomType):
     return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp
 
 
-# 時刻別のスケジュールを読み込む関数（空調）
 def get_roomUsageSchedule(buildingType, roomType):
-    
+    """
+    時刻別のスケジュールを読み込む関数（空調）
+    """
+
     if RoomUsageSchedule[buildingType][roomType]["空調運転パターン"] == None:  # 非空調であれば
 
         roomScheduleRoom = None
@@ -184,10 +190,61 @@ def get_roomUsageSchedule(buildingType, roomType):
     return roomScheduleRoom, roomScheduleLight, roomSchedulePerson, roomScheduleOAapp, roomDayMode
 
 
+def get_dailyOpeSchedule_ventilation(buildingType, roomType):
+    """
+    時刻別のスケジュールを読み込む関数（換気）
+    """
 
-# 時刻別のスケジュールを読み込む関数（照明器具）
-def get_dailyOpeSchedule_lighting(buildingType, roomType):
+    # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
+    opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
+
+    # 各日時における運転状態（365×24の行列）
+    opePattern_hourly_ventilation = []
     
+    if RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン1"] == []:  # 非空調室の場合
+
+        # 非空調室は稼働率にする。
+        ratio_hourly = RoomUsageSchedule[buildingType][roomType]["年間換気時間"] / 8760
+
+        opePattern_hourly_ventilation = np.array( [[ratio_hourly]*24]*365 )
+
+    else:
+
+        if RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間空調時間"]:
+
+            for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
+                opePattern_hourly_ventilation.append(
+                    RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン" + str(opePattern_Daily[dd])]
+                )
+
+        elif RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]:
+        
+            for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
+                opePattern_hourly_ventilation.append(
+                    RoomUsageSchedule[buildingType][roomType]["スケジュール"]["照明発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
+                )
+
+        elif RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == 0:
+
+            for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
+                opePattern_hourly_ventilation.append(
+                    np.zeros(24)
+                )
+
+
+        # np.array型に変換
+        opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
+        # 0か1に変換
+        opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
+
+    return opePattern_hourly_ventilation
+
+
+def get_dailyOpeSchedule_lighting(buildingType, roomType):
+    """
+    時刻別のスケジュールを読み込む関数（照明）
+    """
+
     # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
     opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
 
