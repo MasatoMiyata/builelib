@@ -81,6 +81,8 @@ def calc_energy(inputdata, DEBUG = False):
             "E_ctfan": 0,   # 熱源群冷却塔ファンの一次エネルギー消費量 [GJ]
             "E_ctpump": 0,  # 熱源群冷却水ポンプの一次エネルギー消費量 [GJ]
         },
+        "Matrix":{            
+        },
         "for_CGS":{
         }
     }
@@ -2895,6 +2897,14 @@ def calc_energy(inputdata, DEBUG = False):
     TctwH  = 15.5 * np.ones(6)  #  水冷式の暖房時熱源水温度（暫定） [℃]
 
 
+    # 保存用
+    resultJson["Matrix"]["ToadbC"] = ToadbC
+    resultJson["Matrix"]["ToadbH"] = ToadbH
+    resultJson["Matrix"]["ToawbC"] = ToawbC
+    resultJson["Matrix"]["ToawbH"] = ToawbH
+    resultJson["Matrix"]["TctwC"]  = TctwC
+    resultJson["Matrix"]["TctwH"]  = TctwH
+
     ##----------------------------------------------------------------------------------
     ## 地中熱交換器（クローズドループ）からの熱源水温度 （解説書 2.7.4.4）
     ##----------------------------------------------------------------------------------
@@ -3799,8 +3809,9 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    # filename = './tests/airconditioning/ACtest_Case013.json'
-    filename = './sample/CGS_case_office_00.json'
+    filename = './tests/airconditioning/ACtest_Case001.json'
+    # filename = './sample/CGS_case_office_00.json'
+    # filename = './sample/example_one_room.json'
 
 
     # 入力ファイルの読み込み
@@ -3826,3 +3837,7 @@ if __name__ == '__main__':
     # デバッグ用
     print( f'{resultJson["E_airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * bc.fprime}, {resultJson["ENERGY"]["E_aex"] * bc.fprime}, {resultJson["ENERGY"]["E_pump"] * bc.fprime}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * bc.fprime}, {resultJson["ENERGY"]["E_pumpP"] * bc.fprime}, {resultJson["ENERGY"]["E_ctfan"] * bc.fprime}, {resultJson["ENERGY"]["E_ctpump"] * bc.fprime}')
 
+    for ref_name in inputdata["REF"]:
+        print( f'--- 熱源群名 {ref_name} ---')
+        print( f'熱源群の熱源負荷 Qref: {np.sum(resultJson["REF"][ref_name]["Qref"],0)}' )
+    print( f'設計一次エネルギー消費量 全体: {resultJson["E_airconditioning"]}') 
