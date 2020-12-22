@@ -7,6 +7,21 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import commons as bc
 
+# json.dump用のクラス
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, set):
+            return list(obj)
+        else:
+            return super(MyEncoder, self).default(obj)
+
+
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
@@ -50,6 +65,8 @@ def calc_energy(inputdata, DEBUG = False):
         "BEI_L": None,
         "E_lighting_hourly": None,
         "lighting":{
+        },
+        "for_CGS":{
         }
     }
 
@@ -108,13 +125,12 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 時刻別の設計一次エネルギー消費量 [MJ]
         E_room_hourly = opePattern_hourly_light * unitPower * roomIndexCoeff * bc.fprime * 10**(-6)
-    
-
         # 各室の年間エネルギー消費量 [MJ]
         E_room = E_room_hourly.sum()
-        E_lighting_hourly = E_lighting_hourly + E_room_hourly
 
-        E_lighting += E_room  # 出力用に積算
+        # 出力用に積算
+        E_lighting += E_room  
+        E_lighting_hourly += E_room_hourly
 
         # 床面積あたりの設計一次エネルギー消費量 [MJ/m2]
         if roomArea <= 0:
@@ -159,17 +175,24 @@ def calc_energy(inputdata, DEBUG = False):
     resultJson["BEI_L"] = BEI_L
     resultJson["E_lighting_hourly"] = E_lighting_hourly
 
+    # 日積算値
+    resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly/9760,1)
+
+    if DEBUG:
+        with open("resultJson_L.json",'w') as fw:
+            json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
     return resultJson
 
 
 if __name__ == '__main__':
 
     print('----- lighting.py -----')
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './sample/CGS_case_office_00.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
-    print(resultJson)
