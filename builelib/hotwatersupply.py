@@ -9,6 +9,21 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import commons as bc
 import climate
 
+# json.dump用のクラス
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, set):
+            return list(obj)
+        else:
+            return super(MyEncoder, self).default(obj)
+
+
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
@@ -22,6 +37,11 @@ def calc_energy(inputdata, DEBUG = False):
         "Es_hotwatersupply": 0,   # 給湯設備の基準一次エネルギー消費量 [MJ/年]
         "BEI_HW": 0,
         "hotwatersupply":{
+        },
+        "for_CGS":{
+            "Edesign_MWh_Ele_day": 0, # 給湯設備（エネルギー源を電力とする給湯機器のみが対象）の電力消費量
+            "Edesign_MJ_CGS_day": 0,  # 排熱利用する給湯系統の一次エネルギー消費量
+            "Q_eqp_CGS_day": 0        # 排熱が利用できる系統の給湯設備の給湯負荷
         }
     }
     
@@ -469,6 +489,53 @@ def calc_energy(inputdata, DEBUG = False):
     # BEI/HW
     resultJson["BEI_HW"] = resultJson["E_hotwatersupply"] / resultJson["Es_hotwatersupply"]
 
+
+    #----------------------------------------------------------------------------------
+    # CGS計算用変数 （解説書 ８章 附属書 G.10 他の設備の計算結果の読み込み）
+    #----------------------------------------------------------------------------------
+
+    Edesign_MWh_Ele_hour = np.zeros((365,24))
+    Edesign_MJ_CGS_hour  = np.zeros((365,24))
+    Q_eqp_CGS_hour       = np.zeros((365,24))
+
+    if len(inputdata["CogenerationSystems"]) == 1: # コジェネがあれば実行
+    
+        for cgs_name in inputdata["CogenerationSystems"]:
+
+            # コジェネ系統にない給湯設備の電力消費量を積算
+            for unit_name in inputdata["HotwaterSupplySystems"]:
+                
+                if inputdata["CogenerationSystems"][cgs_name]["HowWaterSystem"] != "" and \
+                    inputdata["CogenerationSystems"][cgs_name]["HowWaterSystem"] == unit_name:
+
+                    # コジェネの排熱利用先であれば
+                    for dd in range(0,365):
+                        Edesign_MJ_CGS_hour[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/24/1000 * np.ones(24)
+                        Q_eqp_CGS_hour[dd] += inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"][dd]/24/1000 * np.ones(24)
+
+                else:
+
+                    # コジェネの排熱利用先以外であれば
+                    for unit_id, unit_configure in enumerate(inputdata["HotwaterSupplySystems"][unit_name]["HeatSourceUnit"]):
+                    
+                        if unit_configure["UsageType"] == "給湯負荷用":
+                            if unit_configure["HeatSourceType"] == "電気瞬間湯沸器" or unit_configure["HeatSourceType"] == "貯湯式電気温水器" or \
+                                unit_configure["HeatSourceType"] == "業務用ヒートポンプ給湯機" or unit_configure["HeatSourceType"] == "家庭用ヒートポンプ給湯機":
+
+                                for dd in range(0,365):
+                                    Edesign_MWh_Ele_hour[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/24/1000/9760 * np.ones(24)
+
+
+        resultJson["for_CGS"]["Edesign_MWh_Ele_day"] = np.sum(Edesign_MWh_Ele_hour,1)
+        resultJson["for_CGS"]["Edesign_MJ_CGS_day"]  = np.sum(Edesign_MJ_CGS_hour,1)
+        resultJson["for_CGS"]["Q_eqp_CGS_day"]       = np.sum(Q_eqp_CGS_hour,1)
+
+
+    if DEBUG:
+        with open("resultJson_HW.json",'w') as fw:
+            json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+
     return resultJson
 
 
@@ -476,12 +543,12 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- hotwatersupply.py -----')
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './sample/CGS_case_office_00.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
-    print(resultJson)
+
 
