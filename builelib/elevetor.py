@@ -7,6 +7,19 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import commons as bc
 
+# json.dump用のクラス
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, set):
+            return list(obj)
+        else:
+            return super(MyEncoder, self).default(obj)
 
 def calc_energy(inputdata, DEBUG = False):
 
@@ -18,7 +31,10 @@ def calc_energy(inputdata, DEBUG = False):
         "E_elevetor": 0,
         "Es_elevetor": 0,
         "BEI_EV": 0,
-        "Elevators": {}
+        "Elevators": {},
+        "for_CGS":{
+            "Edesign_MWh_day": np.zeros(365)
+        }
     }
 
     #----------------------------------------------------------------------------------
@@ -66,8 +82,15 @@ def calc_energy(inputdata, DEBUG = False):
             print(f'室 {room_name} に設置された昇降機')
             print(f'  - 昇降機運転時間 {inputdata["Elevators"][room_name]["operation_time"]}')
 
+        # 時刻別スケジュール
+        if buildingType == "共同住宅":
+            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = 5480/8760 * np.ones((365,24))
+        else:
+            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = bc.get_dailyOpeSchedule_lighting(buildingType, roomType)
+
 
     # エネルギー消費量計算 [kWh/年]
+    Edesign_MWh_hour = np.zeros((365,24))
     for room_name in inputdata["Elevators"]:
         for unit_id, unit_configure in enumerate(inputdata["Elevators"][room_name]["Elevator"]):
 
@@ -83,6 +106,12 @@ def calc_energy(inputdata, DEBUG = False):
                 print(f'　- 積載量  {unit_configure["LoadLimit"]}')
                 print(f'　- 速度制御方式による係数  {unit_configure["ControlTypeCoefficient"]}')
                 print(f'　- エネルギー消費量 kWh/年 {inputdata["Elevators"][room_name]["Elevator"][unit_id]["energy_consumption"]}')
+
+            # 時刻別エネルギー消費量 [MWh]
+            Edesign_MWh_hour += \
+                unit_configure["Number"] * \
+                unit_configure["Velocity"] * unit_configure["LoadLimit"] * unit_configure["ControlTypeCoefficient"] * \
+                inputdata["Elevators"][room_name]["operation_schedule_hourly"] / 860 /1000
 
 
     #----------------------------------------------------------------------------------
@@ -126,17 +155,26 @@ def calc_energy(inputdata, DEBUG = False):
     # BEI/Vの計算
     resultJson["BEI_EV"] = resultJson["E_elevetor"] / resultJson["Es_elevetor"]
 
+    # 日積算値
+    resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(Edesign_MWh_hour,1)
+
+    if DEBUG:
+        with open("resultJson_EV.json",'w') as fw:
+            json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+
     return resultJson
 
 
 if __name__ == '__main__':
 
     print('----- elevetor.py -----')
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './sample/CGS_case_office_00.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
-    resultJson = calc_energy(inputdata)
-    print(resultJson)
+    resultJson = calc_energy(inputdata, DEBUG = True)
+
