@@ -3262,8 +3262,8 @@ def calc_energy(inputdata, DEBUG = False):
 
                         for para_id in range(0, len(inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"])):
 
-                            if inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][i] > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][para_id]["冷却水温度下限"] and \
-                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][i] >= inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][para_id]["冷却水温度上限"]:
+                            if inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][ioa] > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][para_id]["冷却水温度下限"] and \
+                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][ioa] <= inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][para_id]["冷却水温度上限"]:
                                 xCurveNum = para_id
                 
                     # 部分負荷特性の上下限
