@@ -116,15 +116,15 @@ def get_roomHeatGain(buildingType, roomType):
 
 def get_roomUsageSchedule(buildingType, roomType):
     """
-    時刻別のスケジュールを読み込む関数（空調）
+    時刻別のスケジュールを読み込む関数（空調、その他）
     """
 
     if RoomUsageSchedule[buildingType][roomType]["空調運転パターン"] == None:  # 非空調であれば
 
-        roomScheduleRoom = None
-        roomScheduleLight = None
-        roomSchedulePerson = None
-        roomScheduleOAapp = None
+        roomScheduleRoom = np.zeros((365,24))
+        roomScheduleLight = np.zeros((365,24))
+        roomSchedulePerson = np.zeros((365,24))
+        roomScheduleOAapp = np.zeros((365,24))
         roomDayMode = None
 
     else:
@@ -155,7 +155,7 @@ def get_roomUsageSchedule(buildingType, roomType):
                 RoomUsageSchedule[buildingType][roomType]["スケジュール"]["人体発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
             )
 
-            # 人体発熱機器発熱密度比率密度比率
+            # 機器発熱密度比率
             roomScheduleOAapp.append(
                 RoomUsageSchedule[buildingType][roomType]["スケジュール"]["機器発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
             )
@@ -168,13 +168,15 @@ def get_roomUsageSchedule(buildingType, roomType):
         roomSchedulePerson = np.array(roomSchedulePerson)
         roomScheduleOAapp  = np.array(roomScheduleOAapp)
 
+        # roomDayMode の決定
+
         # パターン１で 使用時間帯（１：昼、２：夜、０：終日） を判断
         roomDayMode  = 0
         
         schedule_oneday  = np.array(RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン1"])
         schedule_oneday[(schedule_oneday > 0)] = 1
 
-        opetime_oneday = np.sum(schedule_oneday)
+        opetime_oneday  = np.sum(schedule_oneday)
         opetime_daytime = np.sum(schedule_oneday[[6,7,8,9,10,11,12,13,14,15,16,17]])
         opetime_night   = np.sum(schedule_oneday[[0,1,2,3,4,5,18,19,20,21,22,23]])
 
