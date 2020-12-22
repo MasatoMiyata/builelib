@@ -2385,11 +2385,29 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 # 給湯システム名称をkeyとする
                 unitKey = str(dataHW2[0])
 
+                if str(dataHW2[1]) == "電力":
+                    HeatSourceType = "電気瞬間湯沸器"
+                elif str(dataHW2[1]) == "都市ガス":
+                    HeatSourceType = "ガス給湯機"
+                elif str(dataHW2[1]) == "液化石油ガス":
+                    HeatSourceType = "ガス給湯機"
+                elif str(dataHW2[1]) == "重油":
+                    HeatSourceType = "ボイラ"
+                elif str(dataHW2[1]) == "灯油":
+                    HeatSourceType = "ボイラ"
+                elif str(dataHW2[1]) == "他人から供給された熱（温水）":
+                    HeatSourceType = "地域熱供給"
+                elif str(dataHW2[1]) == "他人から供給された熱（蒸気）":
+                    HeatSourceType = "地域熱供給"
+                else:
+                    raise Exception("給湯の燃料種類の指定が不正です。")
+
+
                 data["HotwaterSupplySystems"][unitKey] = {
                     "HeatSourceUnit":[
                         {
-                            "UsageType": None,
-                            "HeatSourceType": None,
+                            "UsageType": "給湯負荷用",
+                            "HeatSourceType": HeatSourceType,
                             "Number": 1,
                             "RatedCapacity": float(dataHW2[2]),
                             "RatedPowerConsumption": 0,
