@@ -1030,21 +1030,24 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
         # BL-1	建築物の名称
         data["Building"]["Name"] = str(sheet_BL.cell(8, 2).value)
         # BL-2	都道府県	(選択)
-        data["Building"]["BuildingAddress"]["Prefecture"] = str(sheet_BL.cell(9, 3).value)
+        data["Building"]["BuildingAddress"]["Prefecture"] = set_default(str(sheet_BL.cell(9, 3).value), None, "str")
         # BL-3	建築物所在地	市区町村	(選択)
-        data["Building"]["BuildingAddress"]["City"]  = str(sheet_BL.cell(9, 5).value)
+        if sheet_BL.ncols <= 5:
+            data["Building"]["BuildingAddress"]["City"]  = None
+        else:
+            data["Building"]["BuildingAddress"]["City"]  = set_default(str(sheet_BL.cell(9, 5).value), None, "str")
         # BL-4	丁目、番地等
-        data["Building"]["BuildingAddress"]["Address"]  = str(sheet_BL.cell(10, 2).value)
+        data["Building"]["BuildingAddress"]["Address"]  = set_default(str(sheet_BL.cell(10, 2).value), None, "str")
         # BL-5	地域の区分		(自動)
         data["Building"]["Region"] = str(int(sheet_BL.cell(11, 2).value))
         # BL-6	年間日射地域区分		(自動)
-        data["Building"]["AnnualSolarRegion"] = str(sheet_BL.cell(17, 2).value)
+        data["Building"]["AnnualSolarRegion"] = set_default(str(sheet_BL.cell(17, 2).value), "A3", "str")
         # BL-7	延べ面積 	[㎡]	(数値)
         data["Building"]["BuildingFloorArea"] = float(sheet_BL.cell(16, 2).value)
         # BL-8	「他人から供給された熱」	冷熱	(数値)
-        data["Building"]["Coefficient_DHC"]["Cooling"] = float(sheet_BL.cell(18, 2).value)
+        data["Building"]["Coefficient_DHC"]["Cooling"] = set_default(str(sheet_BL.cell(18, 2).value), None, "float")
         # BL-9	の一次エネルギー換算係数	温熱	(数値)
-        data["Building"]["Coefficient_DHC"]["Heating"] = float(sheet_BL.cell(19, 2).value)
+        data["Building"]["Coefficient_DHC"]["Heating"] = set_default(str(sheet_BL.cell(19, 2).value), None, "float")
 
 
     # 様式1の読み込み
@@ -2411,7 +2414,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             "Number": 1,
                             "RatedCapacity": float(dataHW2[2]),
                             "RatedPowerConsumption": 0,
-                            "RatedFuelConsumption": float(dataHW2[2]/dataHW2[3]),
+                            "RatedFuelConsumption": float(dataHW2[2])/float(dataHW2[3]),
                         }
                     ],
                     "InsulationType": str(dataHW2[4]),
@@ -2568,33 +2571,33 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./sample/"
+    # directory = "./sample/"
 
-    case_name = 'CGS_case_office_00'
+    # case_name = 'CGS_case_office_00'
 
-    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    # json出力
-    with open(directory + case_name + ".json",'w') as fw:
-        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # # json出力
+    # with open(directory + case_name + ".json",'w') as fw:
+    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     #-----------------------
     # WEBPRO Ver2シートの例（連続）
     #-----------------------
-    # directory = "./tests/airconditioning/"
+    directory = "./tests/cogeneration/"
 
-    # for id in range(44,46):
-    #     if id < 10:
-    #         case_name = 'ACtest_Case00' + str(int(id))
-    #     else:
-    #         case_name = 'ACtest_Case0' + str(int(id))
+    for id in range(0,5):
+        if id < 10:
+            case_name = 'Case_hotel_0' + str(int(id))
+        else:
+            case_name = 'Case_hotel_' + str(int(id))
 
-    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    #     # json出力
-    #     with open(directory + case_name + ".json",'w') as fw:
-    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+        # json出力
+        with open(directory + case_name + ".json",'w') as fw:
+            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
 

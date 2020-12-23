@@ -203,21 +203,42 @@
             "properties": {
                 "Prefecture": {
                     "description": "BL-2:都道府県",
-                    "type": "string",
-                    "maxLength": 100,
-                    "default":"-"
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "maxLength": 100,
+                            "default":"-"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "City": {
                     "description": "BL-3:市区町村",
-                    "type": "string",
-                    "maxLength": 100,
-                    "default":"-"
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "maxLength": 100,
+                            "default":"-"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "Address": {
                     "description": "BL-4:丁目、番地等",
-                    "type": "string",
-                    "maxLength": 1000,
-                    "default":"-"
+                    "anyOf":[
+                        {
+                            "type": "string",
+                            "maxLength": 1000,
+                            "default":"-"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 }
             },
             "required": [
