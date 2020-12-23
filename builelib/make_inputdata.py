@@ -2369,7 +2369,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     ]
                 }
 
-            elif (dataHW1[5] != "") and (dataHW1[7] != "") :
+            elif (dataHW1[6] != "") and (dataHW1[7] != "") :
 
                 data["HotwaterRoom"][roomKey]["HotwaterSystem"].append(
                     {
