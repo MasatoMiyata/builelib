@@ -1271,6 +1271,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                     if dataBE2[4] != "":
 
+                        if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
+                            dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
+                        elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
+                            dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+
                         data["WallConfigure"][eltKey] = {
                                 "structureType": "その他",
                                 "solarAbsorptionRatio": None,
@@ -1291,6 +1296,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         dataBE2 = sheet_BE2.row_values(i+loop)
                         
                         if dataBE2[4] != "":
+
+                            if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
+                                dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
+                            elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
+                                dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+                                
                             data["WallConfigure"][eltKey]["layers"].append(
                                 {
                                 "materialID": set_default(dataBE2[4], None, "str"),
