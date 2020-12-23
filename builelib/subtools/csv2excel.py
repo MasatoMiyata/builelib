@@ -1,4 +1,3 @@
-import pandas as pd
 import openpyxl as px
 import csv
 import glob
@@ -23,8 +22,11 @@ def csv2excel(csv_directory, output_filename):
     # CSVファイルのリスト
     csvfile_list = glob.glob(csv_directory + "/*.csv")
 
+    if len(csvfile_list) == 0:
+        raise Exception("CSVファイルが見つかりません。")
+
     # テンプレートファイル（Excelファイル）を読み込む
-    excel_workbook = px.load_workbook('inputSheet_template.xlsm',read_only=False, keep_vba=True)
+    excel_workbook = px.load_workbook('./builelib/subtools/inputSheet_template.xlsm',read_only=False, keep_vba=True)
 
     for csvfile_name in csvfile_list:
 
@@ -98,4 +100,16 @@ def csv2excel(csv_directory, output_filename):
 
 if __name__ == '__main__':
 
-    csv2excel("sample", "テスト")
+    # コジェネテスト用（病院）
+    for i in range(0,5):
+        csv2excel("./tests/cogeneration/Case_hospital_0"+str(i), "Case_hospital_0"+str(i))
+
+    # コジェネテスト用（ホテル）
+    for i in range(0,5):
+        csv2excel("./tests/cogeneration/Case_hotel_0"+str(i), "Case_hotel_0"+str(i))
+
+    # コジェネテスト用（事務所）
+    for i in range(0,8):
+        csv2excel("./tests/cogeneration/Case_office_0"+str(i), "Case_office_0"+str(i))
+
+
