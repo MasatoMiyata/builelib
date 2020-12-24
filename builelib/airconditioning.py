@@ -1122,6 +1122,45 @@ def calc_energy(inputdata, DEBUG = False):
             inputdata["SecondaryPumpSystem"][ id_pump_h1 ]["isSimultaneousSupply"] = "有"
             inputdata["SecondaryPumpSystem"][ id_pump_h2 ]["isSimultaneousSupply"] = "有"
 
+        elif inputdata["AirConditioningZone"][room_zone_name]["isSimultaneousSupply"] == "有（室負荷）":
+
+            # 空調機群
+            inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"] ]["isSimultaneousSupply_cooling"] = "有"
+            inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"] ]["isSimultaneousSupply_heating"] = "有"
+
+            # 熱源群
+            id_ref_c1 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"]  ]["HeatSource_cooling"]
+            id_ref_h1 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"]  ]["HeatSource_heating"]
+
+            inputdata["HeatsourceSystem"][ id_ref_c1 ]["isSimultaneousSupply"] = "有"
+            inputdata["HeatsourceSystem"][ id_ref_h1 ]["isSimultaneousSupply"] = "有"
+
+            # 二次ポンプ群
+            id_pump_c1 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"]  ]["Pump_cooling"]
+            id_pump_h1 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"]  ]["Pump_heating"]
+
+            inputdata["SecondaryPumpSystem"][ id_pump_c1 ]["isSimultaneousSupply"] = "有"
+            inputdata["SecondaryPumpSystem"][ id_pump_h1 ]["isSimultaneousSupply"] = "有"
+
+        elif inputdata["AirConditioningZone"][room_zone_name]["isSimultaneousSupply"] == "有（外気負荷）":
+
+            # 空調機群
+            inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"]]["isSimultaneousSupply_cooling"] = "有"
+            inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"]]["isSimultaneousSupply_heating"] = "有"
+
+            # 熱源群
+            id_ref_c2 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"] ]["HeatSource_cooling"]
+            id_ref_h2 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"] ]["HeatSource_heating"]
+
+            inputdata["HeatsourceSystem"][ id_ref_c2 ]["isSimultaneousSupply"] = "有"
+            inputdata["HeatsourceSystem"][ id_ref_h2 ]["isSimultaneousSupply"] = "有"
+
+            # 二次ポンプ群
+            id_pump_c2 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"] ]["Pump_cooling"]
+            id_pump_h2 = inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"] ]["Pump_heating"]
+
+            inputdata["SecondaryPumpSystem"][ id_pump_c2 ]["isSimultaneousSupply"] = "有"
+            inputdata["SecondaryPumpSystem"][ id_pump_h2 ]["isSimultaneousSupply"] = "有"
 
     # 両方とも冷暖同時なら、その空調機群は冷暖同時運転可能とする。
     for ahu_name in inputdata["AirHandlingSystem"]:
@@ -1757,6 +1796,7 @@ def calc_energy(inputdata, DEBUG = False):
                     unit_configure["FanPowerConsumption"] * unit_configure["Number"]
 
             if DEBUG:
+                print( f'--- 空調機群名 {ahu_name} ---')
                 print( f'送風機単体の定格消費電力: {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"]}')
 
                     
@@ -1776,6 +1816,7 @@ def calc_energy(inputdata, DEBUG = False):
                     unit_configure["energy_consumption_ratio"][iL] * unit_configure["FanPowerConsumption_total"]
 
             if DEBUG:
+                print( f'--- 空調機群名 {ahu_name} ---')
                 print( f'負荷率帯別の送風機消費電力: \n {resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]}')
 
     ##----------------------------------------------------------------------------------
@@ -1891,6 +1932,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         for ahu_name in inputdata["AirHandlingSystem"]:
 
+            print( f'--- 空調機群名 {ahu_name} ---')
             print( f'空調機群運転時間（冷房） TcAHU {np.sum(resultJson["AHU"][ahu_name]["TcAHU"],0)}' )
             print( f'空調機群運転時間（暖房） ThAHU {np.sum(resultJson["AHU"][ahu_name]["ThAHU"],0)}' )
 
@@ -3704,13 +3746,32 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------    
 
     if len(inputdata["CogenerationSystems"]) == 1: # コジェネがあれば実行
-    
+
         for cgs_name in inputdata["CogenerationSystems"]:
 
+            # 排熱を冷房に使用するか否か
+            if inputdata["CogenerationSystems"][cgs_name]["CoolingSystem"] == None:
+                cgs_cooling = False
+            else:
+                cgs_cooling = True
+
+            # 排熱を暖房に使用するか否か
+            if inputdata["CogenerationSystems"][cgs_name]["HeatingSystem"] == None:
+                cgs_heating = False
+            else:
+                cgs_heating = True
+
             # 排熱利用機器（冷房）
-            resultJson["for_CGS"]["CGS_refName_C"] = inputdata["CogenerationSystems"][cgs_name]["CoolingSystem"] + "_冷房"
+            if cgs_cooling:
+                resultJson["for_CGS"]["CGS_refName_C"] = inputdata["CogenerationSystems"][cgs_name]["CoolingSystem"] + "_冷房"
+            else:
+                resultJson["for_CGS"]["CGS_refName_C"] = None
+
             # 排熱利用機器（暖房）
-            resultJson["for_CGS"]["CGS_refName_H"] = inputdata["CogenerationSystems"][cgs_name]["HeatingSystem"] + "_暖房"
+            if cgs_heating:
+                resultJson["for_CGS"]["CGS_refName_H"] = inputdata["CogenerationSystems"][cgs_name]["HeatingSystem"] + "_暖房"
+            else:
+                resultJson["for_CGS"]["CGS_refName_H"] = None
 
         # 熱源主機の電力消費量 [MWh/day]
         resultJson["for_CGS"]["E_ref_main_MWh_day"] =  resultJson["ENERGY"]["E_ref_main_MWh_day"]  # 後半でCGSから排熱供給を受ける熱源群の電力消費量を差し引く。
@@ -3809,10 +3870,9 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case001.json'
-    # filename = './sample/CGS_case_office_00.json'
+    # filename = './tests/airconditioning/ACtest_Case001.json'
     # filename = './sample/example_one_room.json'
-
+    filename = './tests/cogeneration/Case_hospital_00.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:
@@ -3820,7 +3880,7 @@ if __name__ == '__main__':
 
     resultJson = calc_energy(inputdata, DEBUG=True)
 
-    with open("resultJson.json",'w') as fw:
+    with open("resultJson_AC.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
     print( f'BEI/AC: {resultJson["BEI_AC"]}')        
@@ -3837,7 +3897,8 @@ if __name__ == '__main__':
     # デバッグ用
     print( f'{resultJson["E_airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * bc.fprime}, {resultJson["ENERGY"]["E_aex"] * bc.fprime}, {resultJson["ENERGY"]["E_pump"] * bc.fprime}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * bc.fprime}, {resultJson["ENERGY"]["E_pumpP"] * bc.fprime}, {resultJson["ENERGY"]["E_ctfan"] * bc.fprime}, {resultJson["ENERGY"]["E_ctpump"] * bc.fprime}')
 
-    for ref_name in inputdata["REF"]:
-        print( f'--- 熱源群名 {ref_name} ---')
-        print( f'熱源群の熱源負荷 Qref: {np.sum(resultJson["REF"][ref_name]["Qref"],0)}' )
+    # for ref_name in inputdata["REF"]:
+    #     print( f'--- 熱源群名 {ref_name} ---')
+    #     print( f'熱源群の熱源負荷 Qref: {np.sum(resultJson["REF"][ref_name]["Qref"],0)}' )
+        
     print( f'設計一次エネルギー消費量 全体: {resultJson["E_airconditioning"]}') 

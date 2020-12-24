@@ -2100,6 +2100,23 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
             data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有"
 
+        # 外調系統だけ冷暖同時であれば（暫定措置）
+        elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
+            data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+            data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "無" and \
+            data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
+
+            data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有（外気負荷）"
+
+        # 室負荷系統だけ冷暖同時であれば（暫定措置）
+        elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+            data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
+            data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
+            data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "無":
+
+            data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有（室負荷）"
+
+
     # isSimultaneous_for_ver2 要素　を削除
     for iREF in data["HeatsourceSystem"]:
         if "冷房" in data["HeatsourceSystem"][iREF]:
@@ -2466,8 +2483,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 # 階＋室をkeyとする
                 roomKey = str(dataEV[0]) + '_' + str(dataEV[1])
 
-                data["Elevators"][roomKey] = {
-                    "Elevator": [
+                if roomKey in data["Elevators"]:  # 昇降機については、室名の重複があり得る。
+
+                    data["Elevators"][roomKey]["Elevator"].append(
                         {
                             "ElevatorName": set_default(str(dataEV[4]),"-","str"),
                             "Number": float(dataEV[5]),
@@ -2477,10 +2495,24 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             "ControlType": set_default(str(dataEV[9]),"交流帰還制御","str"),
                             "Info": str(dataEV[8])
                         }
-                    ]
-                }
+                    )
+                    
+                else:
+                    data["Elevators"][roomKey] = {
+                        "Elevator": [
+                            {
+                                "ElevatorName": set_default(str(dataEV[4]),"-","str"),
+                                "Number": float(dataEV[5]),
+                                "LoadLimit": float(dataEV[6]),
+                                "Velocity": float(dataEV[7]),
+                                "TransportCapacityFactor": set_default(str(dataEV[8]),1,"float"),
+                                "ControlType": set_default(str(dataEV[9]),"交流帰還制御","str"),
+                                "Info": str(dataEV[8])
+                            }
+                        ]
+                    }
 
-            elif (dataEV[4] != ""):
+            elif (dataEV[5] != ""):
 
                 data["Elevators"][roomKey]["Elevator"].append(
                     {
@@ -2600,9 +2632,9 @@ if __name__ == '__main__':
 
     for id in range(0,5):
         if id < 10:
-            case_name = 'Case_hotel_0' + str(int(id))
+            case_name = 'Case_hospital_0' + str(int(id))
         else:
-            case_name = 'Case_hotel_' + str(int(id))
+            case_name = 'Case_hospital_' + str(int(id))
 
         inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
