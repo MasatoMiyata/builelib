@@ -472,13 +472,14 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
                                 "HeatsourceRatedCapacity": float(dataAC2[10]),
                                 "HeatsourceRatedPowerConsumption": set_default(dataAC2[11], 0, "float"),
                                 "HeatsourceRatedFuelConsumption": set_default(dataAC2[12], 0, "float"),
-                                "PrimaryPumpPowerConsumption": set_default(dataAC2[13], 0, "float"),
-                                "PrimaryPumpContolType": set_default(dataAC2[14], "無", "str"),
-                                "CoolingTowerCapacity": set_default(dataAC2[15], 0, "float"),
-                                "CoolingTowerFanPowerConsumption": set_default(dataAC2[16], 0, "float"),
-                                "CoolingTowerPumpPowerConsumption": set_default(dataAC2[17], 0, "float"),
-                                "CoolingTowerContolType": set_default(dataAC2[18], "無", "str"),
-                                "Info": str(dataAC2[19])
+                                "Heatsource_sub_RatedPowerConsumption": set_default(dataAC2[13], 0, "float"),
+                                "PrimaryPumpPowerConsumption": set_default(dataAC2[14], 0, "float"),
+                                "PrimaryPumpContolType": set_default(dataAC2[15], "無", "str"),
+                                "CoolingTowerCapacity": set_default(dataAC2[16], 0, "float"),
+                                "CoolingTowerFanPowerConsumption": set_default(dataAC2[17], 0, "float"),
+                                "CoolingTowerPumpPowerConsumption": set_default(dataAC2[18], 0, "float"),
+                                "CoolingTowerContolType": set_default(dataAC2[19], "無", "str"),
+                                "Info": str(dataAC2[20])
                             }
                         ]
                     }
@@ -496,13 +497,14 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
                         "HeatsourceRatedCapacity": float(dataAC2[10]),
                         "HeatsourceRatedPowerConsumption": set_default(dataAC2[11], 0, "float"),
                         "HeatsourceRatedFuelConsumption": set_default(dataAC2[12], 0, "float"),
-                        "PrimaryPumpPowerConsumption": set_default(dataAC2[13], 0, "float"),
-                        "PrimaryPumpContolType": set_default(dataAC2[14], "無", "str"),
-                        "CoolingTowerCapacity": set_default(dataAC2[15], 0, "float"),
-                        "CoolingTowerFanPowerConsumption": set_default(dataAC2[16], 0, "float"),
-                        "CoolingTowerPumpPowerConsumption": set_default(dataAC2[17], 0, "float"),
-                        "CoolingTowerContolType": set_default(dataAC2[18], "無", "str"),
-                        "Info": str(dataAC2[19])
+                        "Heatsource_sub_RatedPowerConsumption": set_default(dataAC2[13], 0, "float"),
+                        "PrimaryPumpPowerConsumption": set_default(dataAC2[14], 0, "float"),
+                        "PrimaryPumpContolType": set_default(dataAC2[15], "無", "str"),
+                        "CoolingTowerCapacity": set_default(dataAC2[16], 0, "float"),
+                        "CoolingTowerFanPowerConsumption": set_default(dataAC2[17], 0, "float"),
+                        "CoolingTowerPumpPowerConsumption": set_default(dataAC2[18], 0, "float"),
+                        "CoolingTowerContolType": set_default(dataAC2[19], "無", "str"),
+                        "Info": str(dataAC2[20])
                     }
                 )
 
@@ -524,13 +526,14 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
                             "HeatsourceRatedCapacity": float(dataAC2[10]),
                             "HeatsourceRatedPowerConsumption": set_default(dataAC2[11], 0, "float"),
                             "HeatsourceRatedFuelConsumption": set_default(dataAC2[12], 0, "float"),
-                            "PrimaryPumpPowerConsumption": set_default(dataAC2[13], 0, "float"),
-                            "PrimaryPumpContolType": set_default(dataAC2[14], "無", "str"),
-                            "CoolingTowerCapacity": set_default(dataAC2[15], 0, "float"),
-                            "CoolingTowerFanPowerConsumption": set_default(dataAC2[16], 0, "float"),
-                            "CoolingTowerPumpPowerConsumption": set_default(dataAC2[17], 0, "float"),
-                            "CoolingTowerContolType": set_default(dataAC2[18], "無", "str"),
-                            "Info": str(dataAC2[19])
+                            "Heatsource_sub_RatedPowerConsumption": set_default(dataAC2[13], 0, "float"),
+                            "PrimaryPumpPowerConsumption": set_default(dataAC2[14], 0, "float"),
+                            "PrimaryPumpContolType": set_default(dataAC2[15], "無", "str"),
+                            "CoolingTowerCapacity": set_default(dataAC2[16], 0, "float"),
+                            "CoolingTowerFanPowerConsumption": set_default(dataAC2[17], 0, "float"),
+                            "CoolingTowerPumpPowerConsumption": set_default(dataAC2[18], 0, "float"),
+                            "CoolingTowerContolType": set_default(dataAC2[19], "無", "str"),
+                            "Info": str(dataAC2[20])
                         }
                     ]
                 }
@@ -1543,9 +1546,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                     if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[11], 0, "float")
+                        HeatsourceRatedPowerConsumption = 0
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
                         HeatsourceRatedFuelConsumption  = set_default(dataAC2[10], 0, "float")
                         
 
@@ -1565,6 +1570,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                     "HeatsourceRatedCapacity": float(dataAC2[9]),
                                     "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                                     "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                    "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                                     "PrimaryPumpPowerConsumption": set_default(dataAC2[12], 0, "float"),
                                     "PrimaryPumpContolType": "無",
                                     "CoolingTowerCapacity": set_default(dataAC2[13], 0, "float"),
@@ -1590,9 +1596,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                     if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[21], 0, "float")
+                        HeatsourceRatedPowerConsumption = 0
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
                         HeatsourceRatedFuelConsumption  = set_default(dataAC2[20], 0, "float")
                         
                     if unitKey in data["HeatsourceSystem"]:
@@ -1613,6 +1621,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                         "HeatsourceRatedCapacity": float(dataAC2[19]),
                                         "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                                         "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                                         "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
                                         "PrimaryPumpContolType": "無",
                                         "CoolingTowerCapacity": 0,
@@ -1641,6 +1650,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                         "HeatsourceRatedCapacity": float(dataAC2[19]),
                                         "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                                         "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                                         "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
                                         "PrimaryPumpContolType": "無",
                                         "CoolingTowerCapacity": 0,
@@ -1659,9 +1669,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
     
                     if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[11], 0, "float")
+                        HeatsourceRatedPowerConsumption = 0
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
                         HeatsourceRatedFuelConsumption  = set_default(dataAC2[10], 0, "float")
                     
                     data["HeatsourceSystem"][unitKey][modeKey_C]["Heatsource"].append(
@@ -1674,6 +1686,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             "HeatsourceRatedCapacity": float(dataAC2[9]),
                             "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                             "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                            "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                             "PrimaryPumpPowerConsumption": set_default(dataAC2[12], 0, "float"),
                             "PrimaryPumpContolType": "無",
                             "CoolingTowerCapacity": set_default(dataAC2[13], 0, "float"),
@@ -1688,9 +1701,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     
                     if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[21], 0, "float")
+                        HeatsourceRatedPowerConsumption = 0
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
                         HeatsourceRatedFuelConsumption  = set_default(dataAC2[20], 0, "float")
 
                     data["HeatsourceSystem"][unitKey][modeKey_H]["Heatsource"].append(
@@ -1703,6 +1718,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             "HeatsourceRatedCapacity": float(dataAC2[19]),
                             "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                             "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                            "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                             "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
                             "PrimaryPumpContolType": "無",
                             "CoolingTowerCapacity": 0,
@@ -1736,9 +1752,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                     if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[11], 0, "float")
+                        HeatsourceRatedPowerConsumption = 0
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
                         HeatsourceRatedFuelConsumption  = set_default(dataAC2[10], 0, "float")
                         
                     if unitKey in data["HeatsourceSystem"]:
@@ -1759,6 +1777,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                         "HeatsourceRatedCapacity": float(dataAC2[9]),
                                         "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                                         "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                                         "PrimaryPumpPowerConsumption": set_default(dataAC2[12], 0, "float"),
                                         "PrimaryPumpContolType": "無",
                                         "CoolingTowerCapacity": set_default(dataAC2[13], 0, "float"),
@@ -1787,6 +1806,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                         "HeatsourceRatedCapacity": float(dataAC2[9]),
                                         "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                                         "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                                         "PrimaryPumpPowerConsumption": set_default(dataAC2[12], 0, "float"),
                                         "PrimaryPumpContolType": "無",
                                         "CoolingTowerCapacity": set_default(dataAC2[13], 0, "float"),
@@ -1812,9 +1832,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                     if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
                         HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
                         HeatsourceRatedFuelConsumption  = 0
                     else:
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[21], 0, "float")
+                        HeatsourceRatedPowerConsumption = 0
+                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
                         HeatsourceRatedFuelConsumption  = set_default(dataAC2[20], 0, "float")
                         
                     if unitKey in data["HeatsourceSystem"]:
@@ -1835,6 +1857,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                         "HeatsourceRatedCapacity": float(dataAC2[19]),
                                         "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                                         "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                                         "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
                                         "PrimaryPumpContolType": "無",
                                         "CoolingTowerCapacity": 0,
@@ -1864,6 +1887,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                                         "HeatsourceRatedCapacity": float(dataAC2[19]),
                                         "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                                         "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
                                         "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
                                         "PrimaryPumpContolType": "無",
                                         "CoolingTowerCapacity": 0,
@@ -2616,7 +2640,7 @@ if __name__ == '__main__':
     #-----------------------
     # directory = "./sample/"
 
-    # case_name = 'CGS_case_office_00'
+    # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
 
     # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
@@ -2628,19 +2652,37 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例（連続）
     #-----------------------
-    directory = "./tests/cogeneration/"
+    directory = "./tests/airconditioning/"
 
-    for id in range(0,5):
+    for id in range(1,46):
         if id < 10:
-            case_name = 'Case_hospital_0' + str(int(id))
+            case_name = 'ACtest_Case00' + str(int(id))
         else:
-            case_name = 'Case_hospital_' + str(int(id))
+            case_name = 'ACtest_Case0' + str(int(id))
 
         inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
         # json出力
         with open(directory + case_name + ".json",'w') as fw:
             json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+
+
+    #-----------------------
+    # WEBPRO Ver2シートの例（連続）
+    #-----------------------
+    # directory = "./tests/cogeneration/"
+
+    # for id in range(0,5):
+    #     if id < 10:
+    #         case_name = 'Case_hospital_0' + str(int(id))
+    #     else:
+    #         case_name = 'Case_hospital_' + str(int(id))
+
+    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+
+    #     # json出力
+    #     with open(directory + case_name + ".json",'w') as fw:
+    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
 

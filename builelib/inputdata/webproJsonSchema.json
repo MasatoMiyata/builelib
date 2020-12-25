@@ -830,7 +830,9 @@
                     "type": "string",
                     "enum":[
                         "無",
-                        "有"
+                        "有",
+                        "有（室負荷）",
+                        "有（外気負荷）"
                     ]
                 },
                 "AHU_cooling_insideLoad": {
@@ -975,7 +977,7 @@
                                 "maximum": 1000000
                             },
                             "HeatsourceRatedPowerConsumption": {
-                                "description": "AC2-12:熱源本体 定格消費電力",
+                                "description": "AC2-12:熱源主機 定格消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -988,7 +990,20 @@
                                 ]
                             },
                             "HeatsourceRatedFuelConsumption": {
-                                "description": "AC2-13:熱源本体 定格燃料消費量",
+                                "description": "AC2-13:熱源主機 定格燃料消費量",
+                                "anyOf":[
+                                    {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1000000
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            },
+                            "Heatsource_sub_RatedPowerConsumption": {
+                                "description": "AC2-14:熱源補機 定格消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1001,7 +1016,7 @@
                                 ]
                             },
                             "PrimaryPumpPowerConsumption": {
-                                "description": "AC2-14:一次ポンプ 定格消費電力",
+                                "description": "AC2-15:一次ポンプ 定格消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1014,7 +1029,7 @@
                                 ]
                             },
                             "PrimaryPumpContolType": {
-                                "description": "AC2-15:一次ポンプ 制御方式",
+                                "description": "AC2-16:一次ポンプ 制御方式",
                                 "type": "string",
                                 "enum":[
                                     "有",
@@ -1022,7 +1037,7 @@
                                 ]
                             },
                             "CoolingTowerCapacity": {
-                                "description": "AC2-16:冷却塔 定格能力",
+                                "description": "AC2-17:冷却塔 定格能力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1035,7 +1050,7 @@
                                 ]
                             },
                             "CoolingTowerFanPowerConsumption": {
-                                "description": "AC2-17:冷却塔 ファン消費電力",
+                                "description": "AC2-18:冷却塔 ファン消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1048,7 +1063,7 @@
                                 ]
                             },
                             "CoolingTowerPumpPowerConsumption": {
-                                "description": "AC2-18:冷却塔 ポンプ消費電力",
+                                "description": "AC2-19:冷却塔 ポンプ消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1061,7 +1076,7 @@
                                 ]
                             },
                             "CoolingTowerContolType": {
-                                "description": "AC2-19:冷却塔 制御方式",
+                                "description": "AC2-20:冷却塔 制御方式",
                                 "type": "string",
                                 "enum":[
                                     "有",
@@ -1069,7 +1084,7 @@
                                 ]
                             },
                             "Info": {
-                                "description": "AC2-20:備考",
+                                "description": "AC2-21:備考",
                                 "type": "string"
                             }
                         }
