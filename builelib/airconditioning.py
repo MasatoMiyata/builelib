@@ -2615,13 +2615,17 @@ def calc_energy(inputdata, DEBUG = False):
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] = \
                 unit_configure["HeatsourceRatedCapacity"] * unit_configure["Number"]
 
-            # 定格消費電力（台数×消費電力）
+            # 熱源主機の定格消費電力（台数×消費電力）
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] = \
                 unit_configure["HeatsourceRatedPowerConsumption"] * unit_configure["Number"]
 
-            # 定格燃料消費量（台数×燃料消費量）
+            # 熱源主機の定格燃料消費量（台数×燃料消費量）
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = \
                 unit_configure["HeatsourceRatedFuelConsumption"] * unit_configure["Number"]
+
+            # 熱源補機の定格消費電力（台数×消費電力）
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"] = \
+                unit_configure["Heatsource_sub_RatedPowerConsumption"] * unit_configure["Number"]
 
             # 熱源機器の台数
             inputdata["REF"][ref_name]["refsetRnum"] += 1
@@ -3515,7 +3519,7 @@ def calc_energy(inputdata, DEBUG = False):
                             elif inputdata["REF"][ref_name]["mode"] == "heating":
                                 E_nonGE = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] * 0.012
 
-                            E_GEkW = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"]  #  発電時の消費電力 [kW]
+                            E_GEkW = inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"]  #  発電時の消費電力 [kW]
                 
                             if aveLperU <= 0.3:
                                 resultJson["REF"][ref_name]["ErefaprALL"][ioa][iL] += ( 0.3 * E_nonGE - (E_nonGE - E_GEkW) * aveLperU )
@@ -3525,9 +3529,9 @@ def calc_energy(inputdata, DEBUG = False):
                         else:
 
                             if aveLperU <= 0.3:
-                                resultJson["REF"][ref_name]["ErefaprALL"][ioa][iL] += 0.3 * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
+                                resultJson["REF"][ref_name]["ErefaprALL"][ioa][iL] += 0.3 * inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"] 
                             else:
-                                resultJson["REF"][ref_name]["ErefaprALL"][ioa][iL] += aveLperU * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
+                                resultJson["REF"][ref_name]["ErefaprALL"][ioa][iL] += aveLperU * inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"] 
 
                 else:
                     
@@ -3535,7 +3539,7 @@ def calc_energy(inputdata, DEBUG = False):
                     refset_SubPower = 0
                     for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
                         if inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] > 0:
-                            refset_SubPower += inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"]
+                            refset_SubPower += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"]
 
                     if aveLperU <= 0.3:
                         resultJson["REF"][ref_name]["ErefaprALL"][ioa][iL] += 0.3 * refset_SubPower
