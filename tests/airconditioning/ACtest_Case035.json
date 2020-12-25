@@ -3,7 +3,7 @@
         "BuildingAddress": {
             "Prefecture": "東京都",
             "City": "千代田区",
-            "Address": ""
+            "Address": null
         },
         "Coefficient_DHC": {
             "Cooling": 1.36,
@@ -103,6 +103,7 @@
                         "HeatsourceRatedCapacity": 16.0,
                         "HeatsourceRatedPowerConsumption": 12.0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 1.1,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -128,6 +129,7 @@
                         "HeatsourceRatedCapacity": 16.0,
                         "HeatsourceRatedPowerConsumption": 12.0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0.75,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -152,6 +154,7 @@
                         "HeatsourceRatedCapacity": 100.0,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0.8,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -169,6 +172,7 @@
                         "HeatsourceRatedCapacity": 16.0,
                         "HeatsourceRatedPowerConsumption": 12.0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 1.1,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -193,6 +197,7 @@
                         "HeatsourceRatedCapacity": 14.0,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0.8,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -210,6 +215,7 @@
                         "HeatsourceRatedCapacity": 16.0,
                         "HeatsourceRatedPowerConsumption": 12.0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0.75,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,

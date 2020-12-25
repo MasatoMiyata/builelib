@@ -3,7 +3,7 @@
         "BuildingAddress": {
             "Prefecture": "東京都",
             "City": "千代田区",
-            "Address": ""
+            "Address": null
         },
         "Coefficient_DHC": {
             "Cooling": 1.36,
@@ -144,6 +144,7 @@
                         "HeatsourceRatedCapacity": 8.0,
                         "HeatsourceRatedPowerConsumption": 4.0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 8.0,
@@ -161,6 +162,7 @@
                         "HeatsourceRatedCapacity": 8.0,
                         "HeatsourceRatedPowerConsumption": 4.0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 1.2,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -185,8 +187,9 @@
                         "SupplyWaterTempMiddle": null,
                         "SupplyWaterTempWinter": null,
                         "HeatsourceRatedCapacity": 3.0,
-                        "HeatsourceRatedPowerConsumption": 1.0,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 1.0,
+                        "Heatsource_sub_RatedPowerConsumption": 1.0,
                         "PrimaryPumpPowerConsumption": 0.15,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -204,6 +207,7 @@
                         "HeatsourceRatedCapacity": 3.0,
                         "HeatsourceRatedPowerConsumption": 1.0,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0.25,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
