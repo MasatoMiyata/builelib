@@ -130,6 +130,25 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     # 排熱投入型吸収式冷温水機jの主機定格消費エネルギー ｋW/台
     EAC_link_c_j_rated = resultJson_for_CGS["AC"]["EAC_link_c_j_rated"]
 
+    if DEBUG:
+        print(f" 2 EAC_total_d : {np.sum(EAC_total_d)}")
+        print(f" 7 EAC_ref_c_d : {np.sum(EAC_ref_c_d)}")
+        print(f" 8 mxLAC_ref_c_d : {np.sum(mxLAC_ref_c_d)}")
+        print(f" 9 EAC_ref_h_hr_d : {np.sum(EAC_ref_h_hr_d)}")
+        print(f"10 qAC_ref_h_hr_d : {np.sum(qAC_ref_h_hr_d)}")
+        print(f"11 EV_total_d : {np.sum(EV_total_d)}")
+        print(f"12 EL_total_d : {np.sum(EL_total_d)}")
+        print(f"13 EW_total_d : {np.sum(EW_total_d)}")
+        print(f"14 EW_hr_d : {np.sum(EW_hr_d)}")
+        print(f"15 qW_hr_d : {np.sum(qW_hr_d)}")
+        print(f"16 EEV_total_d : {np.sum(EEV_total_d)}")
+        print(f"17 EPV_total_d : {np.sum(EPV_total_d)}")
+        print(f"18 EM_total_d : {np.sum(EM_total_d)}")
+        print(f"19 TAC_c_d : {np.sum(TAC_c_d)}")
+        print(f"20 TAC_h_d : {np.sum(TAC_h_d)}")
+        print(f"qAC_link_c_j_rated : {qAC_link_c_j_rated}")
+        print(f"EAC_link_c_j_rated : {EAC_link_c_j_rated}")
+
 
     ##----------------------------------------------------------------------------------
     ## 解説書 8.1.6 定数
@@ -262,7 +281,7 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     # qAC_ref_c_hr_d : 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての排熱負荷
     # EAC_ref_c_hr_d : 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての主機の一次エネルギー消費量のうち排熱による削減可能量
 
-    if npri_hr_c == 0:
+    if npri_hr_c == None:
         qAC_ref_c_hr_d = np.zeros(365)
         EAC_ref_c_hr_d = np.zeros(365)
     else:
@@ -325,7 +344,7 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
         c = Ee_total_d[dd] * feope_R[dd] * ( 1 + fesub_CGS )
         d = Ecgs_rated * feopeMn
 
-        if npri_hr_c == 0 and npri_hr_h == 0:     # 給湯のみ排熱利用がされる場合（2020/06/13追加）
+        if npri_hr_c == None and npri_hr_h == None:     # 給湯のみ排熱利用がされる場合（2020/06/13追加）
             
             if (a*b >= T_ST) and (c/d >= T_ST):
                 
@@ -656,22 +675,32 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     Etotal_cgs_red_d = EAC_ref_c_red_d + EAC_ref_h_red_d + EW_red_d + Ee_red_d - Es_cgs_d
 
 
-
     # 結果の出力
-
     resultJson["年間運転時間"] = np.sum(Tcgs_d * Ncgs_on_d)    # 年間運転時間 [時間・台]
-    resultJson["年平均負荷率"] = np.sum(Ncgs_on_d*mxLcgs_d)/np.sum(Ncgs_on_d)   # 年平均負荷率 [-]
+
+    if np.sum(Ncgs_on_d) == 0:
+        resultJson["年平均負荷率"] = 0
+    else:
+        resultJson["年平均負荷率"] = np.sum(Ncgs_on_d*mxLcgs_d)/np.sum(Ncgs_on_d)   # 年平均負荷率 [-]
+    
     resultJson["年間発電量"] = np.sum(Ee_cgs_d)/1000         # 年間発電量 [MWh]
     resultJson["年間排熱回収量"] = np.sum(qhr_cgs_d)/1000        # 年間排熱回収量 [GJ]
     resultJson["年間ガス消費量"] = np.sum(Es_cgs_d)/1000         # 年間ガス消費量 [GJ]
 
-    resultJson["年間発電効率"] = resultJson["年間発電量"]*3.6/resultJson["年間ガス消費量"]*100      # 年間発電効率 [%]
-    resultJson["年間排熱回収効率"] = resultJson["年間排熱回収量"]/resultJson["年間ガス消費量"]*100          # 年間排熱回収効率 [%]
+    if resultJson["年間ガス消費量"] == 0:
+        resultJson["年間発電効率"] = 0
+        resultJson["年間排熱回収効率"] =0
+    else:
+        resultJson["年間発電効率"] = resultJson["年間発電量"]*3.6/resultJson["年間ガス消費量"]*100      # 年間発電効率 [%]
+        resultJson["年間排熱回収効率"] = resultJson["年間排熱回収量"]/resultJson["年間ガス消費量"]*100          # 年間排熱回収効率 [%]
 
     resultJson["年間有効発電量"] = np.sum(Eee_cgs_d)/1000        # 年間有効発電量 [%]
     resultJson["年間有効排熱回収量"] = np.sum(qehr_cgs_d)/1000       # 年間有効排熱回収量 [GJ]
 
-    resultJson["有効総合効率"] = (resultJson["年間有効発電量"]*3.6+resultJson["年間有効排熱回収量"])/resultJson["年間ガス消費量"]*100   # 有効総合効率 [%]
+    if resultJson["年間ガス消費量"] == 0:
+        resultJson["有効総合効率"] = 0
+    else:
+        resultJson["有効総合効率"] = (resultJson["年間有効発電量"]*3.6+resultJson["年間有効排熱回収量"])/resultJson["年間ガス消費量"]*100   # 有効総合効率 [%]
 
     resultJson["年間一次エネルギー削減量(電力)"] = np.sum(Ee_red_d)/1000           # 年間一次エネルギー削減量(電力) [GJ]
     resultJson["年間一次エネルギー削減量(冷房)"] = np.sum(EAC_ref_c_red_d)/1000    # 年間一次エネルギー削減量(冷房) [GJ]
@@ -679,8 +708,11 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     resultJson["年間一次エネルギー削減量(給湯) "] = np.sum(EW_red_d)/1000           # 年間一次エネルギー削減量(給湯) [GJ]
     resultJson["年間一次エネルギー削減量"] = np.sum(Etotal_cgs_red_d)/1000   # 年間一次エネルギー削減量合計 [GJ]
 
+
+
     if DEBUG:
         print( f'年間一次エネルギー削減量 全体 : {resultJson["年間一次エネルギー削減量"]} GJ/年')
+        resultJson["EAC_ref_c_red_d"] = EAC_ref_c_red_d
 
     return resultJson
 
@@ -688,7 +720,9 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- cogeneration.py -----')
-    filename = './tests/cogeneration/Case_hotel_00.json'
+    # filename = './tests/cogeneration/Case_hospital_04.json'
+    filename = './tests/cogeneration/Case_hotel_04.json'
+    # filename = './tests/cogeneration/Case_office_07.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
@@ -725,6 +759,9 @@ if __name__ == '__main__':
     resultJson_for_CGS["OT"] = resultJsonOT["for_CGS"]
 
     resultJson = calc_energy(inputdata, resultJson_for_CGS, DEBUG = True)
+
+    with open("resultJson_for_CGS.json",'w') as fw:
+        json.dump(resultJson_for_CGS, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
     with open("resultJson_CGS.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
