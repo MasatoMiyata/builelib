@@ -17143,6 +17143,7 @@
                         "HeatsourceRatedCapacity": 205.74,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 187.07,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 1.9,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 383.0,
@@ -17160,6 +17161,7 @@
                         "HeatsourceRatedCapacity": 205.74,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 187.07,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 1.9,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 383.0,
@@ -17177,6 +17179,7 @@
                         "HeatsourceRatedCapacity": 205.74,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 187.07,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 1.9,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 383.0,
@@ -17201,6 +17204,7 @@
                         "HeatsourceRatedCapacity": 217.17,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 271.46,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 2.0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17218,6 +17222,7 @@
                         "HeatsourceRatedCapacity": 217.17,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 271.46,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 2.0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17235,6 +17240,7 @@
                         "HeatsourceRatedCapacity": 217.17,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 271.46,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 2.0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17261,6 +17267,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 1.11,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17285,6 +17292,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 1.23,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17311,6 +17319,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 1.11,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17335,6 +17344,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 1.23,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17361,6 +17371,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 1.11,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17385,6 +17396,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 1.23,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17411,6 +17423,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 1.11,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17435,6 +17448,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 1.23,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17461,6 +17475,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 1.11,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17485,6 +17500,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 1.23,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17511,6 +17527,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 1.11,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17535,6 +17552,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 1.23,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17561,6 +17579,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 1.11,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17585,6 +17604,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 1.23,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17611,6 +17631,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 1.11,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17635,6 +17656,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 1.23,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17661,6 +17683,7 @@
                         "HeatsourceRatedCapacity": 22.4,
                         "HeatsourceRatedPowerConsumption": 6.91,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17685,6 +17708,7 @@
                         "HeatsourceRatedCapacity": 25.0,
                         "HeatsourceRatedPowerConsumption": 7.72,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17711,6 +17735,7 @@
                         "HeatsourceRatedCapacity": 100.0,
                         "HeatsourceRatedPowerConsumption": 30.86,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -17735,6 +17760,7 @@
                         "HeatsourceRatedCapacity": 112.0,
                         "HeatsourceRatedPowerConsumption": 34.56,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -38694,6 +38720,30 @@
                     "SystemName": "EB2-01",
                     "HotWaterSavingSystem": "無",
                     "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-02",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-03",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-04",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-05",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
                 }
             ]
         },
@@ -38702,6 +38752,30 @@
                 {
                     "UsageType": null,
                     "SystemName": "EB2-01",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-02",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-03",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-04",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-05",
                     "HotWaterSavingSystem": "無",
                     "Info": ""
                 }
@@ -38774,6 +38848,36 @@
                     "SystemName": "EB2-14",
                     "HotWaterSavingSystem": "無",
                     "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-01",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-02",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-03",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-04",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-05",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
                 }
             ]
         },
@@ -38782,6 +38886,36 @@
                 {
                     "UsageType": null,
                     "SystemName": "EB-01",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-01",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-02",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-03",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-04",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-05",
                     "HotWaterSavingSystem": "無",
                     "Info": ""
                 }
@@ -38794,6 +38928,12 @@
                     "SystemName": "EB2-06",
                     "HotWaterSavingSystem": "無",
                     "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-15",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
                 }
             ]
         },
@@ -38804,6 +38944,12 @@
                     "SystemName": "EB2-10",
                     "HotWaterSavingSystem": "無",
                     "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-15",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
                 }
             ]
         },
@@ -38812,6 +38958,12 @@
                 {
                     "UsageType": null,
                     "SystemName": "EB2-11",
+                    "HotWaterSavingSystem": "無",
+                    "Info": ""
+                },
+                {
+                    "UsageType": null,
+                    "SystemName": "EB2-15",
                     "HotWaterSavingSystem": "無",
                     "Info": ""
                 }
