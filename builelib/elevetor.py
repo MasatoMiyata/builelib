@@ -170,7 +170,7 @@ if __name__ == '__main__':
 
     print('----- elevetor.py -----')
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
-    filename = './sample/CGS_case_office_00.json'
+    filename = './tests/cogeneration/Case_hospital_00.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:

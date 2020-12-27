@@ -107,6 +107,7 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["for_CGS"]["Edesign_MWh_day"]  += \
             resultJson["E_other_room"][room_name]["roomHeatGain_daily"] * inputdata["Rooms"][room_name]["roomArea"] * resultJson["E_other_room"][room_name]["E_ratio"] / bc.fprime
 
+
     ##----------------------------------------------------------------------------------
     # コジェネ計算用のスケジュール
     ##----------------------------------------------------------------------------------
@@ -163,7 +164,7 @@ def calc_energy(inputdata, DEBUG = False):
         print(f'その他一次エネルギー消費量 MJ: {resultJson["E_other"]}')
 
     if DEBUG:
-        with open("resultJson_Other.json",'w') as fw:
+        with open("resultJson_OT.json",'w') as fw:
             json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
             
     return resultJson

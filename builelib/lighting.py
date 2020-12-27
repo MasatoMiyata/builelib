@@ -67,6 +67,7 @@ def calc_energy(inputdata, DEBUG = False):
         "lighting":{
         },
         "for_CGS":{
+            "Edesign_MWh_day": np.zeros(365)
         }
     }
 
@@ -189,7 +190,7 @@ if __name__ == '__main__':
 
     print('----- lighting.py -----')
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
-    filename = './sample/CGS_case_office_00.json'
+    filename = './tests/cogeneration/Case_hotel_00.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
