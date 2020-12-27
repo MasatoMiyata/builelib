@@ -9,6 +9,7 @@ import ventilation
 import lighting
 import hotwatersupply
 import elevetor
+import photovoltaic
 import other_energy
 import cogeneration
 
@@ -102,6 +103,8 @@ def test_calc(inputdata, expectedvalue):
     resultJson_for_CGS["HW"] = resultJsonHW["for_CGS"]
     resultJsonEV = elevetor.calc_energy(inputdata, DEBUG = False)
     resultJson_for_CGS["EV"] = resultJsonEV["for_CGS"]
+    resultJsonPV = photovoltaic.calc_energy(inputdata, DEBUG = False)
+    resultJson_for_CGS["PV"] = resultJsonPV["for_CGS"]
     resultJsonOT = other_energy.calc_energy(inputdata, DEBUG = False)
     resultJson_for_CGS["OT"] = resultJsonOT["for_CGS"]
 
