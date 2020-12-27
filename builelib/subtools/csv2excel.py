@@ -29,13 +29,34 @@ def csv2excel(csv_directory, output_filename):
     excel_workbook = px.load_workbook('./builelib/subtools/inputSheet_template.xlsm',read_only=False, keep_vba=True)
 
     for csvfile_name in csvfile_list:
-
+        
         # CSVファイルを読み込む
-        with open(csvfile_name , newline='', encoding='cp932') as data:
+        with open(csvfile_name , newline='', encoding='cp932', errors='ignore') as data:
             csvdata = list(csv.reader(data, delimiter=','))
 
         if "様式0" in csvfile_name:
-            write_list_2d(excel_workbook['0) 基本情報'], csvdata[5:], 6, 1)
+
+            excel_workbook['0) 基本情報'].cell(row=9,  column=3, value=csvdata[8][2]) # 建物名称
+            excel_workbook['0) 基本情報'].cell(row=10, column=4, value=csvdata[9][3]) # 都道府県
+            
+            if len(csvdata[9]) >= 6:
+                excel_workbook['0) 基本情報'].cell(row=10, column=6, value=csvdata[9][5]) # 市区町村
+            excel_workbook['0) 基本情報'].cell(row=11, column=3, value=csvdata[10][2])  # 住所
+
+            excel_workbook['0) 基本情報'].cell(row=12, column=3, value=csvdata[11][2])  # 地域区分
+            excel_workbook['0) 基本情報'].cell(row=13, column=3, value=csvdata[12][2])  # 構造
+
+            excel_workbook['0) 基本情報'].cell(row=14, column=4, value=csvdata[13][3]) # 階数（地上）
+            if len(csvdata[13]) >= 6:
+                excel_workbook['0) 基本情報'].cell(row=14, column=6, value=csvdata[13][5]) # 階数（地下）
+
+            excel_workbook['0) 基本情報'].cell(row=15, column=3, value=csvdata[14][2])  # 敷地面積
+            excel_workbook['0) 基本情報'].cell(row=16, column=3, value=csvdata[15][2])  # 建築面積
+            excel_workbook['0) 基本情報'].cell(row=17, column=3, value=csvdata[16][2])  # 延べ面積
+            excel_workbook['0) 基本情報'].cell(row=18, column=3, value=csvdata[17][2])  # 年間日射地域区分
+            excel_workbook['0) 基本情報'].cell(row=19, column=3, value=csvdata[18][2])  # 一次エネ換算係数（冷熱）
+            excel_workbook['0) 基本情報'].cell(row=20, column=3, value=csvdata[19][2])  # 一次エネ換算係数（温熱）
+
 
         elif "様式1" in csvfile_name:
             write_list_2d(excel_workbook['1) 室仕様'], csvdata[10:], 11, 1)
@@ -100,13 +121,13 @@ def csv2excel(csv_directory, output_filename):
 
 if __name__ == '__main__':
 
-    # コジェネテスト用（病院）
-    for i in range(0,5):
-        csv2excel("./tests/cogeneration/Case_hospital_0"+str(i), "Case_hospital_0"+str(i))
+    # # コジェネテスト用（病院）
+    # for i in range(0,5):
+    #     csv2excel("./tests/cogeneration/Case_hospital_0"+str(i), "Case_hospital_0"+str(i))
 
-    # コジェネテスト用（ホテル）
-    for i in range(0,5):
-        csv2excel("./tests/cogeneration/Case_hotel_0"+str(i), "Case_hotel_0"+str(i))
+    # # コジェネテスト用（ホテル）
+    # for i in range(0,5):
+    #     csv2excel("./tests/cogeneration/Case_hotel_0"+str(i), "Case_hotel_0"+str(i))
 
     # コジェネテスト用（事務所）
     for i in range(0,8):
