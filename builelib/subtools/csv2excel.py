@@ -38,7 +38,7 @@ def csv2excel(csv_directory, output_filename):
 
             excel_workbook['0) 基本情報'].cell(row=9,  column=3, value=csvdata[8][2]) # 建物名称
             excel_workbook['0) 基本情報'].cell(row=10, column=4, value=csvdata[9][3]) # 都道府県
-            
+
             if len(csvdata[9]) >= 6:
                 excel_workbook['0) 基本情報'].cell(row=10, column=6, value=csvdata[9][5]) # 市区町村
             excel_workbook['0) 基本情報'].cell(row=11, column=3, value=csvdata[10][2])  # 住所
@@ -130,7 +130,7 @@ if __name__ == '__main__':
     #     csv2excel("./tests/cogeneration/Case_hotel_0"+str(i), "Case_hotel_0"+str(i))
 
     # コジェネテスト用（事務所）
-    for i in range(0,8):
+    for i in range(3,5):
         csv2excel("./tests/cogeneration/Case_office_0"+str(i), "Case_office_0"+str(i))
 
 
