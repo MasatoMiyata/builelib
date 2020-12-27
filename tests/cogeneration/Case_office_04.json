@@ -2176,8 +2176,9 @@
                         "SupplyWaterTempMiddle": 7.0,
                         "SupplyWaterTempWinter": 7.0,
                         "HeatsourceRatedCapacity": 364.5,
-                        "HeatsourceRatedPowerConsumption": 0.0,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 331.36,
+                        "Heatsource_sub_RatedPowerConsumption": 0.0,
                         "PrimaryPumpPowerConsumption": 3.7,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 678.0,
@@ -2193,8 +2194,9 @@
                         "SupplyWaterTempMiddle": 7.0,
                         "SupplyWaterTempWinter": 7.0,
                         "HeatsourceRatedCapacity": 364.5,
-                        "HeatsourceRatedPowerConsumption": 0.0,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 331.36,
+                        "Heatsource_sub_RatedPowerConsumption": 0.0,
                         "PrimaryPumpPowerConsumption": 3.7,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 678.0,
@@ -2210,8 +2212,9 @@
                         "SupplyWaterTempMiddle": 7.0,
                         "SupplyWaterTempWinter": 7.0,
                         "HeatsourceRatedCapacity": 364.5,
-                        "HeatsourceRatedPowerConsumption": 0.0,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 331.36,
+                        "Heatsource_sub_RatedPowerConsumption": 0.0,
                         "PrimaryPumpPowerConsumption": 3.7,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 678.0,
@@ -2234,8 +2237,9 @@
                         "SupplyWaterTempMiddle": 45.0,
                         "SupplyWaterTempWinter": 45.0,
                         "HeatsourceRatedCapacity": 384.75,
-                        "HeatsourceRatedPowerConsumption": 0.0,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 480.93,
+                        "Heatsource_sub_RatedPowerConsumption": 0.0,
                         "PrimaryPumpPowerConsumption": 3.7,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2251,8 +2255,9 @@
                         "SupplyWaterTempMiddle": 45.0,
                         "SupplyWaterTempWinter": 45.0,
                         "HeatsourceRatedCapacity": 384.75,
-                        "HeatsourceRatedPowerConsumption": 0.0,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 480.93,
+                        "Heatsource_sub_RatedPowerConsumption": 0.0,
                         "PrimaryPumpPowerConsumption": 3.7,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2268,8 +2273,9 @@
                         "SupplyWaterTempMiddle": 45.0,
                         "SupplyWaterTempWinter": 45.0,
                         "HeatsourceRatedCapacity": 384.75,
-                        "HeatsourceRatedPowerConsumption": 0.0,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 480.93,
+                        "Heatsource_sub_RatedPowerConsumption": 0.0,
                         "PrimaryPumpPowerConsumption": 3.7,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2296,6 +2302,7 @@
                         "HeatsourceRatedCapacity": 10.0,
                         "HeatsourceRatedPowerConsumption": 6.19,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2320,6 +2327,7 @@
                         "HeatsourceRatedCapacity": 11.2,
                         "HeatsourceRatedPowerConsumption": 6.93,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2346,6 +2354,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 2.22,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2370,6 +2379,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 2.47,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2396,6 +2406,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 2.22,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2420,6 +2431,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 2.47,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2446,6 +2458,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 2.22,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2470,6 +2483,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 2.47,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2490,7 +2504,7 @@
                 "SecondaryPump": [
                     {
                         "Number": 1.0,
-                        "RatedWaterFlowRate": 47.272,
+                        "RatedWaterFlowRate": 47.27,
                         "RatedPowerConsumption": 5.5,
                         "ContolType": "回転数制御",
                         "MinOpeningRate": 60.0,
@@ -2498,7 +2512,7 @@
                     },
                     {
                         "Number": 1.0,
-                        "RatedWaterFlowRate": 47.272,
+                        "RatedWaterFlowRate": 47.27,
                         "RatedPowerConsumption": 5.5,
                         "ContolType": "回転数制御",
                         "MinOpeningRate": 60.0,
@@ -2506,7 +2520,7 @@
                     },
                     {
                         "Number": 1.0,
-                        "RatedWaterFlowRate": 47.272,
+                        "RatedWaterFlowRate": 47.27,
                         "RatedPowerConsumption": 5.5,
                         "ContolType": "回転数制御",
                         "MinOpeningRate": 60.0,
@@ -2520,7 +2534,7 @@
                 "SecondaryPump": [
                     {
                         "Number": 1.0,
-                        "RatedWaterFlowRate": 47.272,
+                        "RatedWaterFlowRate": 47.27,
                         "RatedPowerConsumption": 5.5,
                         "ContolType": "回転数制御",
                         "MinOpeningRate": 60.0,
@@ -2528,7 +2542,7 @@
                     },
                     {
                         "Number": 1.0,
-                        "RatedWaterFlowRate": 47.272,
+                        "RatedWaterFlowRate": 47.27,
                         "RatedPowerConsumption": 5.5,
                         "ContolType": "回転数制御",
                         "MinOpeningRate": 60.0,
@@ -2536,7 +2550,7 @@
                     },
                     {
                         "Number": 1.0,
-                        "RatedWaterFlowRate": 47.272,
+                        "RatedWaterFlowRate": 47.27,
                         "RatedPowerConsumption": 5.5,
                         "ContolType": "回転数制御",
                         "MinOpeningRate": 60.0,
@@ -4247,8 +4261,8 @@
     },
     "LightingSystems": {
         "1F_風除け室": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4263,13 +4277,13 @@
             }
         },
         "1F_ロビー": {
-            "roomWidth": 10.0,
-            "roomDepth": 11.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.5,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "17.9": {
-                    "RatedPower": 2042.748,
+                    "RatedPower": 2042.75,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4279,8 +4293,8 @@
             }
         },
         "1F_EVホール": {
-            "roomWidth": 3.4,
-            "roomDepth": 4.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4295,8 +4309,8 @@
             }
         },
         "1F_中央監視室・警備室": {
-            "roomWidth": 6.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4311,13 +4325,13 @@
             }
         },
         "1F_更衣室1": {
-            "roomWidth": 4.5,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 96.558,
+                    "RatedPower": 96.56,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4327,13 +4341,13 @@
             }
         },
         "1F_更衣室2": {
-            "roomWidth": 4.5,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 96.558,
+                    "RatedPower": 96.56,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4343,8 +4357,8 @@
             }
         },
         "1F_休憩室": {
-            "roomWidth": 3.3,
-            "roomDepth": 9.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4359,8 +4373,8 @@
             }
         },
         "1F_自販機コーナー": {
-            "roomWidth": 6.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4375,8 +4389,8 @@
             }
         },
         "1F_便所1": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4391,8 +4405,8 @@
             }
         },
         "1F_便所2": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4407,13 +4421,13 @@
             }
         },
         "1F_物入": {
-            "roomWidth": 2.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 50.094,
+                    "RatedPower": 50.09,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4423,13 +4437,13 @@
             }
         },
         "1F_給湯室": {
-            "roomWidth": 1.6,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 34.848,
+                    "RatedPower": 34.85,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4439,13 +4453,13 @@
             }
         },
         "1F_機械室1": {
-            "roomWidth": 15.2,
-            "roomDepth": 10.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 805.119,
+                    "RatedPower": 805.12,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4455,8 +4469,8 @@
             }
         },
         "1F_機械室2": {
-            "roomWidth": 7.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4471,8 +4485,8 @@
             }
         },
         "1F_電気室": {
-            "roomWidth": 5.0,
-            "roomDepth": 10.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4487,8 +4501,8 @@
             }
         },
         "1F_事務室1": {
-            "roomWidth": 23.5,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.5,
             "lightingUnit": {
@@ -4503,8 +4517,8 @@
             }
         },
         "1F_事務室2": {
-            "roomWidth": 16.8,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.5,
             "lightingUnit": {
@@ -4519,8 +4533,8 @@
             }
         },
         "1F_ローカ": {
-            "roomWidth": 2.2,
-            "roomDepth": 67.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4535,8 +4549,8 @@
             }
         },
         "1F_ローカ（湯沸脇）": {
-            "roomWidth": 1.2,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4551,8 +4565,8 @@
             }
         },
         "1F_階段室": {
-            "roomWidth": 2.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4567,8 +4581,8 @@
             }
         },
         "2F_EVホール": {
-            "roomWidth": 3.4,
-            "roomDepth": 4.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4583,8 +4597,8 @@
             }
         },
         "2F_自販機コーナー": {
-            "roomWidth": 6.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4599,8 +4613,8 @@
             }
         },
         "2F_便所1": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4615,8 +4629,8 @@
             }
         },
         "2F_便所2": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4631,13 +4645,13 @@
             }
         },
         "2F_物入": {
-            "roomWidth": 2.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 50.094,
+                    "RatedPower": 50.09,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4647,13 +4661,13 @@
             }
         },
         "2F_給湯室": {
-            "roomWidth": 1.6,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 34.848,
+                    "RatedPower": 34.85,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4663,8 +4677,8 @@
             }
         },
         "2F_機械室": {
-            "roomWidth": 7.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4679,8 +4693,8 @@
             }
         },
         "2F_事務室1": {
-            "roomWidth": 39.8,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4695,8 +4709,8 @@
             }
         },
         "2F_事務室2": {
-            "roomWidth": 33.3,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4711,8 +4725,8 @@
             }
         },
         "2F_ローカ": {
-            "roomWidth": 2.5,
-            "roomDepth": 47.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4727,8 +4741,8 @@
             }
         },
         "2F_ローカ（湯沸脇）": {
-            "roomWidth": 1.2,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4743,8 +4757,8 @@
             }
         },
         "2F_階段室": {
-            "roomWidth": 2.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4759,8 +4773,8 @@
             }
         },
         "3F_EVホール": {
-            "roomWidth": 3.4,
-            "roomDepth": 4.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4775,8 +4789,8 @@
             }
         },
         "3F_自販機コーナー": {
-            "roomWidth": 6.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4791,8 +4805,8 @@
             }
         },
         "3F_便所1": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4807,8 +4821,8 @@
             }
         },
         "3F_便所2": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4823,13 +4837,13 @@
             }
         },
         "3F_物入": {
-            "roomWidth": 2.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 50.094,
+                    "RatedPower": 50.09,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4839,13 +4853,13 @@
             }
         },
         "3F_給湯室": {
-            "roomWidth": 1.6,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 34.848,
+                    "RatedPower": 34.85,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -4855,8 +4869,8 @@
             }
         },
         "3F_機械室": {
-            "roomWidth": 7.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4871,8 +4885,8 @@
             }
         },
         "3F_事務室1": {
-            "roomWidth": 39.8,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4887,8 +4901,8 @@
             }
         },
         "3F_事務室2": {
-            "roomWidth": 33.3,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4903,8 +4917,8 @@
             }
         },
         "3F_ローカ": {
-            "roomWidth": 2.5,
-            "roomDepth": 47.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4919,8 +4933,8 @@
             }
         },
         "3F_ローカ（湯沸脇）": {
-            "roomWidth": 1.2,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4935,8 +4949,8 @@
             }
         },
         "3F_階段室": {
-            "roomWidth": 2.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4951,8 +4965,8 @@
             }
         },
         "4F_EVホール": {
-            "roomWidth": 3.4,
-            "roomDepth": 4.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4967,8 +4981,8 @@
             }
         },
         "4F_自販機コーナー": {
-            "roomWidth": 6.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4983,8 +4997,8 @@
             }
         },
         "4F_便所1": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -4999,8 +5013,8 @@
             }
         },
         "4F_便所2": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5015,13 +5029,13 @@
             }
         },
         "4F_物入": {
-            "roomWidth": 2.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 50.094,
+                    "RatedPower": 50.09,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -5031,13 +5045,13 @@
             }
         },
         "4F_給湯室": {
-            "roomWidth": 1.6,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 34.848,
+                    "RatedPower": 34.85,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -5047,8 +5061,8 @@
             }
         },
         "4F_機械室": {
-            "roomWidth": 7.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5063,8 +5077,8 @@
             }
         },
         "4F_事務室1": {
-            "roomWidth": 39.8,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5079,8 +5093,8 @@
             }
         },
         "4F_事務室2": {
-            "roomWidth": 33.3,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5095,8 +5109,8 @@
             }
         },
         "4F_ローカ": {
-            "roomWidth": 2.5,
-            "roomDepth": 47.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5111,8 +5125,8 @@
             }
         },
         "4F_ローカ（湯沸脇）": {
-            "roomWidth": 1.2,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5127,8 +5141,8 @@
             }
         },
         "4F_階段室": {
-            "roomWidth": 2.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5143,8 +5157,8 @@
             }
         },
         "5F_EVホール": {
-            "roomWidth": 3.4,
-            "roomDepth": 4.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5159,8 +5173,8 @@
             }
         },
         "5F_自販機コーナー": {
-            "roomWidth": 6.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5175,8 +5189,8 @@
             }
         },
         "5F_便所1": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5191,8 +5205,8 @@
             }
         },
         "5F_便所2": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5207,13 +5221,13 @@
             }
         },
         "5F_物入": {
-            "roomWidth": 2.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 50.094,
+                    "RatedPower": 50.09,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -5223,13 +5237,13 @@
             }
         },
         "5F_給湯室": {
-            "roomWidth": 1.6,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 34.848,
+                    "RatedPower": 34.85,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -5239,8 +5253,8 @@
             }
         },
         "5F_機械室": {
-            "roomWidth": 7.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5255,8 +5269,8 @@
             }
         },
         "5F_事務室1": {
-            "roomWidth": 39.8,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5271,8 +5285,8 @@
             }
         },
         "5F_事務室2": {
-            "roomWidth": 33.3,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5287,8 +5301,8 @@
             }
         },
         "5F_ローカ": {
-            "roomWidth": 2.5,
-            "roomDepth": 47.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5303,8 +5317,8 @@
             }
         },
         "5F_ローカ（湯沸脇）": {
-            "roomWidth": 1.2,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5319,8 +5333,8 @@
             }
         },
         "5F_階段室": {
-            "roomWidth": 2.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5335,8 +5349,8 @@
             }
         },
         "6F_EVホール": {
-            "roomWidth": 3.4,
-            "roomDepth": 4.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5351,8 +5365,8 @@
             }
         },
         "6F_自販機コーナー": {
-            "roomWidth": 6.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5367,8 +5381,8 @@
             }
         },
         "6F_便所1": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5383,8 +5397,8 @@
             }
         },
         "6F_便所2": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5399,13 +5413,13 @@
             }
         },
         "6F_物入": {
-            "roomWidth": 2.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 50.094,
+                    "RatedPower": 50.09,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -5415,13 +5429,13 @@
             }
         },
         "6F_給湯室": {
-            "roomWidth": 1.6,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 34.848,
+                    "RatedPower": 34.85,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -5431,8 +5445,8 @@
             }
         },
         "6F_機械室": {
-            "roomWidth": 7.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5447,8 +5461,8 @@
             }
         },
         "6F_事務室1": {
-            "roomWidth": 39.8,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5463,8 +5477,8 @@
             }
         },
         "6F_事務室2": {
-            "roomWidth": 33.3,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5479,8 +5493,8 @@
             }
         },
         "6F_ローカ": {
-            "roomWidth": 2.5,
-            "roomDepth": 47.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5495,8 +5509,8 @@
             }
         },
         "6F_ローカ（湯沸脇）": {
-            "roomWidth": 1.2,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5511,8 +5525,8 @@
             }
         },
         "6F_階段室": {
-            "roomWidth": 2.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5527,8 +5541,8 @@
             }
         },
         "7F_EVホール": {
-            "roomWidth": 3.4,
-            "roomDepth": 4.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5543,8 +5557,8 @@
             }
         },
         "7F_自販機コーナー": {
-            "roomWidth": 6.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5559,8 +5573,8 @@
             }
         },
         "7F_便所1": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5575,8 +5589,8 @@
             }
         },
         "7F_便所2": {
-            "roomWidth": 3.3,
-            "roomDepth": 10.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5591,13 +5605,13 @@
             }
         },
         "7F_物入": {
-            "roomWidth": 2.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 50.094,
+                    "RatedPower": 50.09,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -5607,13 +5621,13 @@
             }
         },
         "7F_給湯室": {
-            "roomWidth": 1.6,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 34.848,
+                    "RatedPower": 34.85,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -5623,8 +5637,8 @@
             }
         },
         "7F_機械室": {
-            "roomWidth": 7.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5639,8 +5653,8 @@
             }
         },
         "7F_事務室1": {
-            "roomWidth": 39.8,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5655,8 +5669,8 @@
             }
         },
         "7F_事務室2": {
-            "roomWidth": 33.3,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5671,8 +5685,8 @@
             }
         },
         "7F_ローカ": {
-            "roomWidth": 2.5,
-            "roomDepth": 47.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5687,8 +5701,8 @@
             }
         },
         "7F_ローカ（湯沸脇）": {
-            "roomWidth": 1.2,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5703,8 +5717,8 @@
             }
         },
         "7F_階段室": {
-            "roomWidth": 2.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5719,8 +5733,8 @@
             }
         },
         "RF_EV機械室": {
-            "roomWidth": 5.0,
-            "roomDepth": 10.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -5735,8 +5749,8 @@
             }
         },
         "RF_階段室": {
-            "roomWidth": 2.5,
-            "roomDepth": 5.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {

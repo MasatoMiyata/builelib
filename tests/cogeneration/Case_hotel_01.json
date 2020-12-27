@@ -6768,7 +6768,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 29.925,
+                            "WindowNumber": 29.93,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6790,7 +6790,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.275,
+                            "WindowNumber": 4.28,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6922,7 +6922,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 10.689,
+                            "WindowNumber": 10.69,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6939,7 +6939,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 3.564,
+                            "WindowNumber": 3.56,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6961,7 +6961,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 3.564,
+                            "WindowNumber": 3.56,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -7061,7 +7061,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.275,
+                            "WindowNumber": 4.28,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -7083,7 +7083,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.275,
+                            "WindowNumber": 4.28,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -28936,8 +28936,8 @@
     },
     "LightingSystems": {
         "1F_風除け室": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -28952,8 +28952,8 @@
             }
         },
         "1F_ロビー": {
-            "roomWidth": 20.0,
-            "roomDepth": 20.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -28968,8 +28968,8 @@
             }
         },
         "1F_フロント": {
-            "roomWidth": 3.0,
-            "roomDepth": 12.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -28984,8 +28984,8 @@
             }
         },
         "1F_EVホール": {
-            "roomWidth": 6.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29000,8 +29000,8 @@
             }
         },
         "1F_ラウンジ": {
-            "roomWidth": 12.0,
-            "roomDepth": 10.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29016,8 +29016,8 @@
             }
         },
         "1F_更衣室1": {
-            "roomWidth": 3.2,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29032,8 +29032,8 @@
             }
         },
         "1F_更衣室2": {
-            "roomWidth": 3.2,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29048,8 +29048,8 @@
             }
         },
         "1F_更衣室3": {
-            "roomWidth": 3.2,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29064,8 +29064,8 @@
             }
         },
         "1F_便所1": {
-            "roomWidth": 9.0,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29080,8 +29080,8 @@
             }
         },
         "1F_便所2": {
-            "roomWidth": 9.0,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29096,8 +29096,8 @@
             }
         },
         "1F_廊下1": {
-            "roomWidth": 12.0,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29112,8 +29112,8 @@
             }
         },
         "1F_宿直室1": {
-            "roomWidth": 7.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29128,8 +29128,8 @@
             }
         },
         "1F_宿直室2": {
-            "roomWidth": 7.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29144,8 +29144,8 @@
             }
         },
         "1F_倉庫": {
-            "roomWidth": 7.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29160,9 +29160,9 @@
             }
         },
         "1F_機械室": {
-            "roomWidth": 20.0,
-            "roomDepth": 12.0,
-            "unitHeight": 4.75,
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 4.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
@@ -29176,9 +29176,9 @@
             }
         },
         "1F_電気室": {
-            "roomWidth": 6.0,
-            "roomDepth": 10.0,
-            "unitHeight": 4.75,
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 4.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
@@ -29192,9 +29192,9 @@
             }
         },
         "1F_階段1": {
-            "roomWidth": 3.4,
-            "roomDepth": 6.0,
-            "unitHeight": 4.75,
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 4.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6": {
@@ -29208,8 +29208,8 @@
             }
         },
         "1F_自販機コーナー": {
-            "roomWidth": 3.0,
-            "roomDepth": 2.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29224,8 +29224,8 @@
             }
         },
         "1F_リネン室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29240,8 +29240,8 @@
             }
         },
         "1F_事務室1": {
-            "roomWidth": 16.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29256,8 +29256,8 @@
             }
         },
         "1F_レストラン": {
-            "roomWidth": 30.0,
-            "roomDepth": 14.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29272,8 +29272,8 @@
             }
         },
         "1F_厨房": {
-            "roomWidth": 18.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29288,8 +29288,8 @@
             }
         },
         "1F_廊下2": {
-            "roomWidth": 10.0,
-            "roomDepth": 1.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29304,8 +29304,8 @@
             }
         },
         "1F_廊下3": {
-            "roomWidth": 2.4,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29320,8 +29320,8 @@
             }
         },
         "1F_事務室2": {
-            "roomWidth": 7.0,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29336,8 +29336,8 @@
             }
         },
         "1F_更衣室4": {
-            "roomWidth": 6.0,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29352,8 +29352,8 @@
             }
         },
         "1F_更衣室5": {
-            "roomWidth": 9.0,
-            "roomDepth": 3.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29368,8 +29368,8 @@
             }
         },
         "1F_便所3": {
-            "roomWidth": 3.6,
-            "roomDepth": 1.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29384,8 +29384,8 @@
             }
         },
         "1F_物入れ": {
-            "roomWidth": 6.0,
-            "roomDepth": 1.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29400,9 +29400,9 @@
             }
         },
         "1F_屋外階段1": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
-            "unitHeight": 4.75,
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 4.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6": {
@@ -29416,9 +29416,9 @@
             }
         },
         "1F_屋外階段2": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
-            "unitHeight": 4.75,
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 4.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6": {
@@ -29432,9 +29432,9 @@
             }
         },
         "1F_DS・PS1": {
-            "roomWidth": 3.0,
-            "roomDepth": 0.8,
-            "unitHeight": 4.75,
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 4.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
@@ -29448,8 +29448,8 @@
             }
         },
         "2F_EVホール": {
-            "roomWidth": 4.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29464,8 +29464,8 @@
             }
         },
         "2F_ES": {
-            "roomWidth": 2.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29480,8 +29480,8 @@
             }
         },
         "2F_自販機コーナー": {
-            "roomWidth": 3.0,
-            "roomDepth": 2.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29496,8 +29496,8 @@
             }
         },
         "2F_リネン室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29512,8 +29512,8 @@
             }
         },
         "2F_階段1": {
-            "roomWidth": 3.4,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29528,8 +29528,8 @@
             }
         },
         "2F_屋外階段1": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29544,8 +29544,8 @@
             }
         },
         "2F_屋外階段2": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29560,8 +29560,8 @@
             }
         },
         "2F_廊下1": {
-            "roomWidth": 96.0,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29576,8 +29576,8 @@
             }
         },
         "2F_客室S01": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29592,8 +29592,8 @@
             }
         },
         "2F_客室S02": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29608,8 +29608,8 @@
             }
         },
         "2F_客室S03": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29624,8 +29624,8 @@
             }
         },
         "2F_客室S04": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29640,8 +29640,8 @@
             }
         },
         "2F_客室S05": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29656,8 +29656,8 @@
             }
         },
         "2F_客室S06": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29672,8 +29672,8 @@
             }
         },
         "2F_客室S07": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29688,8 +29688,8 @@
             }
         },
         "2F_客室S08": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29704,8 +29704,8 @@
             }
         },
         "2F_客室S09": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29720,8 +29720,8 @@
             }
         },
         "2F_客室S10": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29736,8 +29736,8 @@
             }
         },
         "2F_客室S11": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29752,8 +29752,8 @@
             }
         },
         "2F_客室S12": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29768,8 +29768,8 @@
             }
         },
         "2F_客室S13": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29784,8 +29784,8 @@
             }
         },
         "2F_客室S14": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29800,8 +29800,8 @@
             }
         },
         "2F_客室S15": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29816,8 +29816,8 @@
             }
         },
         "2F_客室S16": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29832,8 +29832,8 @@
             }
         },
         "2F_客室S17": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29848,8 +29848,8 @@
             }
         },
         "2F_客室S18": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29864,8 +29864,8 @@
             }
         },
         "2F_客室S19": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29880,8 +29880,8 @@
             }
         },
         "2F_客室S20": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29896,8 +29896,8 @@
             }
         },
         "2F_客室S21": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29912,8 +29912,8 @@
             }
         },
         "2F_客室S22": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29928,8 +29928,8 @@
             }
         },
         "2F_客室S23": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29944,8 +29944,8 @@
             }
         },
         "2F_客室S24": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29960,8 +29960,8 @@
             }
         },
         "2F_客室S1UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29976,8 +29976,8 @@
             }
         },
         "2F_客室S2UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -29992,8 +29992,8 @@
             }
         },
         "2F_客室S3UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30008,8 +30008,8 @@
             }
         },
         "2F_客室S4UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30024,8 +30024,8 @@
             }
         },
         "2F_客室S5UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30040,8 +30040,8 @@
             }
         },
         "2F_客室S6UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30056,8 +30056,8 @@
             }
         },
         "2F_客室S7UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30072,8 +30072,8 @@
             }
         },
         "2F_客室S8UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30088,8 +30088,8 @@
             }
         },
         "2F_客室S9UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30104,8 +30104,8 @@
             }
         },
         "2F_客室S10UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30120,8 +30120,8 @@
             }
         },
         "2F_客室S11UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30136,8 +30136,8 @@
             }
         },
         "2F_客室S12UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30152,8 +30152,8 @@
             }
         },
         "2F_客室S13UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30168,8 +30168,8 @@
             }
         },
         "2F_客室S14UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30184,8 +30184,8 @@
             }
         },
         "2F_客室S15UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30200,8 +30200,8 @@
             }
         },
         "2F_客室S16UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30216,8 +30216,8 @@
             }
         },
         "2F_客室S17UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30232,8 +30232,8 @@
             }
         },
         "2F_客室S18UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30248,8 +30248,8 @@
             }
         },
         "2F_客室S19UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30264,8 +30264,8 @@
             }
         },
         "2F_客室S20UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30280,8 +30280,8 @@
             }
         },
         "2F_客室S21UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30296,8 +30296,8 @@
             }
         },
         "2F_客室S22UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30312,8 +30312,8 @@
             }
         },
         "2F_客室S23UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30328,8 +30328,8 @@
             }
         },
         "2F_客室S24UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30344,8 +30344,8 @@
             }
         },
         "2F_客室W01": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30360,8 +30360,8 @@
             }
         },
         "2F_客室W02": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30376,8 +30376,8 @@
             }
         },
         "2F_客室W03": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30392,8 +30392,8 @@
             }
         },
         "2F_客室W04": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30408,8 +30408,8 @@
             }
         },
         "2F_客室W05": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30424,8 +30424,8 @@
             }
         },
         "2F_客室W06": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30440,8 +30440,8 @@
             }
         },
         "2F_客室W07": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30456,8 +30456,8 @@
             }
         },
         "2F_客室W08": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30472,8 +30472,8 @@
             }
         },
         "2F_客室W09": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30488,8 +30488,8 @@
             }
         },
         "2F_客室W10": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30504,8 +30504,8 @@
             }
         },
         "2F_客室W11": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30520,8 +30520,8 @@
             }
         },
         "2F_客室W12": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30536,8 +30536,8 @@
             }
         },
         "2F_客室W13": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30552,8 +30552,8 @@
             }
         },
         "2F_客室W14": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30568,8 +30568,8 @@
             }
         },
         "2F_客室W15": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30584,8 +30584,8 @@
             }
         },
         "2F_客室W16": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30600,8 +30600,8 @@
             }
         },
         "2F_客室W17": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30616,8 +30616,8 @@
             }
         },
         "2F_客室W18": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30632,8 +30632,8 @@
             }
         },
         "2F_客室W19": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30648,8 +30648,8 @@
             }
         },
         "2F_客室W20": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30664,8 +30664,8 @@
             }
         },
         "2F_客室W1UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30680,8 +30680,8 @@
             }
         },
         "2F_客室W2UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30696,8 +30696,8 @@
             }
         },
         "2F_客室W3UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30712,8 +30712,8 @@
             }
         },
         "2F_客室W4UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30728,8 +30728,8 @@
             }
         },
         "2F_客室W5UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30744,8 +30744,8 @@
             }
         },
         "2F_客室W6UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30760,8 +30760,8 @@
             }
         },
         "2F_客室W7UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30776,8 +30776,8 @@
             }
         },
         "2F_客室W8UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30792,8 +30792,8 @@
             }
         },
         "2F_客室W9UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30808,8 +30808,8 @@
             }
         },
         "2F_客室W10UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30824,8 +30824,8 @@
             }
         },
         "2F_客室W11UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30840,8 +30840,8 @@
             }
         },
         "2F_客室W12UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30856,8 +30856,8 @@
             }
         },
         "2F_客室W13UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30872,8 +30872,8 @@
             }
         },
         "2F_客室W14UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30888,8 +30888,8 @@
             }
         },
         "2F_客室W15UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30904,8 +30904,8 @@
             }
         },
         "2F_客室W16UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30920,8 +30920,8 @@
             }
         },
         "2F_客室W17UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30936,8 +30936,8 @@
             }
         },
         "2F_客室W18UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30952,8 +30952,8 @@
             }
         },
         "2F_客室W19UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30968,8 +30968,8 @@
             }
         },
         "2F_客室W20UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -30984,8 +30984,8 @@
             }
         },
         "3F_EVホール": {
-            "roomWidth": 4.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31000,8 +31000,8 @@
             }
         },
         "3F_ES": {
-            "roomWidth": 2.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31016,8 +31016,8 @@
             }
         },
         "3F_自販機コーナー": {
-            "roomWidth": 3.0,
-            "roomDepth": 2.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31032,8 +31032,8 @@
             }
         },
         "3F_リネン室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31048,8 +31048,8 @@
             }
         },
         "3F_階段1": {
-            "roomWidth": 3.4,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31064,8 +31064,8 @@
             }
         },
         "3F_屋外階段1": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31080,8 +31080,8 @@
             }
         },
         "3F_屋外階段2": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31096,8 +31096,8 @@
             }
         },
         "3F_廊下1": {
-            "roomWidth": 96.0,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31112,8 +31112,8 @@
             }
         },
         "3F_客室S01": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31128,8 +31128,8 @@
             }
         },
         "3F_客室S02": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31144,8 +31144,8 @@
             }
         },
         "3F_客室S03": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31160,8 +31160,8 @@
             }
         },
         "3F_客室S04": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31176,8 +31176,8 @@
             }
         },
         "3F_客室S05": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31192,8 +31192,8 @@
             }
         },
         "3F_客室S06": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31208,8 +31208,8 @@
             }
         },
         "3F_客室S07": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31224,8 +31224,8 @@
             }
         },
         "3F_客室S08": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31240,8 +31240,8 @@
             }
         },
         "3F_客室S09": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31256,8 +31256,8 @@
             }
         },
         "3F_客室S10": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31272,8 +31272,8 @@
             }
         },
         "3F_客室S11": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31288,8 +31288,8 @@
             }
         },
         "3F_客室S12": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31304,8 +31304,8 @@
             }
         },
         "3F_客室S13": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31320,8 +31320,8 @@
             }
         },
         "3F_客室S14": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31336,8 +31336,8 @@
             }
         },
         "3F_客室S15": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31352,8 +31352,8 @@
             }
         },
         "3F_客室S16": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31368,8 +31368,8 @@
             }
         },
         "3F_客室S17": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31384,8 +31384,8 @@
             }
         },
         "3F_客室S18": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31400,8 +31400,8 @@
             }
         },
         "3F_客室S19": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31416,8 +31416,8 @@
             }
         },
         "3F_客室S20": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31432,8 +31432,8 @@
             }
         },
         "3F_客室S21": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31448,8 +31448,8 @@
             }
         },
         "3F_客室S22": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31464,8 +31464,8 @@
             }
         },
         "3F_客室S23": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31480,8 +31480,8 @@
             }
         },
         "3F_客室S24": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31496,8 +31496,8 @@
             }
         },
         "3F_客室S1UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31512,8 +31512,8 @@
             }
         },
         "3F_客室S2UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31528,8 +31528,8 @@
             }
         },
         "3F_客室S3UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31544,8 +31544,8 @@
             }
         },
         "3F_客室S4UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31560,8 +31560,8 @@
             }
         },
         "3F_客室S5UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31576,8 +31576,8 @@
             }
         },
         "3F_客室S6UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31592,8 +31592,8 @@
             }
         },
         "3F_客室S7UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31608,8 +31608,8 @@
             }
         },
         "3F_客室S8UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31624,8 +31624,8 @@
             }
         },
         "3F_客室S9UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31640,8 +31640,8 @@
             }
         },
         "3F_客室S10UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31656,8 +31656,8 @@
             }
         },
         "3F_客室S11UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31672,8 +31672,8 @@
             }
         },
         "3F_客室S12UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31688,8 +31688,8 @@
             }
         },
         "3F_客室S13UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31704,8 +31704,8 @@
             }
         },
         "3F_客室S14UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31720,8 +31720,8 @@
             }
         },
         "3F_客室S15UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31736,8 +31736,8 @@
             }
         },
         "3F_客室S16UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31752,8 +31752,8 @@
             }
         },
         "3F_客室S17UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31768,8 +31768,8 @@
             }
         },
         "3F_客室S18UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31784,8 +31784,8 @@
             }
         },
         "3F_客室S19UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31800,8 +31800,8 @@
             }
         },
         "3F_客室S20UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31816,8 +31816,8 @@
             }
         },
         "3F_客室S21UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31832,8 +31832,8 @@
             }
         },
         "3F_客室S22UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31848,8 +31848,8 @@
             }
         },
         "3F_客室S23UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31864,8 +31864,8 @@
             }
         },
         "3F_客室S24UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31880,8 +31880,8 @@
             }
         },
         "3F_客室W01": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31896,8 +31896,8 @@
             }
         },
         "3F_客室W02": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31912,8 +31912,8 @@
             }
         },
         "3F_客室W03": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31928,8 +31928,8 @@
             }
         },
         "3F_客室W04": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31944,8 +31944,8 @@
             }
         },
         "3F_客室W05": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31960,8 +31960,8 @@
             }
         },
         "3F_客室W06": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31976,8 +31976,8 @@
             }
         },
         "3F_客室W07": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -31992,8 +31992,8 @@
             }
         },
         "3F_客室W08": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32008,8 +32008,8 @@
             }
         },
         "3F_客室W09": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32024,8 +32024,8 @@
             }
         },
         "3F_客室W10": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32040,8 +32040,8 @@
             }
         },
         "3F_客室W11": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32056,8 +32056,8 @@
             }
         },
         "3F_客室W12": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32072,8 +32072,8 @@
             }
         },
         "3F_客室W13": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32088,8 +32088,8 @@
             }
         },
         "3F_客室W14": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32104,8 +32104,8 @@
             }
         },
         "3F_客室W15": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32120,8 +32120,8 @@
             }
         },
         "3F_客室W16": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32136,8 +32136,8 @@
             }
         },
         "3F_客室W17": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32152,8 +32152,8 @@
             }
         },
         "3F_客室W18": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32168,8 +32168,8 @@
             }
         },
         "3F_客室W19": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32184,8 +32184,8 @@
             }
         },
         "3F_客室W20": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32200,8 +32200,8 @@
             }
         },
         "3F_客室W1UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32216,8 +32216,8 @@
             }
         },
         "3F_客室W2UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32232,8 +32232,8 @@
             }
         },
         "3F_客室W3UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32248,8 +32248,8 @@
             }
         },
         "3F_客室W4UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32264,8 +32264,8 @@
             }
         },
         "3F_客室W5UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32280,8 +32280,8 @@
             }
         },
         "3F_客室W6UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32296,8 +32296,8 @@
             }
         },
         "3F_客室W7UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32312,8 +32312,8 @@
             }
         },
         "3F_客室W8UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32328,8 +32328,8 @@
             }
         },
         "3F_客室W9UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32344,8 +32344,8 @@
             }
         },
         "3F_客室W10UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32360,8 +32360,8 @@
             }
         },
         "3F_客室W11UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32376,8 +32376,8 @@
             }
         },
         "3F_客室W12UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32392,8 +32392,8 @@
             }
         },
         "3F_客室W13UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32408,8 +32408,8 @@
             }
         },
         "3F_客室W14UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32424,8 +32424,8 @@
             }
         },
         "3F_客室W15UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32440,8 +32440,8 @@
             }
         },
         "3F_客室W16UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32456,8 +32456,8 @@
             }
         },
         "3F_客室W17UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32472,8 +32472,8 @@
             }
         },
         "3F_客室W18UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32488,8 +32488,8 @@
             }
         },
         "3F_客室W19UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32504,8 +32504,8 @@
             }
         },
         "3F_客室W20UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32520,8 +32520,8 @@
             }
         },
         "4F_EVホール": {
-            "roomWidth": 4.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32536,8 +32536,8 @@
             }
         },
         "4F_ES": {
-            "roomWidth": 2.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32552,8 +32552,8 @@
             }
         },
         "4F_自販機コーナー": {
-            "roomWidth": 3.0,
-            "roomDepth": 2.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32568,8 +32568,8 @@
             }
         },
         "4F_リネン室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32584,8 +32584,8 @@
             }
         },
         "4F_階段1": {
-            "roomWidth": 3.4,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32600,8 +32600,8 @@
             }
         },
         "4F_屋外階段1": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32616,8 +32616,8 @@
             }
         },
         "4F_屋外階段2": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32632,8 +32632,8 @@
             }
         },
         "4F_廊下1": {
-            "roomWidth": 96.0,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32648,8 +32648,8 @@
             }
         },
         "4F_客室S01": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32664,8 +32664,8 @@
             }
         },
         "4F_客室S02": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32680,8 +32680,8 @@
             }
         },
         "4F_客室S03": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32696,8 +32696,8 @@
             }
         },
         "4F_客室S04": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32712,8 +32712,8 @@
             }
         },
         "4F_客室S05": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32728,8 +32728,8 @@
             }
         },
         "4F_客室S06": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32744,8 +32744,8 @@
             }
         },
         "4F_客室S07": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32760,8 +32760,8 @@
             }
         },
         "4F_客室S08": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32776,8 +32776,8 @@
             }
         },
         "4F_客室S09": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32792,8 +32792,8 @@
             }
         },
         "4F_客室S10": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32808,8 +32808,8 @@
             }
         },
         "4F_客室S11": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32824,8 +32824,8 @@
             }
         },
         "4F_客室S12": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32840,8 +32840,8 @@
             }
         },
         "4F_客室S13": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32856,8 +32856,8 @@
             }
         },
         "4F_客室S14": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32872,8 +32872,8 @@
             }
         },
         "4F_客室S15": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32888,8 +32888,8 @@
             }
         },
         "4F_客室S16": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32904,8 +32904,8 @@
             }
         },
         "4F_客室S17": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32920,8 +32920,8 @@
             }
         },
         "4F_客室S18": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32936,8 +32936,8 @@
             }
         },
         "4F_客室S19": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32952,8 +32952,8 @@
             }
         },
         "4F_客室S20": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32968,8 +32968,8 @@
             }
         },
         "4F_客室S21": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -32984,8 +32984,8 @@
             }
         },
         "4F_客室S22": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33000,8 +33000,8 @@
             }
         },
         "4F_客室S23": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33016,8 +33016,8 @@
             }
         },
         "4F_客室S24": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33032,8 +33032,8 @@
             }
         },
         "4F_客室S1UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33048,8 +33048,8 @@
             }
         },
         "4F_客室S2UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33064,8 +33064,8 @@
             }
         },
         "4F_客室S3UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33080,8 +33080,8 @@
             }
         },
         "4F_客室S4UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33096,8 +33096,8 @@
             }
         },
         "4F_客室S5UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33112,8 +33112,8 @@
             }
         },
         "4F_客室S6UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33128,8 +33128,8 @@
             }
         },
         "4F_客室S7UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33144,8 +33144,8 @@
             }
         },
         "4F_客室S8UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33160,8 +33160,8 @@
             }
         },
         "4F_客室S9UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33176,8 +33176,8 @@
             }
         },
         "4F_客室S10UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33192,8 +33192,8 @@
             }
         },
         "4F_客室S11UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33208,8 +33208,8 @@
             }
         },
         "4F_客室S12UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33224,8 +33224,8 @@
             }
         },
         "4F_客室S13UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33240,8 +33240,8 @@
             }
         },
         "4F_客室S14UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33256,8 +33256,8 @@
             }
         },
         "4F_客室S15UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33272,8 +33272,8 @@
             }
         },
         "4F_客室S16UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33288,8 +33288,8 @@
             }
         },
         "4F_客室S17UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33304,8 +33304,8 @@
             }
         },
         "4F_客室S18UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33320,8 +33320,8 @@
             }
         },
         "4F_客室S19UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33336,8 +33336,8 @@
             }
         },
         "4F_客室S20UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33352,8 +33352,8 @@
             }
         },
         "4F_客室S21UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33368,8 +33368,8 @@
             }
         },
         "4F_客室S22UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33384,8 +33384,8 @@
             }
         },
         "4F_客室S23UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33400,8 +33400,8 @@
             }
         },
         "4F_客室S24UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33416,8 +33416,8 @@
             }
         },
         "4F_客室W01": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33432,8 +33432,8 @@
             }
         },
         "4F_客室W02": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33448,8 +33448,8 @@
             }
         },
         "4F_客室W03": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33464,8 +33464,8 @@
             }
         },
         "4F_客室W04": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33480,8 +33480,8 @@
             }
         },
         "4F_客室W05": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33496,8 +33496,8 @@
             }
         },
         "4F_客室W06": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33512,8 +33512,8 @@
             }
         },
         "4F_客室W07": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33528,8 +33528,8 @@
             }
         },
         "4F_客室W08": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33544,8 +33544,8 @@
             }
         },
         "4F_客室W09": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33560,8 +33560,8 @@
             }
         },
         "4F_客室W10": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33576,8 +33576,8 @@
             }
         },
         "4F_客室W11": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33592,8 +33592,8 @@
             }
         },
         "4F_客室W12": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33608,8 +33608,8 @@
             }
         },
         "4F_客室W13": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33624,8 +33624,8 @@
             }
         },
         "4F_客室W14": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33640,8 +33640,8 @@
             }
         },
         "4F_客室W15": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33656,8 +33656,8 @@
             }
         },
         "4F_客室W16": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33672,8 +33672,8 @@
             }
         },
         "4F_客室W17": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33688,8 +33688,8 @@
             }
         },
         "4F_客室W18": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33704,8 +33704,8 @@
             }
         },
         "4F_客室W19": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33720,8 +33720,8 @@
             }
         },
         "4F_客室W20": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33736,8 +33736,8 @@
             }
         },
         "4F_客室W1UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33752,8 +33752,8 @@
             }
         },
         "4F_客室W2UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33768,8 +33768,8 @@
             }
         },
         "4F_客室W3UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33784,8 +33784,8 @@
             }
         },
         "4F_客室W4UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33800,8 +33800,8 @@
             }
         },
         "4F_客室W5UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33816,8 +33816,8 @@
             }
         },
         "4F_客室W6UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33832,8 +33832,8 @@
             }
         },
         "4F_客室W7UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33848,8 +33848,8 @@
             }
         },
         "4F_客室W8UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33864,8 +33864,8 @@
             }
         },
         "4F_客室W9UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33880,8 +33880,8 @@
             }
         },
         "4F_客室W10UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33896,8 +33896,8 @@
             }
         },
         "4F_客室W11UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33912,8 +33912,8 @@
             }
         },
         "4F_客室W12UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33928,8 +33928,8 @@
             }
         },
         "4F_客室W13UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33944,8 +33944,8 @@
             }
         },
         "4F_客室W14UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33960,8 +33960,8 @@
             }
         },
         "4F_客室W15UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33976,8 +33976,8 @@
             }
         },
         "4F_客室W16UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -33992,8 +33992,8 @@
             }
         },
         "4F_客室W17UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34008,8 +34008,8 @@
             }
         },
         "4F_客室W18UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34024,8 +34024,8 @@
             }
         },
         "4F_客室W19UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34040,8 +34040,8 @@
             }
         },
         "4F_客室W20UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34056,8 +34056,8 @@
             }
         },
         "5F_EVホール": {
-            "roomWidth": 4.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34072,8 +34072,8 @@
             }
         },
         "5F_ES": {
-            "roomWidth": 2.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34088,8 +34088,8 @@
             }
         },
         "5F_自販機コーナー": {
-            "roomWidth": 3.0,
-            "roomDepth": 2.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34104,8 +34104,8 @@
             }
         },
         "5F_リネン室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34120,8 +34120,8 @@
             }
         },
         "5F_階段1": {
-            "roomWidth": 3.4,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34136,8 +34136,8 @@
             }
         },
         "5F_屋外階段1": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34152,8 +34152,8 @@
             }
         },
         "5F_屋外階段2": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34168,8 +34168,8 @@
             }
         },
         "5F_廊下1": {
-            "roomWidth": 96.0,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34184,8 +34184,8 @@
             }
         },
         "5F_客室S01": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34200,8 +34200,8 @@
             }
         },
         "5F_客室S02": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34216,8 +34216,8 @@
             }
         },
         "5F_客室S03": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34232,8 +34232,8 @@
             }
         },
         "5F_客室S04": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34248,8 +34248,8 @@
             }
         },
         "5F_客室S05": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34264,8 +34264,8 @@
             }
         },
         "5F_客室S06": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34280,8 +34280,8 @@
             }
         },
         "5F_客室S07": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34296,8 +34296,8 @@
             }
         },
         "5F_客室S08": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34312,8 +34312,8 @@
             }
         },
         "5F_客室S09": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34328,8 +34328,8 @@
             }
         },
         "5F_客室S10": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34344,8 +34344,8 @@
             }
         },
         "5F_客室S11": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34360,8 +34360,8 @@
             }
         },
         "5F_客室S12": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34376,8 +34376,8 @@
             }
         },
         "5F_客室S13": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34392,8 +34392,8 @@
             }
         },
         "5F_客室S14": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34408,8 +34408,8 @@
             }
         },
         "5F_客室S15": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34424,8 +34424,8 @@
             }
         },
         "5F_客室S16": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34440,8 +34440,8 @@
             }
         },
         "5F_客室S17": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34456,8 +34456,8 @@
             }
         },
         "5F_客室S18": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34472,8 +34472,8 @@
             }
         },
         "5F_客室S19": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34488,8 +34488,8 @@
             }
         },
         "5F_客室S20": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34504,8 +34504,8 @@
             }
         },
         "5F_客室S21": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34520,8 +34520,8 @@
             }
         },
         "5F_客室S22": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34536,8 +34536,8 @@
             }
         },
         "5F_客室S23": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34552,8 +34552,8 @@
             }
         },
         "5F_客室S24": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34568,8 +34568,8 @@
             }
         },
         "5F_客室S1UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34584,8 +34584,8 @@
             }
         },
         "5F_客室S2UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34600,8 +34600,8 @@
             }
         },
         "5F_客室S3UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34616,8 +34616,8 @@
             }
         },
         "5F_客室S4UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34632,8 +34632,8 @@
             }
         },
         "5F_客室S5UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34648,8 +34648,8 @@
             }
         },
         "5F_客室S6UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34664,8 +34664,8 @@
             }
         },
         "5F_客室S7UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34680,8 +34680,8 @@
             }
         },
         "5F_客室S8UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34696,8 +34696,8 @@
             }
         },
         "5F_客室S9UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34712,8 +34712,8 @@
             }
         },
         "5F_客室S10UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34728,8 +34728,8 @@
             }
         },
         "5F_客室S11UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34744,8 +34744,8 @@
             }
         },
         "5F_客室S12UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34760,8 +34760,8 @@
             }
         },
         "5F_客室S13UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34776,8 +34776,8 @@
             }
         },
         "5F_客室S14UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34792,8 +34792,8 @@
             }
         },
         "5F_客室S15UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34808,8 +34808,8 @@
             }
         },
         "5F_客室S16UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34824,8 +34824,8 @@
             }
         },
         "5F_客室S17UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34840,8 +34840,8 @@
             }
         },
         "5F_客室S18UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34856,8 +34856,8 @@
             }
         },
         "5F_客室S19UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34872,8 +34872,8 @@
             }
         },
         "5F_客室S20UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34888,8 +34888,8 @@
             }
         },
         "5F_客室S21UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34904,8 +34904,8 @@
             }
         },
         "5F_客室S22UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34920,8 +34920,8 @@
             }
         },
         "5F_客室S23UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34936,8 +34936,8 @@
             }
         },
         "5F_客室S24UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34952,8 +34952,8 @@
             }
         },
         "5F_客室W01": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34968,8 +34968,8 @@
             }
         },
         "5F_客室W02": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -34984,8 +34984,8 @@
             }
         },
         "5F_客室W03": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35000,8 +35000,8 @@
             }
         },
         "5F_客室W04": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35016,8 +35016,8 @@
             }
         },
         "5F_客室W05": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35032,8 +35032,8 @@
             }
         },
         "5F_客室W06": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35048,8 +35048,8 @@
             }
         },
         "5F_客室W07": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35064,8 +35064,8 @@
             }
         },
         "5F_客室W08": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35080,8 +35080,8 @@
             }
         },
         "5F_客室W09": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35096,8 +35096,8 @@
             }
         },
         "5F_客室W10": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35112,8 +35112,8 @@
             }
         },
         "5F_客室W11": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35128,8 +35128,8 @@
             }
         },
         "5F_客室W12": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35144,8 +35144,8 @@
             }
         },
         "5F_客室W13": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35160,8 +35160,8 @@
             }
         },
         "5F_客室W14": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35176,8 +35176,8 @@
             }
         },
         "5F_客室W15": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35192,8 +35192,8 @@
             }
         },
         "5F_客室W16": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35208,8 +35208,8 @@
             }
         },
         "5F_客室W17": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35224,8 +35224,8 @@
             }
         },
         "5F_客室W18": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35240,8 +35240,8 @@
             }
         },
         "5F_客室W19": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35256,8 +35256,8 @@
             }
         },
         "5F_客室W20": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35272,8 +35272,8 @@
             }
         },
         "5F_客室W1UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35288,8 +35288,8 @@
             }
         },
         "5F_客室W2UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35304,8 +35304,8 @@
             }
         },
         "5F_客室W3UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35320,8 +35320,8 @@
             }
         },
         "5F_客室W4UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35336,8 +35336,8 @@
             }
         },
         "5F_客室W5UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35352,8 +35352,8 @@
             }
         },
         "5F_客室W6UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35368,8 +35368,8 @@
             }
         },
         "5F_客室W7UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35384,8 +35384,8 @@
             }
         },
         "5F_客室W8UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35400,8 +35400,8 @@
             }
         },
         "5F_客室W9UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35416,8 +35416,8 @@
             }
         },
         "5F_客室W10UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35432,8 +35432,8 @@
             }
         },
         "5F_客室W11UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35448,8 +35448,8 @@
             }
         },
         "5F_客室W12UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35464,8 +35464,8 @@
             }
         },
         "5F_客室W13UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35480,8 +35480,8 @@
             }
         },
         "5F_客室W14UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35496,8 +35496,8 @@
             }
         },
         "5F_客室W15UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35512,8 +35512,8 @@
             }
         },
         "5F_客室W16UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35528,8 +35528,8 @@
             }
         },
         "5F_客室W17UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35544,8 +35544,8 @@
             }
         },
         "5F_客室W18UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35560,8 +35560,8 @@
             }
         },
         "5F_客室W19UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35576,8 +35576,8 @@
             }
         },
         "5F_客室W20UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35592,8 +35592,8 @@
             }
         },
         "6F_EVホール": {
-            "roomWidth": 4.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35608,8 +35608,8 @@
             }
         },
         "6F_ES": {
-            "roomWidth": 2.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35624,8 +35624,8 @@
             }
         },
         "6F_自販機コーナー": {
-            "roomWidth": 3.0,
-            "roomDepth": 2.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35640,8 +35640,8 @@
             }
         },
         "6F_リネン室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35656,8 +35656,8 @@
             }
         },
         "6F_階段1": {
-            "roomWidth": 3.4,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35672,8 +35672,8 @@
             }
         },
         "6F_屋外階段1": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35688,8 +35688,8 @@
             }
         },
         "6F_屋外階段2": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35704,8 +35704,8 @@
             }
         },
         "6F_廊下1": {
-            "roomWidth": 96.0,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35720,8 +35720,8 @@
             }
         },
         "6F_客室S01": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35736,8 +35736,8 @@
             }
         },
         "6F_客室S02": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35752,8 +35752,8 @@
             }
         },
         "6F_客室S03": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35768,8 +35768,8 @@
             }
         },
         "6F_客室S04": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35784,8 +35784,8 @@
             }
         },
         "6F_客室S05": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35800,8 +35800,8 @@
             }
         },
         "6F_客室S06": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35816,8 +35816,8 @@
             }
         },
         "6F_客室S07": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35832,8 +35832,8 @@
             }
         },
         "6F_客室S08": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35848,8 +35848,8 @@
             }
         },
         "6F_客室S09": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35864,8 +35864,8 @@
             }
         },
         "6F_客室S10": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35880,8 +35880,8 @@
             }
         },
         "6F_客室S11": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35896,8 +35896,8 @@
             }
         },
         "6F_客室S12": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35912,8 +35912,8 @@
             }
         },
         "6F_客室S13": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35928,8 +35928,8 @@
             }
         },
         "6F_客室S14": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35944,8 +35944,8 @@
             }
         },
         "6F_客室S15": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35960,8 +35960,8 @@
             }
         },
         "6F_客室S16": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35976,8 +35976,8 @@
             }
         },
         "6F_客室S17": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -35992,8 +35992,8 @@
             }
         },
         "6F_客室S18": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36008,8 +36008,8 @@
             }
         },
         "6F_客室S19": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36024,8 +36024,8 @@
             }
         },
         "6F_客室S20": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36040,8 +36040,8 @@
             }
         },
         "6F_客室S21": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36056,8 +36056,8 @@
             }
         },
         "6F_客室S22": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36072,8 +36072,8 @@
             }
         },
         "6F_客室S23": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36088,8 +36088,8 @@
             }
         },
         "6F_客室S24": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36104,8 +36104,8 @@
             }
         },
         "6F_客室S1UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36120,8 +36120,8 @@
             }
         },
         "6F_客室S2UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36136,8 +36136,8 @@
             }
         },
         "6F_客室S3UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36152,8 +36152,8 @@
             }
         },
         "6F_客室S4UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36168,8 +36168,8 @@
             }
         },
         "6F_客室S5UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36184,8 +36184,8 @@
             }
         },
         "6F_客室S6UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36200,8 +36200,8 @@
             }
         },
         "6F_客室S7UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36216,8 +36216,8 @@
             }
         },
         "6F_客室S8UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36232,8 +36232,8 @@
             }
         },
         "6F_客室S9UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36248,8 +36248,8 @@
             }
         },
         "6F_客室S10UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36264,8 +36264,8 @@
             }
         },
         "6F_客室S11UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36280,8 +36280,8 @@
             }
         },
         "6F_客室S12UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36296,8 +36296,8 @@
             }
         },
         "6F_客室S13UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36312,8 +36312,8 @@
             }
         },
         "6F_客室S14UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36328,8 +36328,8 @@
             }
         },
         "6F_客室S15UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36344,8 +36344,8 @@
             }
         },
         "6F_客室S16UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36360,8 +36360,8 @@
             }
         },
         "6F_客室S17UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36376,8 +36376,8 @@
             }
         },
         "6F_客室S18UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36392,8 +36392,8 @@
             }
         },
         "6F_客室S19UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36408,8 +36408,8 @@
             }
         },
         "6F_客室S20UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36424,8 +36424,8 @@
             }
         },
         "6F_客室S21UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36440,8 +36440,8 @@
             }
         },
         "6F_客室S22UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36456,8 +36456,8 @@
             }
         },
         "6F_客室S23UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36472,8 +36472,8 @@
             }
         },
         "6F_客室S24UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36488,8 +36488,8 @@
             }
         },
         "6F_客室W01": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36504,8 +36504,8 @@
             }
         },
         "6F_客室W02": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36520,8 +36520,8 @@
             }
         },
         "6F_客室W03": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36536,8 +36536,8 @@
             }
         },
         "6F_客室W04": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36552,8 +36552,8 @@
             }
         },
         "6F_客室W05": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36568,8 +36568,8 @@
             }
         },
         "6F_客室W06": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36584,8 +36584,8 @@
             }
         },
         "6F_客室W07": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36600,8 +36600,8 @@
             }
         },
         "6F_客室W08": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36616,8 +36616,8 @@
             }
         },
         "6F_客室W09": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36632,8 +36632,8 @@
             }
         },
         "6F_客室W10": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36648,8 +36648,8 @@
             }
         },
         "6F_客室W11": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36664,8 +36664,8 @@
             }
         },
         "6F_客室W12": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36680,8 +36680,8 @@
             }
         },
         "6F_客室W13": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36696,8 +36696,8 @@
             }
         },
         "6F_客室W14": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36712,8 +36712,8 @@
             }
         },
         "6F_客室W15": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36728,8 +36728,8 @@
             }
         },
         "6F_客室W16": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36744,8 +36744,8 @@
             }
         },
         "6F_客室W17": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36760,8 +36760,8 @@
             }
         },
         "6F_客室W18": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36776,8 +36776,8 @@
             }
         },
         "6F_客室W19": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36792,8 +36792,8 @@
             }
         },
         "6F_客室W20": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36808,8 +36808,8 @@
             }
         },
         "6F_客室W1UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36824,8 +36824,8 @@
             }
         },
         "6F_客室W2UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36840,8 +36840,8 @@
             }
         },
         "6F_客室W3UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36856,8 +36856,8 @@
             }
         },
         "6F_客室W4UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36872,8 +36872,8 @@
             }
         },
         "6F_客室W5UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36888,8 +36888,8 @@
             }
         },
         "6F_客室W6UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36904,8 +36904,8 @@
             }
         },
         "6F_客室W7UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36920,8 +36920,8 @@
             }
         },
         "6F_客室W8UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36936,8 +36936,8 @@
             }
         },
         "6F_客室W9UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36952,8 +36952,8 @@
             }
         },
         "6F_客室W10UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36968,8 +36968,8 @@
             }
         },
         "6F_客室W11UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -36984,8 +36984,8 @@
             }
         },
         "6F_客室W12UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37000,8 +37000,8 @@
             }
         },
         "6F_客室W13UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37016,8 +37016,8 @@
             }
         },
         "6F_客室W14UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37032,8 +37032,8 @@
             }
         },
         "6F_客室W15UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37048,8 +37048,8 @@
             }
         },
         "6F_客室W16UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37064,8 +37064,8 @@
             }
         },
         "6F_客室W17UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37080,8 +37080,8 @@
             }
         },
         "6F_客室W18UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37096,8 +37096,8 @@
             }
         },
         "6F_客室W19UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37112,8 +37112,8 @@
             }
         },
         "6F_客室W20UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37128,8 +37128,8 @@
             }
         },
         "7F_EVホール": {
-            "roomWidth": 4.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37144,8 +37144,8 @@
             }
         },
         "7F_ES": {
-            "roomWidth": 2.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37160,8 +37160,8 @@
             }
         },
         "7F_自販機コーナー": {
-            "roomWidth": 3.0,
-            "roomDepth": 2.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37176,8 +37176,8 @@
             }
         },
         "7F_リネン室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37192,8 +37192,8 @@
             }
         },
         "7F_階段1": {
-            "roomWidth": 3.4,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37208,8 +37208,8 @@
             }
         },
         "7F_屋外階段1": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37224,8 +37224,8 @@
             }
         },
         "7F_屋外階段2": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37240,8 +37240,8 @@
             }
         },
         "7F_廊下1": {
-            "roomWidth": 96.0,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37256,8 +37256,8 @@
             }
         },
         "7F_客室S01": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37272,8 +37272,8 @@
             }
         },
         "7F_客室S02": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37288,8 +37288,8 @@
             }
         },
         "7F_客室S03": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37304,8 +37304,8 @@
             }
         },
         "7F_客室S04": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37320,8 +37320,8 @@
             }
         },
         "7F_客室S05": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37336,8 +37336,8 @@
             }
         },
         "7F_客室S06": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37352,8 +37352,8 @@
             }
         },
         "7F_客室S07": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37368,8 +37368,8 @@
             }
         },
         "7F_客室S08": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37384,8 +37384,8 @@
             }
         },
         "7F_客室S09": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37400,8 +37400,8 @@
             }
         },
         "7F_客室S10": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37416,8 +37416,8 @@
             }
         },
         "7F_客室S11": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37432,8 +37432,8 @@
             }
         },
         "7F_客室S12": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37448,8 +37448,8 @@
             }
         },
         "7F_客室S13": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37464,8 +37464,8 @@
             }
         },
         "7F_客室S14": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37480,8 +37480,8 @@
             }
         },
         "7F_客室S15": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37496,8 +37496,8 @@
             }
         },
         "7F_客室S16": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37512,8 +37512,8 @@
             }
         },
         "7F_客室S17": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37528,8 +37528,8 @@
             }
         },
         "7F_客室S18": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37544,8 +37544,8 @@
             }
         },
         "7F_客室S19": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37560,8 +37560,8 @@
             }
         },
         "7F_客室S20": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37576,8 +37576,8 @@
             }
         },
         "7F_客室S21": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37592,8 +37592,8 @@
             }
         },
         "7F_客室S22": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37608,8 +37608,8 @@
             }
         },
         "7F_客室S23": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37624,8 +37624,8 @@
             }
         },
         "7F_客室S24": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37640,8 +37640,8 @@
             }
         },
         "7F_客室S1UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37656,8 +37656,8 @@
             }
         },
         "7F_客室S2UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37672,8 +37672,8 @@
             }
         },
         "7F_客室S3UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37688,8 +37688,8 @@
             }
         },
         "7F_客室S4UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37704,8 +37704,8 @@
             }
         },
         "7F_客室S5UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37720,8 +37720,8 @@
             }
         },
         "7F_客室S6UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37736,8 +37736,8 @@
             }
         },
         "7F_客室S7UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37752,8 +37752,8 @@
             }
         },
         "7F_客室S8UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37768,8 +37768,8 @@
             }
         },
         "7F_客室S9UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37784,8 +37784,8 @@
             }
         },
         "7F_客室S10UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37800,8 +37800,8 @@
             }
         },
         "7F_客室S11UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37816,8 +37816,8 @@
             }
         },
         "7F_客室S12UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37832,8 +37832,8 @@
             }
         },
         "7F_客室S13UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37848,8 +37848,8 @@
             }
         },
         "7F_客室S14UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37864,8 +37864,8 @@
             }
         },
         "7F_客室S15UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37880,8 +37880,8 @@
             }
         },
         "7F_客室S16UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37896,8 +37896,8 @@
             }
         },
         "7F_客室S17UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37912,8 +37912,8 @@
             }
         },
         "7F_客室S18UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37928,8 +37928,8 @@
             }
         },
         "7F_客室S19UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37944,8 +37944,8 @@
             }
         },
         "7F_客室S20UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37960,8 +37960,8 @@
             }
         },
         "7F_客室S21UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37976,8 +37976,8 @@
             }
         },
         "7F_客室S22UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -37992,8 +37992,8 @@
             }
         },
         "7F_客室S23UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38008,8 +38008,8 @@
             }
         },
         "7F_客室S24UB": {
-            "roomWidth": 1.8,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38024,8 +38024,8 @@
             }
         },
         "7F_客室W01": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38040,8 +38040,8 @@
             }
         },
         "7F_客室W02": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38056,8 +38056,8 @@
             }
         },
         "7F_客室W03": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38072,8 +38072,8 @@
             }
         },
         "7F_客室W04": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38088,8 +38088,8 @@
             }
         },
         "7F_客室W05": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38104,8 +38104,8 @@
             }
         },
         "7F_客室W06": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38120,8 +38120,8 @@
             }
         },
         "7F_客室W07": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38136,8 +38136,8 @@
             }
         },
         "7F_客室W08": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38152,8 +38152,8 @@
             }
         },
         "7F_客室W09": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38168,8 +38168,8 @@
             }
         },
         "7F_客室W10": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38184,8 +38184,8 @@
             }
         },
         "7F_客室W11": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38200,8 +38200,8 @@
             }
         },
         "7F_客室W12": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38216,8 +38216,8 @@
             }
         },
         "7F_客室W13": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38232,8 +38232,8 @@
             }
         },
         "7F_客室W14": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38248,8 +38248,8 @@
             }
         },
         "7F_客室W15": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38264,8 +38264,8 @@
             }
         },
         "7F_客室W16": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38280,8 +38280,8 @@
             }
         },
         "7F_客室W17": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38296,8 +38296,8 @@
             }
         },
         "7F_客室W18": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38312,8 +38312,8 @@
             }
         },
         "7F_客室W19": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38328,8 +38328,8 @@
             }
         },
         "7F_客室W20": {
-            "roomWidth": 5.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38344,8 +38344,8 @@
             }
         },
         "7F_客室W1UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38360,8 +38360,8 @@
             }
         },
         "7F_客室W2UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38376,8 +38376,8 @@
             }
         },
         "7F_客室W3UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38392,8 +38392,8 @@
             }
         },
         "7F_客室W4UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38408,8 +38408,8 @@
             }
         },
         "7F_客室W5UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38424,8 +38424,8 @@
             }
         },
         "7F_客室W6UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38440,8 +38440,8 @@
             }
         },
         "7F_客室W7UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38456,8 +38456,8 @@
             }
         },
         "7F_客室W8UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38472,8 +38472,8 @@
             }
         },
         "7F_客室W9UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38488,8 +38488,8 @@
             }
         },
         "7F_客室W10UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38504,8 +38504,8 @@
             }
         },
         "7F_客室W11UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38520,8 +38520,8 @@
             }
         },
         "7F_客室W12UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38536,8 +38536,8 @@
             }
         },
         "7F_客室W13UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38552,8 +38552,8 @@
             }
         },
         "7F_客室W14UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38568,8 +38568,8 @@
             }
         },
         "7F_客室W15UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38584,8 +38584,8 @@
             }
         },
         "7F_客室W16UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38600,8 +38600,8 @@
             }
         },
         "7F_客室W17UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38616,8 +38616,8 @@
             }
         },
         "7F_客室W18UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38632,8 +38632,8 @@
             }
         },
         "7F_客室W19UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38648,8 +38648,8 @@
             }
         },
         "7F_客室W20UB": {
-            "roomWidth": 2.2,
-            "roomDepth": 2.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38664,8 +38664,8 @@
             }
         },
         "RF_機械室": {
-            "roomWidth": 6.0,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38680,8 +38680,8 @@
             }
         },
         "RF_屋外階段1": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -38696,8 +38696,8 @@
             }
         },
         "RF_屋外階段2": {
-            "roomWidth": 3.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.8,
             "roomIndex": 2.6,
             "lightingUnit": {

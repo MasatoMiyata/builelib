@@ -4894,7 +4894,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -4950,7 +4950,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -4989,7 +4989,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5028,7 +5028,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5067,7 +5067,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5106,7 +5106,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5145,7 +5145,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5167,7 +5167,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5189,7 +5189,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5211,7 +5211,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5233,7 +5233,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5255,7 +5255,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5321,7 +5321,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -5343,7 +5343,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.875,
+                            "WindowNumber": 4.88,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6133,7 +6133,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 8.775,
+                            "WindowNumber": 8.78,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6150,7 +6150,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 10.125,
+                            "WindowNumber": 10.13,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6172,7 +6172,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 8.775,
+                            "WindowNumber": 8.78,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6186,7 +6186,7 @@
             "WallList": [
                 {
                     "Direction": "北",
-                    "EnvelopeArea": 14.625,
+                    "EnvelopeArea": 14.63,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6194,7 +6194,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 4.3875,
+                            "WindowNumber": 4.39,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6216,7 +6216,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 8.775,
+                            "WindowNumber": 8.78,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6238,7 +6238,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 8.775,
+                            "WindowNumber": 8.78,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6260,7 +6260,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 8.775,
+                            "WindowNumber": 8.78,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6277,7 +6277,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 10.125,
+                            "WindowNumber": 10.13,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6299,7 +6299,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 26.325,
+                            "WindowNumber": 26.33,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6330,7 +6330,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 43.875,
+                    "EnvelopeArea": 43.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6338,7 +6338,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 13.1625,
+                            "WindowNumber": 13.16,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6352,7 +6352,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 16.875,
+                    "EnvelopeArea": 16.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6360,7 +6360,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 5.0625,
+                            "WindowNumber": 5.06,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6374,7 +6374,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 16.875,
+                    "EnvelopeArea": 16.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6382,7 +6382,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 5.0625,
+                            "WindowNumber": 5.06,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6396,7 +6396,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 16.875,
+                    "EnvelopeArea": 16.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6404,7 +6404,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 5.0625,
+                            "WindowNumber": 5.06,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6418,7 +6418,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 16.875,
+                    "EnvelopeArea": 16.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6426,7 +6426,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 5.0625,
+                            "WindowNumber": 5.06,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6440,7 +6440,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 16.875,
+                    "EnvelopeArea": 16.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6448,7 +6448,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 5.0625,
+                            "WindowNumber": 5.06,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6462,7 +6462,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 16.875,
+                    "EnvelopeArea": 16.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6470,7 +6470,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 5.0625,
+                            "WindowNumber": 5.06,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6484,7 +6484,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 16.875,
+                    "EnvelopeArea": 16.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6492,7 +6492,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 5.0625,
+                            "WindowNumber": 5.06,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6506,7 +6506,7 @@
             "WallList": [
                 {
                     "Direction": "南",
-                    "EnvelopeArea": 16.875,
+                    "EnvelopeArea": 16.88,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
                     "WallSpec": "W1",
@@ -6514,7 +6514,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 5.0625,
+                            "WindowNumber": 5.06,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -6553,7 +6553,7 @@
                     "WindowList": [
                         {
                             "WindowID": "G1",
-                            "WindowNumber": 26.325,
+                            "WindowNumber": 26.33,
                             "isBlind": "有",
                             "EavesID": "無",
                             "Info": "無"
@@ -12318,8 +12318,8 @@
                 {
                     "Type": "空調機",
                     "Number": 1.0,
-                    "RatedCapacityCooling": 50.225,
-                    "RatedCapacityHeating": 54.325,
+                    "RatedCapacityCooling": 50.23,
+                    "RatedCapacityHeating": 54.33,
                     "FanType": null,
                     "FanAirVolume": null,
                     "FanPowerConsumption": 2.5,
@@ -12346,8 +12346,8 @@
                 {
                     "Type": "空調機",
                     "Number": 1.0,
-                    "RatedCapacityCooling": 50.225,
-                    "RatedCapacityHeating": 54.325,
+                    "RatedCapacityCooling": 50.23,
+                    "RatedCapacityHeating": 54.33,
                     "FanType": null,
                     "FanAirVolume": null,
                     "FanPowerConsumption": 2.5,
@@ -12374,8 +12374,8 @@
                 {
                     "Type": "空調機",
                     "Number": 1.0,
-                    "RatedCapacityCooling": 50.225,
-                    "RatedCapacityHeating": 54.325,
+                    "RatedCapacityCooling": 50.23,
+                    "RatedCapacityHeating": 54.33,
                     "FanType": null,
                     "FanAirVolume": null,
                     "FanPowerConsumption": 2.5,
@@ -21030,8 +21030,8 @@
             }
         },
         "B1F_電気室": {
-            "roomWidth": 19.5,
-            "roomDepth": 10.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21046,8 +21046,8 @@
             }
         },
         "B1F_倉庫1": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21062,8 +21062,8 @@
             }
         },
         "B1F_倉庫2": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21078,8 +21078,8 @@
             }
         },
         "B1F_倉庫3": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21094,13 +21094,13 @@
             }
         },
         "B1F_倉庫4": {
-            "roomWidth": 4.8,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 266.508,
+                    "RatedPower": 266.51,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21110,8 +21110,8 @@
             }
         },
         "B1F_倉庫5": {
-            "roomWidth": 6.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21126,8 +21126,8 @@
             }
         },
         "B1F_倉庫6": {
-            "roomWidth": 3.2,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21142,13 +21142,13 @@
             }
         },
         "B1F_倉庫7": {
-            "roomWidth": 3.3,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 182.358,
+                    "RatedPower": 182.36,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21158,8 +21158,8 @@
             }
         },
         "B1F_清掃員控室": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21174,13 +21174,13 @@
             }
         },
         "B1F_男子更衣室1": {
-            "roomWidth": 4.8,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 235.158,
+                    "RatedPower": 235.16,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21190,8 +21190,8 @@
             }
         },
         "B1F_男子休養室": {
-            "roomWidth": 5.0,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21206,8 +21206,8 @@
             }
         },
         "B1F_女子休養室": {
-            "roomWidth": 5.0,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21222,13 +21222,13 @@
             }
         },
         "B1F_女子更衣室1": {
-            "roomWidth": 4.8,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 235.158,
+                    "RatedPower": 235.16,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21238,8 +21238,8 @@
             }
         },
         "B1F_医療廃棄物保管庫": {
-            "roomWidth": 3.2,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21254,8 +21254,8 @@
             }
         },
         "B1F_廃棄物保管場所": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21270,13 +21270,13 @@
             }
         },
         "B1F_駐車場機械室": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 238.875,
+                    "RatedPower": 238.88,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21286,8 +21286,8 @@
             }
         },
         "B1F_設備機械室": {
-            "roomWidth": 21.3,
-            "roomDepth": 26.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21302,8 +21302,8 @@
             }
         },
         "B1F_階段室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21318,8 +21318,8 @@
             }
         },
         "B1F_階段室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21334,13 +21334,13 @@
             }
         },
         "B1F_DS": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21350,13 +21350,13 @@
             }
         },
         "B1F_ES": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21366,8 +21366,8 @@
             }
         },
         "B1F_便所1": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21382,8 +21382,8 @@
             }
         },
         "B1F_便所2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21398,8 +21398,8 @@
             }
         },
         "B1F_便所3": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21414,8 +21414,8 @@
             }
         },
         "B1F_エレベータホール": {
-            "roomWidth": 6.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21430,13 +21430,13 @@
             }
         },
         "B1F_売店": {
-            "roomWidth": 8.3,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "17.9": {
-                    "RatedPower": 1255.327,
+                    "RatedPower": 1255.33,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21446,8 +21446,8 @@
             }
         },
         "B1F_感染症待合": {
-            "roomWidth": 4.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21462,13 +21462,13 @@
             }
         },
         "B1F_感染症診察室": {
-            "roomWidth": 6.5,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 450.369,
+                    "RatedPower": 450.37,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21478,8 +21478,8 @@
             }
         },
         "B1F_中央監視室": {
-            "roomWidth": 6.0,
-            "roomDepth": 13.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21494,8 +21494,8 @@
             }
         },
         "B1F_リネン": {
-            "roomWidth": 6.0,
-            "roomDepth": 16.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 26.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21510,8 +21510,8 @@
             }
         },
         "B1F_霊安室": {
-            "roomWidth": 6.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21526,8 +21526,8 @@
             }
         },
         "B1F_ボイラー室": {
-            "roomWidth": 13.0,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21542,13 +21542,13 @@
             }
         },
         "B1F_通信機械室": {
-            "roomWidth": 6.5,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 1536.275,
+                    "RatedPower": 1536.28,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21558,13 +21558,13 @@
             }
         },
         "B1F_サーバー室": {
-            "roomWidth": 6.5,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 1536.275,
+                    "RatedPower": 1536.28,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21574,8 +21574,8 @@
             }
         },
         "B1F_社員食堂": {
-            "roomWidth": 26.0,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21590,8 +21590,8 @@
             }
         },
         "B1F_厨房": {
-            "roomWidth": 12.0,
-            "roomDepth": 16.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21606,13 +21606,13 @@
             }
         },
         "B1F_冷蔵庫": {
-            "roomWidth": 4.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "7.2": {
-                    "RatedPower": 99.432,
+                    "RatedPower": 99.43,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21622,13 +21622,13 @@
             }
         },
         "B1F_冷凍庫": {
-            "roomWidth": 4.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "7.2": {
-                    "RatedPower": 99.432,
+                    "RatedPower": 99.43,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21638,13 +21638,13 @@
             }
         },
         "B1F_下処理室": {
-            "roomWidth": 4.3,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.5": {
-                    "RatedPower": 455.895,
+                    "RatedPower": 455.9,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21654,13 +21654,13 @@
             }
         },
         "B1F_食品庫": {
-            "roomWidth": 5.3,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "7.2": {
-                    "RatedPower": 245.736,
+                    "RatedPower": 245.74,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21670,8 +21670,8 @@
             }
         },
         "B1F_厨房事務室": {
-            "roomWidth": 6.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21686,8 +21686,8 @@
             }
         },
         "B1F_男子更衣室2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21702,8 +21702,8 @@
             }
         },
         "B1F_女子更衣室2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21718,8 +21718,8 @@
             }
         },
         "B1F_便所4": {
-            "roomWidth": 3.3,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21734,8 +21734,8 @@
             }
         },
         "B1F_駐車場": {
-            "roomWidth": 19.5,
-            "roomDepth": 41.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21750,13 +21750,13 @@
             }
         },
         "B1F_廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 203.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 3363.096,
+                    "RatedPower": 3363.1,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21766,8 +21766,8 @@
             }
         },
         "1F_眼科": {
-            "roomWidth": 6.5,
-            "roomDepth": 10.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21782,8 +21782,8 @@
             }
         },
         "1F_眼科・耳鼻咽喉科待合": {
-            "roomWidth": 6.5,
-            "roomDepth": 10.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21798,8 +21798,8 @@
             }
         },
         "1F_耳鼻咽喉科": {
-            "roomWidth": 13.0,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21814,8 +21814,8 @@
             }
         },
         "1F_神経科待合": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21830,8 +21830,8 @@
             }
         },
         "1F_神経科": {
-            "roomWidth": 13.0,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21846,8 +21846,8 @@
             }
         },
         "1F_皮膚科待合": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21862,8 +21862,8 @@
             }
         },
         "1F_皮膚科": {
-            "roomWidth": 13.0,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21878,8 +21878,8 @@
             }
         },
         "1F_外科": {
-            "roomWidth": 13.0,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21894,8 +21894,8 @@
             }
         },
         "1F_外科・整形外科待合": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21910,8 +21910,8 @@
             }
         },
         "1F_整形外科": {
-            "roomWidth": 13.0,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21926,13 +21926,13 @@
             }
         },
         "1F_内科": {
-            "roomWidth": 25.5,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 2701.725,
+                    "RatedPower": 2701.73,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -21942,8 +21942,8 @@
             }
         },
         "1F_内科待合": {
-            "roomWidth": 25.5,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21958,8 +21958,8 @@
             }
         },
         "1F_血液検査室": {
-            "roomWidth": 8.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21974,8 +21974,8 @@
             }
         },
         "1F_設備機械室": {
-            "roomWidth": 8.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -21990,8 +21990,8 @@
             }
         },
         "1F_階段室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22006,8 +22006,8 @@
             }
         },
         "1F_階段室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22022,13 +22022,13 @@
             }
         },
         "1F_DS": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22038,13 +22038,13 @@
             }
         },
         "1F_検尿室": {
-            "roomWidth": 3.3,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 450.369,
+                    "RatedPower": 450.37,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22054,8 +22054,8 @@
             }
         },
         "1F_便所1": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22070,8 +22070,8 @@
             }
         },
         "1F_便所2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22086,8 +22086,8 @@
             }
         },
         "1F_便所3": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22102,8 +22102,8 @@
             }
         },
         "1F_エレベータホール": {
-            "roomWidth": 6.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22118,8 +22118,8 @@
             }
         },
         "1F_泌尿器科": {
-            "roomWidth": 9.0,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22134,8 +22134,8 @@
             }
         },
         "1F_泌尿器科待合": {
-            "roomWidth": 4.0,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22150,13 +22150,13 @@
             }
         },
         "1F_ES": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22166,8 +22166,8 @@
             }
         },
         "1F_便所4": {
-            "roomWidth": 7.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22182,8 +22182,8 @@
             }
         },
         "1F_便所5": {
-            "roomWidth": 7.3,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22198,8 +22198,8 @@
             }
         },
         "1F_掃除用具入": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22214,8 +22214,8 @@
             }
         },
         "1F_機能訓練待合": {
-            "roomWidth": 17.0,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22230,8 +22230,8 @@
             }
         },
         "1F_機能訓練室": {
-            "roomWidth": 17.0,
-            "roomDepth": 13.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22246,8 +22246,8 @@
             }
         },
         "1F_健康相談": {
-            "roomWidth": 6.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22262,8 +22262,8 @@
             }
         },
         "1F_会計": {
-            "roomWidth": 10.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22278,8 +22278,8 @@
             }
         },
         "1F_受付": {
-            "roomWidth": 13.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22294,8 +22294,8 @@
             }
         },
         "1F_リネン": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22310,8 +22310,8 @@
             }
         },
         "1F_SPD事務室": {
-            "roomWidth": 6.0,
-            "roomDepth": 13.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22326,8 +22326,8 @@
             }
         },
         "1F_倉庫1": {
-            "roomWidth": 6.0,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22342,13 +22342,13 @@
             }
         },
         "1F_救急センター": {
-            "roomWidth": 19.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 2701.725,
+                    "RatedPower": 2701.73,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22358,8 +22358,8 @@
             }
         },
         "1F_ロビー": {
-            "roomWidth": 32.5,
-            "roomDepth": 15.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22374,8 +22374,8 @@
             }
         },
         "1F_風除け室1": {
-            "roomWidth": 13.0,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22390,8 +22390,8 @@
             }
         },
         "1F_風除け室2": {
-            "roomWidth": 2.5,
-            "roomDepth": 4.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22406,8 +22406,8 @@
             }
         },
         "1F_風除け室3": {
-            "roomWidth": 2.5,
-            "roomDepth": 4.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22422,13 +22422,13 @@
             }
         },
         "1F_警備室": {
-            "roomWidth": 3.3,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 450.369,
+                    "RatedPower": 450.37,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22438,8 +22438,8 @@
             }
         },
         "1F_階段室3": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22454,13 +22454,13 @@
             }
         },
         "1F_倉庫2": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 53.658,
+                    "RatedPower": 53.66,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22470,8 +22470,8 @@
             }
         },
         "1F_事務室": {
-            "roomWidth": 13.0,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22486,13 +22486,13 @@
             }
         },
         "1F_医学図書室": {
-            "roomWidth": 6.5,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 1536.275,
+                    "RatedPower": 1536.28,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22502,13 +22502,13 @@
             }
         },
         "1F_病歴室": {
-            "roomWidth": 19.5,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 4608.825,
+                    "RatedPower": 4608.83,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22518,13 +22518,13 @@
             }
         },
         "1F_廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 302.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 4983.858,
+                    "RatedPower": 4983.86,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22534,13 +22534,13 @@
             }
         },
         "2F_麻酔科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22550,13 +22550,13 @@
             }
         },
         "2F_機能訓練科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22566,13 +22566,13 @@
             }
         },
         "2F_耳鼻咽喉科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22582,13 +22582,13 @@
             }
         },
         "2F_眼科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22598,13 +22598,13 @@
             }
         },
         "2F_小児科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22614,13 +22614,13 @@
             }
         },
         "2F_泌尿器科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22630,13 +22630,13 @@
             }
         },
         "2F_産婦人科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22646,13 +22646,13 @@
             }
         },
         "2F_神経科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22662,13 +22662,13 @@
             }
         },
         "2F_皮膚科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22678,13 +22678,13 @@
             }
         },
         "2F_整形外科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22694,13 +22694,13 @@
             }
         },
         "2F_外科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22710,13 +22710,13 @@
             }
         },
         "2F_内科部長室": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 397.394,
+                    "RatedPower": 397.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22726,13 +22726,13 @@
             }
         },
         "2F_医院長室": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 794.625,
+                    "RatedPower": 794.63,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22742,13 +22742,13 @@
             }
         },
         "2F_婦長室": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 794.625,
+                    "RatedPower": 794.63,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22758,13 +22758,13 @@
             }
         },
         "2F_医師当直室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 160.908,
+                    "RatedPower": 160.91,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22774,13 +22774,13 @@
             }
         },
         "2F_医師当直室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 160.908,
+                    "RatedPower": 160.91,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22790,8 +22790,8 @@
             }
         },
         "2F_倉庫1": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22806,13 +22806,13 @@
             }
         },
         "2F_倉庫2": {
-            "roomWidth": 3.3,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 182.358,
+                    "RatedPower": 182.36,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22822,13 +22822,13 @@
             }
         },
         "2F_倉庫3": {
-            "roomWidth": 3.3,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 182.358,
+                    "RatedPower": 182.36,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22838,13 +22838,13 @@
             }
         },
         "2F_倉庫4": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 53.658,
+                    "RatedPower": 53.66,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22854,13 +22854,13 @@
             }
         },
         "2F_会議室1": {
-            "roomWidth": 19.5,
-            "roomDepth": 18.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.9": {
-                    "RatedPower": 3932.175,
+                    "RatedPower": 3932.18,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22870,8 +22870,8 @@
             }
         },
         "2F_会議室2": {
-            "roomWidth": 13.0,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22886,13 +22886,13 @@
             }
         },
         "2F_会議室3": {
-            "roomWidth": 6.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.9": {
-                    "RatedPower": 602.225,
+                    "RatedPower": 602.23,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22902,13 +22902,13 @@
             }
         },
         "2F_CPU室": {
-            "roomWidth": 6.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 900.575,
+                    "RatedPower": 900.58,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -22918,8 +22918,8 @@
             }
         },
         "2F_放射線科": {
-            "roomWidth": 17.0,
-            "roomDepth": 13.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22934,8 +22934,8 @@
             }
         },
         "2F_設備機械室": {
-            "roomWidth": 4.0,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22950,8 +22950,8 @@
             }
         },
         "2F_階段室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22966,8 +22966,8 @@
             }
         },
         "2F_階段室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22982,8 +22982,8 @@
             }
         },
         "2F_階段室3": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -22998,13 +22998,13 @@
             }
         },
         "2F_DS": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23014,13 +23014,13 @@
             }
         },
         "2F_ES": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 5.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23030,8 +23030,8 @@
             }
         },
         "2F_便所1": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23046,8 +23046,8 @@
             }
         },
         "2F_便所2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23062,8 +23062,8 @@
             }
         },
         "2F_便所3": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23078,8 +23078,8 @@
             }
         },
         "2F_エレベータホール": {
-            "roomWidth": 8.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23094,13 +23094,13 @@
             }
         },
         "2F_検査センター受付": {
-            "roomWidth": 8.5,
-            "roomDepth": 4.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 658.194,
+                    "RatedPower": 658.19,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23110,13 +23110,13 @@
             }
         },
         "2F_検査センター事務室": {
-            "roomWidth": 8.5,
-            "roomDepth": 3.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 450.369,
+                    "RatedPower": 450.37,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23126,8 +23126,8 @@
             }
         },
         "2F_脱衣室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23142,8 +23142,8 @@
             }
         },
         "2F_脱衣室2": {
-            "roomWidth": 4.6,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23158,8 +23158,8 @@
             }
         },
         "2F_シャワー室1": {
-            "roomWidth": 4.0,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23174,8 +23174,8 @@
             }
         },
         "2F_シャワー室2": {
-            "roomWidth": 4.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23190,8 +23190,8 @@
             }
         },
         "2F_手洗い": {
-            "roomWidth": 4.6,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23206,13 +23206,13 @@
             }
         },
         "2F_RI": {
-            "roomWidth": 6.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 900.575,
+                    "RatedPower": 900.58,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23222,8 +23222,8 @@
             }
         },
         "2F_生理機能検査室": {
-            "roomWidth": 9.8,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23238,8 +23238,8 @@
             }
         },
         "2F_心電図": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23254,8 +23254,8 @@
             }
         },
         "2F_安静室": {
-            "roomWidth": 4.0,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23270,8 +23270,8 @@
             }
         },
         "2F_女子更衣室": {
-            "roomWidth": 6.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23286,8 +23286,8 @@
             }
         },
         "2F_男子更衣室": {
-            "roomWidth": 6.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23302,8 +23302,8 @@
             }
         },
         "2F_リネン": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23318,8 +23318,8 @@
             }
         },
         "2F_麻酔科": {
-            "roomWidth": 6.5,
-            "roomDepth": 12.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23334,8 +23334,8 @@
             }
         },
         "2F_手術室1": {
-            "roomWidth": 13.0,
-            "roomDepth": 12.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23350,8 +23350,8 @@
             }
         },
         "2F_手術室2": {
-            "roomWidth": 13.0,
-            "roomDepth": 12.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23366,13 +23366,13 @@
             }
         },
         "2F_CT": {
-            "roomWidth": 6.5,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 1536.275,
+                    "RatedPower": 1536.28,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23382,8 +23382,8 @@
             }
         },
         "2F_CT準備室": {
-            "roomWidth": 6.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23398,13 +23398,13 @@
             }
         },
         "2F_CT操作室": {
-            "roomWidth": 6.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 900.575,
+                    "RatedPower": 900.58,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23414,13 +23414,13 @@
             }
         },
         "2F_PET": {
-            "roomWidth": 6.5,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 1536.275,
+                    "RatedPower": 1536.28,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23430,8 +23430,8 @@
             }
         },
         "2F_PET準備室": {
-            "roomWidth": 6.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23446,13 +23446,13 @@
             }
         },
         "2F_PET操作室": {
-            "roomWidth": 6.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 900.575,
+                    "RatedPower": 900.58,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23462,13 +23462,13 @@
             }
         },
         "2F_MRI": {
-            "roomWidth": 6.5,
-            "roomDepth": 14.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 1536.275,
+                    "RatedPower": 1536.28,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23478,8 +23478,8 @@
             }
         },
         "2F_MRI準備室": {
-            "roomWidth": 6.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23494,13 +23494,13 @@
             }
         },
         "2F_MRI操作室": {
-            "roomWidth": 6.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 900.575,
+                    "RatedPower": 900.58,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23510,8 +23510,8 @@
             }
         },
         "2F_検査センター待合": {
-            "roomWidth": 13.0,
-            "roomDepth": 17.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23526,8 +23526,8 @@
             }
         },
         "2F_化学療法待合": {
-            "roomWidth": 10.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23542,8 +23542,8 @@
             }
         },
         "2F_化学療法室": {
-            "roomWidth": 13.0,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23558,8 +23558,8 @@
             }
         },
         "2F_人工透析室": {
-            "roomWidth": 26.0,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23574,8 +23574,8 @@
             }
         },
         "2F_廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 296.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23590,8 +23590,8 @@
             }
         },
         "3F_分娩室1": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23606,8 +23606,8 @@
             }
         },
         "3F_分娩室2": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23622,8 +23622,8 @@
             }
         },
         "3F_沐浴室": {
-            "roomWidth": 4.0,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23638,13 +23638,13 @@
             }
         },
         "3F_授乳室": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 167.375,
+                    "RatedPower": 167.38,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23654,8 +23654,8 @@
             }
         },
         "3F_新生児室": {
-            "roomWidth": 13.0,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23670,8 +23670,8 @@
             }
         },
         "3F_小児科待合": {
-            "roomWidth": 3.3,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23686,13 +23686,13 @@
             }
         },
         "3F_小児科": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 794.625,
+                    "RatedPower": 794.63,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23702,13 +23702,13 @@
             }
         },
         "3F_4床室1": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23718,13 +23718,13 @@
             }
         },
         "3F_4床室2": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23734,8 +23734,8 @@
             }
         },
         "3F_設備機械室": {
-            "roomWidth": 8.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23750,8 +23750,8 @@
             }
         },
         "3F_階段室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23766,8 +23766,8 @@
             }
         },
         "3F_階段室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.5,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23782,13 +23782,13 @@
             }
         },
         "3F_ＤＳ": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.5,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23798,13 +23798,13 @@
             }
         },
         "3F_ES": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.5,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23814,13 +23814,13 @@
             }
         },
         "3F_汚物処理室": {
-            "roomWidth": 3.3,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 91.146,
+                    "RatedPower": 91.15,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23830,13 +23830,13 @@
             }
         },
         "3F_機材室": {
-            "roomWidth": 3.3,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.5,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 91.146,
+                    "RatedPower": 91.15,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23846,8 +23846,8 @@
             }
         },
         "3F_便所1": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23862,8 +23862,8 @@
             }
         },
         "3F_便所2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23878,8 +23878,8 @@
             }
         },
         "3F_便所3": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23894,8 +23894,8 @@
             }
         },
         "3F_エレベータホール": {
-            "roomWidth": 8.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23910,8 +23910,8 @@
             }
         },
         "3F_スタッフステーション": {
-            "roomWidth": 8.5,
-            "roomDepth": 8.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23926,8 +23926,8 @@
             }
         },
         "3F_スタッフ事務室": {
-            "roomWidth": 6.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23942,13 +23942,13 @@
             }
         },
         "3F_処置室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 370.825,
+                    "RatedPower": 370.83,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -23958,8 +23958,8 @@
             }
         },
         "3F_脱衣室1": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23974,8 +23974,8 @@
             }
         },
         "3F_脱衣室2": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -23990,8 +23990,8 @@
             }
         },
         "3F_脱衣室3": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24006,8 +24006,8 @@
             }
         },
         "3F_踏込": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24022,8 +24022,8 @@
             }
         },
         "3F_浴室1": {
-            "roomWidth": 4.0,
-            "roomDepth": 4.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24038,8 +24038,8 @@
             }
         },
         "3F_浴室2": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24054,8 +24054,8 @@
             }
         },
         "3F_洗濯室": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24070,8 +24070,8 @@
             }
         },
         "3F_産婦人科": {
-            "roomWidth": 19.5,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24086,8 +24086,8 @@
             }
         },
         "3F_産婦人科待合": {
-            "roomWidth": 9.8,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24102,8 +24102,8 @@
             }
         },
         "3F_パントリー": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24118,8 +24118,8 @@
             }
         },
         "3F_リネン": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24134,13 +24134,13 @@
             }
         },
         "3F_1床室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24150,13 +24150,13 @@
             }
         },
         "3F_1床室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24166,13 +24166,13 @@
             }
         },
         "3F_1床室3": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24182,13 +24182,13 @@
             }
         },
         "3F_1床室4": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24198,13 +24198,13 @@
             }
         },
         "3F_1床室5": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24214,13 +24214,13 @@
             }
         },
         "3F_1床室6": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24230,8 +24230,8 @@
             }
         },
         "3F_便所4": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24246,8 +24246,8 @@
             }
         },
         "3F_便所5": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24262,8 +24262,8 @@
             }
         },
         "3F_便所6": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24278,8 +24278,8 @@
             }
         },
         "3F_便所7": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24294,8 +24294,8 @@
             }
         },
         "3F_便所8": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24310,8 +24310,8 @@
             }
         },
         "3F_便所9": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24326,13 +24326,13 @@
             }
         },
         "3F_廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 175.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 3.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 2893.242,
+                    "RatedPower": 2893.24,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24342,8 +24342,8 @@
             }
         },
         "3F_新生児廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 27.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24358,13 +24358,13 @@
             }
         },
         "4F_4床室1": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24374,13 +24374,13 @@
             }
         },
         "4F_4床室2": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24390,13 +24390,13 @@
             }
         },
         "4F_4床室3": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24406,13 +24406,13 @@
             }
         },
         "4F_4床室4": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24422,13 +24422,13 @@
             }
         },
         "4F_4床室5": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24438,13 +24438,13 @@
             }
         },
         "4F_4床室6": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24454,13 +24454,13 @@
             }
         },
         "4F_4床室7": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24470,13 +24470,13 @@
             }
         },
         "4F_4床室8": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24486,13 +24486,13 @@
             }
         },
         "4F_4床室9": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24502,8 +24502,8 @@
             }
         },
         "4F_設備機械室": {
-            "roomWidth": 8.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24518,8 +24518,8 @@
             }
         },
         "4F_階段室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24534,8 +24534,8 @@
             }
         },
         "4F_階段室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24550,13 +24550,13 @@
             }
         },
         "4F_ＤＳ": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24566,13 +24566,13 @@
             }
         },
         "4F_ES": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24582,13 +24582,13 @@
             }
         },
         "4F_汚物処理室": {
-            "roomWidth": 3.3,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 91.146,
+                    "RatedPower": 91.15,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24598,13 +24598,13 @@
             }
         },
         "4F_機材室": {
-            "roomWidth": 3.3,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 91.146,
+                    "RatedPower": 91.15,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24614,8 +24614,8 @@
             }
         },
         "4F_便所1": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24630,8 +24630,8 @@
             }
         },
         "4F_便所2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24646,8 +24646,8 @@
             }
         },
         "4F_便所3": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24662,8 +24662,8 @@
             }
         },
         "4F_エレベータホール": {
-            "roomWidth": 8.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24678,8 +24678,8 @@
             }
         },
         "4F_スタッフステーション": {
-            "roomWidth": 8.5,
-            "roomDepth": 8.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24694,8 +24694,8 @@
             }
         },
         "4F_スタッフ事務室": {
-            "roomWidth": 6.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24710,13 +24710,13 @@
             }
         },
         "4F_処置室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 370.825,
+                    "RatedPower": 370.83,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24726,8 +24726,8 @@
             }
         },
         "4F_脱衣室1": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24742,8 +24742,8 @@
             }
         },
         "4F_脱衣室2": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24758,8 +24758,8 @@
             }
         },
         "4F_脱衣室3": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24774,8 +24774,8 @@
             }
         },
         "4F_踏込": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24790,8 +24790,8 @@
             }
         },
         "4F_浴室1": {
-            "roomWidth": 4.0,
-            "roomDepth": 4.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24806,8 +24806,8 @@
             }
         },
         "4F_浴室2": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24822,8 +24822,8 @@
             }
         },
         "4F_洗濯室": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -24838,13 +24838,13 @@
             }
         },
         "4F_1床室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24854,13 +24854,13 @@
             }
         },
         "4F_1床室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24870,13 +24870,13 @@
             }
         },
         "4F_1床室3": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24886,13 +24886,13 @@
             }
         },
         "4F_1床室4": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24902,13 +24902,13 @@
             }
         },
         "4F_1床室5": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24918,13 +24918,13 @@
             }
         },
         "4F_1床室6": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24934,13 +24934,13 @@
             }
         },
         "4F_1床室7": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24950,13 +24950,13 @@
             }
         },
         "4F_1床室8": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24966,13 +24966,13 @@
             }
         },
         "4F_1床室9": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24982,13 +24982,13 @@
             }
         },
         "4F_1床室10": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -24998,13 +24998,13 @@
             }
         },
         "4F_1床室11": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25014,13 +25014,13 @@
             }
         },
         "4F_1床室12": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25030,8 +25030,8 @@
             }
         },
         "4F_便所4": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25046,8 +25046,8 @@
             }
         },
         "4F_便所5": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25062,8 +25062,8 @@
             }
         },
         "4F_便所6": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25078,8 +25078,8 @@
             }
         },
         "4F_便所7": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25094,8 +25094,8 @@
             }
         },
         "4F_便所8": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25110,8 +25110,8 @@
             }
         },
         "4F_便所9": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25126,8 +25126,8 @@
             }
         },
         "4F_便所10": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25142,8 +25142,8 @@
             }
         },
         "4F_便所11": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25158,8 +25158,8 @@
             }
         },
         "4F_便所12": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25174,8 +25174,8 @@
             }
         },
         "4F_便所13": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25190,8 +25190,8 @@
             }
         },
         "4F_便所14": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25206,8 +25206,8 @@
             }
         },
         "4F_便所15": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25222,8 +25222,8 @@
             }
         },
         "4F_デイルーム": {
-            "roomWidth": 9.8,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25238,8 +25238,8 @@
             }
         },
         "4F_パントリー": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25254,8 +25254,8 @@
             }
         },
         "4F_リネン": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25270,13 +25270,13 @@
             }
         },
         "4F_廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 147.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 2435.268,
+                    "RatedPower": 2435.27,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25286,13 +25286,13 @@
             }
         },
         "5F_4床室1": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25302,13 +25302,13 @@
             }
         },
         "5F_4床室2": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25318,13 +25318,13 @@
             }
         },
         "5F_4床室3": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25334,13 +25334,13 @@
             }
         },
         "5F_4床室4": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25350,13 +25350,13 @@
             }
         },
         "5F_4床室5": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25366,13 +25366,13 @@
             }
         },
         "5F_4床室6": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25382,13 +25382,13 @@
             }
         },
         "5F_4床室7": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25398,13 +25398,13 @@
             }
         },
         "5F_4床室8": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25414,13 +25414,13 @@
             }
         },
         "5F_4床室9": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25430,8 +25430,8 @@
             }
         },
         "5F_設備機械室": {
-            "roomWidth": 8.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25446,8 +25446,8 @@
             }
         },
         "5F_階段室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25462,8 +25462,8 @@
             }
         },
         "5F_階段室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25478,13 +25478,13 @@
             }
         },
         "5F_ＤＳ": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25494,13 +25494,13 @@
             }
         },
         "5F_ES": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25510,13 +25510,13 @@
             }
         },
         "5F_汚物処理室": {
-            "roomWidth": 3.3,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 91.146,
+                    "RatedPower": 91.15,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25526,13 +25526,13 @@
             }
         },
         "5F_機材室": {
-            "roomWidth": 3.3,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 91.146,
+                    "RatedPower": 91.15,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25542,8 +25542,8 @@
             }
         },
         "5F_便所1": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25558,8 +25558,8 @@
             }
         },
         "5F_便所2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25574,8 +25574,8 @@
             }
         },
         "5F_便所3": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25590,8 +25590,8 @@
             }
         },
         "5F_エレベータホール": {
-            "roomWidth": 8.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25606,8 +25606,8 @@
             }
         },
         "5F_スタッフステーション": {
-            "roomWidth": 8.5,
-            "roomDepth": 8.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25622,8 +25622,8 @@
             }
         },
         "5F_スタッフ事務室": {
-            "roomWidth": 6.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25638,13 +25638,13 @@
             }
         },
         "5F_処置室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 370.825,
+                    "RatedPower": 370.83,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25654,8 +25654,8 @@
             }
         },
         "5F_脱衣室1": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25670,8 +25670,8 @@
             }
         },
         "5F_脱衣室2": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25686,8 +25686,8 @@
             }
         },
         "5F_脱衣室3": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25702,8 +25702,8 @@
             }
         },
         "5F_踏込": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25718,8 +25718,8 @@
             }
         },
         "5F_浴室1": {
-            "roomWidth": 4.0,
-            "roomDepth": 4.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25734,8 +25734,8 @@
             }
         },
         "5F_浴室2": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25750,8 +25750,8 @@
             }
         },
         "5F_洗濯室": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25766,13 +25766,13 @@
             }
         },
         "5F_1床室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25782,13 +25782,13 @@
             }
         },
         "5F_1床室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25798,13 +25798,13 @@
             }
         },
         "5F_1床室3": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25814,13 +25814,13 @@
             }
         },
         "5F_1床室4": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25830,13 +25830,13 @@
             }
         },
         "5F_1床室5": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25846,13 +25846,13 @@
             }
         },
         "5F_1床室6": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25862,13 +25862,13 @@
             }
         },
         "5F_1床室7": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25878,13 +25878,13 @@
             }
         },
         "5F_1床室8": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25894,13 +25894,13 @@
             }
         },
         "5F_1床室9": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25910,13 +25910,13 @@
             }
         },
         "5F_1床室10": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25926,13 +25926,13 @@
             }
         },
         "5F_1床室11": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25942,13 +25942,13 @@
             }
         },
         "5F_1床室12": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -25958,8 +25958,8 @@
             }
         },
         "5F_便所4": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25974,8 +25974,8 @@
             }
         },
         "5F_便所5": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -25990,8 +25990,8 @@
             }
         },
         "5F_便所6": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26006,8 +26006,8 @@
             }
         },
         "5F_便所7": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26022,8 +26022,8 @@
             }
         },
         "5F_便所8": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26038,8 +26038,8 @@
             }
         },
         "5F_便所9": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26054,8 +26054,8 @@
             }
         },
         "5F_便所10": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26070,8 +26070,8 @@
             }
         },
         "5F_便所11": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26086,8 +26086,8 @@
             }
         },
         "5F_便所12": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26102,8 +26102,8 @@
             }
         },
         "5F_便所13": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26118,8 +26118,8 @@
             }
         },
         "5F_便所14": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26134,8 +26134,8 @@
             }
         },
         "5F_便所15": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26150,8 +26150,8 @@
             }
         },
         "5F_デイルーム": {
-            "roomWidth": 9.8,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26166,8 +26166,8 @@
             }
         },
         "5F_パントリー": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26182,8 +26182,8 @@
             }
         },
         "5F_リネン": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26198,13 +26198,13 @@
             }
         },
         "5F_廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 147.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 2435.268,
+                    "RatedPower": 2435.27,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26214,13 +26214,13 @@
             }
         },
         "6F_4床室1": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26230,13 +26230,13 @@
             }
         },
         "6F_4床室2": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26246,13 +26246,13 @@
             }
         },
         "6F_4床室3": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26262,13 +26262,13 @@
             }
         },
         "6F_4床室4": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26278,13 +26278,13 @@
             }
         },
         "6F_4床室5": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26294,13 +26294,13 @@
             }
         },
         "6F_4床室6": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26310,13 +26310,13 @@
             }
         },
         "6F_4床室7": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26326,13 +26326,13 @@
             }
         },
         "6F_4床室8": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26342,13 +26342,13 @@
             }
         },
         "6F_4床室9": {
-            "roomWidth": 6.5,
-            "roomDepth": 7.1,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 477.405,
+                    "RatedPower": 477.41,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26358,8 +26358,8 @@
             }
         },
         "6F_設備機械室": {
-            "roomWidth": 8.5,
-            "roomDepth": 4.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26374,8 +26374,8 @@
             }
         },
         "6F_階段室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26390,8 +26390,8 @@
             }
         },
         "6F_階段室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26406,13 +26406,13 @@
             }
         },
         "6F_ＤＳ": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26422,13 +26422,13 @@
             }
         },
         "6F_ES": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26438,13 +26438,13 @@
             }
         },
         "6F_汚物処理室": {
-            "roomWidth": 3.3,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 91.146,
+                    "RatedPower": 91.15,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26454,13 +26454,13 @@
             }
         },
         "6F_機材室": {
-            "roomWidth": 3.3,
-            "roomDepth": 4.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 91.146,
+                    "RatedPower": 91.15,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26470,8 +26470,8 @@
             }
         },
         "6F_便所1": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26486,8 +26486,8 @@
             }
         },
         "6F_便所2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26502,8 +26502,8 @@
             }
         },
         "6F_便所3": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26518,8 +26518,8 @@
             }
         },
         "6F_エレベータホール": {
-            "roomWidth": 8.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26534,8 +26534,8 @@
             }
         },
         "6F_スタッフステーション": {
-            "roomWidth": 8.5,
-            "roomDepth": 8.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26550,8 +26550,8 @@
             }
         },
         "6F_スタッフ事務室": {
-            "roomWidth": 6.5,
-            "roomDepth": 5.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26566,13 +26566,13 @@
             }
         },
         "6F_処置室": {
-            "roomWidth": 3.5,
-            "roomDepth": 6.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.8,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "16.3": {
-                    "RatedPower": 370.825,
+                    "RatedPower": 370.83,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26582,8 +26582,8 @@
             }
         },
         "6F_脱衣室1": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26598,8 +26598,8 @@
             }
         },
         "6F_脱衣室2": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26614,8 +26614,8 @@
             }
         },
         "6F_脱衣室3": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26630,8 +26630,8 @@
             }
         },
         "6F_踏込": {
-            "roomWidth": 2.0,
-            "roomDepth": 2.3,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26646,8 +26646,8 @@
             }
         },
         "6F_浴室1": {
-            "roomWidth": 4.0,
-            "roomDepth": 4.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26662,8 +26662,8 @@
             }
         },
         "6F_浴室2": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26678,8 +26678,8 @@
             }
         },
         "6F_洗濯室": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.7,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26694,13 +26694,13 @@
             }
         },
         "6F_1床室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26710,13 +26710,13 @@
             }
         },
         "6F_1床室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26726,13 +26726,13 @@
             }
         },
         "6F_1床室3": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26742,13 +26742,13 @@
             }
         },
         "6F_1床室4": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26758,13 +26758,13 @@
             }
         },
         "6F_1床室5": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26774,13 +26774,13 @@
             }
         },
         "6F_1床室6": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26790,13 +26790,13 @@
             }
         },
         "6F_1床室7": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26806,13 +26806,13 @@
             }
         },
         "6F_1床室8": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26822,13 +26822,13 @@
             }
         },
         "6F_1床室9": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26838,13 +26838,13 @@
             }
         },
         "6F_1床室10": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26854,13 +26854,13 @@
             }
         },
         "6F_1床室11": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26870,13 +26870,13 @@
             }
         },
         "6F_1床室12": {
-            "roomWidth": 3.3,
-            "roomDepth": 5.2,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "10.3": {
-                    "RatedPower": 172.422,
+                    "RatedPower": 172.42,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -26886,8 +26886,8 @@
             }
         },
         "6F_便所4": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26902,8 +26902,8 @@
             }
         },
         "6F_便所5": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26918,8 +26918,8 @@
             }
         },
         "6F_便所6": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26934,8 +26934,8 @@
             }
         },
         "6F_便所7": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26950,8 +26950,8 @@
             }
         },
         "6F_便所8": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26966,8 +26966,8 @@
             }
         },
         "6F_便所9": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26982,8 +26982,8 @@
             }
         },
         "6F_便所10": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -26998,8 +26998,8 @@
             }
         },
         "6F_便所11": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27014,8 +27014,8 @@
             }
         },
         "6F_便所12": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27030,8 +27030,8 @@
             }
         },
         "6F_便所13": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27046,8 +27046,8 @@
             }
         },
         "6F_便所14": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27062,8 +27062,8 @@
             }
         },
         "6F_便所15": {
-            "roomWidth": 1.2,
-            "roomDepth": 1.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27078,8 +27078,8 @@
             }
         },
         "6F_デイルーム": {
-            "roomWidth": 9.8,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27094,8 +27094,8 @@
             }
         },
         "6F_パントリー": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27110,8 +27110,8 @@
             }
         },
         "6F_リネン": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27126,13 +27126,13 @@
             }
         },
         "6F_廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 147.6,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "6.6": {
-                    "RatedPower": 2435.268,
+                    "RatedPower": 2435.27,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -27142,13 +27142,13 @@
             }
         },
         "7F_設備機械室": {
-            "roomWidth": 19.5,
-            "roomDepth": 12.8,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 1218.287,
+                    "RatedPower": 1218.29,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -27158,8 +27158,8 @@
             }
         },
         "7F_階段室1": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27174,8 +27174,8 @@
             }
         },
         "7F_階段室2": {
-            "roomWidth": 3.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27190,13 +27190,13 @@
             }
         },
         "7F_ＤＳ": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -27206,13 +27206,13 @@
             }
         },
         "7F_ES": {
-            "roomWidth": 3.3,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 39.837,
+                    "RatedPower": 39.84,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -27222,8 +27222,8 @@
             }
         },
         "7F_便所1": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27238,8 +27238,8 @@
             }
         },
         "7F_便所2": {
-            "roomWidth": 6.5,
-            "roomDepth": 3.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27254,8 +27254,8 @@
             }
         },
         "7F_便所3": {
-            "roomWidth": 2.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.4,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27270,8 +27270,8 @@
             }
         },
         "7F_エレベータホール": {
-            "roomWidth": 4.5,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27286,8 +27286,8 @@
             }
         },
         "7F_喫煙室": {
-            "roomWidth": 6.5,
-            "roomDepth": 2.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27302,13 +27302,13 @@
             }
         },
         "7F_喫茶": {
-            "roomWidth": 13.0,
-            "roomDepth": 14.9,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "12.2": {
-                    "RatedPower": 2368.386,
+                    "RatedPower": 2368.39,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
@@ -27318,8 +27318,8 @@
             }
         },
         "7F_サンルーム": {
-            "roomWidth": 9.8,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27334,8 +27334,8 @@
             }
         },
         "7F_厨房": {
-            "roomWidth": 3.3,
-            "roomDepth": 19.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27350,8 +27350,8 @@
             }
         },
         "7F_廊下": {
-            "roomWidth": 2.5,
-            "roomDepth": 19.4,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 2.6,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27366,8 +27366,8 @@
             }
         },
         "RF_エレベータ機械室1": {
-            "roomWidth": 6.0,
-            "roomDepth": 8.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27382,8 +27382,8 @@
             }
         },
         "RF_エレベータ機械室2": {
-            "roomWidth": 5.3,
-            "roomDepth": 6.0,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
@@ -27398,13 +27398,13 @@
             }
         },
         "RF_設備機械室": {
-            "roomWidth": 7.8,
-            "roomDepth": 19.5,
+            "roomWidth": null,
+            "roomDepth": null,
             "unitHeight": 4.0,
             "roomIndex": 2.6,
             "lightingUnit": {
                 "4.9": {
-                    "RatedPower": 741.125,
+                    "RatedPower": 741.13,
                     "Number": 1.0,
                     "OccupantSensingCTRL": "無",
                     "IlluminanceSensingCTRL": "無",
