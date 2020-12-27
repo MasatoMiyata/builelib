@@ -39,7 +39,10 @@ def calc_energy(inputdata, DEBUG = False):
     # 計算結果を格納する変数
     resultJson = {
         "E_photovoltaic": 0,
-        "PhotovoltaicSystems": {}
+        "PhotovoltaicSystems": {},
+        "for_CGS": {
+            "Edesign_MWh_day": np.zeros(365)
+        }
     }
 
     # 地域区分と気象ファイル名の関係
@@ -106,7 +109,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         resultJson["PhotovoltaicSystems"][system_name] = {
             "Ep_kWh": 0,
-            "Ep" : np.zeros(8760)
+            "Ep" : np.zeros(8760),
         }
 
         ##----------------------------------------------------------------------------------
@@ -245,12 +248,17 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["PhotovoltaicSystems"][system_name]["T_cr"] = T_cr
         resultJson["PhotovoltaicSystems"][system_name]["K_pi"] = K_pi
         
-        # 発電量（一次エネ換算） [kWh]
+        # 発電量 [kWh]
         resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] = np.sum(resultJson["PhotovoltaicSystems"][system_name]["Ep"],0)
 
         # 発電量（一次エネ換算） [kWh] * [kJ/kWh] / 1000 = [MJ]
         resultJson["E_photovoltaic"] += resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] * bc.fprime / 1000
 
+        # 発電量（日積算） [MWh/day]
+        for dd in range(0,365):
+            for hh in range(0,24):
+                tt = 24*dd+hh
+                resultJson["for_CGS"]["Edesign_MWh_day"][dd] += resultJson["PhotovoltaicSystems"][system_name]["Ep"][tt] / 1000
 
     return resultJson
 
@@ -258,14 +266,13 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- photovoltaic.py -----')
-    filename = './sample/太陽光発電.json'
+    filename = './tests/cogeneration/Case_hospital_05.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
-    print(resultJson)
 
-    with open("resultJson.json",'w') as fw:
+    with open("resultJson_PV.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)

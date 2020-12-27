@@ -117,7 +117,7 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     # 日付dにおける昇降機の電力消費量	MWh/日
     EEV_total_d = np.array(resultJson_for_CGS["EV"]["Edesign_MWh_day"])
     # 日付dにおける効率化設備（太陽光発電）の発電量	MWh/日
-    EPV_total_d = np.zeros(365)
+    EPV_total_d = np.array(resultJson_for_CGS["PV"]["Edesign_MWh_day"])
     # 日付dにおけるその他の電力消費量	MWh/日
     EM_total_d = np.array(resultJson_for_CGS["OT"]["Edesign_MWh_day"])
     # 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の運転時間	h/日
@@ -720,9 +720,9 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- cogeneration.py -----')
-    # filename = './tests/cogeneration/Case_hospital_03.json'
+    filename = './tests/cogeneration/Case_hospital_05.json'
     # filename = './tests/cogeneration/Case_hotel_03.json'
-    filename = './tests/cogeneration/Case_office_05.json'
+    # filename = './tests/cogeneration/Case_office_05.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
@@ -735,6 +735,7 @@ if __name__ == '__main__':
         "L":{},
         "HW":{},
         "EV":{},
+        "PV":{},
         "OT":{},
     }
 
@@ -743,6 +744,7 @@ if __name__ == '__main__':
     import lighting
     import hotwatersupply
     import elevetor
+    import photovoltaic
     import other_energy
 
     resultJsonAC = airconditioning.calc_energy(inputdata, DEBUG = False)
@@ -755,6 +757,8 @@ if __name__ == '__main__':
     resultJson_for_CGS["HW"] = resultJsonHW["for_CGS"]
     resultJsonEV = elevetor.calc_energy(inputdata, DEBUG = False)
     resultJson_for_CGS["EV"] = resultJsonEV["for_CGS"]
+    resultJsonPV = photovoltaic.calc_energy(inputdata, DEBUG = False)
+    resultJson_for_CGS["PV"] = resultJsonPV["for_CGS"]
     resultJsonOT = other_energy.calc_energy(inputdata, DEBUG = False)
     resultJson_for_CGS["OT"] = resultJsonOT["for_CGS"]
 
