@@ -3,7 +3,7 @@
         "BuildingAddress": {
             "Prefecture": "東京都",
             "City": "千代田区",
-            "Address": ""
+            "Address": null
         },
         "Coefficient_DHC": {
             "Cooling": 1.36,
@@ -2735,8 +2735,9 @@
                         "SupplyWaterTempMiddle": 7.0,
                         "SupplyWaterTempWinter": 7.0,
                         "HeatsourceRatedCapacity": 703.0,
-                        "HeatsourceRatedPowerConsumption": 6.6,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 639.0,
+                        "Heatsource_sub_RatedPowerConsumption": 6.6,
                         "PrimaryPumpPowerConsumption": 7.5,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 1233.0,
@@ -2752,8 +2753,9 @@
                         "SupplyWaterTempMiddle": 7.0,
                         "SupplyWaterTempWinter": 7.0,
                         "HeatsourceRatedCapacity": 703.0,
-                        "HeatsourceRatedPowerConsumption": 6.6,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 639.0,
+                        "Heatsource_sub_RatedPowerConsumption": 6.6,
                         "PrimaryPumpPowerConsumption": 7.5,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 1233.0,
@@ -2776,8 +2778,9 @@
                         "SupplyWaterTempMiddle": 55.0,
                         "SupplyWaterTempWinter": 55.0,
                         "HeatsourceRatedCapacity": 588.0,
-                        "HeatsourceRatedPowerConsumption": 5.4,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 701.0,
+                        "Heatsource_sub_RatedPowerConsumption": 5.4,
                         "PrimaryPumpPowerConsumption": 7.5,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2793,8 +2796,9 @@
                         "SupplyWaterTempMiddle": 55.0,
                         "SupplyWaterTempWinter": 55.0,
                         "HeatsourceRatedCapacity": 588.0,
-                        "HeatsourceRatedPowerConsumption": 5.4,
+                        "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 701.0,
+                        "Heatsource_sub_RatedPowerConsumption": 5.4,
                         "PrimaryPumpPowerConsumption": 7.5,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2821,6 +2825,7 @@
                         "HeatsourceRatedCapacity": 5.6,
                         "HeatsourceRatedPowerConsumption": 1.37,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2845,6 +2850,7 @@
                         "HeatsourceRatedCapacity": 6.3,
                         "HeatsourceRatedPowerConsumption": 1.34,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2871,6 +2877,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 0.81,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2895,6 +2902,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 0.81,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2921,6 +2929,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 0.81,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2945,6 +2954,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 0.81,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2971,6 +2981,7 @@
                         "HeatsourceRatedCapacity": 3.6,
                         "HeatsourceRatedPowerConsumption": 0.81,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -2995,6 +3006,7 @@
                         "HeatsourceRatedCapacity": 4.0,
                         "HeatsourceRatedPowerConsumption": 0.81,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -7340,8 +7352,8 @@
         "EB2-11": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7358,8 +7370,8 @@
         "EB2-12": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7376,8 +7388,8 @@
         "EB2-13": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7394,8 +7406,8 @@
         "EB1-11": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "ガス給湯機",
                     "Number": 1,
                     "RatedCapacity": 20.0,
                     "RatedPowerConsumption": 0,
@@ -7412,8 +7424,8 @@
         "EB1-12": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7430,8 +7442,8 @@
         "EB2-21": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7448,8 +7460,8 @@
         "EB2-22": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7466,8 +7478,8 @@
         "EB2-23": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7484,8 +7496,8 @@
         "EB1-21": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7502,8 +7514,8 @@
         "EB2-31": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7520,8 +7532,8 @@
         "EB2-32": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7538,8 +7550,8 @@
         "EB2-33": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7556,8 +7568,8 @@
         "EB1-31": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7574,8 +7586,8 @@
         "EB2-41": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7592,8 +7604,8 @@
         "EB2-42": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7610,8 +7622,8 @@
         "EB2-43": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7628,8 +7640,8 @@
         "EB1-41": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7646,8 +7658,8 @@
         "EB2-51": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7664,8 +7676,8 @@
         "EB2-52": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7682,8 +7694,8 @@
         "EB2-53": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7700,8 +7712,8 @@
         "EB1-51": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7718,8 +7730,8 @@
         "EB2-61": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7736,8 +7748,8 @@
         "EB2-62": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7754,8 +7766,8 @@
         "EB2-63": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7772,8 +7784,8 @@
         "EB1-61": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7790,8 +7802,8 @@
         "EB2-71": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7808,8 +7820,8 @@
         "EB2-72": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7826,8 +7838,8 @@
         "EB2-73": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
@@ -7844,8 +7856,8 @@
         "EB1-71": {
             "HeatSourceUnit": [
                 {
-                    "UsageType": null,
-                    "HeatSourceType": null,
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
                     "Number": 1,
                     "RatedCapacity": 1.1,
                     "RatedPowerConsumption": 0,
