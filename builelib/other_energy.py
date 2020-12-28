@@ -63,13 +63,23 @@ def calc_energy(inputdata, DEBUG = False):
         }
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
-        roomScheduleRoom[room_name], roomScheduleLight[room_name], roomSchedulePerson[room_name], roomScheduleOAapp[room_name], _ = \
-            bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+        if inputdata["Rooms"][room_name]["buildingType"] == "共同住宅":
 
-        # 発熱量参照値 [W/m2]
-        (_, _, roomHeatGain_OAapp[room_name]) = \
-            bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+            roomScheduleRoom[room_name] = np.zeros((365,24))
+            roomScheduleLight[room_name] = np.zeros((365,24))
+            roomSchedulePerson[room_name] = np.zeros((365,24))
+            roomScheduleOAapp[room_name] = np.zeros((365,24))
+            roomHeatGain_OAapp[room_name] = 0
 
+        else:
+
+            roomScheduleRoom[room_name], roomScheduleLight[room_name], roomSchedulePerson[room_name], roomScheduleOAapp[room_name], _ = \
+                bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+
+            # 発熱量参照値 [W/m2]
+            (_, _, roomHeatGain_OAapp[room_name]) = \
+                bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+    
         if roomHeatGain_OAapp[room_name] != None:
 
             # 機器からの発熱（日積算）（365日分） [MJ/m2/day]
@@ -175,8 +185,8 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- other_energy.py -----')
-    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
-    filename = './sample/CGS_case_office_00.json'
+    filename = './sample/sample03_WEBPRO_inputSheet_for_Ver3.0.json'
+    # filename = './sample/CGS_case_office_00.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:
