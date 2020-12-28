@@ -1080,10 +1080,15 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 # 階＋室をkeyとする
                 roomKey = str(dataBL[0]) + '_' + str(dataBL[1])
 
+                if str(dataBL[3]) == "ゴミ置場等":
+                    roomType = "廃棄物保管場所等"
+                else:
+                    roomType = str(dataBL[3])
+
                 # ゾーンはないと想定。
                 data["Rooms"][roomKey] = {
                         "buildingType": str(dataBL[2]),               
-                        "roomType": str(dataBL[3]),
+                        "roomType": roomType,
                         "floorHeight": float(dataBL[5]),
                         "ceilingHeight": float(dataBL[6]),
                         "roomArea": float(dataBL[4]),
