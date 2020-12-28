@@ -7,19 +7,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import commons as bc
 
-class MyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
-            return obj.tolist()
-        elif isinstance(obj, set):
-            return list(obj)
-        else:
-            return super(MyEncoder, self).default(obj)
-
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
@@ -837,8 +824,8 @@ if __name__ == '__main__':
 
     resultJson = calc_energy(inputdata, resultJson_for_CGS, DEBUG = True)
 
-    with open("resultJson_for_CGS.json",'w') as fw:
-        json.dump(resultJson_for_CGS, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    # with open("resultJson_for_CGS.json",'w') as fw:
+    #     json.dump(resultJson_for_CGS, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
     with open("resultJson_CGS.json",'w') as fw:
-        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)

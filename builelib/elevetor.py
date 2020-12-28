@@ -7,20 +7,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import commons as bc
 
-# json.dump用のクラス
-class MyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
-            return obj.tolist()
-        elif isinstance(obj, set):
-            return list(obj)
-        else:
-            return super(MyEncoder, self).default(obj)
-
 def calc_energy(inputdata, DEBUG = False):
 
 
@@ -158,11 +144,6 @@ def calc_energy(inputdata, DEBUG = False):
     # 日積算値
     resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(Edesign_MWh_hour,1)
 
-    if DEBUG:
-        with open("resultJson_EV.json",'w') as fw:
-            json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
-
-
     return resultJson
 
 
@@ -177,4 +158,7 @@ if __name__ == '__main__':
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
+
+    with open("resultJson_EV.json",'w') as fw:
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 

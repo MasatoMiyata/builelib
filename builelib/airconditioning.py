@@ -17,21 +17,6 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 
-# json.dump用のクラス
-class MyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
-            return obj.tolist()
-        elif isinstance(obj, set):
-            return list(obj)
-        else:
-            return super(MyEncoder, self).default(obj)
-
-
 def count_Matrix(x, mxL):
     """
     負荷率 X がマトリックス mxL の何番目（ix）のセルに入るかをカウント
@@ -3885,7 +3870,7 @@ if __name__ == '__main__':
     resultJson = calc_energy(inputdata, DEBUG=True)
 
     with open("resultJson_AC.json",'w') as fw:
-        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
     print( f'BEI/AC: {resultJson["BEI_AC"]}')        
     print( f'設計一次エネルギー消費量 全体: {resultJson["E_airconditioning"]}')

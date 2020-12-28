@@ -13,20 +13,6 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 
-# json.dump用のクラス
-class MyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
-            return obj.tolist()
-        elif isinstance(obj, set):
-            return list(obj)
-        else:
-            return super(MyEncoder, self).default(obj)
-
 ## 中間期平均外気温（附属書B.1）
 def set_OutdoorTemperature(region):
     if region == "1":
@@ -364,9 +350,6 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["for_CGS"]["Edesign_MWh_day"][day] = np.sum(resultJson["E_ventilation_hourly"][day]) / (bc.fprime) 
 
     if DEBUG:
-        with open("resultJson_V.json",'w') as fw:
-            json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
-
         print( f'設計一次エネルギー消費量[MJ] {resultJson["E_ventilation"]}')
         print( f'基準一次エネルギー消費量[MJ] {resultJson["Es_ventilation"]}')
 
@@ -377,10 +360,13 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- ventilation.py -----')
-    filename = './sample/CGS_case_office_00.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
+
+    with open("resultJson_V.json",'w') as fw:
+        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
