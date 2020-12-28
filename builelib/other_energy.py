@@ -152,13 +152,15 @@ def calc_energy(inputdata, DEBUG = False):
         AreaWeightedSchedule_OA += roomScheduleOAapp[room_name] * inputdata["Rooms"][room_name]["roomArea"]
 
     for dd in range(0,365):
-        resultJson["for_CGS"]["ratio_AreaWeightedSchedule_AC"][dd] = \
-            AreaWeightedSchedule_AC[dd] / np.sum(AreaWeightedSchedule_AC[dd])
-        resultJson["for_CGS"]["ratio_AreaWeightedSchedule_LT"][dd] = \
-            AreaWeightedSchedule_LT[dd] / np.sum(AreaWeightedSchedule_LT[dd])
-        resultJson["for_CGS"]["ratio_AreaWeightedSchedule_OA"][dd] = \
-            AreaWeightedSchedule_OA[dd] / np.sum(AreaWeightedSchedule_OA[dd])
-
+        if np.sum(AreaWeightedSchedule_AC[dd]) != 0:
+            resultJson["for_CGS"]["ratio_AreaWeightedSchedule_AC"][dd] = \
+                AreaWeightedSchedule_AC[dd] / np.sum(AreaWeightedSchedule_AC[dd])
+        if np.sum(AreaWeightedSchedule_LT[dd]) != 0:
+            resultJson["for_CGS"]["ratio_AreaWeightedSchedule_LT"][dd] = \
+                AreaWeightedSchedule_LT[dd] / np.sum(AreaWeightedSchedule_LT[dd])
+        if np.sum(AreaWeightedSchedule_OA[dd]) != 0:
+            resultJson["for_CGS"]["ratio_AreaWeightedSchedule_OA"][dd] = \
+                AreaWeightedSchedule_OA[dd] / np.sum(AreaWeightedSchedule_OA[dd])
 
     if DEBUG:
         print(f'その他一次エネルギー消費量 MJ: {resultJson["E_other"]}')
