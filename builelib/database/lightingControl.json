@@ -19,8 +19,8 @@
     },
     "TimeScheduleCTRL": {
         "無": 1.00,
-        "減光": 0.95,
-        "消灯": 0.90
+        "減光方式": 0.95,
+        "点滅方式": 0.90
     },
     "InitialIlluminationCorrectionCTRL": {
         "無": 1.00,
