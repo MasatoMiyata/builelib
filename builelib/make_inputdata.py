@@ -1041,8 +1041,14 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
             data["Building"]["BuildingAddress"]["City"]  = set_default(str(sheet_BL.cell(9, 5).value), None, "str")
         # BL-4	丁目、番地等
         data["Building"]["BuildingAddress"]["Address"]  = set_default(str(sheet_BL.cell(10, 2).value), None, "str")
+        
         # BL-5	地域の区分		(自動)
-        data["Building"]["Region"] = str(int(sheet_BL.cell(11, 2).value))
+        area_num = sheet_BL.cell(11, 2).value
+        if type(area_num) is str:
+            data["Building"]["Region"] = str(int(area_num.replace("地域","")))
+        else:
+            data["Building"]["Region"] = str(int(area_num))
+
         # BL-6	年間日射地域区分		(自動)
         data["Building"]["AnnualSolarRegion"] = set_default(str(sheet_BL.cell(17, 2).value), "A3", "str")
         # BL-7	延べ面積 	[㎡]	(数値)
@@ -2440,7 +2446,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 # 給湯システム名称をkeyとする
                 unitKey = str(dataHW2[0])
 
-                if str(dataHW2[1]) == "電力":
+                if str(dataHW2[1]) == "電力" or str(dataHW2[1]) == "電気":
                     HeatSourceType = "電気瞬間湯沸器"
                 elif str(dataHW2[1]) == "都市ガス":
                     HeatSourceType = "ガス給湯機"
@@ -2469,7 +2475,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             "RatedFuelConsumption": float(dataHW2[2])/float(dataHW2[3]),
                         }
                     ],
-                    "InsulationType": str(dataHW2[4]),
+                    "InsulationType": str(dataHW2[4]).replace("１","1"),
                     "PipeSize": float(dataHW2[5]),
                     "SolarSystemArea": set_default(dataHW2[6], None, "float"),
                     "SolarSystemDirection": set_default(dataHW2[7], None, "float"),
@@ -2638,15 +2644,16 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    # directory = "./sample/"
+    directory = "./sample/"
 
     # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
+    case_name = 'sample03_WEBPRO_inputSheet_for_Ver3.0'
 
-    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    # # json出力
-    # with open(directory + case_name + ".json",'w') as fw:
-    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # json出力
+    with open(directory + case_name + ".json",'w') as fw:
+        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     #-----------------------
@@ -2670,19 +2677,19 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例（連続）
     #-----------------------
-    directory = "./tests/cogeneration/"
+    # directory = "./tests/cogeneration/"
 
-    for id in range(5,6):
-        if id < 10:
-            case_name = 'Case_hospital_0' + str(int(id))
-        else:
-            case_name = 'Case_hospital_' + str(int(id))
+    # for id in range(5,6):
+    #     if id < 10:
+    #         case_name = 'Case_hospital_0' + str(int(id))
+    #     else:
+    #         case_name = 'Case_hospital_' + str(int(id))
 
-        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-        # json出力
-        with open(directory + case_name + ".json",'w') as fw:
-            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    #     # json出力
+    #     with open(directory + case_name + ".json",'w') as fw:
+    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
 
