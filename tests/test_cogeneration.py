@@ -88,25 +88,32 @@ def test_calc(inputdata, expectedvalue):
         "L":{},
         "HW":{},
         "EV":{},
+        "PV":{},
         "OT":{},
     }
 
     # 計算実行
-
-    resultJsonAC = airconditioning.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["AC"] = resultJsonAC["for_CGS"]
-    resultJsonV = ventilation.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["V"] = resultJsonV["for_CGS"]
-    resultJsonL = lighting.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["L"] = resultJsonL["for_CGS"]
-    resultJsonHW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["HW"] = resultJsonHW["for_CGS"]
-    resultJsonEV = elevetor.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["EV"] = resultJsonEV["for_CGS"]
-    resultJsonPV = photovoltaic.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["PV"] = resultJsonPV["for_CGS"]
-    resultJsonOT = other_energy.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["OT"] = resultJsonOT["for_CGS"]
+    if inputdata["AirConditioningZone"]:
+        resultJsonAC = airconditioning.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["AC"] = resultJsonAC["for_CGS"]
+    if inputdata["VentilationRoom"]:
+        resultJsonV = ventilation.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["V"] = resultJsonV["for_CGS"]
+    if inputdata["LightingSystems"]:
+        resultJsonL = lighting.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["L"] = resultJsonL["for_CGS"]
+    if inputdata["HotwaterRoom"]:
+        resultJsonHW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["HW"] = resultJsonHW["for_CGS"]
+    if inputdata["Elevators"]: 
+        resultJsonEV = elevetor.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["EV"] = resultJsonEV["for_CGS"]
+    if inputdata["PhotovoltaicSystems"]:
+        resultJsonPV = photovoltaic.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["PV"] = resultJsonPV["for_CGS"]
+    if inputdata["Rooms"]:
+        resultJsonOT = other_energy.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["OT"] = resultJsonOT["for_CGS"]
 
     resultJson = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG = False)
 

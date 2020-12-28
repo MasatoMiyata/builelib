@@ -95,40 +95,107 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     # 日付dにおける空気調和設備の電力消費量	MWh/日
-    EAC_total_d = np.array(resultJson_for_CGS["AC"]["electric_power_comsumption"])
+    if resultJson_for_CGS["AC"]:
+        EAC_total_d = np.array(resultJson_for_CGS["AC"]["electric_power_comsumption"])
+    else:
+        EAC_total_d = np.zeros(365)
+
     # 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての主機の一次エネルギー消費量	MJ/日
-    EAC_ref_c_d = np.array(resultJson_for_CGS["AC"]["E_ref_cgsC_ABS_day"])
+    if resultJson_for_CGS["AC"]:
+        EAC_ref_c_d = np.array(resultJson_for_CGS["AC"]["E_ref_cgsC_ABS_day"])
+    else:
+        EAC_ref_c_d = np.zeros(365)
+
     # 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての負荷率 	無次元
-    mxLAC_ref_c_d = np.array(resultJson_for_CGS["AC"]["Lt_ref_cgsC_day"])
+    if resultJson_for_CGS["AC"]:
+        mxLAC_ref_c_d = np.array(resultJson_for_CGS["AC"]["Lt_ref_cgsC_day"])
+    else:
+        mxLAC_ref_c_d = np.zeros(365)
+
     # 日付dにおけるCGSの排熱利用が可能な温熱源群の主機の一次エネルギー消費量	MJ/日
-    EAC_ref_h_hr_d = np.array(resultJson_for_CGS["AC"]["E_ref_cgsH_day"])
+    if resultJson_for_CGS["AC"]:
+        EAC_ref_h_hr_d = np.array(resultJson_for_CGS["AC"]["E_ref_cgsH_day"])
+    else:
+        EAC_ref_h_hr_d = np.zeros(365)
+
     # 日付dにおけるCGSの排熱利用が可能な温熱源群の熱源負荷	MJ/日
-    qAC_ref_h_hr_d = np.array(resultJson_for_CGS["AC"]["Q_ref_cgsH_day"])
+    if resultJson_for_CGS["AC"]:
+        qAC_ref_h_hr_d = np.array(resultJson_for_CGS["AC"]["Q_ref_cgsH_day"])
+    else:
+        qAC_ref_h_hr_d = np.zeros(365)
+
     # 日付dにおける機械換気設備の電力消費量	MWh/日
-    EV_total_d = np.array(resultJson_for_CGS["V"]["Edesign_MWh_day"])
+    if resultJson_for_CGS["V"]:
+        EV_total_d = np.array(resultJson_for_CGS["V"]["Edesign_MWh_day"])
+    else:
+        EV_total_d = np.zeros(365)
+    
     # 日付dにおける照明設備の電力消費量	MWh/日
-    EL_total_d = np.array(resultJson_for_CGS["L"]["Edesign_MWh_day"])
+    if resultJson_for_CGS["L"]:
+        EL_total_d = np.array(resultJson_for_CGS["L"]["Edesign_MWh_day"])
+    else:
+        EL_total_d = np.zeros(365)
+
     # 日付dにおける給湯設備の電力消費量	MWh/日
-    EW_total_d = np.array(resultJson_for_CGS["HW"]["Edesign_MWh_Ele_day"])
+    if resultJson_for_CGS["HW"]:
+        EW_total_d = np.array(resultJson_for_CGS["HW"]["Edesign_MWh_Ele_day"])
+    else:
+        EW_total_d = np.zeros(365)
+
     # 日付dにおけるCGSの排熱利用が可能な給湯機(系統)の一次エネルギー消費量	MJ/日
-    EW_hr_d = np.array(resultJson_for_CGS["HW"]["Edesign_MJ_CGS_day"])
+    if resultJson_for_CGS["HW"]:
+        EW_hr_d = np.array(resultJson_for_CGS["HW"]["Edesign_MJ_CGS_day"])
+    else:
+        EW_hr_d = np.zeros(365)
+
     # 日付dにおけるCGSの排熱利用が可能な給湯機(系統)の給湯負荷	MJ/日
-    qW_hr_d = np.array(resultJson_for_CGS["HW"]["Q_eqp_CGS_day"])
+    if resultJson_for_CGS["HW"]:
+        qW_hr_d = np.array(resultJson_for_CGS["HW"]["Q_eqp_CGS_day"])
+    else:
+        qW_hr_d = np.zeros(365)
+
     # 日付dにおける昇降機の電力消費量	MWh/日
-    EEV_total_d = np.array(resultJson_for_CGS["EV"]["Edesign_MWh_day"])
+    if resultJson_for_CGS["EV"]:
+        EEV_total_d = np.array(resultJson_for_CGS["EV"]["Edesign_MWh_day"])
+    else:
+        EEV_total_d = np.zeros(365)
+
     # 日付dにおける効率化設備（太陽光発電）の発電量	MWh/日
-    EPV_total_d = np.array(resultJson_for_CGS["PV"]["Edesign_MWh_day"])
+    if resultJson_for_CGS["PV"]:
+        EPV_total_d = np.array(resultJson_for_CGS["PV"]["Edesign_MWh_day"])
+    else:
+        EPV_total_d = np.zeros(365)
+        
     # 日付dにおけるその他の電力消費量	MWh/日
-    EM_total_d = np.array(resultJson_for_CGS["OT"]["Edesign_MWh_day"])
+    if resultJson_for_CGS["OT"]:
+        EM_total_d = np.array(resultJson_for_CGS["OT"]["Edesign_MWh_day"])
+    else:
+        EM_total_d = np.zeros(365)
+
     # 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の運転時間	h/日
-    TAC_c_d = np.array(resultJson_for_CGS["AC"]["T_ref_cgsC_day"])
-    # # 日付dにおけるCGSの排熱利用が可能な温熱源群の運転時間	h/日
-    TAC_h_d = np.array(resultJson_for_CGS["AC"]["T_ref_cgsH_day"])
+    if resultJson_for_CGS["AC"]:
+        TAC_c_d = np.array(resultJson_for_CGS["AC"]["T_ref_cgsC_day"])
+    else:
+        TAC_c_d = np.zeros(365)
+
+    # 日付dにおけるCGSの排熱利用が可能な温熱源群の運転時間	h/日
+    if resultJson_for_CGS["AC"]:
+        TAC_h_d = np.array(resultJson_for_CGS["AC"]["T_ref_cgsH_day"])
+    else:
+        TAC_h_d = np.zeros(365)
 
     # 排熱投入型吸収式冷温水機jの定格冷却能力	ｋW/台
-    qAC_link_c_j_rated = resultJson_for_CGS["AC"]["qAC_link_c_j_rated"]
+    if resultJson_for_CGS["AC"]:
+        qAC_link_c_j_rated = resultJson_for_CGS["AC"]["qAC_link_c_j_rated"]
+    else:
+        qAC_link_c_j_rated = 0
+
     # 排熱投入型吸収式冷温水機jの主機定格消費エネルギー ｋW/台
-    EAC_link_c_j_rated = resultJson_for_CGS["AC"]["EAC_link_c_j_rated"]
+    if resultJson_for_CGS["AC"]:
+        EAC_link_c_j_rated = resultJson_for_CGS["AC"]["EAC_link_c_j_rated"]
+    else:
+        EAC_link_c_j_rated = 0
+
 
     if DEBUG:
         print(f" 2 EAC_total_d : {np.sum(EAC_total_d)}")
@@ -708,8 +775,6 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     resultJson["年間一次エネルギー削減量(給湯) "] = np.sum(EW_red_d)/1000           # 年間一次エネルギー削減量(給湯) [GJ]
     resultJson["年間一次エネルギー削減量"] = np.sum(Etotal_cgs_red_d)/1000   # 年間一次エネルギー削減量合計 [GJ]
 
-
-
     if DEBUG:
         print( f'年間一次エネルギー削減量 全体 : {resultJson["年間一次エネルギー削減量"]} GJ/年')
         resultJson["EAC_ref_c_red_d"] = EAC_ref_c_red_d
@@ -720,9 +785,10 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- cogeneration.py -----')
-    filename = './tests/cogeneration/Case_hospital_05.json'
+    # filename = './tests/cogeneration/Case_hospital_05.json'
     # filename = './tests/cogeneration/Case_hotel_03.json'
-    # filename = './tests/cogeneration/Case_office_05.json'
+    filename = './tests/cogeneration/Case_office_04.json'
+    # filename = './sample/cgs.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
@@ -747,20 +813,27 @@ if __name__ == '__main__':
     import photovoltaic
     import other_energy
 
-    resultJsonAC = airconditioning.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["AC"] = resultJsonAC["for_CGS"]
-    resultJsonV = ventilation.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["V"] = resultJsonV["for_CGS"]
-    resultJsonL = lighting.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["L"] = resultJsonL["for_CGS"]
-    resultJsonHW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["HW"] = resultJsonHW["for_CGS"]
-    resultJsonEV = elevetor.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["EV"] = resultJsonEV["for_CGS"]
-    resultJsonPV = photovoltaic.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["PV"] = resultJsonPV["for_CGS"]
-    resultJsonOT = other_energy.calc_energy(inputdata, DEBUG = False)
-    resultJson_for_CGS["OT"] = resultJsonOT["for_CGS"]
+    if inputdata["AirConditioningZone"]:
+        resultJsonAC = airconditioning.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["AC"] = resultJsonAC["for_CGS"]
+    if inputdata["VentilationRoom"]:
+        resultJsonV = ventilation.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["V"] = resultJsonV["for_CGS"]
+    if inputdata["LightingSystems"]:
+        resultJsonL = lighting.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["L"] = resultJsonL["for_CGS"]
+    if inputdata["HotwaterRoom"]:
+        resultJsonHW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["HW"] = resultJsonHW["for_CGS"]
+    if inputdata["Elevators"]: 
+        resultJsonEV = elevetor.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["EV"] = resultJsonEV["for_CGS"]
+    if inputdata["PhotovoltaicSystems"]:
+        resultJsonPV = photovoltaic.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["PV"] = resultJsonPV["for_CGS"]
+    if inputdata["Rooms"]:
+        resultJsonOT = other_energy.calc_energy(inputdata, DEBUG = False)
+        resultJson_for_CGS["OT"] = resultJsonOT["for_CGS"]
 
     resultJson = calc_energy(inputdata, resultJson_for_CGS, DEBUG = True)
 
