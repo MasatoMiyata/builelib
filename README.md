@@ -35,8 +35,7 @@ python3 -m pip uninstall builelib
 
 ## How to run?
 
-付属の Jupyter Notebook（run.ipynb）をご覧下さい。
-
+builelib_run.py もしくは　run.ipynb（Jupyter Notebook）をご覧下さい。
 
 ## How to make inputdata?
 
