@@ -77,7 +77,7 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
     k_heatup = 0.84        # ファン・ポンプの発熱比率
     Cw = 4.186             # 水の比熱 [kJ/kg・K]
-    divL = 10             # 負荷帯マトリックス分割数
+    divL = 11             # 負荷帯マトリックス分割数 （10区分＋過負荷1区分）
     divT =  6             # 温度帯マトリックス分割数
 
     ##----------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ def calc_energy(inputdata, DEBUG = False):
         Area = json.load(f)
 
     # 負荷率帯マトリックス mxL = array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2])
-    mxL = np.arange(1/divL, 1.01, 1/divL)
+    mxL = np.arange(1/(divL-1), 1.01, 1/(divL-1))
     mxL = np.append(mxL,1.2)
 
     # 負荷率帯マトリックス（平均） aveL = array([0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95, 1.2 ])
@@ -101,7 +101,6 @@ def calc_energy(inputdata, DEBUG = False):
             aveL[iL] = 1.2
         else:
             aveL[iL] = mxL[iL-1] + (mxL[iL]-mxL[iL-1])/2
-
 
     ##----------------------------------------------------------------------------------
     ## 他人から供給された熱の一次エネルギー換算係数（デフォルト）
@@ -2345,21 +2344,21 @@ def calc_energy(inputdata, DEBUG = False):
 
     for pump_name in inputdata["PUMP"]:
 
-        MxPUMPNum = np.zeros(len(mxL))
-        MxPUMPPower = np.zeros(len(mxL))
-        PUMPvwvfac = np.ones(len(mxL))
+        MxPUMPNum = np.zeros(divL)
+        MxPUMPPower = np.zeros(divL)
+        PUMPvwvfac = np.ones(divL)
 
         if inputdata["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
 
             if inputdata["PUMP"][pump_name]["isStagingControl"] == "無":    # 台数制御なし
             
                 # 運転台数
-                MxPUMPNum = np.ones(len(mxL)) * inputdata["PUMP"][pump_name]["number_of_pumps"]
+                MxPUMPNum = np.ones(divL) * inputdata["PUMP"][pump_name]["number_of_pumps"]
 
                 # 流量制御方式
                 if inputdata["PUMP"][pump_name]["ContolType"] == "回転数制御":  # 全台VWVであれば
 
-                    for iL in range(0,len(mxL)):
+                    for iL in range(0,divL):
 
                         # 最小負荷率による下限を設ける。
                         if aveL[iL] < (inputdata["PUMP"][pump_name]["MinOpeningRate"] /100):
@@ -2368,7 +2367,7 @@ def calc_energy(inputdata, DEBUG = False):
                             tmpL = aveL[iL]
 
                         # VWVの効果率曲線(1番目の特性を代表して使う)
-                        PUMPvwvfac = np.ones(len(mxL))
+                        PUMPvwvfac = np.ones(divL)
                         if aveL[iL] > 1.0:
                             PUMPvwvfac[iL] = 1.2
                         else:
@@ -2380,8 +2379,8 @@ def calc_energy(inputdata, DEBUG = False):
                                 inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a0"]
 
                 else: # 全台VWVでなければ、定流量とみなす。
-                    PUMPvwvfac = np.ones(len(mxL))
-                    PUMPvwvfac[len(mxL)] = 1.2
+                    PUMPvwvfac = np.ones(divL)
+                    PUMPvwvfac[divL] = 1.2
 
 
                 # 消費電力（部分負荷特性×定格消費電力）[kW]
@@ -2390,7 +2389,7 @@ def calc_energy(inputdata, DEBUG = False):
 
             elif inputdata["PUMP"][pump_name]["isStagingControl"] == "有":   # 台数制御あり
 
-                for iL in range(0,len(mxL)):
+                for iL in range(0,divL):
 
                     # 負荷区分 iL における処理負荷 [kW]
                     Qpsr_iL  = inputdata["PUMP"][pump_name]["Qpsr"] * aveL[iL]
@@ -2427,7 +2426,7 @@ def calc_energy(inputdata, DEBUG = False):
                             (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
 
                             # 変流量制御の効果率
-                            PUMPvwvfac = np.ones(len(mxL))
+                            PUMPvwvfac = np.ones(divL)
                             if aveL[iL] > 1.0:
                                 PUMPvwvfac[iL] = 1.2
                             
@@ -2447,7 +2446,7 @@ def calc_energy(inputdata, DEBUG = False):
                                 tmpL = inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100
                             
                             # 変流量制御による省エネ効果
-                            PUMPvwvfac = np.ones(len(mxL))
+                            PUMPvwvfac = np.ones(divL)
                             if aveL[iL] > 1.0:
                                 PUMPvwvfac[iL] = 1.2
                             else:
@@ -2698,14 +2697,14 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["REF"][ref_name]["E_PPc_day"]     =  np.zeros(365)     # 一次ポンプ電力 [MWh]
         resultJson["REF"][ref_name]["E_CTfan_day"]   =  np.zeros(365)     # 冷却塔ファン電力 [MWh]
         resultJson["REF"][ref_name]["E_CTpump_day"]  =  np.zeros(365)     # 冷却水ポンプ電力 [MWh]
-        resultJson["REF"][ref_name]["MxREFperE"]     = np.zeros( [divT, divL+1] )   # 熱源群全体で集計した値
+        resultJson["REF"][ref_name]["MxREFperE"]     = np.zeros( [divT, divL] )   # 熱源群全体で集計した値
         
         resultJson["REF"][ref_name]["Heatsource"]    = {}
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
             # 熱源群に属する各熱源機器の値
             resultJson["REF"][ref_name]["Heatsource"][unit_id] = {}
-            resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"]  = np.zeros( [divT, divL+1] ) 
+            resultJson["REF"][ref_name]["Heatsource"][unit_id]["MxREFSUBperE"]  = np.zeros( [divT, divL] ) 
             resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit"] = np.zeros(365)
             resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"] = np.zeros(365)
 
@@ -3058,7 +3057,7 @@ def calc_energy(inputdata, DEBUG = False):
 
     for ref_name in inputdata["REF"]:
 
-        mxT = []
+        mxT = np.ones(len(mxTC))
         if inputdata["REF"][ref_name]["mode"] == "cooling":
             mxT = mxTC
         elif inputdata["REF"][ref_name]["mode"] == "heating":
@@ -3215,16 +3214,16 @@ def calc_energy(inputdata, DEBUG = False):
     # 運転台数マトリックス
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["MxREFnum"] = np.ones( [len(mxT), len(mxL)] ) 
+        resultJson["REF"][ref_name]["MxREFnum"] = np.ones( [divT, divL] ) 
 
         if inputdata["REF"][ref_name]["isStagingControl"] == "無":   # 運転台数制御が「無」の場合
 
-            resultJson["REF"][ref_name]["MxREFnum"] = np.ones( [len(mxT), len(mxL)] ) * inputdata["REF"][ref_name]["refsetRnum"]
+            resultJson["REF"][ref_name]["MxREFnum"] = np.ones( [divT, divL] ) * inputdata["REF"][ref_name]["refsetRnum"]
         
         elif inputdata["REF"][ref_name]["isStagingControl"] == "有":  # 運転台数制御が「有」の場合
 
-            for ioa in range(0, len(mxT)):
-                for iL in range(0, len(mxL)):
+            for ioa in range(0, divT):
+                for iL in range(0, divL):
 
                     # 処理熱量 [kW]
                     tmpQ  = inputdata["REF"][ref_name]["QrefrMax"] * aveL[iL]
@@ -3252,11 +3251,11 @@ def calc_energy(inputdata, DEBUG = False):
 
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["MxREFxL"] = np.zeros( [len(mxT), len(mxL)] ) 
-        resultJson["REF"][ref_name]["MxREFxL_real"] = np.zeros( [len(mxT), len(mxL)] ) 
+        resultJson["REF"][ref_name]["MxREFxL"] = np.zeros( [divT, divL] ) 
+        resultJson["REF"][ref_name]["MxREFxL_real"] = np.zeros( [divT, divL] ) 
 
-        for ioa in range(0, len(mxT)):
-            for iL in range(0, len(mxL)):
+        for ioa in range(0, divT):
+            for iL in range(0, divL):
 
                 # 処理熱量 [kW]
                 tmpQ  = inputdata["REF"][ref_name]["QrefrMax"] * aveL[iL]
@@ -3279,10 +3278,10 @@ def calc_energy(inputdata, DEBUG = False):
     for ref_name in inputdata["REF"]:
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"] = np.zeros( [len(mxT), len(mxL)] ) 
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"] = np.zeros( [divT, divL] ) 
 
-        for ioa in range(0, len(mxT)):
-            for iL in range(0, len(mxL)):
+        for ioa in range(0, divT):
+            for iL in range(0, divL):
 
                 # 部分負荷特性（各負荷率・各温度帯について）
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
@@ -3302,7 +3301,7 @@ def calc_energy(inputdata, DEBUG = False):
 
                     if resultJson["REF"][ref_name]["MxREFxL"][ioa][iL] < inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["下限"]:
                         resultJson["REF"][ref_name]["MxREFxL"][ioa][iL] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["下限"]
-                    elif resultJson["REF"][ref_name]["MxREFxL"][ioa][iL] > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["上限"] or iL == len(mxL):
+                    elif resultJson["REF"][ref_name]["MxREFxL"][ioa][iL] > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["上限"] or iL == divL:
                         resultJson["REF"][ref_name]["MxREFxL"][ioa][iL] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["上限"]
                     tmpL = resultJson["REF"][ref_name]["MxREFxL"][ioa][iL]
 
@@ -3316,7 +3315,7 @@ def calc_energy(inputdata, DEBUG = False):
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["係数"]["a0"]
 
                     # 過負荷時のペナルティ（要検討）
-                    if iL == len(mxL)-1:
+                    if iL == divL-1:
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][ioa][iL] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][ioa][iL] * 1.2
 
 
@@ -3333,11 +3332,11 @@ def calc_energy(inputdata, DEBUG = False):
     for ref_name in inputdata["REF"]:
 
         # 送水温度特性（各負荷率・各温度帯について）
-        for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"] = np.ones( [len(mxT), len(mxL)] ) 
+        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"] = np.ones( [divT, divL] ) 
 
-        for ioa in range(0, len(mxT)):
-            for iL in range(0, len(mxL)):
+        for ioa in range(0, divT):
+            for iL in range(0, divL):
 
                 # 送水温度特性（各負荷率・各温度帯について）
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
@@ -3425,12 +3424,12 @@ def calc_energy(inputdata, DEBUG = False):
     # 蓄熱槽を持つシステムの追い掛け時運転時間補正（追い掛け運転開始時に蓄熱量がすべて使われない問題を解消） 2014/1/10
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["hoseiStorage"] = np.ones( [len(mxT), len(mxL)] ) 
+        resultJson["REF"][ref_name]["hoseiStorage"] = np.ones( [divT, divL] ) 
 
         if inputdata["REF"][ref_name]["isStorage"] == "追掛":
 
-            for ioa in range(0, len(mxT)):
-                for iL in range(0, len(mxL)):
+            for ioa in range(0, divT):
+                for iL in range(0, divL):
 
                     if int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL]) >= 2:
 
@@ -3466,13 +3465,13 @@ def calc_energy(inputdata, DEBUG = False):
 
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["ErefaprALL"]  = np.zeros( [len(mxT), len(mxL)] ) 
-        resultJson["REF"][ref_name]["EpprALL"]     = np.zeros( [len(mxT), len(mxL)] ) 
-        resultJson["REF"][ref_name]["EctfanrALL"]  = np.zeros( [len(mxT), len(mxL)] ) 
-        resultJson["REF"][ref_name]["EctpumprALL"] = np.zeros( [len(mxT), len(mxL)] ) 
+        resultJson["REF"][ref_name]["ErefaprALL"]  = np.zeros( [divT, divL] ) 
+        resultJson["REF"][ref_name]["EpprALL"]     = np.zeros( [divT, divL] ) 
+        resultJson["REF"][ref_name]["EctfanrALL"]  = np.zeros( [divT, divL] ) 
+        resultJson["REF"][ref_name]["EctpumprALL"] = np.zeros( [divT, divL] ) 
 
-        for ioa in range(0, len(mxT)):
-            for iL in range(0, len(mxL)):
+        for ioa in range(0, divT):
+            for iL in range(0, divL):
 
                 # 熱源主機：エネルギー消費量のマトリックス MxREFSUBperE
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][ioa][iL])):
@@ -3487,7 +3486,7 @@ def calc_energy(inputdata, DEBUG = False):
                 # 一台あたりの負荷率（熱源機器の負荷率＝最大能力を考慮した負荷率・ただし、熱源特性の上限・下限は考慮せず）
                 aveLperU = resultJson["REF"][ref_name]["MxREFxL_real"][ioa][iL]
 
-                if iL == len(mxL)-1:   
+                if iL == divL-1:   
                     aveLperU = 1.2
             
                 # 補機電力（燃焼系熱源のみ）
