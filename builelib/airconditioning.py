@@ -103,6 +103,29 @@ def calc_energy(inputdata, DEBUG = False):
             aveL[iL] = mxL[iL-1] + (mxL[iL]-mxL[iL-1])/2
 
     ##----------------------------------------------------------------------------------
+    ## 日平均外気温 （解説書 2.7.4.1）
+    ##----------------------------------------------------------------------------------
+
+    # 外気温度帯の上限・下限
+    mxTH_min = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温下限"]
+    mxTH_max = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温上限"]
+    mxTC_min = Area[inputdata["Building"]["Region"]+"地域"]["冷房時外気温下限"]
+    mxTC_max = Area[inputdata["Building"]["Region"]+"地域"]["冷房時外気温上限"]
+
+    delTC = (mxTC_max - mxTC_min)/divT
+    delTH = (mxTH_max - mxTH_min)/divT
+
+    mxTC = np.arange(mxTC_min+delTC, mxTC_max+delTC, delTC)
+    mxTH = np.arange(mxTH_min+delTH, mxTH_max+delTH, delTH)
+
+    ToadbC = mxTC - delTC/2
+    ToadbH = mxTH - delTH/2
+
+    # 保存用
+    resultJson["Matrix"]["ToadbC"] = ToadbC
+    resultJson["Matrix"]["ToadbH"] = ToadbH
+
+    ##----------------------------------------------------------------------------------
     ## 他人から供給された熱の一次エネルギー換算係数（デフォルト）
     ##----------------------------------------------------------------------------------
 
@@ -1601,25 +1624,25 @@ def calc_energy(inputdata, DEBUG = False):
                             if La[dd] > 0:    # 負荷率が正（冷却コイル負荷）である場合
                                 
                                 # 負荷率帯インデックスの決定
-                                ix = count_Matrix(La[dd], mxL)
+                                iL = count_Matrix(La[dd], mxL)
                                 
                                 if requirement_type == "cooling":     # 室負荷が正（冷房要求）である場合
-                                    Mxc[dd,0] = ix                    # 0列目は、室負荷が正（冷房要求）であるときの冷却コイル負荷の負荷率帯インデックス
+                                    Mxc[dd,0] = iL                    # 0列目は、室負荷が正（冷房要求）であるときの冷却コイル負荷の負荷率帯インデックス
                                     Tdc[dd,0] = Ta[dd]               # 0列目は、室負荷が正（冷房要求）であるときの空調運転時間
                                 elif requirement_type == "heating":   # 室負荷が負（暖房要求）である場合
-                                    Mxc[dd,1] = ix                    # 1列目は、室負荷が負（暖房要求）であるときの冷却コイル負荷の負荷率帯インデックス
+                                    Mxc[dd,1] = iL                    # 1列目は、室負荷が負（暖房要求）であるときの冷却コイル負荷の負荷率帯インデックス
                                     Tdc[dd,1] = Ta[dd]               # 1列目は、室負荷が負（暖房要求）であるときの空調運転時間
                                 
                             elif La[dd] < 0:  # 負荷率が負（加熱コイル負荷）である場合
 
                                 # 負荷率帯インデックスの決定
-                                ix = count_Matrix((-1)*La[dd], mxL)
+                                iL = count_Matrix((-1)*La[dd], mxL)
                                 
                                 if requirement_type == "cooling":     # 室負荷が正（冷房要求）である場合
-                                    Mxh[dd,0] = ix                    # 0列目は、室負荷が正（冷房要求）であるときの加熱コイル負荷の負荷率帯インデックス
+                                    Mxh[dd,0] = iL                    # 0列目は、室負荷が正（冷房要求）であるときの加熱コイル負荷の負荷率帯インデックス
                                     Tdh[dd,0] = Ta[dd]                # 0列目は、室負荷が正（冷房要求）であるときの空調運転時間
                                 elif requirement_type == "heating":   # 室負荷が負（暖房要求）である場合
-                                    Mxh[dd,1] = ix                    # 1列目は、室負荷が負（暖房要求）であるときの加熱コイル負荷の負荷率帯インデックス
+                                    Mxh[dd,1] = iL                    # 1列目は、室負荷が負（暖房要求）であるときの加熱コイル負荷の負荷率帯インデックス
                                     Tdh[dd,1] = Ta[dd]                # 1列目は、室負荷が負（暖房要求）であるときの空調運転時間
 
 
@@ -1634,26 +1657,26 @@ def calc_energy(inputdata, DEBUG = False):
                             if (La[dd] != 0) and (ac_mode[dd] == "冷房" or ac_mode[dd] == "中間"):   
 
                                 # 負荷率帯インデックスの決定
-                                ix = count_Matrix(La[dd], mxL)
+                                iL = count_Matrix(La[dd], mxL)
 
                                 if requirement_type == "cooling":     # 室負荷が正（冷房要求）である場合
-                                    Mxc[dd,0] = ix                    # 0列目は、室負荷が正（冷房要求）であるときの空調負荷の負荷率帯インデックス（ただし、加熱コイル負荷は 負荷率帯 0　となる）
+                                    Mxc[dd,0] = iL                    # 0列目は、室負荷が正（冷房要求）であるときの空調負荷の負荷率帯インデックス（ただし、加熱コイル負荷は 負荷率帯 0　となる）
                                     Tdc[dd,0] = Ta[dd]                # 0列目は、室負荷が正（冷房要求）であるときの空調運転時間(加熱コイル負荷発生時も 負荷率=0として送風機は動く想定)
                                 elif requirement_type == "heating":   # 室負荷が負（暖房要求）である場合
-                                    Mxc[dd,1] = ix                    # 1列目は、室負荷が負（暖房要求）であるときの空調負荷の負荷率帯インデックス（ただし、加熱コイル負荷は 負荷率帯 0　となる）
+                                    Mxc[dd,1] = iL                    # 1列目は、室負荷が負（暖房要求）であるときの空調負荷の負荷率帯インデックス（ただし、加熱コイル負荷は 負荷率帯 0　となる）
                                     Tdc[dd,1] = Ta[dd]                # 1列目は、室負荷が負（暖房要求）であるときの空調運転時間(加熱コイル負荷発生時も 負荷率=0として送風機は動く想定)
 
                             # 暖房モード で動く期間の場合、かつ、空調負荷（冷却コイル負荷か加熱コイル負荷）が発生しているとき
                             elif (La[dd] != 0) and (ac_mode[dd] == "暖房"):  
 
                                 # 負荷率帯インデックスの決定
-                                ix = count_Matrix((-1)*La[dd], mxL)
+                                iL = count_Matrix((-1)*La[dd], mxL)
 
                                 if requirement_type == "cooling":     # 室負荷が正（冷房要求）である場合
-                                    Mxh[dd,0] = ix                    # 0列目は、室負荷が正（冷房要求）であるときの空調負荷の負荷率帯インデックス（ただし、冷却コイル負荷は 負荷率帯 0　となる）
+                                    Mxh[dd,0] = iL                    # 0列目は、室負荷が正（冷房要求）であるときの空調負荷の負荷率帯インデックス（ただし、冷却コイル負荷は 負荷率帯 0　となる）
                                     Tdh[dd,0] = Ta[dd]                # 0列目は、室負荷が正（冷房要求）であるときの空調運転時間(冷却コイル負荷発生時も 負荷率=0として送風機は動く想定)
                                 elif requirement_type == "heating":   # 室負荷が負（暖房要求）である場合
-                                    Mxh[dd,1] = ix                    # 1列目は、室負荷が負（暖房要求）であるときの空調負荷の負荷率帯インデックス（ただし、冷却コイル負荷は 負荷率帯 0　となる）
+                                    Mxh[dd,1] = iL                    # 1列目は、室負荷が負（暖房要求）であるときの空調負荷の負荷率帯インデックス（ただし、冷却コイル負荷は 負荷率帯 0　となる）
                                     Tdh[dd,1] = Ta[dd]                # 1列目は、室負荷が負（暖房要求）であるときの空調運転時間(冷却コイル負荷発生時も 負荷率=0として送風機は動く想定)
 
 
@@ -2300,9 +2323,9 @@ def calc_energy(inputdata, DEBUG = False):
                     if Lpump[dd] > 0:
 
                         # 出現時間マトリックスを作成
-                        ix = count_Matrix(Lpump[dd],mxL)
+                        iL = count_Matrix(Lpump[dd],mxL)
 
-                        Mxc[dd] = ix
+                        Mxc[dd] = iL
                         Tdc[dd] = resultJson["PUMP"][pump_name]["Tps"][dd]
 
         resultJson["PUMP"][pump_name]["LdPUMP"] = Mxc
@@ -2683,14 +2706,11 @@ def calc_energy(inputdata, DEBUG = False):
 
         resultJson["REF"][ref_name] = {}
         resultJson["REF"][ref_name]["Qref"]          = np.zeros(365)      # 日積算熱源負荷 [MJ/Day]
-        resultJson["REF"][ref_name]["Lref"]          = np.zeros(365)      # 日積算熱源負荷 [MJ/Day]
         resultJson["REF"][ref_name]["schedule"]      = np.zeros((365,24)) # 運転スケジュール
         resultJson["REF"][ref_name]["Tref"]          = np.zeros(365)      # 日積算運転時間
         resultJson["REF"][ref_name]["Qref_kW"]       = np.zeros(365)      # 熱源平均負荷 kW
         resultJson["REF"][ref_name]["Qref_OVER"]     = np.zeros(365)      # 過負荷分
         resultJson["REF"][ref_name]["ghsp_Rq"]       = 0                  # 冷房負荷と暖房負荷の比率（地中熱ヒートポンプ用）← 冷房用と暖房用熱源は順に並んでいる
-        resultJson["REF"][ref_name]["matrix_iL"]         = np.zeros(365)      # 熱源の負荷率区分
-        resultJson["REF"][ref_name]["matrix_iT"]         = np.zeros(365)      # 熱源の温度区分
         resultJson["REF"][ref_name]["E_ref_day"]     = np.zeros(365)     # 熱源群エネルギー消費量 [MJ]
         resultJson["REF"][ref_name]["E_ref_day_MWh"] = np.zeros(365)     # 熱源主機電力消費量 [MWh]
         resultJson["REF"][ref_name]["E_ref_ACc_day"] = np.zeros(365)     # 補機電力 [MWh]
@@ -2892,23 +2912,98 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## 日平均外気温 （解説書 2.7.4.1）
+    ## 蓄熱槽からの放熱を加味した補正定格能力 （解説書 2.7.6）
     ##----------------------------------------------------------------------------------
 
-    # 外気温度帯の上限・下限
-    mxTH_min = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温下限"]
-    mxTH_max = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温上限"]
-    mxTC_min = Area[inputdata["Building"]["Region"]+"地域"]["冷房時外気温下限"]
-    mxTC_max = Area[inputdata["Building"]["Region"]+"地域"]["冷房時外気温上限"]
+    # 蓄熱槽がある場合の放熱用熱交換器の容量の補正
+    for ref_name in inputdata["REF"]:
 
-    delTC = (mxTC_max - mxTC_min)/divT
-    delTH = (mxTH_max - mxTH_min)/divT
+        hex_capacity = 0
 
-    mxTC = np.arange(mxTC_min+delTC, mxTC_max+delTC, delTC)
-    mxTH = np.arange(mxTH_min+delTH, mxTH_max+delTH, delTH)
+        if inputdata["REF"][ref_name]["isStorage"] == "追掛":
+            if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceType"] == "熱交換器":
 
-    ToadbC = mxTC - delTC/2
-    ToadbH = mxTH - delTH/2
+                # 熱源運転時間の最大値で補正した容量
+                hex_capacity = inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] * \
+                    (8 / np.max(resultJson["REF"][ref_name]["Tref"]))
+
+                # 定格容量の合計値を更新
+                inputdata["REF"][ref_name]["QrefrMax"] = \
+                    inputdata["REF"][ref_name]["QrefrMax"] + \
+                    hex_capacity - inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]
+
+                # 熱交換器の容量を修正
+                inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = hex_capacity
+
+            else:
+                raise Exception('熱交換機が設定されていません')
+
+        if DEBUG:
+                
+            print( f'--- 熱源群名 {ref_name} ---')
+            print( f'熱交換器の容量: {inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]}')
+            print( f'熱源群の定格能力の合計 QrefrMax: {inputdata["REF"][ref_name]["QrefrMax"]}' )
+
+
+    ##----------------------------------------------------------------------------------
+    ## 熱源群の負荷率（解説書 2.7.7）
+    ##----------------------------------------------------------------------------------
+
+    for ref_name in inputdata["REF"]:
+
+        resultJson["REF"][ref_name]["Lref"] = np.zeros(365)      # 日積算熱源負荷 [MJ/Day]
+
+        for dd in range(0,365):
+            
+            # 負荷率の算出 [-]
+            if resultJson["REF"][ref_name]["Tref"][dd] > 0:
+
+                resultJson["REF"][ref_name]["Lref"][dd] = \
+                    (resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000/3600) / \
+                    inputdata["REF"][ref_name]["QrefrMax"]
+        
+            if np.isnan(resultJson["REF"][ref_name]["Lref"][dd]) == True:
+                resultJson["REF"][ref_name]["Lref"][dd] = 0
+
+
+    ##----------------------------------------------------------------------------------
+    ## 熱源群のマトリックスIDの指定
+    ##----------------------------------------------------------------------------------
+
+    for ref_name in inputdata["REF"]:
+
+        resultJson["REF"][ref_name]["matrix_iL"] = np.zeros(365)      # 熱源の負荷率区分
+        resultJson["REF"][ref_name]["matrix_iT"] = np.zeros(365)      # 熱源の温度区分
+
+        for dd in range(0,365):
+
+            if resultJson["REF"][ref_name]["Lref"][dd] > 0:
+                
+                # 負荷率帯マトリックス
+                resultJson["REF"][ref_name]["matrix_iL"][dd] = count_Matrix(resultJson["REF"][ref_name]["Lref"][dd], mxL)
+
+                # 外気温帯マトリックス
+                if inputdata["REF"][ref_name]["mode"] == "cooling":
+                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTC) 
+                elif inputdata["REF"][ref_name]["mode"] == "heating":
+                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTH) 
+    
+
+    #----------------------------------------------------------------------------------
+    # 蓄熱システムによる外気温帯の補正
+    #----------------------------------------------------------------------------------
+
+    for ref_name in inputdata["REF"]:
+
+        if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
+
+            for dd in range(0,365):
+        
+                if resultJson["REF"][ref_name]["matrix_iT"][dd] > 1:
+                    resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd] - 1   # 外気温帯を1つ下げる。
+                elif resultJson["REF"][ref_name]["matrix_iT"][dd] == 1:
+                    resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd]
+
 
 
     ##----------------------------------------------------------------------------------
@@ -2918,6 +3013,10 @@ def calc_energy(inputdata, DEBUG = False):
     ToawbC = Area[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_冷房a1"] * ToadbC + Area[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_冷房a0"]
     ToawbH = Area[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_暖房a1"] * ToadbH + Area[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_暖房a0"]
 
+    # 保存用
+    resultJson["Matrix"]["ToawbC"] = ToawbC
+    resultJson["Matrix"]["ToawbH"] = ToawbH
+
 
     ##----------------------------------------------------------------------------------
     ## 冷却水温度 （解説書 2.7.4.3）
@@ -2926,14 +3025,10 @@ def calc_energy(inputdata, DEBUG = False):
     TctwC  = ToawbC + 3  # 冷却水温度 [℃]
     TctwH  = 15.5 * np.ones(6)  #  水冷式の暖房時熱源水温度（暫定） [℃]
 
-
     # 保存用
-    resultJson["Matrix"]["ToadbC"] = ToadbC
-    resultJson["Matrix"]["ToadbH"] = ToadbH
-    resultJson["Matrix"]["ToawbC"] = ToawbC
-    resultJson["Matrix"]["ToawbH"] = ToawbH
     resultJson["Matrix"]["TctwC"]  = TctwC
     resultJson["Matrix"]["TctwH"]  = TctwH
+
 
     ##----------------------------------------------------------------------------------
     ## 地中熱交換器（クローズドループ）からの熱源水温度 （解説書 2.7.4.4）
@@ -2982,7 +3077,6 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
     ## 熱源水等の温度 xTALL （解説書 2.7.4）
     ##----------------------------------------------------------------------------------
-    # 外気温度の軸（マトリックスの縦軸）
 
     for ref_name in inputdata["REF"]:
 
@@ -3000,6 +3094,8 @@ def calc_energy(inputdata, DEBUG = False):
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"] = ToadbC  # 乾球温度
             elif unit_configure["parameter"]["熱源種類"] == "不要" and inputdata["REF"][ref_name]["mode"] == "heating":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"] = ToadbH  # 乾球温度
+            else:
+                raise Exception("熱源種類が不正です。")
 
             for gound_type in range(1,6):
 
@@ -3018,72 +3114,6 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"] = \
                         ( gshp_ch[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dh[igsType] ) * ( ToadbH - gshpToa_h[iAREA] ) + \
                         (ghspToa_ave[iAREA] + gshp_ah[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bh[igsType])
-
-
-    ##----------------------------------------------------------------------------------
-    ## 蓄熱槽からの放熱を加味した補正定格能力 （解説書 2.7.6）
-    ##----------------------------------------------------------------------------------
-
-    # 蓄熱槽がある場合の放熱用熱交換器の容量の補正
-    for ref_name in inputdata["REF"]:
-
-        tmpCapacityHEX = 0
-
-        if inputdata["REF"][ref_name]["isStorage"] == "追掛":
-            if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceType"] == "熱交換器":
-
-                # 熱源運転時間の最大値で補正した容量
-                tmpCapacityHEX = inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] * (8 / np.max(resultJson["REF"][ref_name]["Tref"]))
-
-                # 定格容量の合計値を更新
-                inputdata["REF"][ref_name]["QrefrMax"] = inputdata["REF"][ref_name]["QrefrMax"] +  tmpCapacityHEX - inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]
-
-                # 熱交換器の容量を修正
-                inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = tmpCapacityHEX
-
-            else:
-                raise Exception('熱交換機が設定されていません')
-
-        if DEBUG:
-                
-            print( f'--- 熱源群名 {ref_name} ---')
-            print( f'熱交換器の容量: {inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]}')
-            print( f'熱源群の定格能力の合計 QrefrMax: {inputdata["REF"][ref_name]["QrefrMax"]}' )
-
-
-    ##----------------------------------------------------------------------------------
-    ## 熱源群の負荷率（解説書 2.7.7）
-    ##----------------------------------------------------------------------------------
-
-    for ref_name in inputdata["REF"]:
-
-        mxT = np.ones(len(mxTC))
-        if inputdata["REF"][ref_name]["mode"] == "cooling":
-            mxT = mxTC
-        elif inputdata["REF"][ref_name]["mode"] == "heating":
-            mxT = mxTH
-        else:
-            raise Exception('運転モードが不正です')
-
-
-        for dd in range(0,365):
-            
-            # 負荷率算出 [-]
-            if resultJson["REF"][ref_name]["Tref"][dd] > 0:
-
-                resultJson["REF"][ref_name]["Lref"][dd] = \
-                    (resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000/3600) / \
-                    inputdata["REF"][ref_name]["QrefrMax"]
-        
-            if np.isnan(resultJson["REF"][ref_name]["Lref"][dd]) == True:
-                resultJson["REF"][ref_name]["Lref"][dd] = 0
-
-            if resultJson["REF"][ref_name]["Lref"][dd] > 0:
-                
-                # 負荷率帯マトリックス
-                resultJson["REF"][ref_name]["matrix_iL"][dd] = count_Matrix(resultJson["REF"][ref_name]["Lref"][dd], mxL)
-                # 外気温帯マトリックス
-                resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxT) 
 
 
     ##----------------------------------------------------------------------------------
@@ -3159,13 +3189,14 @@ def calc_energy(inputdata, DEBUG = False):
 
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"] = np.zeros(len(ToadbC))
             
-            for iX in range(0,len(ToadbC)):
+            for iT in range(0,len(ToadbC)):
                 
                 # 各外気温区分における最大能力 [kW]
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"][iX] = \
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"][iT] = \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] * \
-                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"][iX]
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"][iT]
             
+
 
     #----------------------------------------------------------------------------------
     # 蓄熱システムによる運転時間の補正（解説書 2.7.15）
@@ -3194,32 +3225,13 @@ def calc_energy(inputdata, DEBUG = False):
                     timeQmax =  aveL[ int(resultJson["REF"][ref_name]["matrix_iL"][dd]) - 1 ] \
                         * resultJson["REF"][ref_name]["Tref"][dd] * inputdata["REF"][ref_name]["QrefrMax"]
                 
-                    # 全負荷相当運転時間（熱負荷を最大負荷で除す）
-                    if resultJson["REF"][ref_name]["matrix_iT"][dd] > 1:
-
-                        resultJson["REF"][ref_name]["Tref"][dd] = \
-                            timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 2] )
-
-                    elif resultJson["REF"][ref_name]["matrix_iT"][dd] == 1:
-
-                        resultJson["REF"][ref_name]["Tref"][dd] = \
-                            timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 1] )                 
-
-                    # 最大負荷率帯（負荷率帯 10）にする。
+                    # 負荷率帯を「負荷率帯 10」にする。
                     resultJson["REF"][ref_name]["matrix_iL"][dd] = len(aveL) - 1 
-                
-                    if resultJson["REF"][ref_name]["matrix_iT"][dd] > 1:
-                        resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd] - 1   # 外気温帯を1つ下げる。
-                    elif resultJson["REF"][ref_name]["matrix_iT"][dd] == 1:
-                        resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd]
+    
+                    # 運転時間を書き換え ＝ 全負荷相当運転時間（熱負荷を最大負荷で除す）とする。
+                    resultJson["REF"][ref_name]["Tref"][dd] = \
+                        timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 1] )                 
 
-
-            if DEBUG:
-                print( f'--- 熱源群名 {ref_name} ---')
-                print( f'各外気温区分における最大能力の合計 Qrefr_mod_sum: \n {inputdata["REF"][ref_name]["Qrefr_mod_sum"]}' )
-                print( f'蓄熱があるシステムの負荷率マトリックス matrix_iL: \n {resultJson["REF"][ref_name]["matrix_iL"]}' )
-                print( f'蓄熱があるシステムの外気温マトリックス matrix_iT: \n {resultJson["REF"][ref_name]["matrix_iT"]}' )
-                print( f'蓄熱があるシステムの運転時間 Tref: \n {np.sum(resultJson["REF"][ref_name]["Tref"])}' )
 
 
     ##----------------------------------------------------------------------------------
