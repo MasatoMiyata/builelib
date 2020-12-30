@@ -3094,40 +3094,41 @@ def calc_energy(inputdata, DEBUG = False):
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
             ## 能力比（各外気温帯における最大能力）
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"] = np.zeros(len(inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"]))
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"] = np.zeros(divT)
 
-            for i in range(0,len(ToadbC)):
+            for iT in range(0,divT):
 
-                x = inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][i]
+                # 外気温度帯
+                temperature = inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][iT]
 
                 # 特性式の数
                 curveNum = len(unit_configure["parameter"]["能力比"])
 
                 # 下限値
-                minX = []
-                for j in range(0,curveNum):
-                    minX.append(unit_configure["parameter"]["能力比"][j]["下限"])
+                temp_min_list = []
+                for para_num in range(0,curveNum):
+                    temp_min_list.append(unit_configure["parameter"]["能力比"][para_num]["下限"])
                 # 上限値
-                maxX = []
-                for j in range(0,curveNum):
-                    maxX.append(unit_configure["parameter"]["能力比"][j]["上限"])
+                temp_max_list = []
+                for para_num in range(0,curveNum):
+                    temp_max_list.append(unit_configure["parameter"]["能力比"][para_num]["上限"])
 
                 # 上限と下限を定める
-                if x < minX[0]:
-                    x = minX[0]
-                elif x > maxX[-1]:
-                    x = maxX[-1]
+                if temperature < temp_min_list[0]:
+                    temperature = temp_min_list[0]
+                elif temperature > temp_max_list[-1]:
+                    temperature = temp_max_list[-1]
 
-                for j in reversed(range(0,curveNum)):
-                    if x <= maxX[j]:
+                for para_num in reversed(range(0,curveNum)):
+                    if temperature <= temp_max_list[para_num]:
 
-                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"][i] =  \
-                            unit_configure["parameter"]["能力比"][j]["基整促係数"] * ( \
-                            unit_configure["parameter"]["能力比"][j]["係数"]["a4"] * x ** 4 + \
-                            unit_configure["parameter"]["能力比"][j]["係数"]["a3"] * x ** 3 + \
-                            unit_configure["parameter"]["能力比"][j]["係数"]["a2"] * x ** 2 + \
-                            unit_configure["parameter"]["能力比"][j]["係数"]["a1"] * x  + \
-                            unit_configure["parameter"]["能力比"][j]["係数"]["a0"] )
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"][iT] =  \
+                            unit_configure["parameter"]["能力比"][para_num]["基整促係数"] * ( \
+                            unit_configure["parameter"]["能力比"][para_num]["係数"]["a4"] * temperature ** 4 + \
+                            unit_configure["parameter"]["能力比"][para_num]["係数"]["a3"] * temperature ** 3 + \
+                            unit_configure["parameter"]["能力比"][para_num]["係数"]["a2"] * temperature ** 2 + \
+                            unit_configure["parameter"]["能力比"][para_num]["係数"]["a1"] * temperature  + \
+                            unit_configure["parameter"]["能力比"][para_num]["係数"]["a0"] )
 
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
@@ -3206,42 +3207,42 @@ def calc_energy(inputdata, DEBUG = False):
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
             # 入力比（各外気温帯における最大入力）
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["xPratio"] = \
-                np.zeros(len(inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"]))
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["xPratio"] = np.zeros(divT)
 
             # 外気温度帯マトリックス 
-            for i in range(0,len(ToadbC)):
-
-                x = inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][i]
+            for iT in range(0,divT):
+                
+                # 外気温度帯
+                temperature = inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][iT]
 
                 # 特性式の数
                 curveNum = len(unit_configure["parameter"]["入力比"])
 
                 # 下限値
-                minX = []
-                for j in range(0,curveNum):
-                    minX.append(unit_configure["parameter"]["入力比"][j]["下限"])
+                temp_min_list = []
+                for para_num in range(0,curveNum):
+                    temp_min_list.append(unit_configure["parameter"]["入力比"][para_num]["下限"])
                 # 上限値
-                maxX = []
-                for j in range(0,curveNum):
-                    maxX.append(unit_configure["parameter"]["入力比"][j]["上限"])
+                temp_max_list = []
+                for para_num in range(0,curveNum):
+                    temp_max_list.append(unit_configure["parameter"]["入力比"][para_num]["上限"])
 
                 # 上限と下限を定める
-                if x < minX[0]:
-                    x = minX[0]
-                elif x > maxX[-1]:
-                    x = maxX[-1]
+                if temperature < temp_min_list[0]:
+                    temperature = temp_min_list[0]
+                elif temperature > temp_max_list[-1]:
+                    temperature = temp_max_list[-1]
 
-                for j in reversed(range(0,curveNum)):
-                    if x <= maxX[j]:
+                for para_num in reversed(range(0,curveNum)):
+                    if temperature <= temp_max_list[para_num]:
 
-                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["xPratio"][i] =  \
-                            unit_configure["parameter"]["入力比"][j]["基整促係数"] * ( \
-                            unit_configure["parameter"]["入力比"][j]["係数"]["a4"] * x ** 4 + \
-                            unit_configure["parameter"]["入力比"][j]["係数"]["a3"] * x ** 3 + \
-                            unit_configure["parameter"]["入力比"][j]["係数"]["a2"] * x ** 2 + \
-                            unit_configure["parameter"]["入力比"][j]["係数"]["a1"] * x  + \
-                            unit_configure["parameter"]["入力比"][j]["係数"]["a0"] )
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["xPratio"][iT] =  \
+                            unit_configure["parameter"]["入力比"][para_num]["基整促係数"] * ( \
+                            unit_configure["parameter"]["入力比"][para_num]["係数"]["a4"] * temperature ** 4 + \
+                            unit_configure["parameter"]["入力比"][para_num]["係数"]["a3"] * temperature ** 3 + \
+                            unit_configure["parameter"]["入力比"][para_num]["係数"]["a2"] * temperature ** 2 + \
+                            unit_configure["parameter"]["入力比"][para_num]["係数"]["a1"] * temperature  + \
+                            unit_configure["parameter"]["入力比"][para_num]["係数"]["a0"] )
 
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
