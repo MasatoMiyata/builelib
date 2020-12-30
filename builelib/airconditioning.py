@@ -2689,8 +2689,8 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["REF"][ref_name]["Qref_kW"]       = np.zeros(365)      # 熱源平均負荷 kW
         resultJson["REF"][ref_name]["Qref_OVER"]     = np.zeros(365)      # 過負荷分
         resultJson["REF"][ref_name]["ghsp_Rq"]       = 0                  # 冷房負荷と暖房負荷の比率（地中熱ヒートポンプ用）← 冷房用と暖房用熱源は順に並んでいる
-        resultJson["REF"][ref_name]["LdREF"]         = np.zeros(365)      # 熱源の負荷率区分
-        resultJson["REF"][ref_name]["TdREF"]         = np.zeros(365)      # 熱源の温度区分
+        resultJson["REF"][ref_name]["matrix_iL"]         = np.zeros(365)      # 熱源の負荷率区分
+        resultJson["REF"][ref_name]["matrix_iT"]         = np.zeros(365)      # 熱源の温度区分
         resultJson["REF"][ref_name]["E_ref_day"]     = np.zeros(365)     # 熱源群エネルギー消費量 [MJ]
         resultJson["REF"][ref_name]["E_ref_day_MWh"] = np.zeros(365)     # 熱源主機電力消費量 [MWh]
         resultJson["REF"][ref_name]["E_ref_ACc_day"] = np.zeros(365)     # 補機電力 [MWh]
@@ -3070,6 +3070,7 @@ def calc_energy(inputdata, DEBUG = False):
             
             # 負荷率算出 [-]
             if resultJson["REF"][ref_name]["Tref"][dd] > 0:
+
                 resultJson["REF"][ref_name]["Lref"][dd] = \
                     (resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000/3600) / \
                     inputdata["REF"][ref_name]["QrefrMax"]
@@ -3080,9 +3081,32 @@ def calc_energy(inputdata, DEBUG = False):
             if resultJson["REF"][ref_name]["Lref"][dd] > 0:
                 
                 # 負荷率帯マトリックス
-                resultJson["REF"][ref_name]["LdREF"][dd] = count_Matrix(resultJson["REF"][ref_name]["Lref"][dd], mxL)
+                resultJson["REF"][ref_name]["matrix_iL"][dd] = count_Matrix(resultJson["REF"][ref_name]["Lref"][dd], mxL)
                 # 外気温帯マトリックス
-                resultJson["REF"][ref_name]["TdREF"][dd] = count_Matrix(Toa_ave[dd], mxT) 
+                resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxT) 
+
+
+    ##----------------------------------------------------------------------------------
+    ## 時刻別の熱源水温度
+    ##----------------------------------------------------------------------------------
+
+    for ref_name in inputdata["REF"]:
+
+        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = np.zeros(365)
+
+            for dd in range(365):
+
+                if resultJson["REF"][ref_name]["matrix_iT"][dd] > 0:
+
+                    iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 1
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["xTALL"][iT]
+
+            print( f'--- 熱源群名 {ref_name} ---')
+            print( f'--- 熱源機器名 {unit_id} ---')
+            print(inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"])
 
 
     ##----------------------------------------------------------------------------------
@@ -3164,37 +3188,37 @@ def calc_energy(inputdata, DEBUG = False):
 
             for dd in range(0,365):
             
-                if resultJson["REF"][ref_name]["LdREF"][dd] > 0:   # これを入れないと aveL(LdREF)でエラーとなる。
+                if resultJson["REF"][ref_name]["matrix_iL"][dd] > 0:   # これを入れないと aveL(matrix_iL)でエラーとなる。
                 
-                    # 負荷率帯 LdREF のときの熱負荷
-                    timeQmax =  aveL[ int(resultJson["REF"][ref_name]["LdREF"][dd]) - 1 ] \
+                    # 負荷率帯 matrix_iL のときの熱負荷
+                    timeQmax =  aveL[ int(resultJson["REF"][ref_name]["matrix_iL"][dd]) - 1 ] \
                         * resultJson["REF"][ref_name]["Tref"][dd] * inputdata["REF"][ref_name]["QrefrMax"]
                 
                     # 全負荷相当運転時間（熱負荷を最大負荷で除す）
-                    if resultJson["REF"][ref_name]["TdREF"][dd] > 1:
+                    if resultJson["REF"][ref_name]["matrix_iT"][dd] > 1:
 
                         resultJson["REF"][ref_name]["Tref"][dd] = \
-                            timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["TdREF"][dd]) - 2] )
+                            timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 2] )
 
-                    elif resultJson["REF"][ref_name]["TdREF"][dd] == 1:
+                    elif resultJson["REF"][ref_name]["matrix_iT"][dd] == 1:
 
                         resultJson["REF"][ref_name]["Tref"][dd] = \
-                            timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["TdREF"][dd]) - 1] )                 
+                            timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 1] )                 
 
                     # 最大負荷率帯（負荷率帯 10）にする。
-                    resultJson["REF"][ref_name]["LdREF"][dd] = len(aveL) - 1 
+                    resultJson["REF"][ref_name]["matrix_iL"][dd] = len(aveL) - 1 
                 
-                    if resultJson["REF"][ref_name]["TdREF"][dd] > 1:
-                        resultJson["REF"][ref_name]["TdREF"][dd] = resultJson["REF"][ref_name]["TdREF"][dd] - 1   # 外気温帯を1つ下げる。
-                    elif resultJson["REF"][ref_name]["TdREF"][dd] == 1:
-                        resultJson["REF"][ref_name]["TdREF"][dd] = resultJson["REF"][ref_name]["TdREF"][dd]
+                    if resultJson["REF"][ref_name]["matrix_iT"][dd] > 1:
+                        resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd] - 1   # 外気温帯を1つ下げる。
+                    elif resultJson["REF"][ref_name]["matrix_iT"][dd] == 1:
+                        resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd]
 
 
             if DEBUG:
                 print( f'--- 熱源群名 {ref_name} ---')
                 print( f'各外気温区分における最大能力の合計 Qrefr_mod_sum: \n {inputdata["REF"][ref_name]["Qrefr_mod_sum"]}' )
-                print( f'蓄熱があるシステムの負荷率マトリックス LdREF: \n {resultJson["REF"][ref_name]["LdREF"]}' )
-                print( f'蓄熱があるシステムの外気温マトリックス TdREF: \n {resultJson["REF"][ref_name]["TdREF"]}' )
+                print( f'蓄熱があるシステムの負荷率マトリックス matrix_iL: \n {resultJson["REF"][ref_name]["matrix_iL"]}' )
+                print( f'蓄熱があるシステムの外気温マトリックス matrix_iT: \n {resultJson["REF"][ref_name]["matrix_iT"]}' )
                 print( f'蓄熱があるシステムの運転時間 Tref: \n {np.sum(resultJson["REF"][ref_name]["Tref"])}' )
 
 
@@ -3251,7 +3275,7 @@ def calc_energy(inputdata, DEBUG = False):
 
             for dd in range(0,365):
 
-                iT = int(resultJson["REF"][ref_name]["TdREF"][dd]) -1
+                iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) -1
 
                 # 各外気温区分における最大入力 [kW]  (1次エネルギー換算値であることに注意）
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["Erefr_mod"][dd] = \
@@ -3272,8 +3296,8 @@ def calc_energy(inputdata, DEBUG = False):
 
             if resultJson["REF"][ref_name]["Tref"][dd] > 0:  # 運転していれば
 
-                iT = int(resultJson["REF"][ref_name]["TdREF"][dd]) -1
-                iL = int(resultJson["REF"][ref_name]["LdREF"][dd]) -1
+                iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) -1
+                iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1
 
                 if inputdata["REF"][ref_name]["isStagingControl"] == "無":   # 運転台数制御が「無」の場合
 
@@ -3307,8 +3331,8 @@ def calc_energy(inputdata, DEBUG = False):
 
             if resultJson["REF"][ref_name]["Tref"][dd] > 0:  # 運転していれば
 
-                iT = int(resultJson["REF"][ref_name]["TdREF"][dd]) -1
-                iL = int(resultJson["REF"][ref_name]["LdREF"][dd]) -1
+                iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) -1
+                iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1
 
                 # 処理熱量 [kW]
                 tmpQ  = inputdata["REF"][ref_name]["QrefrMax"] * aveL[iL]
@@ -3339,8 +3363,8 @@ def calc_energy(inputdata, DEBUG = False):
 
         for dd in range(0,365):
             
-            iT = int(resultJson["REF"][ref_name]["TdREF"][dd]) -1    # 外気温帯のマトリックス番号
-            iL = int(resultJson["REF"][ref_name]["LdREF"][dd]) -1    # 負荷率帯のマトリックス番号
+            iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) -1    # 外気温帯のマトリックス番号
+            iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1    # 負荷率帯のマトリックス番号
 
             # 部分負荷特性（各負荷率・各温度帯について）
             for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][dd])):
@@ -3390,8 +3414,8 @@ def calc_energy(inputdata, DEBUG = False):
 
         for dd in range(0,365):
             
-            iT = int(resultJson["REF"][ref_name]["TdREF"][dd]) -1    # 外気温帯のマトリックス番号
-            iL = int(resultJson["REF"][ref_name]["LdREF"][dd]) -1    # 負荷率帯のマトリックス番号
+            iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) -1    # 外気温帯のマトリックス番号
+            iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1    # 負荷率帯のマトリックス番号
 
             # 送水温度特性（各負荷率・各温度帯について）
             for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][dd])):
@@ -3443,8 +3467,8 @@ def calc_energy(inputdata, DEBUG = False):
 
             for dd in range(0,365):      
                 
-                iT = int(resultJson["REF"][ref_name]["TdREF"][dd]) -1
-                iL = int(resultJson["REF"][ref_name]["LdREF"][dd]) -1
+                iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) -1
+                iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1
 
                 if int(resultJson["REF"][ref_name]["MxREFnum"][dd]) >= 2:
 
@@ -3481,8 +3505,8 @@ def calc_energy(inputdata, DEBUG = False):
 
         for dd in range(0,365):        
             
-            iT = int(resultJson["REF"][ref_name]["TdREF"][dd]) -1
-            iL = int(resultJson["REF"][ref_name]["LdREF"][dd]) -1
+            iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) -1
+            iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1
 
             # 熱源主機（機器毎）：エネルギー消費量のマトリックス MxREFSUBperE
             for unit_id in range(0, int(resultJson["REF"][ref_name]["MxREFnum"][dd])):
@@ -3588,7 +3612,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         for dd in range(0,365):
 
-            if resultJson["REF"][ref_name]["LdREF"][dd] == 0:
+            if resultJson["REF"][ref_name]["matrix_iL"][dd] == 0:
                 
                 resultJson["REF"][ref_name]["E_ref_day"][dd]     =  0   # 熱源主機エネルギー消費量 [MJ]
                 resultJson["REF"][ref_name]["E_ref_day_MWh"][dd] =  0   # 熱源主機電力消費量 [MWh]
@@ -3817,12 +3841,12 @@ def calc_energy(inputdata, DEBUG = False):
                 # CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての負荷率 [-]
                 for dd in range(0,365):
 
-                    if resultJson["REF"][ref_name]["LdREF"][dd] == 0:
+                    if resultJson["REF"][ref_name]["matrix_iL"][dd] == 0:
                         resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 0;
-                    elif resultJson["REF"][ref_name]["LdREF"][dd] == 11:
+                    elif resultJson["REF"][ref_name]["matrix_iL"][dd] == 11:
                         resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 1.2
                     else:
-                        resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = round(0.1*resultJson["REF"][ref_name]["LdREF"][dd]-0.05,2)
+                        resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = round(0.1*resultJson["REF"][ref_name]["matrix_iL"][dd]-0.05,2)
 
                 # CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の運転時間 [h/日]
                 resultJson["for_CGS"]["T_ref_cgsC_day"] = resultJson["REF"][ref_name]["Tref"]
