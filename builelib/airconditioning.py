@@ -3188,12 +3188,12 @@ def calc_energy(inputdata, DEBUG = False):
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"] = np.zeros(365)
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"] = np.zeros(365)
             
             for dd in range(0,365):
                 
                 # 各外気温区分における最大能力 [kW]
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"][dd] = \
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd] = \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"][dd]
             
@@ -3205,7 +3205,7 @@ def calc_energy(inputdata, DEBUG = False):
     # 蓄熱の場合のマトリックス操作（負荷率１に集約＋外気温を１レベル変える）
     for ref_name in inputdata["REF"]:
 
-        inputdata["REF"][ref_name]["Qrefr_mod_sum"] = np.zeros(365)
+        inputdata["REF"][ref_name]["Q_ref_max_total"] = np.zeros(365)
 
         if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
 
@@ -3214,8 +3214,8 @@ def calc_energy(inputdata, DEBUG = False):
                 for dd in range(0,365):
 
                     # 各外気温区分における最大能力の合計を算出[kW]
-                    inputdata["REF"][ref_name]["Qrefr_mod_sum"][dd] += \
-                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"][dd]
+                    inputdata["REF"][ref_name]["Q_ref_max_total"][dd] += \
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd]
 
             for dd in range(0,365):
             
@@ -3230,7 +3230,7 @@ def calc_energy(inputdata, DEBUG = False):
     
                     # 運転時間を書き換え ＝ 全負荷相当運転時間（熱負荷を最大負荷で除す）とする。
                     resultJson["REF"][ref_name]["Tref"][dd] = \
-                        timeQmax / ( inputdata["REF"][ref_name]["Qrefr_mod_sum"][dd] )                 
+                        timeQmax / ( inputdata["REF"][ref_name]["Q_ref_max_total"][dd] )                 
 
 
 
@@ -3283,12 +3283,12 @@ def calc_energy(inputdata, DEBUG = False):
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["Erefr_mod"] = np.zeros(365)
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["E_ref_max"] = np.zeros(365)
 
             for dd in range(0,365):
 
                 # 各外気温区分における最大入力 [kW]  (1次エネルギー換算値であることに注意）
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Erefr_mod"][dd] = \
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["E_ref_max"][dd] = \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["xPratio"][dd]
 
@@ -3320,7 +3320,7 @@ def calc_energy(inputdata, DEBUG = False):
                     # 運転台数 num_of_operation
                     tmpQmax = 0
                     for rr in range(0, inputdata["REF"][ref_name]["num_of_unit"]):
-                        tmpQmax += inputdata["REF"][ref_name]["Heatsource"][rr]["Qrefr_mod"][dd]
+                        tmpQmax += inputdata["REF"][ref_name]["Heatsource"][rr]["Q_ref_max"][dd]
 
                         if tmpQ < tmpQmax:
                             break
@@ -3347,7 +3347,7 @@ def calc_energy(inputdata, DEBUG = False):
                 
                 Qrefr_mod_max = 0
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
-                    Qrefr_mod_max += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"][dd]
+                    Qrefr_mod_max += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd]
 
                 # [iT,iL]における負荷率
                 resultJson["REF"][ref_name]["load_ratio"][dd] = tmpQ / Qrefr_mod_max
@@ -3480,12 +3480,12 @@ def calc_energy(inputdata, DEBUG = False):
                     # 2台目以降の合計最大能力（＝熱交換器以外の能力）
                     Qrefr_mod_except_HEX = 0
                     for unit_id in range(1, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
-                        Qrefr_mod_except_HEX += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Qrefr_mod"][dd]
+                        Qrefr_mod_except_HEX += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd]
 
                     # 追い掛け時運転時間の補正率
-                    # （ Qrefr_mod * hosei * xL + Qrefr_mod_except_HEX = (Qrefr_mod + Qrefr_mod_except_HEX) * xL ）
+                    # （ Q_ref_max * hosei * xL + Qrefr_mod_except_HEX = (Q_ref_max + Qrefr_mod_except_HEX) * xL ）
                     resultJson["REF"][ref_name]["hoseiStorage"][dd] = \
-                        1 - ( inputdata["REF"][ref_name]["Heatsource"][0]["Qrefr_mod"][dd] * \
+                        1 - ( inputdata["REF"][ref_name]["Heatsource"][0]["Q_ref_max"][dd] * \
                                 (1 - resultJson["REF"][ref_name]["load_ratio"][dd]) / \
                                     (resultJson["REF"][ref_name]["load_ratio"][dd] * Qrefr_mod_except_HEX) )
 
@@ -3515,7 +3515,7 @@ def calc_energy(inputdata, DEBUG = False):
             for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
 
                 resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] = \
-                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["Erefr_mod"][dd] * \
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["E_ref_max"][dd] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][dd] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"][dd]
 
@@ -3854,8 +3854,8 @@ def calc_energy(inputdata, DEBUG = False):
             if ref_name == resultJson["for_CGS"]["CGS_refName_H"]:
                 
                 # 当該温熱源群の主機の消費電力を差し引く。
-                resultJson["for_CGS"]["E_ref_main_MWh_day"] = \
-                    resultJson["for_CGS"]["E_ref_main_MWh_day"] - resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"]
+                for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+                    resultJson["for_CGS"]["E_ref_main_MWh_day"] -= resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"]
                 
                 # CGSの排熱利用が可能な温熱源群の主機の一次エネルギー消費量 [MJ/日]
                 resultJson["for_CGS"]["E_ref_cgsH_day"] = resultJson["REF"][ref_name]["E_ref_day"]
