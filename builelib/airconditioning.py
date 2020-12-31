@@ -2964,6 +2964,49 @@ def calc_energy(inputdata, DEBUG = False):
             if np.isnan(resultJson["REF"][ref_name]["Lref"][dd]) == True:
                 resultJson["REF"][ref_name]["Lref"][dd] = 0
 
+    # 任意の熱源水温度の入力（月別）
+    input_heatsource_temperature_monthly = {
+        "1月":  17, 
+        "2月":  17,
+        "3月":  17,
+        "4月":  17,
+        "5月":  17,
+        "6月":  17,
+        "7月":  17,
+        "8月":  17, 
+        "9月":  17,
+        "10月": 17,
+        "11月": 17,
+        "12月": 17
+    }
+
+    heatsource_temperature_daily = np.zeros(365)
+    for dd in range(0,365):
+        if dd < 31:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["1月"]
+        elif dd < 59:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["2月"]
+        elif dd < 90:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["3月"]
+        elif dd < 120:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["4月"]
+        elif dd < 151:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["5月"]
+        elif dd < 181:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["6月"]
+        elif dd < 212:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["7月"]
+        elif dd < 243:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["8月"]
+        elif dd < 273:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["9月"]
+        elif dd < 304:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["10月"]
+        elif dd < 334:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["11月"]
+        elif dd < 365:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["12月"]
+
 
     ##----------------------------------------------------------------------------------
     ## 熱源群のマトリックスIDの指定
@@ -2983,9 +3026,9 @@ def calc_energy(inputdata, DEBUG = False):
 
                 # 外気温帯マトリックス
                 if inputdata["REF"][ref_name]["mode"] == "cooling":
-                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTC) 
+                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(heatsource_temperature_daily[dd], mxTC) 
                 elif inputdata["REF"][ref_name]["mode"] == "heating":
-                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTH) 
+                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(heatsource_temperature_daily[dd], mxTH) 
     
 
     #----------------------------------------------------------------------------------
@@ -3082,9 +3125,11 @@ def calc_energy(inputdata, DEBUG = False):
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
             if unit_configure["parameter"]["熱源種類"] == "水" and inputdata["REF"][ref_name]["mode"] == "cooling":
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = TctwC   # 冷却水温度
+                # inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = TctwC   # 冷却水温度
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbC  # 乾球温度
             elif unit_configure["parameter"]["熱源種類"] == "水" and inputdata["REF"][ref_name]["mode"] == "heating":
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = TctwH   # 冷却水温度
+                # inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = TctwH   # 冷却水温度
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbH  # 乾球温度
             elif unit_configure["parameter"]["熱源種類"] == "空気" and inputdata["REF"][ref_name]["mode"] == "cooling":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbC  # 乾球温度
             elif unit_configure["parameter"]["熱源種類"] == "空気" and inputdata["REF"][ref_name]["mode"] == "heating":
@@ -3140,61 +3185,17 @@ def calc_energy(inputdata, DEBUG = False):
     ## 月別の熱源水温度（任意評定）
     ##----------------------------------------------------------------------------------
 
-    # 任意の熱源水温度の入力（月別）
-    input_heatsource_temperature_monthly = {
-        "1月": 17, 
-        "2月": 17,
-        "3月": 17,
-        "4月": 17,
-        "5月": 17,
-        "6月": 17,
-        "7月": 17,
-        "8月": 17, 
-        "9月": 17,
-        "10月": 17,
-        "11月": 17,
-        "12月": 17
-    }
-
-    heatsource_temperature_daily = np.zeros(365)
-    for dd in range(0,365):
-        if dd < 31:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["1月"]
-        elif dd < 59:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["2月"]
-        elif dd < 90:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["3月"]
-        elif dd < 120:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["4月"]
-        elif dd < 151:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["5月"]
-        elif dd < 181:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["6月"]
-        elif dd < 212:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["7月"]
-        elif dd < 243:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["8月"]
-        elif dd < 273:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["9月"]
-        elif dd < 304:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["10月"]
-        elif dd < 334:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["11月"]
-        elif dd < 365:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["12月"]
-
-
-    for ref_name in inputdata["REF"]:
-        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = \
-                heatsource_temperature_daily
+    # for ref_name in inputdata["REF"]:
+    #     for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+    #         inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = \
+    #             heatsource_temperature_daily
     
-    if DEBUG:
-        for ref_name in inputdata["REF"]:
-            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-                print( f'--- 熱源群名 {ref_name} ---')
-                print( f'- {unit_id+1} 台目の熱源機器 -')
-                print(inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"])
+    # if DEBUG:
+    #     for ref_name in inputdata["REF"]:
+    #         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+    #             print( f'--- 熱源群名 {ref_name} ---')
+    #             print( f'- {unit_id+1} 台目の熱源機器 -')
+    #             print(inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"])
 
 
     ##----------------------------------------------------------------------------------
@@ -3963,7 +3964,7 @@ if __name__ == '__main__':
     # filename = './tests/airconditioning/ACtest_Case001.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
-    filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_2.json'
+    filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:
