@@ -3118,7 +3118,7 @@ def calc_energy(inputdata, DEBUG = False):
                 raise Exception("熱源種類が不正です。")
 
     ##----------------------------------------------------------------------------------
-    ## 時刻別の熱源水温度
+    ## 日別の熱源水温度
     ##----------------------------------------------------------------------------------
 
     for ref_name in inputdata["REF"]:
@@ -3135,9 +3135,66 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"][iT]
 
-            print( f'--- 熱源群名 {ref_name} ---')
-            print( f'--- 熱源機器名 {unit_id} ---')
-            print(inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"])
+
+    ##----------------------------------------------------------------------------------
+    ## 月別の熱源水温度（任意評定）
+    ##----------------------------------------------------------------------------------
+
+    # 任意の熱源水温度の入力（月別）
+    input_heatsource_temperature_monthly = {
+        "1月": 17, 
+        "2月": 17,
+        "3月": 17,
+        "4月": 17,
+        "5月": 17,
+        "6月": 17,
+        "7月": 17,
+        "8月": 17, 
+        "9月": 17,
+        "10月": 17,
+        "11月": 17,
+        "12月": 17
+    }
+
+    heatsource_temperature_daily = np.zeros(365)
+    for dd in range(0,365):
+        if dd < 31:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["1月"]
+        elif dd < 59:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["2月"]
+        elif dd < 90:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["3月"]
+        elif dd < 120:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["4月"]
+        elif dd < 151:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["5月"]
+        elif dd < 181:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["6月"]
+        elif dd < 212:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["7月"]
+        elif dd < 243:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["8月"]
+        elif dd < 273:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["9月"]
+        elif dd < 304:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["10月"]
+        elif dd < 334:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["11月"]
+        elif dd < 365:
+            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["12月"]
+
+
+    for ref_name in inputdata["REF"]:
+        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = \
+                heatsource_temperature_daily
+    
+    if DEBUG:
+        for ref_name in inputdata["REF"]:
+            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+                print( f'--- 熱源群名 {ref_name} ---')
+                print( f'- {unit_id+1} 台目の熱源機器 -')
+                print(inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"])
 
 
     ##----------------------------------------------------------------------------------
@@ -3197,6 +3254,10 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"][dd]
             
+            if DEBUG:
+                print( f'--- 熱源群名 {ref_name} ---')
+                print( f'- {unit_id+1} 台目の熱源機器 -')
+                print( f' Q_ref_max {inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"]}')
 
     #----------------------------------------------------------------------------------
     # 蓄熱システムによる運転時間の補正（解説書 2.7.15）
@@ -3292,6 +3353,10 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["xPratio"][dd]
 
+            if DEBUG:
+                print( f'--- 熱源群名 {ref_name} ---')
+                print( f'- {unit_id+1} 台目の熱源機器 -')
+                print( f' E_ref_max {inputdata["REF"][ref_name]["Heatsource"][unit_id]["E_ref_max"]}')
 
     ##----------------------------------------------------------------------------------
     ## 熱源機器の運転台数（解説書 2.7.9）
@@ -3327,6 +3392,9 @@ def calc_energy(inputdata, DEBUG = False):
                     
                     resultJson["REF"][ref_name]["num_of_operation"][dd] = rr+1
         
+        if DEBUG:
+            print( f'--- 熱源群名 {ref_name} ---')
+            print( f' num_of_operation {resultJson["REF"][ref_name]["num_of_operation"]}')
 
     ##----------------------------------------------------------------------------------
     ## 熱源群の運転負荷率（解説書 2.7.12）
@@ -3358,6 +3426,11 @@ def calc_energy(inputdata, DEBUG = False):
                 # 過負荷時の負荷率は 1.0 とする。ペナルティは別途乗じる。
                 if iL == divL-1:
                     resultJson["REF"][ref_name]["load_ratio"][dd] = 1.0
+
+        if DEBUG:
+            print( f'--- 熱源群名 {ref_name} ---')
+            print( f' load_ratio {resultJson["REF"][ref_name]["load_ratio"]}')
+
 
     ##----------------------------------------------------------------------------------
     ## 部分負荷特性 （解説書 2.7.13）
@@ -3519,13 +3592,14 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][dd] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"][dd]
 
+            ## 補機電力
             # 一台あたりの負荷率（熱源機器の負荷率＝最大能力を考慮した負荷率・ただし、熱源特性の上限・下限は考慮せず）
             aveLperU = resultJson["REF"][ref_name]["load_ratio"][dd]
 
+            # 過負荷の場合は 平均負荷率＝1.2 とする。
             if iL == divL-1:   
                 aveLperU = 1.2
         
-            # 補機電力（燃焼系熱源のみ）
             # 発電機能付きの熱源機器が1台でもある場合
             if inputdata["REF"][ref_name]["checkGEGHP"] == 1:
 
@@ -3601,6 +3675,13 @@ def calc_energy(inputdata, DEBUG = False):
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
                     resultJson["REF"][ref_name]["E_ref_ct_pump"][dd] += \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["CoolingTowerPumpPowerConsumption_total"]
+
+    if DEBUG:
+        for ref_name in inputdata["REF"]:
+            for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
+                print( f'--- 熱源群名 {ref_name} ---')
+                print( f'- {unit_id+1} 台目の熱源機器 -')
+                print( f' E_ref_max {resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"]}')
 
 
     ##----------------------------------------------------------------------------------
@@ -3879,9 +3960,10 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case035.json'
+    # filename = './tests/airconditioning/ACtest_Case001.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
+    filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_2.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:
