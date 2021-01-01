@@ -303,3 +303,38 @@ def inputdata_validation(inputdata):
     # バリデーションの実行
     jsonschema.validate(inputdata, schema_data)
 
+
+def day2month(dd: np.array) -> str:
+    """
+    日数から月を返す関数
+    """
+    
+    month = str()
+    if dd < 31:
+        month = "1月"
+    elif dd < 59:
+        month = "2月"
+    elif dd < 90:
+        month = "3月"
+    elif dd < 120:
+        month = "4月"
+    elif dd < 151:
+        month = "5月"
+    elif dd < 181:
+        month = "6月"
+    elif dd < 212:
+        month = "7月"
+    elif dd < 243:
+        month = "8月"
+    elif dd < 273:
+        month = "9月"
+    elif dd < 304:
+        month = "10月"
+    elif dd < 334:
+        month = "11月"
+    elif dd < 365:
+        month = "12月"
+    else:
+        raise Exception("day2month: 日数が範囲外です。")
+
+    return month
