@@ -3142,18 +3142,18 @@ def calc_energy(inputdata, DEBUG = False):
 
     # 任意の熱源水温度の入力（月別）
     input_heatsource_temperature_monthly = {
-        "1月": 17, 
-        "2月": 17,
-        "3月": 17,
-        "4月": 17,
-        "5月": 17,
-        "6月": 17,
-        "7月": 17,
-        "8月": 17, 
-        "9月": 17,
-        "10月": 17,
-        "11月": 17,
-        "12月": 17
+        "1月":  22, 
+        "2月":  22,
+        "3月":  22,
+        "4月":  22,
+        "5月":  22,
+        "6月":  22,
+        "7月":  22,
+        "8月":  22, 
+        "9月":  22,
+        "10月": 22,
+        "11月": 22,
+        "12月": 22
     }
 
     heatsource_temperature_daily = np.zeros(365)
@@ -3184,10 +3184,10 @@ def calc_energy(inputdata, DEBUG = False):
             heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["12月"]
 
 
-    for ref_name in inputdata["REF"]:
-        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = \
-                heatsource_temperature_daily
+    # for ref_name in inputdata["REF"]:
+    #     for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+    #         inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = \
+    #             heatsource_temperature_daily
     
     if DEBUG:
         for ref_name in inputdata["REF"]:
@@ -3963,7 +3963,7 @@ if __name__ == '__main__':
     # filename = './tests/airconditioning/ACtest_Case001.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
-    filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_2.json'
+    filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:
