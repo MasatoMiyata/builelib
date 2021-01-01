@@ -3077,124 +3077,148 @@ def calc_energy(inputdata, DEBUG = False):
     ## 熱源水等の温度 matrix_T （解説書 2.7.4）
     ##----------------------------------------------------------------------------------
 
-    for ref_name in inputdata["REF"]:
-
-        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-
-            if unit_configure["parameter"]["熱源種類"] == "水" and inputdata["REF"][ref_name]["mode"] == "cooling":
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = TctwC   # 冷却水温度
-            elif unit_configure["parameter"]["熱源種類"] == "水" and inputdata["REF"][ref_name]["mode"] == "heating":
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = TctwH   # 冷却水温度
-            elif unit_configure["parameter"]["熱源種類"] == "空気" and inputdata["REF"][ref_name]["mode"] == "cooling":
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbC  # 乾球温度
-            elif unit_configure["parameter"]["熱源種類"] == "空気" and inputdata["REF"][ref_name]["mode"] == "heating":
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToawbH  # 湿球温度
-            elif unit_configure["parameter"]["熱源種類"] == "不要" and inputdata["REF"][ref_name]["mode"] == "cooling":
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbC  # 乾球温度
-            elif unit_configure["parameter"]["熱源種類"] == "不要" and inputdata["REF"][ref_name]["mode"] == "heating":
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbH  # 乾球温度
-
-            elif "地盤" in unit_configure["parameter"]["熱源種類"]:
-
-                for gound_type in range(1,6):
-
-                    if unit_configure["parameter"]["熱源種類"] == "地盤"+str(int(gound_type)) and inputdata["REF"][ref_name]["mode"] == "cooling":
-                        igsType = int(gound_type)-1
-                        iAREA = int(inputdata["Building"]["Region"])-1
-                        # 地盤からの還り温度（冷房）
-                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = \
-                            ( gshp_cc[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dc[igsType] ) * ( ToadbC - gshpToa_c[iAREA] ) + \
-                            (ghspToa_ave[iAREA] + gshp_ac[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bc[igsType])
-                    
-                    elif unit_configure["parameter"]["熱源種類"] == "地盤"+str(int(gound_type)) and inputdata["REF"][ref_name]["mode"] == "heating":
-                        igsType = int(gound_type)-1
-                        iAREA = int(inputdata["Building"]["Region"])-1
-                        # 地盤からの還り温度（暖房）
-                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = \
-                            ( gshp_ch[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dh[igsType] ) * ( ToadbH - gshpToa_h[iAREA] ) + \
-                            (ghspToa_ave[iAREA] + gshp_ah[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bh[igsType])
-
-            else:
-                raise Exception("熱源種類が不正です。")
-
-    ##----------------------------------------------------------------------------------
-    ## 日別の熱源水温度
-    ##----------------------------------------------------------------------------------
+    # 地中熱オープンループの地盤特性の読み込み
+    with open(database_directory + 'AC_gshp_openloop.json', 'r') as f:
+        AC_gshp_openloop = json.load(f)
 
     for ref_name in inputdata["REF"]:
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
+            # 日別の熱源水等の温度
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = np.zeros(365)
 
-            for dd in range(365):
+            if "地盤A" in unit_configure["parameter"]["熱源種類"] or "地盤B" in unit_configure["parameter"]["熱源種類"] or \
+                "地盤C" in unit_configure["parameter"]["熱源種類"] or "地盤D" in unit_configure["parameter"]["熱源種類"] or \
+                "地盤E" in unit_configure["parameter"]["熱源種類"] or "地盤F" in unit_configure["parameter"]["熱源種類"]:  # 地中熱オープンループ
 
-                if resultJson["REF"][ref_name]["matrix_iT"][dd] > 0:
+                for dd in range(365):
 
-                    iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 1
-                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
-                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"][iT]
+                    # 月別の揚水温度
+                    theta_wo_m = AC_gshp_openloop["theta_ac_wo_ave"][ inputdata["Building"]["Region"]+"地域" ] + \
+                        AC_gshp_openloop["theta_ac_wo_m"][ inputdata["Building"]["Region"]+"地域" ][ bc.day2month(dd) ]
 
+                    # 月別の地盤からの熱源水還り温度
+                    if inputdata["REF"][ref_name]["mode"] == "cooling":
+
+                        # 日別の熱源水還り温度（冷房期）
+                        heatsource_temperature = \
+                            theta_wo_m + AC_gshp_openloop["theta_wo_c"][ unit_configure["parameter"]["熱源種類"] ] + \
+                                AC_gshp_openloop["theta_hex_c"][ unit_configure["parameter"]["熱源種類"] ]
+
+                        # マトリックス化して日別のデータに変換
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
+                            ToadbC[ int(count_Matrix(heatsource_temperature, mxTC)) - 1 ]
+
+                        # マトリックス化せずに日別のデータに変換（将来的にはこちらにすべき）
+                        # inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = heatsource_temperature
+                            
+                    elif inputdata["REF"][ref_name]["mode"] == "heating":
+
+                        # 日別の熱源水還り温度（暖房期）
+                        heatsource_temperature = \
+                            theta_wo_m + AC_gshp_openloop["theta_wo_h"][ unit_configure["parameter"]["熱源種類"] ] + \
+                                AC_gshp_openloop["theta_hex_h"][ unit_configure["parameter"]["熱源種類"] ]
+
+                        # マトリックス化して日別のデータに変換
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
+                            ToadbH[ int(count_Matrix(heatsource_temperature, mxTH)) - 1 ]
+
+                        # マトリックス化せずに日別のデータに変換（将来的にはこちらにすべき）
+                        # inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = heatsource_temperature
+
+            else:
+
+                if unit_configure["parameter"]["熱源種類"] == "水" and inputdata["REF"][ref_name]["mode"] == "cooling":
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = TctwC   # 冷却水温度
+
+                elif unit_configure["parameter"]["熱源種類"] == "水" and inputdata["REF"][ref_name]["mode"] == "heating":
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = TctwH   # 冷却水温度
+
+                elif unit_configure["parameter"]["熱源種類"] == "空気" and inputdata["REF"][ref_name]["mode"] == "cooling":
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbC  # 乾球温度
+
+                elif unit_configure["parameter"]["熱源種類"] == "空気" and inputdata["REF"][ref_name]["mode"] == "heating":
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToawbH  # 湿球温度
+
+                elif unit_configure["parameter"]["熱源種類"] == "不要" and inputdata["REF"][ref_name]["mode"] == "cooling":
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbC  # 乾球温度
+
+                elif unit_configure["parameter"]["熱源種類"] == "不要" and inputdata["REF"][ref_name]["mode"] == "heating":
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = ToadbH  # 乾球温度
+
+                elif "地盤1" in unit_configure["parameter"]["熱源種類"] or "地盤2" in unit_configure["parameter"]["熱源種類"] or \
+                    "地盤3" in unit_configure["parameter"]["熱源種類"] or "地盤4" in unit_configure["parameter"]["熱源種類"] or \
+                    "地盤5" in unit_configure["parameter"]["熱源種類"]:   # 地中熱クローズループ
+
+                    for gound_type in range(1,6):
+
+                        if unit_configure["parameter"]["熱源種類"] == "地盤"+str(int(gound_type)) and inputdata["REF"][ref_name]["mode"] == "cooling":
+                            igsType = int(gound_type)-1
+                            iAREA = int(inputdata["Building"]["Region"])-1
+                            # 地盤からの還り温度（冷房）
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = \
+                                ( gshp_cc[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dc[igsType] ) * ( ToadbC - gshpToa_c[iAREA] ) + \
+                                (ghspToa_ave[iAREA] + gshp_ac[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bc[igsType])
+                        
+                        elif unit_configure["parameter"]["熱源種類"] == "地盤"+str(int(gound_type)) and inputdata["REF"][ref_name]["mode"] == "heating":
+                            igsType = int(gound_type)-1
+                            iAREA = int(inputdata["Building"]["Region"])-1
+                            # 地盤からの還り温度（暖房）
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = \
+                                ( gshp_ch[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dh[igsType] ) * ( ToadbH - gshpToa_h[iAREA] ) + \
+                                (ghspToa_ave[iAREA] + gshp_ah[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bh[igsType])
+
+                else:
+                    raise Exception("熱源種類が不正です。")
+
+                # マトリックスから日別のデータに変換
+                for dd in range(365):
+
+                    if resultJson["REF"][ref_name]["matrix_iT"][dd] > 0:
+
+                        iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 1
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"][ iT ]
+            
 
     ##----------------------------------------------------------------------------------
     ## 月別の熱源水温度（任意評定）
     ##----------------------------------------------------------------------------------
 
-    # 任意の熱源水温度の入力（月別）
-    input_heatsource_temperature_monthly = {
-        "1月":  22, 
-        "2月":  22,
-        "3月":  22,
-        "4月":  22,
-        "5月":  22,
-        "6月":  22,
-        "7月":  22,
-        "8月":  22, 
-        "9月":  22,
-        "10月": 22,
-        "11月": 22,
-        "12月": 22
-    }
+    NINIHYOUTEI = False
 
-    heatsource_temperature_daily = np.zeros(365)
-    for dd in range(0,365):
-        if dd < 31:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["1月"]
-        elif dd < 59:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["2月"]
-        elif dd < 90:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["3月"]
-        elif dd < 120:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["4月"]
-        elif dd < 151:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["5月"]
-        elif dd < 181:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["6月"]
-        elif dd < 212:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["7月"]
-        elif dd < 243:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["8月"]
-        elif dd < 273:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["9月"]
-        elif dd < 304:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["10月"]
-        elif dd < 334:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["11月"]
-        elif dd < 365:
-            heatsource_temperature_daily[dd] = input_heatsource_temperature_monthly["12月"]
+    if NINIHYOUTEI:
 
+        # 任意の熱源水温度の入力（月別）
+        input_heatsource_temperature_monthly = {
+            "1月":  22, 
+            "2月":  22,
+            "3月":  22,
+            "4月":  22,
+            "5月":  22,
+            "6月":  22,
+            "7月":  22,
+            "8月":  22, 
+            "9月":  22,
+            "10月": 22,
+            "11月": 22,
+            "12月": 22
+        }
 
-    # for ref_name in inputdata["REF"]:
-    #     for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-    #         inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = \
-    #             heatsource_temperature_daily
-    
+        for ref_name in inputdata["REF"]:
+            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+
+                for dd in range(0,365):
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
+                        input_heatsource_temperature_monthly[ bc.day2month(dd) ]
+        
     if DEBUG:
         for ref_name in inputdata["REF"]:
             for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
                 print( f'--- 熱源群名 {ref_name} ---')
-                print( f'- {unit_id+1} 台目の熱源機器 -')
-                print(inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"])
+                print( f'- {unit_id+1} 台目の熱源機器の熱源水温度 -')
+                print( inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"])
 
 
     ##----------------------------------------------------------------------------------
@@ -3963,7 +3987,9 @@ if __name__ == '__main__':
     # filename = './tests/airconditioning/ACtest_Case001.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
-    filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
+    # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
+    filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
+
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:

@@ -2490,7 +2490,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、冷却水変流量、LPG)": {
-        "ID": "AbcorptionChiller_Combination_LPG_CTVWV",
+        "ID": "AbsorptionChiller_Combination_LPG_CTVWV",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "水",
@@ -2986,7 +2986,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、LPG)": {
-        "ID": "AbcorptionChiller_Combination_LPG",
+        "ID": "AbsorptionChiller_Combination_LPG",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "水",
@@ -3204,7 +3204,7 @@
         }
     },
     "吸収式冷凍機(温水)": {
-        "ID": "AbcorptionChiller_HotWater",
+        "ID": "AbsorptionChiller_HotWater",
         "冷房時の特性": {
             "燃料種類": "温水",
             "熱源種類": "水",
@@ -4360,7 +4360,7 @@
         }
     },
     "吸収式冷凍機(蒸気)": {
-        "ID": "AbcorptionChiller_Steam",
+        "ID": "AbsorptionChiller_Steam",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "水",
@@ -5200,7 +5200,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、冷却水変流量、都市ガス)": {
-        "ID": "AbcorptionChiller_Combination_CityGas_CTVWV",
+        "ID": "AbsorptionChiller_Combination_CityGas_CTVWV",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -5418,7 +5418,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、蒸気)": {
-        "ID": "AbcorptionChiller_Steam_CTVWV",
+        "ID": "AbsorptionChiller_Steam_CTVWV",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "水",
@@ -5917,7 +5917,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、冷却水変流量、蒸気)": {
-        "ID": "AbcorptionChiller_Combination_Steam_CTVWV",
+        "ID": "AbsorptionChiller_Combination_Steam_CTVWV",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "水",
@@ -6293,7 +6293,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、蒸気)": {
-        "ID": "AbcorptionChiller_Combination_Steam",
+        "ID": "AbsorptionChiller_Combination_Steam",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "水",
@@ -6511,7 +6511,7 @@
         }
     },
     "吸収式冷凍機(重油)": {
-        "ID": "AbcorptionChiller_Oil",
+        "ID": "AbsorptionChiller_Oil",
         "冷房時の特性": {
             "燃料種類": "重油",
             "熱源種類": "水",
@@ -6868,7 +6868,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、灯油)": {
-        "ID": "AbcorptionChiller_Kerosene_CTVWV",
+        "ID": "AbsorptionChiller_Kerosene_CTVWV",
         "冷房時の特性": {
             "燃料種類": "灯油",
             "熱源種類": "水",
@@ -7086,7 +7086,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、都市ガス)": {
-        "ID": "AbcorptionChiller_CityGas_CTVWV",
+        "ID": "AbsorptionChiller_CityGas_CTVWV",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -7225,7 +7225,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、都市ガス)": {
-        "ID": "AbcorptionChiller_Combination_CityGas",
+        "ID": "AbsorptionChiller_Combination_CityGas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -7443,7 +7443,7 @@
         }
     },
     "吸収式冷凍機(LPG)": {
-        "ID": "AbcorptionChiller_LPG",
+        "ID": "AbsorptionChiller_LPG",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "水",
@@ -8217,7 +8217,7 @@
         }
     },
     "吸収式冷凍機(都市ガス)": {
-        "ID": "AbcorptionChiller_CityGas",
+        "ID": "AbsorptionChiller_CityGas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -8514,7 +8514,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、LPG)": {
-        "ID": "AbcorptionChiller_LPG_CTVWV",
+        "ID": "AbsorptionChiller_LPG_CTVWV",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "水",
@@ -8871,7 +8871,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、重油)": {
-        "ID": "AbcorptionChiller_Oil_CTVWV",
+        "ID": "AbsorptionChiller_Oil_CTVWV",
         "冷房時の特性": {
             "燃料種類": "重油",
             "熱源種類": "水",
@@ -9910,7 +9910,7 @@
         }
     },
     "吸収式冷凍機(灯油)": {
-        "ID": "AbcorptionChiller_Kerosene",
+        "ID": "AbsorptionChiller_Kerosene",
         "冷房時の特性": {
             "燃料種類": "灯油",
             "熱源種類": "水",
