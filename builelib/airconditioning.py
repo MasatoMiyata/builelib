@@ -2666,7 +2666,10 @@ def calc_energy(inputdata, DEBUG = False):
         # 放熱器の制約
         if inputdata["REF"][ref_name]["isStorage"] == "追掛":
 
-            tmpCapacity = inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]/8*(1000/3600)
+            if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceType"] != "熱交換器":
+                raise Exception("蓄熱槽があるシステムですが、熱交換器が設定されていません")
+            
+            tmpCapacity = inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"] /8*(1000/3600)
 
             if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] > tmpCapacity:
                 inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = tmpCapacity
