@@ -2666,9 +2666,13 @@ def calc_energy(inputdata, DEBUG = False):
         # 放熱器の制約
         if inputdata["REF"][ref_name]["isStorage"] == "追掛":
 
-            if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceType"] != "熱交換器":
-                raise Exception("蓄熱槽があるシステムですが、熱交換器が設定されていません")
-            
+            # エラー処理
+            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+                if unit_id == 0 and inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceType"] != "熱交換器":
+                    raise Exception("蓄熱槽があるシステムですが、熱交換器が設定されていません")
+                elif unit_id > 0 and inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceType"] == "熱交換器":
+                    raise Exception("蓄熱槽があるシステムですが、1台目以外に熱交換器が設定されています")
+
             tmpCapacity = inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"] /8*(1000/3600)
 
             if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] > tmpCapacity:
@@ -3992,7 +3996,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case048.json'
+    filename = './tests/airconditioning/ACtest_Case049.json'
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
