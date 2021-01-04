@@ -560,7 +560,7 @@ def calc_energy(inputdata, DEBUG = False):
 
 
             # 壁のみの面積（窓がない場合は、window_total = 0）
-            if wall_configure["EnvelopeArea"] > window_total:
+            if wall_configure["EnvelopeArea"] >= window_total:
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["EnvelopeArea"] - window_total
             else:
                 print(room_zone_name)
@@ -3992,8 +3992,8 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
-    # filename = './tests/airconditioning/ACtest_Case001.json'
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './tests/airconditioning/ACtest_Case048.json'
+    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"

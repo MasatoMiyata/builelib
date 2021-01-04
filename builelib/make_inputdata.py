@@ -1182,58 +1182,98 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
             else: # 階と室名が空欄である場合
 
-                # 外壁の種類の判定（Ver.2のみ）
-                if str(dataBE1[2]) == "日陰":
-                    dataBE1[2] = "南"
-                    wallType = "日の当たらない外壁"
-                elif str(dataBE1[2]) == "水平":
-                    dataBE1[2] = "水平（下）"
-                    wallType = "日の当たる外壁"
-                else:
-                    wallType = "日の当たる外壁"
+                if (dataBE1[2] == ""):  # 方位が空白である場合。
 
-                # 日よけ効果係数
-                if dataBE1[3] != "" and dataBE1[4] != "":
-                    EavesID = "庇" + str(int(evaes_num))
-                    evaes_num += 1
+                    if (dataBE1[5] != ""): # もし方位が空白で外壁名称に入力があったらエラー 
+                        raise Exception("外壁名称が入力されている場合は方位の入力が必要です。")
 
-                    data["ShadingConfigure"][EavesID] = {
-                        "shadingEffect_C": set_default(str(dataBE1[3]),None, "float"),
-                        "shadingEffect_H": set_default(str(dataBE1[4]),None, "float"),
-                        "x1": None,
-                        "x2": None,
-                        "x3": None,
-                        "y1": None,
-                        "y2": None,
-                        "y3": None,
-                        "zxPlus":  None,
-                        "zxMinus": None,
-                        "zyPlus":  None,
-                        "zyMinus": None,
-                        "Info": None
-                    }
-                else:
-                    EavesID = "無"
+                    # 日よけ効果係数
+                    if dataBE1[3] != "" and dataBE1[4] != "":
+                        EavesID = "庇" + str(int(evaes_num))
+                        evaes_num += 1
 
-                data["EnvelopeSet"][roomKey]["WallList"].append(
-                    {
-                        "Direction": str(dataBE1[2]),
-                        "EnvelopeArea": set_default(str(dataBE1[6]),None, "float"),
-                        "EnvelopeWidth": None,
-                        "EnvelopeHeight": None,
-                        "WallSpec": set_default(str(dataBE1[5]),"無","str"),
-                        "WallType": wallType,
-                        "WindowList":[
-                            {
-                                "WindowID": set_default(str(dataBE1[7]),"無","str"),
-                                "WindowNumber": set_default(str(dataBE1[8]),None, "float"),
-                                "isBlind": set_default(str(dataBE1[9]),"無","str"),
-                                "EavesID": EavesID,
-                                "Info": set_default(str(dataBE1[10]),"無","str"),
-                            }
-                        ]       
-                    }
-                )
+                        data["ShadingConfigure"][EavesID] = {
+                            "shadingEffect_C": set_default(str(dataBE1[3]),None, "float"),
+                            "shadingEffect_H": set_default(str(dataBE1[4]),None, "float"),
+                            "x1": None,
+                            "x2": None,
+                            "x3": None,
+                            "y1": None,
+                            "y2": None,
+                            "y3": None,
+                            "zxPlus":  None,
+                            "zxMinus": None,
+                            "zyPlus":  None,
+                            "zyMinus": None,
+                            "Info": None
+                        }
+                    else:
+                        EavesID = "無"
+                    
+                    data["EnvelopeSet"][roomKey]["WallList"][-1]["WindowList"].append(
+                        {
+                            "WindowID": set_default(str(dataBE1[7]),"無","str"),
+                            "WindowNumber": set_default(str(dataBE1[8]),None, "float"),
+                            "isBlind": set_default(str(dataBE1[9]),"無","str"),
+                            "EavesID": EavesID,
+                            "Info": set_default(str(dataBE1[10]),"無","str"),
+                        }
+                    )
+
+                else: # 方位が空白ではない場合。
+
+                    # 外壁の種類の判定（Ver.2のみ）
+                    if str(dataBE1[2]) == "日陰":
+                        dataBE1[2] = "南"
+                        wallType = "日の当たらない外壁"
+                    elif str(dataBE1[2]) == "水平":
+                        dataBE1[2] = "水平（下）"
+                        wallType = "日の当たる外壁"
+                    else:
+                        wallType = "日の当たる外壁"
+
+                    # 日よけ効果係数
+                    if dataBE1[3] != "" and dataBE1[4] != "":
+                        EavesID = "庇" + str(int(evaes_num))
+                        evaes_num += 1
+
+                        data["ShadingConfigure"][EavesID] = {
+                            "shadingEffect_C": set_default(str(dataBE1[3]),None, "float"),
+                            "shadingEffect_H": set_default(str(dataBE1[4]),None, "float"),
+                            "x1": None,
+                            "x2": None,
+                            "x3": None,
+                            "y1": None,
+                            "y2": None,
+                            "y3": None,
+                            "zxPlus":  None,
+                            "zxMinus": None,
+                            "zyPlus":  None,
+                            "zyMinus": None,
+                            "Info": None
+                        }
+                    else:
+                        EavesID = "無"
+
+                    data["EnvelopeSet"][roomKey]["WallList"].append(
+                        {
+                            "Direction": str(dataBE1[2]),
+                            "EnvelopeArea": set_default(str(dataBE1[6]),None, "float"),
+                            "EnvelopeWidth": None,
+                            "EnvelopeHeight": None,
+                            "WallSpec": set_default(str(dataBE1[5]),"無","str"),
+                            "WallType": wallType,
+                            "WindowList":[
+                                {
+                                    "WindowID": set_default(str(dataBE1[7]),"無","str"),
+                                    "WindowNumber": set_default(str(dataBE1[8]),None, "float"),
+                                    "isBlind": set_default(str(dataBE1[9]),"無","str"),
+                                    "EavesID": EavesID,
+                                    "Info": set_default(str(dataBE1[10]),"無","str"),
+                                }
+                            ]       
+                        }
+                    )
 
     if "2-2) 外壁構成 " in wb.sheet_names():
 
@@ -2661,36 +2701,36 @@ if __name__ == '__main__':
     #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
-    #-----------------------
-    # WEBPRO Ver2シートの例
-    #-----------------------
-    directory = "./tests/airconditioning_gshp_openloop/"
+    # #-----------------------
+    # # WEBPRO Ver2シートの例
+    # #-----------------------
+    # directory = "./tests/airconditioning_gshp_openloop/"
 
-    case_name = 'AC_gshp_closeloop_Case001'
+    # case_name = 'AC_gshp_closeloop_Case001'
 
-    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    # json出力
-    with open(directory + case_name + ".json",'w') as fw:
-        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # # json出力
+    # with open(directory + case_name + ".json",'w') as fw:
+    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     #-----------------------
     # WEBPRO Ver2シートの例（連続）
     #-----------------------
-    # directory = "./tests/airconditioning/"
+    directory = "./tests/airconditioning/"
 
-    # for id in range(46,47):
-    #     if id < 10:
-    #         case_name = 'ACtest_Case00' + str(int(id))
-    #     else:
-    #         case_name = 'ACtest_Case0' + str(int(id))
+    for id in range(46,49):
+        if id < 10:
+            case_name = 'ACtest_Case00' + str(int(id))
+        else:
+            case_name = 'ACtest_Case0' + str(int(id))
 
-    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    #     # json出力
-    #     with open(directory + case_name + ".json",'w') as fw:
-    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+        # json出力
+        with open(directory + case_name + ".json",'w') as fw:
+            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     #-----------------------
