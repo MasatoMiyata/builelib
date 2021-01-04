@@ -3497,11 +3497,12 @@ def calc_energy(inputdata, DEBUG = False):
 
                 # 部分負荷特性
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][dd] = \
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["基整促係数"]  * ( \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["係数"]["a4"] * tmpL ** 4 +  \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["係数"]["a3"] * tmpL ** 3 +  \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["係数"]["a2"] * tmpL ** 2 +  \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["係数"]["a1"] * tmpL + \
-                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["係数"]["a0"]
+                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["係数"]["a0"] )
 
                 # 過負荷時のペナルティ
                 if iL == divL-1:
@@ -3553,11 +3554,12 @@ def calc_energy(inputdata, DEBUG = False):
 
                     # 送水温度特性
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"][dd] = \
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["基整促係数"]  * ( \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a4"] * TCtmp ** 4 +  \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a3"] * TCtmp ** 3 +  \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a2"] * TCtmp ** 2 +  \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a1"] * TCtmp + \
-                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a0"]
+                        inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["係数"]["a0"] )
 
 
     #----------------------------------------------------------------------------------
@@ -3981,6 +3983,9 @@ def calc_energy(inputdata, DEBUG = False):
             + resultJson["for_CGS"]["E_pump_MWh_day"] \
             + resultJson["for_CGS"]["E_fan_MWh_day"]
 
+    # with open("inputdataJson_AC.json",'w') as fw:
+    #     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
+        
     return resultJson
 
 
@@ -3988,10 +3993,10 @@ if __name__ == '__main__':
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case001.json'
-    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
-    filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
+    # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
 
 
     # 入力ファイルの読み込み
