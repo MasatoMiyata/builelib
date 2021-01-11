@@ -184,7 +184,7 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
         EAC_link_c_j_rated = 0
 
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
         print(f" 2 EAC_total_d : {np.sum(EAC_total_d)}")
         print(f" 7 EAC_ref_c_d : {np.sum(EAC_ref_c_d)}")
         print(f" 8 mxLAC_ref_c_d : {np.sum(mxLAC_ref_c_d)}")
@@ -762,19 +762,19 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     resultJson["年間一次エネルギー削減量(給湯) "] = np.sum(EW_red_d)/1000           # 年間一次エネルギー削減量(給湯) [GJ]
     resultJson["年間一次エネルギー削減量"] = np.sum(Etotal_cgs_red_d)/1000   # 年間一次エネルギー削減量合計 [GJ]
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
         print( f'年間一次エネルギー削減量 全体 : {resultJson["年間一次エネルギー削減量"]} GJ/年')
         resultJson["EAC_ref_c_red_d"] = EAC_ref_c_red_d
 
     return resultJson
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
 
     print('----- cogeneration.py -----')
     # filename = './tests/cogeneration/Case_hospital_05.json'
-    # filename = './tests/cogeneration/Case_hotel_03.json'
-    filename = './tests/cogeneration/Case_office_04.json'
+    # filename = './tests/cogeneration/Case_hotel_test.json'
+    filename = './tests/cogeneration/Case_office_09.json'
     # filename = './sample/cgs.json'
 
     # テンプレートjsonの読み込み
