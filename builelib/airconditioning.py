@@ -515,7 +515,7 @@ def calc_energy(inputdata, DEBUG = False):
                                 0.8258 * inputdata["WindowConfigure"][window_name]["glassIvalue"] )
 
 
-            if DEBUG:
+            if DEBUG: # pragma: no cover
                 print(f'--- 窓名称 {window_name} ---')
                 print(f'窓の熱貫流率 Uvalue : {inputdata["WindowConfigure"][window_name]["Uvalue"]}')
                 print(f'窓+BLの熱貫流率 Uvalue_blind : {inputdata["WindowConfigure"][window_name]["Uvalue_blind"]}')
@@ -940,7 +940,7 @@ def calc_energy(inputdata, DEBUG = False):
 
     print('室負荷計算完了')
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         for room_zone_name in inputdata["AirConditioningZone"]:
 
@@ -1536,7 +1536,7 @@ def calc_energy(inputdata, DEBUG = False):
 
     print('空調負荷計算完了')
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         for ahu_name in inputdata["AirHandlingSystem"]:
 
@@ -1587,7 +1587,7 @@ def calc_energy(inputdata, DEBUG = False):
                 # 日積算運転時間 Ta [時間]
                 Ta = resultJson["AHU"][ahu_name]["cooling"]["Tahu"]
                 
-                if DEBUG:
+                if DEBUG: # pragma: no cover
                     resultJson["AHU"][ahu_name]["Ta_cooling"] = copy.deepcopy(Ta)
 
 
@@ -1607,7 +1607,7 @@ def calc_energy(inputdata, DEBUG = False):
                 # 日積算運転時間 Ta [時間]
                 Ta = resultJson["AHU"][ahu_name]["heating"]["Tahu"]
 
-                if DEBUG:
+                if DEBUG: # pragma: no cover
                     resultJson["AHU"][ahu_name]["Ta_heating"] = copy.deepcopy(Ta)
                     
 
@@ -1686,7 +1686,7 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["AHU"][ahu_name]["TdAHUh"] = Tdh   # 空調負荷が負（加熱コイル負荷）である場合の運転時間（0列目：室負荷が正である場合、1列目：室負荷が負である場合）
 
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         for ahu_name in inputdata["AirHandlingSystem"]:
 
@@ -1777,7 +1777,7 @@ def calc_energy(inputdata, DEBUG = False):
                         a1 * (aveL[iL])**1 + \
                         a0    
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         for ahu_name in inputdata["AirHandlingSystem"]:
             print( f'--- 空調機群名 {ahu_name} ---')
@@ -1802,7 +1802,7 @@ def calc_energy(inputdata, DEBUG = False):
                 inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"] = \
                     unit_configure["FanPowerConsumption"] * unit_configure["Number"]
 
-            if DEBUG:
+            if DEBUG: # pragma: no cover
                 print( f'--- 空調機群名 {ahu_name} ---')
                 print( f'送風機単体の定格消費電力: {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"]}')
 
@@ -1822,7 +1822,7 @@ def calc_energy(inputdata, DEBUG = False):
                 resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] += \
                     unit_configure["energy_consumption_ratio"][iL] * unit_configure["FanPowerConsumption_total"]
 
-            if DEBUG:
+            if DEBUG: # pragma: no cover
                 print( f'--- 空調機群名 {ahu_name} ---')
                 print( f'負荷率帯別の送風機消費電力: \n {resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]}')
 
@@ -1935,7 +1935,7 @@ def calc_energy(inputdata, DEBUG = False):
     print('空調機群のエネルギー消費量計算完了')
 
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         for ahu_name in inputdata["AirHandlingSystem"]:
 
@@ -2265,7 +2265,7 @@ def calc_energy(inputdata, DEBUG = False):
     print('ポンプ負荷計算完了')
 
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         for ahu_name in inputdata["AirHandlingSystem"]:
 
@@ -2522,7 +2522,7 @@ def calc_energy(inputdata, DEBUG = False):
     print('二次ポンプ群のエネルギー消費量計算完了')
 
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         for ahu_name in inputdata["AirHandlingSystem"]:
 
@@ -2559,7 +2559,7 @@ def calc_energy(inputdata, DEBUG = False):
                     resultJson["PUMP"][pump_name]["MxPUMPE"] * k_heatup / resultJson["PUMP"][pump_name]["TcPUMP"] \
                     * resultJson["PUMP"][pump_name]["Tps"][dd] * 3600
 
-        if DEBUG:
+        if DEBUG: # pragma: no cover
             print( f'--- 二次ポンプ群名 {pump_name} ---')
             print( f'二次ポンプ群のポンプ発熱量 Qpsahu_fan: {np.sum(resultJson["PUMP"][pump_name]["Qpsahu_pump"],0)}' )
 
@@ -2839,7 +2839,7 @@ def calc_energy(inputdata, DEBUG = False):
     print('熱源負荷計算完了')
 
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         for ref_name in inputdata["REF"]:
 
@@ -2944,7 +2944,7 @@ def calc_energy(inputdata, DEBUG = False):
             else:
                 raise Exception('熱交換機が設定されていません')
 
-        if DEBUG:
+        if DEBUG: # pragma: no cover
                 
             print( f'--- 熱源群名 {ref_name} ---')
             print( f'熱交換器の容量: {inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]}')
@@ -3060,11 +3060,11 @@ def calc_energy(inputdata, DEBUG = False):
 
         Qcmax = 0
         if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
-            Qcmax = abs( np.max( resultJson["REF"][ref_original_name + "_冷房"]["Qref"] , 0) )
+            Qcmax =  np.max( resultJson["REF"][ref_original_name + "_冷房"]["Qref"] , 0) 
 
         Qhmax = 0
         if "暖房" in inputdata["HeatsourceSystem"][ref_original_name]:
-            Qhmax = abs( np.max( resultJson["REF"][ref_original_name + "_暖房"]["Qref"] , 0) )
+            Qhmax =  np.max( resultJson["REF"][ref_original_name + "_暖房"]["Qref"] , 0) 
 
         if Qcmax != 0 and Qhmax != 0:
 
@@ -3220,7 +3220,7 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
                         input_heatsource_temperature_monthly[ bc.day2month(dd) ]
         
-    if DEBUG:
+    if DEBUG: # pragma: no cover
         for ref_name in inputdata["REF"]:
             for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
                 print( f'--- 熱源群名 {ref_name} ---')
@@ -3285,7 +3285,7 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"][dd]
             
-            if DEBUG:
+            if DEBUG: # pragma: no cover
                 print( f'--- 熱源群名 {ref_name} ---')
                 print( f'- {unit_id+1} 台目の熱源機器 -')
                 print( f' Q_ref_max {inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"]}')
@@ -3384,7 +3384,7 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["xPratio"][dd]
 
-            if DEBUG:
+            if DEBUG: # pragma: no cover
                 print( f'--- 熱源群名 {ref_name} ---')
                 print( f'- {unit_id+1} 台目の熱源機器 -')
                 print( f' E_ref_max {inputdata["REF"][ref_name]["Heatsource"][unit_id]["E_ref_max"]}')
@@ -3423,7 +3423,7 @@ def calc_energy(inputdata, DEBUG = False):
                     
                     resultJson["REF"][ref_name]["num_of_operation"][dd] = rr+1
         
-        if DEBUG:
+        if DEBUG: # pragma: no cover
             print( f'--- 熱源群名 {ref_name} ---')
             print( f' num_of_operation {resultJson["REF"][ref_name]["num_of_operation"]}')
 
@@ -3458,7 +3458,7 @@ def calc_energy(inputdata, DEBUG = False):
                 if iL == divL-1:
                     resultJson["REF"][ref_name]["load_ratio"][dd] = 1.0
 
-        if DEBUG:
+        if DEBUG: # pragma: no cover
             print( f'--- 熱源群名 {ref_name} ---')
             print( f' load_ratio {resultJson["REF"][ref_name]["load_ratio"]}')
 
@@ -3709,7 +3709,7 @@ def calc_energy(inputdata, DEBUG = False):
                     resultJson["REF"][ref_name]["E_ref_ct_pump"][dd] += \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["CoolingTowerPumpPowerConsumption_total"]
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
         for ref_name in inputdata["REF"]:
             for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
                 print( f'--- 熱源群名 {ref_name} ---')
@@ -3772,7 +3772,7 @@ def calc_energy(inputdata, DEBUG = False):
                     resultJson["REF"][ref_name]["E_ref_ct_pump"][dd] /1000 * resultJson["REF"][ref_name]["Tref"][dd]
 
 
-        if DEBUG:
+        if DEBUG: # pragma: no cover
 
             print( f'--- 熱源群名 {ref_name} ---')
             print( f'熱源主機のエネルギー消費量 E_ref_day: {np.sum(resultJson["REF"][ref_name]["E_ref_day"])}' )
@@ -3815,7 +3815,7 @@ def calc_energy(inputdata, DEBUG = False):
 
     print('熱源エネルギー計算完了')
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
 
         print( f'熱源主機エネルギー消費量 E_refsysr: {resultJson["ENERGY"]["E_refsysr"]}' )
         print( f'熱源補機電力消費量 E_refac: {resultJson["ENERGY"]["E_refac"]}' )
@@ -3838,7 +3838,7 @@ def calc_energy(inputdata, DEBUG = False):
         + resultJson["ENERGY"]["E_ctfan"] * bc.fprime \
         + resultJson["ENERGY"]["E_ctpump"] * bc.fprime
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
         print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["E_airconditioning"]/roomAreaTotal}' )
         print( f'空調設備の設計一次エネルギー消費量 MJ : {resultJson["E_airconditioning"]}' )
 
@@ -3856,7 +3856,7 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["Es_airconditioning"] += \
             bc.RoomStandardValue[buildingType][roomType]["空調"][inputdata["Building"]["Region"]+"地域"] * zoneArea
 
-    if DEBUG:
+    if DEBUG: # pragma: no cover
         print( f'空調設備の基準一次エネルギー消費量 MJ/m2 : {resultJson["Es_airconditioning"]/roomAreaTotal}' )
         print( f'空調設備の基準一次エネルギー消費量 MJ : {resultJson["Es_airconditioning"]}' )
 
@@ -3993,7 +3993,7 @@ def calc_energy(inputdata, DEBUG = False):
     return resultJson
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     filename = './tests/airconditioning/ACtest_Case049.json'
