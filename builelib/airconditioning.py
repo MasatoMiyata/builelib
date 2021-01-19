@@ -965,15 +965,16 @@ def calc_energy(inputdata, DEBUG = False):
     if "SpecialInputData" in inputdata:
         if "Qroom" in inputdata["SpecialInputData"]:
 
-            for room_zone_name in inputdata["SpecialInputData"]["Qroom"]:
+            for room_zone_name in inputdata["SpecialInputData"]["Qroom"]: # SP-4シートに入力された室毎に処理
 
-                # 室負荷（冷房要求）の置き換え
-                if "QroomDc" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
-                    resultJson["Qroom"][room_zone_name]["QroomDc"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDc"]
+                if room_zone_name in resultJson["Qroom"]:  # SP-4シートに入力された室が空調ゾーンとして存在していれば
+                    # 室負荷（冷房要求）の置き換え
+                    if "QroomDc" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
+                        resultJson["Qroom"][room_zone_name]["QroomDc"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDc"]
 
-                # 室負荷（暖房要求）の置き換え
-                if "QroomDh" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
-                    resultJson["Qroom"][room_zone_name]["QroomDh"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDh"]
+                    # 室負荷（暖房要求）の置き換え
+                    if "QroomDh" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
+                        resultJson["Qroom"][room_zone_name]["QroomDh"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDh"]
 
 
     ##----------------------------------------------------------------------------------
