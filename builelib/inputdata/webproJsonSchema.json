@@ -126,6 +126,10 @@
             "additionalProperties": {
                 "$ref": "#/definitions/CogenerationSystems"
             }
+        },
+        "SpecialInputData":{
+            "description": "様式SP",
+            "type": "object"
         }
     },
     "dependencies": {
