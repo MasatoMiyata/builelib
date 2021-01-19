@@ -958,7 +958,24 @@ def calc_energy(inputdata, DEBUG = False):
             print( f'室負荷（暖房要求）の合計 QroomDh_anual: {resultJson["Qroom"][room_zone_name]["QroomDh_anual"]}' )
 
 
-    #%%
+    ##----------------------------------------------------------------------------------
+    ## 任意評定用　室負荷（ SP-4 ）
+    ##----------------------------------------------------------------------------------
+
+    if "SpecialInputData" in inputdata:
+        if "Qroom" in inputdata["SpecialInputData"]:
+
+            for room_zone_name in inputdata["SpecialInputData"]["Qroom"]:
+
+                # 室負荷（冷房要求）の置き換え
+                if "QroomDc" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
+                    resultJson["Qroom"][room_zone_name]["QroomDc"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDc"]
+
+                # 室負荷（暖房要求）の置き換え
+                if "QroomDh" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
+                    resultJson["Qroom"][room_zone_name]["QroomDh"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDh"]
+
+
     ##----------------------------------------------------------------------------------
     ## 空調機群の一次エネルギー消費量（解説書 2.5）
     ##----------------------------------------------------------------------------------
@@ -3996,8 +4013,8 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case049.json'
-    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    # filename = './tests/airconditioning/ACtest_Case049.json'
+    filename = './sample/中規模・空冷HP検証用モデル.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"

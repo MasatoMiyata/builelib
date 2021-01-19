@@ -2663,6 +2663,46 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     "Info": str(dataCG[16])
                 }
 
+    if "SP-4) 室負荷" in wb.sheet_names():
+
+        data["SpecialInputData"]["Qroom"] = {}
+
+        # シートの読み込み
+        sheet_SP4 = wb.sheet_by_name("SP-4) 室負荷")
+        # 初期化
+        roomKey = None
+
+        # 行のループ
+        for i in range(10,sheet_SP4.nrows):
+
+            # シートから「行」の読み込み
+            dataSP4 = sheet_SP4.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataSP4[0] != "") and (dataSP4[1] != ""):
+
+                # 階＋室＋ゾーン名をkeyとする（上書き）
+                if (dataSP4[2] != ""):
+                    roomKey = str(dataSP4[0]) + '_' + str(dataSP4[1]) + '_' + str(dataSP4[2])
+                else:
+                    roomKey = str(dataSP4[0]) + '_' + str(dataSP4[1])
+
+            if roomKey not in data["SpecialInputData"]["Qroom"]:
+                data["SpecialInputData"]["Qroom"][roomKey] = {}
+
+            Qroom_input = list()
+            for dd in range(0,365):
+                Qroom_input.append(float(dataSP4[4+dd]))
+
+            if dataSP4[3] == "冷房":
+                data["SpecialInputData"]["Qroom"][roomKey]["QroomDc"] = Qroom_input
+            elif dataSP4[3] == "暖房":
+                data["SpecialInputData"]["Qroom"][roomKey]["QroomDh"] = Qroom_input
+            else:
+                raise Exception("室負荷の種類が不正です。")
+
+
+
     # バリデーションの実行
     if validation:
         jsonschema.validate(data, schema_data)
@@ -2689,16 +2729,16 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    # directory = "./sample/"
+    directory = "./sample/"
 
-    # # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
-    # case_name = 'sample03_WEBPRO_inputSheet_for_Ver3.0'
+    # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
+    case_name = '中規模・空冷HP検証用モデル'
 
-    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    # # json出力
-    # with open(directory + case_name + ".json",'w') as fw:
-    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # json出力
+    with open(directory + case_name + ".json",'w') as fw:
+        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     # #-----------------------
@@ -2718,31 +2758,31 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例（連続）
     #-----------------------
-    directory = "./tests/airconditioning/"
+    # directory = "./tests/airconditioning/"
 
-    for id in range(46,49):
-        if id < 10:
-            case_name = 'ACtest_Case00' + str(int(id))
-        else:
-            case_name = 'ACtest_Case0' + str(int(id))
+    # for id in range(49,50):
+    #     if id < 10:
+    #         case_name = 'ACtest_Case00' + str(int(id))
+    #     else:
+    #         case_name = 'ACtest_Case0' + str(int(id))
 
-        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-        # json出力
-        with open(directory + case_name + ".json",'w') as fw:
-            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    #     # json出力
+    #     with open(directory + case_name + ".json",'w') as fw:
+    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
-    #-----------------------
-    # WEBPRO Ver2シートの例（連続）
-    #-----------------------
+    # #-----------------------
+    # # WEBPRO Ver2シートの例（連続）
+    # #-----------------------
     # directory = "./tests/cogeneration/"
 
-    # for id in range(5,6):
+    # for id in range(9,10):
     #     if id < 10:
-    #         case_name = 'Case_hospital_0' + str(int(id))
+    #         case_name = 'Case_office_0' + str(int(id))
     #     else:
-    #         case_name = 'Case_hospital_' + str(int(id))
+    #         case_name = 'Case_office_' + str(int(id))
 
     #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
