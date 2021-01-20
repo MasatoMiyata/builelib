@@ -2623,6 +2623,57 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
+    ## 蓄熱がある場合の処理（蓄熱槽効率の追加、追掛用熱交換器の検証）
+    ##----------------------------------------------------------------------------------
+
+    for ref_name in inputdata["REF"]:
+
+        # 蓄熱槽効率
+        if inputdata["REF"][ref_name]["isStorage"] == "蓄熱" or inputdata["REF"][ref_name]["isStorage"] == "追掛":
+
+            inputdata["REF"][ref_name]["storageEffratio"] = 0.8
+            if inputdata["REF"][ref_name]["StorageType"] == "水蓄熱(混合型)":
+                inputdata["REF"][ref_name]["storageEffratio"] = 0.8
+            elif inputdata["REF"][ref_name]["StorageType"] == "水蓄熱(成層型)":
+                inputdata["REF"][ref_name]["storageEffratio"] = 0.9
+            elif inputdata["REF"][ref_name]["StorageType"] == "氷蓄熱":
+                inputdata["REF"][ref_name]["storageEffratio"] = 1.0
+            else:
+                raise Exception("蓄熱槽タイプが不正です")
+
+        # 蓄熱追掛時の熱交換器の追加
+        if inputdata["REF"][ref_name]["isStorage"] == "追掛":
+
+            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+                if unit_id == 0 and inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceType"] != "熱交換器":
+                
+                    # 1台目が熱交換器では無い場合、熱交換器を追加する。
+                    inputdata["REF"][ref_name]["Heatsource"].insert(0,
+                        {
+                            "HeatsourceType": "熱交換器",
+                            "Number": 1.0,
+                            "SupplyWaterTempSummer": None,
+                            "SupplyWaterTempMiddle": None,
+                            "SupplyWaterTempWinter": None,
+                            "HeatsourceRatedCapacity": inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"] /8*(1000/3600),
+                            "HeatsourceRatedPowerConsumption": 0,
+                            "HeatsourceRatedFuelConsumption": 0,
+                            "Heatsource_sub_RatedPowerConsumption": 0,
+                            "PrimaryPumpPowerConsumption": 0,
+                            "PrimaryPumpContolType": "無",
+                            "CoolingTowerCapacity": 0,
+                            "CoolingTowerFanPowerConsumption": 0,
+                            "CoolingTowerPumpPowerConsumption": 0,
+                            "CoolingTowerContolType": "無",
+                            "Info": ""
+                        }
+                    )
+
+                # 1台目以外に熱交換器があればエラーを返す。
+                elif unit_id > 0 and inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceType"] == "熱交換器":
+                    raise Exception("蓄熱槽があるシステムですが、1台目以外に熱交換器が設定されています")
+
+    ##----------------------------------------------------------------------------------
     ## 熱源群全体のスペックを整理する。
     ##----------------------------------------------------------------------------------
 
@@ -2667,32 +2718,13 @@ def calc_energy(inputdata, DEBUG = False):
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["CoolingTowerPumpPowerConsumption_total"] = \
                 unit_configure["CoolingTowerPumpPowerConsumption"] * unit_configure["Number"]
 
-
-        # 蓄熱槽効率
-        if inputdata["REF"][ref_name]["isStorage"] == "蓄熱" or inputdata["REF"][ref_name]["isStorage"] == "追掛":
-
-            inputdata["REF"][ref_name]["storageEffratio"] = 0.8
-            if inputdata["REF"][ref_name]["StorageType"] == "水蓄熱(混合型)":
-                inputdata["REF"][ref_name]["storageEffratio"] = 0.8
-            elif inputdata["REF"][ref_name]["StorageType"] == "水蓄熱(成層型)":
-                inputdata["REF"][ref_name]["storageEffratio"] = 0.9
-            elif inputdata["REF"][ref_name]["StorageType"] == "氷蓄熱":
-                inputdata["REF"][ref_name]["storageEffratio"] = 1.0
-            else:
-                raise Exception("蓄熱槽タイプが不正です")
         
-        # 放熱器の制約
+        # 蓄熱システムの追掛運転用熱交換器の制約
         if inputdata["REF"][ref_name]["isStorage"] == "追掛":
-
-            # エラー処理
-            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-                if unit_id == 0 and inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceType"] != "熱交換器":
-                    raise Exception("蓄熱槽があるシステムですが、熱交換器が設定されていません")
-                elif unit_id > 0 and inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceType"] == "熱交換器":
-                    raise Exception("蓄熱槽があるシステムですが、1台目以外に熱交換器が設定されています")
 
             tmpCapacity = inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"] /8*(1000/3600)
 
+            # 1台目は必ず熱交換器であると想定
             if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] > tmpCapacity:
                 inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = tmpCapacity
 
@@ -2751,6 +2783,7 @@ def calc_energy(inputdata, DEBUG = False):
             resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"]  = np.zeros(365) 
             resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit"] = np.zeros(365)
             resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"] = np.zeros(365)
+
 
     ##----------------------------------------------------------------------------------
     ## 熱源群の定格能力 （解説書 2.7.5）
@@ -4002,7 +4035,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case049.json'
-    filename = './sample/airconditioning_heatsoucetemp_area_2.json'
+    filename = './sample/ACtest_Case033.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
