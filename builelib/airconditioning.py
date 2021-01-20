@@ -4059,7 +4059,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case049.json'
-    filename = './sample/sample07_WEBPRO_inputSheet_for_SP2.json'
+    filename = './sample/sample06_WEBPRO_inputSheet_for_SP1.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
