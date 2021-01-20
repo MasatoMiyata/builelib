@@ -3,6 +3,11 @@ import json
 import jsonschema
 import os
 
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+import commons as bc
+
 # テンプレートファイルの保存場所
 template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
 
@@ -2663,6 +2668,29 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     "Info": str(dataCG[16])
                 }
 
+
+    if "SP-1) 変流量・変風量制御" in wb.sheet_names():
+
+        data["SpecialInputData"]["flow_control"] = {}
+
+        # シートの読み込み
+        sheet_SP1 = wb.sheet_by_name("SP-1) 変流量・変風量制御")
+
+        # 行のループ
+        for i in range(10,sheet_SP1.nrows):
+
+            # シートから「行」の読み込み
+            dataSP1 = sheet_SP1.row_values(i)
+
+            data["SpecialInputData"]["flow_control"][dataSP1[0]] = {
+                "Type": "任意評定",
+                "a4": float(dataSP1[1]),
+                "a3": float(dataSP1[2]),
+                "a2": float(dataSP1[3]),
+                "a1": float(dataSP1[4]),
+                "a0": float(dataSP1[5])
+            }
+
     if "SP-3) 熱源水温度" in wb.sheet_names():
 
         data["SpecialInputData"]["heatsource_temperature_monthly"] = {}
@@ -2733,8 +2761,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
 
     # バリデーションの実行
-    if validation:
-        jsonschema.validate(data, schema_data)
+    bc.inputdata_validation(data)
 
     return data
 
@@ -2761,7 +2788,7 @@ if __name__ == '__main__':
     directory = "./sample/"
 
     # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
-    case_name = 'airconditioning_heatsoucetemp_area_2'
+    case_name = 'sample06_WEBPRO_inputSheet_for_SP1'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 

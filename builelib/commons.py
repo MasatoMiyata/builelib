@@ -300,6 +300,29 @@ def inputdata_validation(inputdata):
     with open( template_directory + '/webproJsonSchema.json') as f:
         schema_data = json.load(f)    
 
+    # 任意評定用（SP-1）
+    if "SpecialInputData" in inputdata:
+        if "flow_control" in inputdata["SpecialInputData"]:
+            for control_type_name in inputdata["SpecialInputData"]["flow_control"]:
+
+                # スキーマに追加
+                schema_data["definitions"]["AirHandlingSystem"]["properties"]["AirHandlingUnit"]["items"]["properties"]["FanControlType"]["anyOf"].append(
+                    {
+                        "type": "string",
+                        "enum":[
+                            control_type_name
+                        ]
+                    }
+                )
+                schema_data["definitions"]["SecondaryPump"]["properties"]["SecondaryPump"]["items"]["properties"]["ContolType"]["anyOf"].append(
+                    {
+                        "type": "string",
+                        "enum":[
+                            control_type_name
+                        ]
+                    }
+                )
+
     # バリデーションの実行
     jsonschema.validate(inputdata, schema_data)
 

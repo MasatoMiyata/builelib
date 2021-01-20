@@ -80,6 +80,26 @@ def calc_energy(inputdata, DEBUG = False):
     divL = 11             # 負荷帯マトリックス分割数 （10区分＋過負荷1区分）
     divT =  6             # 外気温度帯マトリックス分割数
 
+
+    ##----------------------------------------------------------------------------------
+    ## データベースファイルの読み込み
+    ##----------------------------------------------------------------------------------
+
+    # 流量制御
+    with open(database_directory + 'FLOWCONTROL.json', 'r') as f:
+        FLOWCONTROL = json.load(f)
+
+
+    ##----------------------------------------------------------------------------------
+    ## 任意評定 （SP-1)
+    ##----------------------------------------------------------------------------------
+
+    # 任意評定用の入力があれば追加
+    if "SpecialInputData" in inputdata:
+        if "flow_control" in inputdata["SpecialInputData"]:
+            FLOWCONTROL.update(inputdata["SpecialInputData"]["flow_control"])
+
+
     ##----------------------------------------------------------------------------------
     ## マトリックスの設定
     ##----------------------------------------------------------------------------------
@@ -1737,8 +1757,6 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     ## 搬送系制御に関する係数
-    with open(database_directory + 'FLOWCONTROL.json', 'r') as f:
-        FLOWCONTROL = json.load(f)
 
     for ahu_name in inputdata["AirHandlingSystem"]:
 
@@ -2105,13 +2123,11 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 全台回転数制御かどうか（台数制御がない場合のみ有効）
         if "無" in inputdata["PUMP"][pump_name]["ContolType"]:
-            inputdata["PUMP"][pump_name]["ContolType"] = "無"
+            inputdata["PUMP"][pump_name]["ContolType"] = "定流量制御がある"
         elif "定流量制御" in inputdata["PUMP"][pump_name]["ContolType"]:
-            inputdata["PUMP"][pump_name]["ContolType"] = "定流量制御"
-        elif "回転数制御" in inputdata["PUMP"][pump_name]["ContolType"]:
-            inputdata["PUMP"][pump_name]["ContolType"] = "回転数制御"
+            inputdata["PUMP"][pump_name]["ContolType"] = "定流量制御がある"
         else:
-            raise Exception('制御方式が対応していません。')
+            inputdata["PUMP"][pump_name]["ContolType"] = "すべて変流量制御である"
 
 
     # 接続される空調機群
@@ -2397,7 +2413,7 @@ def calc_energy(inputdata, DEBUG = False):
                 MxPUMPNum = np.ones(divL) * inputdata["PUMP"][pump_name]["number_of_pumps"]
 
                 # 流量制御方式
-                if inputdata["PUMP"][pump_name]["ContolType"] == "回転数制御":  # 全台VWVであれば
+                if inputdata["PUMP"][pump_name]["ContolType"] == "すべて変流量制御である":  # 全台VWVであれば
 
                     for iL in range(0,divL):
 
@@ -2477,7 +2493,7 @@ def calc_energy(inputdata, DEBUG = False):
                                 MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
 
 
-                        elif inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "回転数制御":
+                        else:
 
                             # 変流量ポンプjの負荷率 [-]
                             tmpL = ( (Qpsr_iL - Qtmp_CWV)/numVWV ) / inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["Qpsr"]
@@ -4035,7 +4051,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case049.json'
-    filename = './sample/ACtest_Case033.json'
+    filename = './sample/sample06_WEBPRO_inputSheet_for_SP1.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
