@@ -89,15 +89,27 @@ def calc_energy(inputdata, DEBUG = False):
     with open(database_directory + 'FLOWCONTROL.json', 'r') as f:
         FLOWCONTROL = json.load(f)
 
+    # 熱源機器特性
+    with open(database_directory + "HeatSourcePerformance.json", 'r') as f:
+        HeatSourcePerformance = json.load(f)
 
     ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-1)
+    ## 任意評定 （SP-1: 流量制御)
     ##----------------------------------------------------------------------------------
 
     # 任意評定用の入力があれば追加
     if "SpecialInputData" in inputdata:
         if "flow_control" in inputdata["SpecialInputData"]:
             FLOWCONTROL.update(inputdata["SpecialInputData"]["flow_control"])
+
+    ##----------------------------------------------------------------------------------
+    ## 任意評定 （SP-2：　熱源機器特性)
+    ##----------------------------------------------------------------------------------
+
+    # 任意評定用の入力があれば追加
+    if "SpecialInputData" in inputdata:
+        if "heatsource_performance" in inputdata["SpecialInputData"]:
+            HeatSourcePerformance.update(inputdata["SpecialInputData"]["heatsource_performance"])
 
 
     ##----------------------------------------------------------------------------------
@@ -2921,10 +2933,6 @@ def calc_energy(inputdata, DEBUG = False):
     ## 熱源機器の特性の読み込み（解説書 附属書A.4）
     ##----------------------------------------------------------------------------------
 
-    ## 熱源機器特性
-    with open(database_directory + "HeatSourcePerformance.json", 'r') as f:
-        HeatSourcePerformance = json.load(f)
-
     for ref_name in inputdata["REF"]:
 
         inputdata["REF"][ref_name]["checkCTVWV"] = 0   # 冷却水変流量の有無
@@ -4051,7 +4059,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case049.json'
-    filename = './sample/sample06_WEBPRO_inputSheet_for_SP1.json'
+    filename = './sample/sample07_WEBPRO_inputSheet_for_SP2.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"

@@ -1028,6 +1028,108 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
     with open( template_directory + 'webproJsonSchema.json', 'r') as f:
         schema_data = json.load(f)
     
+
+
+    if "SP-2) 熱源特性" in wb.sheet_names():
+
+        data["SpecialInputData"]["heatsource_performance"] = {}
+
+        # シートの読み込み
+        sheet_SP2 = wb.sheet_by_name("SP-2) 熱源特性")
+
+        ref_name = ""
+        operation_mode = ""
+        curve_type = ""
+
+        # 行のループ
+        for i in range(10,sheet_SP2.nrows):
+
+            # シートから「行」の読み込み
+            dataSP2 = sheet_SP2.row_values(i)
+
+            # 「熱源機種名称」が空白でなければ。
+            if (dataSP2[0] != ""):
+
+                ref_name = dataSP2[0]  # 熱源機種名の更新
+
+                # データがなければ作成
+                if ref_name not in data["SpecialInputData"]["heatsource_performance"]:
+
+                    data["SpecialInputData"]["heatsource_performance"][ref_name] = {
+                        "ID": "任意評定",
+                        "冷房時の特性": {
+                            "燃料種類": "",
+                            "熱源種類": "",
+                            "能力比": [],
+                            "入力比": [],
+                            "部分負荷特性": [],
+                            "送水温度特性": []
+                        },
+                        "暖房時の特性": {
+                            "燃料種類": "",
+                            "熱源種類": "",
+                            "能力比": [],
+                            "入力比": [],
+                            "部分負荷特性": [],
+                            "送水温度特性": []
+                        }
+                    }
+
+            # 「冷房／暖房」が空白でなければ。
+            if (dataSP2[1] != ""):
+
+                if dataSP2[1] == "冷房":
+                    operation_mode = "冷房時の特性"
+                elif dataSP2[1] == "暖房":
+                    operation_mode = "暖房時の特性"
+                else:
+                    raise Exception("予期せぬ選択肢です。")
+
+                data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode]["燃料種類"] = dataSP2[2]
+                data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode]["熱源種類"] = dataSP2[3]
+
+            # 「特性の種類」が空白でなければ。
+            if (dataSP2[4] != ""):
+
+                curve_type = dataSP2[4]
+
+                data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode][curve_type]=[
+                    {
+                        "下限": set_default(dataSP2[5], 0, "float"),
+                        "上限": set_default(dataSP2[6], 0, "float"),
+                        "冷却水温度下限": set_default(dataSP2[7], None, "float"),
+                        "冷却水温度上限": set_default(dataSP2[8], None, "float"),
+                        "係数": {
+                            "a4": set_default(dataSP2[9], 0, "float"),
+                            "a3": set_default(dataSP2[10], 0, "float"),
+                            "a2": set_default(dataSP2[11], 0, "float"),
+                            "a1": set_default(dataSP2[12], 0, "float"),
+                            "a0": set_default(dataSP2[13], 0, "float")
+                        },
+                        "基整促係数": set_default(dataSP2[14], 1.0, "float")
+                    }
+                ]
+
+            else:
+                
+                data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode][curve_type].append(
+                    {
+                        "下限": set_default(dataSP2[5], 0, "float"),
+                        "上限": set_default(dataSP2[6], 0, "float"),
+                        "冷却水温度下限": set_default(dataSP2[7], None, "float"),
+                        "冷却水温度上限": set_default(dataSP2[8], None, "float"),
+                        "係数": {
+                            "a4": set_default(dataSP2[9], 0, "float"),
+                            "a3": set_default(dataSP2[10], 0, "float"),
+                            "a2": set_default(dataSP2[11], 0, "float"),
+                            "a1": set_default(dataSP2[12], 0, "float"),
+                            "a0": set_default(dataSP2[13], 0, "float")
+                        },
+                        "基整促係数": set_default(dataSP2[14], 1.0, "float")
+                    }
+                )
+
+
     # %%
     # 様式0の読み込み
     if "0) 基本情報" in wb.sheet_names():
@@ -1549,6 +1651,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
         ## 熱源機器特性
         with open(database_directory + "HeatSourcePerformance.json", 'r') as f:
             HeatSourcePerformance = json.load(f)
+
+        # SP-2で作成した機種を追加
+        if "SpecialInputData" in data:
+            if "heatsource_performance" in data["SpecialInputData"]:
+                HeatSourcePerformance.update(data["SpecialInputData"]["heatsource_performance"])
 
         # シートの読み込み
         sheet_AC2 = wb.sheet_by_name("2-5) 熱源")
@@ -2788,7 +2895,8 @@ if __name__ == '__main__':
     directory = "./sample/"
 
     # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
-    case_name = 'sample06_WEBPRO_inputSheet_for_SP1'
+    # case_name = 'sample07_WEBPRO_inputSheet'
+    case_name = 'sample07_WEBPRO_inputSheet_for_SP2'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
