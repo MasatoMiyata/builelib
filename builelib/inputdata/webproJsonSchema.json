@@ -1149,10 +1149,18 @@
                             },
                             "ContolType": {
                                 "description": "AC3-8:制御方式",
-                                "enum":[
-                                    "無",
-                                    "回転数制御",
-                                    "定流量制御"
+                                "anyOf":[
+                                    {
+                                        "type": "string",
+                                        "enum":[
+                                            "無",
+                                            "定流量制御",
+                                            "回転数制御"
+                                        ]
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
                                 ]
                             },
                             "MinOpeningRate":{
