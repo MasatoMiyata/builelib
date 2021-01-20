@@ -2663,6 +2663,35 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     "Info": str(dataCG[16])
                 }
 
+    if "SP-3) 熱源水温度" in wb.sheet_names():
+
+        data["SpecialInputData"]["heatsource_temperature_monthly"] = {}
+
+        # シートの読み込み
+        sheet_SP3 = wb.sheet_by_name("SP-3) 熱源水温度")
+
+        # 行のループ
+        for i in range(10,sheet_SP3.nrows):
+
+            # シートから「行」の読み込み
+            dataSP3 = sheet_SP3.row_values(i)
+
+            data["SpecialInputData"]["heatsource_temperature_monthly"][dataSP3[0]] = {
+                "1月":  float(dataSP3[1]), 
+                "2月":  float(dataSP3[2]), 
+                "3月":  float(dataSP3[3]), 
+                "4月":  float(dataSP3[4]), 
+                "5月":  float(dataSP3[5]), 
+                "6月":  float(dataSP3[6]), 
+                "7月":  float(dataSP3[7]), 
+                "8月":  float(dataSP3[8]),  
+                "9月":  float(dataSP3[9]), 
+                "10月": float(dataSP3[10]), 
+                "11月": float(dataSP3[11]), 
+                "12月": float(dataSP3[12])
+            }
+
+
     if "SP-4) 室負荷" in wb.sheet_names():
 
         data["SpecialInputData"]["Qroom"] = {}
@@ -2732,7 +2761,7 @@ if __name__ == '__main__':
     directory = "./sample/"
 
     # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
-    case_name = '中規模・空冷HP検証用モデル'
+    case_name = 'airconditioning_heatsoucetemp_area_2'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 

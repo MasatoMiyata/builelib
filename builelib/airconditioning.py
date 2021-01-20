@@ -3208,36 +3208,23 @@ def calc_energy(inputdata, DEBUG = False):
             
 
     ##----------------------------------------------------------------------------------
-    ## 月別の熱源水温度（任意評定）
+    ## 任意評定用　熱源水温度（ SP-3 ）
     ##----------------------------------------------------------------------------------
 
-    NINIHYOUTEI = False
+    if "SpecialInputData" in inputdata:
+        if "heatsource_temperature_monthly" in inputdata["SpecialInputData"]:
 
-    if NINIHYOUTEI:
+            for ref_original_name in inputdata["SpecialInputData"]["heatsource_temperature_monthly"]:
+                
+                # 入力された熱源群名称から、計算上使用する熱源群名称（冷暖、蓄熱分離）に変換
+                for ref_name in [ref_original_name + "_冷房", ref_original_name + "_暖房", ref_original_name + "_冷房_蓄熱", ref_original_name + "_暖房_蓄熱"]:
 
-        # 任意の熱源水温度の入力（月別）
-        input_heatsource_temperature_monthly = {
-            "1月":  22, 
-            "2月":  22,
-            "3月":  22,
-            "4月":  22,
-            "5月":  22,
-            "6月":  22,
-            "7月":  22,
-            "8月":  22, 
-            "9月":  22,
-            "10月": 22,
-            "11月": 22,
-            "12月": 22
-        }
+                    if  ref_name in inputdata["REF"]:
+                        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+                            for dd in range(0,365):
+                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
+                                    inputdata["SpecialInputData"]["heatsource_temperature_monthly"][ref_original_name][ bc.day2month(dd) ]
 
-        for ref_name in inputdata["REF"]:
-            for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-
-                for dd in range(0,365):
-                    inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
-                        input_heatsource_temperature_monthly[ bc.day2month(dd) ]
-        
     if DEBUG: # pragma: no cover
         for ref_name in inputdata["REF"]:
             for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
@@ -4015,7 +4002,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case049.json'
-    filename = './sample/中規模・空冷HP検証用モデル.json'
+    filename = './sample/airconditioning_heatsoucetemp_area_2.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
