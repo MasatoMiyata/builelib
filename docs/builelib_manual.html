@@ -657,30 +657,10 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <li><a href="#_入力シートの作成方法">2. 入力シートの作成方法</a></li>
 <li><a href="#_特殊な入力方法">3. 特殊な入力方法</a>
 <ul class="sectlevel2">
-<li><a href="#_空調変流量風量制御の特性様式sp_1">3.1. 【空調】変流量/風量制御の特性（様式SP-1）</a>
-<ul class="sectlevel3">
-<li><a href="#_概要">3.1.1. 概要</a></li>
-<li><a href="#_入力シートの作成方法_2">3.1.2. 入力シートの作成方法</a></li>
-</ul>
-</li>
-<li><a href="#_空調熱源機器特性様式sp_2">3.2. 【空調】熱源機器特性（様式SP-2）</a>
-<ul class="sectlevel3">
-<li><a href="#_概要_2">3.2.1. 概要</a></li>
-<li><a href="#_入力シートの作成方法_3">3.2.2. 入力シートの作成方法</a></li>
-</ul>
-</li>
-<li><a href="#_空調熱源水温度様式sp_3">3.3. 【空調】熱源水温度（様式SP-3）</a>
-<ul class="sectlevel3">
-<li><a href="#_概要_3">3.3.1. 概要</a></li>
-<li><a href="#_入力シートの作成方法_4">3.3.2. 入力シートの作成方法</a></li>
-</ul>
-</li>
-<li><a href="#_空調室負荷様式sp_4">3.4. 【空調】室負荷（様式SP-4）</a>
-<ul class="sectlevel3">
-<li><a href="#_概要_4">3.4.1. 概要</a></li>
-<li><a href="#_入力シートの作成方法_5">3.4.2. 入力シートの作成方法</a></li>
-</ul>
-</li>
+<li><a href="#_変流量風量制御の特性様式sp_1">3.1. 変流量/風量制御の特性（様式SP-1）</a></li>
+<li><a href="#_熱源機器特性様式sp_2">3.2. 熱源機器特性（様式SP-2）</a></li>
+<li><a href="#_熱源水温度様式sp_3">3.3. 熱源水温度（様式SP-3）</a></li>
+<li><a href="#_室負荷様式sp_4">3.4. 室負荷（様式SP-4）</a></li>
 </ul>
 </li>
 </ul>
@@ -696,8 +676,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <div class="ulist">
 <ul>
 <li>
-<p>Builelib (Builelib: Building Energy-modeling Library)<br>
-<a href="https://builelib.net/" class="bare">https://builelib.net/</a></p>
+<p>Builelib: <a href="https://builelib.net/" class="bare">https://builelib.net/</a></p>
 </li>
 </ul>
 </div>
@@ -715,9 +694,6 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <a href="https://webpro-nr.github.io/BESJP_EngineeringReference/index.html" class="bare">https://webpro-nr.github.io/BESJP_EngineeringReference/index.html</a></p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>Builelibはpythonでコーディングされています。コマンドラインで実行することも可能です。詳細は <a href="https://github.com/MasatoMiyata/builelib">githubのページ</a>をご覧下さい。</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -743,6 +719,21 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </tr>
 </table>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Builelibはpythonでコーディングされています。コマンドラインで実行することも可能です。<br>
+詳細は <a href="https://github.com/MasatoMiyata/builelib">githubのページ</a>をご覧下さい。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -760,6 +751,13 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 </li>
 </ul>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="paragraph">
 <p>入力シートの作成方法については、国土技術政策総合研究所及び建築研究所による技術資料をご覧下さい。</p>
 </div>
@@ -771,6 +769,10 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 </li>
 </ul>
 </div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -781,14 +783,14 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 プログラム内部で規定されているパラメータ等を強制的に上書きして計算することができます。</p>
 </div>
 <div class="sect2">
-<h3 id="_空調変流量風量制御の特性様式sp_1"><a class="link" href="#_空調変流量風量制御の特性様式sp_1">3.1. 【空調】変流量/風量制御の特性（様式SP-1）</a></h3>
+<h3 id="_変流量風量制御の特性様式sp_1"><a class="link" href="#_変流量風量制御の特性様式sp_1">3.1. 変流量/風量制御の特性（様式SP-1）</a></h3>
 <div class="sect3">
 <h4 id="_概要"><a class="link" href="#_概要">3.1.1. 概要</a></h4>
 <div class="paragraph">
 <p>空気調和設備における二次ポンプ群の変流量制御、空調機群の変風量制御を選択した場合のエネルギー消費特性を任意に入力することができます。</p>
 </div>
 <div class="paragraph">
-<p>エネルギー消費特性は「様式SP-1:変流量・変風量制御」に入力します。<br>
+<p>エネルギー消費特性は「様式SP-1:変流量・変風量制御」に入力します。
 例えば「様式SP-1:変流量・変風量制御」に <a href="#fig-SP1-1">図 1</a> のように入力すると、<br></p>
 </div>
 <div class="ulist">
@@ -816,15 +818,15 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <div class="ulist">
 <ul>
 <li>
-<p>「様式2-6 二次ポンプ入力シート」の「⑧流量制御方式」（<a href="#fig-SP1-2">図 2</a>）</p>
+<p>様式2-6:二次ポンプ入力シート ⑧流量制御方式（<a href="#fig-SP1-2">図 2</a>）</p>
 </li>
 <li>
-<p>「様式2-7 空調機入力シート」の「⑪風量制御方式」（<a href="#fig-SP1-3">図 3</a>）</p>
+<p>様式2-7:空調機入力シート ⑪風量制御方式（<a href="#fig-SP1-3">図 3</a>）</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>に入力することができます。</p>
+<p>に入力して使用することができます。</p>
 </div>
 <div id="fig-SP1-2" class="imageblock">
 <div class="content">
@@ -851,10 +853,10 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <div class="ulist">
 <ul>
 <li>
-<p>定風量制御／定流量制御　：負荷率に関係なくエネルギー消費量は一定とする。</p>
+<p>定風量制御／定流量制御：負荷率に関係なくエネルギー消費量は一定とする。</p>
 </li>
 <li>
-<p>回転数制御　：負荷率の1次式として規定</p>
+<p>回転数制御：負荷率の1次式として規定</p>
 </li>
 </ul>
 </div>
@@ -864,10 +866,10 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://webpro-nr.github.io/BESJP_EngineeringReference/EngineeringReference_chapter02.html#<em>2_5_7</em>%E9%A2%A8%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0">WEBPRO仕様書　2.5.7 風量制御方式によって定まる係数</a></p>
+<p><a href="https://webpro-nr.github.io/BESJP_EngineeringReference/EngineeringReference_chapter02.html#_2_5_7_%E9%A2%A8%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0">WEBPRO仕様書　2.5.7 風量制御方式によって定まる係数</a></p>
 </li>
 <li>
-<p><a href="https://webpro-nr.github.io/BESJP_EngineeringReference/EngineeringReference_chapter02.html#<em>2_6_7</em>%E6%B5%81%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0">WEBPRO仕様書　2.6.7 流量制御方式によって定まる係数</a></p>
+<p><a href="https://webpro-nr.github.io/BESJP_EngineeringReference/EngineeringReference_chapter02.html#_2_6_7_%E6%B5%81%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0">WEBPRO仕様書　2.6.7 流量制御方式によって定まる係数</a></p>
 </li>
 </ul>
 </div>
@@ -881,7 +883,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <div class="paragraph">
 <p><strong>①制御方式名称</strong><br>
 制御方式の名称を入力します。名称は自由に付けることができます。
-ここで入力した名称を「様式2-6 二次ポンプ入力シート」の「⑧流量制御方式」もしくは「様式2-7 空調機入力シート」の「⑪風量制御方式」に入力すると、
+ここで入力した名称を「様式2-6:二次ポンプ入力シート ⑧流量制御方式」もしくは「様式2-7:空調機入力シート ⑪風量制御方式」に入力すると、
 本シートで指定した特性でエネルギー消費計算をすることができます。</p>
 </div>
 <div class="paragraph">
@@ -907,7 +909,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_空調熱源機器特性様式sp_2"><a class="link" href="#_空調熱源機器特性様式sp_2">3.2. 【空調】熱源機器特性（様式SP-2）</a></h3>
+<h3 id="_熱源機器特性様式sp_2"><a class="link" href="#_熱源機器特性様式sp_2">3.2. 熱源機器特性（様式SP-2）</a></h3>
 <div class="sect3">
 <h4 id="_概要_2"><a class="link" href="#_概要_2">3.2.1. 概要</a></h4>
 <div class="paragraph">
@@ -924,17 +926,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <div class="title">図 4. 様式SP-2: 熱源機器特性</div>
 </div>
 <div class="paragraph">
-<p>「様式SP-2:熱源機器特性」で入力した熱源機器名称は、<br></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>「様式2-5 熱源入力シート」の「⑥熱源機種」（<a href="#fig-SP2-2">図 5</a>）</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>に入力することができます。</p>
+<p>「様式SP-2:熱源機器特性」で入力した熱源機器名称は「様式2-5:熱源入力シート ⑥熱源機種」（<a href="#fig-SP2-2">図 5</a>）に入力することができます。</p>
 </div>
 <div id="fig-SP2-2" class="imageblock">
 <div class="content">
@@ -979,7 +971,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <div class="ulist">
 <ul>
 <li>
-<p>ここで入力した名称を「様式2-5 熱源入力シート」の「⑥熱源機種」に入力すると、本シートで指定した特性でエネルギー消費計算をすることができます。</p>
+<p>ここで入力した名称を「様式2-5:熱源入力シート ⑥熱源機種」に入力すると、本シートで指定した特性でエネルギー消費計算をすることができます。</p>
 </li>
 <li>
 <p>同じ名称を重複して使用することはできません。</p>
@@ -1310,7 +1302,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_空調熱源水温度様式sp_3"><a class="link" href="#_空調熱源水温度様式sp_3">3.3. 【空調】熱源水温度（様式SP-3）</a></h3>
+<h3 id="_熱源水温度様式sp_3"><a class="link" href="#_熱源水温度様式sp_3">3.3. 熱源水温度（様式SP-3）</a></h3>
 <div class="sect3">
 <h4 id="_概要_3"><a class="link" href="#_概要_3">3.3.1. 概要</a></h4>
 <div class="paragraph">
@@ -1319,7 +1311,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <div class="paragraph">
 <p>熱源水温度は「様式SP-3:熱源水温度入力シート」に入力します。<br>
 例えば「様式SP-3:熱源水温度入力シート」に <a href="#fig-SP3-1">図 6</a> のように入力すると、
-「様式2-5：①熱源群名称」が「熱源A」である熱源群について、ここで入力された熱源水温度（年間17℃一定）でエネルギー消費量の計算が行われます。</p>
+「様式2-5:熱源入力シート ①熱源群名称」が「熱源A」である熱源群について、ここで入力された熱源水温度（年間17℃一定）でエネルギー消費量の計算が行われます。</p>
 </div>
 <div id="fig-SP3-1" class="imageblock">
 <div class="content">
@@ -1340,7 +1332,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <div class="ulist">
 <ul>
 <li>
-<p>この熱源群の名称は「様式2-5：①熱源群名称」にて入力された名称と一致していなければなりません。</p>
+<p>この熱源群の名称は「様式2-5:熱源入力シート ①熱源群名称」にて入力された名称と一致していなければなりません。</p>
 </li>
 <li>
 <p>対象とする熱源機器の機種は「水冷式」でなければいけません。</p>
@@ -1366,7 +1358,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_空調室負荷様式sp_4"><a class="link" href="#_空調室負荷様式sp_4">3.4. 【空調】室負荷（様式SP-4）</a></h3>
+<h3 id="_室負荷様式sp_4"><a class="link" href="#_室負荷様式sp_4">3.4. 室負荷（様式SP-4）</a></h3>
 <div class="sect3">
 <h4 id="_概要_4"><a class="link" href="#_概要_4">3.4.1. 概要</a></h4>
 <div class="paragraph">
@@ -1395,7 +1387,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 <p>室負荷を入力する室の名称等を入力します。</p>
 </li>
 <li>
-<p>該当する室について、「様式2-1:空調ゾーン入力シート」の「①階」「②室名」に入力した名称と同じ名称を入力します。</p>
+<p>該当する室について「様式2-1:空調ゾーン入力シート ①階、②室名」に入力した名称と同じ名称を入力します。</p>
 </li>
 </ul>
 </div>
@@ -1476,7 +1468,7 @@ WEBPROの入力シートをアップロードすれば、ZIPファイル（入�
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-21 16:47:21 +0900
+Last updated 2021-01-21 17:41:22 +0900
 </div>
 </div>
 <script type="text/x-mathjax-config">
