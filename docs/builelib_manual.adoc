@@ -12,9 +12,10 @@
 :example-caption: 例
 :table-caption: 表
 :figure-caption: 図
-:docname: = builelib manual
+:docname: = Builelib manual
 :stem: latexmath
 :xrefstyle: short
+:stylesheet: ./css/adoc-foundation-potion.css
 
 = Builelib: 入力シート作成マニュアル 
 Masato Miyata
@@ -24,7 +25,7 @@ Ver.1.0.7 (2021.01)
 
 Builelib (Builelib: Building Energy-modeling Library) は 非住宅建築物の年間一次エネルギー消費量を計算するためのプログラムです。 +
 
-* Builelib (Builelib: Building Energy-modeling Library) 
+* Builelib (Builelib: Building Energy-modeling Library) +
 https://builelib.net/
 
 計算ロジックは建築物省エネ基準に基づくエネルギー消費性能計算プログラム（WEBPRO）と同じですが、一部、WEBPROにはない機能を追加で実装しています。
@@ -83,7 +84,7 @@ Buileibでは、入力シートに特殊なシート（様式SPシリーズ）�
 
 [[fig-SP1-1]]
 .様式SP-1: 変流量・変風量制御
-image::images/fig-SP1-1.png[width="80%"]
+image::images/fig-SP1-1.png[width="95%"]
 
 「様式SP-1:変流量・変風量制御」で入力した制御方式名称は、 +
 
@@ -94,11 +95,11 @@ image::images/fig-SP1-1.png[width="80%"]
 
 [[fig-SP1-2]]
 .様式2-6 二次ポンプ入力シート
-image::images/fig-SP1-2.png[width="80%"運転モード]
+image::images/fig-SP1-2.png[width="95%"]
 
 [[fig-SP1-3]]
 .様式2-7 空調機入力シート
-image::images/fig-SP1-3.png[width="90%"運転モード]
+image::images/fig-SP1-3.png[width="95%"]
 
 
 [TIP]
@@ -149,7 +150,7 @@ WEBPROにおいては、流量制御方式／風量制御方式として、以�
 
 [[fig-SP2-1]]
 .様式SP-2: 熱源機器特性
-image::images/fig-SP2-1.png[width="80%"運転モード]
+image::images/fig-SP2-1.png[width="95%"]
 
 「様式SP-2:熱源機器特性」で入力した熱源機器名称は、 +
 
@@ -159,7 +160,7 @@ image::images/fig-SP2-1.png[width="80%"運転モード]
 
 [[fig-SP2-2]]
 .様式2-5 熱源入力シート
-image::images/fig-SP1-2.png[width="80%"運転モード]
+image::images/fig-SP1-2.png[width="95%"]
 
 [TIP]
 ====
@@ -189,7 +190,7 @@ WEBPROにおいて選択できる熱源機種及び特性については、次�
 
 [[Table-SP2-1]]
 .SP-2：②運転モード　の選択肢
-[options="header", cols="2,5,1"]
+[options="header", cols="2,5,1", width="95%"]
 |====
 |選択肢|定義／適用|備考
 |冷房|冷房運転時（冷熱生成時）の特性を入力する場合|
@@ -205,7 +206,7 @@ WEBPROにおいて選択できる熱源機種及び特性については、次�
 
 [[Table-SP2-2]]
 .SP-2：③燃料種類　の選択肢
-[options="header", cols="2,5,1"]
+[options="header", cols="2,5,1", width="95%"]
 |====
 |選択肢|定義／適用|備考
 |電力|電力により駆動する熱源である場合|
@@ -227,7 +228,7 @@ WEBPROにおいて選択できる熱源機種及び特性については、次�
 
 [[Table-SP2-3]]
 .SP-2：④熱源種類　の選択肢
-[options="header", cols="1,3,3"]
+[options="header", cols="1,3,3", width="95%"]
 |====
 |選択肢|定義／適用|備考
 |空気|空冷式の熱源機器である場合|能力比及び入力比は外気乾球温度（冷房）、外気湿球温度（暖房）の関数となる。
@@ -244,7 +245,7 @@ WEBPROにおいて選択できる熱源機種及び特性については、次�
 
 [[Table-SP2-4]]
 .SP-2：⑤特性の種類　の選択肢
-[options="header", cols="1,3,3"]
+[options="header", cols="1,3,3", width="95%"]
 |====
 |選択肢|定義／適用|備考
 |能力比|最大能力がどのように変化するかを入力する場合|能力比は「④熱源種類」の選択肢により何の関数となるかが変わります。
@@ -293,7 +294,7 @@ WEBPROにおいて選択できる熱源機種及び特性については、次�
 
 [[fig-SP3-1]]
 .様式SP-3: 熱源水温度入力シート
-image::images/fig-SP3-1.png[width="80%"運転モード]
+image::images/fig-SP3-1.png[width="95%"]
 
 ==== 入力シートの作成方法
 
@@ -320,7 +321,7 @@ image::images/fig-SP3-1.png[width="80%"運転モード]
 
 [[fig-SP4-1]]
 .様式SP-4: 室負荷入力シート（抜粋）
-image::images/fig-SP4-1.png[width="80%"運転モード]
+image::images/fig-SP4-1.png[width="95%"]
 
 ==== 入力シートの作成方法
 
@@ -341,7 +342,7 @@ image::images/fig-SP4-1.png[width="80%"運転モード]
 
 [[Table-SP4-1]]
 .SP-4：④室負荷の種類　の選択肢
-[options="header", cols="1,3,3"]
+[options="header", cols="1,3,3", width="95%"]
 |====
 |選択肢|定義／適用|備考
 |冷房|冷房負荷を入力する場合|

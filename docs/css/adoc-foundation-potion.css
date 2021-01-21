@@ -266,18 +266,19 @@ blockquote, blockquote p { line-height: 1.6; color: #777777; }
   .print-only { display: block !important; }
   .hide-for-print { display: none !important; }
   .show-for-print { display: inherit !important; } }
+  
 /* Tables */
-table { background: white; margin-bottom: 1.25em; border: solid 1px #dddddd; }
-table thead, table tfoot { background: whitesmoke; font-weight: normal; }
-table thead tr th, table thead tr td, table tfoot tr th, table tfoot tr td { padding: 0.5em 0.625em 0.625em; font-size: inherit; color: #333333; text-align: left; }
+table { background: white; margin-bottom: 1.25em; }
+table thead, table tfoot { background: #ffddf8; font-weight: normal;}
+table thead tr th, table thead tr td, table tfoot tr th, table tfoot tr td { padding: 0.5em 0.625em 0.625em; font-size: inherit; color: #333333; text-align: left;}
 table tr th, table tr td { padding: 0.5625em 0.625em; font-size: inherit; color: #555555; }
 table tr.even, table tr.alt, table tr:nth-of-type(even) { background: #f9f9f9; }
-table thead tr th, table tfoot tr th, table tbody tr td, table tr td, table tfoot tr td { display: table-cell; line-height: 1.4; }
+table thead tr th, table tfoot tr th, table tbody tr td, table tr td, table tfoot tr td { display: table-cell; line-height: 1.4; border: 1px solid; border-color: #cccccc; }
 
 .clearfix:before, .clearfix:after, .float-group:before, .float-group:after { content: " "; display: table; }
 .clearfix:after, .float-group:after { clear: both; }
 
-*:not(pre) > code { font-size: inherit; padding: 0; white-space: nowrap; background-color: inherit; border: 0 solid #dddddd; -webkit-border-radius: 0; border-radius: 0; text-shadow: none; }
+*:not(pre) > code { font-size: inherit; padding: 0; white-space: nowrap; background-color: inherit; border: 1px solid #dddddd; -webkit-border-radius: 0; border-radius: 0; text-shadow: none; }
 
 pre, pre > code { line-height: 1.4; color: black; font-family: monospace, serif; font-weight: normal; }
 
@@ -425,7 +426,7 @@ table.pyhltable .linenodiv { background-color: transparent !important; padding-r
 
 table thead th, table tfoot th { font-weight: normal; }
 
-table.tableblock.grid-all { border-collapse: separate; border-spacing: 1px; -webkit-border-radius: 0; border-radius: 0; border-top: 1px solid #dddddd; border-bottom: 1px solid #dddddd; }
+table.tableblock.grid-all { border-collapse: collapse; border-spacing: 1px; -webkit-border-radius: 0; border-radius: 0; border-top: 1px solid #dddddd; border-bottom: 1px solid #dddddd; }
 
 table.tableblock.frame-topbot, table.tableblock.frame-none { border-left: 0; border-right: 0; }
 
@@ -607,12 +608,12 @@ div.unbreakable { page-break-inside: avoid; }
 
 span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 
-.admonitionblock td.icon [class^="icon-"]:before { font-size: 2.5em; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); cursor: default; }
-.admonitionblock td.icon .icon-note:before { content: "\f05a"; color: #b1005d; color: #850046; }
-.admonitionblock td.icon .icon-tip:before { content: "\f0eb"; text-shadow: 1px 1px 2px rgba(155, 155, 0, 0.8); color: #111; }
-.admonitionblock td.icon .icon-warning:before { content: "\f071"; color: #bf6900; }
-.admonitionblock td.icon .icon-caution:before { content: "\f06d"; color: #bf3400; }
-.admonitionblock td.icon .icon-important:before { content: "\f06a"; color: #bf0000; }
+.admonitionblock td.icon [class^="icon-"]:before { font-size: 2em; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); cursor: default; }
+.admonitionblock td.icon .icon-note:before { font-size: 2em; content: "\f05a"; color: #b1005d; color: #850046; }
+.admonitionblock td.icon .icon-tip:before { font-size: 2em; content: "\f0eb"; text-shadow: 1px 1px 2px rgba(155, 155, 0, 0.8); color: #111; }
+.admonitionblock td.icon .icon-warning:before { font-size: 2em; content: "\f071"; color: #bf6900; }
+.admonitionblock td.icon .icon-caution:before { font-size: 2em; content: "\f06d"; color: #bf3400; }
+.admonitionblock td.icon .icon-important:before { font-size: 2em; content: "\f06a"; color: #bf0000; }
 
 .conum { display: inline-block; color: white !important; background-color: #555555; -webkit-border-radius: 100px; border-radius: 100px; text-align: center; width: 20px; height: 20px; font-size: 12px; font-weight: bold; line-height: 20px; font-family: Arial, sans-serif; font-style: normal; position: relative; top: -2px; letter-spacing: -1px; }
 .conum * { color: white !important; }
