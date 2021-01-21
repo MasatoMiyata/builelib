@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="author" content="Masato Miyata">
+<title>Builelib: 入力シート作成マニュアル</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment @import statement to use as custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+:not(pre)>code.nobreak{word-wrap:normal}
+:not(pre)>code.nowrap{white-space:nowrap}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details>summary:first-of-type{cursor:pointer;display:list-item;outline:none;margin-bottom:.75em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;padding-right:.5em}
+pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
+pre.pygments .lineno::before{content:"";margin-right:-.125em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
+table.tableblock{max-width:100%;border-collapse:separate}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+  <script src="https://darshandsoni.com/asciidoctor-skins/switcher.js" type="text/javascript"></script>
+<div id="header">
+<h1>Builelib: 入力シート作成マニュアル</h1>
+<div class="details">
+<span id="author" class="author">Masato Miyata</span><br>
+<span id="revdate">Ver.1.0.7 (2021.01)</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Builelibマニュアル</div>
+<ul class="sectlevel1">
+<li><a href="#_はじめに">1. はじめに</a></li>
+<li><a href="#_入力シートの作成方法">2. 入力シートの作成方法</a></li>
+<li><a href="#_特殊な入力方法">3. 特殊な入力方法</a>
+<ul class="sectlevel2">
+<li><a href="#_空調変流量風量制御の特性様式sp_1">3.1. 【空調】変流量/風量制御の特性（様式SP-1）</a>
+<ul class="sectlevel3">
+<li><a href="#_概要">3.1.1. 概要</a></li>
+<li><a href="#_入力シートの作成方法_2">3.1.2. 入力シートの作成方法</a></li>
+</ul>
+</li>
+<li><a href="#_空調熱源機器特性様式sp_2">3.2. 【空調】熱源機器特性（様式SP-2）</a>
+<ul class="sectlevel3">
+<li><a href="#_概要_2">3.2.1. 概要</a></li>
+<li><a href="#_入力シートの作成方法_3">3.2.2. 入力シートの作成方法</a></li>
+</ul>
+</li>
+<li><a href="#_空調熱源水温度様式sp_3">3.3. 【空調】熱源水温度（様式SP-3）</a>
+<ul class="sectlevel3">
+<li><a href="#_概要_3">3.3.1. 概要</a></li>
+<li><a href="#_入力シートの作成方法_4">3.3.2. 入力シートの作成方法</a></li>
+</ul>
+</li>
+<li><a href="#_空調室負荷様式sp_4">3.4. 【空調】室負荷（様式SP-4）</a>
+<ul class="sectlevel3">
+<li><a href="#_概要_4">3.4.1. 概要</a></li>
+<li><a href="#_入力シートの作成方法_5">3.4.2. 入力シートの作成方法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_はじめに"><a class="link" href="#_はじめに">1. はじめに</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Builelib (Builelib: Building Energy-modeling Library) は 非住宅建築物の年間一次エネルギー消費量を計算するためのプログラムです。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Builelib (Builelib: Building Energy-modeling Library)
+<a href="https://builelib.net/" class="bare">https://builelib.net/</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>計算ロジックは建築物省エネ基準に基づくエネルギー消費性能計算プログラム（WEBPRO）と同じですが、一部、WEBPROにはない機能を追加で実装しています。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>建築物省エネ基準に基づく「建築物のエネルギー消費量計算プログラム（非住宅版）」（WEBPRO）<br>
+<a href="https://building.app.lowenergy.jp/" class="bare">https://building.app.lowenergy.jp/</a></p>
+</li>
+<li>
+<p>「建築物のエネルギー消費量計算プログラム（非住宅版）」の計算方法（HTML）<br>
+<a href="https://webpro-nr.github.io/BESJP_EngineeringReference/index.html" class="bare">https://webpro-nr.github.io/BESJP_EngineeringReference/index.html</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Builelibはpythonでコーディングされています。コマンドラインで実行することも可能です。詳細は <a href="https://github.com/MasatoMiyata/builelib">githubのページ</a>をご覧下さい。</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>本マニュアルの内容の一部または全部を無断で転載することは禁止とします。</p>
+</li>
+<li>
+<p>本プログラムの評価結果を建築物省エネ基準の申請等に使用することはできません（申請のためのPDF等は出力されません）。</p>
+</li>
+<li>
+<p>本プログラムを使用したことに伴っていかなる損害、損失等が生じたとしても、これらについて一切の保証責任及び賠償責任を負いません。</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_入力シートの作成方法"><a class="link" href="#_入力シートの作成方法">2. 入力シートの作成方法</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>建築物の仕様の入力には、WEBPROの入力シート（.xlsmファイル）を用います。 入力方法等はWEBPROと同じです。<br>
+WEBPROの入力シートをアップロードすれば、ZIPファイル（入力ファイルと計算結果）をダウンロードできます。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>WEBPROの入力シート（外皮・設備仕様入力シート_Ver2用）<br>
+<a href="https://www.kenken.go.jp/becc/index.html#5-2" class="bare">https://www.kenken.go.jp/becc/index.html#5-2</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>入力シートの作成方法については、国土技術政策総合研究所及び建築研究所による技術資料をご覧下さい。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>入力シートの作成方法（エネルギー消費性能計算プログラム（非住宅版）Ver.2 の入力マニュアル）<br>
+<a href="https://www.kenken.go.jp/becc/building.html#1-2" class="bare">https://www.kenken.go.jp/becc/building.html#1-2</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_特殊な入力方法"><a class="link" href="#_特殊な入力方法">3. 特殊な入力方法</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Buileibでは、入力シートに特殊なシート（様式SPシリーズ）を追加することにより、
+プログラム内部で規定されているパラメータ等を強制的に上書きして計算することができます。</p>
+</div>
+<div class="sect2">
+<h3 id="_空調変流量風量制御の特性様式sp_1"><a class="link" href="#_空調変流量風量制御の特性様式sp_1">3.1. 【空調】変流量/風量制御の特性（様式SP-1）</a></h3>
+<div class="sect3">
+<h4 id="_概要"><a class="link" href="#_概要">3.1.1. 概要</a></h4>
+<div class="paragraph">
+<p>空気調和設備における二次ポンプ群の変流量制御、空調機群の変風量制御を選択した場合のエネルギー消費特性を任意に入力することができます。</p>
+</div>
+<div class="paragraph">
+<p>エネルギー消費特性は「様式SP-1:変流量・変風量制御」に入力します。<br>
+例えば「様式SP-1:変流量・変風量制御」に <a href="#fig-SP1-1">図 1</a> のように入力すると、<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>制御方式名称「特殊な流量制御」として、負荷率の2次関数でエネルギー消費量が変化する特性</p>
+</li>
+<li>
+<p>制御方式名称「特殊な風量制御」として、負荷率の1次関数でエネルギー消費量が変化する特性</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>が追加されます。</p>
+</div>
+<div id="fig-SP1-1" class="imageblock">
+<div class="content">
+<img src="images/fig-SP1-1.png" alt="fig SP1 1" width="80%">
+</div>
+<div class="title">図 1. 様式SP-1: 変流量・変風量制御</div>
+</div>
+<div class="paragraph">
+<p>「様式SP-1:変流量・変風量制御」で入力した制御方式名称は、<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>「様式2-6 二次ポンプ入力シート」の「⑧流量制御方式」（<a href="#fig-SP1-2">図 2</a>）</p>
+</li>
+<li>
+<p>「様式2-7 空調機入力シート」の「⑪風量制御方式」（<a href="#fig-SP1-3">図 3</a>）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>に入力することができます。</p>
+</div>
+<div id="fig-SP1-2" class="imageblock">
+<div class="content">
+<img src="images/fig-SP1-2.png" alt="fig SP1 2" width="運転モード">
+</div>
+<div class="title">図 2. 様式2-6 二次ポンプ入力シート</div>
+</div>
+<div id="fig-SP1-3" class="imageblock">
+<div class="content">
+<img src="images/fig-SP1-3.png" alt="fig SP1 3" width="運転モード">
+</div>
+<div class="title">図 3. 様式2-7 空調機入力シート</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>WEBPROにおいては、流量制御方式／風量制御方式として、以下の二つの選択肢が用意されています。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>定風量制御／定流量制御　：負荷率に関係なくエネルギー消費量は一定とする。</p>
+</li>
+<li>
+<p>回転数制御　：負荷率の1次式として規定</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>詳細はWEBPROの仕様書をご覧下さい。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://webpro-nr.github.io/BESJP_EngineeringReference/EngineeringReference_chapter02.html#<em>2_5_7</em>%E9%A2%A8%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0">WEBPRO仕様書　2.5.7 風量制御方式によって定まる係数</a></p>
+</li>
+<li>
+<p><a href="https://webpro-nr.github.io/BESJP_EngineeringReference/EngineeringReference_chapter02.html#<em>2_6_7</em>%E6%B5%81%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0">WEBPRO仕様書　2.6.7 流量制御方式によって定まる係数</a></p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_入力シートの作成方法_2"><a class="link" href="#_入力シートの作成方法_2">3.1.2. 入力シートの作成方法</a></h4>
+<div class="paragraph">
+<p><strong>①制御方式名称</strong><br>
+制御方式の名称を入力します。名称は自由に付けることができます。
+ここで入力した名称を「様式2-6 二次ポンプ入力シート」の「⑧流量制御方式」もしくは「様式2-7 空調機入力シート」の「⑪風量制御方式」に入力すると、
+本シートで指定した特性でエネルギー消費計算をすることができます。</p>
+</div>
+<div class="paragraph">
+<p><strong>②係数 x4</strong><br>
+負荷率の4次関数の係数のうち、4次の項の係数を入力します。</p>
+</div>
+<div class="paragraph">
+<p><strong>③係数 x3</strong><br>
+負荷率の4次関数の係数のうち、3次の項の係数を入力します。</p>
+</div>
+<div class="paragraph">
+<p><strong>④係数 x2</strong><br>
+負荷率の4次関数の係数のうち、2次の項の係数を入力します。</p>
+</div>
+<div class="paragraph">
+<p><strong>⑤係数 x1</strong><br>
+負荷率の4次関数の係数のうち、1次の項の係数を入力します。</p>
+</div>
+<div class="paragraph">
+<p><strong>⑥係数 a</strong><br>
+負荷率の4次関数の係数のうち、切片の値を入力します。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_空調熱源機器特性様式sp_2"><a class="link" href="#_空調熱源機器特性様式sp_2">3.2. 【空調】熱源機器特性（様式SP-2）</a></h3>
+<div class="sect3">
+<h4 id="_概要_2"><a class="link" href="#_概要_2">3.2.1. 概要</a></h4>
+<div class="paragraph">
+<p>空気調和設備における熱源群の熱源機器特性を任意に入力することができます。</p>
+</div>
+<div class="paragraph">
+<p>熱源機器特性は「様式SP-2:熱源機器特性」に入力します。<br>
+例えば「様式SP-2:熱源機器特性」に <a href="#fig-SP2-1">図 4</a> のように入力すると、入力された特性を持つ新たな熱源機種「特殊な熱源機器1」及び「特殊な熱源機器2」が追加されます。</p>
+</div>
+<div id="fig-SP2-1" class="imageblock">
+<div class="content">
+<img src="images/fig-SP2-1.png" alt="fig SP2 1" width="運転モード">
+</div>
+<div class="title">図 4. 様式SP-2: 熱源機器特性</div>
+</div>
+<div class="paragraph">
+<p>「様式SP-2:熱源機器特性」で入力した熱源機器名称は、<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>「様式2-5 熱源入力シート」の「⑥熱源機種」（<a href="#fig-SP2-2">図 5</a>）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>に入力することができます。</p>
+</div>
+<div id="fig-SP2-2" class="imageblock">
+<div class="content">
+<img src="images/fig-SP1-2.png" alt="fig SP1 2" width="運転モード">
+</div>
+<div class="title">図 5. 様式2-5 熱源入力シート</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>WEBPROにおいて選択できる熱源機種及び特性については、次の仕様書をご覧下さい。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://webpro-nr.github.io/BESJP_EngineeringReference/EngineeringReference_chapter02.html#<em>a_4</em>%E7%86%B1%E6%BA%90%E7%89%B9%E6%80%A7">WEBPRO仕様書　2.A.4 熱源特性</a></p>
+</li>
+<li>
+<p><a href="https://webpro-nr.github.io/BESJP_EngineeringReference/pdf/heatsource_performance_curve.pdf">WEBPRO仕様書　熱源機器特性一覧</a></p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_入力シートの作成方法_3"><a class="link" href="#_入力シートの作成方法_3">3.2.2. 入力シートの作成方法</a></h4>
+<div class="paragraph">
+<p><strong>①熱源機種名称</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>熱源機種の名称を入力します。名称は自由に付けることができます。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>ここで入力した名称を「様式2-5 熱源入力シート」の「⑥熱源機種」に入力すると、本シートで指定した特性でエネルギー消費計算をすることができます。</p>
+</li>
+<li>
+<p>同じ名称を重複して使用することはできません。</p>
+</li>
+<li>
+<p>既にWEBPROで指定されている熱源機種名称と同じ名称を使用することはできません。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>同一の機種について、後述する「②運転モード」及び「⑤特性の種類」を複数指定する場合は、<a href="#fig-SP2-1">図 4</a>の例のように「①熱源機種名称」は空欄として下の行に連続して入力します。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>②運転モード</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>入力する特性が、冷房運転モードの特性か暖房運転モード時の特性かを選択します。</p>
+</li>
+<li>
+<p>選択肢は<a href="#Table-SP2-1">表 1</a>に示すとおりです。</p>
+</li>
+<li>
+<p>「①熱源機種名称」と同様に、同じ運転モードの特性を複数指定する場合は、<a href="#fig-SP2-1">図 4</a>の例のように「②運転モード」は空欄として下の行に連続して入力します。</p>
+</li>
+</ul>
+</div>
+<table id="Table-SP2-1" class="tableblock frame-all grid-all stretch">
+<caption class="title">表 1. SP-2：②運転モード　の選択肢</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 62.5%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">選択肢</th>
+<th class="tableblock halign-left valign-top">定義／適用</th>
+<th class="tableblock halign-left valign-top">備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">冷房</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">冷房運転時（冷熱生成時）の特性を入力する場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">暖房</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">暖房運転時（温熱生成時）の特性を入力する場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>③燃料種類</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>入力する熱源機器の燃料種類を選択します。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>この選択により、熱源機器のエネルギー消費量を一次エネルギー換算する際に使用する係数（一次エネルギー換算係数）の値が決まります。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>選択肢は<a href="#Table-SP2-2">表 2</a>に示すとおりです。</p>
+</li>
+<li>
+<p>同一の「①熱源機種名称」と「②運転モード」の組み合わせについて1つしか「③燃料種類」は指定できません。</p>
+</li>
+</ul>
+</div>
+<table id="Table-SP2-2" class="tableblock frame-all grid-all stretch">
+<caption class="title">表 2. SP-2：③燃料種類　の選択肢</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 62.5%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">選択肢</th>
+<th class="tableblock halign-left valign-top">定義／適用</th>
+<th class="tableblock halign-left valign-top">備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">電力</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">電力により駆動する熱源である場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ガス</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">都市ガスにより駆動する熱源である場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">重油</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">重油により駆動する熱源である場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">灯油</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">灯油により駆動する熱源である場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">液化石油ガス</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">液化石油ガス（LPG）により駆動する熱源である場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">蒸気</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">熱源外部から供給蒸気された蒸気により駆動する熱源である場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">温水</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">熱源外部から供給蒸気された温水により駆動する熱源である場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">冷水</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">熱源外部から供給蒸気された冷水により駆動する熱源である場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>④熱源種類</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>入力する熱源機器の熱源（ヒートソース）の種類を選択します。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>この選択により、能力比及び入力比が何の関数となるかが決まります。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>選択肢は<a href="#Table-SP2-3">表 3</a>に示すとおりです。</p>
+</li>
+<li>
+<p>同一の「①熱源機種名称」と「②運転モード」の組み合わせについて1つしか「④熱源種類」は指定できません。</p>
+</li>
+</ul>
+</div>
+<table id="Table-SP2-3" class="tableblock frame-all grid-all stretch">
+<caption class="title">表 3. SP-2：④熱源種類　の選択肢</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">選択肢</th>
+<th class="tableblock halign-left valign-top">定義／適用</th>
+<th class="tableblock halign-left valign-top">備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">空気</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">空冷式の熱源機器である場合</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">能力比及び入力比は外気乾球温度（冷房）、外気湿球温度（暖房）の関数となる。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">水</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">水冷式の熱源機器である場合</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">能力比及び入力比は熱源水温度（冷却水温度）の関数となる。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不要</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">燃焼式の熱源機器等、外部の熱源を必要としない場合</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">能力比及び入力比は外気乾球温度の関数となる。</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>⑤特性の種類</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>入力する特性の種類の種類を選択します。</p>
+</li>
+<li>
+<p>選択肢は<a href="#Table-SP2-4">表 4</a>に示すとおりです。</p>
+</li>
+<li>
+<p>同一の「①熱源機種名称」と「②運転モード」の組み合わせについて、複数の特性を指定する場合は、
+<a href="#fig-SP2-1">図 4</a>の例のように「①熱源機種名称」から「④熱源種類」までを空欄として下の行に連続して入力します。</p>
+</li>
+</ul>
+</div>
+<table id="Table-SP2-4" class="tableblock frame-all grid-all stretch">
+<caption class="title">表 4. SP-2：⑤特性の種類　の選択肢</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">選択肢</th>
+<th class="tableblock halign-left valign-top">定義／適用</th>
+<th class="tableblock halign-left valign-top">備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">能力比</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">最大能力がどのように変化するかを入力する場合</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">能力比は「④熱源種類」の選択肢により何の関数となるかが変わります。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">入力比</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">最大入力がどのように変化するかを入力する場合</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">入力比は「④熱源種類」の選択肢により何の関数となるかが変わります。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">部分負荷特性</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">負荷率により入力がどのように変化するかを入力する場合</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">部分負荷特性は負荷率の関数となります。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">送水温度特性</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">送水温度により入力がどのように変化するかを入力する場合</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">送水温度特性は送水温度の関数となります。</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>⑥特性データ 係数の適用範囲 下限</strong><br>
+<strong>⑦特性データ 係数の適用範囲 上限</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>入力する特性データの適用範囲を指定します。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>何の範囲を指定するかは「⑤特性の種類」が何の関数であるか、つまり「④熱源種類」の選択肢により変わります。</p>
+</li>
+<li>
+<p>例えば、「②運転モード」が「冷房」、「④熱源種類」が「水」、「⑤特性の種類」が「能力比」である場合は、熱源水温度の範囲を入力します。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="#fig-SP2-1">図 4</a>における「暖房」の「能力比」のように、複数の範囲を指定して異なる特性データを入力することができます。
+この場合は、「⑤特性の種類」は空欄として下の行に連続して入力します。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>⑧特性データ 冷却水温度（部分負荷のみ）下限</strong><br>
+<strong>⑨特性データ 冷却水温度（部分負荷のみ）上限</strong><br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>「④熱源種類」が「水」であり、「⑤特性の種類」が「部分負荷特性」である場合において、冷却水温度により特性を変えたい場合は、本欄に各特性の適用範囲を入力します。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>入力をしない場合は空欄とします。</p>
+</li>
+<li>
+<p>複数の範囲に対する特性データを入力する場合、「⑥特性データ 係数の適用範囲 下限」及び「⑦特性データ 係数の適用範囲 上限」を空欄とすることはできません。これらのセルにも値の入力が必要です。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>⑩~⑭特性データ 係数</strong><br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>熱源の特性は4次式の関数として指定することができます。ここでは特性を表す関数の係数を入力します。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>a4は4次の項の係数、a3は3次の項の係数、a2は2次の項の係数、a1は1次の項の係数、a0は切片です。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>⑮特性データ 基整促係数</strong><br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>WEBPROでは、試験所等で測定された性能と実際に建物に据え付けられたときの性能との差を埋めるための係数（基整促係数）が考慮されています。ここでは、当該係数の値を入力します。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>基整促係数を 1 とすれば補正がかからない条件での計算ができます。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_空調熱源水温度様式sp_3"><a class="link" href="#_空調熱源水温度様式sp_3">3.3. 【空調】熱源水温度（様式SP-3）</a></h3>
+<div class="sect3">
+<h4 id="_概要_3"><a class="link" href="#_概要_3">3.3.1. 概要</a></h4>
+<div class="paragraph">
+<p>空気調和設備における熱源群の熱源水温度を任意に入力することができます。</p>
+</div>
+<div class="paragraph">
+<p>熱源水温度は「様式SP-3:熱源水温度入力シート」に入力します。<br>
+例えば「様式SP-3:熱源水温度入力シート」に <a href="#fig-SP3-1">図 6</a> のように入力すると、
+「様式2-5：①熱源群名称」が「熱源A」である熱源群について、ここで入力された熱源水温度（年間17℃一定）でエネルギー消費量の計算が行われます。</p>
+</div>
+<div id="fig-SP3-1" class="imageblock">
+<div class="content">
+<img src="images/fig-SP3-1.png" alt="fig SP3 1" width="運転モード">
+</div>
+<div class="title">図 6. 様式SP-3: 熱源水温度入力シート</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_入力シートの作成方法_4"><a class="link" href="#_入力シートの作成方法_4">3.3.2. 入力シートの作成方法</a></h4>
+<div class="paragraph">
+<p><strong>①熱源群名称</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>熱源水温度を指定する熱源群の名称を入力します。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>この熱源群の名称は「様式2-5：①熱源群名称」にて入力された名称と一致していなければなりません。</p>
+</li>
+<li>
+<p>対象とする熱源機器の機種は「水冷式」でなければいけません。</p>
+</li>
+<li>
+<p>同一の熱源群に対して、複数の熱源水温度を指定することはできません。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>②~⑬熱源水温度 </strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>各月の熱源水温度を入力します。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_空調室負荷様式sp_4"><a class="link" href="#_空調室負荷様式sp_4">3.4. 【空調】室負荷（様式SP-4）</a></h3>
+<div class="sect3">
+<h4 id="_概要_4"><a class="link" href="#_概要_4">3.4.1. 概要</a></h4>
+<div class="paragraph">
+<p>空気調和設備における各室の日積算室負荷（外気負荷は含まない）を任意に入力することができます。</p>
+</div>
+<div class="paragraph">
+<p>室負荷は「様式SP-4:室負荷入力シート」に入力します。<br>
+例えば「様式SP-4:室負荷入力シート」に <a href="#fig-SP4-1">図 7</a> のように入力すると、「1F 事務室」については入力された室負荷でエネルギー消費量の計算が行われます（プログラム内部で計算された室負荷が上書きされます）。</p>
+</div>
+<div id="fig-SP4-1" class="imageblock">
+<div class="content">
+<img src="images/fig-SP4-1.png" alt="fig SP4 1" width="運転モード">
+</div>
+<div class="title">図 7. 様式SP-4: 室負荷入力シート（抜粋）</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_入力シートの作成方法_5"><a class="link" href="#_入力シートの作成方法_5">3.4.2. 入力シートの作成方法</a></h4>
+<div class="paragraph">
+<p><strong>①階</strong>
+<strong>②室名称</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>室負荷を入力する室の名称等を入力します。</p>
+</li>
+<li>
+<p>該当する室について、「様式2-1:空調ゾーン入力シート」の「①階」「②室名」に入力した名称と同じ名称を入力します。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>③ゾーン名称</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>本欄は将来の機能拡張のためのものです。現状では必ず空欄します。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>④室負荷の種類</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>入力する室負荷の種類を選択します。</p>
+</li>
+<li>
+<p>選択肢は<a href="#Table-SP4-1">表 5</a>に示すとおりです。</p>
+</li>
+</ul>
+</div>
+<table id="Table-SP4-1" class="tableblock frame-all grid-all stretch">
+<caption class="title">表 5. SP-4：④室負荷の種類　の選択肢</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">選択肢</th>
+<th class="tableblock halign-left valign-top">定義／適用</th>
+<th class="tableblock halign-left valign-top">備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">冷房</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">冷房負荷を入力する場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">暖房</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">暖房負荷を入力する場合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>⑤日積算室負荷[MJ/day]</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>各日の日積算室負荷の値を入力します。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>冷房負荷は正の値、暖房負荷は負の値とします。</p>
+</li>
+<li>
+<p>同一の日に冷房負荷と暖房負荷の両方が発生する場合もあります。これは、例えば、午前は暖房要求、午後は冷房要求となることがあり得るからです。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-01-21 14:38:32 +0900
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>
