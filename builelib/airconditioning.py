@@ -3147,12 +3147,10 @@ def calc_energy(inputdata, DEBUG = False):
             resultJson["REF"][ref_original_name + "_暖房"]["ghsp_Rq"] = (Qcmax-Qhmax)/(Qcmax+Qhmax)
 
         elif Qcmax == 0 and Qhmax != 0:
-            Qcmax = Qhmax
-            resultJson["REF"][ref_original_name + "_暖房"]["ghsp_Rq"] = (Qcmax-Qhmax)/(Qcmax+Qhmax)
+            resultJson["REF"][ref_original_name + "_暖房"]["ghsp_Rq"] = 0
 
         elif Qcmax != 0 and Qhmax == 0:
-            Qhmax = Qcmax
-            resultJson["REF"][ref_original_name + "_冷房"]["ghsp_Rq"] = (Qcmax-Qhmax)/(Qcmax+Qhmax)
+            resultJson["REF"][ref_original_name + "_冷房"]["ghsp_Rq"] = 0
 
 
     ##----------------------------------------------------------------------------------
@@ -3353,7 +3351,7 @@ def calc_energy(inputdata, DEBUG = False):
                 print( f' Q_ref_max {inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"]}')
 
     #----------------------------------------------------------------------------------
-    # 蓄熱システムによる運転時間の補正（解説書 2.7.15）
+    # 蓄熱システムによる運転時間の補正（解説書 2.7.15 蓄熱）
     #----------------------------------------------------------------------------------
 
     # 蓄熱の場合のマトリックス操作（負荷率１に集約＋外気温を１レベル変える）
@@ -3588,7 +3586,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         for dd in range(0,365):
             
-            iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1    # 負荷率帯のマトリックス番号
+            # iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1    # 負荷率帯のマトリックス番号
 
             # 送水温度特性（各負荷率・各温度帯について）
             for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
@@ -3629,7 +3627,7 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     #----------------------------------------------------------------------------------
-    # 蓄熱システムによる運転時間の補正（解説書 2.7.15）
+    # 蓄熱システムによる運転時間の補正（解説書 2.7.15 追掛）
     #----------------------------------------------------------------------------------
 
     # 蓄熱槽を持つシステムの追い掛け時運転時間補正（追い掛け運転開始時に蓄熱量がすべて使われない問題を解消） 2014/1/10
@@ -3641,7 +3639,7 @@ def calc_energy(inputdata, DEBUG = False):
 
             for dd in range(0,365):      
                 
-                iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1
+                # iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1
 
                 if int(resultJson["REF"][ref_name]["num_of_operation"][dd]) >= 2:
 
@@ -3771,12 +3769,12 @@ def calc_energy(inputdata, DEBUG = False):
                     resultJson["REF"][ref_name]["E_ref_ct_pump"][dd] += \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["CoolingTowerPumpPowerConsumption_total"]
 
-    if DEBUG: # pragma: no cover
-        for ref_name in inputdata["REF"]:
-            for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
-                print( f'--- 熱源群名 {ref_name} ---')
-                print( f'- {unit_id+1} 台目の熱源機器 -')
-                print( f' E_ref_max {resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"]}')
+            if DEBUG: # pragma: no cover
+                for ref_name in inputdata["REF"]:
+                    for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
+                        print( f'--- 熱源群名 {ref_name} ---')
+                        print( f'- {unit_id+1} 台目の熱源機器 -')
+                        print( f' E_ref_max {resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"]}')
 
 
     ##----------------------------------------------------------------------------------
@@ -3787,7 +3785,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         for dd in range(0,365):
 
-            if resultJson["REF"][ref_name]["matrix_iL"][dd] == 0:
+            if resultJson["REF"][ref_name]["Tref"][dd] == 0:
                 
                 resultJson["REF"][ref_name]["E_ref_day"][dd]     =  0   # 熱源主機エネルギー消費量 [MJ]
                 resultJson["REF"][ref_name]["E_ref_day_MWh"][dd] =  0   # 熱源主機電力消費量 [MWh]
@@ -4016,7 +4014,7 @@ def calc_energy(inputdata, DEBUG = False):
                 # CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての負荷率 [-]
                 for dd in range(0,365):
 
-                    if resultJson["REF"][ref_name]["matrix_iL"][dd] == 0:
+                    if resultJson["REF"][ref_name]["Tref"][dd] == 0:
                         resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 0;
                     elif resultJson["REF"][ref_name]["matrix_iL"][dd] == 11:
                         resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 1.2
@@ -4059,7 +4057,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case049.json'
-    filename = './sample/sample06_WEBPRO_inputSheet_for_SP1.json'
+    filename = './sample/sample05_WEBPRO_inputSheet_for_SP4.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
