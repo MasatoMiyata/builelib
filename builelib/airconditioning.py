@@ -3769,13 +3769,6 @@ def calc_energy(inputdata, DEBUG = False):
                     resultJson["REF"][ref_name]["E_ref_ct_pump"][dd] += \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["CoolingTowerPumpPowerConsumption_total"]
 
-            if DEBUG: # pragma: no cover
-                for ref_name in inputdata["REF"]:
-                    for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
-                        print( f'--- 熱源群名 {ref_name} ---')
-                        print( f'- {unit_id+1} 台目の熱源機器 -')
-                        print( f' E_ref_max {resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"]}')
-
 
     ##----------------------------------------------------------------------------------
     ## 熱熱源群の一次エネルギー消費量および消費電力（解説書 2.7.17）
@@ -4056,8 +4049,8 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    # filename = './tests/airconditioning/ACtest_Case049.json'
-    filename = './sample/sample05_WEBPRO_inputSheet_for_SP4.json'
+    filename = './tests/airconditioning/ACtest_Case050.json'
+    # filename = './sample/sample05_WEBPRO_inputSheet_for_SP4.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
