@@ -2824,7 +2824,7 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## 蓄熱総の熱損失 （解説書 2.7.1）
+    ## 蓄熱槽の熱損失 （解説書 2.7.1）
     ##----------------------------------------------------------------------------------
 
     for ref_name in inputdata["REF"]:
@@ -3032,13 +3032,14 @@ def calc_energy(inputdata, DEBUG = False):
 
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["Lref"] = np.zeros(365)      # 日積算熱源負荷 [MJ/Day]
+        resultJson["REF"][ref_name]["Lref"] = np.zeros(365)      # 日積算熱源負荷 [MJ/Day] の 定格能力に対する比率（熱源定格負荷率）
 
         for dd in range(0,365):
             
             # 負荷率の算出 [-]
             if resultJson["REF"][ref_name]["Tref"][dd] > 0:
 
+                # 熱源定格負荷率（定格能力に対する比率
                 resultJson["REF"][ref_name]["Lref"][dd] = \
                     (resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000/3600) / \
                     inputdata["REF"][ref_name]["Qref_rated"]
@@ -3514,9 +3515,9 @@ def calc_energy(inputdata, DEBUG = False):
                 if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
                     resultJson["REF"][ref_name]["load_ratio"][dd] = 1.0
 
-                # 過負荷時の負荷率は 1.0 とする。ペナルティは別途乗じる。
-                if iL == divL-1:
-                    resultJson["REF"][ref_name]["load_ratio"][dd] = 1.0
+                # # 過負荷時の負荷率は 1.0 とする。ペナルティは別途乗じる。
+                # if iL == divL-1:
+                #     resultJson["REF"][ref_name]["load_ratio"][dd] = 1.0
 
         if DEBUG: # pragma: no cover
             print( f'--- 熱源群名 {ref_name} ---')
@@ -4049,7 +4050,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case050.json'
+    filename = './tests/airconditioning/ACtest_Case035.json'
     # filename = './sample/sample05_WEBPRO_inputSheet_for_SP4.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
