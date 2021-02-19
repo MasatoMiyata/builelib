@@ -151,7 +151,7 @@
                         "SupplyWaterTempSummer": null,
                         "SupplyWaterTempMiddle": null,
                         "SupplyWaterTempWinter": null,
-                        "HeatsourceRatedCapacity": 100.0,
+                        "HeatsourceRatedCapacity": 10.0,
                         "HeatsourceRatedPowerConsumption": 0,
                         "HeatsourceRatedFuelConsumption": 0,
                         "Heatsource_sub_RatedPowerConsumption": 0,
@@ -313,5 +313,9 @@
     "HotwaterSupplySystems": {},
     "Elevators": {},
     "PhotovoltaicSystems": {},
-    "CogenerationSystems": {}
+    "CogenerationSystems": {},
+    "SpecialInputData": {
+        "heatsource_performance": {},
+        "flow_control": {}
+    }
 }
