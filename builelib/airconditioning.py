@@ -26,10 +26,10 @@ def count_Matrix(x, mxL):
     ix = 0
 
     # C#の処理に合わせる。
-    x = math.floor(x*10)/10+0.05
+    # x = math.floor(x*10)/10+0.05
 
     # 該当するマトリックスを探査
-    while x >= mxL[ix]:
+    while x > mxL[ix]:
         ix += 1
 
         if ix == len(mxL)-1:
