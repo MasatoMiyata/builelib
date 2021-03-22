@@ -2904,36 +2904,36 @@ if __name__ == '__main__':
     #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
-    # #-----------------------
-    # # WEBPRO Ver2シートの例
-    # #-----------------------
-    # directory = "./tests/airconditioning_gshp_openloop/"
+    #-----------------------
+    # WEBPRO Ver2シートの例
+    #-----------------------
+    directory = "./tests/photovoltaic/"
 
-    # case_name = 'AC_gshp_closeloop_Case001'
+    case_name = 'PV_case01'
 
-    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    # # json出力
-    # with open(directory + case_name + ".json",'w') as fw:
-    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # json出力
+    with open(directory + case_name + ".json",'w') as fw:
+        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     #-----------------------
     # WEBPRO Ver2シートの例（連続）
     #-----------------------
-    directory = "./tests/airconditioning/"
+    # directory = "./tests/airconditioning/"
 
-    for id in [50]: #range(50,51):
-        if id < 10:
-            case_name = 'ACtest_Case00' + str(int(id))
-        else:
-            case_name = 'ACtest_Case0' + str(int(id))
+    # for id in [35]: #range(50,51):
+    #     if id < 10:
+    #         case_name = 'ACtest_Case00' + str(int(id))
+    #     else:
+    #         case_name = 'ACtest_Case0' + str(int(id))
 
-        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-        # json出力
-        with open(directory + case_name + ".json",'w') as fw:
-            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    #     # json出力
+    #     with open(directory + case_name + ".json",'w') as fw:
+    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     # #-----------------------

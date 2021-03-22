@@ -6,6 +6,7 @@ sample/backup/*
 .pypirc
 inputdata.json
 resultJson.json
+sample/入力シートV3/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

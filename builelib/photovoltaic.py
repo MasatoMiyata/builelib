@@ -107,8 +107,9 @@ def calc_energy(inputdata, DEBUG = False):
         # 傾斜面の傾斜角（水平0°、垂直90°） 一の位を四捨五入
         slope_angle = round(inputdata["PhotovoltaicSystems"][system_name]["Angle"], -1)
 
-        if slope_angle > 90:
-            slope_angle = 90
+        # 90度を超えた場合でも計算できるように調整
+        # if slope_angle > 90:
+        #     slope_angle = 90
 
         ##----------------------------------------------------------------------------------
         ## 付録 A 傾斜面における単位面積当たりの平均日射量
@@ -251,7 +252,8 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- photovoltaic.py -----')
-    filename = './tests/cogeneration/Case_hospital_05.json'
+    # filename = './tests/cogeneration/Case_hospital_05.json'
+    filename = './tests/photovoltaic/PV_case01.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
@@ -261,3 +263,6 @@ if __name__ == '__main__':
 
     with open("resultJson_PV.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
+
+    for system_name in resultJson["PhotovoltaicSystems"]:
+        print(resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"])

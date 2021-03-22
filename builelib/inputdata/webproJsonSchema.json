@@ -2081,7 +2081,7 @@
                     "description": "PV-7:パネルの傾斜角",
                     "type": "number",
                     "minimum": 0,
-                    "maximum": 90
+                    "maximum": 180
                 },
                 "Info": {
                     "description": "PV-8:備考",
