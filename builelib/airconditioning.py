@@ -173,15 +173,24 @@ def calc_energy(inputdata, DEBUG = False):
     ## 気象データ（解説書 2.2.1）
     ##----------------------------------------------------------------------------------
 
-    # 気象データ（HASP形式）読み込み ＜365×24の行列＞
-    [ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
-        climate.readHaspClimateData( climatedata_directory + "/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
+    if "climate_data" in inputdata["SpecialInputData"]:
+
+        ToutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
+        XoutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Xout"])
+        IodALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"])
+        IosALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"])
+        InnALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
+
+    else:
+
+        # 気象データ（HASP形式）読み込み ＜365×24の行列＞
+        [ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
+            climate.readHaspClimateData( climatedata_directory + "/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
 
     # 緯度
     phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
     # 経度
     longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
-
 
     ##----------------------------------------------------------------------------------
     ## 冷暖房期間（解説書 2.2.2）
@@ -4051,8 +4060,8 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case035.json'
-    # filename = './sample/sample05_WEBPRO_inputSheet_for_SP4.json'
+    # filename = './tests/airconditioning/ACtest_Case035.json'
+    filename = './sample/sample08_WEBPRO_inputSheet_for_SP5.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"

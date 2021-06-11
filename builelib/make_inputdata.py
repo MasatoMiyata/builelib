@@ -2866,6 +2866,61 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 raise Exception("室負荷の種類が不正です。")
 
 
+    if "SP-5) 気象データ" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_SP5 = wb.sheet_by_name("SP-5) 気象データ")
+
+        # 行のループ
+        Tout_8760 = []
+        Xout_8760 = []
+        Iod_8760  = []
+        Ios_8760  = []
+        Inn_8760  = []
+        for i in range(10,sheet_SP5.nrows):
+
+            # シートから「行」の読み込み
+            dataSP5 = sheet_SP5.row_values(i)
+
+            Tout_8760.append(float(dataSP5[4]))
+            Xout_8760.append(float(dataSP5[5]))
+            Iod_8760.append(float(dataSP5[6]))
+            Ios_8760.append(float(dataSP5[7]))
+            Inn_8760.append(float(dataSP5[8]))
+
+        # 365×24の行列に変更。
+        Tout = []
+        Xout = []
+        Iod  = []
+        Ios  = []
+        Inn  = []
+        for dd in range(0,365):
+            Tout_tmp = []
+            Xout_tmp = []
+            Iod_tmp = []
+            Ios_tmp = []
+            Inn_tmp = []
+            for hh in range(0,24):
+                Tout_tmp.append(Tout_8760[24*dd+hh])
+                Xout_tmp.append(Xout_8760[24*dd+hh])
+                Iod_tmp.append(Iod_8760[24*dd+hh])
+                Ios_tmp.append(Ios_8760[24*dd+hh])
+                Inn_tmp.append(Inn_8760[24*dd+hh])
+            Tout.append(Tout_tmp)
+            Xout.append(Xout_tmp)
+            Iod.append(Iod_tmp)
+            Ios.append(Ios_tmp)
+            Inn.append(Inn_tmp)
+
+        # 保存
+        data["SpecialInputData"]["climate_data"] = {
+            "Tout": Tout,
+            "Xout": Xout,
+            "Iod": Iod,
+            "Ios": Ios,
+            "Inn": Inn
+        }
+
 
     # バリデーションの実行
     bc.inputdata_validation(data)
@@ -2892,30 +2947,30 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    # directory = "./sample/"
+    directory = "./sample/"
 
-    # # case_name = 'sample01_WEBPRO_inputSheet_for_Ver2.5'
-    # case_name = 'Case_P_A6'
-
-    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
-
-    # # json出力
-    # with open(directory + case_name + ".json",'w') as fw:
-    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
-
-
-    #-----------------------
-    # WEBPRO Ver2シートの例
-    #-----------------------
-    directory = "./tests/photovoltaic/"
-
-    case_name = 'PV_case01'
+    case_name = 'sample08_WEBPRO_inputSheet_for_SP5'
+    # case_name = 'WEBPRO_KE14_Case01'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
     # json出力
     with open(directory + case_name + ".json",'w') as fw:
         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+
+
+    #-----------------------
+    # WEBPRO Ver2シートの例
+    #-----------------------
+    # directory = "./tests/photovoltaic/"
+
+    # case_name = 'PV_case01'
+
+    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+
+    # # json出力
+    # with open(directory + case_name + ".json",'w') as fw:
+    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     #-----------------------
