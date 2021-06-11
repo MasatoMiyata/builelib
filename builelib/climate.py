@@ -2,6 +2,8 @@
 import csv
 import math
 import numpy as np
+import pandas as pd
+import itertools
 
 def readCsvClimateData(filename):
     """
@@ -112,12 +114,20 @@ def readHaspClimateData(filename):
                 tmp.append( float(line[3*hh:3*(hh+1)])*4.18*1000/3600 )
             Inn.append(tmp)
 
-
     Tout = np.array(Tout)
     Xout = np.array(Xout)
     Iod  = np.array(Iod)
     Ios  = np.array(Ios)
     Inn  = np.array(Inn)
+
+    # # CSVファイルに出力（検証用）
+    # df = pd.DataFrame()
+    # df["Tout"] = list(itertools.chain.from_iterable(Tout))
+    # df["Xout"] = list(itertools.chain.from_iterable(Xout))
+    # df["Iod"] = list(itertools.chain.from_iterable(Iod))
+    # df["Ios"] = list(itertools.chain.from_iterable(Ios))
+    # df["Inn"] = list(itertools.chain.from_iterable(Inn))
+    # df.to_csv("climatedata.csv")
 
     return Tout, Xout, Iod, Ios, Inn
 
