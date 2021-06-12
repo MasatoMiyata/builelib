@@ -8,7 +8,7 @@ with open('LICENSE') as f:
 
 setup(
     name='builelib',
-    version='1.0.7',
+    version='1.0.8',
     description='builelib: Building Energy-modeling Library',
     author='Masato Miyata',
     author_email='builelib@gmail.com',

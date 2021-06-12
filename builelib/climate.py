@@ -2,7 +2,7 @@
 import csv
 import math
 import numpy as np
-import pandas as pd
+# import pandas as pd
 import itertools
 
 def readCsvClimateData(filename):

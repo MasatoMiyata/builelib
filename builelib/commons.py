@@ -6,7 +6,7 @@ import json
 import jsonschema
 import numpy as np
 import os
-import pandas as pd
+# import pandas as pd
 import itertools
 
 # 電気の量 1kWh を熱量 kJ に換算する係数
@@ -132,7 +132,7 @@ def get_roomHeatGain(buildingType, roomType):
     return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp
 
 
-def get_roomUsageSchedule(buildingType, roomType, input_calendar):
+def get_roomUsageSchedule(buildingType, roomType, input_calendar={}):
     """
     時刻別のスケジュールを読み込む関数（空調、その他）
     """
