@@ -6,6 +6,8 @@ import json
 import jsonschema
 import numpy as np
 import os
+import pandas as pd
+import itertools
 
 # 電気の量 1kWh を熱量 kJ に換算する係数
 fprime = 9760
@@ -211,6 +213,15 @@ def get_roomUsageSchedule(buildingType, roomType, input_calendar):
             roomDayMode = "夜"
         else:
             raise Exception('室の使用時間帯が特定できませんでした。')
+
+
+    # # CSVファイルに出力（検証用）
+    # df = pd.DataFrame()
+    # df["roomScheduleRoom"] = list(itertools.chain.from_iterable(roomScheduleRoom))
+    # df["roomScheduleLight"] = list(itertools.chain.from_iterable(roomScheduleLight))
+    # df["roomSchedulePerson"] = list(itertools.chain.from_iterable(roomSchedulePerson))
+    # df["roomScheduleOAapp"] = list(itertools.chain.from_iterable(roomScheduleOAapp))
+    # df.to_csv("schedule.csv")
 
     return roomScheduleRoom, roomScheduleLight, roomSchedulePerson, roomScheduleOAapp, roomDayMode
 

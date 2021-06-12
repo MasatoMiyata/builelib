@@ -312,6 +312,32 @@ def calc_energy(inputdata, DEBUG = False):
         roomAreaTotal += inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
 
+    ##----------------------------------------------------------------------------------
+    ## 任意評定 （SP-7: 室スケジュール)
+    ##----------------------------------------------------------------------------------
+
+    if "room_schedule" in inputdata["SpecialInputData"]:
+
+        # 空調ゾーン毎にループ
+        for room_zone_name in inputdata["AirConditioningZone"]:
+
+            # SP-7に入力されていれば
+            if room_zone_name in inputdata["SpecialInputData"]["room_schedule"]:
+
+                # 使用時間帯
+                roomDayMode[room_zone_name] = inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["roomDayMode"]
+
+                if "室の同時使用率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
+                    roomScheduleRoom_tmp = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["室の同時使用率"]).astype("float")
+                    roomScheduleRoom_tmp = np.where(roomScheduleRoom_tmp < 1, 0, roomScheduleRoom_tmp)  # 同時使用率は考えない
+                    roomScheduleRoom[room_zone_name] = roomScheduleRoom_tmp
+                if "照明発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
+                    roomScheduleLight[room_zone_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["照明発熱密度比率"])
+                if "人体発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
+                    roomSchedulePerson[room_zone_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["人体発熱密度比率"])
+                if "機器発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
+                    roomScheduleOAapp[room_zone_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["機器発熱密度比率"])
+
 
     #%%
     ##----------------------------------------------------------------------------------
@@ -4076,7 +4102,9 @@ if __name__ == '__main__':  # pragma: no cover
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case035.json'
     # filename = './sample/sample08_WEBPRO_inputSheet_for_SP5.json'
-    filename = './sample/sample09_WEBPRO_inputSheet_for_SP6.json'
+    # filename = './sample/sample09_WEBPRO_inputSheet_for_SP6.json'
+    filename = './sample/sample10_WEBPRO_inputSheet_for_SP7.json'
+    # filename = './sample/WEBPRO_KE14_Case01.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"

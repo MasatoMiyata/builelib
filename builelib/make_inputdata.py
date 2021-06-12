@@ -2939,6 +2939,66 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 data["SpecialInputData"]["calender"][building_type][room_type] = calender_num
 
 
+    if "SP-7) 室スケジュール" in wb.sheet_names():
+
+        data["SpecialInputData"]["room_schedule"] = {}
+
+        # シートの読み込み
+        sheet_SP7 = wb.sheet_by_name("SP-7) 室スケジュール")
+        # 初期化
+        roomKey = None
+
+        for i in range(10,sheet_SP7.nrows):
+
+            # シートから「行」の読み込み
+            dataSP7 = sheet_SP7.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataSP7[0] != "") and (dataSP7[1] != ""):
+
+                roomKey = str(dataSP7[0]) + '_' + str(dataSP7[1])
+
+                data["SpecialInputData"]["room_schedule"][roomKey] = {
+                    "roomDayMode": "",
+                    "schedule": {}
+                }
+
+                # 使用時間帯
+                if dataSP7[2] == "終日":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "終日"
+                elif dataSP7[2] == "昼":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "昼"
+                elif dataSP7[2] == "夜":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "夜"
+                else:
+                    raise Exception("使用時間帯の入力が不正です")
+
+                if dataSP7[3] == "室の同時使用率":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  trans_8760to36524(dataSP7[4:])
+                elif dataSP7[3] == "照明発熱密度比率":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                elif dataSP7[3] == "人体発熱密度比率":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                elif dataSP7[3] == "機器発熱密度比率":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                else:
+                    raise Exception("スケジュールの種類が不正です")
+
+            # 階と室名が空欄であり、かつ、スケジュールの種類の入力がある場合
+            elif (dataSP7[0] == "") and (dataSP7[1] == "") and (dataSP7[3] != ""):
+
+                if dataSP7[3] == "室の同時使用率":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  trans_8760to36524(dataSP7[4:])
+                elif dataSP7[3] == "照明発熱密度比率":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                elif dataSP7[3] == "人体発熱密度比率":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                elif dataSP7[3] == "機器発熱密度比率":
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                else:
+                    raise Exception("スケジュールの種類が不正です")
+
+
 
     # バリデーションの実行
     bc.inputdata_validation(data)
@@ -2967,7 +3027,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'sample09_WEBPRO_inputSheet_for_SP6'
+    case_name = 'sample10_WEBPRO_inputSheet_for_SP7'
     # case_name = 'WEBPRO_KE14_Case01'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
