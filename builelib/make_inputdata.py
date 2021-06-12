@@ -2998,6 +2998,20 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 else:
                     raise Exception("スケジュールの種類が不正です")
 
+    if "SP-8) 日射熱取得率" in wb.sheet_names():
+
+        data["SpecialInputData"]["window_Ivalue"] = {}
+
+        # シートの読み込み
+        sheet_SP8 = wb.sheet_by_name("SP-8) 日射熱取得率")
+
+        for i in range(10,sheet_SP8.nrows):
+
+            # シートから「行」の読み込み
+            dataSP8 = sheet_SP8.row_values(i)
+
+            data["SpecialInputData"]["window_Ivalue"][dataSP8[0]] = dataSP8[1:]
+
 
 
     # バリデーションの実行
@@ -3025,16 +3039,16 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    # directory = "./sample/"
+    directory = "./sample/"
 
-    # case_name = 'sample10_WEBPRO_inputSheet_for_SP7'
-    # # case_name = 'WEBPRO_KE14_Case01'
+    case_name = 'sample02_WEBPRO_inputSheet_for_Ver3.0'
+    # case_name = 'WEBPRO_KE14_Case01'
 
-    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-    # # json出力
-    # with open(directory + case_name + ".json",'w') as fw:
-    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # json出力
+    with open(directory + case_name + ".json",'w') as fw:
+        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     #-----------------------
@@ -3054,19 +3068,19 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例（連続）
     #-----------------------
-    directory = "./tests/airconditioning/"
+    # directory = "./tests/airconditioning/"
 
-    for id in range(1,51):
-        if id < 10:
-            case_name = 'ACtest_Case00' + str(int(id))
-        else:
-            case_name = 'ACtest_Case0' + str(int(id))
+    # for id in range(1,51):
+    #     if id < 10:
+    #         case_name = 'ACtest_Case00' + str(int(id))
+    #     else:
+    #         case_name = 'ACtest_Case0' + str(int(id))
 
-        inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
-        # json出力
-        with open(directory + case_name + ".json",'w') as fw:
-            json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    #     # json出力
+    #     with open(directory + case_name + ".json",'w') as fw:
+    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
     # #-----------------------
