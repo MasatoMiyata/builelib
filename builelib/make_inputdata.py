@@ -36,6 +36,19 @@ def set_isCalculatedEquipment(input):
     return isEquip
 
 
+def trans_8760to36524(X8760):
+    """
+    8760行のリストを365行×24列のリストに変形する関数
+    """
+    X = []
+    for dd in range(0,365):
+        tmp = []
+        for hh in range(0,24):
+            tmp.append(X8760[24*dd+hh])
+        X.append(tmp)
+    return X
+
+    
 def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
     """
     WEBPRO Ver4 用の入力シートから 入力データ（辞書型）を生成するプログラム
@@ -2888,38 +2901,43 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
             Ios_8760.append(float(dataSP5[7]))
             Inn_8760.append(float(dataSP5[8]))
 
-        # 365×24の行列に変更。
-        Tout = []
-        Xout = []
-        Iod  = []
-        Ios  = []
-        Inn  = []
-        for dd in range(0,365):
-            Tout_tmp = []
-            Xout_tmp = []
-            Iod_tmp = []
-            Ios_tmp = []
-            Inn_tmp = []
-            for hh in range(0,24):
-                Tout_tmp.append(Tout_8760[24*dd+hh])
-                Xout_tmp.append(Xout_8760[24*dd+hh])
-                Iod_tmp.append(Iod_8760[24*dd+hh])
-                Ios_tmp.append(Ios_8760[24*dd+hh])
-                Inn_tmp.append(Inn_8760[24*dd+hh])
-            Tout.append(Tout_tmp)
-            Xout.append(Xout_tmp)
-            Iod.append(Iod_tmp)
-            Ios.append(Ios_tmp)
-            Inn.append(Inn_tmp)
-
-        # 保存
+        # 365×24の行列に変更して保存
         data["SpecialInputData"]["climate_data"] = {
-            "Tout": Tout,
-            "Xout": Xout,
-            "Iod": Iod,
-            "Ios": Ios,
-            "Inn": Inn
+            "Tout": trans_8760to36524(Tout_8760),
+            "Xout": trans_8760to36524(Xout_8760),
+            "Iod": trans_8760to36524(Iod_8760),
+            "Ios": trans_8760to36524(Ios_8760),
+            "Inn": trans_8760to36524(Inn_8760)
         }
+
+    if "SP-6) カレンダー" in wb.sheet_names():
+
+        data["SpecialInputData"]["calender"] = {}
+
+        # シートの読み込み
+        sheet_SP6 = wb.sheet_by_name("SP-6) カレンダー")
+
+        for i in range(10,sheet_SP6.nrows):
+
+            # シートから「行」の読み込み
+            dataSP6 = sheet_SP6.row_values(i)
+
+            building_type = dataSP6[0]
+            room_type = dataSP6[1]
+            calender_num = [int(x) for x in dataSP6[2:]]  # 整数型に変換
+
+
+            # 建物用途が既に登録されているかを判定
+            if building_type not in data["SpecialInputData"]["calender"]:
+
+                data["SpecialInputData"]["calender"][building_type] = {}
+                data["SpecialInputData"]["calender"][building_type] = {
+                    room_type : calender_num
+                }
+
+            else:
+                data["SpecialInputData"]["calender"][building_type][room_type] = calender_num
+
 
 
     # バリデーションの実行
@@ -2949,7 +2967,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'sample08_WEBPRO_inputSheet_for_SP5'
+    case_name = 'sample09_WEBPRO_inputSheet_for_SP6'
     # case_name = 'WEBPRO_KE14_Case01'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)

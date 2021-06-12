@@ -130,7 +130,7 @@ def get_roomHeatGain(buildingType, roomType):
     return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp
 
 
-def get_roomUsageSchedule(buildingType, roomType):
+def get_roomUsageSchedule(buildingType, roomType, input_calendar):
     """
     時刻別のスケジュールを読み込む関数（空調、その他）
     """
@@ -147,6 +147,13 @@ def get_roomUsageSchedule(buildingType, roomType):
 
         # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
         opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
+
+        # 入力されたカレンダーパターンを使う場合（上書きする）
+        if input_calendar != []:
+            if buildingType in input_calendar:
+                if roomType in input_calendar[buildingType]:
+                    opePattern_Daily = input_calendar[buildingType][roomType]
+
 
         # 各日時における運転状態（365×24の行列）
         roomScheduleRoom = []

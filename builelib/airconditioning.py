@@ -171,14 +171,20 @@ def calc_energy(inputdata, DEBUG = False):
 
     ##----------------------------------------------------------------------------------
     ## 気象データ（解説書 2.2.1）
+    ## 任意評定 （SP-5: 気象データ)
     ##----------------------------------------------------------------------------------
 
-    if "climate_data" in inputdata["SpecialInputData"]:
+    if "climate_data" in inputdata["SpecialInputData"]:  # 任意入力（SP-5）
 
+        # 外気温 [℃]
         ToutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
+        # 外気湿度 [kg/kgDA]
         XoutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Xout"])
+        # 法線面直達日射量 [W/m2]
         IodALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"])
+        # 水平面天空日射量 [W/m2]
         IosALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"])
+        # 水平面夜間放射量 [W/m2]
         InnALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
 
     else:
@@ -255,6 +261,14 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
+    ## 任意評定 （SP-6: カレンダーパターン)
+    ##----------------------------------------------------------------------------------
+    input_calendar = []
+    if "calender" in inputdata["SpecialInputData"]:
+        input_calendar = inputdata["SpecialInputData"]["calender"]
+
+
+    ##----------------------------------------------------------------------------------
     ## 空調機の稼働状態、内部発熱量（解説書 2.3.3、2.3.4）
     ##----------------------------------------------------------------------------------
 
@@ -291,7 +305,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
         roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name], roomDayMode[room_zone_name] = \
-            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"])
+            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], input_calendar)
 
 
         # 空調対象面積の合計
@@ -4061,7 +4075,8 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case035.json'
-    filename = './sample/sample08_WEBPRO_inputSheet_for_SP5.json'
+    # filename = './sample/sample08_WEBPRO_inputSheet_for_SP5.json'
+    filename = './sample/sample09_WEBPRO_inputSheet_for_SP6.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
