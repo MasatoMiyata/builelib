@@ -1603,5 +1603,6 @@
         }
     },
     "PhotovoltaicSystems": {},
-    "CogenerationSystems": {}
+    "CogenerationSystems": {},
+    "SpecialInputData": {}
 }
