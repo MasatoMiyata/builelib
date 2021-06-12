@@ -312,5 +312,9 @@
     "HotwaterSupplySystems": {},
     "Elevators": {},
     "PhotovoltaicSystems": {},
-    "CogenerationSystems": {}
+    "CogenerationSystems": {},
+    "SpecialInputData": {
+        "heatsource_performance": {},
+        "flow_control": {}
+    }
 }

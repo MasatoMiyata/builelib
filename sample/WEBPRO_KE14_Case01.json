@@ -1,0 +1,253 @@
+{
+    "Building": {
+        "BuildingAddress": {
+            "Prefecture": "東京都",
+            "City": "千代田区",
+            "Address": null
+        },
+        "Coefficient_DHC": {
+            "Cooling": 1.36,
+            "Heating": 1.36
+        },
+        "Name": "ゾーン3",
+        "Region": "6",
+        "AnnualSolarRegion": "A3",
+        "BuildingFloorArea": 543.0
+    },
+    "Rooms": {
+        "２F_事務室": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 4.0,
+            "ceilingHeight": 2.8,
+            "roomArea": 54.0,
+            "zone": null,
+            "modelBuildingType": "事務所モデル",
+            "buildingGroup": null,
+            "Info": ""
+        }
+    },
+    "EnvelopeSet": {
+        "２F_事務室": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "南",
+                    "EnvelopeArea": 28.8,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "W1",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "G1",
+                            "WindowNumber": 14.55,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "14.25"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "WallConfigure": {
+        "W1": {
+            "structureType": "その他",
+            "solarAbsorptionRatio": null,
+            "inputMethod": "建材構成を入力",
+            "layers": [
+                {
+                    "materialID": "せっこうボード",
+                    "conductivity": null,
+                    "thickness": 12.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "非密閉中空層",
+                    "conductivity": null,
+                    "thickness": null,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "吹付け硬質ウレタンフォームＡ種１",
+                    "conductivity": null,
+                    "thickness": 50.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "コンクリート",
+                    "conductivity": null,
+                    "thickness": 150.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "セメント・モルタル",
+                    "conductivity": null,
+                    "thickness": 20.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "タイル",
+                    "conductivity": null,
+                    "thickness": 8.0,
+                    "Info": "無"
+                }
+            ]
+        }
+    },
+    "WindowConfigure": {
+        "G1": {
+            "windowArea": 1,
+            "windowWidth": null,
+            "windowHeight": null,
+            "inputMethod": "性能値を入力",
+            "windowUvalue": 3.62,
+            "windowIvalue": 0.32,
+            "layerType": "単層",
+            "glassUvalue": null,
+            "glassIvalue": null,
+            "Info": "無"
+        }
+    },
+    "ShadingConfigure": {},
+    "AirConditioningZone": {
+        "２F_事務室": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "EHP1-1",
+            "AHU_cooling_outdoorLoad": "EHP1-1",
+            "AHU_heating_insideLoad": "EHP1-1",
+            "AHU_heating_outdoorLoad": "EHP1-1",
+            "Info": "EHP1-1"
+        }
+    },
+    "HeatsourceSystem": {
+        "EHP1-1O": {
+            "冷房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "無",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "パッケージエアコンディショナ(空冷式)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": null,
+                        "SupplyWaterTempWinter": null,
+                        "HeatsourceRatedCapacity": 7.1,
+                        "HeatsourceRatedPowerConsumption": 1.68,
+                        "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
+                        "PrimaryPumpPowerConsumption": 0,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "無",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "パッケージエアコンディショナ(空冷式)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": null,
+                        "SupplyWaterTempWinter": null,
+                        "HeatsourceRatedCapacity": 8.0,
+                        "HeatsourceRatedPowerConsumption": 1.76,
+                        "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
+                        "PrimaryPumpPowerConsumption": 0,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            }
+        }
+    },
+    "SecondaryPumpSystem": {},
+    "AirHandlingSystem": {
+        "EHP1-1": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": null,
+            "Pump_heating": null,
+            "HeatSource_cooling": "EHP1-1O",
+            "HeatSource_heating": "EHP1-1O",
+            "AirHandlingUnit": [
+                {
+                    "Type": "室内機",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": 7.1,
+                    "RatedCapacityHeating": 8.0,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 0.0,
+                    "FanControlType": "定風量制御",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": "EHP1-1O"
+                },
+                {
+                    "Type": "全熱交ユニット",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": null,
+                    "RatedCapacityHeating": null,
+                    "FanType": null,
+                    "FanAirVolume": 350.0,
+                    "FanPowerConsumption": 0.14,
+                    "FanControlType": "無",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": 70.0,
+                    "AirHeatExchangeRatioHeating": 70.0,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                }
+            ]
+        }
+    },
+    "VentilationRoom": {},
+    "VentilationUnit": {},
+    "LightingSystems": {
+        "２Ｆ_事務室": {
+            "roomWidth": 7.2,
+            "roomDepth": 7.5,
+            "unitHeight": 2.8,
+            "roomIndex": 1.791,
+            "lightingUnit": {
+                "LED": {
+                    "RatedPower": 266.8,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        }
+    },
+    "HotwaterRoom": {},
+    "HotwaterSupplySystems": {},
+    "Elevators": {},
+    "PhotovoltaicSystems": {},
+    "CogenerationSystems": {},
+    "SpecialInputData": {}
+}
