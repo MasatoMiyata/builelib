@@ -170,7 +170,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- lighting.py -----')
-    filename = './sample/sample03_WEBPRO_inputSheet_for_Ver3.0.json'
+    filename = './sample/WEBPRO_KE14_Case01.json'
     # filename = './tests/cogeneration/Case_hotel_00.json'
 
     # テンプレートjsonの読み込み

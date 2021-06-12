@@ -3041,8 +3041,8 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'sample02_WEBPRO_inputSheet_for_Ver3.0'
-    # case_name = 'WEBPRO_KE14_Case01'
+    # case_name = 'sample02_WEBPRO_inputSheet_for_Ver3.0'
+    case_name = 'WEBPRO_KE14_Case01'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
