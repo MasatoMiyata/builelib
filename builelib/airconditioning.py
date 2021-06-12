@@ -16,6 +16,8 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
+# 照明との連成
+connection_to_lighting = True
 
 def count_Matrix(x, mxL):
     """
@@ -750,11 +752,12 @@ def calc_energy(inputdata, DEBUG = False):
 
 
                     # 任意入力 SP-8
-                    if window_configure["WindowID"] in inputdata["SpecialInputData"]["window_Ivalue"]:
+                    if "window_Ivalue" in inputdata["SpecialInputData"]:
+                        if window_configure["WindowID"] in inputdata["SpecialInputData"]["window_Ivalue"]:
 
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["IA_window"] = \
-                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
-                            np.array(inputdata["SpecialInputData"]["window_Ivalue"][ window_configure["WindowID"] ])
+                            inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["IA_window"] = \
+                                window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
+                                np.array(inputdata["SpecialInputData"]["window_Ivalue"][ window_configure["WindowID"] ])
 
 
     for room_zone_name in inputdata["AirConditioningZone"]:
@@ -936,8 +939,18 @@ def calc_energy(inputdata, DEBUG = False):
         btype = inputdata["AirConditioningZone"][room_zone_name]["buildingType"]
         rtype = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
 
-        # 発熱量参照値を読み込む関数（空調）
+        # 発熱量参照値 [W/m2] を読み込む関数（空調）
         (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp) = bc.get_roomHeatGain(btype, rtype)
+
+        # 様式4から照明発熱量を読み込む
+        if connection_to_lighting:
+            if room_zone_name in inputdata["LightingSystems"]:
+                lighting_power = 0
+                for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
+                    lighting_power += inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["RatedPower"] * \
+                        inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["Number"]
+                roomHeatGain_Light = lighting_power / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+
 
         Heat_light_daily  = np.sum(roomScheduleLight[room_zone_name],1) * roomHeatGain_Light   # 照明からの発熱（日積算）（365日分）
         Heat_person_daily = np.sum(roomSchedulePerson[room_zone_name],1) * roomHeatGain_Person # 人体からの発熱（日積算）（365日分）
@@ -4124,9 +4137,9 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case035.json'
-    # filename = './sample/sample08_WEBPRO_inputSheet_for_SP5.json'
+    filename = './sample/sample02_WEBPRO_inputSheet_for_Ver3.0.json'
     # filename = './sample/sample09_WEBPRO_inputSheet_for_SP6.json'
-    filename = './sample/sample11_WEBPRO_inputSheet_for_SP8.json'
+    # filename = './sample/sample11_WEBPRO_inputSheet_for_SP8.json'
     # filename = './sample/WEBPRO_KE14_Case01.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
