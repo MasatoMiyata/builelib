@@ -749,6 +749,13 @@ def calc_energy(inputdata, DEBUG = False):
                             inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue_blind"]
 
 
+                    # 任意入力 SP-8
+                    if window_configure["WindowID"] in inputdata["SpecialInputData"]["window_Ivalue"]:
+
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["IA_window"] = \
+                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
+                            np.array(inputdata["SpecialInputData"]["window_Ivalue"][ window_configure["WindowID"] ])
+
 
     for room_zone_name in inputdata["AirConditioningZone"]:
 
@@ -850,18 +857,34 @@ def calc_energy(inputdata, DEBUG = False):
                                     shading_daily[dd] = window_configure["shadingEffect_C"]
                                 elif ac_mode[dd] == "暖房":
                                     shading_daily[dd] = window_configure["shadingEffect_H"]
-                                    
-                            if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
+                            
+                            if isinstance(window_configure["IA_window"], float):
 
-                                Qwind_S = Qwind_S + shading_daily * \
-                                    (window_configure["IA_window"] / 0.88) * \
-                                    (solor_radiation["直達_入射角特性込"]["水平"]*0.89 + solor_radiation["天空"]["水平"]*0.808)
+                                # 様式2-3に入力された窓仕様を使用する場合
+                                # 0.88は標準ガラスの日射熱取得率
+                                # 0.89は標準ガラスの入射角特性の最大値
+                                # 0.808は天空・反射日射に対する標準ガラスの入射角特性 0.808/0.88 = 0.91818
+                                if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
+
+                                    Qwind_S = Qwind_S + shading_daily * \
+                                        (window_configure["IA_window"] / 0.88) * \
+                                        (solor_radiation["直達_入射角特性込"]["水平"]*0.89 + solor_radiation["天空"]["水平"]*0.808)
+
+                                else:
+
+                                    Qwind_S = Qwind_S + shading_daily * \
+                                        (window_configure["IA_window"] / 0.88) * \
+                                        (solor_radiation["直達_入射角特性込"][ wall_configure["Direction"] ]*0.89 + solor_radiation["天空"]["垂直"]*0.808)
 
                             else:
 
-                                Qwind_S = Qwind_S + shading_daily * \
-                                    (window_configure["IA_window"] / 0.88) * \
-                                    (solor_radiation["直達_入射角特性込"][ wall_configure["Direction"] ]*0.89 + solor_radiation["天空"]["垂直"]*0.808)
+                                # 任意入力の場合（SP-8）
+                                if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
+                                    Qwind_S = Qwind_S +   \
+                                        (window_configure["IA_window"]) * (solor_radiation["直達"]["水平"] + solor_radiation["天空"]["水平"])
+                                else:
+                                    Qwind_S = Qwind_S + shading_daily * \
+                                        (window_configure["IA_window"]) * (solor_radiation["直達"][ wall_configure["Direction"] ] + solor_radiation["天空"]["垂直"])
 
 
                             ## ③ 夜間放射による熱取得（マイナス）
@@ -4103,7 +4126,7 @@ if __name__ == '__main__':  # pragma: no cover
     # filename = './tests/airconditioning/ACtest_Case035.json'
     # filename = './sample/sample08_WEBPRO_inputSheet_for_SP5.json'
     # filename = './sample/sample09_WEBPRO_inputSheet_for_SP6.json'
-    filename = './sample/sample10_WEBPRO_inputSheet_for_SP7.json'
+    filename = './sample/sample11_WEBPRO_inputSheet_for_SP8.json'
     # filename = './sample/WEBPRO_KE14_Case01.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'

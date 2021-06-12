@@ -1,0 +1,1978 @@
+{
+    "Building": {
+        "BuildingAddress": {
+            "Prefecture": "東京都",
+            "City": "○○区",
+            "Address": "○○○町○○○番地"
+        },
+        "Coefficient_DHC": {
+            "Cooling": 1.36,
+            "Heating": 1.36
+        },
+        "Name": "事務所2階建",
+        "Region": "6",
+        "AnnualSolarRegion": "A3",
+        "BuildingFloorArea": 1149.43
+    },
+    "Rooms": {
+        "1F_打合せスペース": {
+            "buildingType": "事務所等",
+            "roomType": "会議室",
+            "floorHeight": 3.8,
+            "ceilingHeight": 3.1,
+            "roomArea": 21.13,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "1F_トイレ(女）": {
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "floorHeight": 3.8,
+            "ceilingHeight": 2.8,
+            "roomArea": 6.5,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "1F_ＰＳ": {
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "floorHeight": 3.8,
+            "ceilingHeight": 3.8,
+            "roomArea": 0.88,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "1F_トイレ(男）": {
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "floorHeight": 3.8,
+            "ceilingHeight": 2.8,
+            "roomArea": 5.17,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "1F_湯沸室": {
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "floorHeight": 3.8,
+            "ceilingHeight": 2.8,
+            "roomArea": 2.73,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "1F_トイレ前通路": {
+            "buildingType": "事務所等",
+            "roomType": "廊下",
+            "floorHeight": 3.8,
+            "ceilingHeight": 3.1,
+            "roomArea": 5.85,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "1F_ホール": {
+            "buildingType": "事務所等",
+            "roomType": "ロビー",
+            "floorHeight": 3.8,
+            "ceilingHeight": 3.1,
+            "roomArea": 48.8,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "1F_階段室": {
+            "buildingType": "事務所等",
+            "roomType": "廊下",
+            "floorHeight": 3.8,
+            "ceilingHeight": 3.8,
+            "roomArea": 23.4,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "1F_事務室": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 3.8,
+            "ceilingHeight": 2.8,
+            "roomArea": 442.32,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_更衣･休憩(女）": {
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 13.0,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_更衣･休憩(男）": {
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 11.85,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_トイレ(男）": {
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 8.46,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_ＰＳ": {
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "floorHeight": 3.6,
+            "ceilingHeight": 3.6,
+            "roomArea": 0.99,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_トイレ(女）": {
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 8.8,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_湯沸室": {
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 2.86,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_トイレ前通路": {
+            "buildingType": "事務所等",
+            "roomType": "廊下",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 13.52,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_ホール横通路": {
+            "buildingType": "事務所等",
+            "roomType": "廊下",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 18.85,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_ホール": {
+            "buildingType": "事務所等",
+            "roomType": "ロビー",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 12.6,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_階段室": {
+            "buildingType": "事務所等",
+            "roomType": "廊下",
+            "floorHeight": 3.6,
+            "ceilingHeight": 3.6,
+            "roomArea": 23.4,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "2F_事務室": {
+            "buildingType": "事務所等",
+            "roomType": "事務室",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 442.32,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "RF_ホール": {
+            "buildingType": "事務所等",
+            "roomType": "ロビー",
+            "floorHeight": 3.6,
+            "ceilingHeight": 2.6,
+            "roomArea": 12.6,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        },
+        "RF_階段室": {
+            "buildingType": "事務所等",
+            "roomType": "廊下",
+            "floorHeight": 3.6,
+            "ceilingHeight": 3.6,
+            "roomArea": 23.4,
+            "zone": null,
+            "modelBuildingType": "",
+            "buildingGroup": null,
+            "Info": ""
+        }
+    },
+    "EnvelopeSet": {
+        "1F_打合せスペース": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "北",
+                    "EnvelopeArea": 12.5,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 1.5,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "西",
+                    "EnvelopeArea": 24.7,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 11.1,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "南",
+                    "EnvelopeArea": 21.1,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "IF4J",
+                    "WallType": "地盤に接する外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "1F_ホール": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "西",
+                    "EnvelopeArea": 31.7,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 25.7,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "南",
+                    "EnvelopeArea": 48.8,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "IF4J",
+                    "WallType": "地盤に接する外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "1F_事務室": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "北",
+                    "EnvelopeArea": 91.2,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 40.8,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "東",
+                    "EnvelopeArea": 70.1,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 4.6,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "南",
+                    "EnvelopeArea": 91.2,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 40.8,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "南",
+                    "EnvelopeArea": 442.3,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "IF4J",
+                    "WallType": "地盤に接する外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "2F_ホール": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "西",
+                    "EnvelopeArea": 10.1,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "水平（下）",
+                    "EnvelopeArea": 12.6,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "RF1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        },
+        "2F_事務室": {
+            "isAirconditioned": "有",
+            "WallList": [
+                {
+                    "Direction": "北",
+                    "EnvelopeArea": 86.4,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 36.0,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "東",
+                    "EnvelopeArea": 66.4,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 4.1,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "南",
+                    "EnvelopeArea": 86.4,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "OW1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "WNDW1",
+                            "WindowNumber": 36.0,
+                            "isBlind": "有",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                },
+                {
+                    "Direction": "水平（下）",
+                    "EnvelopeArea": 442.3,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "RF1J",
+                    "WallType": "日の当たる外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": "無"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "WallConfigure": {
+        "OW1J": {
+            "structureType": "その他",
+            "solarAbsorptionRatio": null,
+            "inputMethod": "建材構成を入力",
+            "layers": [
+                {
+                    "materialID": "せっこうボード",
+                    "conductivity": null,
+                    "thickness": 12.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "非密閉中空層",
+                    "conductivity": null,
+                    "thickness": null,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "押出法ポリスチレンフォーム　保温板　1種",
+                    "conductivity": null,
+                    "thickness": 25.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "気泡コンクリート(ALC)",
+                    "conductivity": null,
+                    "thickness": 60.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "タイル",
+                    "conductivity": null,
+                    "thickness": 10.0,
+                    "Info": "無"
+                }
+            ]
+        },
+        "RF1J": {
+            "structureType": "その他",
+            "solarAbsorptionRatio": null,
+            "inputMethod": "建材構成を入力",
+            "layers": [
+                {
+                    "materialID": "ロックウール化粧吸音板",
+                    "conductivity": null,
+                    "thickness": 10.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "せっこうボード",
+                    "conductivity": null,
+                    "thickness": 12.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "非密閉中空層",
+                    "conductivity": null,
+                    "thickness": null,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "気泡コンクリート(ALC)",
+                    "conductivity": null,
+                    "thickness": 150.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "押出法ポリスチレンフォーム　保温板　1種",
+                    "conductivity": null,
+                    "thickness": 50.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "アスファルト類",
+                    "conductivity": null,
+                    "thickness": 10.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "コンクリート",
+                    "conductivity": null,
+                    "thickness": 85.0,
+                    "Info": "普通コンクリート"
+                }
+            ]
+        },
+        "IF4J": {
+            "structureType": "その他",
+            "solarAbsorptionRatio": null,
+            "inputMethod": "建材構成を入力",
+            "layers": [
+                {
+                    "materialID": "カーペット類",
+                    "conductivity": null,
+                    "thickness": 3.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "アルミニウム",
+                    "conductivity": null,
+                    "thickness": 10.0,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "非密閉中空層",
+                    "conductivity": null,
+                    "thickness": null,
+                    "Info": "無"
+                },
+                {
+                    "materialID": "コンクリート",
+                    "conductivity": null,
+                    "thickness": 250.0,
+                    "Info": "普通コンクリート"
+                }
+            ]
+        }
+    },
+    "WindowConfigure": {
+        "WNDW1": {
+            "windowArea": 1,
+            "windowWidth": null,
+            "windowHeight": null,
+            "inputMethod": "ガラスの種類を入力",
+            "frameType": "金属木複合製",
+            "glassID": "T",
+            "Info": "無"
+        }
+    },
+    "ShadingConfigure": {},
+    "AirConditioningZone": {
+        "1F_打合せスペース": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "PAC-1_UT-2",
+            "AHU_cooling_outdoorLoad": "PAC-1_UT-2",
+            "AHU_heating_insideLoad": "PAC-1_UT-2",
+            "AHU_heating_outdoorLoad": "PAC-1_UT-2",
+            "Info": "PAC-1_UT-2"
+        },
+        "1F_ホール": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "PAC-1_UT-3",
+            "AHU_cooling_outdoorLoad": "PAC-1_UT-3",
+            "AHU_heating_insideLoad": "PAC-1_UT-3",
+            "AHU_heating_outdoorLoad": "PAC-1_UT-3",
+            "Info": "PAC-1_UT-3"
+        },
+        "1F_事務室": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "PAC-1_UT-1",
+            "AHU_cooling_outdoorLoad": "PAC-1_UT-1",
+            "AHU_heating_insideLoad": "PAC-1_UT-1",
+            "AHU_heating_outdoorLoad": "PAC-1_UT-1",
+            "Info": "PAC-1_UT-1"
+        },
+        "2F_ホール": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "PAC-2_UT-2",
+            "AHU_cooling_outdoorLoad": "PAC-2_UT-2",
+            "AHU_heating_insideLoad": "PAC-2_UT-2",
+            "AHU_heating_outdoorLoad": "PAC-2_UT-2",
+            "Info": "PAC-2_UT-2"
+        },
+        "2F_事務室": {
+            "isNatualVentilation": "無",
+            "isSimultaneousSupply": "無",
+            "AHU_cooling_insideLoad": "PAC-2_UT-1",
+            "AHU_cooling_outdoorLoad": "PAC-2_UT-1",
+            "AHU_heating_insideLoad": "PAC-2_UT-1",
+            "AHU_heating_outdoorLoad": "PAC-2_UT-1",
+            "Info": "PAC-2_UT-1"
+        }
+    },
+    "HeatsourceSystem": {
+        "PA1": {
+            "冷房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "無",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "パッケージエアコンディショナ(空冷式)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": null,
+                        "SupplyWaterTempWinter": null,
+                        "HeatsourceRatedCapacity": 100.0,
+                        "HeatsourceRatedPowerConsumption": 31.8,
+                        "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
+                        "PrimaryPumpPowerConsumption": 0,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "無",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "パッケージエアコンディショナ(空冷式)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": null,
+                        "SupplyWaterTempWinter": null,
+                        "HeatsourceRatedCapacity": 112.0,
+                        "HeatsourceRatedPowerConsumption": 33.2,
+                        "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
+                        "PrimaryPumpPowerConsumption": 0,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            }
+        },
+        "PA2": {
+            "冷房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "無",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "パッケージエアコンディショナ(空冷式)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": null,
+                        "SupplyWaterTempWinter": null,
+                        "HeatsourceRatedCapacity": 61.5,
+                        "HeatsourceRatedPowerConsumption": 16.3,
+                        "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
+                        "PrimaryPumpPowerConsumption": 0,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            },
+            "暖房": {
+                "StorageType": null,
+                "StorageSize": null,
+                "isStagingControl": "無",
+                "Heatsource": [
+                    {
+                        "HeatsourceType": "パッケージエアコンディショナ(空冷式)",
+                        "Number": 1.0,
+                        "SupplyWaterTempSummer": null,
+                        "SupplyWaterTempMiddle": null,
+                        "SupplyWaterTempWinter": null,
+                        "HeatsourceRatedCapacity": 69.0,
+                        "HeatsourceRatedPowerConsumption": 18.0,
+                        "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
+                        "PrimaryPumpPowerConsumption": 0,
+                        "PrimaryPumpContolType": "無",
+                        "CoolingTowerCapacity": 0,
+                        "CoolingTowerFanPowerConsumption": 0,
+                        "CoolingTowerPumpPowerConsumption": 0,
+                        "CoolingTowerContolType": "無",
+                        "Info": ""
+                    }
+                ]
+            }
+        }
+    },
+    "SecondaryPumpSystem": {},
+    "AirHandlingSystem": {
+        "PAC-1_UT-1": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": null,
+            "Pump_heating": null,
+            "HeatSource_cooling": "PA1",
+            "HeatSource_heating": "PA1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "室内機",
+                    "Number": 12.0,
+                    "RatedCapacityCooling": 4.5,
+                    "RatedCapacityHeating": 5.0,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 0.047,
+                    "FanControlType": "定風量制御",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": "PA1"
+                },
+                {
+                    "Type": "全熱交ユニット",
+                    "Number": 4.0,
+                    "RatedCapacityCooling": null,
+                    "RatedCapacityHeating": null,
+                    "FanType": null,
+                    "FanAirVolume": 480.0,
+                    "FanPowerConsumption": 0.34,
+                    "FanControlType": "定風量制御",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": 60.0,
+                    "AirHeatExchangeRatioHeating": 60.0,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                }
+            ]
+        },
+        "PAC-1_UT-2": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": null,
+            "Pump_heating": null,
+            "HeatSource_cooling": "PA1",
+            "HeatSource_heating": "PA1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "室内機",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": 14.0,
+                    "RatedCapacityHeating": 16.0,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 0.209,
+                    "FanControlType": "定風量制御",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": "PA1"
+                }
+            ]
+        },
+        "PAC-1_UT-3": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": null,
+            "Pump_heating": null,
+            "HeatSource_cooling": "PA1",
+            "HeatSource_heating": "PA1",
+            "AirHandlingUnit": [
+                {
+                    "Type": "室内機",
+                    "Number": 2.0,
+                    "RatedCapacityCooling": 14.0,
+                    "RatedCapacityHeating": 16.0,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 0.209,
+                    "FanControlType": "定風量制御",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": "PA1"
+                }
+            ]
+        },
+        "PAC-2_UT-1": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": null,
+            "Pump_heating": null,
+            "HeatSource_cooling": "PA2",
+            "HeatSource_heating": "PA2",
+            "AirHandlingUnit": [
+                {
+                    "Type": "室内機",
+                    "Number": 12.0,
+                    "RatedCapacityCooling": 4.5,
+                    "RatedCapacityHeating": 5.0,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 0.047,
+                    "FanControlType": "定風量制御",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": "PA2"
+                },
+                {
+                    "Type": "全熱交ユニット",
+                    "Number": 4.0,
+                    "RatedCapacityCooling": null,
+                    "RatedCapacityHeating": null,
+                    "FanType": null,
+                    "FanAirVolume": 480.0,
+                    "FanPowerConsumption": 0.34,
+                    "FanControlType": "定風量制御",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": 60.0,
+                    "AirHeatExchangeRatioHeating": 60.0,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": ""
+                }
+            ]
+        },
+        "PAC-2_UT-2": {
+            "isEconomizer": "無",
+            "EconomizerMaxAirVolume": null,
+            "isOutdoorAirCut": "無",
+            "Pump_cooling": null,
+            "Pump_heating": null,
+            "HeatSource_cooling": "PA2",
+            "HeatSource_heating": "PA2",
+            "AirHandlingUnit": [
+                {
+                    "Type": "室内機",
+                    "Number": 1.0,
+                    "RatedCapacityCooling": 2.8,
+                    "RatedCapacityHeating": 3.2,
+                    "FanType": null,
+                    "FanAirVolume": null,
+                    "FanPowerConsumption": 0.033,
+                    "FanControlType": "定風量制御",
+                    "FanMinOpeningRate": null,
+                    "AirHeatExchangeRatioCooling": null,
+                    "AirHeatExchangeRatioHeating": null,
+                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
+                    "AirHeatExchangerControl": "無",
+                    "AirHeatExchangerPowerConsumption": null,
+                    "Info": "PA2"
+                }
+            ]
+        }
+    },
+    "VentilationRoom": {
+        "1F_トイレ(男）": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "FE-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "1F_トイレ(女）": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "FE-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "1F_湯沸室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "FE-2": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "2F_トイレ(男）": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "FE-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "2F_トイレ(女）": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "FE-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "2F_更衣･休憩(女）": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "FE-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "2F_更衣･休憩(男）": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "FE-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        },
+        "2F_湯沸室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "FE-5": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            }
+        }
+    },
+    "VentilationUnit": {
+        "FE-1": {
+            "Number": 1,
+            "FanAirVolume": 340.0,
+            "MoterRatedPower": 0.08,
+            "PowerConsumption": null,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        "FE-2": {
+            "Number": 1,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": 0.05,
+            "PowerConsumption": null,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        "FE-3": {
+            "Number": 1,
+            "FanAirVolume": 560.0,
+            "MoterRatedPower": 0.13,
+            "PowerConsumption": null,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        "FE-4": {
+            "Number": 1,
+            "FanAirVolume": 100.0,
+            "MoterRatedPower": 0.03,
+            "PowerConsumption": null,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        },
+        "FE-5": {
+            "Number": 1,
+            "FanAirVolume": 200.0,
+            "MoterRatedPower": 0.05,
+            "PowerConsumption": null,
+            "HighEfficiencyMotor": "無",
+            "Inverter": "無",
+            "AirVolumeControl": "無",
+            "VentilationRoomType": null,
+            "AC_CoolingCapacity": null,
+            "AC_RefEfficiency": null,
+            "AC_PumpPower": null,
+            "Info": ""
+        }
+    },
+    "LightingSystems": {
+        "1F_打合せスペース": {
+            "roomWidth": 3.25,
+            "roomDepth": 6.5,
+            "unitHeight": 3.1,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS15-322": {
+                    "RatedPower": 95.0,
+                    "Number": 4.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "1F_トイレ(女）": {
+            "roomWidth": 3.25,
+            "roomDepth": 2.0,
+            "unitHeight": 2.8,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS23-H321": {
+                    "RatedPower": 35.0,
+                    "Number": 3.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "FBF7RP-321": {
+                    "RatedPower": 22.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "1F_トイレ(男）": {
+            "roomWidth": 2.65,
+            "roomDepth": 1.95,
+            "unitHeight": 2.8,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS23-H321": {
+                    "RatedPower": 35.0,
+                    "Number": 2.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "FBF7RP-321": {
+                    "RatedPower": 22.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "1F_湯沸室": {
+            "roomWidth": 1.4,
+            "roomDepth": 1.95,
+            "unitHeight": 2.8,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS23-H321": {
+                    "RatedPower": 35.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "FBF7RP-321": {
+                    "RatedPower": 22.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "1F_トイレ前通路": {
+            "roomWidth": 1.3,
+            "roomDepth": 4.5,
+            "unitHeight": 3.1,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS15-321": {
+                    "RatedPower": 48.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "点滅方式",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "1F_ホール": {
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 3.1,
+            "roomIndex": 1.1,
+            "lightingUnit": {
+                "FRS15-322": {
+                    "RatedPower": 95.0,
+                    "Number": 11.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "1F_階段室": {
+            "roomWidth": 3.6,
+            "roomDepth": 6.5,
+            "unitHeight": 3.8,
+            "roomIndex": null,
+            "lightingUnit": {
+                "K1-FBF15-321": {
+                    "RatedPower": 48.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "1F_事務室": {
+            "roomWidth": 18.43,
+            "roomDepth": 24.0,
+            "unitHeight": 2.8,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS18L3V-322": {
+                    "RatedPower": 95.0,
+                    "Number": 84.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式",
+                    "TimeScheduleCTRL": "点滅方式",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_更衣･休憩(女）": {
+            "roomWidth": 6.5,
+            "roomDepth": 2.0,
+            "unitHeight": 2.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS15-322": {
+                    "RatedPower": 95.0,
+                    "Number": 2.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_更衣･休憩(男）": {
+            "roomWidth": 3.95,
+            "roomDepth": 3.0,
+            "unitHeight": 2.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS15-322": {
+                    "RatedPower": 95.0,
+                    "Number": 2.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_トイレ(男）": {
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 2.6,
+            "roomIndex": 0.5,
+            "lightingUnit": {
+                "FRS23-H321": {
+                    "RatedPower": 35.0,
+                    "Number": 3.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "FBF7RP-321": {
+                    "RatedPower": 22.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_トイレ(女）": {
+            "roomWidth": 4.0,
+            "roomDepth": 2.2,
+            "unitHeight": 2.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS23-H321": {
+                    "RatedPower": 35.0,
+                    "Number": 4.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "FBF7RP-321": {
+                    "RatedPower": 22.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_湯沸室": {
+            "roomWidth": 2.2,
+            "roomDepth": 1.3,
+            "unitHeight": 2.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS23-H321": {
+                    "RatedPower": 35.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                },
+                "FBF7RP-321": {
+                    "RatedPower": 22.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_トイレ前通路": {
+            "roomWidth": null,
+            "roomDepth": null,
+            "unitHeight": 2.6,
+            "roomIndex": 0.7,
+            "lightingUnit": {
+                "FRS15-321": {
+                    "RatedPower": 48.0,
+                    "Number": 3.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "点滅方式",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_ホール横通路": {
+            "roomWidth": 2.9,
+            "roomDepth": 6.5,
+            "unitHeight": 2.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS15-322": {
+                    "RatedPower": 95.0,
+                    "Number": 3.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "点滅方式",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_ホール": {
+            "roomWidth": 4.5,
+            "roomDepth": 2.8,
+            "unitHeight": 2.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS15-322": {
+                    "RatedPower": 95.0,
+                    "Number": 2.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_階段室": {
+            "roomWidth": 3.6,
+            "roomDepth": 6.5,
+            "unitHeight": 3.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "K1-FBF15-321": {
+                    "RatedPower": 48.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "2F_事務室": {
+            "roomWidth": 18.43,
+            "roomDepth": 24.0,
+            "unitHeight": 2.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS18L3V-322": {
+                    "RatedPower": 95.0,
+                    "Number": 84.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "調光方式",
+                    "TimeScheduleCTRL": "点滅方式",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "RF_ホール": {
+            "roomWidth": 4.5,
+            "roomDepth": 2.8,
+            "unitHeight": 2.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "FRS15-322": {
+                    "RatedPower": 95.0,
+                    "Number": 2.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        },
+        "RF_階段室": {
+            "roomWidth": 3.6,
+            "roomDepth": 6.5,
+            "unitHeight": 3.6,
+            "roomIndex": null,
+            "lightingUnit": {
+                "K1-FBF15-321": {
+                    "RatedPower": 48.0,
+                    "Number": 1.0,
+                    "OccupantSensingCTRL": "無",
+                    "IlluminanceSensingCTRL": "無",
+                    "TimeScheduleCTRL": "無",
+                    "InitialIlluminationCorrectionCTRL": "無"
+                }
+            }
+        }
+    },
+    "HotwaterRoom": {
+        "1F_打合せスペース": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": null,
+                    "SystemName": "EH1",
+                    "HotWaterSavingSystem": "自動給湯栓",
+                    "Info": ""
+                }
+            ]
+        },
+        "1F_事務室": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": null,
+                    "SystemName": "EH1",
+                    "HotWaterSavingSystem": "自動給湯栓",
+                    "Info": ""
+                }
+            ]
+        },
+        "2F_事務室": {
+            "HotwaterSystem": [
+                {
+                    "UsageType": null,
+                    "SystemName": "EH2",
+                    "HotWaterSavingSystem": "自動給湯栓",
+                    "Info": ""
+                }
+            ]
+        }
+    },
+    "HotwaterSupplySystems": {
+        "EH1": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
+                    "Number": 1,
+                    "RatedCapacity": 3.0,
+                    "RatedPowerConsumption": 0,
+                    "RatedFuelConsumption": 8.108108108108109
+                }
+            ],
+            "InsulationType": "保温仕様1",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        },
+        "EH2": {
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "電気瞬間湯沸器",
+                    "Number": 1,
+                    "RatedCapacity": 3.0,
+                    "RatedPowerConsumption": 0,
+                    "RatedFuelConsumption": 8.108108108108109
+                }
+            ],
+            "InsulationType": "保温仕様1",
+            "PipeSize": 20.0,
+            "SolarSystemArea": null,
+            "SolarSystemDirection": null,
+            "SolarSystemAngle": null,
+            "Info": ""
+        }
+    },
+    "Elevators": {
+        "2F_事務室": {
+            "Elevator": [
+                {
+                    "ElevatorName": "事務所2階建モデル常用EV1台",
+                    "Number": 1.0,
+                    "LoadLimit": 600.0,
+                    "Velocity": 45.0,
+                    "TransportCapacityFactor": 1.0,
+                    "ControlType": "VVVF(電力回生なし)",
+                    "Info": "1.0"
+                }
+            ]
+        }
+    },
+    "PhotovoltaicSystems": {},
+    "CogenerationSystems": {},
+    "SpecialInputData": {
+        "window_Ivalue": {
+            "WNDW1": [
+                0.10711598525712233,
+                0.1134354337834805,
+                0.10741467995843061,
+                0.10355149028945373,
+                0.09733725049188385,
+                0.04648033173358524,
+                0.11030516923485303,
+                0.08849003777978563,
+                0.10618128287302907,
+                0.0982129129293944,
+                0.09206518888425573,
+                0.08945304969824065,
+                0.10252300816958373,
+                0.09947287771225662,
+                0.038733507693706246,
+                0.07294940929253546,
+                0.09875511457312454,
+                0.10309386221594223,
+                0.07410293911976609,
+                0.0752906564753716,
+                0.10297967208404311,
+                0.1021446173603853,
+                0.04412450118007369,
+                0.07051952989582501,
+                0.09583489368755342,
+                0.05284313459591913,
+                0.06439599766211612,
+                0.08087774814663676,
+                0.06723049594804252,
+                0.09145569154826788,
+                0.08825749579823705,
+                0.04648340684328175,
+                0.04527606553128625,
+                0.09725248454934225,
+                0.07520265367169728,
+                0.0807266917495452,
+                0.07838285404075909,
+                0.040126190826758626,
+                0.08871928251907323,
+                0.07286573200590017,
+                0.08753301462481301,
+                0.09860826629251646,
+                0.05207781241014853,
+                0.04536101077209996,
+                0.053230390370566816,
+                0.0748347401566855,
+                0.07760578300535254,
+                0.08585679190821556,
+                0.0805557249580449,
+                0.10176430514305132,
+                0.08009737960406377,
+                0.0719716278338845,
+                0.09263998211405063,
+                0.08596627538604182,
+                0.03871303655657502,
+                0.08610551376333096,
+                0.08868955902776185,
+                0.07724128838101531,
+                0.04110835538730436,
+                0.04258127781975901,
+                0.05063754792049515,
+                0.045792505825215796,
+                0.08858562445275316,
+                0.0827666647787119,
+                0.06479313249597389,
+                0.048225179917912114,
+                0.08396875455126337,
+                0.05879390569410018,
+                0.040293793457921175,
+                0.08957493252390583,
+                0.08335851553513907,
+                0.05309563050230608,
+                0.0680992706708075,
+                0.07413571330603204,
+                0.05707415793811488,
+                0.07321003631797729,
+                0.07996130294861191,
+                0.07270653316720209,
+                0.06557457680825048,
+                0.08064121667142583,
+                0.05943831749292813,
+                0.057782224950216864,
+                0.060782649535558765,
+                0.0763200318575239,
+                0.06658579982878236,
+                0.06292205829728093,
+                0.06506299219256727,
+                0.05430365745050077,
+                0.058256118101026516,
+                0.0567237682809854,
+                0.07413390049339386,
+                0.06141395067732306,
+                0.0635411712905447,
+                0.039694740001573296,
+                0.05869374236394308,
+                0.0670925342023756,
+                0.06388008896328641,
+                0.06959585995482014,
+                0.05819336234856598,
+                0.06117374900843352,
+                0.03861876180172931,
+                0.04822848485156671,
+                0.04397113091334195,
+                0.053981724823202376,
+                0.06478051284747798,
+                0.05901489895246141,
+                0.05587852080598136,
+                0.05221912853550738,
+                0.05672340426201908,
+                0.038568143020670215,
+                0.06023322292634906,
+                0.06032274191580663,
+                0.0598479948054488,
+                0.04683416036878772,
+                0.04273283464347257,
+                0.05886310284397535,
+                0.055522209565339264,
+                0.06347617204843037,
+                0.06802411970138635,
+                0.053099351517138765,
+                0.055360653831416466,
+                0.0467395043863659,
+                0.06040807630975326,
+                0.06415818642353283,
+                0.06130724812205017,
+                0.051100775734612976,
+                0.03860793624968853,
+                0.07582531755308293,
+                0.04141830582120701,
+                0.03967991652350305,
+                0.05435817493439739,
+                0.05979755680227186,
+                0.03857256748149095,
+                0.06964466519252979,
+                0.058719098854423786,
+                0.0386041027714885,
+                0.0431968456740472,
+                0.05218762661948416,
+                0.0582751105604587,
+                0.053033254759832206,
+                0.0726286489090513,
+                0.06948898229542555,
+                0.07133334737584801,
+                0.07818390047308148,
+                0.0637448587868227,
+                0.05204989500146237,
+                0.06693293800324439,
+                0.05969667785814642,
+                0.06888471719534775,
+                0.07785189198088557,
+                0.06266471676399887,
+                0.07778323622863237,
+                0.06270437128044203,
+                0.06209647275157768,
+                0.07005120026743054,
+                0.07873919565700793,
+                0.03858543969757588,
+                0.07642102625799632,
+                0.06160967575087167,
+                0.06760676384178031,
+                0.06746009723631197,
+                0.07198797618810368,
+                0.04212971017733973,
+                0.07144472326199625,
+                0.03859521554193993,
+                0.038588172698470695,
+                0.047966986564759395,
+                0.07864317262951398,
+                0.06816775753704762,
+                0.08600153912721088,
+                0.08368710856171327,
+                0.038596624682017994,
+                0.058448761526829755,
+                0.0682821718646935,
+                0.0752810617454455,
+                0.07478075885743181,
+                0.08608768695574928,
+                0.09544279217561216,
+                0.08366894507754401,
+                0.08950997304507241,
+                0.0796090967662185,
+                0.059084459032588854,
+                0.06237546727519312,
+                0.07756402836275057,
+                0.08724406485330098,
+                0.08584701660666365,
+                0.08451563034766167,
+                0.0676209214357422,
+                0.06708797803733418,
+                0.05324544180606202,
+                0.07674251752121429,
+                0.08430901280837531,
+                0.0872626813030141,
+                0.08204298153997357,
+                0.09581531122180675,
+                0.07084799650009001,
+                0.0645565736023161,
+                0.06038922833484541,
+                0.09114260872353319,
+                0.09000144925872335,
+                0.07669866486982901,
+                0.09120289178202474,
+                0.0741398765122743,
+                0.06351808829751035,
+                0.08728844404175268,
+                0.08499040254330442,
+                0.09489937599792847,
+                0.09730038869438463,
+                0.10338890378319862,
+                0.07637248932289548,
+                0.06513805415279905,
+                0.08424675114595347,
+                0.09027317403196962,
+                0.08301822946274175,
+                0.08542389939880878,
+                0.0967999941068185,
+                0.08315644372251048,
+                0.05596117783044339,
+                0.08089328068882172,
+                0.08888495486506236,
+                0.0965005201730421,
+                0.09711858111251816,
+                0.09742839801087069,
+                0.07290638656405807,
+                0.07828922247652444,
+                0.08196879927222758,
+                0.09369031910985048,
+                0.08745965033763,
+                0.07400259156593882,
+                0.08735586956430454,
+                0.06979297775000162,
+                0.058308711593184244,
+                0.08193893694636378,
+                0.09005383880912003,
+                0.0908721786523739,
+                0.07633207867105726,
+                0.039091082655701465,
+                0.09694569736913998,
+                0.06474394913054196,
+                0.07629139574708847,
+                0.07721799804014617,
+                0.08117524108795279,
+                0.08831198401830259,
+                0.08785617584850056,
+                0.0770518284754504,
+                0.06609198412838956,
+                0.09025573108370347,
+                0.07872839201471768,
+                0.08491144347647261,
+                0.09089164848371581,
+                0.0829198060547086,
+                0.0686945276795609,
+                0.0654155655456876,
+                0.06759698292185568,
+                0.08025965465354082,
+                0.08526781228074058,
+                0.08873981605005284,
+                0.07337908743685553,
+                0.07527783007045015,
+                0.08191129124319615,
+                0.03886001393892106,
+                0.06550065025067625,
+                0.0922365400726872,
+                0.05587410644130942,
+                0.03851268296430846,
+                0.08462236282731617,
+                0.08295076967287121,
+                0.08686622054258787,
+                0.08251421276047392,
+                0.07905907371622445,
+                0.03841248637313567,
+                0.03857323737861729,
+                0.040975485494254046,
+                0.03958042787608738,
+                0.09333940626978633,
+                0.08752461611609752,
+                0.0805677945173755,
+                0.059134204792543145,
+                0.09125100131741745,
+                0.07556281771556435,
+                0.03647021249698558,
+                0.08863745253366098,
+                0.038745933755426044,
+                0.0902148931692274,
+                0.08726234573257802,
+                0.09161339467056927,
+                0.0980829928124518,
+                0.09198759799539993,
+                0.08967169185111226,
+                0.038581415685557494,
+                0.03865135353750189,
+                0.0907483437698021,
+                0.09108470554592149,
+                0.07560693940351539,
+                0.07604704876097683,
+                0.10021996075296237,
+                0.07676539561861574,
+                0.08769286071691673,
+                0.09213703813829034,
+                0.09253784887997735,
+                0.04070923176864721,
+                0.10577211581249296,
+                0.043973798758579236,
+                0.0953330298061149,
+                0.09349732225012822,
+                0.037897122731836846,
+                0.0989766550270213,
+                0.10148692918409326,
+                0.06528587096189487,
+                0.10045155190216405,
+                0.0988470481967849,
+                0.0682747693776086,
+                0.09794676927137871,
+                0.09483264870581327,
+                0.038809231657942825,
+                0.03844736775382543,
+                0.046324294961685816,
+                0.06585853762866796,
+                0.10500574607763258,
+                0.06440055680810233,
+                0.03874797833829611,
+                0.10876785009733343,
+                0.03875817047152601,
+                0.10175452341404233,
+                0.10364514832740496,
+                0.03969813507803597,
+                0.11304222057304512,
+                0.05156330589712668,
+                0.10830432674889881,
+                0.10977073635409595,
+                0.0812566436212165,
+                0.10117402205271511,
+                0.07204957900893376,
+                0.045412317384971146,
+                0.10258135252578358,
+                0.11148456352795398,
+                0.03879089925124917,
+                0.10379649310238602,
+                0.056733942941198386,
+                0.10703112225426159,
+                0.10030790922367656,
+                0.10361251994275888,
+                0.041424355313345436,
+                0.09811808296418245,
+                0.04622573039288988,
+                0.10420798016886867,
+                0.07126999163663998,
+                0.04928163527291716,
+                0.07353276365755919,
+                0.03784890116897447,
+                0.10468942512592676,
+                0.09870865124929612,
+                0.09820205625450028,
+                0.10430786410646557,
+                0.10069424800662936,
+                0.09845963580927998,
+                0.11194546244580393,
+                0.11005311424996612,
+                0.10147057651874447,
+                0.08854935606951811,
+                0.09390186965072336,
+                0.10126530122960131,
+                0.09098065094547705,
+                0.08634230691015084,
+                0.09598374226655963
+            ]
+        }
+    }
+}
