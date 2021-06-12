@@ -446,8 +446,9 @@ else:
     calc_reuslt["BEI"] = math.ceil(calc_reuslt["BEI"] * 100) / 100
 
     # 設計一次エネ・基準一次エネにその他を追加
-    calc_reuslt["設計一次エネルギー消費量 [MJ]"] += resultdata_OT["E_other"]
-    calc_reuslt["基準一次エネルギー消費量 [MJ]"] += resultdata_OT["E_other"]
+    if "E_other" in resultdata_OT:
+        calc_reuslt["設計一次エネルギー消費量 [MJ]"] += resultdata_OT["E_other"]
+        calc_reuslt["基準一次エネルギー消費量 [MJ]"] += resultdata_OT["E_other"]
 
 
 #------------------------------------
