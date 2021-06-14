@@ -129,7 +129,9 @@ def get_roomHeatGain(buildingType, roomType):
     
     roomHeatGain_OAapp  = RoomUsageSchedule[buildingType][roomType]["機器発熱参照値"]
 
-    return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp
+    roomNumOfPerson = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
+
+    return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson
 
 
 def get_roomUsageSchedule(buildingType, roomType, input_calendar={}):

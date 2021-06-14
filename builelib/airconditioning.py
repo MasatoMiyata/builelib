@@ -16,8 +16,8 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
-# 照明との連成
-connection_to_lighting = True
+# builelibモードかどうか（照明との連成、動的負荷計算）
+SWITCH_BUILELIB = True
 
 def count_Matrix(x, mxL):
     """
@@ -287,9 +287,10 @@ def calc_energy(inputdata, DEBUG = False):
         if room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
 
             # 建物用途・室用途、ゾーン面積等の取得
-            inputdata["AirConditioningZone"][room_zone_name]["buildingType"] = inputdata["Rooms"][room_zone_name]["buildingType"]
-            inputdata["AirConditioningZone"][room_zone_name]["roomType"]     = inputdata["Rooms"][room_zone_name]["roomType"]
-            inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]     = inputdata["Rooms"][room_zone_name]["roomArea"]
+            inputdata["AirConditioningZone"][room_zone_name]["buildingType"]  = inputdata["Rooms"][room_zone_name]["buildingType"]
+            inputdata["AirConditioningZone"][room_zone_name]["roomType"]      = inputdata["Rooms"][room_zone_name]["roomType"]
+            inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]      = inputdata["Rooms"][room_zone_name]["roomArea"]
+            inputdata["AirConditioningZone"][room_zone_name]["ceilingHeight"] = inputdata["Rooms"][room_zone_name]["ceilingHeight"]
                 
         else:
 
@@ -299,9 +300,10 @@ def calc_energy(inputdata, DEBUG = False):
                     for zone_name  in inputdata["Rooms"][room_name]["zone"]:   # ゾーン名を検索
                         if room_zone_name == (room_name+"_"+zone_name):
 
-                            inputdata["AirConditioningZone"][room_zone_name]["buildingType"] = inputdata["Rooms"][room_name]["buildingType"]
-                            inputdata["AirConditioningZone"][room_zone_name]["roomType"]     = inputdata["Rooms"][room_name]["roomType"]
-                            inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]     = inputdata["Rooms"][room_name]["zone"][zone_name]["zoneArea"]
+                            inputdata["AirConditioningZone"][room_zone_name]["buildingType"]  = inputdata["Rooms"][room_name]["buildingType"]
+                            inputdata["AirConditioningZone"][room_zone_name]["roomType"]      = inputdata["Rooms"][room_name]["roomType"]
+                            inputdata["AirConditioningZone"][room_zone_name]["ceilingHeight"] = inputdata["Rooms"][room_name]["ceilingHeight"]
+                            inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]      = inputdata["Rooms"][room_name]["zone"][zone_name]["zoneArea"]
 
                             break
 
@@ -670,11 +672,21 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
                         inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_roof"] * wall_configure["WallArea"]
 
+                    # 動的負荷計算用
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
+                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_roof"]
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
+
                 elif wall_configure["Direction"] == "水平（下）":  # 床と見なす。
 
                     # 外壁のUA（熱貫流率×面積）を計算
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
                         inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_floor"] * wall_configure["WallArea"]
+
+                    # 動的負荷計算用
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
+                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_floor"]
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
 
                 else:
 
@@ -682,12 +694,21 @@ def calc_energy(inputdata, DEBUG = False):
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
                         inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_wall"] * wall_configure["WallArea"]
 
+                    # 動的負荷計算用
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
+                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_wall"]
+                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
+
             else:
 
                 # 外壁のUA（熱貫流率×面積）を計算
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
                     inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"] * wall_configure["WallArea"]
 
+                # 動的負荷計算用
+                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
+                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"]
+                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
 
             for (window_id, window_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"]):
 
@@ -739,6 +760,13 @@ def calc_energy(inputdata, DEBUG = False):
                             window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
                             inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue"]
 
+                        # 動的負荷計算用
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["U_window"] = \
+                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Uvalue"]
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["I_window"] = \
+                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue"]
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["windowArea"] = \
+                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"]
 
                     elif window_configure["isBlind"] == "有": # ブラインドがある場合
 
@@ -750,6 +778,13 @@ def calc_energy(inputdata, DEBUG = False):
                             window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
                             inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue_blind"]
 
+                        # 動的負荷計算用
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["U_window"] = \
+                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Uvalue_blind"]
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["I_window"] = \
+                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue_blind"]
+                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["windowArea"] = \
+                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"]
 
                     # 任意入力 SP-8
                     if "window_Ivalue" in inputdata["SpecialInputData"]:
@@ -923,6 +958,10 @@ def calc_energy(inputdata, DEBUG = False):
     with open(database_directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
         QROOM_COEFFI = json.load(f)
 
+    
+    Heat_light_hourly = {}
+    Num_of_Person_hourly = {}
+    Heat_OAapp_hourly = {}
 
     for room_zone_name in inputdata["AirConditioningZone"]:
 
@@ -940,10 +979,10 @@ def calc_energy(inputdata, DEBUG = False):
         rtype = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
 
         # 発熱量参照値 [W/m2] を読み込む関数（空調）
-        (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp) = bc.get_roomHeatGain(btype, rtype)
+        (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = bc.get_roomHeatGain(btype, rtype)
 
         # 様式4から照明発熱量を読み込む
-        if connection_to_lighting:
+        if SWITCH_BUILELIB:
             if room_zone_name in inputdata["LightingSystems"]:
                 lighting_power = 0
                 for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
@@ -955,6 +994,12 @@ def calc_energy(inputdata, DEBUG = False):
         Heat_light_daily  = np.sum(roomScheduleLight[room_zone_name],1) * roomHeatGain_Light   # 照明からの発熱（日積算）（365日分）
         Heat_person_daily = np.sum(roomSchedulePerson[room_zone_name],1) * roomHeatGain_Person # 人体からの発熱（日積算）（365日分）
         Heat_OAapp_daily  = np.sum(roomScheduleOAapp[room_zone_name],1) * roomHeatGain_OAapp   # 機器からの発熱（日積算）（365日分）
+
+        # 時刻別計算用（本来はこのループに入れるべきではない）
+        Heat_light_hourly[room_zone_name]  = roomScheduleLight[room_zone_name] * roomHeatGain_Light   # 照明からの発熱 （365日分）
+        Num_of_Person_hourly[room_zone_name] = roomSchedulePerson[room_zone_name] * roomNumOfPerson   # 人員密度（365日分）
+        Heat_OAapp_hourly[room_zone_name]  = roomScheduleOAapp[room_zone_name] * roomHeatGain_OAapp   # 機器からの発熱 （365日分）
+
 
         for dd in range(0,365):
 
@@ -1049,11 +1094,12 @@ def calc_energy(inputdata, DEBUG = False):
                 Qheat[dd] = 0
 
 
+        # QroomDc, QroomDh [MJ/day]
         resultJson["Qroom"][room_zone_name]["QroomDc"] = Qcool * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
         resultJson["Qroom"][room_zone_name]["QroomDh"] = Qheat * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
-        resultJson["Qroom"][room_zone_name]["QroomDc_anual"] = np.sum(Qcool,0)
-        resultJson["Qroom"][room_zone_name]["QroomDh_anual"] = np.sum(Qheat,0)
+        resultJson["Qroom"][room_zone_name]["QroomDc_annual"] = np.sum(Qcool,0)
+        resultJson["Qroom"][room_zone_name]["QroomDh_annual"] = np.sum(Qheat,0)
 
 
     print('室負荷計算完了')
@@ -1072,8 +1118,8 @@ def calc_energy(inputdata, DEBUG = False):
             print( f'熱取得_窓放射 Qwind_N: {np.sum(resultJson["Qroom"][room_zone_name]["Qwind_N"],0)}' )
             print( f'室負荷（冷房要求）の合計 QroomDc: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"],0)}' )
             print( f'室負荷（暖房要求）の合計 QroomDh: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)}' )
-            print( f'室負荷（冷房要求）の合計 QroomDc_anual: {resultJson["Qroom"][room_zone_name]["QroomDc_anual"]}' )
-            print( f'室負荷（暖房要求）の合計 QroomDh_anual: {resultJson["Qroom"][room_zone_name]["QroomDh_anual"]}' )
+            print( f'室負荷（冷房要求）の合計 QroomDc_annual: {resultJson["Qroom"][room_zone_name]["QroomDc_annual"]}' )
+            print( f'室負荷（暖房要求）の合計 QroomDh_annual: {resultJson["Qroom"][room_zone_name]["QroomDh_annual"]}' )
 
 
     ##----------------------------------------------------------------------------------
@@ -1086,13 +1132,364 @@ def calc_energy(inputdata, DEBUG = False):
             for room_zone_name in inputdata["SpecialInputData"]["Qroom"]: # SP-4シートに入力された室毎に処理
 
                 if room_zone_name in resultJson["Qroom"]:  # SP-4シートに入力された室が空調ゾーンとして存在していれば
-                    # 室負荷（冷房要求）の置き換え
+                    # 室負荷（冷房要求）の置き換え [MJ/day]
                     if "QroomDc" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
                         resultJson["Qroom"][room_zone_name]["QroomDc"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDc"]
 
                     # 室負荷（暖房要求）の置き換え
                     if "QroomDh" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
                         resultJson["Qroom"][room_zone_name]["QroomDh"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDh"]
+
+    ##----------------------------------------------------------------------------------
+    ## 動的室負荷計算
+    ##----------------------------------------------------------------------------------
+    if SWITCH_BUILELIB:
+
+        # 負荷計算モジュールの読み込み
+        from heat_load_calculation import Main
+
+        # ファイルの読み込み
+        with open('./builelib/heat_load_calculation/heatload_calculation_template.json', 'r', encoding='utf-8') as js:
+        # with open('input_non_residential.json', 'r', encoding='utf-8') as js:
+            input_heatcalc = json.load(js)
+
+        ## 入力ファイルの生成（共通）
+        # 地域
+        input_heatcalc["common"]["region"] = inputdata["Building"]["Region"]
+        input_heatcalc["common"]["is_residential"] = False
+
+        # 室温上限値・下限
+        input_heatcalc["rooms"][0]["schedule"]["temperature_upper_limit"] = np.reshape(TroomSP*np.ones([24,1]),8760)
+        input_heatcalc["rooms"][0]["schedule"]["temperature_lower_limit"] = np.reshape(TroomSP*np.ones([24,1]),8760)
+
+        # 相対湿度上限値・下限
+        input_heatcalc["rooms"][0]["schedule"]["relative_humidity_upper_limit"] = np.reshape(RroomSP*np.ones([24,1]),8760)
+        input_heatcalc["rooms"][0]["schedule"]["relative_humidity_lower_limit"] = np.reshape(RroomSP*np.ones([24,1]),8760)
+
+        # 非住宅では使わない
+        input_heatcalc["rooms"][0]["vent"] = 0
+        input_heatcalc["rooms"][0]["schedule"]["heat_generation_cooking"] = np.zeros(8760)
+        input_heatcalc["rooms"][0]["schedule"]["vapor_generation_cooking"] = np.zeros(8760)
+        input_heatcalc["rooms"][0]["schedule"]["local_vent_amount"] = np.zeros(8760)
+
+
+        # 空調ゾーン毎に負荷を計算
+        for room_zone_name in inputdata["AirConditioningZone"]:
+
+            ## 入力ファイルの生成（室単位）
+
+            # 室名
+            input_heatcalc["rooms"][0]["name"] = room_zone_name
+            # 気積 [m3]
+            input_heatcalc["rooms"][0]["volume"] = inputdata["AirConditioningZone"][room_zone_name]["zoneArea"] * inputdata["AirConditioningZone"][room_zone_name]["ceilingHeight"]
+
+            # 室温湿度の上下限
+            input_heatcalc["rooms"][0]["schedule"]["is_upper_temp_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760) 
+            input_heatcalc["rooms"][0]["schedule"]["is_lower_temp_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760) 
+            input_heatcalc["rooms"][0]["schedule"]["is_upper_humidity_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760) 
+            input_heatcalc["rooms"][0]["schedule"]["is_lower_humidity_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760) 
+            
+            # 発熱量
+            # 照明発熱スケジュール[W]
+            input_heatcalc["rooms"][0]["schedule"]["heat_generation_lighting"] = np.reshape(Heat_light_hourly[room_zone_name],8760) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+            # 機器発熱スケジュール[W]
+            input_heatcalc["rooms"][0]["schedule"]["heat_generation_appliances"] = np.reshape(Heat_OAapp_hourly[room_zone_name],8760) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+            # 人員数[人]
+            input_heatcalc["rooms"][0]["schedule"]["number_of_people"] = np.reshape(Num_of_Person_hourly[room_zone_name],8760) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+
+
+            # 床の設定
+            input_heatcalc["rooms"][0]["boundaries"][0] = {
+                "name" : 'floor',
+                "boundary_type" : 'external_general_part',
+                "area": inputdata["AirConditioningZone"][room_zone_name]["zoneArea"],
+                "is_sun_striked_outside": False,
+                "temp_dif_coef": 0,
+                "is_solar_absorbed_inside": True,
+                "general_part_spec" :
+                    {
+                        "outside_emissivity": 0.9,
+                        "outside_solar_absorption": 0.8,
+                        "inside_heat_transfer_resistance": 0.11,
+                        "outside_heat_transfer_resistance": 0.11,
+                        "layers": [
+                            {
+                                "name": 'カーペット類',
+                                "thermal_resistance": 0.0875,
+                                "thermal_capacity": 2.24,
+                            },
+                            {
+                                "name": '鋼',
+                                "thermal_resistance": 0.000066667,
+                                "thermal_capacity": 10.86,
+                            },
+                            {
+                                "name": '非密閉中空層',
+                                "thermal_resistance": 0.086,
+                                "thermal_capacity": 0,
+                            },
+                            {
+                                "name": '普通コンクリート',
+                                "thermal_resistance": 0.107142857,
+                                "thermal_capacity": 289.5,
+                            },
+                            {
+                                "name": '非密閉中空層',
+                                "thermal_resistance": 0.086,
+                                "thermal_capacity": 0,
+                            },
+                            {
+                                "name": 'せっこうボード',
+                                "thermal_resistance": 0.052941176,
+                                "thermal_capacity": 9.27,
+                            },
+                            {
+                                "name": 'ロックウール化粧吸音板',
+                                "thermal_resistance": 0.1875,
+                                "thermal_capacity": 3.0,
+                            },
+                        ],
+                        "solar_shading_part": {
+                            "existence" : False
+                        },
+                    }
+            }
+
+            # 天井
+            input_heatcalc["rooms"][0]["boundaries"][1] = {
+                "name" : 'ceil',
+                "boundary_type" : 'external_general_part',
+                "area": inputdata["AirConditioningZone"][room_zone_name]["zoneArea"],
+                "is_sun_striked_outside": False,
+                "temp_dif_coef": 0,
+                "is_solar_absorbed_inside": True,
+                "general_part_spec" :
+                    {
+                        "outside_emissivity": 0.9,
+                        "outside_solar_absorption": 0.8,
+                        "inside_heat_transfer_resistance": 0.11,
+                        "outside_heat_transfer_resistance": 0.11,
+                        "layers": [
+                            {
+                                "name": 'ロックウール化粧吸音板',
+                                "thermal_resistance": 0.1875,
+                                "thermal_capacity": 3.0,
+                            },
+                            {
+                                "name": 'せっこうボード',
+                                "thermal_resistance": 0.052941176,
+                                "thermal_capacity": 9.27,
+                            },
+
+                            {
+                                "name": '非密閉中空層',
+                                "thermal_resistance": 0.086,
+                                "thermal_capacity": 0,
+                            },
+                            {
+                                "name": '普通コンクリート',
+                                "thermal_resistance": 0.107142857,
+                                "thermal_capacity": 289.5,
+                            },
+                            {
+                                "name": '非密閉中空層',
+                                "thermal_resistance": 0.086,
+                                "thermal_capacity": 0,
+                            },
+                            {
+                                "name": '鋼',
+                                "thermal_resistance": 0.000066667,
+                                "thermal_capacity": 10.86,
+                            },
+                            {
+                                "name": 'カーペット類',
+                                "thermal_resistance": 0.0875,
+                                "thermal_capacity": 2.24,
+                            },
+                        ],
+                        "solar_shading_part": {
+                            "existence" : False
+                        },
+                    }
+            }
+
+            # 外皮があれば
+            if room_zone_name in inputdata["EnvelopeSet"]:
+
+                # 外壁
+                for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
+            
+                    # 等価R値
+                    if inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] > 4:
+                        equivalent_Rvalue = 0.001
+                    else:
+                        equivalent_Rvalue = (1/inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] - 0.25)
+                    
+                    direction = ""
+                    if inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "北":
+                        direction = "n"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "北東":
+                        direction = "ne"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "東":
+                        direction = "e"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "南東":
+                        direction = "se"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "南":
+                        direction = "s"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "南西":
+                        direction = "sw"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "西":
+                        direction = "w"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "北西":
+                        direction = "nw"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "水平（上）":
+                        direction = "top"
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "水平（下）":
+                        direction = "bottom"
+                    else:
+                        raise Exception("方位が不正です")
+
+                    boundary_type  = ""
+                    is_sun_striked_outside = ""
+                    if inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallType"] == "日の当たる外壁":
+                        boundary_type = "external_general_part"
+                        is_sun_striked_outside = True
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallType"] == "日の当たらない外壁":
+                        boundary_type = "external_general_part"
+                        is_sun_striked_outside = False
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallType"] == "地盤に接する外壁":
+                        boundary_type = "ground"
+                        is_sun_striked_outside = False
+                    elif inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallType"] == "地盤に接する外壁_Ver2":
+                        boundary_type = "ground"
+                        is_sun_striked_outside = False
+
+                    if boundary_type == "external_general_part":
+
+                        input_heatcalc["rooms"][0]["boundaries"].append(
+                            {
+                                "name": "wall",
+                                "boundary_type": boundary_type,
+                                "area": inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"],
+                                "is_sun_striked_outside": is_sun_striked_outside,
+                                "temp_dif_coef": 0,
+                                "direction": direction,
+                                "is_solar_absorbed_inside": False,
+                                "general_part_spec" : 
+                                    {
+                                        "outside_emissivity": 0.9,
+                                        "outside_solar_absorption": 0.8,
+                                        "inside_heat_transfer_resistance": 0.11,
+                                        "outside_heat_transfer_resistance": 0.04,
+                                        "layers": [
+                                            {
+                                                "name": "コンクリート",
+                                                "thermal_resistance": 0.10,
+                                                "thermal_capacity": 300
+                                            },
+                                            {
+                                                "name": "吹付け硬質ウレタンフォーム",
+                                                "thermal_resistance": equivalent_Rvalue,
+                                                "thermal_capacity": 1.00
+                                            }
+                                        ],
+                                    },
+                                "solar_shading_part": {
+                                    "existence" : False
+                                },
+                            }
+                        )
+
+                    elif boundary_type == "ground":
+
+                        input_heatcalc["rooms"][0]["boundaries"].append(
+                            {
+                                "name": "wall",
+                                "boundary_type": boundary_type,
+                                "area": inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"],
+                                "is_sun_striked_outside": is_sun_striked_outside,
+                                "temp_dif_coef": 0,
+                                "direction": direction,
+                                "is_solar_absorbed_inside": False,
+                                "ground_spec" : 
+                                    {
+                                        "inside_heat_transfer_resistance": 0.11,
+                                        "layers": [
+                                            {
+                                                "name": "コンクリート",
+                                                "thermal_resistance": 0.10,
+                                                "thermal_capacity": 300
+                                            },
+                                            {
+                                                "name": "吹付け硬質ウレタンフォーム",
+                                                "thermal_resistance": equivalent_Rvalue,
+                                                "thermal_capacity": 1.00
+                                            }
+                                        ],
+                                    }
+                            }
+                        )
+                        
+
+                    # 窓
+                    for (window_id, window_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"]):
+                        
+                        if window_configure["WindowID"] != "無":
+
+                            input_heatcalc["rooms"][0]["boundaries"].append(
+                                {
+                                    "name": "window",
+                                    "boundary_type": "external_transparent_part",
+                                    "area": inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["windowArea"] ,
+                                    "is_sun_striked_outside": True,
+                                    "temp_dif_coef": 0,
+                                    "direction": direction,
+                                    "is_solar_absorbed_inside": False,
+                                    "transparent_opening_part_spec": {
+                                        "eta_value": inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["I_window"],
+                                        "u_value": inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["U_window"],
+                                        "outside_emissivity": 0.8,
+                                        "inside_heat_transfer_resistance": 0.11,
+                                        "outside_heat_transfer_resistance": 0.04,
+                                        "incident_angle_characteristics": "1"
+                                    },
+                                    "solar_shading_part": {
+                                        "existence": False
+                                    }
+                                }
+                            )
+
+            # デバッグ用
+            # with open("heatloadcalc_input.json",'w') as fw:
+            #     json.dump(input_heatcalc, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
+            
+            # 負荷計算の実行
+            heatload_sensible_convection, heatload_sensible_radiation, heatload_latent = Main.run(input_heatcalc)
+
+            # 負荷の積算[W] (365×24)
+            heatload = np.array( 
+                    bc.trans_8760to36524(heatload_sensible_convection) + \
+                    bc.trans_8760to36524(heatload_sensible_radiation) + \
+                    bc.trans_8760to36524(heatload_latent)
+                )
+
+            # 冷房負荷と暖房負荷に分離する。
+            heatload_for_cooling = np.zeros(365)
+            heatload_for_heating = np.zeros(365)
+            for dd in range(0,365):
+                for hh in range(0,24):
+                    if heatload[dd][hh] < 0:
+                        # 暖房負荷 [W] → [MJ/day]
+                        heatload_for_heating[dd] += heatload[dd][hh] * 3600/1000000
+                    elif heatload[dd][hh] > 0:
+                        # 冷房負荷 [W]
+                        heatload_for_cooling[dd] += heatload[dd][hh] * 3600/1000000
+
+            resultJson["Qroom"][room_zone_name]["QroomDc"] = heatload_for_cooling
+            resultJson["Qroom"][room_zone_name]["QroomDh"] = heatload_for_heating
+
+            print( f'室負荷（冷房要求）の合計 heatload_for_cooling: {np.sum(heatload_for_cooling,0)}' )
+            print( f'室負荷（暖房要求）の合計 heatload_for_heating: {np.sum(heatload_for_heating,0)}' )
 
 
     ##----------------------------------------------------------------------------------
@@ -4095,7 +4492,7 @@ def calc_energy(inputdata, DEBUG = False):
                 for dd in range(0,365):
 
                     if resultJson["REF"][ref_name]["Tref"][dd] == 0:
-                        resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 0;
+                        resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 0
                     elif resultJson["REF"][ref_name]["matrix_iL"][dd] == 11:
                         resultJson["for_CGS"]["Lt_ref_cgsC_day"][dd] = 1.2
                     else:
