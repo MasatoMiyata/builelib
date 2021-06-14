@@ -379,3 +379,17 @@ def day2month(dd: np.array) -> str:
         raise Exception("day2month: 日数が範囲外です。")
 
     return month
+
+
+def trans_8760to36524(X8760):
+    """
+    8760行のリストを365行×24列のリストに変形する関数
+    """
+    X = []
+    for dd in range(0,365):
+        tmp = []
+        for hh in range(0,24):
+            tmp.append(X8760[24*dd+hh])
+        X.append(tmp)
+    return X
+    

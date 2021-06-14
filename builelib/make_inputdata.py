@@ -36,17 +36,7 @@ def set_isCalculatedEquipment(input):
     return isEquip
 
 
-def trans_8760to36524(X8760):
-    """
-    8760行のリストを365行×24列のリストに変形する関数
-    """
-    X = []
-    for dd in range(0,365):
-        tmp = []
-        for hh in range(0,24):
-            tmp.append(X8760[24*dd+hh])
-        X.append(tmp)
-    return X
+
 
     
 def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
@@ -2903,11 +2893,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
         # 365×24の行列に変更して保存
         data["SpecialInputData"]["climate_data"] = {
-            "Tout": trans_8760to36524(Tout_8760),
-            "Xout": trans_8760to36524(Xout_8760),
-            "Iod": trans_8760to36524(Iod_8760),
-            "Ios": trans_8760to36524(Ios_8760),
-            "Inn": trans_8760to36524(Inn_8760)
+            "Tout": bc.trans_8760to36524(Tout_8760),
+            "Xout": bc.trans_8760to36524(Xout_8760),
+            "Iod": bc.trans_8760to36524(Iod_8760),
+            "Ios": bc.trans_8760to36524(Ios_8760),
+            "Inn": bc.trans_8760to36524(Inn_8760)
         }
 
     if "SP-6) カレンダー" in wb.sheet_names():
@@ -2974,13 +2964,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     raise Exception("使用時間帯の入力が不正です")
 
                 if dataSP7[3] == "室の同時使用率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  trans_8760to36524(dataSP7[4:])
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  bc.trans_8760to36524(dataSP7[4:])
                 elif dataSP7[3] == "照明発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
                 elif dataSP7[3] == "人体発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
                 elif dataSP7[3] == "機器発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
                 else:
                     raise Exception("スケジュールの種類が不正です")
 
@@ -2988,13 +2978,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
             elif (dataSP7[0] == "") and (dataSP7[1] == "") and (dataSP7[3] != ""):
 
                 if dataSP7[3] == "室の同時使用率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  trans_8760to36524(dataSP7[4:])
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  bc.trans_8760to36524(dataSP7[4:])
                 elif dataSP7[3] == "照明発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
                 elif dataSP7[3] == "人体発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
                 elif dataSP7[3] == "機器発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  trans_8760to36524(dataSP7[4:])
+                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
                 else:
                     raise Exception("スケジュールの種類が不正です")
 
@@ -3041,8 +3031,8 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    # case_name = 'sample02_WEBPRO_inputSheet_for_Ver3.0'
-    case_name = 'WEBPRO_KE14_Case01'
+    case_name = 'sample10_WEBPRO_inputSheet_for_SP7'
+    # case_name = 'WEBPRO_KE14_Case01'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
