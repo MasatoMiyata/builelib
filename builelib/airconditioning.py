@@ -1147,34 +1147,37 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 負荷計算モジュールの読み込み
         from heat_load_calculation import Main
+        import copy
 
         # ファイルの読み込み
         with open('./builelib/heat_load_calculation/heatload_calculation_template.json', 'r', encoding='utf-8') as js:
         # with open('input_non_residential.json', 'r', encoding='utf-8') as js:
-            input_heatcalc = json.load(js)
-
+            input_heatcalc_template = json.load(js)
+            
         ## 入力ファイルの生成（共通）
         # 地域
-        input_heatcalc["common"]["region"] = inputdata["Building"]["Region"]
-        input_heatcalc["common"]["is_residential"] = False
+        input_heatcalc_template["common"]["region"] = inputdata["Building"]["Region"]
+        input_heatcalc_template["common"]["is_residential"] = False
 
         # 室温上限値・下限
-        input_heatcalc["rooms"][0]["schedule"]["temperature_upper_limit"] = np.reshape(TroomSP*np.ones([24,1]),8760)
-        input_heatcalc["rooms"][0]["schedule"]["temperature_lower_limit"] = np.reshape(TroomSP*np.ones([24,1]),8760)
+        input_heatcalc_template["rooms"][0]["schedule"]["temperature_upper_limit"] = np.reshape(TroomSP*np.ones([24,1]),8760)
+        input_heatcalc_template["rooms"][0]["schedule"]["temperature_lower_limit"] = np.reshape(TroomSP*np.ones([24,1]),8760)
 
         # 相対湿度上限値・下限
-        input_heatcalc["rooms"][0]["schedule"]["relative_humidity_upper_limit"] = np.reshape(RroomSP*np.ones([24,1]),8760)
-        input_heatcalc["rooms"][0]["schedule"]["relative_humidity_lower_limit"] = np.reshape(RroomSP*np.ones([24,1]),8760)
+        input_heatcalc_template["rooms"][0]["schedule"]["relative_humidity_upper_limit"] = np.reshape(RroomSP*np.ones([24,1]),8760)
+        input_heatcalc_template["rooms"][0]["schedule"]["relative_humidity_lower_limit"] = np.reshape(RroomSP*np.ones([24,1]),8760)
 
         # 非住宅では使わない
-        input_heatcalc["rooms"][0]["vent"] = 0
-        input_heatcalc["rooms"][0]["schedule"]["heat_generation_cooking"] = np.zeros(8760)
-        input_heatcalc["rooms"][0]["schedule"]["vapor_generation_cooking"] = np.zeros(8760)
-        input_heatcalc["rooms"][0]["schedule"]["local_vent_amount"] = np.zeros(8760)
-
-
+        input_heatcalc_template["rooms"][0]["vent"] = 0
+        input_heatcalc_template["rooms"][0]["schedule"]["heat_generation_cooking"] = np.zeros(8760)
+        input_heatcalc_template["rooms"][0]["schedule"]["vapor_generation_cooking"] = np.zeros(8760)
+        input_heatcalc_template["rooms"][0]["schedule"]["local_vent_amount"] = np.zeros(8760)
+        
         # 空調ゾーン毎に負荷を計算
         for room_zone_name in inputdata["AirConditioningZone"]:
+
+            # 入力ファイルの読み込み
+            input_heatcalc = copy.deepcopy(input_heatcalc_template)
 
             ## 入力ファイルの生成（室単位）
 
