@@ -1044,7 +1044,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
         operation_mode = ""
         curve_type = ""
 
-        # 行のループ
+        # 行のループ（nrowsが10より小さいと空行列になる）
         for i in range(10,sheet_SP2.nrows):
 
             # シートから「行」の読み込み
@@ -2786,20 +2786,22 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
         # シートの読み込み
         sheet_SP1 = wb.sheet_by_name("SP-1) 変流量・変風量制御")
 
-        # 行のループ
+        # 行のループ（nrowsが10より小さいと空行列になる）
         for i in range(10,sheet_SP1.nrows):
 
             # シートから「行」の読み込み
             dataSP1 = sheet_SP1.row_values(i)
 
-            data["SpecialInputData"]["flow_control"][dataSP1[0]] = {
-                "Type": "任意評定",
-                "a4": float(dataSP1[1]),
-                "a3": float(dataSP1[2]),
-                "a2": float(dataSP1[3]),
-                "a1": float(dataSP1[4]),
-                "a0": float(dataSP1[5])
-            }
+            if dataSP1[0] != "":
+
+                data["SpecialInputData"]["flow_control"][dataSP1[0]] = {
+                    "Type": "任意評定",
+                    "a4": float(dataSP1[1]),
+                    "a3": float(dataSP1[2]),
+                    "a2": float(dataSP1[3]),
+                    "a1": float(dataSP1[4]),
+                    "a0": float(dataSP1[5])
+                }
 
     if "SP-3) 熱源水温度" in wb.sheet_names():
 
@@ -2808,26 +2810,28 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
         # シートの読み込み
         sheet_SP3 = wb.sheet_by_name("SP-3) 熱源水温度")
 
-        # 行のループ
+        # 行のループ（nrowsが10より小さいと空行列になる）
         for i in range(10,sheet_SP3.nrows):
 
             # シートから「行」の読み込み
             dataSP3 = sheet_SP3.row_values(i)
 
-            data["SpecialInputData"]["heatsource_temperature_monthly"][dataSP3[0]] = {
-                "1月":  float(dataSP3[1]), 
-                "2月":  float(dataSP3[2]), 
-                "3月":  float(dataSP3[3]), 
-                "4月":  float(dataSP3[4]), 
-                "5月":  float(dataSP3[5]), 
-                "6月":  float(dataSP3[6]), 
-                "7月":  float(dataSP3[7]), 
-                "8月":  float(dataSP3[8]),  
-                "9月":  float(dataSP3[9]), 
-                "10月": float(dataSP3[10]), 
-                "11月": float(dataSP3[11]), 
-                "12月": float(dataSP3[12])
-            }
+            if dataSP3[0] != "":
+
+                data["SpecialInputData"]["heatsource_temperature_monthly"][dataSP3[0]] = {
+                    "1月":  float(dataSP3[1]), 
+                    "2月":  float(dataSP3[2]), 
+                    "3月":  float(dataSP3[3]), 
+                    "4月":  float(dataSP3[4]), 
+                    "5月":  float(dataSP3[5]), 
+                    "6月":  float(dataSP3[6]), 
+                    "7月":  float(dataSP3[7]), 
+                    "8月":  float(dataSP3[8]),  
+                    "9月":  float(dataSP3[9]), 
+                    "10月": float(dataSP3[10]), 
+                    "11月": float(dataSP3[11]), 
+                    "12月": float(dataSP3[12])
+                }
 
 
     if "SP-4) 室負荷" in wb.sheet_names():
@@ -2880,6 +2884,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
         Iod_8760  = []
         Ios_8760  = []
         Inn_8760  = []
+
         for i in range(10,sheet_SP5.nrows):
 
             # シートから「行」の読み込み
@@ -2891,14 +2896,15 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
             Ios_8760.append(float(dataSP5[7]))
             Inn_8760.append(float(dataSP5[8]))
 
-        # 365×24の行列に変更して保存
-        data["SpecialInputData"]["climate_data"] = {
-            "Tout": bc.trans_8760to36524(Tout_8760),
-            "Xout": bc.trans_8760to36524(Xout_8760),
-            "Iod": bc.trans_8760to36524(Iod_8760),
-            "Ios": bc.trans_8760to36524(Ios_8760),
-            "Inn": bc.trans_8760to36524(Inn_8760)
-        }
+        # データの処理がなされていたら、365×24の行列に変更して保存
+        if Tout_8760 != []:
+            data["SpecialInputData"]["climate_data"] = {
+                "Tout": bc.trans_8760to36524(Tout_8760),
+                "Xout": bc.trans_8760to36524(Xout_8760),
+                "Iod": bc.trans_8760to36524(Iod_8760),
+                "Ios": bc.trans_8760to36524(Ios_8760),
+                "Inn": bc.trans_8760to36524(Inn_8760)
+            }
 
     if "SP-6) カレンダー" in wb.sheet_names():
 
@@ -3031,7 +3037,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'sample10_WEBPRO_inputSheet_for_SP7'
+    case_name = 'WEBPRO_KE14_Case01(SPシート不使用)'
     # case_name = 'WEBPRO_KE14_Case01'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)

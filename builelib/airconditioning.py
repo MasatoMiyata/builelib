@@ -17,7 +17,8 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成、動的負荷計算）
-SWITCH_BUILELIB = True
+SWITCH_BUILELIB_LIGHTING = True
+SWITCH_BUILELIB_HEATLOADCALC = False
 
 def count_Matrix(x, mxL):
     """
@@ -982,7 +983,7 @@ def calc_energy(inputdata, DEBUG = False):
         (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = bc.get_roomHeatGain(btype, rtype)
 
         # 様式4から照明発熱量を読み込む
-        if SWITCH_BUILELIB:
+        if SWITCH_BUILELIB_LIGHTING:
             if room_zone_name in inputdata["LightingSystems"]:
                 lighting_power = 0
                 for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
@@ -1143,7 +1144,7 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
     ## 動的室負荷計算
     ##----------------------------------------------------------------------------------
-    if SWITCH_BUILELIB:
+    if SWITCH_BUILELIB_HEATLOADCALC:
 
         # 負荷計算モジュールの読み込み
         from heat_load_calculation import Main
@@ -2123,8 +2124,8 @@ def calc_energy(inputdata, DEBUG = False):
                 # 日積算運転時間 Ta [時間]
                 Ta = resultJson["AHU"][ahu_name]["cooling"]["Tahu"]
                 
-                if DEBUG: # pragma: no cover
-                    resultJson["AHU"][ahu_name]["Ta_cooling"] = copy.deepcopy(Ta)
+                # if DEBUG: # pragma: no cover
+                #     resultJson["AHU"][ahu_name]["Ta_cooling"] = copy.deepcopy(Ta)
 
 
             elif requirement_type == "heating": # 室負荷が負（暖房要求）であるとき
@@ -2143,8 +2144,8 @@ def calc_energy(inputdata, DEBUG = False):
                 # 日積算運転時間 Ta [時間]
                 Ta = resultJson["AHU"][ahu_name]["heating"]["Tahu"]
 
-                if DEBUG: # pragma: no cover
-                    resultJson["AHU"][ahu_name]["Ta_heating"] = copy.deepcopy(Ta)
+                # if DEBUG: # pragma: no cover
+                #     resultJson["AHU"][ahu_name]["Ta_heating"] = copy.deepcopy(Ta)
                     
 
             # 定格能力＞０　→　AHU or FCU があれば
