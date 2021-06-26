@@ -87,7 +87,7 @@
         }
     },
     "HeatsourceSystem": {
-        "熱源": {
+        "熱源A": {
             "冷房": {
                 "StorageType": null,
                 "StorageSize": null,
@@ -195,8 +195,8 @@
             "isOutdoorAirCut": "無",
             "Pump_cooling": "二次ポンプ",
             "Pump_heating": "二次ポンプ",
-            "HeatSource_cooling": "熱源",
-            "HeatSource_heating": "熱源",
+            "HeatSource_cooling": "熱源A",
+            "HeatSource_heating": "熱源A",
             "AirHandlingUnit": [
                 {
                     "Type": "空調機",
@@ -213,7 +213,7 @@
                     "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
-                    "Info": "熱源"
+                    "Info": "熱源A"
                 }
             ]
         }
@@ -227,8 +227,9 @@
     "PhotovoltaicSystems": {},
     "CogenerationSystems": {},
     "SpecialInputData": {
+        "heatsource_performance": {},
         "heatsource_temperature_monthly": {
-            "熱源": {
+            "熱源A": {
                 "1月": 17.0,
                 "2月": 17.0,
                 "3月": 17.0,

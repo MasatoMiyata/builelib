@@ -180,6 +180,8 @@
     "PhotovoltaicSystems": {},
     "CogenerationSystems": {},
     "SpecialInputData": {
+        "heatsource_performance": {},
+        "flow_control": {},
         "Qroom": {
             "1F_事務室": {
                 "QroomDc": [

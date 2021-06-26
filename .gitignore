@@ -7,6 +7,7 @@ sample/backup/*
 inputdata.json
 resultJson.json
 sample/入力シートV3/*
+sample/基整促E14/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

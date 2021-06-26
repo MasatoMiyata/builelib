@@ -3,7 +3,7 @@
         "BuildingAddress": {
             "Prefecture": "東京都",
             "City": "千代田区",
-            "Address": ""
+            "Address": null
         },
         "Coefficient_DHC": {
             "Cooling": 1.36,
@@ -140,6 +140,7 @@
                         "HeatsourceRatedCapacity": 23.0,
                         "HeatsourceRatedPowerConsumption": 6.52,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -164,6 +165,7 @@
                         "HeatsourceRatedCapacity": 26.0,
                         "HeatsourceRatedPowerConsumption": 6.85,
                         "HeatsourceRatedFuelConsumption": 0,
+                        "Heatsource_sub_RatedPowerConsumption": 0,
                         "PrimaryPumpPowerConsumption": 0,
                         "PrimaryPumpContolType": "無",
                         "CoolingTowerCapacity": 0,
@@ -231,5 +233,9 @@
     "HotwaterSupplySystems": {},
     "Elevators": {},
     "PhotovoltaicSystems": {},
-    "CogenerationSystems": {}
+    "CogenerationSystems": {},
+    "SpecialInputData": {
+        "heatsource_performance": {},
+        "flow_control": {}
+    }
 }
