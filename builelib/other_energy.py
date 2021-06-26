@@ -64,7 +64,7 @@ def calc_energy(inputdata, DEBUG = False):
                 bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
 
             # 発熱量参照値 [W/m2]
-            (_, _, roomHeatGain_OAapp[room_name]) = \
+            (_, _, roomHeatGain_OAapp[room_name],_) = \
                 bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
     
         if roomHeatGain_OAapp[room_name] != None:
@@ -168,8 +168,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- other_energy.py -----')
-    filename = './sample/sample03_WEBPRO_inputSheet_for_Ver3.0.json'
-    # filename = './sample/CGS_case_office_00.json'
+    filename = './sample/Builelib_sample_SP7.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:
