@@ -278,13 +278,19 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType):
     return opePattern_hourly_ventilation
 
 
-def get_dailyOpeSchedule_lighting(buildingType, roomType):
+def get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar={}):
     """
     時刻別のスケジュールを読み込む関数（照明）
     """
 
     # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
     opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
+
+    # 入力されたカレンダーパターンを使う場合（上書きする）
+    if input_calendar != []:
+        if buildingType in input_calendar:
+            if roomType in input_calendar[buildingType]:
+                opePattern_Daily = input_calendar[buildingType][roomType]
 
     # 各日時における運転状態（365×24の行列）
     opePattern_hourly_lighting = []
