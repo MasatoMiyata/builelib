@@ -12,16 +12,22 @@ import commons as bc
 template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
 
 # デフォルトを設定する関数
-def set_default(value,default,type):
+def set_default(value,default,datatype):
     if value == "":
         out = default
     else:
-        if type == "str":
+        if datatype == "str":
             out = str(value)
-        elif type == "float":
+        elif datatype == "float":
             out = float(value)
-        elif type == "int":
+        elif datatype == "int":
             out = int(value)
+        elif datatype == "str_or_float":
+            try:
+                out = float(value)
+            except:
+                out = str(value)
+
         else:
             out = value
     return out
@@ -34,9 +40,6 @@ def set_isCalculatedEquipment(input):
         isEquip = False
 
     return isEquip
-
-
-
 
     
 def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
@@ -2517,18 +2520,18 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 roomKey = str(dataL[0]) + '_' + str(dataL[1])
 
                 data["LightingSystems"][roomKey] = {
-                    "roomWidth": set_default(dataL[7],None, "float"),
-                    "roomDepth": set_default(dataL[8],None, "float"),
-                    "unitHeight": set_default(dataL[6],None, "float"),
-                    "roomIndex": set_default(dataL[9],None, "float"),
+                    "roomWidth": set_default(dataL[7], None, "float"),
+                    "roomDepth": set_default(dataL[8], None, "float"),
+                    "unitHeight": set_default(dataL[6], None, "float"),
+                    "roomIndex": set_default(dataL[9], None, "float"),
                     "lightingUnit": {
                         str(dataL[10]): {
                             "RatedPower": float(dataL[11]),
                             "Number": float(dataL[12]),
-                            "OccupantSensingCTRL": set_default(str(dataL[13]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
-                            "IlluminanceSensingCTRL": set_default(str(dataL[14]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
-                            "TimeScheduleCTRL": set_default(str(dataL[15]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
-                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
+                            "OccupantSensingCTRL": set_default(str(dataL[13]), "無", "str_or_float"),
+                            "IlluminanceSensingCTRL": set_default(str(dataL[14]), "無", "str_or_float"),
+                            "TimeScheduleCTRL": set_default(str(dataL[15]), "無", "str_or_float"),
+                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]), "無", "str_or_float")
                         }
                     }
                 }
@@ -2539,10 +2542,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[10])] = {
                     "RatedPower": float(dataL[11]),
                     "Number": float(dataL[12]),
-                    "OccupantSensingCTRL": set_default(str(dataL[13]),schema_data["definitions"]["Lighting_OccupantSensingCTRL"]["default"], "str"),
-                    "IlluminanceSensingCTRL": set_default(str(dataL[14]),schema_data["definitions"]["Lighting_IlluminanceSensingCTRL"]["default"], "str"),
-                    "TimeScheduleCTRL": set_default(str(dataL[15]),schema_data["definitions"]["Lighting_TimeScheduleCTRL"]["default"], "str"),
-                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]),schema_data["definitions"]["Lighting_InitialIlluminationCorrectionCTRL"]["default"], "str")
+                    "OccupantSensingCTRL": set_default(str(dataL[13]), "無", "str_or_float"),
+                    "IlluminanceSensingCTRL": set_default(str(dataL[14]), "無", "str_or_float"),
+                    "TimeScheduleCTRL": set_default(str(dataL[15]), "無", "str_or_float"),
+                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]), "無", "str_or_float")
                 }
 
 
@@ -3037,7 +3040,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'Builelib_sample_SP7-1'
+    case_name = 'WEBPRO_inputSheet_sample'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 

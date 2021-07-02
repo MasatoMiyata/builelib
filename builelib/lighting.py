@@ -120,16 +120,50 @@ def calc_energy(inputdata, DEBUG = False):
         unitPower = 0
         for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
 
-            # 制御による効果
-            ctrl = (
-                lightingCtrl["OccupantSensingCTRL"][inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"]] *
-                lightingCtrl["IlluminanceSensingCTRL"][inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"]] *
-                lightingCtrl["TimeScheduleCTRL"][inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"]] *
-                lightingCtrl["InitialIlluminationCorrectionCTRL"][inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"]]
-            )
+            # 在室検知制御方式の効果係数
+            ctrl_occupant_sensing = 1
+            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"] in lightingCtrl["OccupantSensingCTRL"]:
+                # データベースから検索して効果係数を決定
+                ctrl_occupant_sensing = lightingCtrl["OccupantSensingCTRL"][ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"] ]
+            else:
+                # 直接入力された効果係数を使用
+                ctrl_occupant_sensing = float( inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"] )
+
+
+            # 明るさ検知制御方式の効果係数
+            ctrl_illuminance_sensing = 1
+            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"] in lightingCtrl["IlluminanceSensingCTRL"]:
+                # データベースから検索して効果係数を決定
+                ctrl_illuminance_sensing = lightingCtrl["IlluminanceSensingCTRL"][ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"] ]
+            else:
+                # 直接入力された効果係数を使用
+                ctrl_illuminance_sensing = float( inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"] )
+
+
+            # タイムスケジュール制御方式の効果係数
+            ctrl_time_schedule = 1
+            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"] in lightingCtrl["TimeScheduleCTRL"]:
+                # データベースから検索して効果係数を決定
+                ctrl_time_schedule = lightingCtrl["TimeScheduleCTRL"][ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"] ]
+            else:
+                # 直接入力された効果係数を使用
+                ctrl_time_schedule = float( inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"] )
+
+
+            # 初期照度補正の効果係数
+            initial_illumination_correction = 1
+            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"] in lightingCtrl["InitialIlluminationCorrectionCTRL"]:
+                # データベースから検索して効果係数を決定
+                initial_illumination_correction = lightingCtrl["InitialIlluminationCorrectionCTRL"][ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"] ]
+            else:
+                # 直接入力された効果係数を使用
+                initial_illumination_correction = float( inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"] )
+
 
             # 照明器具の消費電力（制御込み） [W]
-            unitPower += inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["RatedPower"] * inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["Number"] * ctrl
+            unitPower += inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["RatedPower"]  \
+                            * inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["Number"] \
+                            * ctrl_occupant_sensing * ctrl_illuminance_sensing * ctrl_time_schedule * initial_illumination_correction
 
 
         # 時刻別の設計一次エネルギー消費量 [MJ]
@@ -194,7 +228,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- lighting.py -----')
-    filename = './sample/Builelib_sample_SP7-1.json'
+    filename = './sample/WEBPRO_inputSheet_sample.json'
     # filename = './tests/cogeneration/Case_hotel_00.json'
 
     # テンプレートjsonの読み込み

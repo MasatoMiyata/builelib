@@ -1740,53 +1740,81 @@
         },
         "Lighting_OccupantSensingCTRL": {
             "description": "L-11:在室検知制御",
-            "type": "string",
-            "enum":[
-                "無",
-                "下限調光方式",
-                "点滅方式",
-                "減光方式"
-            ],
-            "default":"無"
+            "anyOf":[
+                {
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "下限調光方式",
+                        "点滅方式",
+                        "減光方式"
+                    ],
+                    "default":"無"
+                },
+                {
+                    "type": "number"
+                }
+            ]
         },
         "Lighting_IlluminanceSensingCTRL": {
             "description": "L-12:明るさ検知制御",
-            "type": "string",
-            "enum":[
-                "無",
-                "調光方式",
-                "調光方式BL",
-                "調光方式W15",
-                "調光方式W15BL",
-                "調光方式W20",
-                "調光方式W20BL",
-                "調光方式W25",
-                "調光方式W25BL",
-                "点滅方式"
-            ],
-            "default":"無"
+            "anyOf":[
+                {
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "調光方式",
+                        "調光方式BL",
+                        "調光方式W15",
+                        "調光方式W15BL",
+                        "調光方式W20",
+                        "調光方式W20BL",
+                        "調光方式W25",
+                        "調光方式W25BL",
+                        "点滅方式"
+                    ],
+                    "default":"無"
+                },
+                {
+                    "type": "number"
+                }
+            ]
         },
         "Lighting_TimeScheduleCTRL": {
             "description": "L-13:タイムスケジュール制御",
-            "type": "string",
-            "enum":[
-                "無",
-                "減光方式",
-                "点滅方式"
-            ],
-            "default":"無"
+            "anyOf":[
+                {
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "減光方式",
+                        "点滅方式"
+                    ],
+                    "default":"無"
+                },
+                {
+                    "type": "number"
+                }
+            ]
         },
         "Lighting_InitialIlluminationCorrectionCTRL": {
             "description": "L-14:初期照度補正機能",
-            "type": "string",
-            "enum":[
-                "無",
-                "タイマ方式(LED)",
-                "タイマ方式(蛍光灯)",
-                "センサ方式(LED)",
-                "センサ方式(蛍光灯)"
-            ],
-            "default":"無"
+            "anyOf":[
+                {
+                    "type": "string",
+                    "enum":[
+                        "無",
+                        "タイマ方式(LED)",
+                        "タイマ方式(蛍光灯)",
+                        "センサ方式(LED)",
+                        "センサ方式(蛍光灯)"
+                    ],
+                    "default":"無"
+                },
+                {
+                    "type": "number"
+                }
+            ]
         },
         "HotwaterRoom":{
             "properties": {
