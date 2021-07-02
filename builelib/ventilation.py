@@ -67,8 +67,25 @@ def calc_energy(inputdata, DEBUG = False):
         ##----------------------------------------------------------------------------------
         ## 年間換気運転時間 （解説書 B.2）
         ##----------------------------------------------------------------------------------
-        inputdata["VentilationRoom"][roomID]["opeTime"] = bc.RoomUsageSchedule[buildingType][roomType]["年間換気時間"]
-        inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_dailyOpeSchedule_ventilation(buildingType, roomType)
+
+        if "SpecialInputData" in inputdata:
+
+            input_calendar = {}
+            if "calender" in inputdata["SpecialInputData"]:
+                input_calendar = inputdata["SpecialInputData"]["calender"]
+
+            input_room_usage_condition = {}
+            if "room_usage_condition" in inputdata["SpecialInputData"]:
+                input_room_usage_condition = inputdata["SpecialInputData"]["room_usage_condition"]
+
+            inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_condition, input_calendar)
+
+        else:
+            inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_dailyOpeSchedule_ventilation(buildingType, roomType)
+
+
+        # 年間換気運転時間
+        inputdata["VentilationRoom"][roomID]["opeTime"] = np.sum(np.sum(inputdata["VentilationRoom"][roomID]["opeTime_hourly"]))
 
         # 接続されている換気機器の種類に応じて集計処理を実行
         inputdata["VentilationRoom"][roomID]["isVentilationUsingAC"] = False
@@ -178,6 +195,7 @@ def calc_energy(inputdata, DEBUG = False):
         # 最大の運転時間
         inputdata["VentilationUnit"][unitID]["maxopeTime"] = 0
         inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] = np.zeros((365,24))
+
         for opeTime_id, opeTime_V in enumerate(iunit["opeTimeList"]):
             if inputdata["VentilationUnit"][unitID]["maxopeTime"] < opeTime_V:
                 inputdata["VentilationUnit"][unitID]["maxopeTime"] = opeTime_V
@@ -193,7 +211,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 各室の計算結果を格納
         resultJson["ventilation"][roomID] = {
-                "PrimaryEnergy": 0,
+                # "PrimaryEnergy": 0,
                 "PrimaryEnergy_hourly": np.zeros((365,24)),
                 "StandardEnergy": 0
         }
@@ -251,11 +269,11 @@ def calc_energy(inputdata, DEBUG = False):
                             xL = float(inputdata["VentilationUnit"][unitID]["VentilationRoomType"] )
 
                         # 換気代替空調機本体
-                        resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
-                            ( inputdata["VentilationUnit"][unitID]["AC_CoolingCapacity"] * xL / (2.71 * inputdata["VentilationUnit"][unitID]["AC_RefEfficiency"] )  \
-                            + inputdata["VentilationUnit"][unitID]["AC_PumpPower"] /0.75 ) \
-                            * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                            * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cac
+                        # resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
+                        #     ( inputdata["VentilationUnit"][unitID]["AC_CoolingCapacity"] * xL / (2.71 * inputdata["VentilationUnit"][unitID]["AC_RefEfficiency"] )  \
+                        #     + inputdata["VentilationUnit"][unitID]["AC_PumpPower"] /0.75 ) \
+                        #     * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
+                        #     * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cac
 
                         # 時刻別
                         resultJson["ventilation"][roomID]["PrimaryEnergy_hourly"] += \
@@ -265,10 +283,10 @@ def calc_energy(inputdata, DEBUG = False):
                             * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * bc.fprime * 10**(-3) * Cac
 
                     # 空調機に付属するファン
-                    resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
-                        inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
-                        * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                        * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cac
+                    # resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
+                    #     inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
+                    #     * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
+                    #     * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cac
 
                     # 時刻別
                     resultJson["ventilation"][roomID]["PrimaryEnergy_hourly"] += \
@@ -279,10 +297,10 @@ def calc_energy(inputdata, DEBUG = False):
 
                 else: ## 換気代替空調機と併設される送風機
 
-                    resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
-                        inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
-                        * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                        * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cfan
+                    # resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
+                    #     inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
+                    #     * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
+                    #     * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3) * Cfan
 
                     # 時刻別
                     resultJson["ventilation"][roomID]["PrimaryEnergy_hourly"] += \
@@ -293,7 +311,7 @@ def calc_energy(inputdata, DEBUG = False):
 
                 if DEBUG:
                     print( f'室名称 {roomID}, 機器名称 {unitID}')
-                    print( f'　- 運転時間 {inputdata["VentilationUnit"][unitID]["maxopeTime"] }')
+                    # print( f'　- 運転時間 {inputdata["VentilationUnit"][unitID]["maxopeTime"] }')
                     print( f'　- 消費電力[W/m2] {inputdata["VentilationUnit"][unitID]["Energy_kW"]/inputdata["VentilationRoom"][roomID]["roomArea"]*1000}')
 
 
@@ -302,9 +320,9 @@ def calc_energy(inputdata, DEBUG = False):
             for unitID, iunit in inputdata["VentilationRoom"][roomID]["VentilationUnitRef"].items():
                 
                 # エネルギー消費量 [kW * hour * m2/m2 * kJ/KWh]
-                resultJson["ventilation"][roomID]["PrimaryEnergy"] += inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
-                    * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                    * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3)
+                # resultJson["ventilation"][roomID]["PrimaryEnergy"] += inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
+                #     * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
+                #     * inputdata["VentilationUnit"][unitID]["maxopeTime"] * bc.fprime * 10**(-3)
 
                 # 時刻別
                 resultJson["ventilation"][roomID]["PrimaryEnergy_hourly"] += inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
@@ -327,16 +345,11 @@ def calc_energy(inputdata, DEBUG = False):
 
     # 結果の集計
     for roomID, isys in inputdata["VentilationRoom"].items():
-        resultJson["E_ventilation"]  += resultJson["ventilation"][roomID]["PrimaryEnergy"]
+        # resultJson["E_ventilation"]  += resultJson["ventilation"][roomID]["PrimaryEnergy"]
         resultJson["E_ventilation_hourly"]  += resultJson["ventilation"][roomID]["PrimaryEnergy_hourly"]
         resultJson["Es_ventilation"] += resultJson["ventilation"][roomID]["StandardEnergy"]
 
-    # 値の検証
-    if (resultJson["E_ventilation"] - np.sum(np.sum(resultJson["E_ventilation_hourly"]))) < 0.000001:
-        print('年積算値と時刻別の値は一致しています。')
-    else:
-        print(resultJson["E_ventilation"])
-        print(np.sum(np.sum(resultJson["E_ventilation_hourly"])))
+    resultJson["E_ventilation"]  = np.sum(np.sum(resultJson["E_ventilation_hourly"]))
 
 
     # BEI/V [-]
@@ -357,7 +370,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- ventilation.py -----')
-    filename = './sample/WEBPRO_inputSheet_sample.json'
+    filename = './sample/Builelib_sample_SP9.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
