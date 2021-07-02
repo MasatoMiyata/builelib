@@ -62,6 +62,14 @@ def calc_energy(inputdata, DEBUG = False):
     Es_lighting = 0   # 基準一次エネルギー消費量 [GJ]
 
 
+    ##----------------------------------------------------------------------------------
+    ## 任意評定 （SP-6: カレンダーパターン)
+    ##----------------------------------------------------------------------------------
+    input_calendar = []
+    if "calender" in inputdata["SpecialInputData"]:
+        input_calendar = inputdata["SpecialInputData"]["calender"]
+
+        
     # 室毎（照明系統毎）のループ
     for room_zone_name in inputdata["LightingSystems"]:
 
@@ -70,19 +78,12 @@ def calc_energy(inputdata, DEBUG = False):
         roomType     = inputdata["Rooms"][room_zone_name]["roomType"]
         roomArea     = inputdata["Rooms"][room_zone_name]["roomArea"]
 
-
-        ##----------------------------------------------------------------------------------
-        ## 任意評定 （SP-6: カレンダーパターン)
-        ##----------------------------------------------------------------------------------
-        input_calendar = []
-        if "calender" in inputdata["SpecialInputData"]:
-            input_calendar = inputdata["SpecialInputData"]["calender"]
-            
         # 年間照明点灯時間 [時間] ← 計算には使用しない。
-        opeTime = bc.RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]
+        # opeTime = bc.RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]
 
         # 時刻別スケジュールの読み込み
         opePattern_hourly_light = bc.get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar)
+        opeTime = np.sum( np.sum(opePattern_hourly_light))
 
 
         ##----------------------------------------------------------------------------------
@@ -99,6 +100,7 @@ def calc_energy(inputdata, DEBUG = False):
                     
                     # SP-7の場合は、発熱比率をそのまま使用することにする。
                     # opePattern_hourly_light = np.where(opePattern_hourly_light > 0, 1, 0)
+
 
         ## 室の形状に応じて定められる係数（仕様書4.4）
         # 室指数
