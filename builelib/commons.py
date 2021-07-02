@@ -63,18 +63,26 @@ def air_enenthalpy(Tdb, X):
     return H   
 
 
-def get_roomOutdoorAirVolume(buildingType, roomType):
+def get_roomOutdoorAirVolume(buildingType, roomType, input_room_usage_condition={}):
     """
-    発熱量参照値を読み込む関数（空調）
+    外気導入量を読み込む関数（空調）
     """
 
-    # 外気導入量 [m3/h/m2]
+    # 外気導入量 [m3/h/m2] 標準室使用条件より取得
     roomOutdoorAirVolume  = RoomUsageSchedule[buildingType][roomType]["外気導入量"]
+    
+    # SP-9シートによる任意入力があれば上書き
+    if buildingType in input_room_usage_condition:
+        if roomType in input_room_usage_condition[buildingType]:
+            roomOutdoorAirVolume = float( input_room_usage_condition[buildingType][roomType]["外気導入量"] )
 
     return roomOutdoorAirVolume
 
-# 湯使用量を読み込む関数（給湯）
-def get_roomHotwaterDemand(buildingType, roomType):
+
+def get_roomHotwaterDemand(buildingType, roomType, input_room_usage_condition={}):
+    """
+    湯使用量（L/m2日）を読み込む関数（給湯）
+    """
 
     # 年間湯使用量
     if RoomUsageSchedule[buildingType][roomType]["年間湯使用量の単位"] == "[L/人日]" or \
@@ -103,34 +111,69 @@ def get_roomHotwaterDemand(buildingType, roomType):
 
         raise Exception('給湯負荷が設定されていません')
 
+
+    # SP-9シートによる任意入力があれば上書き（単位は L/m2日 に限定）
+    if buildingType in input_room_usage_condition:
+        if roomType in input_room_usage_condition[buildingType]:
+
+            # 全て入力されていれば上書き
+            if input_room_usage_condition[buildingType][roomType]["年間湯使用量（洗面）"] != "" and \
+                input_room_usage_condition[buildingType][roomType]["年間湯使用量（シャワー）"] != "" and \
+                input_room_usage_condition[buildingType][roomType]["年間湯使用量（厨房）"] != "" and \
+                input_room_usage_condition[buildingType][roomType]["年間湯使用量（その他）"] != "":
+
+                hotwater_demand_washroom = float( input_room_usage_condition[buildingType][roomType]["年間湯使用量（洗面）"])
+                hotwater_demand_shower   = float( input_room_usage_condition[buildingType][roomType]["年間湯使用量（シャワー）"])
+                hotwater_demand_kitchen  = float( input_room_usage_condition[buildingType][roomType]["年間湯使用量（厨房）"])
+                hotwater_demand_other    = float( input_room_usage_condition[buildingType][roomType]["年間湯使用量（その他）"])
+
+                # 湯使用量の合計[L/m2日]
+                hotwater_demand  = hotwater_demand_washroom + hotwater_demand_shower + hotwater_demand_kitchen + hotwater_demand_other
+
     return hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other
 
 
-def get_roomHeatGain(buildingType, roomType):
+def get_roomHeatGain(buildingType, roomType, input_room_usage_condition={}):
     """
     発熱量参照値を読み込む関数（空調）
     """
 
     roomHeatGain_Light  = RoomUsageSchedule[buildingType][roomType]["照明発熱参照値"]
+    roomNumOfPerson     = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
+    roomHeatGain_OAapp  = RoomUsageSchedule[buildingType][roomType]["機器発熱参照値"]
+    work_load_index     = RoomUsageSchedule[buildingType][roomType]["作業強度指数"]
+
+    # SP-9シートによる任意入力があれば上書き
+    if buildingType in input_room_usage_condition:
+        if roomType in input_room_usage_condition[buildingType]:
+
+            if input_room_usage_condition[buildingType][roomType]["照明発熱参照値"] != "":
+                roomHeatGain_Light = float(input_room_usage_condition[buildingType][roomType]["照明発熱参照値"])
+
+            if input_room_usage_condition[buildingType][roomType]["人体発熱参照値"] != "":
+                roomNumOfPerson = float(input_room_usage_condition[buildingType][roomType]["人体発熱参照値"])
+            
+            if input_room_usage_condition[buildingType][roomType]["機器発熱参照値"] != "":
+                roomHeatGain_OAapp = float(input_room_usage_condition[buildingType][roomType]["機器発熱参照値"])
+
+            if input_room_usage_condition[buildingType][roomType]["作業強度指数"] != "":
+                work_load_index = float(input_room_usage_condition[buildingType][roomType]["作業強度指数"])
+
 
     # 人体発熱量参照値 [人/m2 * W/人 = W/m2]
-    if RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 1:
-        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 92
-    elif RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 2:
-        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 106
-    elif RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 3:
-        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 119
-    elif RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 4:
-        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 131
-    elif RoomUsageSchedule[buildingType][roomType]["作業強度指数"] == 5:
-        roomHeatGain_Person = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"] * 145
+    if work_load_index == 1:
+        roomHeatGain_Person = roomNumOfPerson * 92
+    elif work_load_index == 2:
+        roomHeatGain_Person = roomNumOfPerson * 106
+    elif work_load_index == 3:
+        roomHeatGain_Person = roomNumOfPerson * 119
+    elif work_load_index == 4:
+        roomHeatGain_Person = roomNumOfPerson * 131
+    elif work_load_index == 5:
+        roomHeatGain_Person = roomNumOfPerson * 145
     else:
-        roomHeatGain_Person = None
+        roomHeatGain_Person = np.nan
     
-    roomHeatGain_OAapp  = RoomUsageSchedule[buildingType][roomType]["機器発熱参照値"]
-
-    roomNumOfPerson = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
-
     return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson
 
 
@@ -228,25 +271,38 @@ def get_roomUsageSchedule(buildingType, roomType, input_calendar={}):
     return roomScheduleRoom, roomScheduleLight, roomSchedulePerson, roomScheduleOAapp, roomDayMode
 
 
-def get_dailyOpeSchedule_ventilation(buildingType, roomType):
+def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_condition={}, input_calendar={}):
     """
     時刻別のスケジュールを読み込む関数（換気）
     """
-
-    # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
-    opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
 
     # 各日時における運転状態（365×24の行列）
     opePattern_hourly_ventilation = []
     
     if RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン1"] == []:  # 非空調室の場合
 
-        # 非空調室は稼働率にする。
+        # 非空調室は、年間一律で運転することにする。
         ratio_hourly = RoomUsageSchedule[buildingType][roomType]["年間換気時間"] / 8760
 
+        # SP-9シートに入力があれば上書きする。
+        if buildingType in input_room_usage_condition:
+            if roomType in input_room_usage_condition[buildingType]:
+                ratio_hourly = float(input_room_usage_condition[buildingType][roomType]["年間換気時間"]) / 8760
+
+        # 365×24の行列に変換
         opePattern_hourly_ventilation = np.array( [[ratio_hourly]*24]*365 )
 
     else:
+
+        # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
+        opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
+
+        # 入力されたカレンダーパターンを使う場合（上書きする）
+        if input_calendar != []:
+            if buildingType in input_calendar:
+                if roomType in input_calendar[buildingType]:
+                    opePattern_Daily = input_calendar[buildingType][roomType]
+
 
         if RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間空調時間"]:
 
@@ -269,13 +325,19 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType):
                     np.zeros(24)
                 )
 
+        else:
+
+            raise Exception("換気運転時間が定まりません")
+
 
         # np.array型に変換
         opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
         # 0か1に変換
         opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
 
+
     return opePattern_hourly_ventilation
+
 
 
 def get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar={}):

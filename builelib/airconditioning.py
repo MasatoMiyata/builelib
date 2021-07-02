@@ -980,7 +980,12 @@ def calc_energy(inputdata, DEBUG = False):
         rtype = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
 
         # 発熱量参照値 [W/m2] を読み込む関数（空調）
-        (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = bc.get_roomHeatGain(btype, rtype)
+        if "room_usage_condition" in inputdata["SpecialInputData"]:
+            (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
+                bc.get_roomHeatGain(btype, rtype, inputdata["SpecialInputData"]["room_usage_condition"])
+        else:
+            (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
+                bc.get_roomHeatGain(btype, rtype)
 
         # 様式4から照明発熱量を読み込む
         if SWITCH_BUILELIB_LIGHTING:
@@ -1846,9 +1851,23 @@ def calc_energy(inputdata, DEBUG = False):
     for room_zone_name in inputdata["AirConditioningZone"]:
 
         # 各室の外気導入量 [m3/h]
-        inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
-            bc.get_roomOutdoorAirVolume( inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"] ) * \
-            inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+        if "room_usage_condition" in inputdata["SpecialInputData"]:
+
+            inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
+                bc.get_roomOutdoorAirVolume( 
+                    inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
+                    inputdata["AirConditioningZone"][room_zone_name]["roomType"], 
+                    inputdata["SpecialInputData"]["room_usage_condition"]
+                ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+
+        else:
+
+            inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
+                bc.get_roomOutdoorAirVolume( 
+                    inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
+                    inputdata["AirConditioningZone"][room_zone_name]["roomType"]
+                ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+
 
         # 冷房運転時の外気風量 [m3/h]
         inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"] ]["outdoorAirVolume_cooling"] += \
@@ -4538,9 +4557,9 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './tests/airconditioning/ACtest_Case035.json'
-    filename = './sample/sample02_WEBPRO_inputSheet_for_Ver3.0.json'
-    # filename = './sample/sample09_WEBPRO_inputSheet_for_SP6.json'
-    # filename = './sample/sample11_WEBPRO_inputSheet_for_SP8.json'
+    # filename = './sample/sample02_WEBPRO_inputSheet_for_Ver3.0.json'
+    # filename = './sample/WEBPRO_inputSheet_sample.json'
+    filename = './sample/Builelib_sample_SP9.json'
     # filename = './sample/WEBPRO_KE14_Case01.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
