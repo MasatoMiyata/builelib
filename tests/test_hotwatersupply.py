@@ -69,6 +69,10 @@ def make_inputdata(data):
             }
         },
         "HotwaterSupplySystems":{
+        },
+        "CogenerationSystems":{
+        },
+        "SpecialInputData":{
         }
     }
 

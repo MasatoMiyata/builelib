@@ -64,6 +64,9 @@ for case_name in testcase_dict:
         with open(filename, 'r') as f:
             inputdata = json.load(f)
 
+        if "SpecialInputData" not in inputdata:
+            inputdata["SpecialInputData"] = {}
+
         # 期待値
         expectedvalue = (testdata[16])
 
