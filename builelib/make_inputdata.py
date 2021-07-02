@@ -3037,8 +3037,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'WEBPRO_KE14_Case01(SPシート不使用)'
-    # case_name = 'WEBPRO_KE14_Case01'
+    case_name = 'Builelib_sample_SP6-1'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 

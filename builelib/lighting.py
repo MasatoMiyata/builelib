@@ -70,10 +70,20 @@ def calc_energy(inputdata, DEBUG = False):
         roomType     = inputdata["Rooms"][ikey]["roomType"]
         roomArea     = inputdata["Rooms"][ikey]["roomArea"]
 
+
+        ##----------------------------------------------------------------------------------
+        ## 任意評定 （SP-6: カレンダーパターン)
+        ##----------------------------------------------------------------------------------
+        input_calendar = []
+        if "calender" in inputdata["SpecialInputData"]:
+            input_calendar = inputdata["SpecialInputData"]["calender"]
+            
         # 年間照明点灯時間 [時間] ← 計算には使用しない。
         opeTime = bc.RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]
+
         # 時刻別スケジュールの読み込み
-        opePattern_hourly_light = bc.get_dailyOpeSchedule_lighting(buildingType, roomType)
+        opePattern_hourly_light = bc.get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar)
+
 
         ## 室の形状に応じて定められる係数（仕様書4.4）
         # 室指数
@@ -111,6 +121,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 時刻別の設計一次エネルギー消費量 [MJ]
         E_room_hourly = opePattern_hourly_light * unitPower * roomIndexCoeff * bc.fprime * 10**(-6)
+
         # 各室の年間エネルギー消費量 [MJ]
         E_room = E_room_hourly.sum()
 
@@ -170,14 +181,17 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- lighting.py -----')
-    filename = './sample/WEBPRO_KE14_Case01.json'
+    filename = './sample/Builelib_sample_SP6-1.json'
     # filename = './tests/cogeneration/Case_hotel_00.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
-    resultJson = calc_energy(inputdata, DEBUG = True)
+    resultJson = calc_energy(inputdata, DEBUG = False)
+
+    print(f'設計値: {resultJson["E_lighting"]}')
+    print(f'基準値: {resultJson["Es_lighting"]}')
 
     with open("resultJson_L.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
