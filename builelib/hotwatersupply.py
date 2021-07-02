@@ -35,6 +35,21 @@ def calc_energy(inputdata, DEBUG = False):
         Area = json.load(f)
 
 
+    ##----------------------------------------------------------------------------------
+    ## 任意評定 （SP-6: カレンダーパターン)
+    ##----------------------------------------------------------------------------------
+    input_calendar = []
+    if "calender" in inputdata["SpecialInputData"]:
+        input_calendar = inputdata["SpecialInputData"]["calender"]
+
+    ##----------------------------------------------------------------------------------
+    ## 任意評定 （SP-9: 室使用条件)
+    ##----------------------------------------------------------------------------------
+    input_room_usage_condition = {}
+    if "room_usage_condition" in inputdata["SpecialInputData"]:
+        inputdata["SpecialInputData"]["room_usage_condition"]
+    
+
     #----------------------------------------------------------------------------------
     # 入力データの整理（計算準備）
     #----------------------------------------------------------------------------------
@@ -93,8 +108,14 @@ def calc_energy(inputdata, DEBUG = False):
     
     for room_name in inputdata["HotwaterRoom"]:
 
+        # 日積算湯使用利用 [L/m2/day]
         hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
-            bc.get_roomHotwaterDemand(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+            bc.get_roomHotwaterDemand(
+                inputdata["Rooms"][room_name]["buildingType"], 
+                inputdata["Rooms"][room_name]["roomType"],
+                input_room_usage_condition
+                
+            )
 
         # 日積算給湯量参照値 [L/day]
         inputdata["HotwaterRoom"][room_name]["hotwater_demand"] = hotwater_demand * inputdata["Rooms"][room_name]["roomArea"]
@@ -103,9 +124,9 @@ def calc_energy(inputdata, DEBUG = False):
         inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen"]  = hotwater_demand_kitchen * inputdata["Rooms"][room_name]["roomArea"]
         inputdata["HotwaterRoom"][room_name]["hotwater_demand_other"]    = hotwater_demand_other * inputdata["Rooms"][room_name]["roomArea"]
 
-        # 各室のカレンダーパターン
+        # 各室の室使用スケジュール （＝室の同時使用率。 給湯需要がある室は、必ず空調されている前提とする）
         roomScheduleRoom, _, _, _, _ = \
-            bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+            bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], input_calendar)
 
         inputdata["HotwaterRoom"][room_name]["hotwaterSchedule"] = np.zeros(365)
         inputdata["HotwaterRoom"][room_name]["hotwaterSchedule"][ np.sum(roomScheduleRoom,1) > 0 ] = 1
@@ -528,7 +549,7 @@ if __name__ == '__main__':
 
     print('----- hotwatersupply.py -----')
     # filename = './sample/CGS_case_office_00.json'
-    filename = './tests/cogeneration/Case_hotel_00.json'
+    filename = './sample/Builelib_sample_SP6.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r') as f:
