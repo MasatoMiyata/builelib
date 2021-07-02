@@ -63,12 +63,12 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     # 室毎（照明系統毎）のループ
-    for ikey, isys in inputdata["LightingSystems"].items():
+    for room_zone_name in inputdata["LightingSystems"]:
 
         # 建物用途、室用途、室面積の取得
-        buildingType = inputdata["Rooms"][ikey]["buildingType"]
-        roomType     = inputdata["Rooms"][ikey]["roomType"]
-        roomArea     = inputdata["Rooms"][ikey]["roomArea"]
+        buildingType = inputdata["Rooms"][room_zone_name]["buildingType"]
+        roomType     = inputdata["Rooms"][room_zone_name]["roomType"]
+        roomArea     = inputdata["Rooms"][room_zone_name]["roomArea"]
 
 
         ##----------------------------------------------------------------------------------
@@ -85,13 +85,28 @@ def calc_energy(inputdata, DEBUG = False):
         opePattern_hourly_light = bc.get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar)
 
 
+        ##----------------------------------------------------------------------------------
+        ## 任意評定 （SP-7: 室スケジュール)
+        ##----------------------------------------------------------------------------------
+
+        if "room_schedule" in inputdata["SpecialInputData"]:
+
+            # SP-7に入力されていれば
+            if room_zone_name in inputdata["SpecialInputData"]["room_schedule"]:
+
+                if "照明発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
+                    opePattern_hourly_light = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["照明発熱密度比率"])
+                    
+                    # SP-7の場合は、発熱比率をそのまま使用することにする。
+                    # opePattern_hourly_light = np.where(opePattern_hourly_light > 0, 1, 0)
+
         ## 室の形状に応じて定められる係数（仕様書4.4）
         # 室指数
-        if isys["roomIndex"] != None:
-            roomIndex = isys["roomIndex"]
-        elif isys["roomWidth"] != None and isys["roomDepth"] != None and isys["unitHeight"] != None:
-            if isys["roomWidth"] > 0 and isys["roomDepth"] > 0 and isys["unitHeight"] > 0:
-                roomIndex = (isys["roomWidth"] * isys["roomDepth"]) / ( (isys["roomWidth"] + isys["roomDepth"]) * isys["unitHeight"] )
+        if inputdata["LightingSystems"][room_zone_name]["roomIndex"] != None:
+            roomIndex = inputdata["LightingSystems"][room_zone_name]["roomIndex"]
+        elif inputdata["LightingSystems"][room_zone_name]["roomWidth"] != None and inputdata["LightingSystems"][room_zone_name]["roomDepth"] != None and inputdata["LightingSystems"][room_zone_name]["unitHeight"] != None:
+            if inputdata["LightingSystems"][room_zone_name]["roomWidth"] > 0 and inputdata["LightingSystems"][room_zone_name]["roomDepth"] > 0 and inputdata["LightingSystems"][room_zone_name]["unitHeight"] > 0:
+                roomIndex = (inputdata["LightingSystems"][room_zone_name]["roomWidth"] * inputdata["LightingSystems"][room_zone_name]["roomDepth"]) / ( (inputdata["LightingSystems"][room_zone_name]["roomWidth"] + inputdata["LightingSystems"][room_zone_name]["roomDepth"]) * inputdata["LightingSystems"][room_zone_name]["unitHeight"] )
             else:
                 roomIndex = None
         else:
@@ -100,23 +115,21 @@ def calc_energy(inputdata, DEBUG = False):
         # 補正係数
         roomIndexCoeff = set_roomIndexCoeff(roomIndex)
 
+
         ## 器具毎のループ
         unitPower = 0
-        for _, iunit in isys["lightingUnit"].items():
-        
-            # 室指数による補正
-            rmIx = 1
+        for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
 
             # 制御による効果
             ctrl = (
-                lightingCtrl["OccupantSensingCTRL"][iunit["OccupantSensingCTRL"]] *
-                lightingCtrl["IlluminanceSensingCTRL"][iunit["IlluminanceSensingCTRL"]] *
-                lightingCtrl["TimeScheduleCTRL"][iunit["TimeScheduleCTRL"]] *
-                lightingCtrl["InitialIlluminationCorrectionCTRL"][iunit["InitialIlluminationCorrectionCTRL"]]
+                lightingCtrl["OccupantSensingCTRL"][inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"]] *
+                lightingCtrl["IlluminanceSensingCTRL"][inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"]] *
+                lightingCtrl["TimeScheduleCTRL"][inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"]] *
+                lightingCtrl["InitialIlluminationCorrectionCTRL"][inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"]]
             )
 
             # 照明器具の消費電力（制御込み） [W]
-            unitPower += iunit["RatedPower"] * iunit["Number"] * ctrl
+            unitPower += inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["RatedPower"] * inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["Number"] * ctrl
 
 
         # 時刻別の設計一次エネルギー消費量 [MJ]
@@ -142,7 +155,7 @@ def calc_energy(inputdata, DEBUG = False):
 
 
         # 各室の計算結果を格納
-        resultJson["lighting"][ikey] = {
+        resultJson["lighting"][room_zone_name] = {
                 "buildingType": buildingType,
                 "roomType": roomType,
                 "roomArea": roomArea,
@@ -156,10 +169,10 @@ def calc_energy(inputdata, DEBUG = False):
             }
 
         if DEBUG:
-            print( f'室名称　{ikey}')
+            print( f'室名称　{room_zone_name}')
             print( f'　- 設計一次エネルギー消費量  {E_room} MJ')
             print( f'　- 基準一次エネルギー消費量  {Es_room} MJ')
-            
+    
     # BEI/L [-]
     if Es_lighting <= 0:
         BEI_L = None
@@ -181,7 +194,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- lighting.py -----')
-    filename = './sample/Builelib_sample_SP6-1.json'
+    filename = './sample/Builelib_sample_SP7-1.json'
     # filename = './tests/cogeneration/Case_hotel_00.json'
 
     # テンプレートjsonの読み込み

@@ -3037,7 +3037,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'Builelib_sample_SP6-1'
+    case_name = 'Builelib_sample_SP7-1'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
