@@ -23,6 +23,13 @@ def calc_energy(inputdata, DEBUG = False):
         }
     }
 
+    ##----------------------------------------------------------------------------------
+    ## 任意評定 （SP-6: カレンダーパターン)
+    ##----------------------------------------------------------------------------------
+    input_calendar = []
+    if "calender" in inputdata["SpecialInputData"]:
+        input_calendar = inputdata["SpecialInputData"]["calender"]
+    
     #----------------------------------------------------------------------------------
     # 解説書 6.2 速度制御方式に応じて定められる係数
     #----------------------------------------------------------------------------------
@@ -61,18 +68,27 @@ def calc_energy(inputdata, DEBUG = False):
         # 年間照明点灯時間 [時間] 
         if buildingType == "共同住宅":
             inputdata["Elevators"][room_name]["operation_time"] = 5480
+            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = 5480/8760 * np.ones((365,24))
         else:
-            inputdata["Elevators"][room_name]["operation_time"] = bc.RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]
-        
+            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = bc.get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar)
+            inputdata["Elevators"][room_name]["operation_time"] = np.sum( np.sum(inputdata["Elevators"][room_name]["operation_schedule_hourly"]))
+
+        ##----------------------------------------------------------------------------------
+        ## 任意評定 （SP-7: 室スケジュール)
+        ##----------------------------------------------------------------------------------
+        if "room_schedule" in inputdata["SpecialInputData"]:
+
+            # SP-7に入力されていれば上書き
+            if room_name in inputdata["SpecialInputData"]["room_schedule"]:
+
+                if "照明発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]:
+                    inputdata["Elevators"][room_name]["operation_schedule_hourly"] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]["照明発熱密度比率"])
+                    inputdata["Elevators"][room_name]["operation_time"] = np.sum( np.sum(inputdata["Elevators"][room_name]["operation_schedule_hourly"]))
+
+
         if DEBUG:
             print(f'室 {room_name} に設置された昇降機')
             print(f'  - 昇降機運転時間 {inputdata["Elevators"][room_name]["operation_time"]}')
-
-        # 時刻別スケジュール
-        if buildingType == "共同住宅":
-            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = 5480/8760 * np.ones((365,24))
-        else:
-            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = bc.get_dailyOpeSchedule_lighting(buildingType, roomType)
 
 
     # エネルギー消費量計算 [kWh/年]
@@ -139,7 +155,10 @@ def calc_energy(inputdata, DEBUG = False):
     resultJson["Elevetors"] = inputdata["Elevators"]
 
     # BEI/Vの計算
-    resultJson["BEI_EV"] = resultJson["E_elevetor"] / resultJson["Es_elevetor"]
+    if resultJson["Es_elevetor"] != 0:
+        resultJson["BEI_EV"] = resultJson["E_elevetor"] / resultJson["Es_elevetor"]
+    else:
+        resultJson["BEI_EV"] = np.nan
 
     # 日積算値
     resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(Edesign_MWh_hour,1)
@@ -150,8 +169,7 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- elevetor.py -----')
-    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
-    filename = './tests/cogeneration/Case_hospital_00.json'
+    filename = './sample/Builelib_sample_SP7-1.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r') as f:
