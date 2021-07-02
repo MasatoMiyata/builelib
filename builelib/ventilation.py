@@ -247,7 +247,8 @@ def calc_energy(inputdata, DEBUG = False):
                         elif inputdata["VentilationUnit"][unitID]["VentilationRoomType"] == "その他":
                             xL = 1.0
                         else:
-                            raise Exception('Error!')
+                            # 直接数値を入力する場合
+                            xL = float(inputdata["VentilationUnit"][unitID]["VentilationRoomType"] )
 
                         # 換気代替空調機本体
                         resultJson["ventilation"][roomID]["PrimaryEnergy"] += \
@@ -349,10 +350,6 @@ def calc_energy(inputdata, DEBUG = False):
     for day in range(0,365):
         resultJson["for_CGS"]["Edesign_MWh_day"][day] = np.sum(resultJson["E_ventilation_hourly"][day]) / (bc.fprime) 
 
-    if DEBUG:
-        print( f'設計一次エネルギー消費量[MJ] {resultJson["E_ventilation"]}')
-        print( f'基準一次エネルギー消費量[MJ] {resultJson["Es_ventilation"]}')
-
 
     return resultJson
 
@@ -360,13 +357,16 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':
 
     print('----- ventilation.py -----')
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver2.5.json'
+    filename = './sample/WEBPRO_inputSheet_sample.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r') as f:
         inputdata = json.load(f)
 
-    resultJson = calc_energy(inputdata, DEBUG = True)
+    resultJson = calc_energy(inputdata, DEBUG = False)
+
+    print( f'設計一次エネルギー消費量[MJ] {resultJson["E_ventilation"]}')
+    print( f'基準一次エネルギー消費量[MJ] {resultJson["Es_ventilation"]}')
 
     with open("resultJson_V.json",'w') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)

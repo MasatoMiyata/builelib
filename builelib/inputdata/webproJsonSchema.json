@@ -1580,6 +1580,9 @@
                             "default":"その他"
                         },
                         {
+                            "type": "number"
+                        },
+                        {
                             "type": "null"
                         }
                     ]
