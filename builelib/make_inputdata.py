@@ -3044,6 +3044,24 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                     "年間湯使用量（その他）" : dataSP9[11]
                 }
 
+
+    if "SP-10) 空調負荷" in wb.sheet_names():
+
+        data["SpecialInputData"]["Qahu"] = {}
+
+        # シートの読み込み
+        sheet_SP10 = wb.sheet_by_name("SP-10) 空調負荷")
+
+        for i in range(10,sheet_SP10.nrows):
+
+            # シートから「行」の読み込み
+            dataSP10 = sheet_SP10.row_values(i)
+            
+            if dataSP10[0] != "":
+            
+                data["SpecialInputData"]["Qahu"][dataSP10[0]] = bc.trans_8760to36524(dataSP10[1:])
+
+
     # バリデーションの実行
     bc.inputdata_validation(data)
 
@@ -3071,7 +3089,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'Builelib_sample_SP7-1'
+    case_name = 'Builelib_sample_SP10'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
