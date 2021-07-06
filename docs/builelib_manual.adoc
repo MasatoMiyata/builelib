@@ -196,7 +196,7 @@ image::images/fig-SP2-1.png[width="95%"]
 
 [[fig-SP2-2]]
 .様式2-5 熱源入力シート
-image::images/fig-SP1-2.png[width="95%"]
+image::images/fig-SP2-2.png[width="95%"]
 
 [TIP]
 ====
