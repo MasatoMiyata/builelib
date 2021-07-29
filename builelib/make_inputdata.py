@@ -3062,6 +3062,53 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 data["SpecialInputData"]["Qahu"][dataSP10[0]] = bc.trans_8760to36524(dataSP10[1:])
 
 
+    if "SP-11) 湯使用量" in wb.sheet_names():
+
+        data["SpecialInputData"]["hotwater_demand_daily"] = {}
+
+        # シートの読み込み
+        sheet_SP11 = wb.sheet_by_name("SP-11) 湯使用量")
+        # 初期化
+        roomKey = None
+
+        for i in range(10,sheet_SP11.nrows):
+
+            # シートから「行」の読み込み
+            dataSP11 = sheet_SP11.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataSP11[0] != "") and (dataSP11[1] != ""):
+
+                roomKey = str(dataSP11[0]) + '_' + str(dataSP11[1])
+
+                data["SpecialInputData"]["hotwater_demand_daily"][roomKey] = {}
+
+                if dataSP11[2] == "洗面":
+                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["洗面"] = dataSP11[3:]
+                elif dataSP11[2] == "シャワー":
+                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["シャワー"] =  dataSP11[3:]
+                elif dataSP11[2] == "厨房":
+                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["厨房"] =  dataSP11[3:]
+                elif dataSP11[2] == "その他":
+                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["その他"] =  dataSP11[3:]
+                else:
+                    raise Exception("使用用途が不正です")
+
+            # 階と室名が空欄であり、かつ、使用用途ｓの入力がある場合
+            elif (dataSP11[0] == "") and (dataSP11[1] == "") and (dataSP11[2] != ""):
+
+                if dataSP11[2] == "洗面":
+                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["洗面"] = dataSP11[3:]
+                elif dataSP11[2] == "シャワー":
+                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["シャワー"] =  dataSP11[3:]
+                elif dataSP11[2] == "厨房":
+                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["厨房"] =  dataSP11[3:]
+                elif dataSP11[2] == "その他":
+                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["その他"] =  dataSP11[3:]
+                else:
+                    raise Exception("使用用途が不正です")
+
+
     # バリデーションの実行
     bc.inputdata_validation(data)
 
@@ -3089,7 +3136,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'Builelib_sample_SP10'
+    case_name = 'Builelib_sample_SP11'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
