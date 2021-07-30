@@ -36,19 +36,18 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-6: カレンダーパターン)
+    ## 任意入力 （SP-6: カレンダーパターン)
     ##----------------------------------------------------------------------------------
     input_calendar = []
     if "calender" in inputdata["SpecialInputData"]:
         input_calendar = inputdata["SpecialInputData"]["calender"]
 
     ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-9: 室使用条件)
+    ## 任意入力 （SP-9: 室使用条件)
     ##----------------------------------------------------------------------------------
     input_room_usage_condition = {}
     if "room_usage_condition" in inputdata["SpecialInputData"]:
-        inputdata["SpecialInputData"]["room_usage_condition"]
-    
+        input_room_usage_condition = inputdata["SpecialInputData"]["room_usage_condition"] 
 
     #----------------------------------------------------------------------------------
     # 入力データの整理（計算準備）
@@ -147,6 +146,35 @@ def calc_energy(inputdata, DEBUG = False):
         inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"] = \
             inputdata["HotwaterRoom"][room_name]["hotwater_demand_other"] * inputdata["HotwaterRoom"][room_name]["hotwaterSchedule"]
 
+
+        # 日別の給湯量 [L/day] (365×1) の任意入力 （SP-11: 日積算湯使用量)
+        if "hotwater_demand_daily" in inputdata["SpecialInputData"]:
+            if room_name in inputdata["SpecialInputData"]["hotwater_demand_daily"]:
+
+                if "洗面" in inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]:
+                    inputdata["HotwaterRoom"][room_name]["hotwater_demand_washroom_daily"] = \
+                        np.array(inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]["洗面"])
+
+                if "シャワー" in inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]:
+                    inputdata["HotwaterRoom"][room_name]["hotwater_demand_shower_daily"] = \
+                        np.array(inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]["シャワー"])
+
+                if "厨房" in inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]:
+                    inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"] = \
+                        np.array(inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]["厨房"])
+
+                if "その他" in inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]:
+                    inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"] = \
+                        np.array(inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]["その他"])
+
+                # 合計を更新
+                inputdata["HotwaterRoom"][room_name]["hotwater_demand_daily"]  = \
+                    np.array(inputdata["HotwaterRoom"][room_name]["hotwater_demand_washroom_daily"]) + \
+                    np.array(inputdata["HotwaterRoom"][room_name]["hotwater_demand_shower_daily"]) + \
+                    np.array(inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"]) + \
+                    np.array(inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"])
+                
+
         if DEBUG:
             print(f'室名称 {room_name}')
             print(f'  - 給湯使用量参照値 L/day {inputdata["HotwaterRoom"][room_name]["hotwater_demand"]}')
@@ -157,11 +185,10 @@ def calc_energy(inputdata, DEBUG = False):
             print(f'  - 日別給湯使用量（厨房） {np.sum(inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"])}')
             print(f'  - 日別給湯使用量（その他） {np.sum(inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"])}')
 
-            # np.savetxt("日別給湯使用量（手洗い）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_washroom_daily"]/inputdata["Rooms"][room_name]["roomArea"])
-            # np.savetxt("日別給湯使用量（シャワー）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_shower_daily"]/inputdata["Rooms"][room_name]["roomArea"])
-            # np.savetxt("日別給湯使用量（厨房）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"]/inputdata["Rooms"][room_name]["roomArea"])
-            # np.savetxt("日別給湯使用量（その他）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"]/inputdata["Rooms"][room_name]["roomArea"])
-
+            # np.savetxt("日別給湯使用量（手洗い）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_washroom_daily"])
+            # np.savetxt("日別給湯使用量（シャワー）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_shower_daily"])
+            # np.savetxt("日別給湯使用量（厨房）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"])
+            # np.savetxt("日別給湯使用量（その他）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"])
 
 
     #----------------------------------------------------------------------------------
@@ -549,7 +576,7 @@ if __name__ == '__main__':
 
     print('----- hotwatersupply.py -----')
     # filename = './sample/CGS_case_office_00.json'
-    filename = './sample/Builelib_sample_SP6.json'
+    filename = './sample/Builelib_sample_SP11.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r') as f:
