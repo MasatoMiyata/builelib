@@ -672,6 +672,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <li><a href="#_開口部の日射熱取得率様式sp_8空調">3.8. 開口部の日射熱取得率（様式SP-8）【空調】</a></li>
 <li><a href="#_室使用条件様式sp_9空調換気給湯">3.9. 室使用条件（様式SP-9）【空調、換気、給湯】</a></li>
 <li><a href="#_空調負荷様式sp_10空調">3.10. 空調負荷（様式SP-10）【空調】</a></li>
+<li><a href="#_湯使用量様式sp_11給湯">3.11. 湯使用量（様式SP-11）【給湯】</a></li>
 </ul>
 </li>
 </ul>
@@ -812,9 +813,9 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <table id="Table-2-2-1" class="tableblock frame-all grid-all" style="width: 95%;">
 <caption class="title">表 1. SPシートの一覧</caption>
 <colgroup>
-<col style="width: 22.2222%;">
-<col style="width: 55.5555%;">
-<col style="width: 22.2223%;">
+<col style="width: 30%;">
+<col style="width: 50%;">
+<col style="width: 20%;">
 </colgroup>
 <thead>
 <tr>
@@ -825,7 +826,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SP-1 変風量／変流量制御の特性入力シート</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SP-1 変風量／変流量制御特性入力シート</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">変風量及び変流量制御の省エネ効果を任意に指定することができます。</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">空調</p></td>
 </tr>
@@ -873,6 +874,11 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <td class="tableblock halign-left valign-top"><p class="tableblock">SP-10 空調負荷入力シート</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">時刻別の空調負荷（室負荷＋外気負荷）を任意に指定することができます。</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">空調</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SP-11 湯使用量入力シート</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">日積算湯使用量を任意に指定することができます。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">給湯</p></td>
 </tr>
 </tbody>
 </table>
@@ -2096,12 +2102,107 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_湯使用量様式sp_11給湯"><a class="link" href="#_湯使用量様式sp_11給湯">3.11. 湯使用量（様式SP-11）【給湯】</a></h3>
+<div class="sect3">
+<h4 id="_概要_11"><a class="link" href="#_概要_11">3.11.1. 概要</a></h4>
+<div class="paragraph">
+<p>各室の日積算湯使用量を任意に入力することができます。</p>
+</div>
+<div class="paragraph">
+<p>湯使用量は「様式SP-11: 湯使用量入力シート」に入力します。<br>
+例えば「様式SP-11: 湯使用量入力シート」に <a href="#fig-SP11-1">図 14</a> のように入力すると、
+「1F 事務室」については、ここで入力された日積算湯使用量を用いて給湯設備のエネルギー消費量計算が行われます。</p>
+</div>
+<div id="fig-SP11-1" class="imageblock">
+<div class="content">
+<img src="images/fig-SP11-1.png" alt="fig SP11 1" width="95%">
+</div>
+<div class="title">図 14. 様式SP-11: 湯使用量入力シート（抜粋）</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_入力シートの作成方法_11"><a class="link" href="#_入力シートの作成方法_11">3.11.2. 入力シートの作成方法</a></h4>
+<div class="paragraph">
+<p><strong>①階</strong>
+<strong>②室名称</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>室負荷を入力する室の名称等を入力します。</p>
+</li>
+<li>
+<p>該当する室について「様式5-1:給湯対象室入力シート ①階、②室名」に入力した名称と同じ名称を入力します。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>③使用用途</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>湯の使用用途を入力します。</p>
+</li>
+<li>
+<p>湯の使用用途の選択肢は <a href="#Table-SP11-1">表 8</a> のとおりです。</p>
+</li>
+<li>
+<p>全ての使用用途を入力する必要はありません。入力のない使用用途については標準室使用条件で規定された湯の使用量が使用されます。
+従って、ある使用用途の湯使用量を強制的に0にしたい場合は、明示的に0を入力する必要があります。</p>
+</li>
+</ul>
+</div>
+<table id="Table-SP11-1" class="tableblock frame-all grid-all" style="width: 95%;">
+<caption class="title">表 8. SP-11：③使用用途　の選択肢</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">選択肢</th>
+<th class="tableblock halign-left valign-top">説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">洗面</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">便所等で洗面・手洗いに使用される湯</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">シャワー</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">更衣室等のシャワーで使用される湯</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">厨房</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">厨房で使用される湯</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">その他</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">上記以外の目的で使用される湯（病院で治療・検査のために使用される湯、浴槽のための湯等）</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>④日積算湯使用量</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>日積算湯使用量を入力します。単位は[L/日]です。一人当たり、面積当たりの数値ではないため注意が必要です。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-07-06 17:42:04 +0900
+Last updated 2021-07-31 10:06:09 +0900
 </div>
 </div>
 <script type="text/x-mathjax-config">
