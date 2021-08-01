@@ -39,12 +39,10 @@ builelib_run.py をご覧下さい。
 
 ## How to make inputdata?
 
-建築物の仕様の入力には、WEBPROの入力シートを用います。
-入力方法等はWEBPROと同じです。
+建築物の仕様の入力には、WEBPROの入力シートを用います。入力方法等はWEBPROと同じです。
 
-- WEBPROの入力シート（外皮・設備仕様入力シート_Ver2用）  
-https://www.kenken.go.jp/becc/index.html#5-2
+WEBPROの入力シートにBuilelib専用のSPシート（様式SP）を追加することにより、計算条件を詳細に指定して計算を実行することができます。
+詳しくはマニュアルをご覧下さい。
 
-- 入力シートの作成方法（エネルギー消費性能計算プログラム（非住宅版）Ver.2 の入力マニュアル）  
-https://www.kenken.go.jp/becc/building.html#1-2
+https://masatomiyata.github.io/builelib/builelib_manual.html
 
