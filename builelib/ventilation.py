@@ -5,7 +5,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
+from . import commons as bc
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -165,7 +165,7 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
     ## 送風機の制御方式に応じて定められる係数（解説書 3.2）
     ##----------------------------------------------------------------------------------
-    with open( database_directory + '/ventilationControl.json', 'r') as f:
+    with open( database_directory + '/ventilationControl.json', 'r', encoding='utf-8') as f:
         ventilationCtrl = json.load(f)
 
     
@@ -373,7 +373,7 @@ if __name__ == '__main__':
     filename = './sample/Builelib_sample_SP9.json'
 
     # テンプレートjsonの読み込み
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = False)
@@ -381,5 +381,5 @@ if __name__ == '__main__':
     print( f'設計一次エネルギー消費量[MJ] {resultJson["E_ventilation"]}')
     print( f'基準一次エネルギー消費量[MJ] {resultJson["Es_ventilation"]}')
 
-    with open("resultJson_V.json",'w') as fw:
+    with open("resultJson_V.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)

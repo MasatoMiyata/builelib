@@ -5,11 +5,11 @@ targetFile = 'REFLIST.json'
 schemaFile = './builelib/database_make/schema/QROOM_COEFFI_schema.json'
 
 # スキーマの読み込み
-with open(schemaFile) as file_obj:
+with open(schemaFile, encoding='utf-8') as file_obj:
     schema_data = json.load(file_obj)
 
 # インプットデータの読み込み
-with open(targetFile) as file_obj:
+with open(targetFile, encoding='utf-8') as file_obj:
     check_data = json.load(file_obj)
 
 

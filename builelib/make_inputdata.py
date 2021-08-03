@@ -6,7 +6,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
+from . import commons as bc
 
 # テンプレートファイルの保存場所
 template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
@@ -51,11 +51,11 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
     wb = xlrd.open_workbook(inputfileName)
 
     # テンプレートjsonの読み込み
-    with open( template_directory + 'template.json', 'r') as f:
+    with open( template_directory + 'template.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     # スキーマの読み込み
-    with open( template_directory + 'webproJsonSchema.json', 'r') as f:
+    with open( template_directory + 'webproJsonSchema.json', 'r', encoding='utf-8') as f:
         schema_data = json.load(f)
 
     # %%
@@ -1027,11 +1027,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
     wb = xlrd.open_workbook(inputfileName)
 
     # テンプレートjsonの読み込み
-    with open( template_directory + 'template.json', 'r') as f:
+    with open( template_directory + 'template.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     # スキーマの読み込み
-    with open( template_directory + 'webproJsonSchema.json', 'r') as f:
+    with open( template_directory + 'webproJsonSchema.json', 'r', encoding='utf-8') as f:
         schema_data = json.load(f)
     
 
@@ -1655,7 +1655,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
         # データベースファイルの保存場所
         database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
         ## 熱源機器特性
-        with open(database_directory + "HeatSourcePerformance.json", 'r') as f:
+        with open(database_directory + "HeatSourcePerformance.json", 'r', encoding='utf-8') as f:
             HeatSourcePerformance = json.load(f)
 
         # SP-2で作成した機種を追加
@@ -3128,7 +3128,7 @@ if __name__ == '__main__':
     # inputdata = make_jsondata_from_Ver4_sheet(directory + case_name + ".xlsx")
 
     # # json出力
-    # with open(directory + case_name + ".json",'w') as fw:
+    # with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
     #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
     #-----------------------
@@ -3141,7 +3141,7 @@ if __name__ == '__main__':
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
     # json出力
-    with open(directory + case_name + ".json",'w') as fw:
+    with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
@@ -3155,7 +3155,7 @@ if __name__ == '__main__':
     # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
     # # json出力
-    # with open(directory + case_name + ".json",'w') as fw:
+    # with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
     #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
@@ -3173,7 +3173,7 @@ if __name__ == '__main__':
     #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
     #     # json出力
-    #     with open(directory + case_name + ".json",'w') as fw:
+    #     with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
     #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
@@ -3191,5 +3191,5 @@ if __name__ == '__main__':
     #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
     #     # json出力
-    #     with open(directory + case_name + ".json",'w') as fw:
+    #     with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
     #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)

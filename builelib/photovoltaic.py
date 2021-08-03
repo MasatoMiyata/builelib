@@ -12,8 +12,8 @@ import math
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
-import climate
+from . import commons as bc
+from . import climate
 
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
@@ -256,12 +256,12 @@ if __name__ == '__main__':
     filename = './tests/photovoltaic/PV_case01.json'
 
     # テンプレートjsonの読み込み
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
 
-    with open("resultJson_PV.json",'w') as fw:
+    with open("resultJson_PV.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
     for system_name in resultJson["PhotovoltaicSystems"]:

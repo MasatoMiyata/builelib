@@ -39,7 +39,7 @@ def readDatClimateData(filename):
     8760の行列
     """
 
-    with open(filename) as f:
+    with open(filename, encoding='utf-8') as f:
         reader = csv.reader(f)
         data = [row for row in reader]
 
@@ -65,7 +65,7 @@ def readHaspClimateData(filename):
     """
 
     # hasファイルの読み込み
-    with open(filename) as f:
+    with open(filename, encoding='utf-8') as f:
         hasData = f.readlines()
 
     Tout = list()   # 最終的に365×24の行列になる。

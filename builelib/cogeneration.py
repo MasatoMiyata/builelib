@@ -5,7 +5,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
+from . import commons as bc
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -778,7 +778,7 @@ if __name__ == '__main__':  # pragma: no cover
     # filename = './sample/cgs.json'
 
     # テンプレートjsonの読み込み
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         inputdata = json.load(f)
 
     # 各設備の計算
@@ -824,8 +824,8 @@ if __name__ == '__main__':  # pragma: no cover
 
     resultJson = calc_energy(inputdata, resultJson_for_CGS, DEBUG = True)
 
-    # with open("resultJson_for_CGS.json",'w') as fw:
+    # with open("resultJson_for_CGS.json",'w', encoding='utf-8') as fw:
     #     json.dump(resultJson_for_CGS, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
-    with open("resultJson_CGS.json",'w') as fw:
+    with open("resultJson_CGS.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
