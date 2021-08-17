@@ -11,7 +11,7 @@ plt.rcParams['grid.linewidth'] = 0.5
 
 
 # データベースjsonの読み込み
-with open('./builelib/database/HeatSourcePerformance.json', 'r') as f:
+with open('./builelib/database/HeatSourcePerformance.json', 'r', encoding='utf-8') as f:
     db = json.load(f)
 
 

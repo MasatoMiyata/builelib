@@ -5,7 +5,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
+from . import commons as bc
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -40,7 +40,7 @@ def set_roomIndexCoeff(roomIndex):
 def calc_energy(inputdata, DEBUG = False):
 
     # データベースjsonの読み込み
-    with open( database_directory + 'lightingControl.json', 'r') as f:
+    with open( database_directory + 'lightingControl.json', 'r', encoding='utf-8') as f:
         lightingCtrl = json.load(f)
 
     # 計算結果を格納する変数
@@ -234,7 +234,7 @@ if __name__ == '__main__':
     # filename = './tests/cogeneration/Case_hotel_00.json'
 
     # テンプレートjsonの読み込み
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = False)
@@ -242,5 +242,5 @@ if __name__ == '__main__':
     print(f'設計値: {resultJson["E_lighting"]}')
     print(f'基準値: {resultJson["Es_lighting"]}')
 
-    with open("resultJson_L.json",'w') as fw:
+    with open("resultJson_L.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)

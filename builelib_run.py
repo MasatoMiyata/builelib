@@ -119,7 +119,7 @@ else:
     exec_calculation = False  # 計算は行わない。
 
 # 出力
-with open(inputfile_name_split[0] + "_input.json",'w') as fw:
+with open(inputfile_name_split[0] + "_input.json",'w', encoding='utf-8') as fw:
     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -160,7 +160,7 @@ else:
     }
 
 # 出力
-with open(inputfile_name_split[0] + "_result_AC.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result_AC.json",'w', encoding='utf-8') as fw:
     json.dump(resultdata_AC, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -201,7 +201,7 @@ else:
     }
 
 # 出力
-with open(inputfile_name_split[0] + "_result_V.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result_V.json",'w', encoding='utf-8') as fw:
     json.dump(resultdata_V, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -241,7 +241,7 @@ else:
     }
 
 # 出力
-with open(inputfile_name_split[0] + "_result_L.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result_L.json",'w', encoding='utf-8') as fw:
     json.dump(resultdata_L, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -281,7 +281,7 @@ else:
     }
 
 # 出力
-with open(inputfile_name_split[0] + "_result_HW.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result_HW.json",'w', encoding='utf-8') as fw:
     json.dump(resultdata_HW, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -321,7 +321,7 @@ else:
     }
 
 # 出力
-with open(inputfile_name_split[0] + "_result_EV.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result_EV.json",'w', encoding='utf-8') as fw:
     json.dump(resultdata_EV, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -359,7 +359,7 @@ else:
     }
 
 # 出力
-with open(inputfile_name_split[0] + "_result_PV.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result_PV.json",'w', encoding='utf-8') as fw:
     json.dump(resultdata_PV, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -394,7 +394,7 @@ else:
     }
 
 # 出力
-with open(inputfile_name_split[0] + "_result_Other.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result_Other.json",'w', encoding='utf-8') as fw:
     json.dump(resultdata_OT, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -428,7 +428,7 @@ else:
     }
 
 # 出力
-with open(inputfile_name_split[0] + "_result_CGS.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result_CGS.json",'w', encoding='utf-8') as fw:
     json.dump(resultdata_CGS, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
@@ -455,7 +455,7 @@ else:
 # 計算結果ファイルの出力
 #------------------------------------
 
-with open(inputfile_name_split[0] + "_result.json",'w') as fw:
+with open(inputfile_name_split[0] + "_result.json",'w', encoding='utf-8') as fw:
     json.dump(calc_reuslt, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 

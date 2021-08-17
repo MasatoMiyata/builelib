@@ -53,7 +53,7 @@ for case_name in testcase_dict:
 
         filename = "./tests/airconditioning/ACtest_" + testdata[0] + ".json"
         # 入力データの作成
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             inputdata = json.load(f)
 
         # 期待値
@@ -70,7 +70,7 @@ for case_name in testcase_dict:
 def test_calc(inputdata, expectedvalue):
 
     # 検証用
-    with open("inputdata.json",'w') as fw:
+    with open("inputdata.json",'w', encoding='utf-8') as fw:
         json.dump(inputdata, fw, indent=4, ensure_ascii=False)
 
     # 計算実行        

@@ -7,9 +7,9 @@ import copy
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
-import climate
-import shading
+from . import commons as bc
+from . import climate
+from . import shading
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -90,11 +90,11 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     # 流量制御
-    with open(database_directory + 'FLOWCONTROL.json', 'r') as f:
+    with open(database_directory + 'FLOWCONTROL.json', 'r', encoding='utf-8') as f:
         FLOWCONTROL = json.load(f)
 
     # 熱源機器特性
-    with open(database_directory + "HeatSourcePerformance.json", 'r') as f:
+    with open(database_directory + "HeatSourcePerformance.json", 'r', encoding='utf-8') as f:
         HeatSourcePerformance = json.load(f)
 
     ##----------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     # 地域別データの読み込み
-    with open(database_directory + 'AREA.json', 'r') as f:
+    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
     # 負荷率帯マトリックス mxL = array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2])
@@ -206,7 +206,7 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     # 空調運転モード
-    with open(database_directory + 'ACoperationMode.json', 'r') as f:
+    with open(database_directory + 'ACoperationMode.json', 'r', encoding='utf-8') as f:
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
@@ -400,11 +400,11 @@ def calc_energy(inputdata, DEBUG = False):
     ### ISSUE : 二つのデータベースにわかれてしまっているので統一する。###
 
     # 標準入力法建材データの読み込み
-    with open(database_directory + 'HeatThermalConductivity.json', 'r') as f:
+    with open(database_directory + 'HeatThermalConductivity.json', 'r', encoding='utf-8') as f:
         HeatThermalConductivity = json.load(f)
 
     # モデル建物法建材データの読み込み
-    with open(database_directory + 'HeatThermalConductivity_model.json', 'r') as f:
+    with open(database_directory + 'HeatThermalConductivity_model.json', 'r', encoding='utf-8') as f:
         HeatThermalConductivity_model = json.load(f)
 
 
@@ -471,10 +471,10 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     # 窓データの読み込み
-    with open(database_directory + 'WindowHeatTransferPerformance.json', 'r') as f:
+    with open(database_directory + 'WindowHeatTransferPerformance.json', 'r', encoding='utf-8') as f:
         WindowHeatTransferPerformance = json.load(f)
 
-    with open(database_directory + 'glass2window.json', 'r') as f:
+    with open(database_directory + 'glass2window.json', 'r', encoding='utf-8') as f:
         glass2window = json.load(f)
 
 
@@ -956,7 +956,7 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     ## 室負荷計算のための係数（解説書 A.3）
-    with open(database_directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r') as f:
+    with open(database_directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
         QROOM_COEFFI = json.load(f)
 
     
@@ -1152,7 +1152,7 @@ def calc_energy(inputdata, DEBUG = False):
     if SWITCH_BUILELIB_HEATLOADCALC:
 
         # 負荷計算モジュールの読み込み
-        from heat_load_calculation import Main
+        from .heat_load_calculation import Main
         import copy
 
         # ファイルの読み込み
@@ -1469,7 +1469,7 @@ def calc_energy(inputdata, DEBUG = False):
                             )
 
             # デバッグ用
-            # with open("heatloadcalc_input.json",'w') as fw:
+            # with open("heatloadcalc_input.json",'w', encoding='utf-8') as fw:
             #     json.dump(input_heatcalc, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
             
             # 負荷計算の実行
@@ -3740,7 +3740,7 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
 
     # 地中熱オープンループの地盤特性の読み込み
-    with open(database_directory + 'AC_gshp_openloop.json', 'r') as f:
+    with open(database_directory + 'AC_gshp_openloop.json', 'r', encoding='utf-8') as f:
         AC_gshp_openloop = json.load(f)
 
     for ref_name in inputdata["REF"]:
@@ -4622,7 +4622,7 @@ def calc_energy(inputdata, DEBUG = False):
             + resultJson["for_CGS"]["E_pump_MWh_day"] \
             + resultJson["for_CGS"]["E_fan_MWh_day"]
 
-    # with open("inputdataJson_AC.json",'w') as fw:
+    # with open("inputdataJson_AC.json",'w', encoding='utf-8') as fw:
     #     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
         
     return resultJson
@@ -4642,12 +4642,12 @@ if __name__ == '__main__':  # pragma: no cover
 
 
     # 入力ファイルの読み込み
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG=True)
 
-    with open("resultJson_AC.json",'w') as fw:
+    with open("resultJson_AC.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
     print( f'BEI/AC: {resultJson["BEI_AC"]}')        

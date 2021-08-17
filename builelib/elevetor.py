@@ -5,7 +5,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
+from . import commons as bc
 
 def calc_energy(inputdata, DEBUG = False):
 
@@ -172,11 +172,11 @@ if __name__ == '__main__':
     filename = './sample/Builelib_sample_SP7-1.json'
 
     # 入力ファイルの読み込み
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
 
-    with open("resultJson_EV.json",'w') as fw:
+    with open("resultJson_EV.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 

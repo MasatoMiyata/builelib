@@ -326,7 +326,7 @@ for case_name in testcase_dict:
 def test_calc(inputdata, expectedvalue):
 
     # 検証用
-    with open("inputdata.json",'w') as fw:
+    with open("inputdata.json",'w', encoding='utf-8') as fw:
         json.dump(inputdata, fw, indent=4, ensure_ascii=False)
 
     if expectedvalue[0] != "err":  # passが期待されるテスト

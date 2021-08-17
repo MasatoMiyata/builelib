@@ -18,15 +18,15 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
 
 # 基準値データベースの読み込み
-with open(database_directory + 'ROOM_STANDARDVALUE.json', 'r') as f:
+with open(database_directory + 'ROOM_STANDARDVALUE.json', 'r', encoding='utf-8') as f:
     RoomStandardValue = json.load(f)
 
 # 室使用条件データの読み込み
-with open(database_directory + 'RoomUsageSchedule.json', 'r') as f:
+with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
     RoomUsageSchedule = json.load(f)
 
 # カレンダーパターンの読み込み
-with open(database_directory + 'CALENDAR.json', 'r') as f:
+with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
     Calendar = json.load(f)
 
 class MyEncoder(json.JSONEncoder):
@@ -385,7 +385,7 @@ def get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar={}):
 def inputdata_validation(inputdata):
 
     # スキーマの読み込み
-    with open( template_directory + '/webproJsonSchema.json') as f:
+    with open( template_directory + '/webproJsonSchema.json', encoding='utf-8') as f:
         schema_data = json.load(f)    
 
     # 任意評定用（SP-1）

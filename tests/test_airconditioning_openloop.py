@@ -55,7 +55,7 @@ for case_name in testcase_dict:
 
         filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_base.json"
         # 入力データの読み込み
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             inputdata = json.load(f)
 
         # 地域
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
             filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_base.json"
             # 入力データの読み込み
-            with open(filename, 'r') as f:
+            with open(filename, 'r', encoding='utf-8') as f:
                 inputdata = json.load(f)
 
             # 地域
@@ -134,7 +134,7 @@ if __name__ == '__main__':
                 str(resultJson["ENERGY"]["E_ctpump"] * bc.fprime)
             ]
 
-            with open("resultALL.txt",'a') as fw:
+            with open("resultALL.txt",'a', encoding='utf-8') as fw:
                 fw.write(testdata[0]+",")
                 fw.write(",".join(resultALL))
                 fw.write("\n")

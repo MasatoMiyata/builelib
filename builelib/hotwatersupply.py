@@ -6,8 +6,8 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
-import climate
+from . import commons as bc
+from . import climate
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -31,7 +31,7 @@ def calc_energy(inputdata, DEBUG = False):
     }
     
     # 地域別データの読み込み
-    with open(database_directory + 'AREA.json', 'r') as f:
+    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
 
@@ -196,7 +196,7 @@ def calc_energy(inputdata, DEBUG = False):
     #----------------------------------------------------------------------------------
 
     # 給湯配管の線熱損失係数の読み込み
-    with open(database_directory + 'ThermalConductivityPiping.json', 'r') as f:
+    with open(database_directory + 'ThermalConductivityPiping.json', 'r', encoding='utf-8') as f:
         thermal_conductivity_dict = json.load(f)
 
     for unit_name in inputdata["HotwaterSupplySystems"]:
@@ -246,7 +246,7 @@ def calc_energy(inputdata, DEBUG = False):
                                     Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名（給湯）"])
 
     # 空調運転モード
-    with open(database_directory + 'ACoperationMode.json', 'r') as f:
+    with open(database_directory + 'ACoperationMode.json', 'r', encoding='utf-8') as f:
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
@@ -579,11 +579,11 @@ if __name__ == '__main__':
     filename = './sample/Builelib_sample_SP11.json'
 
     # 入力データ（json）の読み込み
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         inputdata = json.load(f)
 
     resultJson = calc_energy(inputdata, DEBUG = True)
 
-    with open("resultJson_HW.json",'w') as fw:
+    with open("resultJson_HW.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 

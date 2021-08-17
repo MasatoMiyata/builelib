@@ -1,7 +1,5 @@
 numpy
-sys
-json
 jsonschema
-math
-csv
+pandas
+pytest
 xlrd == 1.2.0
