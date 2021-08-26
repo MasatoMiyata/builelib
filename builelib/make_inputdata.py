@@ -6,7 +6,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from . import commons as bc
+import commons as bc
 
 # テンプレートファイルの保存場所
 template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
@@ -2664,11 +2664,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
             if str(dataEV[9]) == "VVVF（電力回生なし）":
                 dataEV[9] = "VVVF(電力回生なし)"
             elif str(dataEV[9]) == "VVVF（電力回生あり）":
-                dataEV[9] = "VVVF(電力回生なし)"
+                dataEV[9] = "VVVF(電力回生あり)"
             elif str(dataEV[9]) == "VVVF（電力回生なし、ギアレス）":
-                dataEV[9] = "VVVF(電力回生なし)"
+                dataEV[9] = "VVVF(電力回生なし、ギアレス)"
             elif str(dataEV[9]) == "VVVF（電力回生あり、ギアレス）":
-                dataEV[9] = "VVVF(電力回生なし)"
+                dataEV[9] = "VVVF(電力回生あり、ギアレス)"
             
             # 階と室名が空欄でない場合
             if (dataEV[0] != "") and (dataEV[1] != "") :
@@ -3136,7 +3136,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'Builelib_sample_SP11'
+    case_name = 'ZEB設計ガイドライン_中規模オフィス_6地域'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
