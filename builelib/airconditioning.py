@@ -17,8 +17,7 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成、動的負荷計算）
-SWITCH_BUILELIB_LIGHTING = False
-SWITCH_BUILELIB_HEATLOADCALC = False
+BUILELIB_MODE = False
 
 def count_Matrix(x, mxL):
     """
@@ -988,7 +987,7 @@ def calc_energy(inputdata, DEBUG = False):
                 bc.get_roomHeatGain(btype, rtype)
 
         # 様式4から照明発熱量を読み込む
-        if SWITCH_BUILELIB_LIGHTING:
+        if BUILELIB_MODE:
             if room_zone_name in inputdata["LightingSystems"]:
                 lighting_power = 0
                 for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
@@ -1149,7 +1148,7 @@ def calc_energy(inputdata, DEBUG = False):
     ##----------------------------------------------------------------------------------
     ## 動的室負荷計算
     ##----------------------------------------------------------------------------------
-    if SWITCH_BUILELIB_HEATLOADCALC:
+    if BUILELIB_MODE:
 
         # 負荷計算モジュールの読み込み
         from .heat_load_calculation import Main
