@@ -3,6 +3,7 @@ import numpy as np
 import math
 import os
 import copy
+import matplotlib.pyplot as plt
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -10,6 +11,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from . import commons as bc
 from . import climate
 from . import shading
+from . import make_figure as mf
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -1510,22 +1512,30 @@ def calc_energy(inputdata, DEBUG = False):
             for dd in range(0,365):
                 for hh in range(0,24):
 
-                    if heatload[dd][hh] < 0:
+                    if heatload[dd][hh] > 0:
                         # 暖房負荷 [W] → [MJ/hour]
-                        resultJson["Qroom"][room_zone_name]["QroomHh"][dd][hh] = heatload[dd][hh] * 3600/1000000 
+                        resultJson["Qroom"][room_zone_name]["QroomHh"][dd][hh] = (-1) * heatload[dd][hh] * 3600/1000000 
                         # 暖房負荷 [W] → [MJ/day]
-                        resultJson["Qroom"][room_zone_name]["QroomDh"][dd] += heatload[dd][hh] * 3600/1000000
+                        resultJson["Qroom"][room_zone_name]["QroomDh"][dd] += (-1) * heatload[dd][hh] * 3600/1000000
 
-                    elif heatload[dd][hh] > 0:
+                    elif heatload[dd][hh] < 0:
                         # 冷房負荷 [W] → [MJ/hour]
-                        resultJson["Qroom"][room_zone_name]["QroomHc"][dd][hh] = heatload[dd][hh] * 3600/1000000 
+                        resultJson["Qroom"][room_zone_name]["QroomHc"][dd][hh] = (-1) * heatload[dd][hh] * 3600/1000000 
                         # 冷房負荷 [W]→ [MJ/day]
-                        resultJson["Qroom"][room_zone_name]["QroomDc"][dd] += heatload[dd][hh] * 3600/1000000
+                        resultJson["Qroom"][room_zone_name]["QroomDc"][dd] += (-1) * heatload[dd][hh] * 3600/1000000
 
 
             print( f'室負荷（冷房要求）の合計 heatload_for_cooling: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"],0)}' )
             print( f'室負荷（暖房要求）の合計 heatload_for_heating: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)}' )
 
+
+    # 熱負荷のグラフ化（確認用）
+    for room_zone_name in inputdata["AirConditioningZone"]:
+
+        mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHc"], "室負荷（冷房）："+room_zone_name, "b")
+        mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHh"], "室負荷（暖房）："+room_zone_name, "m")
+
+    plt.show()
 
     ##----------------------------------------------------------------------------------
     ## 空調機群の一次エネルギー消費量（解説書 2.5）
