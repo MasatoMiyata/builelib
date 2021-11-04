@@ -17,7 +17,7 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成、動的負荷計算）
-BUILELIB_MODE = True
+BUILELIB_MODE = False
 
 def count_Matrix(x, mxL):
     """
@@ -1502,6 +1502,11 @@ def calc_energy(inputdata, DEBUG = False):
                 )
 
             # 冷房負荷と暖房負荷に分離する。
+            resultJson["Qroom"][room_zone_name]["QroomDc"] = np.zeros(365)
+            resultJson["Qroom"][room_zone_name]["QroomDh"] = np.zeros(365)
+            resultJson["Qroom"][room_zone_name]["QroomHc"] = np.zeros((365,24))
+            resultJson["Qroom"][room_zone_name]["QroomHh"] = np.zeros((365,24))
+
             for dd in range(0,365):
                 for hh in range(0,24):
 
