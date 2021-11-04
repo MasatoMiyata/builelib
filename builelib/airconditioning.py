@@ -17,7 +17,7 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成、動的負荷計算）
-BUILELIB_MODE = False
+BUILELIB_MODE = True
 
 def count_Matrix(x, mxL):
     """
