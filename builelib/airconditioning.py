@@ -357,10 +357,11 @@ def calc_energy(inputdata, DEBUG = False):
             "Qwind_T": np.zeros(365),  # 窓からの温度差による熱取得 [W/m2]
             "Qwind_S": np.zeros(365),  # 窓からの日射による熱取得 [W/m2]
             "Qwind_N": np.zeros(365),  # 窓からの夜間放射による熱取得（マイナス）[W/m2]
-            "QroomDc": np.zeros(365),  # 冷房熱取得　[MJ/day]
-            "QroomDh": np.zeros(365)   # 暖房熱取得　[MJ/day]
+            "QroomDc": np.zeros(365),  # 冷房熱取得（日積算）　[MJ/day]
+            "QroomDh": np.zeros(365),   # 暖房熱取得（日積算）　[MJ/day]
+            "QroomHc": np.zeros((365,24)),  # 冷房熱取得（時刻別）　[MJ/h]
+            "QroomHh": np.zeros((365,24))   # 暖房熱取得（時刻別）　[MJ/h]
         }
-
 
     ##----------------------------------------------------------------------------------
     ## 外皮面への入射日射量（解説書 2.4.1）
@@ -1099,7 +1100,7 @@ def calc_energy(inputdata, DEBUG = False):
                 Qheat[dd] = 0
 
 
-        # QroomDc, QroomDh [MJ/day]
+        # 日積算熱取得　　QroomDc, QroomDh [MJ/day]
         resultJson["Qroom"][room_zone_name]["QroomDc"] = Qcool * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
         resultJson["Qroom"][room_zone_name]["QroomDh"] = Qheat * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
@@ -1144,6 +1145,25 @@ def calc_energy(inputdata, DEBUG = False):
                     # 室負荷（暖房要求）の置き換え
                     if "QroomDh" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
                         resultJson["Qroom"][room_zone_name]["QroomDh"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDh"]
+
+
+    ##----------------------------------------------------------------------------------
+    # 時刻別熱取得 [MJ/hour]
+    ##----------------------------------------------------------------------------------
+    for room_zone_name in inputdata["AirConditioningZone"]:
+
+        for dd in range(0,365):
+            
+            # 日別の運転時間 [h]
+            daily_opetime = sum(roomScheduleRoom[room_zone_name][dd])
+
+            for hh in range(0,24):
+                if roomScheduleRoom[room_zone_name][dd][hh] > 0:
+                    # 冷房熱取得
+                    resultJson["Qroom"][room_zone_name]["QroomHc"][dd][hh] = resultJson["Qroom"][room_zone_name]["QroomDc"][dd] / daily_opetime
+                    # 暖房熱取得
+                    resultJson["Qroom"][room_zone_name]["QroomHh"][dd][hh] = resultJson["Qroom"][room_zone_name]["QroomDh"][dd] / daily_opetime
+
 
     ##----------------------------------------------------------------------------------
     ## 動的室負荷計算
@@ -1474,7 +1494,7 @@ def calc_energy(inputdata, DEBUG = False):
             # 負荷計算の実行
             heatload_sensible_convection, heatload_sensible_radiation, heatload_latent = Main.run(input_heatcalc)
 
-            # 負荷の積算[W] (365×24)
+            # 負荷の積算（全熱負荷）[W] (365×24)
             heatload = np.array( 
                     bc.trans_8760to36524(heatload_sensible_convection) + \
                     bc.trans_8760to36524(heatload_sensible_radiation) + \
@@ -1482,22 +1502,24 @@ def calc_energy(inputdata, DEBUG = False):
                 )
 
             # 冷房負荷と暖房負荷に分離する。
-            heatload_for_cooling = np.zeros(365)
-            heatload_for_heating = np.zeros(365)
             for dd in range(0,365):
                 for hh in range(0,24):
+
                     if heatload[dd][hh] < 0:
+                        # 暖房負荷 [W] → [MJ/hour]
+                        resultJson["Qroom"][room_zone_name]["QroomHh"][dd][hh] = heatload[dd][hh] * 3600/1000000 
                         # 暖房負荷 [W] → [MJ/day]
-                        heatload_for_heating[dd] += heatload[dd][hh] * 3600/1000000
+                        resultJson["Qroom"][room_zone_name]["QroomDh"][dd] += heatload[dd][hh] * 3600/1000000
+
                     elif heatload[dd][hh] > 0:
-                        # 冷房負荷 [W]
-                        heatload_for_cooling[dd] += heatload[dd][hh] * 3600/1000000
+                        # 冷房負荷 [W] → [MJ/hour]
+                        resultJson["Qroom"][room_zone_name]["QroomHc"][dd][hh] = heatload[dd][hh] * 3600/1000000 
+                        # 冷房負荷 [W]→ [MJ/day]
+                        resultJson["Qroom"][room_zone_name]["QroomDc"][dd] += heatload[dd][hh] * 3600/1000000
 
-            resultJson["Qroom"][room_zone_name]["QroomDc"] = heatload_for_cooling
-            resultJson["Qroom"][room_zone_name]["QroomDh"] = heatload_for_heating
 
-            print( f'室負荷（冷房要求）の合計 heatload_for_cooling: {np.sum(heatload_for_cooling,0)}' )
-            print( f'室負荷（暖房要求）の合計 heatload_for_heating: {np.sum(heatload_for_heating,0)}' )
+            print( f'室負荷（冷房要求）の合計 heatload_for_cooling: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"],0)}' )
+            print( f'室負荷（暖房要求）の合計 heatload_for_heating: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)}' )
 
 
     ##----------------------------------------------------------------------------------
@@ -1764,7 +1786,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 室の空調有無 roomScheduleRoom（365×24）を加算
         resultJson["AHU"][ ahu_name ]["schedule"] += roomScheduleRoom[room_zone_name]
-        # 運転時間帯
+        # 運転時間帯（昼、夜、終日）をリストに追加していく。
         resultJson["AHU"][ ahu_name ]["day_mode"].append( roomDayMode[room_zone_name] )
 
 
@@ -1775,7 +1797,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 室の空調有無 roomScheduleRoom（365×24）を加算
         resultJson["AHU"][ ahu_name ]["schedule"] += roomScheduleRoom[room_zone_name]
-        # 運転時間帯
+        # 運転時間帯（昼、夜、終日）をリストに追加していく。
         resultJson["AHU"][ ahu_name ]["day_mode"].append( roomDayMode[room_zone_name] )
 
 
@@ -4630,10 +4652,10 @@ def calc_energy(inputdata, DEBUG = False):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    # filename = './tests/airconditioning/ACtest_Case035.json'
+    filename = './tests/airconditioning/ACtest_Case001.json'
     # filename = './sample/sample02_WEBPRO_inputSheet_for_Ver3.0.json'
     # filename = './sample/WEBPRO_inputSheet_sample.json'
-    filename = './sample/Builelib_sample_SP10.json'
+    # filename = './sample/Builelib_sample_SP10.json'
     # filename = './sample/WEBPRO_KE14_Case01.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
