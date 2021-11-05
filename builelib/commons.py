@@ -58,7 +58,10 @@ def air_enenthalpy(Tdb, X):
     if len(Tdb) != len(X):
         raise Exception('温度と湿度のリストの長さが異なります。')
     else:
-        H = (Ca*Tdb + (Cw*Tdb+Lw)*X)
+        
+        H = np.zeros(len(Tdb))
+        for i in range(0, len(Tdb)):
+            H[i] = (Ca*Tdb[i] + (Cw*Tdb[i]+Lw)*X[i])
 
     return H   
 
@@ -461,5 +464,15 @@ def trans_8760to36524(X8760):
         for hh in range(0,24):
             tmp.append(X8760[24*dd+hh])
         X.append(tmp)
+    return X
+
+def trans_36524to8760(X36524):
+    """
+    365行×24列のリストを8760行のリストに変形する関数
+    """
+    X = []
+    for dd in range(0,365):
+        for hh in range(0,24):
+            X.append(X36524[dd][hh])
     return X
     
