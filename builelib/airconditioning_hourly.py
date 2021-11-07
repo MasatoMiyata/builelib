@@ -808,24 +808,6 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## 任意評定用　室負荷（ SP-4 ）
-    ##----------------------------------------------------------------------------------
-
-    if "SpecialInputData" in inputdata:
-        if "Qroom" in inputdata["SpecialInputData"]:
-
-            for room_zone_name in inputdata["SpecialInputData"]["Qroom"]: # SP-4シートに入力された室毎に処理
-
-                if room_zone_name in resultJson["Qroom"]:  # SP-4シートに入力された室が空調ゾーンとして存在していれば
-                    # 室負荷（冷房要求）の置き換え [MJ/day]
-                    if "QroomDc" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
-                        resultJson["Qroom"][room_zone_name]["QroomDc"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDc"]
-
-                    # 室負荷（暖房要求）の置き換え
-                    if "QroomDh" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
-                        resultJson["Qroom"][room_zone_name]["QroomDh"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDh"]
-
-    ##----------------------------------------------------------------------------------
     ## 動的室負荷計算
     ##----------------------------------------------------------------------------------
     if BUILELIB_MODE:
@@ -1187,7 +1169,7 @@ def calc_energy(inputdata, DEBUG = False):
 
         # 熱負荷のグラフ化
         for room_zone_name in inputdata["AirConditioningZone"]:
-            mf.hourlyplot(resultJson["Qroom"][room_zone_name]["Qroom_hourly"], "室負荷： "+room_zone_name, "b")
+            mf.hourlyplot(resultJson["Qroom"][room_zone_name]["Qroom_hourly"], "室負荷： "+room_zone_name, "b", "時刻別室負荷")
 
     
 
@@ -1205,7 +1187,7 @@ def calc_energy(inputdata, DEBUG = False):
             "HoaDayAve": np.zeros(365),        # 空調運転時間帯の外気エンタルピー
             "Hoa_hourly": np.zeros((365,24)),  # 空調運転時間帯の外気エンタルピー
 
-            "qoaAHU": np.zeros((365,24)),           # 日平均外気負荷 [kW]
+            "qoaAHU": np.zeros((365,24)),      # 日平均外気負荷 [kW]
             "Tahu_total": np.zeros(365),       # 空調機群の日積算運転時間（冷暖合計）
 
             "E_fan_day": np.zeros(365),        # 空調機群のエネルギー消費量
@@ -1230,7 +1212,7 @@ def calc_energy(inputdata, DEBUG = False):
                 "cooling_for_room" : np.zeros(365),   # 室負荷が正（冷房要求）であるときの空調負荷（正であれば冷却コイル負荷、負であれば加熱コイル負荷） [MJ/day]
                 "heating_for_room" : np.zeros(365),   # 室負荷が負（暖房要求）であるときの空調負荷（正であれば冷却コイル負荷、負であれば加熱コイル負荷） [MJ/day]
             },
-            "Qahu_hourly" : np.zeros((365,24)),
+            "Qahu_hourly" : np.zeros((365,24)),       # 時刻別空調負荷 [MJ/day]
             "Tahu" :{
                 "cooling_for_room" : np.zeros(365),   # 室負荷が冷房要求である場合の空調機群の運転時間 [h/day]
                 "heating_for_room" : np.zeros(365),   # 室負荷が暖房要求である場合の空調機群の運転時間 [h/day]
@@ -1257,7 +1239,7 @@ def calc_energy(inputdata, DEBUG = False):
                 "cooling_for_room" : np.zeros(365), # 空調機群の暖房運転時間（室負荷が冷房要求である場合）
                 "heating_for_room" : np.zeros(365), # 空調機群の暖房運転時間（室負荷が冷房要求である場合）
             },
-
+            "load_ratio": np.zeros((365,24)),       # 時刻別の負荷率
             "TcAHU": 0,
             "ThAHU": 0,
             "MxAHUcE": 0,
@@ -1765,32 +1747,12 @@ def calc_energy(inputdata, DEBUG = False):
         for ahu_name in inputdata["AirHandlingSystem"]:
             
             # 外気負荷のグラフ化
-            mf.hourlyplot( resultJson["AHU"][ahu_name]["qoaAHU"] , "外気負荷： "+ahu_name, "b")
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["qoaAHU"] , "外気負荷： "+ahu_name, "b", "時刻別外気負荷")
             # 外気冷房効果のグラフ化
-            mf.hourlyplot( resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"] , "外気冷房による削減熱量： "+ahu_name, "b")
-            mf.hourlyplot( resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"] , "外気冷房時の風量： "+ahu_name, "b")
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"] , "外気冷房による削減熱量： "+ahu_name, "b", "時刻別外気冷房効果")
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"] , "外気冷房時の風量： "+ahu_name, "b", "時刻別外気冷房時風量")
             # 空調負荷のグラフ化
-            mf.hourlyplot( resultJson["AHU"][ahu_name]["Qahu_hourly"] , "空調負荷： "+ahu_name, "b")
-
-
-    # if DEBUG: # pragma: no cover
-
-    #     for ahu_name in inputdata["AirHandlingSystem"]:
-
-    #         print( f'--- 空調機群名 {ahu_name} ---')
-
-    #         print( f'外気負荷 qoaAHU {np.sum(resultJson["AHU"][ahu_name]["qoaAHU"],0)}' )
-    #         print( f'外気導入量 outdoorAirVolume_cooling {inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"]} m3/h' )
-    #         print( f'外気冷房時最大風量 EconomizerMaxAirVolume {inputdata["AirHandlingSystem"][ahu_name]["EconomizerMaxAirVolume"]} m3/h' )
-    #         print( f'外気冷房時風量 AHUVovc {np.sum(resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"],0)}' )
-    #         print( f'外気冷房効果 Qahu_oac： {np.sum(resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"],0)}' )
-
-    #         print( f'室負荷が正（冷房要求）であるときの空調機群の運転時間 Tahu： {np.sum(resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"],0)} 時間' )
-    #         print( f'室負荷が負（暖房要求）であるときの空調機群の運転時間 Tahu： {np.sum(resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"],0)} 時間' )
-    #         print( f'室負荷が正（冷房要求）であるときの空調負荷 Qahu： {np.sum(resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"],0)}' )
-    #         print( f'室負荷が負（暖房要求）であるときの空調負荷 Qahu： {np.sum(resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"],0)}' )
-
-    #         print( f'空調機群 冷暖同時供給の有無： {inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"]}' )
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["Qahu_hourly"] , "空調負荷： "+ahu_name, "b", "時刻別空調負荷")
 
 
     # ##----------------------------------------------------------------------------------
@@ -1833,164 +1795,59 @@ def calc_energy(inputdata, DEBUG = False):
     #                 resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"] = np.zeros(365)
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 空調機群の負荷率（解説書 2.5.6）
-    # ##----------------------------------------------------------------------------------
+    ##----------------------------------------------------------------------------------
+    ## 空調機群の負荷率（解説書 2.5.6）
+    ##----------------------------------------------------------------------------------
 
-    # for ahu_name in inputdata["AirHandlingSystem"]:
+    for ahu_name in inputdata["AirHandlingSystem"]:
 
-    #     # 冷房要求の場合と暖房要求の場合で処理を繰り返す（同じ日に両方発生する場合がある）
-    #     for requirement_type in ["cooling_for_room", "heating_for_room"]:
+        for dd in range(0,365):
+            for hh in range(0,24):
 
-    #         La  = np.zeros(365)
+                if resultJson["AHU"][ahu_name]["schedule"][dd][hh] > 0:    # 空調機が稼働する場合
 
-    #         # 負荷率の算出
-    #         if requirement_type == "cooling_for_room": # 室負荷が正（冷房要求）であるとき
+                    # 冷暖同時運転が「有」である場合（季節に依らず、冷却コイル負荷も加熱コイル負荷も処理する）
+                    if inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "有": 
 
-    #             # 室負荷が正（冷房要求）であるときの平均負荷率 La [-]
-    #             for dd in range(0,365):
-
-    #                 if resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] >= 0 and resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] != 0:
-
-    #                     # 空調負荷が正（冷却コイル負荷）である場合　→　定格冷却能力で除して負荷率を求める。
-    #                     La[dd] = (resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] / resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] *1000/3600) / \
-    #                         inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]   
-
-    #                 elif resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] != 0:
-
-    #                     # 空調負荷が負（加熱コイル負荷）である場合　→　定格加熱能力で除して負荷率を求める。
-    #                     La[dd] = (resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] / resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] *1000/3600) / \
-    #                         inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]
-                
-
-    #         elif requirement_type == "heating_for_room": # 室負荷が負（暖房要求）であるとき
-                
-    #             # 室負荷が負（暖房要求）であるときの平均負荷率 La [-]
-    #             for dd in range(0,365):
-
-    #                 if resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] <= 0 and resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] != 0:
-
-    #                     # 空調負荷が負（加熱コイル負荷）である場合　→　定格加熱能力で除して負荷率を求める。
-    #                     La[dd] = (resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] / resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] *1000/3600) / \
-    #                         inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]   
-
-    #                 elif resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] != 0:
-
-    #                     # 空調負荷が正（冷却コイル負荷）である場合　→　定格冷却能力で除して負荷率を求める。
-    #                     La[dd] = (resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] / resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] *1000/3600) / \
-    #                         inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]
-                    
-
-    #         # 定格能力＞０　→　空調機群に負荷を処理する機器があれば
-    #         if (inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"] > 0) or (inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"] > 0):
-                
-    #             # 冷暖同時運転が「有」である場合（季節に依らず、冷却コイル負荷も加熱コイル負荷も処理する）
-    #             if inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "有":  
-                    
-    #                 for dd in range(0,365):
-                        
-    #                     if np.isnan(La[dd]) == False:
-
-    #                         if La[dd] > 0:    # 負荷率が正（冷却コイル負荷）である場合
-                                
-    #                             # 負荷率帯インデックスの決定
-    #                             iL = count_Matrix(La[dd], mxL)
-                                
-    #                             if requirement_type == "cooling_for_room":     # 室負荷が正（冷房要求）である場合
-
-    #                                 # 室負荷が正（冷房要求）であるときの冷却コイル負荷の負荷率帯インデックス
-    #                                 resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd] = iL
-    #                                 # 室負荷が正（冷房要求）であるときの空調運転時間
-    #                                 resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]
-
-    #                             elif requirement_type == "heating_for_room":   # 室負荷が負（暖房要求）である場合
-
-    #                                 # 室負荷が負（暖房要求）であるときの冷却コイル負荷の負荷率帯インデックス
-    #                                 resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd] = iL
-    #                                 # 室負荷が負（暖房要求）であるときの空調運転時間
-    #                                 resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]       
-                                
-    #                         elif La[dd] < 0:  # 負荷率が負（加熱コイル負荷）である場合
-
-    #                             # 負荷率帯インデックスの決定
-    #                             iL = count_Matrix((-1)*La[dd], mxL)
-                                
-    #                             if requirement_type == "cooling_for_room":     # 室負荷が正（冷房要求）である場合
-
-    #                                 # 室負荷が正（冷房要求）であるときの加熱コイル負荷の負荷率帯インデックス
-    #                                 resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd] = iL           
-    #                                 # 室負荷が正（冷房要求）であるときの空調運転時間
-    #                                 resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]   
-
-    #                             elif requirement_type == "heating_for_room":   # 室負荷が負（暖房要求）である場合
-
-    #                                 # 室負荷が負（暖房要求）であるときの加熱コイル負荷の負荷率帯インデックス
-    #                                 resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] = iL           
-    #                                 # 室負荷が負（暖房要求）であるときの空調運転時間
-    #                                 resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]       
+                        if resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] >= 0:  # 冷房負荷の場合
+                            # 冷房時の負荷率 [kW]
+                            resultJson["AHU"][ahu_name]["load_ratio"][dd][hh] = \
+                                resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh]*1000/3600 / inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]
+                        else:
+                            # 暖房時の負荷率 [kW]
+                            resultJson["AHU"][ahu_name]["load_ratio"][dd][hh] = \
+                                (-1) * resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh]*1000/3600 / inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]
 
 
-    #             # 冷暖同時供給が「無」である場合（季節により、冷却コイル負荷か加熱コイル負荷のどちらか一方を処理する）
-    #             elif inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "無":  
+                    # 冷暖同時供給が「無」である場合（季節により、冷却コイル負荷か加熱コイル負荷のどちらか一方を処理する）
+                    elif inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "無":  
 
-    #                 for dd in range(0,365):
+                        # 冷房期、中間期の場合
+                        if (ac_mode[dd] == "冷房" or ac_mode[dd] == "中間"):   
 
-    #                     if np.isnan(La[dd]) == False:   # 日付dの負荷率が NaN で無い場合
+                            if resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] > 0:  # 冷房負荷の場合
+                                resultJson["AHU"][ahu_name]["load_ratio"][dd][hh] = \
+                                    resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh]*1000/3600 / inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]
+                            else:
+                                resultJson["AHU"][ahu_name]["load_ratio"][dd][hh] = 0.01
 
-    #                         # 冷房モード で動く期間の場合、かつ、空調負荷（冷却コイル負荷か加熱コイル負荷）が発生しているとき
-    #                         if (La[dd] != 0) and (ac_mode[dd] == "冷房" or ac_mode[dd] == "中間"):   
 
-    #                             # 負荷率帯インデックスの決定
-    #                             iL = count_Matrix(La[dd], mxL)
+                        # 暖房期の場合
+                        elif ac_mode[dd] == "暖房":  
 
-    #                             if requirement_type == "cooling_for_room":     # 室負荷が正（冷房要求）である場合
+                            if resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] < 0:  # 暖房負荷の場合
+                                resultJson["AHU"][ahu_name]["load_ratio"][dd][hh] = \
+                                    (-1) * resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh]*1000/3600 / inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]
+                            else:
+                                resultJson["AHU"][ahu_name]["load_ratio"][dd][hh] = 0.01
 
-    #                                 # 室負荷が正（冷房要求）であるときの空調負荷の負荷率帯インデックス（ただし、加熱コイル負荷は 負荷率帯 0　となる）
-    #                                 resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd] = iL           
-    #                                 # 室負荷が正（冷房要求）であるときの空調運転時間(加熱コイル負荷発生時も 負荷率=0として送風機は動く想定)
-    #                                 resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]       
 
-    #                             elif requirement_type == "heating_for_room":   # 室負荷が負（暖房要求）である場合
-                                    
-    #                                 # 室負荷が負（暖房要求）であるときの空調負荷の負荷率帯インデックス（ただし、加熱コイル負荷は 負荷率帯 0　となる）
-    #                                 resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd] = iL           
-    #                                 # 室負荷が負（暖房要求）であるときの空調運転時間(加熱コイル負荷発生時も 負荷率=0として送風機は動く想定)
-    #                                 resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]  
-                                    
-    #                         # 暖房モード で動く期間の場合、かつ、空調負荷（冷却コイル負荷か加熱コイル負荷）が発生しているとき
-    #                         elif (La[dd] != 0) and (ac_mode[dd] == "暖房"):  
+    if DEBUG: # pragma: no cover
 
-    #                             # 負荷率帯インデックスの決定
-    #                             iL = count_Matrix((-1)*La[dd], mxL)
-
-    #                             if requirement_type == "cooling_for_room":     # 室負荷が正（冷房要求）である場合
-
-    #                                 # 室負荷が正（冷房要求）であるときの空調負荷の負荷率帯インデックス（ただし、冷却コイル負荷は 負荷率帯 0　となる）
-    #                                 resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd] = iL
-    #                                 # 室負荷が正（冷房要求）であるときの空調運転時間(冷却コイル負荷発生時も 負荷率=0として送風機は動く想定)
-    #                                 resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]
-                                    
-    #                             elif requirement_type == "heating_for_room":   # 室負荷が負（暖房要求）である場合
-
-    #                                 # 室負荷が負（暖房要求）であるときの空調負荷の負荷率帯インデックス（ただし、冷却コイル負荷は 負荷率帯 0　となる）
-    #                                 resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] = iL                  
-    #                                 # 室負荷が負（暖房要求）であるときの空調運転時間(冷却コイル負荷発生時も 負荷率=0として送風機は動く想定)
-    #                                 resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]      
-        
-    # if DEBUG: # pragma: no cover
-
-    #     for ahu_name in inputdata["AirHandlingSystem"]:
-
-    #         # マトリックスの再現
-    #         LAHUc0 = np.zeros(11)
-    #         LAHUc1 = np.zeros(11)
-    #         LAHUh0 = np.zeros(11)
-    #         LAHUh1 = np.zeros(11)
-    #         for dd in range(0,365):
-    #             LAHUc0[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
-    #             LAHUc1[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
-    #             LAHUh0[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
-    #             LAHUh1[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
+        for ahu_name in inputdata["AirHandlingSystem"]:
+            
+            # 空調負荷率のグラフ化
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["load_ratio"] , "空調負荷率： "+ahu_name, "b", "時刻別空調負荷")
 
 
     # ##----------------------------------------------------------------------------------
