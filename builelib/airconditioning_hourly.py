@@ -1958,170 +1958,164 @@ def calc_energy(inputdata, DEBUG = False):
             print(resultJson["AHU"][ahu_name]["Tahu_total"])
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプ群の一次エネルギー消費量（解説書 2.6）
-    # ##----------------------------------------------------------------------------------
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ群の一次エネルギー消費量（解説書 2.6）
+    ##----------------------------------------------------------------------------------
 
-    # # 二次ポンプが空欄であった場合、ダミーの仮想ポンプを追加する。
-    # number = 0
-    # for ahu_name in inputdata["AirHandlingSystem"]:
+    # 二次ポンプが空欄であった場合、ダミーの仮想ポンプを追加する。
+    number = 0
+    for ahu_name in inputdata["AirHandlingSystem"]:
 
-    #     if inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] == None:
+        if inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] == None:
 
-    #         inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] = "dummyPump_" + str(number)
+            inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] = "dummyPump_" + str(number)
 
-    #         inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
-    #             "冷房":{
-    #                 "TempelatureDifference": 0,
-    #                 "isStagingControl": "無",
-    #                 "SecondaryPump": [
-    #                     {
-    #                         "Number": 0,
-    #                         "RatedWaterFlowRate": 0,
-    #                         "RatedPowerConsumption": 0,
-    #                         "ContolType": "無",
-    #                         "MinOpeningRate": 100,
-    #                     }
-    #                 ]
-    #             }
-    #         }
+            inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
+                "冷房":{
+                    "TempelatureDifference": 0,
+                    "isStagingControl": "無",
+                    "SecondaryPump": [
+                        {
+                            "Number": 0,
+                            "RatedWaterFlowRate": 0,
+                            "RatedPowerConsumption": 0,
+                            "ContolType": "無",
+                            "MinOpeningRate": 100,
+                        }
+                    ]
+                }
+            }
 
-    #         number += 1
+            number += 1
 
-    #     if inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] == None:
+        if inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] == None:
             
-    #         inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] = "dummyPump_" + str(number)
+            inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] = "dummyPump_" + str(number)
 
-    #         inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
-    #             "暖房":{
-    #                 "TempelatureDifference": 0,
-    #                 "isStagingControl": "無",
-    #                 "SecondaryPump": [
-    #                     {
-    #                         "Number": 0,
-    #                         "RatedWaterFlowRate": 0,
-    #                         "RatedPowerConsumption": 0,
-    #                         "ContolType": "無",
-    #                         "MinOpeningRate": 100,
-    #                     }
-    #                 ]
-    #             }
-    #         }
+            inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
+                "暖房":{
+                    "TempelatureDifference": 0,
+                    "isStagingControl": "無",
+                    "SecondaryPump": [
+                        {
+                            "Number": 0,
+                            "RatedWaterFlowRate": 0,
+                            "RatedPowerConsumption": 0,
+                            "ContolType": "無",
+                            "MinOpeningRate": 100,
+                        }
+                    ]
+                }
+            }
 
-    #         number += 1
-
-
-    # # 冷房と暖房の二次ポンプ群に分ける。
-    # for pump_original_name in inputdata["SecondaryPumpSystem"]:
-
-    #     if "冷房" in inputdata["SecondaryPumpSystem"][pump_original_name]:
-
-    #         # 二次ポンプ群名称を置き換え
-    #         pump_name = pump_original_name + "_冷房"
-    #         inputdata["PUMP"][pump_name] = inputdata["SecondaryPumpSystem"][pump_original_name]["冷房"]
-    #         inputdata["PUMP"][pump_name]["mode"] = "cooling"
-
-    #     if "暖房" in inputdata["SecondaryPumpSystem"][pump_original_name]:
-
-    #         # 二次ポンプ群名称を置き換え
-    #         pump_name = pump_original_name + "_暖房"
-    #         inputdata["PUMP"][pump_name] = inputdata["SecondaryPumpSystem"][pump_original_name]["暖房"]
-    #         inputdata["PUMP"][pump_name]["mode"] = "heating"
+            number += 1
 
 
-    # for pump_name in inputdata["PUMP"]:
+    # 冷房と暖房の二次ポンプ群に分ける。
+    for pump_original_name in inputdata["SecondaryPumpSystem"]:
 
-    #     resultJson["PUMP"][pump_name] = {}
-    #     resultJson["PUMP"][pump_name]["Qpsahu_fan"]       = np.zeros(365)   # ファン発熱量 [MJ/day]
-    #     resultJson["PUMP"][pump_name]["pumpTime_Start"]   = np.zeros(365)
-    #     resultJson["PUMP"][pump_name]["pumpTime_Stop"]    = np.zeros(365)
-    #     resultJson["PUMP"][pump_name]["Qps"] = np.zeros(365)  # ポンプ負荷 [MJ/day]
-    #     resultJson["PUMP"][pump_name]["Tps"] = np.zeros(365)  # ポンプ運転時間 [時間/day]
-    #     resultJson["PUMP"][pump_name]["schedule"] = np.zeros((365,24))  # ポンプ時刻別運転スケジュール
-    #     resultJson["PUMP"][pump_name]["LdPUMP"] = np.zeros(365)    # 負荷率帯
-    #     resultJson["PUMP"][pump_name]["TdPUMP"] = np.zeros(365)    # 運転時間
-    #     resultJson["PUMP"][pump_name]["Qpsahu_pump"] = np.zeros(365)  # ポンプの発熱量 [MJ/day]
-    #     resultJson["PUMP"][pump_name]["E_pump_day"] = np.zeros(365)   # 二次ポンプ群の電力消費量（消費電力×運転時間）[MWh]
-    #     resultJson["PUMP"][pump_name]["TcPUMP"] = 0
-    #     resultJson["PUMP"][pump_name]["MxPUMPE"] = 0
+        if "冷房" in inputdata["SecondaryPumpSystem"][pump_original_name]:
 
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプ機群全体のスペックを整理する。
-    # ##----------------------------------------------------------------------------------
+            # 二次ポンプ群名称を置き換え
+            pump_name = pump_original_name + "_冷房"
+            inputdata["PUMP"][pump_name] = inputdata["SecondaryPumpSystem"][pump_original_name]["冷房"]
+            inputdata["PUMP"][pump_name]["mode"] = "cooling"
 
-    # for pump_name in inputdata["PUMP"]:
+        if "暖房" in inputdata["SecondaryPumpSystem"][pump_original_name]:
 
-    #     inputdata["PUMP"][pump_name]["AHU_list"] = set()        # 接続される空調機群
-    #     inputdata["PUMP"][pump_name]["Qpsr"] = 0                # ポンプ定格能力
-    #     inputdata["PUMP"][pump_name]["ContolType"] = set()      # 全台回転数制御かどうか（台数制御がない場合のみ有効）
-    #     inputdata["PUMP"][pump_name]["MinOpeningRate"] = 100    # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
+            # 二次ポンプ群名称を置き換え
+            pump_name = pump_original_name + "_暖房"
+            inputdata["PUMP"][pump_name] = inputdata["SecondaryPumpSystem"][pump_original_name]["暖房"]
+            inputdata["PUMP"][pump_name]["mode"] = "heating"
 
 
-    #     # ポンプの台数
-    #     inputdata["PUMP"][pump_name]["number_of_pumps"] = len(inputdata["PUMP"][pump_name]["SecondaryPump"])
+    ## 結果格納用の変数
+    for pump_name in inputdata["PUMP"]:
 
-    #     # 二次ポンプの能力のリスト
-    #     inputdata["PUMP"][pump_name]["Qpsr_list"] = []
+        resultJson["PUMP"][pump_name] = {
 
-    #     # 二次ポンプ群全体の定格消費電力の合計
-    #     inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"] = 0
+            "Qpsahu_fan":       np.zeros(365),   # ファン発熱量 [MJ/day]
 
-    #     for unit_id, unit_configure in enumerate(inputdata["PUMP"][pump_name]["SecondaryPump"]):
+            "pumpTime_Start":   np.zeros(365),
+            "pumpTime_Stop":    np.zeros(365),
 
-    #         # 流量の合計（台数×流量）
-    #         inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate_total"] = \
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate"] * \
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Number"]
+            "Qps": np.zeros(365),  # ポンプ負荷 [MJ/day]
+            "Tps": np.zeros(365),  # ポンプ運転時間 [時間/day]
 
-    #         # 消費電力の合計（消費電力×流量）
-    #         inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"] = \
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption"] * \
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Number"]
+            "schedule": np.zeros((365,24)),  # ポンプ時刻別運転スケジュール
+
+            "LdPUMP": np.zeros(365),    # 負荷率帯
+            "TdPUMP": np.zeros(365),    # 運転時間
+
+            "Qpsahu_pump": np.zeros(365),  # ポンプの発熱量 [MJ/day]
+            "E_pump_day": np.zeros(365),   # 二次ポンプ群の電力消費量（消費電力×運転時間）[MWh]
+
+            "TcPUMP": 0,
+            "MxPUMPE": 0
+        }
+
+
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ機群全体のスペックを整理する。
+    ##----------------------------------------------------------------------------------
+
+    for pump_name in inputdata["PUMP"]:
+
+        inputdata["PUMP"][pump_name]["AHU_list"] = set()        # 接続される空調機群
+        inputdata["PUMP"][pump_name]["Qpsr"] = 0                # ポンプ定格能力
+        inputdata["PUMP"][pump_name]["ContolType"] = set()      # 全台回転数制御かどうか（台数制御がない場合のみ有効）
+        inputdata["PUMP"][pump_name]["MinOpeningRate"] = 100    # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
+
+
+        # ポンプの台数
+        inputdata["PUMP"][pump_name]["number_of_pumps"] = len(inputdata["PUMP"][pump_name]["SecondaryPump"])
+
+        # 二次ポンプの能力のリスト
+        inputdata["PUMP"][pump_name]["Qpsr_list"] = []
+
+        # 二次ポンプ群全体の定格消費電力の合計
+        inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"] = 0
+
+        for unit_id, unit_configure in enumerate(inputdata["PUMP"][pump_name]["SecondaryPump"]):
+
+            # 流量の合計（台数×流量）
+            inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate_total"] = \
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate"] * \
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Number"]
+
+            # 消費電力の合計（消費電力×流量）
+            inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"] = \
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption"] * \
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Number"]
         
-    #         # 二次ポンプ群全体の定格消費電力の合計
-    #         inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"] += \
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"]
+            # 二次ポンプ群全体の定格消費電力の合計
+            inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"] += \
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"]
 
-    #         # 制御方式
-    #         inputdata["PUMP"][pump_name]["ContolType"].add( inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["ContolType"] )
+            # 制御方式
+            inputdata["PUMP"][pump_name]["ContolType"].add( inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["ContolType"] )
 
-    #         # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
-    #         if unit_configure["MinOpeningRate"] == None or np.isnan( unit_configure["MinOpeningRate"] ) == True:
-    #             inputdata["PUMP"][pump_name]["MinOpeningRate"] = 100
-    #         elif inputdata["PUMP"][pump_name]["MinOpeningRate"] > unit_configure["MinOpeningRate"]:
-    #             inputdata["PUMP"][pump_name]["MinOpeningRate"] = unit_configure["MinOpeningRate"]
-
-
-    #     # 全台回転数制御かどうか（台数制御がない場合のみ有効）
-    #     if "無" in inputdata["PUMP"][pump_name]["ContolType"]:
-    #         inputdata["PUMP"][pump_name]["ContolType"] = "定流量制御がある"
-    #     elif "定流量制御" in inputdata["PUMP"][pump_name]["ContolType"]:
-    #         inputdata["PUMP"][pump_name]["ContolType"] = "定流量制御がある"
-    #     else:
-    #         inputdata["PUMP"][pump_name]["ContolType"] = "すべて変流量制御である"
+            # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
+            if unit_configure["MinOpeningRate"] == None or np.isnan( unit_configure["MinOpeningRate"] ) == True:
+                inputdata["PUMP"][pump_name]["MinOpeningRate"] = 100
+            elif inputdata["PUMP"][pump_name]["MinOpeningRate"] > unit_configure["MinOpeningRate"]:
+                inputdata["PUMP"][pump_name]["MinOpeningRate"] = unit_configure["MinOpeningRate"]
 
 
-    # # 接続される空調機群
-    # # for room_zone_name in inputdata["AirConditioningZone"]:
+        # 全台回転数制御かどうか（台数制御がない場合のみ有効）
+        if "無" in inputdata["PUMP"][pump_name]["ContolType"]:
+            inputdata["PUMP"][pump_name]["ContolType"] = "定流量制御がある"
+        elif "定流量制御" in inputdata["PUMP"][pump_name]["ContolType"]:
+            inputdata["PUMP"][pump_name]["ContolType"] = "定流量制御がある"
+        else:
+            inputdata["PUMP"][pump_name]["ContolType"] = "すべて変流量制御である"
 
-    # #     # 冷房（室内負荷処理用空調機）
-    # #     inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add( \
-    # #         inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_insideLoad"])
-    # #     # 冷房（外気負荷処理用空調機）
-    # #     inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add( \
-    # #         inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"])
 
-    # #     # 暖房（室内負荷処理用空調機）
-    # #     inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add( \
-    # #         inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_insideLoad"])
-    # #     # 暖房（外気負荷処理用空調機）
-    # #     inputdata["PUMP"][ inputdata["AirConditioningZone"][room_zone_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add( \
-    # #         inputdata["AirConditioningZone"][room_zone_name]["AHU_heating_outdoorLoad"])
+    # 接続される空調機群
+    for ahu_name in inputdata["AirHandlingSystem"]:
 
-    # for ahu_name in inputdata["AirHandlingSystem"]:
-
-    #     inputdata["PUMP"][ inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add(ahu_name)
-    #     inputdata["PUMP"][ inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add(ahu_name)
+        inputdata["PUMP"][ inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] + "_冷房" ]["AHU_list"].add(ahu_name)
+        inputdata["PUMP"][ inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] + "_暖房" ]["AHU_list"].add(ahu_name)
 
 
 
