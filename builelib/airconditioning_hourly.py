@@ -1927,7 +1927,7 @@ def calc_energy(inputdata, DEBUG = False):
         for dd in range(0,365):
             for hh in range(0,24):
 
-                if resultJson["AHU"][ahu_name]["mtx_L"][dd][hh] > 0:   # 空調負荷が正（冷却コイル負荷）である場合
+                if resultJson["AHU"][ahu_name]["mtx_L"][dd][hh] > 0:   # 負荷率が０より大きい場合
 
                     # 負荷率帯番号
                     iL = int(resultJson["AHU"][ahu_name]["mtx_L"][dd][hh] - 1)
@@ -2051,9 +2051,13 @@ def calc_energy(inputdata, DEBUG = False):
 
             "Qpsahu_pump": np.zeros(365),  # ポンプの発熱量 [MJ/day]
             "E_pump_day": np.zeros(365),   # 二次ポンプ群の電力消費量（消費電力×運転時間）[MWh]
+            "E_pump_hourly": np.zeros((365,24)),  # ポンプ電力消費量[MWh]
 
-            "TcPUMP": 0,
-            "MxPUMPE": 0
+            "load_ratio": np.zeros((365,24)),       # 時刻別の負荷率
+            "mtx_L": np.zeros((365,24)),       # 時刻別の負荷率マトリックス番号
+            
+            "E_pump": 0,
+            "E_pump_MWh_day" : np.zeros(365)
         }
 
 
@@ -2155,7 +2159,7 @@ def calc_energy(inputdata, DEBUG = False):
         for ahu_name in inputdata["AirHandlingSystem"]:
             
             # 空調負荷率のグラフ化
-            mf.hourlyplot( resultJson["AHU"][ahu_name]["Qahu_remainH"] , "未処理負荷： "+ahu_name, "b", "時刻別未処理負荷：")
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["Qahu_remainH"] , "未処理負荷： "+ahu_name, "b", "時刻別未処理負荷")
 
 
     # ポンプ負荷の積算
@@ -2235,271 +2239,270 @@ def calc_energy(inputdata, DEBUG = False):
 
         for pump_name in inputdata["PUMP"]:
 
-            # ポンプ負荷率のグラフ化
-            mf.hourlyplot( resultJson["PUMP"][pump_name]["Qps_hourly"] , "ポンプ負荷： "+pump_name, "b", "時刻別ポンプ負荷：")
+            # ポンプ負荷のグラフ化
+            mf.hourlyplot( resultJson["PUMP"][pump_name]["Qps_hourly"] , "ポンプ負荷： "+pump_name, "b", "時刻別ポンプ負荷")
 
 
 
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ群の仮想定格能力（解説書 2.6.3）
+    ##----------------------------------------------------------------------------------
+    for pump_name in inputdata["PUMP"]:
 
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプ群の仮想定格能力（解説書 2.6.3）
-    # ##----------------------------------------------------------------------------------
-    # for pump_name in inputdata["PUMP"]:
+        for unit_id, unit_configure in enumerate(inputdata["PUMP"][pump_name]["SecondaryPump"]):
 
-    #     for unit_id, unit_configure in enumerate(inputdata["PUMP"][pump_name]["SecondaryPump"]):
+            # 二次ポンプの定格処理能力[kW] = [K] * [m3/h] * [kJ/kg・K] * [kg/m3] * [h/s]
+            inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"] = \
+                inputdata["PUMP"][pump_name]["TempelatureDifference"]* unit_configure["RatedWaterFlowRate_total"] *4.1860*1000/3600
+            inputdata["PUMP"][pump_name]["Qpsr"] += inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"]
 
-    #         # 二次ポンプの定格処理能力[kW] = [K] * [m3/h] * [kJ/kg・K] * [kg/m3] * [h/s]
-    #         inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"] = \
-    #             inputdata["PUMP"][pump_name]["TempelatureDifference"]* unit_configure["RatedWaterFlowRate_total"] *4.1860*1000/3600
-    #         inputdata["PUMP"][pump_name]["Qpsr"] += inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"]
-
-    #         inputdata["PUMP"][pump_name]["Qpsr_list"].append( inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"] )
+            inputdata["PUMP"][pump_name]["Qpsr_list"].append( inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"] )
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプ群の負荷率（解説書 2.6.4）
-    # ##----------------------------------------------------------------------------------
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ群の負荷率（解説書 2.6.4）
+    ##----------------------------------------------------------------------------------
 
-    # for pump_name in inputdata["PUMP"]:
-
-    #     Lpump = np.zeros(365) 
-    #     Mxc = np.zeros(365)  # ポンプの負荷率区分
-    #     Tdc = np.zeros(365)  # ポンプの運転時間
+    for pump_name in inputdata["PUMP"]:
         
-    #     if inputdata["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
+        if inputdata["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
 
-    #         for dd in range(0,365):
+            for dd in range(0,365):
+                for hh in range(0,24):
 
-    #             if resultJson["PUMP"][pump_name]["Tps"][dd] > 0:
-    #                 # 負荷率 Lpump[-] = [MJ/day] / [h/day] * [kJ/MJ] / [s/h] / [KJ/s]
-    #                 Lpump[dd] = (resultJson["PUMP"][pump_name]["Qps"][dd] / resultJson["PUMP"][pump_name]["Tps"][dd] *1000/3600) \
-    #                     /inputdata["PUMP"][pump_name]["Qpsr"]
+                    if resultJson["PUMP"][pump_name]["Qps_hourly"][dd][hh] > 0:
+                        # 負荷率 Lpump[-] = [MJ/h] * [kJ/MJ] / [s/h] / [KJ/s]
+                        resultJson["PUMP"][pump_name]["load_ratio"][dd][hh] = \
+                            (resultJson["PUMP"][pump_name]["Qps_hourly"][dd][hh] *1000/3600) /inputdata["PUMP"][pump_name]["Qpsr"]
 
-    #         for dd in range(0,365):
+            for dd in range(0,365):
+                for hh in range(0,24):
             
-    #             if (resultJson["PUMP"][pump_name]["Tps"][dd] > 0) and (inputdata["PUMP"][pump_name]["Qpsr"] > 0):  # ゼロ割でNaNになっている値を飛ばす
-                    
-    #                 if Lpump[dd] > 0:
-
-    #                     # 出現時間マトリックスを作成
-    #                     iL = count_Matrix(Lpump[dd],mxL)
-
-    #                     Mxc[dd] = iL
-    #                     Tdc[dd] = resultJson["PUMP"][pump_name]["Tps"][dd]
-
-    #     resultJson["PUMP"][pump_name]["LdPUMP"] = Mxc
-    #     resultJson["PUMP"][pump_name]["TdPUMP"] = Tdc
-        
-
-    # ##----------------------------------------------------------------------------------
-    # ## 流量制御方式によって定まる係数（解説書 2.6.7）
-    # ##----------------------------------------------------------------------------------
-
-    # for pump_name in inputdata["PUMP"]:
-
-    #     for unit_id, unit_configure in enumerate(inputdata["PUMP"][pump_name]["SecondaryPump"]):
-
-    #         if unit_configure["ContolType"] in FLOWCONTROL.keys():
-
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a4"]
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a3"]
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a2"]
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a1"]
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a0"]
-
-    #         elif unit_configure["ContolType"] == "無":
-
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = 0
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = 0
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = 0
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = 0
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = 1
-    #             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["MinOpeningRate"] = 100
-
-    #         else:
-    #             raise Exception('制御方式が不正です')
-
-
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプのエネルギー消費量（解説書 2.6.8）
-    # ##----------------------------------------------------------------------------------
-
-    # for pump_name in inputdata["PUMP"]:
-
-    #     MxPUMPNum = np.zeros(divL)
-    #     MxPUMPPower = np.zeros(divL)
-    #     PUMPvwvfac = np.ones(divL)
-
-    #     if inputdata["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
-
-    #         if inputdata["PUMP"][pump_name]["isStagingControl"] == "無":    # 台数制御なし
-            
-    #             # 運転台数
-    #             MxPUMPNum = np.ones(divL) * inputdata["PUMP"][pump_name]["number_of_pumps"]
-
-    #             # 流量制御方式
-    #             if inputdata["PUMP"][pump_name]["ContolType"] == "すべて変流量制御である":  # 全台VWVであれば
-
-    #                 for iL in range(0,divL):
-
-    #                     # 最小負荷率による下限を設ける。
-    #                     if aveL[iL] < (inputdata["PUMP"][pump_name]["MinOpeningRate"] /100):
-    #                         tmpL = inputdata["PUMP"][pump_name]["MinOpeningRate"] / 100
-    #                     else:
-    #                         tmpL = aveL[iL]
-
-    #                     # VWVの効果率曲線(1番目の特性を代表して使う)
-    #                     PUMPvwvfac = np.ones(divL)
-    #                     if aveL[iL] > 1.0:
-    #                         PUMPvwvfac[iL] = 1.2
-    #                     else:
-    #                         PUMPvwvfac[iL] = \
-    #                             inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a4"] * tmpL ** 4 + \
-    #                             inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a3"] * tmpL ** 3 + \
-    #                             inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a2"] * tmpL ** 2 + \
-    #                             inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a1"] * tmpL + \
-    #                             inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a0"]
-
-    #             else: # 全台VWVでなければ、定流量とみなす。
-    #                 PUMPvwvfac = np.ones(divL)
-    #                 PUMPvwvfac[divL] = 1.2
-
-
-    #             # 消費電力（部分負荷特性×定格消費電力）[kW]
-    #             MxPUMPPower = PUMPvwvfac * inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"]
-
-
-    #         elif inputdata["PUMP"][pump_name]["isStagingControl"] == "有":   # 台数制御あり
-
-    #             for iL in range(0,divL):
-
-    #                 # 負荷区分 iL における処理負荷 [kW]
-    #                 Qpsr_iL  = inputdata["PUMP"][pump_name]["Qpsr"] * aveL[iL]
-
-    #                 # 運転台数 MxPUMPNum
-    #                 for rr in range(0, inputdata["PUMP"][pump_name]["number_of_pumps"]):
-
-    #                     # 1台～rr台までの最大能力合計値
-    #                     tmpQmax = np.sum( inputdata["PUMP"][pump_name]["Qpsr_list"][0:rr+1] )
-
-    #                     if Qpsr_iL < tmpQmax:
-    #                         break
-                    
-    #                 MxPUMPNum[iL] = rr+1   # pythonのインデックスと実台数は「1」ずれることに注意。
-
-
-    #                 # 定流量ポンプの処理熱量合計、VWVポンプの台数
-    #                 Qtmp_CWV = 0
-    #                 numVWV = MxPUMPNum[iL]  # MxPUMPNum[iL]は、負荷率帯 iL のときの運転台数（定流量＋変流量）
-
-    #                 for rr in range(0, int(MxPUMPNum[iL])):
+                    if (resultJson["PUMP"][pump_name]["Qps_hourly"][dd][hh] > 0) and (inputdata["PUMP"][pump_name]["Qpsr"] > 0):  # ゼロ割でNaNになっている値を飛ばす
                         
-    #                     if (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "無") or \
-    #                         (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
+                        if resultJson["PUMP"][pump_name]["load_ratio"][dd][hh] > 0:
 
-    #                         Qtmp_CWV += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["Qpsr"]
-    #                         numVWV = numVWV -1
+                            # 出現時間マトリックスを作成
+                            resultJson["PUMP"][pump_name]["mtx_L"][dd][hh] = count_Matrix(resultJson["PUMP"][pump_name]["load_ratio"][dd][hh],mxL)
 
 
-    #                 # 制御を加味した消費エネルギー MxPUMPPower [kW]
-    #                 for rr in range(0, int(MxPUMPNum[iL])):
+    if DEBUG: # pragma: no cover
 
-    #                     if (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "無") or \
-    #                         (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
+        for pump_name in inputdata["PUMP"]:
 
-    #                         # 変流量制御の効果率
-    #                         PUMPvwvfac = np.ones(divL)
-    #                         if aveL[iL] > 1.0:
-    #                             PUMPvwvfac[iL] = 1.2
+            # ポンプ負荷率のグラフ化
+            mf.hourlyplot( resultJson["PUMP"][pump_name]["load_ratio"] , "ポンプ負荷率： "+pump_name, "b", "時刻別ポンプ負荷率")
+
+
+
+    ##----------------------------------------------------------------------------------
+    ## 流量制御方式によって定まる係数（解説書 2.6.7）
+    ##----------------------------------------------------------------------------------
+
+    for pump_name in inputdata["PUMP"]:
+
+        for unit_id, unit_configure in enumerate(inputdata["PUMP"][pump_name]["SecondaryPump"]):
+
+            if unit_configure["ContolType"] in FLOWCONTROL.keys():
+
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a4"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a3"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a2"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a1"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a0"]
+
+            elif unit_configure["ContolType"] == "無":
+
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = 0
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = 0
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = 0
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = 0
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = 1
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["MinOpeningRate"] = 100
+
+            else:
+                raise Exception('制御方式が不正です')
+
+
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプのエネルギー消費量（解説書 2.6.8）
+    ##----------------------------------------------------------------------------------
+
+    for pump_name in inputdata["PUMP"]:
+
+        MxPUMPNum = np.zeros(divL)
+        MxPUMPPower = np.zeros(divL)
+        PUMPvwvfac = np.ones(divL)
+
+        if inputdata["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
+
+            if inputdata["PUMP"][pump_name]["isStagingControl"] == "無":    # 台数制御なし
+            
+                # 運転台数
+                MxPUMPNum = np.ones(divL) * inputdata["PUMP"][pump_name]["number_of_pumps"]
+
+                # 流量制御方式
+                if inputdata["PUMP"][pump_name]["ContolType"] == "すべて変流量制御である":  # 全台VWVであれば
+
+                    for iL in range(0,divL):
+
+                        # 最小負荷率による下限を設ける。
+                        if aveL[iL] < (inputdata["PUMP"][pump_name]["MinOpeningRate"] /100):
+                            tmpL = inputdata["PUMP"][pump_name]["MinOpeningRate"] / 100
+                        else:
+                            tmpL = aveL[iL]
+
+                        # VWVの効果率曲線(1番目の特性を代表して使う)
+                        PUMPvwvfac = np.ones(divL)
+                        if aveL[iL] > 1.0:
+                            PUMPvwvfac[iL] = 1.2
+                        else:
+                            PUMPvwvfac[iL] = \
+                                inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a4"] * tmpL ** 4 + \
+                                inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a3"] * tmpL ** 3 + \
+                                inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a2"] * tmpL ** 2 + \
+                                inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a1"] * tmpL + \
+                                inputdata["PUMP"][pump_name]["SecondaryPump"][0]["a0"]
+
+                else: # 全台VWVでなければ、定流量とみなす。
+                    PUMPvwvfac = np.ones(divL)
+                    PUMPvwvfac[divL] = 1.2
+
+
+                # 消費電力（部分負荷特性×定格消費電力）[kW]
+                MxPUMPPower = PUMPvwvfac * inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"]
+
+
+            elif inputdata["PUMP"][pump_name]["isStagingControl"] == "有":   # 台数制御あり
+
+                for iL in range(0,divL):
+
+                    # 負荷区分 iL における処理負荷 [kW]
+                    Qpsr_iL  = inputdata["PUMP"][pump_name]["Qpsr"] * aveL[iL]
+
+                    # 運転台数 MxPUMPNum
+                    for rr in range(0, inputdata["PUMP"][pump_name]["number_of_pumps"]):
+
+                        # 1台～rr台までの最大能力合計値
+                        tmpQmax = np.sum( inputdata["PUMP"][pump_name]["Qpsr_list"][0:rr+1] )
+
+                        if Qpsr_iL < tmpQmax:
+                            break
+                    
+                    MxPUMPNum[iL] = rr+1   # pythonのインデックスと実台数は「1」ずれることに注意。
+
+
+                    # 定流量ポンプの処理熱量合計、VWVポンプの台数
+                    Qtmp_CWV = 0
+                    numVWV = MxPUMPNum[iL]  # MxPUMPNum[iL]は、負荷率帯 iL のときの運転台数（定流量＋変流量）
+
+                    for rr in range(0, int(MxPUMPNum[iL])):
+                        
+                        if (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "無") or \
+                            (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
+
+                            Qtmp_CWV += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["Qpsr"]
+                            numVWV = numVWV -1
+
+
+                    # 制御を加味した消費エネルギー MxPUMPPower [kW]
+                    for rr in range(0, int(MxPUMPNum[iL])):
+
+                        if (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "無") or \
+                            (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
+
+                            # 変流量制御の効果率
+                            PUMPvwvfac = np.ones(divL)
+                            if aveL[iL] > 1.0:
+                                PUMPvwvfac[iL] = 1.2
                             
-    #                         if aveL[iL] > 1.0:
-    #                             MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
-    #                         else:
-    #                             MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
+                            if aveL[iL] > 1.0:
+                                MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
+                            else:
+                                MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
 
 
-    #                     else:
+                        else:
 
-    #                         # 変流量ポンプjの負荷率 [-]
-    #                         tmpL = ( (Qpsr_iL - Qtmp_CWV)/numVWV ) / inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["Qpsr"]
+                            # 変流量ポンプjの負荷率 [-]
+                            tmpL = ( (Qpsr_iL - Qtmp_CWV)/numVWV ) / inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["Qpsr"]
 
-    #                         # 最小流量の制限
-    #                         if tmpL < inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100:
-    #                             tmpL = inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100
+                            # 最小流量の制限
+                            if tmpL < inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100:
+                                tmpL = inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100
                             
-    #                         # 変流量制御による省エネ効果
-    #                         PUMPvwvfac = np.ones(divL)
-    #                         if aveL[iL] > 1.0:
-    #                             PUMPvwvfac[iL] = 1.2
-    #                         else:
-    #                             PUMPvwvfac[iL] = \
-    #                                 inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a4"] * tmpL ** 4 + \
-    #                                 inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a3"] * tmpL ** 3 + \
-    #                                 inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a2"] * tmpL ** 2 + \
-    #                                 inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a1"] * tmpL + \
-    #                                 inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a0"]
+                            # 変流量制御による省エネ効果
+                            PUMPvwvfac = np.ones(divL)
+                            if aveL[iL] > 1.0:
+                                PUMPvwvfac[iL] = 1.2
+                            else:
+                                PUMPvwvfac[iL] = \
+                                    inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a4"] * tmpL ** 4 + \
+                                    inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a3"] * tmpL ** 3 + \
+                                    inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a2"] * tmpL ** 2 + \
+                                    inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a1"] * tmpL + \
+                                    inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["a0"]
 
-    #                         MxPUMPPower[iL] +=  inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
-
-
-    #     resultJson["PUMP"][pump_name]["MxPUMPNum"]   = MxPUMPNum
-    #     resultJson["PUMP"][pump_name]["MxPUMPPower"] = MxPUMPPower
+                            MxPUMPPower[iL] +=  inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプ群ごとの消費電力（解説書 2.6.8）
-    # ##----------------------------------------------------------------------------------
-
-    # for pump_name in inputdata["PUMP"]:
-
-    #     for dd in range(0,365):
-
-    #         if resultJson["PUMP"][pump_name]["TdPUMP"][dd] > 0:
-
-    #             resultJson["PUMP"][pump_name]["E_pump_day"][dd] = \
-    #                 resultJson["PUMP"][pump_name]["MxPUMPPower"][ int(resultJson["PUMP"][pump_name]["LdPUMP"][dd])-1 ] / 1000 * \
-    #                 resultJson["PUMP"][pump_name]["TdPUMP"][dd]
+        resultJson["PUMP"][pump_name]["MxPUMPNum"]   = MxPUMPNum
+        resultJson["PUMP"][pump_name]["MxPUMPPower"] = MxPUMPPower
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプ群全体の年間一次エネルギー消費量（解説書 2.6.10）
-    # ##----------------------------------------------------------------------------------
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ群ごとの消費電力（解説書 2.6.8）
+    ##----------------------------------------------------------------------------------
 
-    # resultJson["ENERGY"]["E_pump"] = 0
-    # resultJson["ENERGY"]["E_pump_MWh_day"] = np.zeros(365)
+    for pump_name in inputdata["PUMP"]:
 
-    # for pump_name in inputdata["PUMP"]:
+        for dd in range(0,365):
+            for hh in range(0,24):
 
-    #     resultJson["ENERGY"]["E_pump"] += np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
+                if resultJson["PUMP"][pump_name]["Qps_hourly"][dd][hh] > 0:
 
-    #     resultJson["ENERGY"]["E_pump_MWh_day"] += resultJson["PUMP"][pump_name]["E_pump_day"]
+                    resultJson["PUMP"][pump_name]["E_pump_hourly"][dd][hh] = \
+                        resultJson["PUMP"][pump_name]["MxPUMPPower"][ int(resultJson["PUMP"][pump_name]["mtx_L"][dd][hh])-1 ] / 1000 
+
+
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ群全体の年間一次エネルギー消費量（解説書 2.6.10）
+    ##----------------------------------------------------------------------------------
+
+    resultJson["ENERGY"]["E_pump"] = 0
+    resultJson["ENERGY"]["E_pump_MWh_day"] = np.zeros(365)
+
+    for pump_name in inputdata["PUMP"]:
+
+        for dd in range(0,365):
+            for hh in range(0,24):
+
+                resultJson["PUMP"][pump_name]["E_pump"] += resultJson["PUMP"][pump_name]["E_pump_hourly"][dd][hh]
+
+                # 運転時間の合計 h
+                resultJson["AHU"][ahu_name]["Tahu_total"] += 1
+                
+                resultJson["ENERGY"]["E_pump"] += resultJson["PUMP"][pump_name]["E_pump_hourly"][dd][hh]
+                resultJson["ENERGY"]["E_pump_MWh_day"][dd] += resultJson["PUMP"][pump_name]["E_pump_hourly"][dd][hh]
     
-    #     resultJson["PUMP"][pump_name]["TcPUMP"]  = np.sum(resultJson["PUMP"][pump_name]["TdPUMP"], 0)
-    #     resultJson["PUMP"][pump_name]["MxPUMPE"]  = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
+
+    print('二次ポンプ群のエネルギー消費量計算完了')
 
 
-    # print('二次ポンプ群のエネルギー消費量計算完了')
+    if DEBUG: # pragma: no cover
+
+        for ahu_name in inputdata["AirHandlingSystem"]:
+
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["Qahu_remainC"] , "未処理負荷（冷房）： "+ahu_name, "b", "未処理負荷（冷房）")
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["Qahu_remainH"] , "未処理負荷（暖房）： "+ahu_name, "b", "未処理負荷（暖房）")
 
 
-    # if DEBUG: # pragma: no cover
+        for pump_name in inputdata["PUMP"]:
 
-    #     for ahu_name in inputdata["AirHandlingSystem"]:
+            mf.hourlyplot( resultJson["PUMP"][pump_name]["E_pump_hourly"] , "ポンプ消費電力： "+pump_name, "b", "時刻別ポンプ消費電力")
 
-    #         print( f'--- 空調機群名 {ahu_name} ---')
-
-    #         print( f'未処理負荷（冷房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainC"])} MJ' )
-    #         print( f'未処理負荷（暖房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainH"])} MJ' )
-
-    #     for pump_name in inputdata["PUMP"]:
-
-    #         print( f'--- 二次ポンプ群名 {pump_name} ---')
-
-    #         print( f'二次ポンプ群に加算されるファン発熱量 Qpsahu_fan: {np.sum(resultJson["PUMP"][pump_name]["Qpsahu_fan"],0)}' )
-    #         print( f'二次ポンプ群の負荷 Qps: {np.sum(resultJson["PUMP"][pump_name]["Qps"],0)}' )
-    #         print( f'二次ポンプ群の運転時間 Tps: {np.sum(resultJson["PUMP"][pump_name]["Tps"],0)}' )
-    #         print( f'二次ポンプ群の電力消費量 E_pump_day: {np.sum(resultJson["PUMP"][pump_name]["E_pump_day"],0)}' )
-        
-    #     print( f'二次ポンプ群の年間一次エネルギー消費量 E_pump: {resultJson["ENERGY"]["E_pump"]}' )
+            print( "----" + pump_name + "----")
+            print(resultJson["PUMP"][pump_name]["E_pump"])
 
 
 
