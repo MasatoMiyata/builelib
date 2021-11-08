@@ -1195,6 +1195,9 @@ def calc_energy(inputdata, DEBUG = False):
             "E_fan_h_day": np.zeros(365),      # 空調機群のエネルギー消費量（暖房）
             "E_AHUaex_day": np.zeros(365),     # 全熱交換器のエネルギー消費量
             
+            "E_fan_hourly" : np.zeros((365,24)), # 送風機の時刻別エネルギー消費量 [MWh]
+            "E_aex_hourly" : np.zeros((365,24)), # 全熱交換器の時刻別エネルギー消費量 [MWh]
+
             "TdAHUc_total": np.zeros(365),     # 空調機群の冷房運転時間の合計
             "TdAHUh_total": np.zeros(365),     # 空調機群の暖房運転時間の合計
 
@@ -1240,10 +1243,13 @@ def calc_energy(inputdata, DEBUG = False):
                 "heating_for_room" : np.zeros(365), # 空調機群の暖房運転時間（室負荷が冷房要求である場合）
             },
             "load_ratio": np.zeros((365,24)),       # 時刻別の負荷率
+            "mtx_L": np.zeros((365,24)),       # 時刻別の負荷率マトリックス番号
             "TcAHU": 0,
             "ThAHU": 0,
             "MxAHUcE": 0,
-            "MxAHUhE": 0
+            "MxAHUhE": 0,
+            "Eahu_total" : 0,   # 消費電力の合計 [h]
+            "Tahu_total" : 0    # 運転時間の合計 [h]
         }
 
 
@@ -1463,77 +1469,8 @@ def calc_energy(inputdata, DEBUG = False):
         # 運転スケジュールの和が「1以上（どこか一部屋は動いている）」であれば、空調機は稼働しているとする。
         resultJson["AHU"][ahu_name]["schedule"][   resultJson["AHU"][ahu_name]["schedule"] > 1   ] = 1
 
-        # 空調機群の日積算運転時間（冷暖合計）
-        resultJson["AHU"][ahu_name]["Tahu_total"] = np.sum(resultJson["AHU"][ahu_name]["schedule"], 1)
-
-        # 空調機の運転モード と　外気エンタルピー
-        if "終日" in resultJson["AHU"][ahu_name]["day_mode"]: # 一つでも「終日」があれば
-            resultJson["AHU"][ahu_name]["day_mode"] = "終日"
-            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave
-
-        elif resultJson["AHU"][ahu_name]["day_mode"].count("昼") == len(resultJson["AHU"][ahu_name]["day_mode"]): # 全て「昼」であれば
-            resultJson["AHU"][ahu_name]["day_mode"] = "昼"
-            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_day
-
-        elif resultJson["AHU"][ahu_name]["day_mode"].count("夜") == len(resultJson["AHU"][ahu_name]["day_mode"]): # 全て夜であれば
-            resultJson["AHU"][ahu_name]["day_mode"] = "夜"
-            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ngt
-
-        else: # 「昼」と「夜」が混在する場合は「終日とする。
-            resultJson["AHU"][ahu_name]["day_mode"]  = "終日"
-            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave
-
         # 時刻別の外気エンタルピー
         resultJson["AHU"][ahu_name]["Hoa_hourly"] = Hoa_hourly
-
-
-        # 日別に運転時間を「冷房」と「暖房」に振り分ける。
-        for dd in range(0,365):
-
-            if resultJson["AHU"][ahu_name]["Tahu_total"][dd] == 0:
-
-                # 日空調時間が0であれば、冷暖房空調時間は0とする。
-                resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = 0
-                resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] = 0
-
-            else:
-
-                if (resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd] == 0) and \
-                    (resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd] == 0): # 外調機を想定（空調運転時間は0より大きいが、Qroomが0である場合）
-
-                    # 外調機の場合は「冷房側」に運転時間を割り当てる。
-                    resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]   
-                    resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] = 0
-            
-                elif resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd] == 0:  # 暖房要求しかない場合。
-
-                    resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = 0
-                    resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
-        
-                elif resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd] == 0:  # 冷房要求しかない場合。
-
-                    resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
-                    resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] = 0
-
-                else: # 冷房要求と暖房要求の両方が発生する場合
-
-                    if abs(resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd]) < abs(resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd]):
-                        
-                        # 暖房負荷の方が大きい場合
-                        ratio = abs(resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd]) / \
-                            ( abs(resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd]) + abs(resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd]) )
-
-                        resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = math.ceil( resultJson["AHU"][ahu_name]["Tahu_total"][dd] * ratio )
-                        resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]
-
-                    else:
-
-                        # 冷房負荷の方が大きい場合
-                        ratio = abs(resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd]) / \
-                            ( abs(resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd]) + abs(resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd]) )
-
-                        resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] = math.ceil( resultJson["AHU"][ahu_name]["Tahu_total"][dd] * ratio )
-                        resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd] - resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]
 
 
     ##----------------------------------------------------------------------------------
@@ -1818,6 +1755,9 @@ def calc_energy(inputdata, DEBUG = False):
                             resultJson["AHU"][ahu_name]["load_ratio"][dd][hh] = \
                                 (-1) * resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh]*1000/3600 / inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]
 
+                        # 負荷率帯マトリックス
+                        resultJson["AHU"][ahu_name]["mtx_L"][dd][hh] = count_Matrix(resultJson["AHU"][ahu_name]["load_ratio"][dd][hh], mxL)
+
 
                     # 冷暖同時供給が「無」である場合（季節により、冷却コイル負荷か加熱コイル負荷のどちらか一方を処理する）
                     elif inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "無":  
@@ -1841,6 +1781,10 @@ def calc_energy(inputdata, DEBUG = False):
                             else:
                                 resultJson["AHU"][ahu_name]["load_ratio"][dd][hh] = 0.01
 
+                        # 負荷率帯マトリックス
+                        resultJson["AHU"][ahu_name]["mtx_L"][dd][hh] = count_Matrix(resultJson["AHU"][ahu_name]["load_ratio"][dd][hh], mxL)
+
+
 
     if DEBUG: # pragma: no cover
 
@@ -1850,248 +1794,168 @@ def calc_energy(inputdata, DEBUG = False):
             mf.hourlyplot( resultJson["AHU"][ahu_name]["load_ratio"] , "空調負荷率： "+ahu_name, "b", "時刻別空調負荷")
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 風量制御方式によって定まる係数（解説書 2.5.7）
-    # ##----------------------------------------------------------------------------------
+    ##----------------------------------------------------------------------------------
+    ## 風量制御方式によって定まる係数（解説書 2.5.7）
+    ##----------------------------------------------------------------------------------
 
-    # ## 搬送系制御に関する係数
+    ## 搬送系制御に関する係数
 
-    # for ahu_name in inputdata["AirHandlingSystem"]:
+    for ahu_name in inputdata["AirHandlingSystem"]:
 
-    #     for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
 
-    #         # 初期化
-    #         inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"] = np.ones(len(aveL))
+            # 初期化
+            inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"] = np.ones(len(aveL))
                 
-    #         # 係数の取得
-    #         if unit_configure["FanControlType"] in FLOWCONTROL.keys():
+            # 係数の取得
+            if unit_configure["FanControlType"] in FLOWCONTROL.keys():
                 
-    #             a4 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a4"]
-    #             a3 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a3"]
-    #             a2 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a2"]
-    #             a1 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a1"]
-    #             a0 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a0"]
+                a4 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a4"]
+                a3 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a3"]
+                a2 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a2"]
+                a1 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a1"]
+                a0 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a0"]
 
-    #             if unit_configure["FanMinOpeningRate"] == None:
-    #                 Vmin = 1
-    #             else:
-    #                 Vmin = unit_configure["FanMinOpeningRate"]/100
+                if unit_configure["FanMinOpeningRate"] == None:
+                    Vmin = 1
+                else:
+                    Vmin = unit_configure["FanMinOpeningRate"]/100
 
-    #         elif unit_configure["FanControlType"] == "無":
+            elif unit_configure["FanControlType"] == "無":
 
-    #             a4 = 0
-    #             a3 = 0
-    #             a2 = 0
-    #             a1 = 0
-    #             a0 = 1
-    #             Vmin = 1
+                a4 = 0
+                a3 = 0
+                a2 = 0
+                a1 = 0
+                a0 = 1
+                Vmin = 1
 
-    #         else:
-    #             raise Exception('制御方式が不正です')
+            else:
+                raise Exception('制御方式が不正です')
 
+            # 負荷率帯毎のエネルギー消費量を算出
+            for iL in range(0,len(aveL)):
+                if aveL[iL] > 1:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = 1.2
+                elif aveL[iL] == 0:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = 0
+                elif aveL[iL] < Vmin:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = \
+                        a4 * (Vmin)**4 + \
+                        a3 * (Vmin)**3 + \
+                        a2 * (Vmin)**2 + \
+                        a1 * (Vmin)**1 + \
+                        a0    
+                else:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = \
+                        a4 * (aveL[iL])**4 + \
+                        a3 * (aveL[iL])**3 + \
+                        a2 * (aveL[iL])**2 + \
+                        a1 * (aveL[iL])**1 + \
+                        a0    
 
-    #         # 負荷率帯毎のエネルギー消費量を算出
-    #         for iL in range(0,len(aveL)):
-    #             if aveL[iL] > 1:
-    #                 inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = 1.2
-    #             elif aveL[iL] == 0:
-    #                 inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = 0
-    #             elif aveL[iL] < Vmin:
-    #                 inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = \
-    #                     a4 * (Vmin)**4 + \
-    #                     a3 * (Vmin)**3 + \
-    #                     a2 * (Vmin)**2 + \
-    #                     a1 * (Vmin)**1 + \
-    #                     a0    
-    #             else:
-    #                 inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = \
-    #                     a4 * (aveL[iL])**4 + \
-    #                     a3 * (aveL[iL])**3 + \
-    #                     a2 * (aveL[iL])**2 + \
-    #                     a1 * (aveL[iL])**1 + \
-    #                     a0    
+    if DEBUG: # pragma: no cover
 
-    # if DEBUG: # pragma: no cover
+        for ahu_name in inputdata["AirHandlingSystem"]:
+            print( f'--- 空調機群名 {ahu_name} ---')
+            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+                print( f'--- {unit_id+1} 台目の送風機 ---')
+                print(f'負荷率帯毎のエネルギー消費量 energy_consumption_ratio {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"]}')
 
-    #     for ahu_name in inputdata["AirHandlingSystem"]:
-    #         print( f'--- 空調機群名 {ahu_name} ---')
-    #         for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-    #             print( f'--- {unit_id+1} 台目の送風機 ---')
-    #             print(f'負荷率帯毎のエネルギー消費量 energy_consumption_ratio {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"]}')
+    ##----------------------------------------------------------------------------------
+    ## 送風機単体の定格消費電力（解説書 2.5.8）
+    ##----------------------------------------------------------------------------------
 
+    for ahu_name in inputdata["AirHandlingSystem"]:
 
-    # ##----------------------------------------------------------------------------------
-    # ## 送風機単体の定格消費電力（解説書 2.5.8）
-    # ##----------------------------------------------------------------------------------
+        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
 
-    # for ahu_name in inputdata["AirHandlingSystem"]:
+            inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"] = 0
 
-    #     for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+            if unit_configure["FanPowerConsumption"] != None:
 
-    #         inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"] = 0
+                # 送風機の定格消費電力 kW = 1台あたりの消費電力 kW × 台数
+                inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"] = \
+                    unit_configure["FanPowerConsumption"] * unit_configure["Number"]
 
-    #         if unit_configure["FanPowerConsumption"] != None:
-
-    #             # 送風機の定格消費電力 kW = 1台あたりの消費電力 kW × 台数
-    #             inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"] = \
-    #                 unit_configure["FanPowerConsumption"] * unit_configure["Number"]
-
-    #         if DEBUG: # pragma: no cover
-    #             print( f'--- 空調機群名 {ahu_name} ---')
-    #             print( f'送風機単体の定格消費電力: {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"]}')
+            if DEBUG: # pragma: no cover
+                print( f'--- 空調機群名 {ahu_name} ---')
+                print( f'送風機単体の定格消費電力: {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"]}')
 
                     
-    # ##----------------------------------------------------------------------------------
-    # ## 送風機の消費電力 （解説書 2.5.9）
-    # ##----------------------------------------------------------------------------------
+    ##----------------------------------------------------------------------------------
+    ## 送風機の消費電力 （解説書 2.5.9）
+    ##----------------------------------------------------------------------------------
 
-    # # 空調機群毎に、負荷率帯とエネルギー消費量[kW]の関係を算出
-    # for ahu_name in inputdata["AirHandlingSystem"]:
+    # 空調機群毎に、負荷率帯とエネルギー消費量[kW]の関係を算出
+    for ahu_name in inputdata["AirHandlingSystem"]:
 
-    #     for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
 
-    #         for iL in range(0,len(aveL)):
+            for iL in range(0,len(aveL)):
 
-    #             # 各負荷率帯における消費電力（制御の効果込み） [kW]
-    #             resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] += \
-    #                 unit_configure["energy_consumption_ratio"][iL] * unit_configure["FanPowerConsumption_total"]
+                # 各負荷率帯における消費電力（制御の効果込み） [kW]
+                resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] += \
+                    unit_configure["energy_consumption_ratio"][iL] * unit_configure["FanPowerConsumption_total"]
 
-    #         if DEBUG: # pragma: no cover
-    #             print( f'--- 空調機群名 {ahu_name} ---')
-    #             print( f'負荷率帯別の送風機消費電力: \n {resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]}')
-
-    # ##----------------------------------------------------------------------------------
-    # ## 全熱交換器の消費電力 （解説書 2.5.11）
-    # ##----------------------------------------------------------------------------------
-
-    # for ahu_name in inputdata["AirHandlingSystem"]:
-    #     for dd in range(0,365):
-
-    #         # 冷房負荷or暖房負荷が発生していれば、全熱交換器は動いたとみなす。
-    #         if (resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd] > 0) or \
-    #             (resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd] > 0) or \
-    #             (resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd] > 0) or \
-    #             (resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] > 0):
-
-    #             # 全熱交換器の消費電力量 MWh = 運転時間 h × 消費電力 kW
-    #             resultJson["AHU"][ahu_name]["E_AHUaex_day"][dd] += \
-    #                 resultJson["AHU"][ahu_name]["Tahu_total"][dd] * \
-    #                 inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerPowerConsumption"] / 1000
+            if DEBUG: # pragma: no cover
+                print( f'--- 空調機群名 {ahu_name} ---')
+                print( f'負荷率帯別の送風機消費電力: \n {resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]}')
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 空調機群の年間一次エネルギー消費量 （解説書 2.5.12）
-    # ##----------------------------------------------------------------------------------
+    ##----------------------------------------------------------------------------------
+    ## 全熱交換器の消費電力 （解説書 2.5.11）
+    ##----------------------------------------------------------------------------------
 
-    # for ahu_name in inputdata["AirHandlingSystem"]:
-    #     for dd in range(0,365):
+    for ahu_name in inputdata["AirHandlingSystem"]:
+        for dd in range(0,365):
+            for hh in range(0,24):
 
-    #         ##-----------------------------------
-    #         ## 室負荷が正（冷房要求）である場合：
-    #         ##-----------------------------------
-    #         if resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd] > 0:   # 空調負荷が正（冷却コイル負荷）である場合
-
-    #             # 負荷率帯番号
-    #             iL = int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd] - 1)
-
-    #             # 空調負荷が正（冷却コイル負荷）の時の送風機等の消費電力　MWh
-    #             resultJson["AHU"][ahu_name]["E_fan_c_day"][dd] += \
-    #                 resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] / 1000 * resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
-
-    #             # 運転時間の合計 h
-    #             resultJson["AHU"][ahu_name]["TdAHUc_total"][dd] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
-
-    #         elif resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd] > 0:  # 空調負荷が負（加熱コイル負荷）である場合
-
-    #             # 負荷率帯番号
-    #             iL = int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd] - 1)
-
-    #             # 空調負荷が負（加熱コイル負荷）の時の送風機等の消費電力　MWh
-    #             resultJson["AHU"][ahu_name]["E_fan_h_day"][dd] += \
-    #                 resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] / 1000 * \
-    #                 resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
-
-    #             # 運転時間の合計 h
-    #             resultJson["AHU"][ahu_name]["TdAHUh_total"][dd] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
+                if resultJson["AHU"][ahu_name]["schedule"][dd][hh] > 0:  # 空調機が稼働する場合
+    
+                    # 全熱交換器の消費電力量 MWh
+                    resultJson["AHU"][ahu_name]["E_aex_hourly"][dd][hh] += \
+                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerPowerConsumption"] / 1000
 
 
-    #         ##-----------------------------------
-    #         ## 室負荷が負（暖房要求）である場合：
-    #         ##-----------------------------------
-    #         if resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd] > 0:   # 空調負荷が正（冷却コイル負荷）である場合
+    ##----------------------------------------------------------------------------------
+    ## 空調機群の年間一次エネルギー消費量 （解説書 2.5.12）
+    ##----------------------------------------------------------------------------------
 
-    #             # 負荷率帯番号
-    #             iL = int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd] - 1)
+    for ahu_name in inputdata["AirHandlingSystem"]:
 
-    #             # 空調負荷が正（冷却コイル負荷）の時の送風機等の消費電力　MWh
-    #             resultJson["AHU"][ahu_name]["E_fan_c_day"][dd] += \
-    #                 resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] / 1000 * resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
+        for dd in range(0,365):
+            for hh in range(0,24):
 
-    #             # 運転時間の合計 h
-    #             resultJson["AHU"][ahu_name]["TdAHUc_total"][dd] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
+                if resultJson["AHU"][ahu_name]["mtx_L"][dd][hh] > 0:   # 空調負荷が正（冷却コイル負荷）である場合
 
+                    # 負荷率帯番号
+                    iL = int(resultJson["AHU"][ahu_name]["mtx_L"][dd][hh] - 1)
 
-    #         elif resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] > 0:   # 空調負荷が負（加熱コイル負荷）である場合
+                    # 送風機等の消費電力　MWh
+                    resultJson["AHU"][ahu_name]["E_fan_hourly"][dd][hh] += \
+                        resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] / 1000
 
-    #             # 負荷率帯番号
-    #             iL = int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] - 1)
-
-    #             # 空調負荷が負（加熱コイル負荷）の時の送風機等の消費電力　MWh
-    #             resultJson["AHU"][ahu_name]["E_fan_h_day"][dd] += \
-    #                 resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] / 1000 * \
-    #                 resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
-
-    #             # 運転時間の合計 h
-    #             resultJson["AHU"][ahu_name]["TdAHUh_total"][dd] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
+                    # 送風機と全熱交換器の消費電力の合計 MWh
+                    resultJson["AHU"][ahu_name]["Eahu_total"] += resultJson["AHU"][ahu_name]["E_fan_hourly"][dd][hh] + resultJson["AHU"][ahu_name]["E_aex_hourly"][dd][hh]
+                    # 運転時間の合計 h
+                    resultJson["AHU"][ahu_name]["Tahu_total"] += 1
 
 
-    #         ##------------------------
-    #         # 空調負荷が正（冷却コイル負荷）のときと負（加熱コイル負荷）のときを合計する。
-    #         ##------------------------            
-    #         resultJson["AHU"][ahu_name]["E_fan_day"][dd] = \
-    #             resultJson["AHU"][ahu_name]["E_fan_c_day"][dd] + resultJson["AHU"][ahu_name]["E_fan_h_day"][dd]
+    print('空調機群のエネルギー消費量計算完了')
 
 
-    # # 合計
+    if DEBUG: # pragma: no cover
 
-    # resultJson["ENERGY"]["E_fan_MWh_day"] = np.zeros(365)
+        for ahu_name in inputdata["AirHandlingSystem"]:
 
-    # for ahu_name in inputdata["AirHandlingSystem"]:
+            # 外気負荷のグラフ化
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["E_fan_hourly"] , "送風機の消費電力： "+ahu_name, "b", "時刻別送風機消費電力")
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["E_aex_hourly"] , "全熱交換器の消費電力： "+ahu_name, "b", "時刻別全熱交換器消費電力")
 
-    #     # 空調機群（送風機）のエネルギー消費量 MWh
-    #     resultJson["ENERGY"]["E_fan"] += np.sum(resultJson["AHU"][ahu_name]["E_fan_day"],0)
-
-    #     # 空調機群（全熱交換器）のエネルギー消費量 MWh
-    #     resultJson["ENERGY"]["E_aex"] += np.sum(resultJson["AHU"][ahu_name]["E_AHUaex_day"],0)
-
-    #     # 空調機群（送風機+全熱交換器）のエネルギー消費量 MWh/day
-    #     resultJson["ENERGY"]["E_fan_MWh_day"] += resultJson["AHU"][ahu_name]["E_fan_day"] + \
-    #         resultJson["AHU"][ahu_name]["E_AHUaex_day"]
-
-    #     # ファン発熱量計算用
-    #     resultJson["AHU"][ahu_name]["TcAHU"] = np.sum(resultJson["AHU"][ahu_name]["TdAHUc_total"],0)
-    #     resultJson["AHU"][ahu_name]["ThAHU"] = np.sum(resultJson["AHU"][ahu_name]["TdAHUh_total"],0)
-    #     resultJson["AHU"][ahu_name]["MxAHUcE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_c_day"],0)
-    #     resultJson["AHU"][ahu_name]["MxAHUhE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_h_day"],0)
-
-
-    # print('空調機群のエネルギー消費量計算完了')
-
-
-    # if DEBUG: # pragma: no cover
-
-    #     for ahu_name in inputdata["AirHandlingSystem"]:
-
-    #         print( f'--- 空調機群名 {ahu_name} ---')
-    #         print( f'空調機群運転時間（冷房） TcAHU {np.sum(resultJson["AHU"][ahu_name]["TcAHU"],0)}' )
-    #         print( f'空調機群運転時間（暖房） ThAHU {np.sum(resultJson["AHU"][ahu_name]["ThAHU"],0)}' )
-
-    #         print( f'空調機群エネルギー消費量（冷房） MxAHUcE {np.sum(resultJson["AHU"][ahu_name]["MxAHUcE"],0)}' )
-    #         print( f'空調機群エネルギー消費量（暖房） MxAHUcE {np.sum(resultJson["AHU"][ahu_name]["MxAHUhE"],0)}' )
-
-    #     print( f'空調機群（送風機）のエネルギー消費量: {resultJson["ENERGY"]["E_fan"]} MWh' )
-    #     print( f'空調機群（全熱交換器）のエネルギー消費量: {resultJson["ENERGY"]["E_aex"]} MWh' )
-
+            print( "----" + ahu_name + "----")
+            print(resultJson["AHU"][ahu_name]["Eahu_total"])
+            print(resultJson["AHU"][ahu_name]["Tahu_total"])
 
 
     # ##----------------------------------------------------------------------------------
