@@ -1201,8 +1201,8 @@ def calc_energy(inputdata, DEBUG = False):
             "TdAHUc_total": np.zeros(365),     # 空調機群の冷房運転時間の合計
             "TdAHUh_total": np.zeros(365),     # 空調機群の暖房運転時間の合計
 
-            "Qahu_remainC": np.zeros(365),     # 空調機群の未処理負荷（冷房）[MJ/day]
-            "Qahu_remainH": np.zeros(365),     # 空調機群の未処理負荷（暖房）[MJ/day]
+            "Qahu_remainC": np.zeros((365,24)),     # 空調機群の未処理負荷（冷房）[MJ/h]
+            "Qahu_remainH": np.zeros((365,24)),     # 空調機群の未処理負荷（暖房）[MJ/h]
 
             "energy_consumption_each_LF": np.zeros(len(aveL)), 
 
@@ -2034,12 +2034,14 @@ def calc_energy(inputdata, DEBUG = False):
 
         resultJson["PUMP"][pump_name] = {
 
-            "Qpsahu_fan":       np.zeros(365),   # ファン発熱量 [MJ/day]
+            "Qpsahu_fan":       np.zeros((365,24)),   # ファン発熱量 [MJ/h]
 
             "pumpTime_Start":   np.zeros(365),
             "pumpTime_Stop":    np.zeros(365),
 
             "Qps": np.zeros(365),  # ポンプ負荷 [MJ/day]
+            "Qps_hourly": np.zeros((365,24)),  # ポンプ負荷 [MJ/h]
+
             "Tps": np.zeros(365),  # ポンプ運転時間 [時間/day]
 
             "schedule": np.zeros((365,24)),  # ポンプ時刻別運転スケジュール
@@ -2119,166 +2121,124 @@ def calc_energy(inputdata, DEBUG = False):
 
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプ負荷（解説書 2.6.1）
-    # ##----------------------------------------------------------------------------------
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ負荷（解説書 2.6.1）
+    ##----------------------------------------------------------------------------------
 
-    # # 未処理負荷の算出
-    # for ahu_name in inputdata["AirHandlingSystem"]:
+    # 未処理負荷の算出
+    for ahu_name in inputdata["AirHandlingSystem"]:
 
-    #     for dd in range(0,365):
+        for dd in range(0,365):
+            for hh in range(0,24):
 
-    #         if ac_mode[dd] == "暖房":  ## 暖房期である場合
+                if ac_mode[dd] == "暖房":  ## 暖房期である場合
 
-    #             # 室負荷が冷房要求である場合において空調負荷が正の値である場合、かつ、冷暖同時供給が無い場合
-    #             if (resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] > 0) and \
-    #                 (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):   
+                    # 空調負荷が正の値である場合、かつ、冷暖同時供給が無い場合
+                    if (resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] > 0) and \
+                        (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):   
 
-    #                 resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += ( resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] )
-    #                 resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] = 0
-
-    #             # 室負荷が暖房要求である場合において空調負荷が正の値である場合、かつ、冷暖同時供給が無い場合
-    #             if (resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] > 0) and \
-    #                 (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):
-
-    #                 resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += ( resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] )
-    #                 resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] = 0
-
-    #         elif (ac_mode[dd] == "冷房") or (ac_mode[dd] == "中間"):
-
-    #             # 室負荷が冷房要求である場合において空調負荷が負の値である場合、かつ、冷暖同時供給が無い場合
-    #             if (resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] < 0) and \
-    #                 (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):   
-
-    #                 resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += (-1)*( resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] )
-    #                 resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] = 0
-
-    #             # 室負荷が暖房要求である場合において空調負荷が負の値である場合、かつ、冷暖同時供給が無い場合
-    #             if (resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] < 0) and \
-    #                 (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):
-
-    #                 resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += (-1)*( resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] )
-    #                 resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] = 0
+                        resultJson["AHU"][ahu_name]["Qahu_remainC"][dd][hh] += ( resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] )
+                        resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] = 0
 
 
-    # # ポンプ負荷の積算
-    # for pump_name in inputdata["PUMP"]:
+                elif (ac_mode[dd] == "冷房") or (ac_mode[dd] == "中間"):
 
-    #     for ahu_name in inputdata["PUMP"][pump_name]["AHU_list"]:
+                    # 空調負荷が負の値である場合、かつ、冷暖同時供給が無い場合
+                    if (resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] < 0) and \
+                        (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):   
 
-    #         for dd in range(0,365):
+                        resultJson["AHU"][ahu_name]["Qahu_remainH"][dd][hh] += (-1)*( resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] )
+                        resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] = 0
 
-    #             if inputdata["PUMP"][pump_name]["mode"] == "cooling":  # 冷水ポンプの場合
+    if DEBUG: # pragma: no cover
 
-    #                 # ファン発熱量 Qpsahu_fan [MJ/day] の算出（解説書 2.5.10）
-    #                 tmpC = 0
-    #                 tmpH = 0
-
-    #                 if inputdata["AirHandlingSystem"][ahu_name]["AHU_type"] == "空調機":
-
-    #                     # 室負荷が冷房要求である場合において空調負荷が正である場合
-    #                     if resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] > 0:
-    #                         tmpC = k_heatup * resultJson["AHU"][ahu_name]["MxAHUcE"] * \
-    #                             resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] / resultJson["AHU"][ahu_name]["TcAHU"] * 3600
-
-    #                     # 室負荷が暖房要求である場合において空調負荷が正である場合
-    #                     if resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] > 0:
-    #                         tmpH = k_heatup * resultJson["AHU"][ahu_name]["MxAHUhE"] * \
-    #                             resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] / resultJson["AHU"][ahu_name]["ThAHU"] * 3600
-
-    #                 resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd] = tmpC + tmpH
+        for ahu_name in inputdata["AirHandlingSystem"]:
+            
+            # 空調負荷率のグラフ化
+            mf.hourlyplot( resultJson["AHU"][ahu_name]["Qahu_remainH"] , "未処理負荷： "+ahu_name, "b", "時刻別未処理負荷：")
 
 
-    #                 ## 日積算ポンプ負荷 Qps [MJ/day] の算出
-    #                 # 室負荷が冷房要求である場合において空調負荷が正である場合
-    #                 if resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] > 0:
-    #                     if resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd] > 0: # 外冷時はファン発熱量足さない ⇒ 小さな負荷が出てしまう
-    #                         if abs(resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] - resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd]) < 1:
-    #                             resultJson["PUMP"][pump_name]["Qps"][dd] += 0
-    #                         else:
-    #                             resultJson["PUMP"][pump_name]["Qps"][dd] += \
-    #                                 resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] - resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd]
-    #                     else:
-    #                         resultJson["PUMP"][pump_name]["Qps"][dd] += \
-    #                             resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] - resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd] + resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd]
+    # ポンプ負荷の積算
+    for pump_name in inputdata["PUMP"]:
 
-    #                 # 室負荷が暖房要求である場合において空調負荷が正である場合
-    #                 if resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] > 0:
-                        
-    #                     resultJson["PUMP"][pump_name]["Qps"][dd] += \
-    #                         resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] - resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd] + resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd]
+        for ahu_name in inputdata["PUMP"][pump_name]["AHU_list"]:
+
+            for dd in range(0,365):
+                for hh in range(0,24):
+
+                    if inputdata["PUMP"][pump_name]["mode"] == "cooling":  # 冷水ポンプの場合
+
+                        # ファン発熱量 Qpsahu_fan [MJ/day] の算出（解説書 2.5.10）
+                        if inputdata["AirHandlingSystem"][ahu_name]["AHU_type"] == "空調機":
+
+                            # ファン発熱量 MWh * 3600 = MJ/h
+                            resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd][hh] = k_heatup * resultJson["AHU"][ahu_name]["E_fan_hourly"][dd][hh] * 3600
 
 
-    #             elif inputdata["PUMP"][pump_name]["mode"] == "heating":
+                        ## 日積算ポンプ負荷 Qps [MJ/h] の算出
 
-    #                 # ファン発熱量 Qpsahu_fan [MJ/day] の算出
-    #                 tmpC = 0
-    #                 tmpH = 0
+                        # 空調負荷が正である場合
+                        if resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] > 0:
 
-    #                 if inputdata["AirHandlingSystem"][ahu_name]["AHU_type"] == "空調機":
+                            if resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd][hh] > 0: # 外冷時はファン発熱量足さない ⇒ 小さな負荷が出てしまう
 
-    #                     # 室負荷が冷房要求である場合の空調負荷が負である場合
-    #                     if resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] < 0:
-    #                         tmpC = k_heatup * resultJson["AHU"][ahu_name]["MxAHUcE"] * \
-    #                             resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] / resultJson["AHU"][ahu_name]["TcAHU"] * 3600
+                                if abs(resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] - resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd][hh]) < 1:
+                                    resultJson["PUMP"][pump_name]["Qps_hourly"][dd][hh] += 0
+                                else:
+                                    resultJson["PUMP"][pump_name]["Qps_hourly"][dd][hh] += \
+                                        resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] - resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd][hh]
+                            else:
 
-    #                     # 室負荷が暖房要求である場合の空調負荷が負である場合
-    #                     if resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] < 0:
-    #                         tmpH = k_heatup * resultJson["AHU"][ahu_name]["MxAHUhE"] * \
-    #                             resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] / resultJson["AHU"][ahu_name]["ThAHU"] * 3600
-
-    #                 resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd] = tmpC + tmpH
+                                resultJson["PUMP"][pump_name]["Qps_hourly"][dd][hh] += \
+                                    resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] - resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd][hh] + \
+                                    resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd][hh]
 
 
-    #                 ## 日積算ポンプ負荷 Qps [MJ/day] の算出<符号逆転させる>
-    #                 # 室負荷が冷房要求である場合において空調負荷が正である場合
-    #                 if resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] < 0:
+                    elif inputdata["PUMP"][pump_name]["mode"] == "heating":
 
-    #                     resultJson["PUMP"][pump_name]["Qps"][dd] += \
-    #                         (-1) * ( resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] + resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd] )
+                        # ファン発熱量 Qpsahu_fan [MJ/day] の算出（解説書 2.5.10）
+                        if inputdata["AirHandlingSystem"][ahu_name]["AHU_type"] == "空調機":
 
-    #                 # 室負荷が暖房要求である場合において空調負荷が正である場合
-    #                 if resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] < 0:
-
-    #                     resultJson["PUMP"][pump_name]["Qps"][dd] += \
-    #                         (-1) * ( resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] + resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd] )
+                            # ファン発熱量 MWh * 3600 = MJ/h
+                            resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd][hh] = k_heatup * resultJson["AHU"][ahu_name]["E_fan_hourly"][dd][hh] * 3600
 
 
-    # ##----------------------------------------------------------------------------------
-    # ## 二次ポンプ群の運転時間（解説書 2.6.2）
-    # ##----------------------------------------------------------------------------------
+                        ## 日積算ポンプ負荷 Qps [MJ/day] の算出<符号逆転させる>
+                        # 室負荷が冷房要求である場合において空調負荷が正である場合
+                        if resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] < 0:
 
-    # for pump_name in inputdata["PUMP"]:
+                            resultJson["PUMP"][pump_name]["Qps_hourly"][dd][hh] += \
+                                (-1) * ( resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] + resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd][hh] )
+
+
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ群の運転時間（解説書 2.6.2）
+    ##----------------------------------------------------------------------------------
+
+    for pump_name in inputdata["PUMP"]:
         
-    #     for ahu_name in inputdata["PUMP"][pump_name]["AHU_list"]:
+        for ahu_name in inputdata["PUMP"][pump_name]["AHU_list"]:
 
-    #         resultJson["PUMP"][ pump_name ]["schedule"] += resultJson["AHU"][ ahu_name ]["schedule"]
+            resultJson["PUMP"][ pump_name ]["schedule"] += resultJson["AHU"][ ahu_name ]["schedule"]
 
-    #     # 運転スケジュールの和が「1以上（接続されている空調機群の1つは動いている）」であれば、二次ポンプは稼働しているとする。
-    #     resultJson["PUMP"][ pump_name ]["schedule"][ resultJson["PUMP"][ pump_name ]["schedule"] > 1 ] = 1
+        # 運転スケジュールの和が「1以上（接続されている空調機群の1つは動いている）」であれば、二次ポンプは稼働しているとする。
+        resultJson["PUMP"][ pump_name ]["schedule"][ resultJson["PUMP"][ pump_name ]["schedule"] > 1 ] = 1
 
-    #     # 日積算運転時間
-    #     resultJson["PUMP"][pump_name]["Tps"] = np.sum(resultJson["PUMP"][ pump_name ]["schedule"],1)
-
-
-    # print('ポンプ負荷計算完了')
+        # 日積算運転時間
+        resultJson["PUMP"][pump_name]["Tps"] = np.sum(resultJson["PUMP"][ pump_name ]["schedule"],1)
 
 
-    # if DEBUG: # pragma: no cover
+    print('ポンプ負荷計算完了')
 
-    #     for ahu_name in inputdata["AirHandlingSystem"]:
 
-    #         print( f'--- 空調機群名 {ahu_name} ---')
+    if DEBUG: # pragma: no cover
 
-    #         print( f'未処理負荷（冷房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainC"])} MJ' )
-    #         print( f'未処理負荷（暖房）: {np.sum(resultJson["AHU"][ahu_name]["Qahu_remainH"])} MJ' )
+        for pump_name in inputdata["PUMP"]:
 
-    #     for pump_name in inputdata["PUMP"]:
+            # ポンプ負荷率のグラフ化
+            mf.hourlyplot( resultJson["PUMP"][pump_name]["Qps_hourly"] , "ポンプ負荷： "+pump_name, "b", "時刻別ポンプ負荷：")
 
-    #         print( f'--- 二次ポンプ群名 {pump_name} ---')
 
-    #         print( f'二次ポンプ負荷 Qps: {np.sum(resultJson["PUMP"][pump_name]["Qps"],0)}' )
-    #         print( f'二次ポンプ運転時間 Tps: {np.sum(resultJson["PUMP"][pump_name]["Tps"],0)}' )
 
 
     # ##----------------------------------------------------------------------------------
