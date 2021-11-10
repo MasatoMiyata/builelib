@@ -1530,12 +1530,12 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     # 熱負荷のグラフ化（確認用）
-    for room_zone_name in inputdata["AirConditioningZone"]:
+    # for room_zone_name in inputdata["AirConditioningZone"]:
 
-        mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHc"], "室負荷（冷房）："+room_zone_name, "b")
-        mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHh"], "室負荷（暖房）："+room_zone_name, "m")
+    #     mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHc"], "室負荷（冷房）："+room_zone_name, "b", "室負荷（冷房）")
+    #     mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHh"], "室負荷（暖房）："+room_zone_name, "m", "室負荷（暖房）")
 
-    plt.show()
+    # plt.show()
 
     ##----------------------------------------------------------------------------------
     ## 空調機群の一次エネルギー消費量（解説書 2.5）
