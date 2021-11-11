@@ -799,9 +799,6 @@ def calc_energy(inputdata, DEBUG = False):
         Heat_OAapp_hourly[room_zone_name]  = roomScheduleOAapp[room_zone_name] * roomHeatGain_OAapp   # 機器からの発熱 （365日分）
 
 
-    print('室負荷計算完了')
-
-
     ##----------------------------------------------------------------------------------
     ## 動的室負荷計算
     ##----------------------------------------------------------------------------------
@@ -815,7 +812,7 @@ def calc_energy(inputdata, DEBUG = False):
         with open('./builelib/heat_load_calculation/heatload_calculation_template.json', 'r', encoding='utf-8') as js:
         # with open('input_non_residential.json', 'r', encoding='utf-8') as js:
             input_heatcalc_template = json.load(js)
-            
+        
         ## 入力ファイルの生成（共通）
         # 地域
         input_heatcalc_template["common"]["region"] = inputdata["Building"]["Region"]
@@ -863,120 +860,14 @@ def calc_energy(inputdata, DEBUG = False):
             input_heatcalc["rooms"][0]["schedule"]["number_of_people"] = np.reshape(Num_of_Person_hourly[room_zone_name],8760) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
 
-            # 床の設定
-            input_heatcalc["rooms"][0]["boundaries"][0] = {
-                "name" : 'floor',
-                "boundary_type" : 'external_general_part',
-                "area": inputdata["AirConditioningZone"][room_zone_name]["zoneArea"],
-                "is_sun_striked_outside": False,
-                "temp_dif_coef": 0,
-                "is_solar_absorbed_inside": True,
-                "general_part_spec" :
-                    {
-                        "outside_emissivity": 0.9,
-                        "outside_solar_absorption": 0.8,
-                        "inside_heat_transfer_resistance": 0.11,
-                        "outside_heat_transfer_resistance": 0.11,
-                        "layers": [
-                            {
-                                "name": 'カーペット類',
-                                "thermal_resistance": 0.0875,
-                                "thermal_capacity": 2.24,
-                            },
-                            {
-                                "name": '鋼',
-                                "thermal_resistance": 0.000066667,
-                                "thermal_capacity": 10.86,
-                            },
-                            {
-                                "name": '非密閉中空層',
-                                "thermal_resistance": 0.086,
-                                "thermal_capacity": 0,
-                            },
-                            {
-                                "name": '普通コンクリート',
-                                "thermal_resistance": 0.107142857,
-                                "thermal_capacity": 289.5,
-                            },
-                            {
-                                "name": '非密閉中空層',
-                                "thermal_resistance": 0.086,
-                                "thermal_capacity": 0,
-                            },
-                            {
-                                "name": 'せっこうボード',
-                                "thermal_resistance": 0.052941176,
-                                "thermal_capacity": 9.27,
-                            },
-                            {
-                                "name": 'ロックウール化粧吸音板',
-                                "thermal_resistance": 0.1875,
-                                "thermal_capacity": 3.0,
-                            },
-                        ],
-                        "solar_shading_part": {
-                            "existence" : False
-                        },
-                    }
-            }
+            # 床の面積（計算対象床面積を入力する）
+            input_heatcalc["rooms"][0]["boundaries"][0]["area"] = \
+                inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
-            # 天井
-            input_heatcalc["rooms"][0]["boundaries"][1] = {
-                "name" : 'ceil',
-                "boundary_type" : 'external_general_part',
-                "area": inputdata["AirConditioningZone"][room_zone_name]["zoneArea"],
-                "is_sun_striked_outside": False,
-                "temp_dif_coef": 0,
-                "is_solar_absorbed_inside": True,
-                "general_part_spec" :
-                    {
-                        "outside_emissivity": 0.9,
-                        "outside_solar_absorption": 0.8,
-                        "inside_heat_transfer_resistance": 0.11,
-                        "outside_heat_transfer_resistance": 0.11,
-                        "layers": [
-                            {
-                                "name": 'ロックウール化粧吸音板',
-                                "thermal_resistance": 0.1875,
-                                "thermal_capacity": 3.0,
-                            },
-                            {
-                                "name": 'せっこうボード',
-                                "thermal_resistance": 0.052941176,
-                                "thermal_capacity": 9.27,
-                            },
+            # 天井の面積（床と同じとする）
+            input_heatcalc["rooms"][0]["boundaries"][1]["area"] = \
+                inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
-                            {
-                                "name": '非密閉中空層',
-                                "thermal_resistance": 0.086,
-                                "thermal_capacity": 0,
-                            },
-                            {
-                                "name": '普通コンクリート',
-                                "thermal_resistance": 0.107142857,
-                                "thermal_capacity": 289.5,
-                            },
-                            {
-                                "name": '非密閉中空層',
-                                "thermal_resistance": 0.086,
-                                "thermal_capacity": 0,
-                            },
-                            {
-                                "name": '鋼',
-                                "thermal_resistance": 0.000066667,
-                                "thermal_capacity": 10.86,
-                            },
-                            {
-                                "name": 'カーペット類',
-                                "thermal_resistance": 0.0875,
-                                "thermal_capacity": 2.24,
-                            },
-                        ],
-                        "solar_shading_part": {
-                            "existence" : False
-                        },
-                    }
-            }
 
             # 外皮があれば
             if room_zone_name in inputdata["EnvelopeSet"]:
@@ -1145,7 +1036,6 @@ def calc_energy(inputdata, DEBUG = False):
                     resultJson["Qroom"][room_zone_name]["Qroom_hourly"][dd][hh] = (-1) * heatload[dd][hh] * 3600/1000000 
                     
 
-
     if DEBUG: # pragma: no cover
 
         # 熱負荷のグラフ化
@@ -1153,6 +1043,8 @@ def calc_energy(inputdata, DEBUG = False):
             mf.hourlyplot(resultJson["Qroom"][room_zone_name]["Qroom_hourly"], "室負荷： "+room_zone_name, "b", "時刻別室負荷")
 
     
+    print('室負荷計算完了')
+
 
     ##----------------------------------------------------------------------------------
     ## 空調機群の一次エネルギー消費量（解説書 2.5）
@@ -3822,7 +3714,7 @@ def calc_energy(inputdata, DEBUG = False):
     # # with open("inputdataJson_AC.json",'w', encoding='utf-8') as fw:
     # #     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
     
-    # plt.show()
+    plt.show()
     return resultJson
 
 

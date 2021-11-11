@@ -1,112 +1,164 @@
 {
-     "common":{
-          "region":6,
-          "is_residential":false
+     "common": {
+          "region": 6,
+          "is_residential": false
      },
-     "rooms":[
+     "rooms": [
           {
-               "name":"Office",
-               "volume":200,
-               "vent":0.0,
-               "schedule":{
-                    "is_upper_temp_limit_set":[
+               "name": "Office",
+               "volume": 0,
+               "vent": 0,
+               "schedule": {
+                    "is_upper_temp_limit_set": [
                          0.0
                     ],
-                    "temperature_upper_limit":[
+                    "temperature_upper_limit": [
                          0.0
                     ],
-                    "is_upper_humidity_limit_set":[
+                    "is_upper_humidity_limit_set": [
                          0.0
                     ],
-                    "relative_humidity_upper_limit":[
+                    "relative_humidity_upper_limit": [
                          0.0
                     ],
-                    "is_lower_temp_limit_set":[
+                    "is_lower_temp_limit_set": [
                          0.0
                     ],
-                    "temperature_lower_limit":[
+                    "temperature_lower_limit": [
                          0.0
                     ],
-                    "is_lower_humidity_limit_set":[
+                    "is_lower_humidity_limit_set": [
                          0.0
                     ],
-                    "relative_humidity_lower_limit":[
+                    "relative_humidity_lower_limit": [
                          0.0
                     ],
-                    "heat_generation_lighting":[
+                    "heat_generation_lighting": [
                          0.0
                     ],
-                    "heat_generation_appliances":[
+                    "heat_generation_appliances": [
                          0.0
                     ],
-                    "heat_generation_cooking":[
+                    "heat_generation_cooking": [
                          0.0
                     ],
-                    "vapor_generation_cooking":[
+                    "vapor_generation_cooking": [
                          0.0
                     ],
-                    "number_of_people":[
+                    "number_of_people": [
                          0.0
                     ],
-                    "local_vent_amount":[
+                    "local_vent_amount": [
                          0.0
                     ]
                },
-               "boundaries":[
+               "boundaries": [
                     {
-                         "name":"床",
-                         "boundary_type":"external_general_part",
-                         "area":50.0,
-                         "is_sun_striked_outside":false,
-                         "temp_dif_coef":0,
-                         "is_solar_absorbed_inside":true,
-                         "general_part_spec":{
-                              "outside_emissivity":0.9,
-                              "outside_solar_absorption":0.8,
-                              "inside_heat_transfer_resistance":0.11,
-                              "outside_heat_transfer_resistance":0.11,
-                              "layers":[
+                         "name": "floor",
+                         "boundary_type": "external_general_part",
+                         "area": 100,
+                         "is_sun_striked_outside": false,
+                         "temp_dif_coef": 0,
+                         "is_solar_absorbed_inside": true,
+                         "general_part_spec": {
+                              "outside_emissivity": 0.9,
+                              "outside_solar_absorption": 0.8,
+                              "inside_heat_transfer_resistance": 0.11,
+                              "outside_heat_transfer_resistance": 0.11,
+                              "layers": [
                                    {
-                                        "name":"カーペット類",
-                                        "thermal_resistance":0.0875,
-                                        "thermal_capacity":2.24
+                                        "name": "カーペット類",
+                                        "thermal_resistance": 0.0875,
+                                        "thermal_capacity": 2.24
                                    },
                                    {
-                                        "name":"鋼",
-                                        "thermal_resistance":0.000066667,
-                                        "thermal_capacity":10.86
+                                        "name": "鋼",
+                                        "thermal_resistance": 0.000066667,
+                                        "thermal_capacity": 10.86
+                                   },
+                                   {
+                                        "name": "非密閉中空層",
+                                        "thermal_resistance": 0.086,
+                                        "thermal_capacity": 0
+                                   },
+                                   {
+                                        "name": "普通コンクリート",
+                                        "thermal_resistance": 0.107142857,
+                                        "thermal_capacity": 289.5
+                                   },
+                                   {
+                                        "name": "非密閉中空層",
+                                        "thermal_resistance": 0.086,
+                                        "thermal_capacity": 0
+                                   },
+                                   {
+                                        "name": "せっこうボード",
+                                        "thermal_resistance": 0.052941176,
+                                        "thermal_capacity": 9.27
+                                   },
+                                   {
+                                        "name": "ロックウール化粧吸音板",
+                                        "thermal_resistance": 0.1875,
+                                        "thermal_capacity": 3.0
                                    }
-                              ]
-                         },
-                         "solar_shading_part":{
-                              "existence":false
+                              ],
+                              "solar_shading_part": {
+                                   "existence": false
+                              }
                          }
                     },
                     {
-                         "name":"壁",
-                         "boundary_type":"external_general_part",
-                         "area":28.0,
-                         "is_solar_absorbed_inside":false,
-                         "general_part_spec":{
-                              "outside_emissivity":0.9,
-                              "outside_solar_absorption":0.8,
-                              "inside_heat_transfer_resistance":0.11,
-                              "outside_heat_transfer_resistance":0.04,
-                              "layers":[
+                         "name": "ceil",
+                         "boundary_type": "external_general_part",
+                         "area": 100,
+                         "is_sun_striked_outside": false,
+                         "temp_dif_coef": 0,
+                         "is_solar_absorbed_inside": true,
+                         "general_part_spec": {
+                              "outside_emissivity": 0.9,
+                              "outside_solar_absorption": 0.8,
+                              "inside_heat_transfer_resistance": 0.11,
+                              "outside_heat_transfer_resistance": 0.11,
+                              "layers": [
                                    {
-                                        "name":"石こう板、ラスボード",
-                                        "thermal_resistance":0.047058824,
-                                        "thermal_capacity":8.24
+                                        "name": "ロックウール化粧吸音板",
+                                        "thermal_resistance": 0.1875,
+                                        "thermal_capacity": 3.0
                                    },
                                    {
-                                        "name":"非密閉中空層",
-                                        "thermal_resistance":0.086,
-                                        "thermal_capacity":0
+                                        "name": "せっこうボード",
+                                        "thermal_resistance": 0.052941176,
+                                        "thermal_capacity": 9.27
+                                   },
+                                   {
+                                        "name": "非密閉中空層",
+                                        "thermal_resistance": 0.086,
+                                        "thermal_capacity": 0
+                                   },
+                                   {
+                                        "name": "普通コンクリート",
+                                        "thermal_resistance": 0.107142857,
+                                        "thermal_capacity": 289.5
+                                   },
+                                   {
+                                        "name": "非密閉中空層",
+                                        "thermal_resistance": 0.086,
+                                        "thermal_capacity": 0
+                                   },
+                                   {
+                                        "name": "鋼",
+                                        "thermal_resistance": 0.000066667,
+                                        "thermal_capacity": 10.86
+                                   },
+                                   {
+                                        "name": "カーペット類",
+                                        "thermal_resistance": 0.0875,
+                                        "thermal_capacity": 2.24
                                    }
-                              ]
-                         },
-                         "solar_shading_part":{
-                              "existence":false
+                              ],
+                              "solar_shading_part": {
+                                   "existence": false
+                              }
                          }
                     }
                ]
