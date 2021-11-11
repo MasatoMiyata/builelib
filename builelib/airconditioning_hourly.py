@@ -223,7 +223,6 @@ def calc_energy(inputdata, DEBUG = False):
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
     ac_mode = ACoperationMode[ Area[inputdata["Building"]["Region"]+"地域"]["空調運転モードタイプ"] ]
 
-
     ##----------------------------------------------------------------------------------
     ## 平均外気温（解説書 2.2.3）
     ##----------------------------------------------------------------------------------
@@ -244,27 +243,27 @@ def calc_energy(inputdata, DEBUG = False):
     ## 空調室の設定温度、室内エンタルピー（解説書 2.3.1、2.3.2）
     ##----------------------------------------------------------------------------------
 
-    TroomSP = np.zeros(365)    # 室内設定温度
-    RroomSP = np.zeros(365)    # 室内設定湿度
-    Hroom   = np.zeros(365)    # 室内設定エンタルピー
+    TroomSP = np.zeros((365,24))    # 室内設定温度
+    RroomSP = np.zeros((365,24))    # 室内設定湿度
+    Hroom   = np.zeros((365,24))    # 室内設定エンタルピー
 
     for dd in range(0,365):
+        for hh in range(0,24):
 
-        if ac_mode[dd] == "冷房":
-            TroomSP[dd] = 26
-            RroomSP[dd] = 50
-            Hroom[dd] = 52.91
+            if ac_mode[dd] == "冷房":
+                TroomSP[dd][hh] = 26
+                RroomSP[dd][hh] = 50
+                Hroom[dd][hh] = 52.91
 
-        elif ac_mode[dd] == "中間":
-            TroomSP[dd] = 24
-            RroomSP[dd] = 50
-            Hroom[dd] = 47.81
+            elif ac_mode[dd] == "中間":
+                TroomSP[dd][hh] = 24
+                RroomSP[dd][hh] = 50
+                Hroom[dd][hh] = 47.81
 
-        elif ac_mode[dd] == "暖房":
-            TroomSP[dd] = 22
-            RroomSP[dd] = 40
-            Hroom[dd] = 38.81
-
+            elif ac_mode[dd] == "暖房":
+                TroomSP[dd][hh] = 22
+                RroomSP[dd][hh] = 40
+                Hroom[dd][hh] = 38.81
 
     ##----------------------------------------------------------------------------------
     ## 任意評定 （SP-6: カレンダーパターン)
@@ -358,6 +357,8 @@ def calc_energy(inputdata, DEBUG = False):
     for room_zone_name in inputdata["AirConditioningZone"]:
 
         resultJson["Qroom"][room_zone_name] = {
+            "Troom": np.zeros((365,24)),         # 時刻別室温　[℃]
+            "MRTroom": np.zeros((365,24)),       # 時刻別平均放射温度　[℃]
             "Qroom_hourly": np.zeros((365,24))   # 時刻別熱取得　[MJ/h]
         }
 
@@ -819,12 +820,12 @@ def calc_energy(inputdata, DEBUG = False):
         input_heatcalc_template["common"]["is_residential"] = False
 
         # 室温上限値・下限
-        input_heatcalc_template["rooms"][0]["schedule"]["temperature_upper_limit"] = np.reshape(TroomSP*np.ones([24,1]),8760)
-        input_heatcalc_template["rooms"][0]["schedule"]["temperature_lower_limit"] = np.reshape(TroomSP*np.ones([24,1]),8760)
+        input_heatcalc_template["rooms"][0]["schedule"]["temperature_upper_limit"] = bc.trans_36524to8760(TroomSP)
+        input_heatcalc_template["rooms"][0]["schedule"]["temperature_lower_limit"] = bc.trans_36524to8760(TroomSP)
 
         # 相対湿度上限値・下限
-        input_heatcalc_template["rooms"][0]["schedule"]["relative_humidity_upper_limit"] = np.reshape(RroomSP*np.ones([24,1]),8760)
-        input_heatcalc_template["rooms"][0]["schedule"]["relative_humidity_lower_limit"] = np.reshape(RroomSP*np.ones([24,1]),8760)
+        input_heatcalc_template["rooms"][0]["schedule"]["relative_humidity_upper_limit"] = bc.trans_36524to8760(RroomSP)
+        input_heatcalc_template["rooms"][0]["schedule"]["relative_humidity_lower_limit"] = bc.trans_36524to8760(RroomSP)
 
         # 非住宅では使わない
         input_heatcalc_template["rooms"][0]["vent"] = 0
@@ -1020,7 +1021,12 @@ def calc_energy(inputdata, DEBUG = False):
             #     json.dump(input_heatcalc, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
             
             # 負荷計算の実行
-            heatload_sensible_convection, heatload_sensible_radiation, heatload_latent = Main.run(input_heatcalc)
+            room_air_temperature, mean_radiant_temperature, heatload_sensible_convection, heatload_sensible_radiation, heatload_latent \
+                = Main.run(input_heatcalc)
+
+            # 室温
+            resultJson["Qroom"][room_zone_name]["Troom"]   = bc.trans_8760to36524(room_air_temperature)
+            resultJson["Qroom"][room_zone_name]["MRTroom"] = bc.trans_8760to36524(mean_radiant_temperature)
 
             # 負荷の積算（全熱負荷）[W] (365×24)
             heatload = np.array( 
@@ -1031,15 +1037,16 @@ def calc_energy(inputdata, DEBUG = False):
 
             for dd in range(0,365):
                 for hh in range(0,24):
-
                     # 時刻別室負荷 [W] → [MJ/hour]
                     resultJson["Qroom"][room_zone_name]["Qroom_hourly"][dd][hh] = (-1) * heatload[dd][hh] * 3600/1000000 
-                    
+
 
     if DEBUG: # pragma: no cover
 
         # 熱負荷のグラフ化
         for room_zone_name in inputdata["AirConditioningZone"]:
+            mf.hourlyplot(resultJson["Qroom"][room_zone_name]["Troom"], "室内空気温度： "+room_zone_name, "b", "室内空気温度")
+            mf.hourlyplot(resultJson["Qroom"][room_zone_name]["MRTroom"], "室内平均放射温度 "+room_zone_name, "b", "室内平均放射温度")
             mf.hourlyplot(resultJson["Qroom"][room_zone_name]["Qroom_hourly"], "室負荷： "+room_zone_name, "b", "時刻別室負荷")
 
     
@@ -1382,21 +1389,21 @@ def calc_energy(inputdata, DEBUG = False):
                         if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] == None:   # 全熱交換器がない場合
 
                             resultJson["AHU"][ahu_name]["Qoa_hourly"][dd][hh] = \
-                                (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] *1.293/3600
+                                (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd][hh]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] *1.293/3600
 
                         else:  # 全熱交換器がある場合
                             
-                            if (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] > Hroom[dd]) and (inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] == "有"):
+                            if (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] > Hroom[dd][hh]) and (inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] == "有"):
 
                                 # バイパス有の場合はそのまま外気導入する。
                                 resultJson["AHU"][ahu_name]["Qoa_hourly"][dd][hh] = \
-                                    (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] *1.293/3600
+                                    (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd][hh]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] *1.293/3600
 
                             else:
 
                                 # 全熱交換器による外気負荷削減を見込む。
                                 resultJson["AHU"][ahu_name]["Qoa_hourly"][dd][hh] = \
-                                    (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd]) * \
+                                    (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd][hh]) * \
                                     (inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] - \
                                         ahuaexV * inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] ) *1.293/3600
 
@@ -1416,21 +1423,21 @@ def calc_energy(inputdata, DEBUG = False):
                         if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] == None:   # 全熱交換器がない場合
 
                             resultJson["AHU"][ahu_name]["Qoa_hourly"][dd][hh] = \
-                                (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
+                                (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd][hh]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
                                 
                         else:  # 全熱交換器がある場合
 
-                            if (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] < Hroom[dd]) and  (inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] == "有"):
+                            if (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] < Hroom[dd][hh]) and  (inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] == "有"):
 
                                 # バイパス有の場合はそのまま外気導入する。
                                 resultJson["AHU"][ahu_name]["Qoa_hourly"][dd][hh] = \
-                                    (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
+                                    (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd][hh]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
 
                             else:  # 全熱交換器がある場合
 
                                 # 全熱交換器による外気負荷削減を見込む。
                                 resultJson["AHU"][ahu_name]["Qoa_hourly"][dd][hh] = \
-                                    (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd]) * \
+                                    (resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh] - Hroom[dd][hh]) * \
                                     (inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] - \
                                         ahuaexV * inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] ) *1.293/3600
 
@@ -1452,7 +1459,7 @@ def calc_energy(inputdata, DEBUG = False):
                         # 外気冷房運転時の外気風量 [kg/s]
                         resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd][hh] = \
                             resultJson["AHU"][ahu_name]["Qroom_hourly"][dd][hh] / \
-                            ((Hroom[dd]-resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh]) * (3600/1000))
+                            ((Hroom[dd][hh]-resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh]) * (3600/1000))
                         
                         # 上限・下限
                         if resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd][hh] < inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600:
@@ -1475,7 +1482,7 @@ def calc_energy(inputdata, DEBUG = False):
                         if resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd][hh] > 0: # 外冷時風量＞０であれば
 
                             resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd][hh] = \
-                                resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd][hh] * (Hroom[dd]-resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh])*3600/1000
+                                resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd][hh] * (Hroom[dd][hh]-resultJson["AHU"][ahu_name]["Hoa_hourly"][dd][hh])*3600/1000
 
 
     ##----------------------------------------------------------------------------------
@@ -3171,7 +3178,7 @@ def calc_energy(inputdata, DEBUG = False):
                         # 運転台数 num_of_operation
                         tmpQmax = 0
                         for rr in range(0, inputdata["REF"][ref_name]["num_of_unit"]):
-                            tmpQmax += inputdata["REF"][ref_name]["Heatsource"][rr]["Q_ref_max"][dd]
+                            tmpQmax += resultJson["REF"][ref_name]["Heatsource"][rr]["Q_ref_max"][dd]
 
                             if tmpQ < tmpQmax:
                                 break
@@ -3714,7 +3721,7 @@ def calc_energy(inputdata, DEBUG = False):
     # # with open("inputdataJson_AC.json",'w', encoding='utf-8') as fw:
     # #     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
     
-    plt.show()
+    # plt.show()
     return resultJson
 
 
