@@ -2484,11 +2484,10 @@ def calc_energy(inputdata, DEBUG = False):
 
             "schedule":         np.zeros((365,24)),       # 運転スケジュール
 
-            "load_ratio":       np.zeros((365,24)),       # 負荷率（最大能力に対する比率） [-]
             "load_ratio_rated": np.zeros((365,24)),       # 負荷率（定格能力に対する比率） [-]
 
             "Qref_hourly":      np.zeros((365,24)),       # 熱源負荷 [MJ/h]
-            "Qref_storage":     np.zeros(365),            # 日積算蓄熱量 [MJ/day]
+            "Qref_storage":     np.zeros(365),            # 日積算必要蓄熱量 [MJ/day]
 
             "matrix_iL":        np.zeros((365,24)),       # 熱源の負荷率区分
             "matrix_iT":        np.zeros(365),            # 熱源の温度区分
@@ -2522,6 +2521,7 @@ def calc_energy(inputdata, DEBUG = False):
 
             resultJson["REF"][ref_name]["Heatsource"][unit_id] = {
                 "heatsource_temperature":   np.zeros(365),        # 日別の熱源水等の温度
+                "load_ratio":               np.zeros((365,24)),   # 負荷率（最大能力に対する比率） [-]
                 "xQratio":                  np.zeros(365),        # 能力比（各外気温帯における最大能力）
                 "xPratio":                  np.zeros(365),        # 入力比（各外気温帯における最大入力）
                 "coeff_x":                  np.zeros((365,24)),   # 部分負荷特性
@@ -2586,21 +2586,21 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     # 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。（MATLAB版では Tref>0で判定）
-    for ref_name in inputdata["REF"]:
+    # for ref_name in inputdata["REF"]:
         
-        for dd in range(0,365):
+    #     for dd in range(0,365):
 
-            if (np.sum(resultJson["REF"][ref_name]["Qref_hourly"][dd]) != 0) and (inputdata["REF"][ref_name]["isStorage"] == "蓄熱"):
+    #         if (np.sum(resultJson["REF"][ref_name]["Qref_hourly"][dd]) != 0) and (inputdata["REF"][ref_name]["isStorage"] == "蓄熱"):
 
-                resultJson["REF"][ref_name]["Qref_storage"][dd] = \
-                    np.sum(resultJson["REF"][ref_name]["Qref_hourly"][dd]) + resultJson["REF"][ref_name]["Qref_thermal_loss"]
+    #             resultJson["REF"][ref_name]["Qref_storage"][dd] = \
+    #                 np.sum(resultJson["REF"][ref_name]["Qref_hourly"][dd]) + resultJson["REF"][ref_name]["Qref_thermal_loss"]
             
-                # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
-                if resultJson["REF"][ref_name]["Qref_storage"][dd] > \
-                    inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
+    #             # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
+    #             if resultJson["REF"][ref_name]["Qref_storage"][dd] > \
+    #                 inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
 
-                    resultJson["REF"][ref_name]["Qref_storage"][dd] = \
-                        inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]
+    #                 resultJson["REF"][ref_name]["Qref_storage"][dd] = \
+    #                     inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]
 
 
     ##----------------------------------------------------------------------------------
@@ -2708,31 +2708,33 @@ def calc_energy(inputdata, DEBUG = False):
     ## 蓄熱槽からの放熱を加味した補正定格能力 （解説書 2.7.6）
     ##----------------------------------------------------------------------------------
 
-    # 蓄熱槽がある場合の放熱用熱交換器の容量の補正
-    for ref_name in inputdata["REF"]:
+    # # 蓄熱槽がある場合の放熱用熱交換器の容量の補正
+    # for ref_name in inputdata["REF"]:
 
-        hex_capacity = 0
+    #     hex_capacity = 0
 
-        if inputdata["REF"][ref_name]["isStorage"] == "追掛":
-            if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceType"] == "熱交換器":
+    #     if inputdata["REF"][ref_name]["isStorage"] == "追掛":
+    #         if inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceType"] == "熱交換器":
 
-                # 熱源運転時間の最大値で補正した容量
-                hex_capacity = inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] * \
-                    (8 / np.max(resultJson["REF"][ref_name]["Tref"]))
+    #             # 熱源運転時間の最大値で補正した容量
+    #             hex_capacity = inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] * \
+    #                 (8 / np.max(resultJson["REF"][ref_name]["Tref"]))
 
-                # 定格容量の合計値を更新
-                inputdata["REF"][ref_name]["Qref_rated"] = \
-                    inputdata["REF"][ref_name]["Qref_rated"] + \
-                    hex_capacity - inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]
+    #             # 定格容量の合計値を更新
+    #             inputdata["REF"][ref_name]["Qref_rated"] = \
+    #                 inputdata["REF"][ref_name]["Qref_rated"] + \
+    #                 hex_capacity - inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]
 
-                # 熱交換器の容量を修正
-                inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = hex_capacity
+    #             # 熱交換器の容量を修正
+    #             inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] = hex_capacity
 
-            else:
-                raise Exception('熱交換機が設定されていません')
+    #         else:
+    #             raise Exception('熱交換機が設定されていません')
 
-        if DEBUG: # pragma: no cover
-                
+
+    if DEBUG: # pragma: no cover
+
+        for ref_name in inputdata["REF"]:            
             print( f'--- 熱源群名 {ref_name} ---')
             print( f'熱交換器の容量: {inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]}')
             print( f'熱源群の定格能力の合計 Qref_rated: {inputdata["REF"][ref_name]["Qref_rated"]}' )
@@ -3068,13 +3070,34 @@ def calc_energy(inputdata, DEBUG = False):
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
             for dd in range(0,365):
-                inputdata["REF"][ref_name]["Q_ref_max_total"][dd] += \
+                resultJson["REF"][ref_name]["Q_ref_max_total"][dd] += \
                     resultJson["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd]
 
 
-    # 蓄熱の場合のマトリックス操作（負荷率１に集約＋外気温を１レベル変える）
+    # 必要蓄熱量の算出
     for ref_name in inputdata["REF"]:
 
+        if inputdata["REF"][ref_name]["isStorage"] == "追掛":
+
+            for dd in range(0,365):
+                for hh in range(0,24):
+
+                    if  resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] > 0:
+                        if resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] - inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"] > 0:
+                            resultJson["REF"][ref_name]["Qref_storage"][dd] += inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]
+                        else:
+                            resultJson["REF"][ref_name]["Qref_storage"][dd] += resultJson["REF"][ref_name]["Qref_hourly"][dd][hh]
+
+                # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
+                if resultJson["REF"][ref_name]["Qref_storage"][dd] > \
+                    inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
+                    raise Exception("蓄熱槽容量が足りません")
+
+            # 蓄熱用熱源に値を渡す
+            resultJson["REF"][ref_name + "_蓄熱"]["Qref_storage"] = resultJson["REF"][ref_name]["Qref_storage"]
+
+
+    for ref_name in inputdata["REF"]:
         if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
 
             # 一旦削除
@@ -3085,13 +3108,16 @@ def calc_energy(inputdata, DEBUG = False):
                 # 蓄熱すべき熱量が 0　以上である場合
                 if resultJson["REF"][ref_name]["Qref_storage"][dd] > 0:
 
+                    # 熱ロスを足す。
+                    resultJson["REF"][ref_name]["Qref_storage"][dd] += inputdata["REF"][ref_name]["StorageSize"] * k_heatloss
+
                     # 蓄熱運転すべき時間
-                    hour_for_strorage = resultJson["REF"][ref_name]["Qref_storage"][dd] / inputdata["REF"][ref_name]["Q_ref_max_total"][dd]
+                    hour_for_strorage = math.ceil(resultJson["REF"][ref_name]["Qref_storage"][dd] / resultJson["REF"][ref_name]["Q_ref_max_total"][dd])
 
                     if hour_for_strorage > 8:
                         raise Exception("蓄熱に必要な能力が足りません")
 
-                    # 1時間に蓄熱すべき量 [MJ]
+                    # 1時間に蓄熱すべき量 [MJ/h]
                     storage_heat_in_hour = (resultJson["REF"][ref_name]["Qref_storage"][dd] / hour_for_strorage)
 
                     # 本来は22時〜6時にすべきだが、ひとまず0時から8時に設定
@@ -3217,16 +3243,27 @@ def calc_energy(inputdata, DEBUG = False):
                         Qrefr_mod_max += resultJson["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd]
 
                     # [iT,iL]における負荷率
-                    resultJson["REF"][ref_name]["load_ratio"][dd][hh] = tmpQ / Qrefr_mod_max
+                    if inputdata["REF"][ref_name]["isStorage"] == "追掛":
 
-                    if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
-                        resultJson["REF"][ref_name]["load_ratio"][dd][hh] = 1.0
+                        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
+                            if unit_id == 0: 
+                                # 熱交換器の負荷率は1とする
+                                resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] = 1
+                            else:
+                                # 熱交換器以外で負荷率を求める。
+                                resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] = \
+                                    (tmpQ - inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]) / \
+                                    (Qrefr_mod_max - inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"])
 
-    if DEBUG: # pragma: no cover
+                    else:
 
-        for ref_name in inputdata["REF"]:
-            mf.hourlyplot( resultJson["REF"][ref_name]["load_ratio"] , "熱源負荷率： "+ref_name, "b", "熱源負荷率")
+                        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] = tmpQ / Qrefr_mod_max
+
+                    # if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
+                    #     resultJson["REF"][ref_name]["load_ratio"][dd][hh] = 1.0
+
 
 
     ##----------------------------------------------------------------------------------
@@ -3257,12 +3294,12 @@ def calc_energy(inputdata, DEBUG = False):
             
                         # 機器特性による上下限を考慮した部分負荷率 tmpL
                         tmpL = 0
-                        if resultJson["REF"][ref_name]["load_ratio"][dd][hh] < inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["下限"]:
+                        if resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] < inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["下限"]:
                             tmpL = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["下限"]
-                        elif resultJson["REF"][ref_name]["load_ratio"][dd][hh] > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["上限"]:
+                        elif resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["上限"]:
                             tmpL = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["上限"]
                         else:            
-                            tmpL = resultJson["REF"][ref_name]["load_ratio"][dd][hh]
+                            tmpL = resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh]
 
                         # 部分負荷特性
                         resultJson["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][dd][hh] = \
@@ -3383,7 +3420,7 @@ def calc_energy(inputdata, DEBUG = False):
 
                 ## 補機電力
                 # 一台あたりの負荷率（熱源機器の負荷率＝最大能力を考慮した負荷率・ただし、熱源特性の上限・下限は考慮せず）
-                aveLperU = resultJson["REF"][ref_name]["load_ratio"][dd][hh]
+                aveLperU = resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh]
 
                 # 過負荷の場合は 平均負荷率＝1.2 とする。
                 if iL == divL-1:   
@@ -3727,7 +3764,7 @@ def calc_energy(inputdata, DEBUG = False):
     # # with open("inputdataJson_AC.json",'w', encoding='utf-8') as fw:
     # #     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
     
-    # plt.show()
+    plt.show()
     return resultJson
 
 
