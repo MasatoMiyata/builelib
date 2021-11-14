@@ -46,7 +46,7 @@ class MyEncoder(json.JSONEncoder):
             return super(MyEncoder, self).default(obj)
 
 
-def air_enenthalpy(Tdb, X):
+def air_enthalpy(Tdb, X):
     """
     空気のエンタルピーを算出する関数
     """

@@ -4,7 +4,8 @@ from builelib import commons as bc
 from builelib import airconditioning_hourly as ac
 
 print('----- airconditioning.py -----')
-filename = './sample/ACtest_Case001.json'
+# filename = './sample/ACtest_Case001.json'
+filename = './sample/ACtest_Case033.json'
 
 # 入力ファイルの読み込み
 with open(filename, 'r', encoding='utf-8') as f:
