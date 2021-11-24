@@ -1584,6 +1584,24 @@ def calc_energy(inputdata, DEBUG = False):
             mf.hourlyplot( resultJson["AHU"][ahu_name]["load_ratio"] , "空調負荷率： "+ahu_name, "b", "時刻別空調負荷")
 
 
+    # fig = plt.figure(figsize=(14,7))
+    # fig.suptitle("fig_name", fontsize=16)
+    # plt.subplots_adjust(left=0.03, bottom=0.06, right=0.97, top=0.9, wspace=0.20, hspace=0.25)
+
+    # マトリックスの作成
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        resultJson["AHU"][ahu_name]["MXiL"] = np.zeros(len(mxL))
+
+        for dd in range(0,365):
+            for hh in range(0,24):
+                if resultJson["AHU"][ahu_name]["matrix_iL"][dd][hh] > 0:
+                    resultJson["AHU"][ahu_name]["MXiL"][ int(resultJson["AHU"][ahu_name]["matrix_iL"][dd][hh]) -1 ] += 1
+
+        print( resultJson["AHU"][ahu_name]["MXiL"]  )
+
+
+
     ##----------------------------------------------------------------------------------
     ## 風量制御方式によって定まる係数（解説書 2.5.7）
     ##----------------------------------------------------------------------------------
@@ -1753,6 +1771,19 @@ def calc_energy(inputdata, DEBUG = False):
             print( "----" + ahu_name + "----")
             print(resultJson["AHU"][ahu_name]["Eahu_total"])
             print(resultJson["AHU"][ahu_name]["Tahu_total"])
+
+
+    # 空調のマトリックスを作成する。
+
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        resultJson["AHU"][ahu_name]["matrix_hour"] = np.zeros(11)
+        resultJson["AHU"][ahu_name]["matrix_power"] = np.zeros(11)
+        resultJson["AHU"][ahu_name]["matrix_energy"] = np.zeros(11)
+
+
+
+
 
 
     ##----------------------------------------------------------------------------------
