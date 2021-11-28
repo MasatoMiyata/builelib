@@ -1504,7 +1504,10 @@ def calc_energy(inputdata, DEBUG = False):
                             resultJson["AHU"][ahu_name]["Qroom_hourly"][dd][hh] + resultJson["AHU"][ahu_name]["Qoa_hourly"][dd][hh] * 3600/1000
                     else:
                         if hh != 0 and resultJson["AHU"][ahu_name]["schedule"][dd][hh-1] == 0:  # 起動時（前の時刻が停止状態）であれば
-                            resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] = resultJson["AHU"][ahu_name]["Qroom_hourly"][hh][dd]
+                            resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] = resultJson["AHU"][ahu_name]["Qroom_hourly"][dd][hh]
+                        else:
+                            resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] = \
+                                resultJson["AHU"][ahu_name]["Qroom_hourly"][dd][hh] + resultJson["AHU"][ahu_name]["Qoa_hourly"][dd][hh] * 3600/1000
 
     print('空調負荷計算完了')
 
@@ -3814,8 +3817,10 @@ def calc_energy(inputdata, DEBUG = False):
     #         + resultJson["for_CGS"]["E_pump_MWh_day"] \
     #         + resultJson["for_CGS"]["E_fan_MWh_day"]
 
-    # # with open("inputdataJson_AC.json",'w', encoding='utf-8') as fw:
-    # #     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
+
+    # if DEBUG:
+    #     with open("inputdataJson_AC.json",'w', encoding='utf-8') as fw:
+    #         json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
     
     return resultJson
 
