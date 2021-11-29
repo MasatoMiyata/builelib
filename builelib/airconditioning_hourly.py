@@ -366,36 +366,6 @@ def calc_energy(inputdata, DEBUG = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## 外皮面への入射日射量（解説書 2.4.1）
-    ##----------------------------------------------------------------------------------
-
-    # solor_radiation = {
-    #     "直達":{
-    #     },
-    #     "直達_入射角特性込":{
-    #     },
-    #     "天空":{
-    #     },
-    #     "夜間":{
-    #     }
-    # }
-
-    # # 方位角別の日射量
-    # (solor_radiation["直達"]["南"],  solor_radiation["直達_入射角特性込"]["南"], solor_radiation["天空"]["垂直"], solor_radiation["夜間"]["垂直"])  = \
-    #     climate.solarRadiationByAzimuth(  0, 90, phi, longi, IodALL, IosALL, InnALL)
-    # (solor_radiation["直達"]["南西"], solor_radiation["直達_入射角特性込"]["南西"], _, _) = climate.solarRadiationByAzimuth( 45, 90, phi, longi, IodALL, IosALL, InnALL)
-    # (solor_radiation["直達"]["西"],  solor_radiation["直達_入射角特性込"]["西"], _, _)  = climate.solarRadiationByAzimuth( 90, 90, phi, longi, IodALL, IosALL, InnALL)
-    # (solor_radiation["直達"]["北西"], solor_radiation["直達_入射角特性込"]["北西"], _, _) = climate.solarRadiationByAzimuth(135, 90, phi, longi, IodALL, IosALL, InnALL)
-    # (solor_radiation["直達"]["北"],  solor_radiation["直達_入射角特性込"]["北"], _, _)  = climate.solarRadiationByAzimuth(180, 90, phi, longi, IodALL, IosALL, InnALL)
-    # (solor_radiation["直達"]["北東"], solor_radiation["直達_入射角特性込"]["北東"], _, _) = climate.solarRadiationByAzimuth(225, 90, phi, longi, IodALL, IosALL, InnALL)
-    # (solor_radiation["直達"]["東"],  solor_radiation["直達_入射角特性込"]["東"], _, _)  = climate.solarRadiationByAzimuth(270, 90, phi, longi, IodALL, IosALL, InnALL)
-    # (solor_radiation["直達"]["南東"], solor_radiation["直達_入射角特性込"]["南東"], _, _) = climate.solarRadiationByAzimuth(315, 90, phi, longi, IodALL, IosALL, InnALL)
-    # (solor_radiation["直達"]["水平"], solor_radiation["直達_入射角特性込"]["水平"], solor_radiation["天空"]["水平"], solor_radiation["夜間"]["水平"])  = \
-    #     climate.solarRadiationByAzimuth(  0,  0, phi, longi, IodALL, IosALL, InnALL)
-
-
-
-    ##----------------------------------------------------------------------------------
     ## 外壁等の熱貫流率の算出（解説書 附属書A.1）
     ##----------------------------------------------------------------------------------
 
