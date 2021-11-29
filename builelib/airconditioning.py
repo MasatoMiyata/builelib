@@ -233,9 +233,9 @@ def calc_energy(inputdata, DEBUG = False):
     ## 外気エンタルピー（解説書 2.2.4）
     ##----------------------------------------------------------------------------------
 
-    Hoa_ave = bc.air_enenthalpy(Toa_ave, Xoa_ave)
-    Hoa_day = bc.air_enenthalpy(Toa_day, Xoa_day)
-    Hoa_ngt = bc.air_enenthalpy(Toa_ngt, Xoa_ngt)
+    Hoa_ave = bc.air_enthalpy(Toa_ave, Xoa_ave)
+    Hoa_day = bc.air_enthalpy(Toa_day, Xoa_day)
+    Hoa_ngt = bc.air_enthalpy(Toa_ngt, Xoa_ngt)
 
 
     ##----------------------------------------------------------------------------------
