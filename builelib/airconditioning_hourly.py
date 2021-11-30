@@ -2015,6 +2015,26 @@ def calc_energy(inputdata, DEBUG = False):
     ## 二次ポンプのエネルギー消費量（解説書 2.6.8）
     ##----------------------------------------------------------------------------------
 
+    def pump_control_performance_curve(load_ratio, a4, a3, a2, a1, a0, Vmin):
+        """
+        二次ポンプ群の制御によるエネルギー削減効果（負荷率の関数）
+        """
+
+        if load_ratio <= 0:
+            saving_factor = 0
+        else:
+            if load_ratio > 1:
+                saving_factor = 1.2
+            elif load_ratio == 0:
+                saving_factor = 0
+            elif load_ratio < Vmin:
+                saving_factor = a4 * (Vmin)**4 + a3 * (Vmin)**3 + a2 * (Vmin)**2 + a1 * (Vmin)**1 + a0    
+            else:
+                saving_factor = a4 * (load_ratio)**4 + a3 * (load_ratio)**3 + a2 * (load_ratio)**2 + a1 * (load_ratio)**1 + a0    
+
+        return saving_factor
+
+
     for pump_name in inputdata["PUMP"]:
 
         MxPUMPNum = np.zeros(divL)
@@ -2025,7 +2045,7 @@ def calc_energy(inputdata, DEBUG = False):
 
             if inputdata["PUMP"][pump_name]["isStagingControl"] == "無":    # 台数制御なし
             
-                # 運転台数
+                # 運転台数（常に最大の台数）
                 MxPUMPNum = np.ones(divL) * inputdata["PUMP"][pump_name]["number_of_pumps"]
 
                 # 流量制御方式
