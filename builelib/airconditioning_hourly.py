@@ -2418,7 +2418,6 @@ def calc_energy(inputdata, DEBUG = False):
             "Qref_storage":     np.zeros(365),            # 日積算必要蓄熱量 [MJ/day]
             "Tref_discharge":   np.zeros(365),            # 最大追い掛け運転時間 [hour]
 
-            "matrix_iL":        np.zeros((365,24)),       # 熱源の負荷率区分
             "matrix_iT":        np.zeros(365),            # 熱源の温度区分
 
             "num_of_operation": np.zeros((365,24)),       # 運転台数
@@ -2651,10 +2650,6 @@ def calc_energy(inputdata, DEBUG = False):
                 elif inputdata["REF"][ref_name]["mode"] == "heating":
                     resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTH) 
 
-                # 負荷率帯マトリックス
-                for hh in range(0,24):                   
-                    resultJson["REF"][ref_name]["matrix_iL"][dd][hh] = count_Matrix(resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh], mxL)
-    
 
     for ref_name in inputdata["REF"]:
 
@@ -2974,7 +2969,6 @@ def calc_energy(inputdata, DEBUG = False):
             # 一旦削除
             resultJson["REF"][ref_name]["Qref_hourly"] = np.zeros((365,24))
             resultJson["REF"][ref_name]["load_ratio_rated"] = np.zeros((365,24))
-            resultJson["REF"][ref_name]["matrix_iL"] = np.zeros((365,24))
 
             for dd in range(0,365):
             
@@ -3003,7 +2997,7 @@ def calc_energy(inputdata, DEBUG = False):
                         if resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] > 0:
                             resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh] = \
                                 (resultJson["REF"][ref_name]["Qref_hourly"][dd][hh]*1000/3600) / inputdata["REF"][ref_name]["Qref_rated"]                 
-                            resultJson["REF"][ref_name]["matrix_iL"][dd][hh] = count_Matrix(resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh], mxL)
+
 
 
     ##----------------------------------------------------------------------------------
@@ -3072,8 +3066,6 @@ def calc_energy(inputdata, DEBUG = False):
 
                 if resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] > 0:  # 負荷があれば
 
-                    iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1
-
                     if inputdata["REF"][ref_name]["isStagingControl"] == "無":   # 運転台数制御が「無」の場合
 
                         resultJson["REF"][ref_name]["num_of_operation"][dd][hh] = inputdata["REF"][ref_name]["num_of_unit"]
@@ -3081,7 +3073,7 @@ def calc_energy(inputdata, DEBUG = False):
                     elif inputdata["REF"][ref_name]["isStagingControl"] == "有":  # 運転台数制御が「有」の場合
 
                         # 処理熱量 [kW]
-                        tmpQ  = inputdata["REF"][ref_name]["Qref_rated"] * aveL[iL]
+                        tmpQ  = resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] * 1000/3600
             
                         # 運転台数 num_of_operation
                         tmpQmax = 0
@@ -3109,10 +3101,8 @@ def calc_energy(inputdata, DEBUG = False):
 
                 if resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] > 0:  # 運転していれば
 
-                    iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1
-
                     # 処理熱量 [kW]
-                    tmpQ  = inputdata["REF"][ref_name]["Qref_rated"] * aveL[iL]
+                    tmpQ  = resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] * 1000/3600
                     
                     Qrefr_mod_max = 0
                     for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd][hh])):
@@ -3149,8 +3139,6 @@ def calc_energy(inputdata, DEBUG = False):
             
                 if resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] > 0:  # 運転していれば
 
-                    iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1    # 負荷率帯のマトリックス番号
-
                     # 部分負荷特性（各負荷率・各温度帯について）
                     for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd][hh])):
 
@@ -3183,7 +3171,7 @@ def calc_energy(inputdata, DEBUG = False):
                             inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["係数"]["a0"] )
 
                         # 過負荷時のペナルティ
-                        if iL == divL-1:
+                        if resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] > 1:
                             resultJson["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][dd][hh] = \
                                 resultJson["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][dd][hh] * 1.2
 
@@ -3244,8 +3232,6 @@ def calc_energy(inputdata, DEBUG = False):
         for dd in range(0,365):
             for hh in range(0,24):        
             
-                iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1
-
                 # 熱源主機（機器毎）：エネルギー消費量 kW のマトリックス E_ref_main
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd][hh])):
 
@@ -3259,7 +3245,7 @@ def calc_energy(inputdata, DEBUG = False):
                 aveLperU = resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh]
 
                 # 過負荷の場合は 平均負荷率＝1.2 とする。
-                if iL == divL-1:   
+                if aveLperU > 1:   
                     aveLperU = 1.2
             
                 # 発電機能付きの熱源機器が1台でもある場合
@@ -3403,70 +3389,70 @@ def calc_energy(inputdata, DEBUG = False):
             #------------------------------
             # マトリックスの生成
             #------------------------------
-            resultJson["REF"][ref_name]["MX_time"] = np.zeros((len(mxTC), len(mxL)))
-            resultJson["REF"][ref_name]["MX_number"] = np.zeros((len(mxTC), len(mxL)))
-            resultJson["REF"][ref_name]["MX_load_ratio"] = np.zeros((len(mxTC), len(mxL)))
-            resultJson["REF"][ref_name]["MX_power"] = np.zeros((len(mxTC), len(mxL)))
-            resultJson["REF"][ref_name]["MX_energy"] = {
-                "ref_main": np.zeros(len(mxL)),
-                "ref_sub": np.zeros(len(mxL)),
-                "ref_pump": np.zeros(len(mxL)),
-                "ref_ct_fan": np.zeros(len(mxL)),
-                "ref_ct_pump": np.zeros(len(mxL))
-            }
+            # resultJson["REF"][ref_name]["MX_time"] = np.zeros((len(mxTC), len(mxL)))
+            # resultJson["REF"][ref_name]["MX_number"] = np.zeros((len(mxTC), len(mxL)))
+            # resultJson["REF"][ref_name]["MX_load_ratio"] = np.zeros((len(mxTC), len(mxL)))
+            # resultJson["REF"][ref_name]["MX_power"] = np.zeros((len(mxTC), len(mxL)))
+            # resultJson["REF"][ref_name]["MX_energy"] = {
+            #     "ref_main": np.zeros(len(mxL)),
+            #     "ref_sub": np.zeros(len(mxL)),
+            #     "ref_pump": np.zeros(len(mxL)),
+            #     "ref_ct_fan": np.zeros(len(mxL)),
+            #     "ref_ct_pump": np.zeros(len(mxL))
+            # }
 
-            for dd in range(0,365):
-                for hh in range(0,24):
+            # for dd in range(0,365):
+            #     for hh in range(0,24):
 
-                    if resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] > 0:
+            #         if resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] > 0:
 
-                        resultJson["REF"][ref_name]["MX_time"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += 1
+            #             resultJson["REF"][ref_name]["MX_time"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += 1
 
-                        if resultJson["REF"][ref_name]["MX_number"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] < \
-                            resultJson["REF"][ref_name]["num_of_operation"][dd][hh]:
+            #             if resultJson["REF"][ref_name]["MX_number"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] < \
+            #                 resultJson["REF"][ref_name]["num_of_operation"][dd][hh]:
 
-                            resultJson["REF"][ref_name]["MX_number"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] = \
-                                resultJson["REF"][ref_name]["num_of_operation"][dd][hh]
+            #                 resultJson["REF"][ref_name]["MX_number"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] = \
+            #                     resultJson["REF"][ref_name]["num_of_operation"][dd][hh]
 
-                        if resultJson["REF"][ref_name]["MX_load_ratio"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] < \
-                            resultJson["REF"][ref_name]["Heatsource"][0]["load_ratio"][dd][hh]:
+            #             if resultJson["REF"][ref_name]["MX_load_ratio"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] < \
+            #                 resultJson["REF"][ref_name]["Heatsource"][0]["load_ratio"][dd][hh]:
 
-                            resultJson["REF"][ref_name]["MX_load_ratio"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] = \
-                                resultJson["REF"][ref_name]["Heatsource"][0]["load_ratio"][dd][hh]
+            #                 resultJson["REF"][ref_name]["MX_load_ratio"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] = \
+            #                     resultJson["REF"][ref_name]["Heatsource"][0]["load_ratio"][dd][hh]
 
-                        tmp = 0
-                        for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd][hh])):
-                            tmp += resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main_kW"][dd][hh] 
+            #             tmp = 0
+            #             for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd][hh])):
+            #                 tmp += resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main_kW"][dd][hh] 
 
-                        if resultJson["REF"][ref_name]["MX_power"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] < tmp:
-                            resultJson["REF"][ref_name]["MX_power"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] = tmp
-
-
-                        resultJson["REF"][ref_name]["MX_energy"]["ref_main"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
-                            resultJson["REF"][ref_name]["E_ref_main"][dd][hh]
-
-                        resultJson["REF"][ref_name]["MX_energy"]["ref_sub"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
-                            resultJson["REF"][ref_name]["E_ref_sub_MWh"][dd][hh]
-
-                        resultJson["REF"][ref_name]["MX_energy"]["ref_pump"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
-                            resultJson["REF"][ref_name]["E_ref_pump_MWh"][dd][hh]
-
-                        resultJson["REF"][ref_name]["MX_energy"]["ref_ct_fan"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
-                            resultJson["REF"][ref_name]["E_ref_ct_fan_MWh"][dd][hh]
-
-                        resultJson["REF"][ref_name]["MX_energy"]["ref_ct_pump"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
-                            resultJson["REF"][ref_name]["E_ref_ct_pump_MWh"][dd][hh]
+            #             if resultJson["REF"][ref_name]["MX_power"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] < tmp:
+            #                 resultJson["REF"][ref_name]["MX_power"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd])-1 ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] = tmp
 
 
-            print( resultJson["REF"][ref_name]["MX_time"] )
-            print( resultJson["REF"][ref_name]["MX_number"] )
-            print( resultJson["REF"][ref_name]["MX_load_ratio"] )
-            print( resultJson["REF"][ref_name]["MX_power"] )
-            print( resultJson["REF"][ref_name]["MX_energy"]["ref_main"] )
-            print( resultJson["REF"][ref_name]["MX_energy"]["ref_sub"] )
-            print( resultJson["REF"][ref_name]["MX_energy"]["ref_pump"] )
-            print( resultJson["REF"][ref_name]["MX_energy"]["ref_ct_fan"] )
-            print( resultJson["REF"][ref_name]["MX_energy"]["ref_ct_pump"] )
+            #             resultJson["REF"][ref_name]["MX_energy"]["ref_main"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
+            #                 resultJson["REF"][ref_name]["E_ref_main"][dd][hh]
+
+            #             resultJson["REF"][ref_name]["MX_energy"]["ref_sub"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
+            #                 resultJson["REF"][ref_name]["E_ref_sub_MWh"][dd][hh]
+
+            #             resultJson["REF"][ref_name]["MX_energy"]["ref_pump"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
+            #                 resultJson["REF"][ref_name]["E_ref_pump_MWh"][dd][hh]
+
+            #             resultJson["REF"][ref_name]["MX_energy"]["ref_ct_fan"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
+            #                 resultJson["REF"][ref_name]["E_ref_ct_fan_MWh"][dd][hh]
+
+            #             resultJson["REF"][ref_name]["MX_energy"]["ref_ct_pump"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd][hh]) -1 ] += \
+            #                 resultJson["REF"][ref_name]["E_ref_ct_pump_MWh"][dd][hh]
+
+
+            # print( resultJson["REF"][ref_name]["MX_time"] )
+            # print( resultJson["REF"][ref_name]["MX_number"] )
+            # print( resultJson["REF"][ref_name]["MX_load_ratio"] )
+            # print( resultJson["REF"][ref_name]["MX_power"] )
+            # print( resultJson["REF"][ref_name]["MX_energy"]["ref_main"] )
+            # print( resultJson["REF"][ref_name]["MX_energy"]["ref_sub"] )
+            # print( resultJson["REF"][ref_name]["MX_energy"]["ref_pump"] )
+            # print( resultJson["REF"][ref_name]["MX_energy"]["ref_ct_fan"] )
+            # print( resultJson["REF"][ref_name]["MX_energy"]["ref_ct_pump"] )
 
     ##----------------------------------------------------------------------------------
     ## 熱源群のエネルギー消費量（解説書 2.7.18）
