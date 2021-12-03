@@ -744,7 +744,7 @@ def calc_energy(inputdata, DEBUG = False):
         btype = inputdata["AirConditioningZone"][room_zone_name]["buildingType"]
         rtype = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
 
-        # 発熱量参照値 [W/m2] を読み込む関数（空調）
+        # 発熱量参照値 [W/m2] を読み込む関数（空調） SP-9
         if "room_usage_condition" in inputdata["SpecialInputData"]:
             (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
                 bc.get_roomHeatGain(btype, rtype, inputdata["SpecialInputData"]["room_usage_condition"])
@@ -1282,7 +1282,7 @@ def calc_energy(inputdata, DEBUG = False):
     for room_zone_name in inputdata["AirConditioningZone"]:
 
         # 各室の外気導入量 [m3/h]
-        if "room_usage_condition" in inputdata["SpecialInputData"]:    # SPシートで任意の入力がされている場合
+        if "room_usage_condition" in inputdata["SpecialInputData"]:    # SP-9シートで任意の入力がされている場合
 
             inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
                 bc.get_roomOutdoorAirVolume( 
@@ -1491,7 +1491,24 @@ def calc_energy(inputdata, DEBUG = False):
             # 空調負荷のグラフ化
             mf.hourlyplot( resultJson["AHU"][ahu_name]["Qahu_hourly"] , "空調負荷： "+ahu_name, "b", "時刻別空調負荷")
 
+    ##----------------------------------------------------------------------------------
+    ## 任意評定用　空調負荷（ SP-10 ）
+    ##----------------------------------------------------------------------------------
 
+    if "SpecialInputData" in inputdata:
+        if "Qahu" in inputdata["SpecialInputData"]:
+
+            for ahu_name in inputdata["SpecialInputData"]["Qahu"]: # SP-10シートに入力された空調機群毎に処理
+                if ahu_name in resultJson["AHU"]:  # SP-10シートに入力された室が空調機群として存在していれば
+
+                    for dd in range(0,365):
+                        for hh in range(0,24):
+
+                            # 空調負荷[kW] → [MJ/h]
+                            resultJson["AHU"][ahu_name]["Qahu_hourly"][dd][hh] = inputdata["SpecialInputData"]["Qahu"][ahu_name][dd][hh] * 3600 / 1000
+                            # 外気冷房は強制的に0とする（既に見込まれているものとする）
+                            resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd][hh] = 0
+                    
     ##----------------------------------------------------------------------------------
     ## 空調機群の負荷率（解説書 2.5.6）
     ##----------------------------------------------------------------------------------
