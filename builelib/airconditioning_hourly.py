@@ -306,9 +306,7 @@ def calc_energy(inputdata, DEBUG = False):
     ## 室負荷計算（解説書 2.4）
     ##----------------------------------------------------------------------------------
 
-    ##----------------------------------------------------------------------------------
     ## 結果格納用の変数 resultJson　（室負荷）
-    ##----------------------------------------------------------------------------------
     for room_zone_name in inputdata["AirConditioningZone"]:
 
         resultJson["Qroom"][room_zone_name] = {
@@ -587,28 +585,24 @@ def calc_energy(inputdata, DEBUG = False):
 
                 if wall_configure["Direction"] == "水平（上）":  # 天井と見なす。
 
-                    # 動的負荷計算用
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
                         inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_roof"]
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
 
                 elif wall_configure["Direction"] == "水平（下）":  # 床と見なす。
 
-                    # 動的負荷計算用
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
                         inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_floor"]
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
 
                 else:
 
-                    # 動的負荷計算用
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
                         inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_wall"]
                     inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
 
             else:
 
-                # 動的負荷計算用
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
                     inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"]
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
@@ -670,6 +664,7 @@ def calc_energy(inputdata, DEBUG = False):
                             inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue_blind"]
                         inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["windowArea"] = \
                             window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"]
+
 
                     # 任意入力 SP-8
                     if "window_Ivalue" in inputdata["SpecialInputData"]:
@@ -1633,7 +1628,7 @@ def calc_energy(inputdata, DEBUG = False):
             print(resultJson["AHU"][ahu_name]["Eahu_total"])
             print(resultJson["AHU"][ahu_name]["Tahu_total"])
 
-            mf.histgram_matrix_fan( resultJson["AHU"][ahu_name]["load_ratio"], resultJson["AHU"][ahu_name]["Qahu_hourly"], resultJson["AHU"][ahu_name]["E_fan_hourly"] )
+            mf.histgram_matrix_ahu( resultJson["AHU"][ahu_name]["load_ratio"], resultJson["AHU"][ahu_name]["Qahu_hourly"], resultJson["AHU"][ahu_name]["E_fan_hourly"] )
 
 
     ##----------------------------------------------------------------------------------

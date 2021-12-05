@@ -58,7 +58,7 @@ def hourlyplot(x, lable_text, color_name, title_text):
     ax.grid()
 
 
-def histgram_matrix_fan(load_ratio, heat_amount, energy):
+def histgram_matrix_ahu(load_ratio, heat_amount, energy):
     """
     空調機群の計算結果をマトリックス表示する関数
     """
@@ -197,8 +197,14 @@ def histgram_matrix_pump(load_ratio, number_of_operation, energy_consumption):
     ax.grid()
 
 
+def histgram_matrix_ref(load_ratio, heat_amount, energy):
+    """
+    熱源群の計算結果をマトリックス表示する関数
+    """
 
-
+    print(load_ratio)
+    print(heat_amount)
+    print(energy)
 
 
 
