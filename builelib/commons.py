@@ -8,6 +8,7 @@ import numpy as np
 import os
 # import pandas as pd
 import itertools
+import math
 
 # 電気の量 1kWh を熱量 kJ に換算する係数
 fprime = 9760
@@ -46,14 +47,37 @@ class MyEncoder(json.JSONEncoder):
             return super(MyEncoder, self).default(obj)
 
 
+def count_Matrix(x, mxL):
+    """
+    負荷率 X がマトリックス mxL の何番目（ix）のセルに入るかをカウント
+    ＜現在は使用していない＞
+    """
+
+    # 初期値
+    ix = 0
+
+    # C#の処理に合わせる（代表負荷率にする）
+    # 負荷率1.00の場合は x=1.05となるため過負荷判定
+    x = math.floor(x*10)/10+0.05
+
+    # 該当するマトリックスを探査
+    while x > mxL[ix]:
+        ix += 1
+
+        if ix == len(mxL)-1:
+            break
+
+    return ix+1
+
+
 def air_enthalpy(Tdb, X):
     """
     空気のエンタルピーを算出する関数
     """
     
     Ca = 1.006  # 乾き空気の定圧比熱 [kJ/kg･K]
-    Cw = 1.805  # 水蒸気の定圧比熱 [kJ/kg･K]
-    Lw = 2502   # 水の蒸発潜熱 [kJ/kg]
+    Cw = 1.86   # 水蒸気の定圧比熱 [kJ/kg･K]
+    Lw = 2501   # 水の蒸発潜熱 [kJ/kg]
 
     if len(Tdb) != len(X):
         raise Exception('温度と湿度のリストの長さが異なります。')
