@@ -4672,7 +4672,7 @@ def calc_energy(inputdata, DEBUG = False):
                 resultJson["for_CGS"]["T_ref_cgsH_day"] = resultJson["REF"][ref_name]["Tref"]
 
         # 空気調和設備の電力消費量 [MWh/day]
-        resultJson["for_CGS"]["electric_power_comsumption"] = \
+        resultJson["for_CGS"]["electric_power_consumption"] = \
             + resultJson["for_CGS"]["E_ref_main_MWh_day"] \
             + resultJson["for_CGS"]["E_ref_sub_MWh_day"] \
             + resultJson["for_CGS"]["E_pump_MWh_day"] \

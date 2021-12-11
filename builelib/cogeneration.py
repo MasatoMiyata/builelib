@@ -83,7 +83,7 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
 
     # 日付dにおける空気調和設備の電力消費量	MWh/日
     if resultJson_for_CGS["AC"]:
-        EAC_total_d = np.array(resultJson_for_CGS["AC"]["electric_power_comsumption"])
+        EAC_total_d = np.array(resultJson_for_CGS["AC"]["electric_power_consumption"])
     else:
         EAC_total_d = np.zeros(365)
 
