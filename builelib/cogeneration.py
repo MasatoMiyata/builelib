@@ -759,7 +759,7 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     resultJson["年間一次エネルギー削減量(電力)"] = np.sum(Ee_red_d)/1000           # 年間一次エネルギー削減量(電力) [GJ]
     resultJson["年間一次エネルギー削減量(冷房)"] = np.sum(EAC_ref_c_red_d)/1000    # 年間一次エネルギー削減量(冷房) [GJ]
     resultJson["年間一次エネルギー削減量(暖房)"] = np.sum(EAC_ref_h_red_d)/1000    # 年間一次エネルギー削減量(暖房) [GJ]
-    resultJson["年間一次エネルギー削減量(給湯) "] = np.sum(EW_red_d)/1000           # 年間一次エネルギー削減量(給湯) [GJ]
+    resultJson["年間一次エネルギー削減量(給湯)"] = np.sum(EW_red_d)/1000           # 年間一次エネルギー削減量(給湯) [GJ]
     resultJson["年間一次エネルギー削減量"] = np.sum(Etotal_cgs_red_d)/1000   # 年間一次エネルギー削減量合計 [GJ]
 
     if DEBUG: # pragma: no cover
