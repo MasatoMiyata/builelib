@@ -3,8 +3,8 @@
 # buileibをコマンドラインで実行するファイル
 #-----------------------------------------------------------------------------
 # 使用方法
-# % python3 -m builelib_run.py (実行モード) (入力シートファイル名)
-# % python3 -m builelib_run.py True ./sample/Builelib_sample_SP9.xlsm
+# % python3 -m builelib_run (実行モード) (入力シートファイル名)
+# % python3 -m builelib_run True ./sample/Builelib_sample_SP1.xlsm
 #-----------------------------------------------------------------------------
 
 import json
@@ -17,7 +17,7 @@ import zipfile
 import math
 
 from builelib.make_inputdata import make_jsondata_from_Ver2_sheet, make_jsondata_from_Ver4_sheet
-from builelib import airconditioning, ventilation, lighting, hotwatersupply, elevetor, photovoltaic, other_energy, cogeneration
+from builelib import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevetor, photovoltaic, other_energy, cogeneration
 
 
 # json.dump用のクラス
@@ -129,11 +129,12 @@ with open(inputfile_name_split[0] + "_input.json",'w', encoding='utf-8') as fw:
 
 # 実行
 resultdata_AC = {}
+
 if exec_calculation:
     
     try:
         if inputdata["AirConditioningZone"]:   # AirConditioningZone が 空 でなければ
-            resultdata_AC = airconditioning.calc_energy(inputdata, DEBUG = False)
+            resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug = False)
 
             # CGSの計算に必要となる変数
             resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
@@ -476,12 +477,12 @@ with zipfile.ZipFile(inputfile_name_split[0]+".zip", 'w', compression=zipfile.ZI
     new_zip.write( inputfile_name_split[0] + "_result_Other.json", arcname='builelib_result_Ohter.json')
 
 # ファイル削除
-os.remove( inputfile_name_split[0] + "_input.json" )
-os.remove( inputfile_name_split[0] + "_result_AC.json" )
-os.remove( inputfile_name_split[0] + "_result_V.json" )
-os.remove( inputfile_name_split[0] + "_result_L.json" )
-os.remove( inputfile_name_split[0] + "_result_HW.json" )
-os.remove( inputfile_name_split[0] + "_result_EV.json" )
-os.remove( inputfile_name_split[0] + "_result_PV.json" )
-os.remove( inputfile_name_split[0] + "_result_CGS.json" )
-os.remove( inputfile_name_split[0] + "_result_Other.json" )
+# os.remove( inputfile_name_split[0] + "_input.json" )
+# os.remove( inputfile_name_split[0] + "_result_AC.json" )
+# os.remove( inputfile_name_split[0] + "_result_V.json" )
+# os.remove( inputfile_name_split[0] + "_result_L.json" )
+# os.remove( inputfile_name_split[0] + "_result_HW.json" )
+# os.remove( inputfile_name_split[0] + "_result_EV.json" )
+# os.remove( inputfile_name_split[0] + "_result_PV.json" )
+# os.remove( inputfile_name_split[0] + "_result_CGS.json" )
+# os.remove( inputfile_name_split[0] + "_result_Other.json" )
