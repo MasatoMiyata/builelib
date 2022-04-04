@@ -237,13 +237,19 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] = np.sum(resultJson["PhotovoltaicSystems"][system_name]["Ep"],0)
 
         # 発電量（一次エネ換算） [kWh] * [kJ/kWh] / 1000 = [MJ]
-        resultJson["E_photovoltaic"] += resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] * bc.fprime / 1000
+        resultJson["PhotovoltaicSystems"][system_name]["Ep_MJ"] = resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] * bc.fprime / 1000
+
+        # 発電量を積算
+        resultJson["E_photovoltaic"] += resultJson["PhotovoltaicSystems"][system_name]["Ep_MJ"]
 
         # 発電量（日積算） [MWh/day]
         for dd in range(0,365):
             for hh in range(0,24):
                 tt = 24*dd+hh
                 resultJson["for_CGS"]["Edesign_MWh_day"][dd] += resultJson["PhotovoltaicSystems"][system_name]["Ep"][tt] / 1000
+
+        resultJson["E_photovoltaic_GJ"] = resultJson["E_photovoltaic"] /1000
+
 
     return resultJson
 
@@ -252,7 +258,7 @@ if __name__ == '__main__':
 
     print('----- photovoltaic.py -----')
     # filename = './tests/cogeneration/Case_hospital_05.json'
-    filename = './tests/photovoltaic/PV_case01.json'
+    filename = './sample/Builelib_sample_SP1_input.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
