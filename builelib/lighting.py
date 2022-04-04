@@ -60,7 +60,7 @@ def calc_energy(inputdata, DEBUG = False):
     E_lighting = 0    # 設計一次エネルギー消費量 [GJ]
     E_lighting_hourly = np.zeros((365,24))  # 設計一次エネルギー消費量（時刻別） [GJ]
     Es_lighting = 0   # 基準一次エネルギー消費量 [GJ]
-
+    total_area = 0    # 建物全体の床面積
 
     ##----------------------------------------------------------------------------------
     ## 任意評定 （SP-6: カレンダーパターン)
@@ -178,6 +178,8 @@ def calc_energy(inputdata, DEBUG = False):
         E_lighting += E_room  
         E_lighting_hourly += E_room_hourly
 
+        total_area += roomArea
+
         # 床面積あたりの設計一次エネルギー消費量 [MJ/m2]
         if roomArea <= 0:
             PrimaryEnergyPerArea = None
@@ -199,9 +201,10 @@ def calc_energy(inputdata, DEBUG = False):
                 "roomIndex": roomIndex,
                 "roomIndexCoeff": roomIndexCoeff,
                 "unitPower": unitPower,
-                "PrimaryEnergy": E_room,
-                "PrimaryEnergyPerArea": PrimaryEnergyPerArea,
-                "StandardEnergy": Es_room
+                "primaryEnergy": E_room,
+                "standardEnergy": Es_room,
+                "primaryEnergyPerArea": PrimaryEnergyPerArea,
+                "energyRatio": E_room / Es_room
             }
 
         if DEBUG:
@@ -216,10 +219,15 @@ def calc_energy(inputdata, DEBUG = False):
         BEI_L = E_lighting / Es_lighting
         
     # 建物全体の計算結果
-    resultJson["E_lighting"] = E_lighting
-    resultJson["Es_lighting"] = Es_lighting
     resultJson["BEI_L"] = BEI_L
-    resultJson["E_lighting_hourly"] = E_lighting_hourly
+    resultJson["total_area"] = total_area
+    resultJson["E_lighting"] = E_lighting
+    resultJson["E_lighting_GJ"] = E_lighting /1000
+    resultJson["E_lighting_MJ_m2"] = E_lighting /total_area
+    resultJson["Es_lighting"] = Es_lighting
+    resultJson["Es_lighting_GJ"] = Es_lighting /1000
+    resultJson["Es_lighting_MJ_m2"] = Es_lighting /total_area
+    # resultJson["E_lighting_hourly"] = E_lighting_hourly
 
     # 日積算値
     resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly/9760,1)
