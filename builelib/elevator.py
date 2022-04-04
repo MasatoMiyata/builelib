@@ -14,8 +14,8 @@ def calc_energy(inputdata, DEBUG = False):
     # 計算結果を格納する変数
     #----------------------------------------------------------------------------------
     resultJson = {
-        "E_elevetor": 0,
-        "Es_elevetor": 0,
+        "E_elevator": 0,
+        "Es_elevator": 0,
         "BEI_EV": 0,
         "Elevators": {},
         "for_CGS":{
@@ -124,10 +124,10 @@ def calc_energy(inputdata, DEBUG = False):
     for room_name in inputdata["Elevators"]:
         for unit_id, unit_configure in enumerate(inputdata["Elevators"][room_name]["Elevator"]):
 
-            resultJson["E_elevetor"] += unit_configure["energy_consumption"] * 9760 / 1000
+            resultJson["E_elevator"] += unit_configure["energy_consumption"] * 9760 / 1000
 
     if DEBUG:
-        print(f'昇降機の設計一次エネルギー消費量  {resultJson["E_elevetor"]}  MJ/年')
+        print(f'昇降機の設計一次エネルギー消費量  {resultJson["E_elevator"]}  MJ/年')
 
 
     #----------------------------------------------------------------------------------
@@ -144,19 +144,26 @@ def calc_energy(inputdata, DEBUG = False):
                 unit_configure["TransportCapacityFactor"] * \
                 inputdata["Elevators"][room_name]["operation_time"] / 860 
 
+            inputdata["Elevators"][room_name]["Elevator"][unit_id]["energyRatio"] = \
+                inputdata["Elevators"][room_name]["Elevator"][unit_id]["energy_consumption"] / inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"]
+
             # 基準一次エネルギー消費量計算 [MJ/年]
-            resultJson["Es_elevetor"] += inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] * 9760 / 1000
+            resultJson["Es_elevator"] += inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] * 9760 / 1000
 
     if DEBUG:
-        print(f'昇降機の基準一次エネルギー消費量  {resultJson["Es_elevetor"]}  MJ/年')
+        print(f'昇降機の基準一次エネルギー消費量  {resultJson["Es_elevator"]}  MJ/年')
 
+
+    # 単位変換
+    resultJson["E_elevator_GJ"]  = resultJson["E_elevator"] /1000
+    resultJson["Es_elevator_GJ"] = resultJson["Es_elevator"] /1000
 
     # 入力データも出力
-    resultJson["Elevetors"] = inputdata["Elevators"]
+    resultJson["Elevators"] = inputdata["Elevators"]
 
     # BEI/Vの計算
-    if resultJson["Es_elevetor"] != 0:
-        resultJson["BEI_EV"] = resultJson["E_elevetor"] / resultJson["Es_elevetor"]
+    if resultJson["Es_elevator"] != 0:
+        resultJson["BEI_EV"] = resultJson["E_elevator"] / resultJson["Es_elevator"]
     else:
         resultJson["BEI_EV"] = np.nan
 
@@ -168,7 +175,7 @@ def calc_energy(inputdata, DEBUG = False):
 
 if __name__ == '__main__':
 
-    print('----- elevetor.py -----')
+    print('----- elevator.py -----')
     filename = './sample/Builelib_sample_SP7-1.json'
 
     # 入力ファイルの読み込み
