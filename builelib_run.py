@@ -17,7 +17,7 @@ import zipfile
 import math
 
 from builelib.make_inputdata import make_jsondata_from_Ver2_sheet, make_jsondata_from_Ver4_sheet
-from builelib import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevetor, photovoltaic, other_energy, cogeneration
+from builelib import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
 
 
 # json.dump用のクラス
@@ -296,16 +296,16 @@ if exec_calculation:
 
     try:
         if inputdata["Elevators"]:   # Elevators が 空 でなければ
-            resultdata_EV = elevetor.calc_energy(inputdata, DEBUG = False)
+            resultdata_EV = elevator.calc_energy(inputdata, DEBUG = False)
 
             # CGSの計算に必要となる変数
             resultJson_for_CGS["EV"] = resultdata_EV["for_CGS"]
 
             # 設計一次エネ・基準一次エネに追加
-            calc_reuslt["設計一次エネルギー消費量 [MJ]"] += resultdata_EV["E_elevetor"]
-            calc_reuslt["基準一次エネルギー消費量 [MJ]"] += resultdata_EV["Es_elevetor"]
-            calc_reuslt["設計一次エネルギー消費量（昇降機） [MJ]"] = resultdata_EV["E_elevetor"]
-            calc_reuslt["基準一次エネルギー消費量（昇降機） [MJ]"] = resultdata_EV["Es_elevetor"]
+            calc_reuslt["設計一次エネルギー消費量 [MJ]"] += resultdata_EV["E_elevator"]
+            calc_reuslt["基準一次エネルギー消費量 [MJ]"] += resultdata_EV["Es_elevator"]
+            calc_reuslt["設計一次エネルギー消費量（昇降機） [MJ]"] = resultdata_EV["E_elevator"]
+            calc_reuslt["基準一次エネルギー消費量（昇降機） [MJ]"] = resultdata_EV["Es_elevator"]
             calc_reuslt["BEI_EV"] = math.ceil(resultdata_EV["BEI_EV"] * 100) / 100
 
         else:
