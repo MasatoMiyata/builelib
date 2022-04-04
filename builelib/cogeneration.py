@@ -730,6 +730,8 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
 
 
     # 結果の出力
+    resultJson["システム名称"] = cgs_name # 系統名称
+
     resultJson["年間運転時間"] = np.sum(Tcgs_d * Ncgs_on_d)    # 年間運転時間 [時間・台]
 
     if np.sum(Ncgs_on_d) == 0:
@@ -796,7 +798,7 @@ if __name__ == '__main__':  # pragma: no cover
     import ventilation
     import lighting
     import hotwatersupply
-    import elevetor
+    import elevator
     import photovoltaic
     import other_energy
 
@@ -813,7 +815,7 @@ if __name__ == '__main__':  # pragma: no cover
         resultJsonHW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
         resultJson_for_CGS["HW"] = resultJsonHW["for_CGS"]
     if inputdata["Elevators"]: 
-        resultJsonEV = elevetor.calc_energy(inputdata, DEBUG = False)
+        resultJsonEV = elevator.calc_energy(inputdata, DEBUG = False)
         resultJson_for_CGS["EV"] = resultJsonEV["for_CGS"]
     if inputdata["PhotovoltaicSystems"]:
         resultJsonPV = photovoltaic.calc_energy(inputdata, DEBUG = False)
