@@ -1,3 +1,4 @@
+import re
 import sys
 import json
 import numpy as np
@@ -18,11 +19,19 @@ def calc_energy(inputdata, DEBUG = False):
 
     # 計算結果を格納する変数
     resultJson = {
-        "E_hotwatersupply": 0,    # 給湯設備の設計一次エネルギー消費量 [MJ/年]
-        "Es_hotwatersupply": 0,   # 給湯設備の基準一次エネルギー消費量 [MJ/年]
-        "BEI_HW": 0,
-        "hotwatersupply":{
+
+        "設計一次エネルギー消費量[MJ/年]": 0,   # 給湯設備の設計一次エネルギー消費量 [MJ/年]
+        "基準一次エネルギー消費量[MJ/年]": 0,   # 給湯設備の基準一次エネルギー消費量 [MJ/年]
+        "設計一次エネルギー消費量[GJ/年]": 0,   # 給湯設備の設計一次エネルギー消費量 [GJ/年]
+        "基準一次エネルギー消費量[GJ/年]": 0,   # 給湯設備の基準一次エネルギー消費量 [GJ/年]
+        "設計一次エネルギー消費量[MJ/m2年]": 0,   # 給湯設備の設計一次エネルギー消費量 [MJ/年]
+        "基準一次エネルギー消費量[MJ/m2年]": 0,   # 給湯設備の基準一次エネルギー消費量 [MJ/年]
+        "BEI/HW": 0,
+        "計算対象面積": 0,
+        
+        "HotwaterSupplySystems":{
         },
+        
         "for_CGS":{
             "Edesign_MWh_Ele_day": 0, # 給湯設備（エネルギー源を電力とする給湯機器のみが対象）の電力消費量
             "Edesign_MJ_CGS_day": 0,  # 排熱利用する給湯系統の一次エネルギー消費量
@@ -185,11 +194,6 @@ def calc_energy(inputdata, DEBUG = False):
             print(f'  - 日別給湯使用量（厨房） {np.sum(inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"])}')
             print(f'  - 日別給湯使用量（その他） {np.sum(inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"])}')
 
-            # np.savetxt("日別給湯使用量（手洗い）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_washroom_daily"])
-            # np.savetxt("日別給湯使用量（シャワー）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_shower_daily"])
-            # np.savetxt("日別給湯使用量（厨房）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"])
-            # np.savetxt("日別給湯使用量（その他）_" + room_name + ".txt", inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"])
-
 
     #----------------------------------------------------------------------------------
     # 解説書 D.5 給湯配管の線熱損失係数
@@ -265,10 +269,6 @@ def calc_energy(inputdata, DEBUG = False):
     elif inputdata["Building"]["Region"] == '8':
         TWdata = 0.6921*Toa_ave + 7.167
 
-    # if DEBUG:
-    #     np.savetxt("日平均外気温度.txt", Toa_ave)
-    #     np.savetxt("日平均給水温度.txt", TWdata)
-
 
     #----------------------------------------------------------------------------------
     # 解説書 5.2 日積算湯使用量
@@ -288,9 +288,6 @@ def calc_energy(inputdata, DEBUG = False):
                 inputdata["HotwaterRoom"][room_name]["HotwaterSystem"][unit_id]["RatedCapacity_total"]
 
     for room_name in inputdata["HotwaterRoom"]:
-
-        if DEBUG:
-            print(f'室名称 {room_name}')
 
         for unit_id, unit_configure in enumerate(inputdata["HotwaterRoom"][room_name]["HotwaterSystem"]):
 
@@ -348,7 +345,6 @@ def calc_energy(inputdata, DEBUG = False):
             print(f'  - 日積算湯供給量 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qsr_eqp_daily"])}')
             print(f'  - 日積算湯供給量（節湯込み） {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qs_eqp_daily"])}')
 
-            # np.savetxt("日積算湯供給量（節湯込み）_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["Qs_eqp_daily"])
             
 
     #----------------------------------------------------------------------------------
@@ -438,7 +434,6 @@ def calc_energy(inputdata, DEBUG = False):
             print(f'機器名称 {unit_name}')
             print(f'  - 太陽熱利用システムの熱利用量 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qs_solargain"])}')
 
-            # np.savetxt("太陽熱利用システムの熱利用量_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["Qs_solargain"])
 
     #----------------------------------------------------------------------------------
     # 解説書 5.6 年間給湯負荷
@@ -478,7 +473,6 @@ def calc_energy(inputdata, DEBUG = False):
             print(f'機器名称 {unit_name}')
             print(f'  - 日積算給湯負荷 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qh_eqp_daily"])}')
 
-            # np.savetxt("日積算給湯負荷_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["Qh_eqp_daily"])
 
     #----------------------------------------------------------------------------------
     # 解説書 5.7 給湯設備の設計一次エネルギー消費量
@@ -486,7 +480,7 @@ def calc_energy(inputdata, DEBUG = False):
 
     for unit_name in inputdata["HotwaterSupplySystems"]:
 
-        # 日別給湯負荷＋配管熱損失 [kJ/day]
+        # 日別給湯負荷＋配管熱損失（＝給湯加熱負荷） [kJ/day]
         inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"] = \
             inputdata["HotwaterSupplySystems"][unit_name]["Qh_eqp_daily"] + \
             inputdata["HotwaterSupplySystems"][unit_name]["Qp_eqp"] * 2.5
@@ -496,36 +490,79 @@ def calc_energy(inputdata, DEBUG = False):
             inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"] / inputdata["HotwaterSupplySystems"][unit_name]["RatedEfficiency_total"]
 
         # 設計一次エネルギー消費量 [MJ/day]
-        resultJson["E_hotwatersupply"] += np.sum(inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"])/1000
+        resultJson["設計一次エネルギー消費量[MJ/年]"] += np.sum(inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"])/1000
 
         if DEBUG:
             print(f'機器名称 {unit_name}')
             print(f'  - 日別給湯負荷と配管熱損失 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"])}')
             print(f'  - 日別消費エネルギー消費量 {np.sum(inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"])}')
 
-            # np.savetxt("日別給湯負荷と配管熱損失_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"])
-            # np.savetxt("日別消費エネルギー消費量_" + unit_name + ".txt", inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"])
-
     if DEBUG:
-        print(f'設計一次エネルギー消費量 {resultJson["E_hotwatersupply"]} MJ/年')
+        print(f'設計一次エネルギー消費量 {resultJson["設計一次エネルギー消費量[MJ/年]"]} MJ/年')
+
+
+    #----------------------------------------------------------------------------------
+    # 結果の保存
+    #----------------------------------------------------------------------------------
+
+    for unit_name in inputdata["HotwaterSupplySystems"]:
+
+        resultJson["HotwaterSupplySystems"][unit_name] = inputdata["HotwaterSupplySystems"][unit_name]
+
+        resultJson["HotwaterSupplySystems"][unit_name]["湯使用量（節湯込）[L/年]"] = np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qs_eqp_daily"]/1000)
+        resultJson["HotwaterSupplySystems"][unit_name]["太陽熱利用量[MJ/年]"] = np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qs_solargain"]/1000)
+        resultJson["HotwaterSupplySystems"][unit_name]["給湯加熱負荷[MJ/年]"] = np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Q_eqp"]/1000)
+        resultJson["HotwaterSupplySystems"][unit_name]["配管熱損失[MJ/年]"] = np.sum(inputdata["HotwaterSupplySystems"][unit_name]["Qp_eqp"]/1000)
+        resultJson["HotwaterSupplySystems"][unit_name]["設計一次エネルギー消費量[MJ/年]"] = np.sum(inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"]/1000)
+
+        # 初期化　→ 次の処理で値を代入
+        resultJson["HotwaterSupplySystems"][unit_name]["基準一次エネルギー消費量[MJ/年]"] = 0
 
 
     #----------------------------------------------------------------------------------
     # 解説書 10.4 給湯設備の基準一次エネルギー消費量
     #----------------------------------------------------------------------------------
 
+    resultJson["基準一次エネルギー消費量[MJ/年]"] = 0
     for room_name in inputdata["HotwaterRoom"]:
 
         # 建物用途、室用途（可読性重視で一旦変数に代入する）
         buildingType = inputdata["Rooms"][room_name]["buildingType"]
         roomType     = inputdata["Rooms"][room_name]["roomType"]
     
-        resultJson["Es_hotwatersupply"] += \
+        #　計算対象面積[m2]
+        resultJson["計算対象面積"] += inputdata["Rooms"][room_name]["roomArea"]
+
+        inputdata["HotwaterRoom"][room_name]["基準一次エネルギー消費量[MJ/年]"] = \
             bc.RoomStandardValue[buildingType][roomType]["給湯"][inputdata["Building"]["Region"]+"地域"] * \
             inputdata["Rooms"][room_name]["roomArea"]
 
+        # 積算する
+        resultJson["基準一次エネルギー消費量[MJ/年]"] += inputdata["HotwaterRoom"][room_name]["基準一次エネルギー消費量[MJ/年]"] 
+
+        # 熱源単位に振り分け（参考情報）
+        for unit_id, unit_configure in enumerate(inputdata["HotwaterRoom"][room_name]["HotwaterSystem"]):
+
+            unit_name = unit_configure["SystemName"]
+
+            resultJson["HotwaterSupplySystems"][unit_name]["基準一次エネルギー消費量[MJ/年]"] += \
+                inputdata["HotwaterRoom"][room_name]["基準一次エネルギー消費量[MJ/年]"] * unit_configure["roomPowerRatio"]
+
+
+
     # BEI/HW
-    resultJson["BEI_HW"] = resultJson["E_hotwatersupply"] / resultJson["Es_hotwatersupply"]
+    resultJson["BEI/HW"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["基準一次エネルギー消費量[MJ/年]"]
+
+    resultJson["設計一次エネルギー消費量[GJ/年]"] = resultJson["設計一次エネルギー消費量[MJ/年]"] /1000
+    resultJson["基準一次エネルギー消費量[GJ/年]"] = resultJson["基準一次エネルギー消費量[MJ/年]"] /1000
+    resultJson["設計一次エネルギー消費量[MJ/m2年]"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["計算対象面積"]
+    resultJson["基準一次エネルギー消費量[MJ/m2年]"] = resultJson["基準一次エネルギー消費量[MJ/年]"] / resultJson["計算対象面積"]
+
+
+    for unit_name in inputdata["HotwaterSupplySystems"]:
+        resultJson["HotwaterSupplySystems"][unit_name]["設計値/基準値"] = \
+            resultJson["HotwaterSupplySystems"][unit_name]["設計一次エネルギー消費量[MJ/年]"] / resultJson["HotwaterSupplySystems"][unit_name]["基準一次エネルギー消費量[MJ/年]"]
+
 
 
     #----------------------------------------------------------------------------------

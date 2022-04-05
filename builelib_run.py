@@ -260,6 +260,7 @@ with open(inputfile_name_split[0] + "_result_L.json",'w', encoding='utf-8') as f
 
 # 実行
 resultdata_HW = {}
+
 if exec_calculation:
 
     try:
@@ -270,11 +271,11 @@ if exec_calculation:
             resultJson_for_CGS["HW"] = resultdata_HW["for_CGS"]
 
             # 設計一次エネ・基準一次エネに追加
-            energy_consumption_design += resultdata_HW["E_hotwatersupply"]
-            energy_consumption_standard += resultdata_HW["Es_hotwatersupply"]
-            calc_reuslt["設計一次エネルギー消費量（給湯） [MJ]"] = resultdata_HW["E_hotwatersupply"]
-            calc_reuslt["基準一次エネルギー消費量（給湯） [MJ]"] = resultdata_HW["Es_hotwatersupply"]
-            calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI_HW"] * 100) / 100
+            energy_consumption_design += resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
+            energy_consumption_standard += resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["設計一次エネルギー消費量（給湯） [MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["基準一次エネルギー消費量（給湯） [MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
         else:
             resultdata_HW = {
                 "message": "給湯設備はありません。"
