@@ -367,13 +367,24 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["for_CGS"]["Edesign_MWh_day"][day] = np.sum(resultJson["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (bc.fprime) 
 
 
+    ##----------------------------------------------------------------------------------
+    # 不要な要素を削除
+    ##----------------------------------------------------------------------------------
+
+    del resultJson["時刻別設計一次エネルギー消費量[MJ/h]"]
+
+    for roomID, isys in inputdata["VentilationRoom"].items():
+        del resultJson["ventilation"][roomID]["opeTime_hourly"]
+        del resultJson["ventilation"][roomID]["時刻別設計一次エネルギー消費量[MJ/h]"]
+
+
     return resultJson
 
 
 if __name__ == '__main__':
 
     print('----- ventilation.py -----')
-    filename = './sample/Builelib_sample_SP9.json'
+    filename = './sample/WEBPRO_inputSheet_sample.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
@@ -381,8 +392,8 @@ if __name__ == '__main__':
 
     resultJson = calc_energy(inputdata, DEBUG = False)
 
-    print( f'設計一次エネルギー消費量[MJ] {resultJson["設計一次エネルギー消費量[MJ/年]"]}')
-    print( f'基準一次エネルギー消費量[MJ] {resultJson["基準一次エネルギー消費量[MJ/年]"]}')
-
     with open("resultJson_V.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
+    
+    print( f'設計一次エネルギー消費量[MJ] {resultJson["設計一次エネルギー消費量[MJ/年]"]}')
+    print( f'基準一次エネルギー消費量[MJ] {resultJson["基準一次エネルギー消費量[MJ/年]"]}')
