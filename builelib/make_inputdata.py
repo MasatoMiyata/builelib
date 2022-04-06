@@ -572,7 +572,7 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
 
                 data["SecondaryPumpSystem"][unitKey] = {
                     modeKey : {
-                        "TempelatureDifference": float(dataAC3[2]),
+                        "TemperatureDifference": float(dataAC3[2]),
                         "isStagingControl": set_default(dataAC3[3], "無", "str"),
                         "SecondaryPump" :[
                             {
@@ -605,7 +605,7 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
                 modeKey = str(dataAC3[1])
 
                 data["SecondaryPumpSystem"][unitKey][modeKey] = {
-                    "TempelatureDifference": float(dataAC3[2]),
+                    "TemperatureDifference": float(dataAC3[2]),
                     "isStagingControl": set_default(dataAC3[3], "無", "str"),
                     "SecondaryPump" :[
                         {
@@ -2094,7 +2094,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                     data["SecondaryPumpSystem"][unitKey] = {
                         modeKey : {
-                            "TempelatureDifference": float(dataAC3[2]),
+                            "TemperatureDifference": float(dataAC3[2]),
                             "isStagingControl": set_default(dataAC3[1], "無", "str"),
                             "SecondaryPump" :[
                                 {
@@ -2117,7 +2117,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
                         data["SecondaryPumpSystem"][unitKey][modeKey] = \
                             {
-                                "TempelatureDifference": float(dataAC3[3]),
+                                "TemperatureDifference": float(dataAC3[3]),
                                 "isStagingControl": set_default(dataAC3[1], "無", "str"),
                                 "SecondaryPump" :[
                                     {
@@ -2135,7 +2135,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                             
                         data["SecondaryPumpSystem"][unitKey] = {
                             modeKey : {
-                                "TempelatureDifference": float(dataAC3[3]),
+                                "TemperatureDifference": float(dataAC3[3]),
                                 "isStagingControl": set_default(dataAC3[1], "無", "str"),
                                 "SecondaryPump" :[
                                     {
@@ -3136,7 +3136,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'ZEB設計ガイドライン_中規模オフィス_6地域'
+    case_name = 'WEBPRO_inputSheet_sample'
 
     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
 
