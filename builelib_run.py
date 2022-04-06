@@ -46,30 +46,30 @@ inputfile_name   = str(sys.argv[2])   # 入力ファイル指定
 # 出力ファイルの定義
 #------------------------------------
 calc_reuslt = {
-    "設計一次エネルギー消費量 [MJ]" : 0,
-    "基準一次エネルギー消費量 [MJ]" : 0, 
+    "設計一次エネルギー消費量[MJ]" : 0,
+    "基準一次エネルギー消費量[MJ]" : 0, 
     "設計一次エネルギー消費量（その他除き）[MJ]" : 0,
     "基準一次エネルギー消費量（その他除き）[MJ]" : 0, 
     "BEI": 0,
     "設計一次エネルギー消費量（再エネ、その他除き）[MJ]" : 0,
     "BEI（再エネ除き）": 0,
-    "設計一次エネルギー消費量（空調） [MJ]": 0,
-    "基準一次エネルギー消費量（空調） [MJ]": 0,
+    "設計一次エネルギー消費量（空調）[MJ]": 0,
+    "基準一次エネルギー消費量（空調）[MJ]": 0,
     "BEI_AC": 0,   # BEI（空調）
-    "設計一次エネルギー消費量（換気） [MJ]": 0, 
-    "基準一次エネルギー消費量（換気） [MJ]": 0,
+    "設計一次エネルギー消費量（換気）[MJ]": 0, 
+    "基準一次エネルギー消費量（換気）[MJ]": 0,
     "BEI_V": 0,    # BEI（換気）
-    "設計一次エネルギー消費量（照明） [MJ]": 0,
-    "基準一次エネルギー消費量（照明） [MJ]": 0,
+    "設計一次エネルギー消費量（照明）[MJ]": 0,
+    "基準一次エネルギー消費量（照明）[MJ]": 0,
     "BEI_L": 0,    # BEI（照明）
-    "設計一次エネルギー消費量（給湯） [MJ]": 0,
-    "基準一次エネルギー消費量（給湯） [MJ]": 0, 
+    "設計一次エネルギー消費量（給湯）[MJ]": 0,
+    "基準一次エネルギー消費量（給湯）[MJ]": 0, 
     "BEI_HW": 0,   # BEI（給湯）
-    "設計一次エネルギー消費量（昇降機） [MJ]": 0, 
-    "基準一次エネルギー消費量（昇降機） [MJ]": 0, 
+    "設計一次エネルギー消費量（昇降機）[MJ]": 0, 
+    "基準一次エネルギー消費量（昇降機）[MJ]": 0, 
     "BEI_EV": 0,   # BEI（昇降機）
-    "その他一次エネルギー消費量 [MJ]" : 0,
-    "創エネルギー量（太陽光） [MJ]": 0, 
+    "その他一次エネルギー消費量[MJ]" : 0,
+    "創エネルギー量（太陽光）[MJ]": 0, 
     "創エネルギー量（コジェネ）[MJ]": 0, 
 }
 
@@ -84,9 +84,9 @@ resultJson_for_CGS = {
     "OT":{},
 }
 
-# 設計一次エネルギー消費量 [MJ]
+# 設計一次エネルギー消費量[MJ]
 energy_consumption_design = 0
-# 基準一次エネルギー消費量 [MJ]
+# 基準一次エネルギー消費量[MJ]
 energy_consumption_standard = 0
 
 #------------------------------------
@@ -150,8 +150,8 @@ if exec_calculation:
             # 設計一次エネ・基準一次エネに追加
             energy_consumption_design += resultdata_AC["E_airconditioning"]
             energy_consumption_standard += resultdata_AC["Es_airconditioning"]
-            calc_reuslt["設計一次エネルギー消費量（空調） [MJ]"] = resultdata_AC["E_airconditioning"]
-            calc_reuslt["基準一次エネルギー消費量（空調） [MJ]"] = resultdata_AC["Es_airconditioning"]
+            calc_reuslt["設計一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["E_airconditioning"]
+            calc_reuslt["基準一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["Es_airconditioning"]
             calc_reuslt["BEI_AC"] = math.ceil(resultdata_AC["BEI_AC"] * 100) / 100
 
         else:
@@ -191,8 +191,8 @@ if exec_calculation:
             # 設計一次エネ・基準一次エネに追加
             energy_consumption_design += resultdata_V["設計一次エネルギー消費量[MJ/年]"]
             energy_consumption_standard += resultdata_V["基準一次エネルギー消費量[MJ/年]"]
-            calc_reuslt["設計一次エネルギー消費量（換気） [MJ]"] = resultdata_V["設計一次エネルギー消費量[MJ/年]"]
-            calc_reuslt["基準一次エネルギー消費量（換気） [MJ]"] = resultdata_V["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["設計一次エネルギー消費量（換気）[MJ]"] = resultdata_V["設計一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["基準一次エネルギー消費量（換気）[MJ]"] = resultdata_V["基準一次エネルギー消費量[MJ/年]"]
             calc_reuslt["BEI_V"] = math.ceil(resultdata_V["BEI/V"] * 100) / 100
 
         else:
@@ -232,8 +232,8 @@ if exec_calculation:
             # 設計一次エネ・基準一次エネに追加
             energy_consumption_design += resultdata_L["E_lighting"]
             energy_consumption_standard += resultdata_L["Es_lighting"]
-            calc_reuslt["設計一次エネルギー消費量（照明） [MJ]"] = resultdata_L["E_lighting"]
-            calc_reuslt["基準一次エネルギー消費量（照明） [MJ]"] = resultdata_L["Es_lighting"]
+            calc_reuslt["設計一次エネルギー消費量（照明）[MJ]"] = resultdata_L["E_lighting"]
+            calc_reuslt["基準一次エネルギー消費量（照明）[MJ]"] = resultdata_L["Es_lighting"]
             calc_reuslt["BEI_L"] = math.ceil(resultdata_L["BEI_L"] * 100) / 100
 
         else:
@@ -273,8 +273,8 @@ if exec_calculation:
             # 設計一次エネ・基準一次エネに追加
             energy_consumption_design += resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
             energy_consumption_standard += resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
-            calc_reuslt["設計一次エネルギー消費量（給湯） [MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
-            calc_reuslt["基準一次エネルギー消費量（給湯） [MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
             calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
         else:
             resultdata_HW = {
@@ -313,8 +313,8 @@ if exec_calculation:
             # 設計一次エネ・基準一次エネに追加
             energy_consumption_design += resultdata_EV["E_elevator"]
             energy_consumption_standard += resultdata_EV["Es_elevator"]
-            calc_reuslt["設計一次エネルギー消費量（昇降機） [MJ]"] = resultdata_EV["E_elevator"]
-            calc_reuslt["基準一次エネルギー消費量（昇降機） [MJ]"] = resultdata_EV["Es_elevator"]
+            calc_reuslt["設計一次エネルギー消費量（昇降機）[MJ]"] = resultdata_EV["E_elevator"]
+            calc_reuslt["基準一次エネルギー消費量（昇降機）[MJ]"] = resultdata_EV["Es_elevator"]
             calc_reuslt["BEI_EV"] = math.ceil(resultdata_EV["BEI_EV"] * 100) / 100
 
         else:
@@ -353,7 +353,7 @@ if exec_calculation:
 
             # 設計一次エネ・基準一次エネに追加
             energy_consumption_design -= resultdata_PV["E_photovoltaic"]
-            calc_reuslt["創エネルギー量（太陽光） [MJ]"] = resultdata_PV["E_photovoltaic"]
+            calc_reuslt["創エネルギー量（太陽光）[MJ]"] = resultdata_PV["E_photovoltaic"]
 
         else:
             resultdata_PV = {
@@ -388,7 +388,7 @@ if exec_calculation:
 
             # CGSの計算に必要となる変数
             resultJson_for_CGS["OT"] = resultdata_OT["for_CGS"]
-            calc_reuslt["その他一次エネルギー消費量 [MJ]"] = resultdata_OT["E_other"]
+            calc_reuslt["その他一次エネルギー消費量[MJ]"] = resultdata_OT["E_other"]
 
         else:
             resultdata_OT = {
@@ -454,15 +454,15 @@ if energy_consumption_standard  != 0:
     calc_reuslt["BEI"] = energy_consumption_design / energy_consumption_standard 
     calc_reuslt["BEI"] = math.ceil(calc_reuslt["BEI"] * 100) / 100
 
-    calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] = energy_consumption_design + calc_reuslt["創エネルギー量（太陽光） [MJ]"]
+    calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] = energy_consumption_design + calc_reuslt["創エネルギー量（太陽光）[MJ]"]
 
     calc_reuslt["BEI（再エネ除き）"] = calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] / calc_reuslt["基準一次エネルギー消費量（その他除き）[MJ]"] 
     calc_reuslt["BEI（再エネ除き）"] = math.ceil(calc_reuslt["BEI（再エネ除き）"] * 100) / 100
 
     # 設計一次エネ・基準一次エネにその他を追加
     if "E_other" in resultdata_OT:
-        calc_reuslt["設計一次エネルギー消費量 [MJ]"] = energy_consumption_design + resultdata_OT["E_other"]
-        calc_reuslt["基準一次エネルギー消費量 [MJ]"] = energy_consumption_standard + resultdata_OT["E_other"]
+        calc_reuslt["設計一次エネルギー消費量[MJ]"] = energy_consumption_design + resultdata_OT["E_other"]
+        calc_reuslt["基準一次エネルギー消費量[MJ]"] = energy_consumption_standard + resultdata_OT["E_other"]
 
 
 #------------------------------------
