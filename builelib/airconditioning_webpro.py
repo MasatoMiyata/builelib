@@ -4692,7 +4692,22 @@ def calc_energy(inputdata, debug = False):
 
     # with open("inputdataJson_AC.json",'w', encoding='utf-8') as fw:
     #     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
-        
+
+
+    ##----------------------------------------------------------------------------------
+    # 不要な要素を削除
+    ##----------------------------------------------------------------------------------
+
+    del resultJson["Matrix"]
+    del resultJson["Qroom"]
+    del resultJson["AHU"]
+    del resultJson["PUMP"]
+    del resultJson["REF"]
+    del resultJson["ENERGY"]["E_fan_MWh_day"]
+    del resultJson["ENERGY"]["E_pump_MWh_day"]
+    del resultJson["ENERGY"]["E_ref_main_MWh_day"]
+    del resultJson["ENERGY"]["E_ref_sub_MWh_day"]
+
     return resultJson
 
 
