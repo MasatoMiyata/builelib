@@ -3016,7 +3016,7 @@
     "SecondaryPumpSystem": {
         "CHP2": {
             "冷房": {
-                "TempelatureDifference": 5.0,
+                "TemperatureDifference": 5.0,
                 "isStagingControl": "有",
                 "SecondaryPump": [
                     {
@@ -3038,7 +3038,7 @@
                 ]
             },
             "暖房": {
-                "TempelatureDifference": 5.0,
+                "TemperatureDifference": 5.0,
                 "isStagingControl": "有",
                 "SecondaryPump": [
                     {
@@ -4797,7 +4797,7 @@
             "HighEfficiencyMotor": "無",
             "Inverter": "無",
             "AirVolumeControl": "無",
-            "VentilationRoomType": 0.01,
+            "VentilationRoomType": "エレベータ機械室",
             "AC_CoolingCapacity": 4.5,
             "AC_RefEfficiency": 1.25,
             "AC_PumpPower": 0.0,
