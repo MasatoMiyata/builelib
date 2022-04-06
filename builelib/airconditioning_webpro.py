@@ -3,7 +3,7 @@ import numpy as np
 import math
 import os
 import copy
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from . import commons as bc
 from . import climate
 from . import shading
-from . import make_figure as mf
+# from . import make_figure as mf
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -70,9 +70,15 @@ def calc_energy(inputdata, debug = False):
 
     # 計算結果を格納する変数
     resultJson = {
-        "E_airconditioning": 0,
-        "Es_airconditioning": 0,
-        "BEI_AC": 0,
+
+        "設計一次エネルギー消費量[MJ/年]": 0,    # 空調設備の設計一次エネルギー消費量 [MJ/年]
+        "基準一次エネルギー消費量[MJ/年]": 0,    # 空調設備の基準一次エネルギー消費量 [MJ/年]
+        "設計一次エネルギー消費量[GJ/年]": 0,    # 空調設備の設計一次エネルギー消費量 [GJ/年]
+        "基準一次エネルギー消費量[GJ/年]": 0,    # 空調設備の基準一次エネルギー消費量 [GJ/年]
+        "設計一次エネルギー消費量[MJ/m2年]": 0,  # 空調設備の設計一次エネルギー消費量 [MJ/年]
+        "基準一次エネルギー消費量[MJ/m2年]": 0,  # 空調設備の基準一次エネルギー消費量 [MJ/年]
+        "計算対象面積": 0,
+        "BEI/AC": 0,
         "Qroom": {
         },
         "AHU":{
@@ -4519,7 +4525,7 @@ def calc_energy(inputdata, debug = False):
     ## 設計一次エネルギー消費量（解説書 2.8）
     ##----------------------------------------------------------------------------------
 
-    resultJson["E_airconditioning"] = \
+    resultJson["設計一次エネルギー消費量[MJ/年]"] = \
         + resultJson["ENERGY"]["E_fan"] * bc.fprime \
         + resultJson["ENERGY"]["E_aex"] * bc.fprime \
         + resultJson["ENERGY"]["E_pump"]  * bc.fprime \
@@ -4530,8 +4536,8 @@ def calc_energy(inputdata, debug = False):
         + resultJson["ENERGY"]["E_ctpump"] * bc.fprime
 
     if debug: # pragma: no cover
-        print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["E_airconditioning"]/roomAreaTotal}' )
-        print( f'空調設備の設計一次エネルギー消費量 MJ : {resultJson["E_airconditioning"]}' )
+        print( f'空調設備の設計一次エネルギー消費量 MJ/m2 : {resultJson["設計一次エネルギー消費量[MJ/年]"]/roomAreaTotal}' )
+        print( f'空調設備の設計一次エネルギー消費量 MJ : {resultJson["設計一次エネルギー消費量[MJ/年]"]}' )
 
 
     ##----------------------------------------------------------------------------------
@@ -4544,15 +4550,21 @@ def calc_energy(inputdata, debug = False):
         roomType     = inputdata["Rooms"][room_zone_name]["roomType"]
         zoneArea     = inputdata["Rooms"][room_zone_name]["roomArea"]
 
-        resultJson["Es_airconditioning"] += \
+        resultJson["計算対象面積"] += zoneArea
+        resultJson["基準一次エネルギー消費量[MJ/年]"] += \
             bc.RoomStandardValue[buildingType][roomType]["空調"][inputdata["Building"]["Region"]+"地域"] * zoneArea
 
     if debug: # pragma: no cover
-        print( f'空調設備の基準一次エネルギー消費量 MJ/m2 : {resultJson["Es_airconditioning"]/roomAreaTotal}' )
-        print( f'空調設備の基準一次エネルギー消費量 MJ : {resultJson["Es_airconditioning"]}' )
+        print( f'空調設備の基準一次エネルギー消費量 MJ/m2 : {resultJson["基準一次エネルギー消費量[MJ/年]"]/roomAreaTotal}' )
+        print( f'空調設備の基準一次エネルギー消費量 MJ : {resultJson["基準一次エネルギー消費量[MJ/年]"]}' )
 
     # BEI/ACの算出
-    resultJson["BEI_AC"] = resultJson["E_airconditioning"] / resultJson["Es_airconditioning"]
+    resultJson["BEI/AC"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["基準一次エネルギー消費量[MJ/年]"]
+
+    resultJson["設計一次エネルギー消費量[GJ/年]"]   = resultJson["設計一次エネルギー消費量[MJ/年]"] / 1000
+    resultJson["基準一次エネルギー消費量[GJ/年]"]   = resultJson["基準一次エネルギー消費量[MJ/年]"] / 1000
+    resultJson["設計一次エネルギー消費量[MJ/m2年]"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["計算対象面積"]
+    resultJson["基準一次エネルギー消費量[MJ/m2年]"] = resultJson["基準一次エネルギー消費量[MJ/年]"] / resultJson["計算対象面積"]
 
 
     ##----------------------------------------------------------------------------------
@@ -4687,8 +4699,8 @@ def calc_energy(inputdata, debug = False):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    filename = './tests/airconditioning/ACtest_Case001.json'
-    # filename = './sample/sample02_WEBPRO_inputSheet_for_Ver3.0.json'
+    # filename = './sample/ACtest_Case001.json'
+    filename = './sample/Builelib_sample_SP1_input.json'
     # filename = './sample/WEBPRO_inputSheet_sample.json'
     # filename = './sample/Builelib_sample_SP10.json'
     # filename = './sample/WEBPRO_KE14_Case01.json'
@@ -4707,7 +4719,7 @@ if __name__ == '__main__':  # pragma: no cover
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
     print( f'BEI/AC: {resultJson["BEI_AC"]}')        
-    print( f'設計一次エネルギー消費量 全体: {resultJson["E_airconditioning"]}')
+    print( f'設計一次エネルギー消費量 全体: {resultJson["設計一次エネルギー消費量[MJ/年]"]}')
     print( f'設計一次エネルギー消費量 空調ファン: {resultJson["ENERGY"]["E_fan"] * bc.fprime}')
     print( f'設計一次エネルギー消費量 空調全熱交換器: {resultJson["ENERGY"]["E_aex"] * bc.fprime}')
     print( f'設計一次エネルギー消費量 二次ポンプ: {resultJson["ENERGY"]["E_pump"] * bc.fprime}')
@@ -4718,10 +4730,10 @@ if __name__ == '__main__':  # pragma: no cover
     print( f'設計一次エネルギー消費量 冷却水ポンプ: {resultJson["ENERGY"]["E_ctpump"] * bc.fprime}')
 
     # デバッグ用
-    print( f'{resultJson["E_airconditioning"]}, {resultJson["ENERGY"]["E_fan"] * bc.fprime}, {resultJson["ENERGY"]["E_aex"] * bc.fprime}, {resultJson["ENERGY"]["E_pump"] * bc.fprime}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * bc.fprime}, {resultJson["ENERGY"]["E_pumpP"] * bc.fprime}, {resultJson["ENERGY"]["E_ctfan"] * bc.fprime}, {resultJson["ENERGY"]["E_ctpump"] * bc.fprime}')
+    print( f'{resultJson["設計一次エネルギー消費量[MJ/年]"]}, {resultJson["ENERGY"]["E_fan"] * bc.fprime}, {resultJson["ENERGY"]["E_aex"] * bc.fprime}, {resultJson["ENERGY"]["E_pump"] * bc.fprime}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * bc.fprime}, {resultJson["ENERGY"]["E_pumpP"] * bc.fprime}, {resultJson["ENERGY"]["E_ctfan"] * bc.fprime}, {resultJson["ENERGY"]["E_ctpump"] * bc.fprime}')
 
     # for ref_name in inputdata["REF"]:
     #     print( f'--- 熱源群名 {ref_name} ---')
     #     print( f'熱源群の熱源負荷 Qref: {np.sum(resultJson["REF"][ref_name]["Qref"],0)}' )
         
-    print( f'設計一次エネルギー消費量 全体: {resultJson["E_airconditioning"]}') 
+    print( f'設計一次エネルギー消費量 全体: {resultJson["設計一次エネルギー消費量[MJ/年]"]}') 

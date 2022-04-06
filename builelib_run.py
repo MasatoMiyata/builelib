@@ -148,11 +148,11 @@ if exec_calculation:
             resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
 
             # 設計一次エネ・基準一次エネに追加
-            energy_consumption_design += resultdata_AC["E_airconditioning"]
-            energy_consumption_standard += resultdata_AC["Es_airconditioning"]
-            calc_reuslt["設計一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["E_airconditioning"]
-            calc_reuslt["基準一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["Es_airconditioning"]
-            calc_reuslt["BEI_AC"] = math.ceil(resultdata_AC["BEI_AC"] * 100) / 100
+            energy_consumption_design += resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
+            energy_consumption_standard += resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["設計一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["基準一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["BEI_AC"] = math.ceil(resultdata_AC["BEI/AC"] * 100) / 100
 
         else:
             resultdata_AC = {
