@@ -607,6 +607,22 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["for_CGS"]["Edesign_MJ_CGS_day"]  = np.sum(Edesign_MJ_CGS_hour,1)
         resultJson["for_CGS"]["Q_eqp_CGS_day"]       = np.sum(Q_eqp_CGS_hour,1)
 
+
+    ##----------------------------------------------------------------------------------
+    # 不要な要素を削除
+    ##----------------------------------------------------------------------------------
+
+    for unitID, isys in resultJson["HotwaterSupplySystems"].items():
+        del resultJson["HotwaterSupplySystems"][unitID]["Qsr_eqp_daily"]
+        del resultJson["HotwaterSupplySystems"][unitID]["Qs_eqp_daily"]
+        del resultJson["HotwaterSupplySystems"][unitID]["L_eqp"]
+        del resultJson["HotwaterSupplySystems"][unitID]["Qp_eqp"]
+        del resultJson["HotwaterSupplySystems"][unitID]["Qs_solargain"]
+        del resultJson["HotwaterSupplySystems"][unitID]["Qh_eqp_daily"]
+        del resultJson["HotwaterSupplySystems"][unitID]["Q_eqp"]
+        del resultJson["HotwaterSupplySystems"][unitID]["E_eqp"]
+
+
     return resultJson
 
 
