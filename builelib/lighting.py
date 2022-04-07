@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import os
+import math
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -216,7 +217,7 @@ def calc_energy(inputdata, DEBUG = False):
     if Es_lighting <= 0:
         BEI_L = None
     else:
-        BEI_L = E_lighting / Es_lighting
+        BEI_L = math.ceil( (E_lighting / Es_lighting) * 100)/100
         
     # 建物全体の計算結果
     resultJson["BEI_L"] = BEI_L

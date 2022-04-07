@@ -3,6 +3,7 @@ import sys
 import json
 import numpy as np
 import os
+import math
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -552,6 +553,7 @@ def calc_energy(inputdata, DEBUG = False):
 
     # BEI/HW
     resultJson["BEI/HW"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["基準一次エネルギー消費量[MJ/年]"]
+    resultJson["BEI/HW"] = math.ceil(resultJson["BEI/HW"] * 100)/100
 
     resultJson["設計一次エネルギー消費量[GJ/年]"] = resultJson["設計一次エネルギー消費量[MJ/年]"] /1000
     resultJson["基準一次エネルギー消費量[GJ/年]"] = resultJson["基準一次エネルギー消費量[MJ/年]"] /1000

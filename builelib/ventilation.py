@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import os
+import math
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -360,6 +361,7 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["BEI/V"]  = None
     else:
         resultJson["BEI/V"]  = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["基準一次エネルギー消費量[MJ/年]"]
+        resultJson["BEI/V"] = math.ceil(resultJson["BEI/V"] * 100)/100
 
 
     # コジェネ用の結果の格納 [MJ → MWh]

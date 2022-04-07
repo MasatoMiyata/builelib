@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import os
+import math
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -164,6 +165,7 @@ def calc_energy(inputdata, DEBUG = False):
     # BEI/Vの計算
     if resultJson["Es_elevator"] != 0:
         resultJson["BEI_EV"] = resultJson["E_elevator"] / resultJson["Es_elevator"]
+        resultJson["BEI_EV"] = math.ceil(resultJson["BEI_EV"] * 100)/100
     else:
         resultJson["BEI_EV"] = np.nan
 

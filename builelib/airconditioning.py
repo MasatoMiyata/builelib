@@ -3228,6 +3228,7 @@ def calc_energy(inputdata, debug=False):
 
     # BEI/ACの算出
     resultJson["BEI/AC"] = resultJson["E_ac"] / resultJson["Es_ac"]
+    resultJson["BEI/AC"] = math.ceil(resultJson["BEI/AC"] * 100)/100
 
     #----------------------------------------------------------------------------------
     # CGS計算用変数 （解説書 ８章 附属書 G.10 他の設備の計算結果の読み込み）
