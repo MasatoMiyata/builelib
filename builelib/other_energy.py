@@ -7,7 +7,7 @@ import copy
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from . import commons as bc
+import commons as bc
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -195,13 +195,21 @@ def calc_energy(inputdata, DEBUG = False):
     if DEBUG:
         print(f'その他一次エネルギー消費量 MJ: {resultJson["E_other"]}')
             
+
+    ##----------------------------------------------------------------------------------
+    # 不要な要素を削除
+    ##----------------------------------------------------------------------------------
+
+    for roomID, isys in resultJson["E_other_room"].items():
+        del resultJson["E_other_room"][roomID]["roomHeatGain_daily"]
+        
     return resultJson
 
 
 if __name__ == '__main__':
 
     print('----- other_energy.py -----')
-    filename = './sample/Builelib_sample_SP9.json'
+    filename = './sample/WEBPRO_inputSheet_sample.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
