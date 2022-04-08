@@ -2710,6 +2710,11 @@ def calc_energy(inputdata, debug = False):
             resultJson["AHU"][ahu_name]["年間空調負荷（暖房）[MJ]"] * 1000 \
             / (resultJson["AHU"][ahu_name]["年間空調時間（暖房）[時間]"] * 3600)
 
+        resultJson["AHU"][ahu_name]["平均負荷率（冷房）[-]"] = \
+            resultJson["AHU"][ahu_name]["平均空調負荷（冷房）[kW]"] / resultJson["AHU"][ahu_name]["定格能力（冷房）[kW]"]
+
+        resultJson["AHU"][ahu_name]["平均負荷率（暖房）[-]"] = \
+            resultJson["AHU"][ahu_name]["平均空調負荷（暖房）[kW]"] / resultJson["AHU"][ahu_name]["定格能力（暖房）[kW]"]
 
         resultJson["AHU"][ahu_name]["電力消費量（送風機、冷房）[MWh]"] = np.sum( resultJson["AHU"][ahu_name]["E_fan_c_day"] )
         resultJson["AHU"][ahu_name]["電力消費量（送風機、暖房）[MWh]"] = np.sum( resultJson["AHU"][ahu_name]["E_fan_h_day"] )
@@ -2831,6 +2836,7 @@ def calc_energy(inputdata, debug = False):
 
         inputdata["PUMP"][pump_name]["AHU_list"] = set()        # 接続される空調機群
         inputdata["PUMP"][pump_name]["Qpsr"] = 0                # ポンプ定格能力
+        inputdata["PUMP"][pump_name]["Vpsr"] = 0                # ポンプ定格流量 [m3/h]
         inputdata["PUMP"][pump_name]["ContolType"] = set()      # 全台回転数制御かどうか（台数制御がない場合のみ有効）
         inputdata["PUMP"][pump_name]["MinOpeningRate"] = 100    # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
 
@@ -2850,6 +2856,8 @@ def calc_energy(inputdata, debug = False):
             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate_total"] = \
                 inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate"] * \
                 inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Number"]
+
+            inputdata["PUMP"][pump_name]["Vpsr"] += inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedWaterFlowRate_total"]
 
             # 消費電力の合計（消費電力×流量）
             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"] = \
@@ -3075,8 +3083,8 @@ def calc_energy(inputdata, debug = False):
             # 二次ポンプの定格処理能力[kW] = [K] * [m3/h] * [kJ/kg・K] * [kg/m3] * [h/s]
             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"] = \
                 inputdata["PUMP"][pump_name]["TemperatureDifference"]* unit_configure["RatedWaterFlowRate_total"] *4.1860*1000/3600
-            inputdata["PUMP"][pump_name]["Qpsr"] += inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"]
 
+            inputdata["PUMP"][pump_name]["Qpsr"] += inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"]
             inputdata["PUMP"][pump_name]["Qpsr_list"].append( inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Qpsr"] )
 
 
@@ -3121,6 +3129,8 @@ def calc_energy(inputdata, debug = False):
 
     for pump_name in inputdata["PUMP"]:
 
+        resultJson["PUMP"][pump_name]["変流量制御の有無"] = "無"
+
         for unit_id, unit_configure in enumerate(inputdata["PUMP"][pump_name]["SecondaryPump"]):
 
             if unit_configure["ContolType"] in FLOWCONTROL.keys():
@@ -3130,6 +3140,8 @@ def calc_energy(inputdata, debug = False):
                 inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a2"]
                 inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a1"]
                 inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a0"]
+
+                resultJson["PUMP"][pump_name]["変流量制御の有無"] = "有"
 
             elif unit_configure["ContolType"] == "無":
 
@@ -3345,6 +3357,38 @@ def calc_energy(inputdata, debug = False):
             print( f'--- 二次ポンプ群名 {pump_name} ---')
             print( f'二次ポンプ群のポンプ発熱量 Qpsahu_fan: {np.sum(resultJson["PUMP"][pump_name]["Qpsahu_pump"],0)}' )
 
+
+    ##----------------------------------------------------------------------------------
+    ## 二次ポンプ群計算結果の集約
+    ##----------------------------------------------------------------------------------
+
+    for pump_name in inputdata["PUMP"]:
+
+        if pump_name.startswith("dummyPump") == False:
+
+            if inputdata["PUMP"][pump_name]["mode"] == "cooling":
+                resultJson["PUMP"][pump_name]["運転モード"] = "冷房" 
+            elif inputdata["PUMP"][pump_name]["mode"] == "heating":
+                resultJson["PUMP"][pump_name]["運転モード"] = "暖房"
+            else:
+                raise Exception("運転モードが不正です")
+
+            resultJson["PUMP"][pump_name]["台数"] = inputdata["PUMP"][pump_name]["number_of_pumps"] 
+
+            resultJson["PUMP"][pump_name]["定格能力[kW]"] = inputdata["PUMP"][pump_name]["Qpsr"]
+            resultJson["PUMP"][pump_name]["定格消費電力[kW]"] = inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"] 
+            resultJson["PUMP"][pump_name]["定格流量[m3/h]"] = inputdata["PUMP"][pump_name]["Vpsr"] 
+
+            resultJson["PUMP"][pump_name]["運転時間[時間]"] = np.sum(resultJson["PUMP"][pump_name]["Tps"],0)
+            resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] = np.sum(resultJson["PUMP"][pump_name]["Qps"],0)
+            resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] = \
+                resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] * 1000 \
+                / (resultJson["PUMP"][pump_name]["運転時間[時間]"] * 3600)
+
+            resultJson["PUMP"][pump_name]["平均負荷率[-]"] = resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] / resultJson["PUMP"][pump_name]["定格能力[kW]"]
+
+            resultJson["PUMP"][pump_name]["台数制御の有無"] = inputdata["PUMP"][pump_name]["isStagingControl"]
+            resultJson["PUMP"][pump_name]["電力消費量[MWh]"] = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
 
     ##----------------------------------------------------------------------------------
@@ -4794,12 +4838,6 @@ def calc_energy(inputdata, debug = False):
     # 不要な要素を削除
     ##----------------------------------------------------------------------------------
 
-    # del resultJson["AHU"]
-    del resultJson["PUMP"]
-    del resultJson["REF"]
-    del resultJson["Matrix"]
-    del resultJson["日別エネルギー消費量"]
-
     for room_zone_name in resultJson["Qroom"]:
         del resultJson["Qroom"][room_zone_name]["Qwall_T"]
         del resultJson["Qroom"][room_zone_name]["Qwall_S"]
@@ -4811,7 +4849,6 @@ def calc_energy(inputdata, debug = False):
         del resultJson["Qroom"][room_zone_name]["QroomDh"]
         del resultJson["Qroom"][room_zone_name]["QroomHc"]
         del resultJson["Qroom"][room_zone_name]["QroomHh"]
-
 
     for ahu_name in resultJson["AHU"]:
         del resultJson["AHU"][ahu_name]["schedule"]
@@ -4835,6 +4872,33 @@ def calc_energy(inputdata, debug = False):
         del resultJson["AHU"][ahu_name]["TdAHUc"]
         del resultJson["AHU"][ahu_name]["LdAHUh"]
         del resultJson["AHU"][ahu_name]["TdAHUh"]
+
+    dummypumplist = []
+    for pump_name in resultJson["PUMP"]:
+        if pump_name.startswith("dummyPump"):
+            dummypumplist.append(pump_name)
+
+    for pump_name in dummypumplist:
+        del resultJson["PUMP"][pump_name]
+
+    for pump_name in resultJson["PUMP"]:
+        del resultJson["PUMP"][pump_name]["Qpsahu_fan"]
+        del resultJson["PUMP"][pump_name]["pumpTime_Start"]
+        del resultJson["PUMP"][pump_name]["pumpTime_Stop"]
+        del resultJson["PUMP"][pump_name]["Qps"]
+        del resultJson["PUMP"][pump_name]["Tps"]
+        del resultJson["PUMP"][pump_name]["schedule"]
+        del resultJson["PUMP"][pump_name]["LdPUMP"]
+        del resultJson["PUMP"][pump_name]["TdPUMP"]
+        del resultJson["PUMP"][pump_name]["Qpsahu_pump"]
+        del resultJson["PUMP"][pump_name]["MxPUMPNum"]
+        del resultJson["PUMP"][pump_name]["MxPUMPPower"]
+        del resultJson["PUMP"][pump_name]["E_pump_day"]
+        
+    del resultJson["REF"]
+    del resultJson["Matrix"]
+    del resultJson["日別エネルギー消費量"]
+
 
     return resultJson
 
