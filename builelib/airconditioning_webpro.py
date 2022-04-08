@@ -2512,6 +2512,8 @@ def calc_energy(inputdata, debug = False):
 
     for ahu_name in inputdata["AirHandlingSystem"]:
 
+        inputdata["AirHandlingSystem"][ahu_name]["FanPowerConsumption_total"] = 0
+
         for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
 
             inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"] = 0
@@ -2522,9 +2524,14 @@ def calc_energy(inputdata, debug = False):
                 inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"] = \
                     unit_configure["FanPowerConsumption"] * unit_configure["Number"]
 
+                # 積算
+                inputdata["AirHandlingSystem"][ahu_name]["FanPowerConsumption_total"] += \
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"]
+
             if debug: # pragma: no cover
                 print( f'--- 空調機群名 {ahu_name} ---')
                 print( f'送風機単体の定格消費電力: {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"]}')
+
 
                     
     ##----------------------------------------------------------------------------------
@@ -2657,11 +2664,60 @@ def calc_energy(inputdata, debug = False):
         resultJson["AHU"][ahu_name]["MxAHUcE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_c_day"],0)
         resultJson["AHU"][ahu_name]["MxAHUhE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_h_day"],0)
 
-
     resultJson["年間エネルギー消費量"]["空調機群ファン[GJ]"]  = resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"]  * bc.fprime /1000
     resultJson["年間エネルギー消費量"]["空調機群全熱交換器[GJ]"]  = resultJson["年間エネルギー消費量"]["空調機群全熱交換器[MWh]"]  * bc.fprime /1000
 
     print('空調機群のエネルギー消費量計算完了')
+
+
+    ##----------------------------------------------------------------------------------
+    ## 空調機群計算結果の集約
+    ##----------------------------------------------------------------------------------
+
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        resultJson["AHU"][ahu_name]["定格能力（冷房）[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"] 
+        resultJson["AHU"][ahu_name]["定格能力（暖房）[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"] 
+        resultJson["AHU"][ahu_name]["定格消費電力[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["FanPowerConsumption_total"] 
+
+        cooling_load = 0
+        heating_load = 0
+        for dd in range(0,365):
+            
+            if resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] >= 0:
+                cooling_load += resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd]
+            else:
+                heating_load += resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] * (-1)
+
+            if resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] >= 0:
+                cooling_load += resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd]
+            else:
+                heating_load += resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] * (-1)
+
+        resultJson["AHU"][ahu_name]["年間空調負荷（冷房）[MJ]"] = cooling_load
+        resultJson["AHU"][ahu_name]["年間空調負荷（暖房）[MJ]"] = heating_load
+
+        resultJson["AHU"][ahu_name]["年間空調時間（冷房）[時間]"] = \
+            np.sum(resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"]) + np.sum(resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"])
+        resultJson["AHU"][ahu_name]["年間空調時間（暖房）[時間]"] = \
+            np.sum(resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"]) + np.sum(resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"])
+
+        resultJson["AHU"][ahu_name]["平均空調負荷（冷房）[kW]"] = \
+            resultJson["AHU"][ahu_name]["年間空調負荷（冷房）[MJ]"] * 1000 \
+            / (resultJson["AHU"][ahu_name]["年間空調時間（冷房）[時間]"] * 3600)
+
+        resultJson["AHU"][ahu_name]["平均空調負荷（暖房）[kW]"] = \
+            resultJson["AHU"][ahu_name]["年間空調負荷（暖房）[MJ]"] * 1000 \
+            / (resultJson["AHU"][ahu_name]["年間空調時間（暖房）[時間]"] * 3600)
+
+
+        resultJson["AHU"][ahu_name]["電力消費量（送風機、冷房）[MWh]"] = np.sum( resultJson["AHU"][ahu_name]["E_fan_c_day"] )
+        resultJson["AHU"][ahu_name]["電力消費量（送風機、暖房）[MWh]"] = np.sum( resultJson["AHU"][ahu_name]["E_fan_h_day"] )
+        resultJson["AHU"][ahu_name]["電力消費量（全熱交換器）[MWh]"] = np.sum( resultJson["AHU"][ahu_name]["E_AHUaex_day"] )
+        resultJson["AHU"][ahu_name]["電力消費量（合計）[MWh]"] = \
+            resultJson["AHU"][ahu_name]["電力消費量（送風機、冷房）[MWh]"] \
+            + resultJson["AHU"][ahu_name]["電力消費量（送風機、暖房）[MWh]"]  \
+            + resultJson["AHU"][ahu_name]["電力消費量（全熱交換器）[MWh]"]
 
 
     if debug: # pragma: no cover
@@ -4738,10 +4794,10 @@ def calc_energy(inputdata, debug = False):
     # 不要な要素を削除
     ##----------------------------------------------------------------------------------
 
-    del resultJson["Matrix"]
-    del resultJson["AHU"]
+    # del resultJson["AHU"]
     del resultJson["PUMP"]
     del resultJson["REF"]
+    del resultJson["Matrix"]
     del resultJson["日別エネルギー消費量"]
 
     for room_zone_name in resultJson["Qroom"]:
@@ -4755,6 +4811,30 @@ def calc_energy(inputdata, debug = False):
         del resultJson["Qroom"][room_zone_name]["QroomDh"]
         del resultJson["Qroom"][room_zone_name]["QroomHc"]
         del resultJson["Qroom"][room_zone_name]["QroomHh"]
+
+
+    for ahu_name in resultJson["AHU"]:
+        del resultJson["AHU"][ahu_name]["schedule"]
+        del resultJson["AHU"][ahu_name]["HoaDayAve"]
+        del resultJson["AHU"][ahu_name]["qoaAHU"]
+        del resultJson["AHU"][ahu_name]["Tahu_total"]
+        del resultJson["AHU"][ahu_name]["E_fan_day"]
+        del resultJson["AHU"][ahu_name]["E_fan_c_day"]
+        del resultJson["AHU"][ahu_name]["E_fan_h_day"]
+        del resultJson["AHU"][ahu_name]["E_AHUaex_day"]
+        del resultJson["AHU"][ahu_name]["TdAHUc_total"]
+        del resultJson["AHU"][ahu_name]["TdAHUh_total"]
+        del resultJson["AHU"][ahu_name]["Qahu_remainC"]
+        del resultJson["AHU"][ahu_name]["Qahu_remainH"]
+        del resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]
+        del resultJson["AHU"][ahu_name]["Qroom"]
+        del resultJson["AHU"][ahu_name]["Qahu"]
+        del resultJson["AHU"][ahu_name]["Tahu"]
+        del resultJson["AHU"][ahu_name]["Economizer"]
+        del resultJson["AHU"][ahu_name]["LdAHUc"]
+        del resultJson["AHU"][ahu_name]["TdAHUc"]
+        del resultJson["AHU"][ahu_name]["LdAHUh"]
+        del resultJson["AHU"][ahu_name]["TdAHUh"]
 
     return resultJson
 
