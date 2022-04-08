@@ -1146,11 +1146,6 @@ def calc_energy(inputdata, debug = False):
         resultJson["Qroom"][room_zone_name]["QroomDc"] = Qcool * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
         resultJson["Qroom"][room_zone_name]["QroomDh"] = Qheat * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
-        resultJson["Qroom"][room_zone_name]["QroomDc_annual"] = np.sum(Qcool,0)
-        resultJson["Qroom"][room_zone_name]["QroomDh_annual"] = np.sum(Qheat,0)
-
-
-    print('室負荷計算完了')
 
     if debug: # pragma: no cover
 
@@ -1164,10 +1159,6 @@ def calc_energy(inputdata, debug = False):
             print( f'熱取得_窓温度 Qwind_T: {np.sum(resultJson["Qroom"][room_zone_name]["Qwind_T"],0)}' )
             print( f'熱取得_窓日射 Qwind_S: {np.sum(resultJson["Qroom"][room_zone_name]["Qwind_S"],0)}' )
             print( f'熱取得_窓放射 Qwind_N: {np.sum(resultJson["Qroom"][room_zone_name]["Qwind_N"],0)}' )
-            print( f'室負荷（冷房要求）の合計 QroomDc: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"],0)}' )
-            print( f'室負荷（暖房要求）の合計 QroomDh: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)}' )
-            print( f'室負荷（冷房要求）の合計 QroomDc_annual: {resultJson["Qroom"][room_zone_name]["QroomDc_annual"]}' )
-            print( f'室負荷（暖房要求）の合計 QroomDh_annual: {resultJson["Qroom"][room_zone_name]["QroomDh_annual"]}' )
 
 
     ##----------------------------------------------------------------------------------
@@ -1569,6 +1560,36 @@ def calc_energy(inputdata, debug = False):
             print( f'室負荷（暖房要求）の合計 heatload_for_heating: {np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"],0)}' )
 
 
+
+    ##----------------------------------------------------------------------------------
+    ## 負荷計算結果の集約
+    ##----------------------------------------------------------------------------------
+    for room_zone_name in inputdata["AirConditioningZone"]:
+
+        # 結果の集約 [MJ/年]
+        resultJson["Qroom"][room_zone_name]["建物用途"] = inputdata["AirConditioningZone"][room_zone_name]["buildingType"]
+        resultJson["Qroom"][room_zone_name]["室用途"] = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
+        resultJson["Qroom"][room_zone_name]["床面積"] = inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+        resultJson["Qroom"][room_zone_name]["年間空調時間"] = np.sum( np.sum( roomScheduleRoom[room_zone_name] ))
+
+        resultJson["Qroom"][room_zone_name]["年間室負荷（冷房）[MJ]"] = np.sum(resultJson["Qroom"][room_zone_name]["QroomDc"])
+        resultJson["Qroom"][room_zone_name]["年間室負荷（暖房）[MJ]"] = np.sum(resultJson["Qroom"][room_zone_name]["QroomDh"])
+        resultJson["Qroom"][room_zone_name]["平均室負荷（冷房）[W/m2]"] = \
+            resultJson["Qroom"][room_zone_name]["年間室負荷（冷房）[MJ]"] *1000000 \
+            / (resultJson["Qroom"][room_zone_name]["年間空調時間"]*3600) \
+            / resultJson["Qroom"][room_zone_name]["床面積"]
+        resultJson["Qroom"][room_zone_name]["平均室負荷（暖房）[W/m2]"] = \
+            resultJson["Qroom"][room_zone_name]["年間室負荷（暖房）[MJ]"] *1000000 \
+            / (resultJson["Qroom"][room_zone_name]["年間空調時間"]*3600) \
+            / resultJson["Qroom"][room_zone_name]["床面積"]
+
+    if debug: # pragma: no cover
+        for room_zone_name in inputdata["AirConditioningZone"]:
+            print( f'--- ゾーン名 {room_zone_name} ---')
+            print( f'年間室負荷（冷房要求） QroomDc: {resultJson["Qroom"][room_zone_name]["年間室負荷（冷房）[MJ]"]}' )
+            print( f'年間室負荷（暖房要求） QroomDh: {resultJson["Qroom"][room_zone_name]["年間室負荷（暖房）[MJ]"]}' )
+
+
     # 熱負荷のグラフ化（確認用）
     # for room_zone_name in inputdata["AirConditioningZone"]:
 
@@ -1576,6 +1597,9 @@ def calc_energy(inputdata, debug = False):
     #     mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHh"], "室負荷（暖房）："+room_zone_name, "m", "室負荷（暖房）")
 
     # plt.show()
+
+    print('室負荷計算完了')
+
 
     ##----------------------------------------------------------------------------------
     ## 空調機群の一次エネルギー消費量（解説書 2.5）
@@ -4715,11 +4739,22 @@ def calc_energy(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     del resultJson["Matrix"]
-    del resultJson["Qroom"]
     del resultJson["AHU"]
     del resultJson["PUMP"]
     del resultJson["REF"]
     del resultJson["日別エネルギー消費量"]
+
+    for room_zone_name in resultJson["Qroom"]:
+        del resultJson["Qroom"][room_zone_name]["Qwall_T"]
+        del resultJson["Qroom"][room_zone_name]["Qwall_S"]
+        del resultJson["Qroom"][room_zone_name]["Qwall_N"]
+        del resultJson["Qroom"][room_zone_name]["Qwind_T"]
+        del resultJson["Qroom"][room_zone_name]["Qwind_S"]
+        del resultJson["Qroom"][room_zone_name]["Qwind_N"]
+        del resultJson["Qroom"][room_zone_name]["QroomDc"]
+        del resultJson["Qroom"][room_zone_name]["QroomDh"]
+        del resultJson["Qroom"][room_zone_name]["QroomHc"]
+        del resultJson["Qroom"][room_zone_name]["QroomHh"]
 
     return resultJson
 
