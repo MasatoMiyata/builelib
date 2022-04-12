@@ -3715,6 +3715,8 @@ def calc_energy(inputdata, debug = False):
 
     for ref_name in inputdata["REF"]:
 
+        inputdata["REF"][ref_name]["Eref_rated_primary"] = 0
+
         inputdata["REF"][ref_name]["checkCTVWV"] = 0   # 冷却水変流量の有無
         inputdata["REF"][ref_name]["checkGEGHP"] = 0   # 発電機能の有無
 
@@ -3770,6 +3772,9 @@ def calc_energy(inputdata, debug = False):
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = \
                     (inputdata["Building"]["Coefficient_DHC"]["Cooling"])*inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+
+            # 熱源群ごとに積算
+            inputdata["REF"][ref_name]["Eref_rated_primary"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"]
 
 
     ##----------------------------------------------------------------------------------
@@ -4552,7 +4557,7 @@ def calc_energy(inputdata, debug = False):
 
 
     ##----------------------------------------------------------------------------------
-    ## 熱熱源群の一次エネルギー消費量および消費電力（解説書 2.7.17）
+    ## 熱源群の一次エネルギー消費量および消費電力（解説書 2.7.17）
     ##----------------------------------------------------------------------------------
 
     for ref_name in inputdata["REF"]:
@@ -4622,6 +4627,18 @@ def calc_energy(inputdata, debug = False):
 
     for ref_name in inputdata["REF"]:
 
+        resultJson["REF"][ref_name]["熱源群熱源主機[MJ]"] = 0
+        resultJson["REF"][ref_name]["熱源群熱源補機[MWh]"] = 0
+        resultJson["REF"][ref_name]["熱源群一次ポンプ[MWh]"] = 0
+        resultJson["REF"][ref_name]["熱源群冷却塔ファン[MWh]"] = 0
+        resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] = 0
+
+        resultJson["REF"][ref_name]["熱源群熱源主機[GJ]"] = 0
+        resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"] = 0
+        resultJson["REF"][ref_name]["熱源群一次ポンプ[GJ]"] = 0
+        resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] = 0
+        resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] = 0
+
         # 熱源主機の電力消費量 [MWh/day]
         resultJson["日別エネルギー消費量"]["E_ref_main_MWh_day"]  += resultJson["REF"][ref_name]["E_ref_day_MWh"]
         # 熱源主機以外の電力消費量 [MWh/day]
@@ -4632,22 +4649,35 @@ def calc_energy(inputdata, debug = False):
         for dd in range(0,365):
 
             # 熱源主機のエネルギー消費量 [MJ]
-            resultJson["年間エネルギー消費量"]["熱源群熱源主機[MJ]"] += resultJson["REF"][ref_name]["E_ref_day"][dd]
+            resultJson["REF"][ref_name]["熱源群熱源主機[MJ]"] += resultJson["REF"][ref_name]["E_ref_day"][dd]
             # 熱源補機電力消費量 [MWh]
-            resultJson["年間エネルギー消費量"]["熱源群熱源補機[MWh]"]  += resultJson["REF"][ref_name]["E_ref_ACc_day"][dd]
+            resultJson["REF"][ref_name]["熱源群熱源補機[MWh]"]  += resultJson["REF"][ref_name]["E_ref_ACc_day"][dd]
             # 一次ポンプ電力消費量 [MWh]
-            resultJson["年間エネルギー消費量"]["熱源群一次ポンプ[MWh]"]  += resultJson["REF"][ref_name]["E_PPc_day"][dd]
+            resultJson["REF"][ref_name]["熱源群一次ポンプ[MWh]"]  += resultJson["REF"][ref_name]["E_PPc_day"][dd]
             # 冷却塔ファン電力消費量 [MWh]
-            resultJson["年間エネルギー消費量"]["熱源群冷却塔ファン[MWh]"]  += resultJson["REF"][ref_name]["E_CTfan_day"][dd]
+            resultJson["REF"][ref_name]["熱源群冷却塔ファン[MWh]"]  += resultJson["REF"][ref_name]["E_CTfan_day"][dd]
             # 冷却水ポンプ電力消費量 [MWh]
-            resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[MWh]"] += resultJson["REF"][ref_name]["E_CTpump_day"][dd]
+            resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] += resultJson["REF"][ref_name]["E_CTpump_day"][dd]
 
+        resultJson["REF"][ref_name]["熱源群熱源主機[GJ]"] = resultJson["REF"][ref_name]["熱源群熱源主機[MJ]"] / 1000
+        resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"] = resultJson["REF"][ref_name]["熱源群熱源補機[MWh]"] * bc.fprime / 1000
+        resultJson["REF"][ref_name]["熱源群一次ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群一次ポンプ[MWh]"] * bc.fprime / 1000
+        resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却塔ファン[MWh]"] * bc.fprime / 1000
+        resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] * bc.fprime / 1000
 
-    resultJson["年間エネルギー消費量"]["熱源群熱源主機[GJ]"]  = resultJson["年間エネルギー消費量"]["熱源群熱源主機[MJ]"] / 1000
-    resultJson["年間エネルギー消費量"]["熱源群熱源補機[GJ]"]  = resultJson["年間エネルギー消費量"]["熱源群熱源補機[MWh]"]  * bc.fprime / 1000
-    resultJson["年間エネルギー消費量"]["熱源群一次ポンプ[GJ]"]  = resultJson["年間エネルギー消費量"]["熱源群一次ポンプ[MWh]"]  * bc.fprime / 1000
-    resultJson["年間エネルギー消費量"]["熱源群冷却塔ファン[GJ]"]  = resultJson["年間エネルギー消費量"]["熱源群冷却塔ファン[MWh]"]  * bc.fprime / 1000
-    resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[GJ]"]  = resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[MWh]"]  * bc.fprime / 1000
+        # 建物全体
+        resultJson["年間エネルギー消費量"]["熱源群熱源主機[MJ]"] += resultJson["REF"][ref_name]["熱源群熱源主機[MJ]"]
+        resultJson["年間エネルギー消費量"]["熱源群熱源補機[MWh]"] += resultJson["REF"][ref_name]["熱源群熱源補機[MWh]"]
+        resultJson["年間エネルギー消費量"]["熱源群一次ポンプ[MWh]"] += resultJson["REF"][ref_name]["熱源群一次ポンプ[MWh]"]
+        resultJson["年間エネルギー消費量"]["熱源群冷却塔ファン[MWh]"] += resultJson["REF"][ref_name]["熱源群冷却塔ファン[MWh]"]
+        resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[MWh]"] += resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"]
+
+        resultJson["年間エネルギー消費量"]["熱源群熱源主機[GJ]"] += resultJson["REF"][ref_name]["熱源群熱源主機[GJ]"]
+        resultJson["年間エネルギー消費量"]["熱源群熱源補機[GJ]"] += resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"]
+        resultJson["年間エネルギー消費量"]["熱源群一次ポンプ[GJ]"] += resultJson["REF"][ref_name]["熱源群一次ポンプ[GJ]"]
+        resultJson["年間エネルギー消費量"]["熱源群冷却塔ファン[GJ]"] += resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"]
+        resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[GJ]"] += resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"]
+
 
     print('熱源エネルギー計算完了')
 
@@ -4658,6 +4688,40 @@ def calc_energy(inputdata, debug = False):
         print( f'一次ポンプ電力消費量 : {resultJson["年間エネルギー消費量"]["熱源群一次ポンプ[MWh]"]} MWh' )
         print( f'冷却塔ファン電力消費量 : {resultJson["年間エネルギー消費量"]["熱源群冷却塔ファン[MWh]"]} MWh' )
         print( f'冷却水ポンプ電力消費量 : {resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[MWh]"]} MWh' )
+
+
+    ##----------------------------------------------------------------------------------
+    ## 熱源群計算結果の集約
+    ##----------------------------------------------------------------------------------
+
+    for ref_name in inputdata["REF"]:
+
+        if inputdata["REF"][ref_name]["mode"] == "cooling":
+            resultJson["REF"][ref_name]["運転モード"] = "冷房" 
+        elif inputdata["REF"][ref_name]["mode"] == "heating":
+            resultJson["REF"][ref_name]["運転モード"] = "暖房"
+        else:
+            raise Exception("運転モードが不正です")
+
+        resultJson["REF"][ref_name]["定格能力[kW]"] = inputdata["REF"][ref_name]["Qref_rated"]
+        resultJson["REF"][ref_name]["熱源主機_定格消費エネルギー[kW]"] = inputdata["REF"][ref_name]["Eref_rated_primary"]
+        resultJson["REF"][ref_name]["年間運転時間[時間]"] = np.sum( resultJson["REF"][ref_name]["Tref"] ) 
+        resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] = np.sum( resultJson["REF"][ref_name]["Qref"] ) /1000
+        resultJson["REF"][ref_name]["年積算過負荷[GJ]"] = np.sum( resultJson["REF"][ref_name]["Qref_OVER"] ) /1000
+        resultJson["REF"][ref_name]["年積算エネルギー消費量[GJ]"] = \
+            resultJson["REF"][ref_name]["熱源群熱源主機[GJ]"] \
+            + resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"] \
+            + resultJson["REF"][ref_name]["熱源群一次ポンプ[GJ]"] \
+            + resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] \
+            + resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] \
+
+        resultJson["REF"][ref_name]["年間平均負荷率[-]"] = \
+            (resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] *1000000 / (resultJson["REF"][ref_name]["年間運転時間[時間]"]*3600) ) \
+            / resultJson["REF"][ref_name]["熱源主機_定格消費エネルギー[kW]"] 
+
+        resultJson["REF"][ref_name]["年間運転効率[-]"] = \
+            resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] \
+            / resultJson["REF"][ref_name]["年積算エネルギー消費量[GJ]"]
 
 
     ##----------------------------------------------------------------------------------
@@ -4894,8 +4958,36 @@ def calc_energy(inputdata, debug = False):
         del resultJson["PUMP"][pump_name]["MxPUMPNum"]
         del resultJson["PUMP"][pump_name]["MxPUMPPower"]
         del resultJson["PUMP"][pump_name]["E_pump_day"]
-        
-    del resultJson["REF"]
+
+    for ref_name in resultJson["REF"]:
+        del resultJson["REF"][ref_name]["schedule"]
+        del resultJson["REF"][ref_name]["ghsp_Rq"]
+        del resultJson["REF"][ref_name]["Qref_thermal_loss"]
+        del resultJson["REF"][ref_name]["Qref"]
+        del resultJson["REF"][ref_name]["Tref"]
+        del resultJson["REF"][ref_name]["Qref_kW"]
+        del resultJson["REF"][ref_name]["Qref_OVER"]
+        del resultJson["REF"][ref_name]["E_ref_day"]
+        del resultJson["REF"][ref_name]["E_ref_day_MWh"]
+        del resultJson["REF"][ref_name]["E_ref_ACc_day"]
+        del resultJson["REF"][ref_name]["E_PPc_day"]
+        del resultJson["REF"][ref_name]["E_CTfan_day"]
+        del resultJson["REF"][ref_name]["E_CTpump_day"]
+        del resultJson["REF"][ref_name]["Heatsource"]
+        del resultJson["REF"][ref_name]["Lref"]
+        del resultJson["REF"][ref_name]["matrix_iL"]
+        del resultJson["REF"][ref_name]["matrix_iT"]
+        del resultJson["REF"][ref_name]["num_of_operation"]
+        del resultJson["REF"][ref_name]["load_ratio"]
+        del resultJson["REF"][ref_name]["hoseiStorage"]
+        del resultJson["REF"][ref_name]["E_ref_sub"]
+        del resultJson["REF"][ref_name]["E_ref_pri_pump"]
+        del resultJson["REF"][ref_name]["E_ref_ct_fan"]
+        del resultJson["REF"][ref_name]["E_ref_ct_pump"]
+
+
+
+
     del resultJson["Matrix"]
     del resultJson["日別エネルギー消費量"]
 
