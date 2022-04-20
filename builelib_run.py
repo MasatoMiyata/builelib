@@ -106,7 +106,7 @@ if inputfile_name_split[-1] == ".xlsm":  # WEBPRO Ver2の入力シートであ�
 
     except:
         validation = {
-            "error": "入力シートからjsonデータ生成時にエラーが発生しました。"
+            "error": "入力シートの読み込み時に予期せぬエラーが発生しました。"
         }
         exec_calculation = False  # 計算は行わない。
 
@@ -117,7 +117,7 @@ elif inputfile_name_split[-1] == ".xlsx":  # Builelibの入力シートであれ
         inputdata, validation = make_jsondata_from_Ver4_sheet(inputfile_name)
     except:
         validation = {
-            "error": "入力シートからjsonデータ生成時にエラーが発生しました。"
+            "error": "入力シートの読み込み時に予期せぬエラーが発生しました。"
         }
         exec_calculation = False  # 計算は行わない。
 
@@ -152,6 +152,7 @@ if exec_calculation:
     
     try:
         if inputdata["AirConditioningZone"]:   # AirConditioningZone が 空 でなければ
+
             resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug = False)
 
             # CGSの計算に必要となる変数
@@ -168,14 +169,15 @@ if exec_calculation:
             resultdata_AC = {
                 "message": "空気調和設備はありません。"
             }
+
     except:
         resultdata_AC = {
-            "error": "空気調和設備の計算時にエラーが発生しました。"
+            "error": "空気調和設備の計算時に予期せぬエラーが発生しました。"
         }
 
 else:
     resultdata_AC = {
-        "error": "空気調和設備の計算を実行しませんでした。"
+        "error": "空気調和設備の計算は実行されませんでした。"
     }
 
 # 出力
@@ -193,6 +195,7 @@ if exec_calculation:
 
     try:
         if inputdata["VentilationRoom"]:   # VentilationRoom が 空 でなければ
+
             resultdata_V = ventilation.calc_energy(inputdata, DEBUG = False)
 
             # CGSの計算に必要となる変数
@@ -209,14 +212,15 @@ if exec_calculation:
             resultdata_V = {
                 "message": "機械換気設備はありません。"
             }
+
     except:
         resultdata_V = {
-            "error": "機械換気設備の計算時にエラーが発生しました。"
+            "error": "機械換気設備の計算時に予期せぬエラーが発生しました。"
         }
 
 else:
     resultdata_V = {
-        "error": "機械換気設備の計算を実行しませんでした。"
+        "error": "機械換気設備の計算は実行されませんでした。"
     }
 
 # 出力
@@ -234,6 +238,7 @@ if exec_calculation:
 
     try:
         if inputdata["LightingSystems"]:   # LightingSystems が 空 でなければ
+
             resultdata_L = lighting.calc_energy(inputdata, DEBUG = False)
 
             # CGSの計算に必要となる変数
@@ -250,13 +255,15 @@ if exec_calculation:
             resultdata_L = {
                 "message": "照明設備はありません。"
             }
+
     except:
         resultdata_L = {
-            "error": "照明設備の計算時にエラーが発生しました。"
+            "error": "照明設備の計算時に予期せぬエラーが発生しました。"
         }
+
 else:
     resultdata_L = {
-        "error": "照明設備の計算を実行しませんでした。"
+        "error": "照明設備の計算は実行されませんでした。"
     }
 
 # 出力
@@ -275,6 +282,7 @@ if exec_calculation:
 
     try:
         if inputdata["HotwaterRoom"]:   # HotwaterRoom が 空 でなければ
+        
             resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
     
             # CGSの計算に必要となる変数
@@ -286,18 +294,20 @@ if exec_calculation:
             calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
             calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
             calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
+        
         else:
             resultdata_HW = {
                 "message": "給湯設備はありません。"
             }
+
     except:
         resultdata_HW = {
-            "error": "給湯設備の計算時にエラーが発生しました。"
+            "error": "給湯設備の計算時に予期せぬエラーが発生しました。"
         }
 
 else:
     resultdata_HW = {
-        "error": "給湯設備の計算を実行しませんでした。"
+        "error": "給湯設備の計算は実行されませんでした。"
     }
 
 # 出力
@@ -315,6 +325,7 @@ if exec_calculation:
 
     try:
         if inputdata["Elevators"]:   # Elevators が 空 でなければ
+
             resultdata_EV = elevator.calc_energy(inputdata, DEBUG = False)
 
             # CGSの計算に必要となる変数
@@ -331,13 +342,15 @@ if exec_calculation:
             resultdata_EV = {
                 "message": "昇降機はありません。"
             }
+
     except:
         resultdata_EV = {
-            "error": "昇降機の計算時にエラーが発生しました。"
+            "error": "昇降機の計算時に予期せぬエラーが発生しました。"
         }
+
 else:
     resultdata_EV = {
-        "error": "昇降機の計算を実行しませんでした。"
+        "error": "昇降機の計算は実行されませんでした。"
     }
 
 # 出力
@@ -371,11 +384,11 @@ if exec_calculation:
             }
     except:
         resultdata_PV = {
-            "error": "太陽光発電設備の計算時にエラーが発生しました。"
+            "error": "太陽光発電設備の計算時に予期せぬエラーが発生しました。"
         }
 else:
     resultdata_PV = {
-        "error": "太陽光発電設備の計算を実行しませんでした。"
+        "error": "太陽光発電設備の計算は実行されませんでした。"
     }
 
 # 出力
@@ -402,15 +415,15 @@ if exec_calculation:
 
         else:
             resultdata_OT = {
-                "message": "その他はありません。"
+                "message": "その他一次エネルギー消費量は0です。"
             }
     except:
         resultdata_OT = {
-            "error": "その他一次エネの計算時にエラーが発生しました。"
+            "error": "その他一次エネルギー消費量の計算時に予期せぬエラーが発生しました。"
         }
 else:
     resultdata_OT = {
-        "error": "その他一次エネの計算を実行しませんでした。"
+        "error": "その他一次エネルギー消費量の計算は実行されませんでした。"
     }
 
 # 出力
@@ -436,15 +449,15 @@ if exec_calculation:
 
         else:
             resultdata_CGS = {
-                "message": "コジェネはありません。"
+                "message": "コージェネレーション設備はありません。"
             }
     except:
         resultdatresultdata_CGSa_OT = {
-            "error": "コジェネの計算時にエラーが発生しました。"
+            "error": "コージェネレーション設備の計算時に予期せぬエラーが発生しました。"
         }
 else:
     resultdata_CGS = {
-        "error": "コジェネの計算を実行しませんでした。"
+        "error": "コージェネレーション設備の計算は実行されませんでした。"
     }
 
 # 出力
