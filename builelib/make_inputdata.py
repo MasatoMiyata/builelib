@@ -11,17 +11,36 @@ import commons as bc
 # テンプレートファイルの保存場所
 template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
 
-# デフォルトを設定する関数
+
 def set_default(value,default,datatype):
+    """
+    型をチェックし、デフォルト値を設定する関数
+    → 期待された型と異なれば、"error"を返す。
+    """
     if value == "":
+
         out = default
+
     else:
+
         if datatype == "str":
-            out = str(value)
+            try:
+                out = str(value)
+            except:
+                out = "error"
+
         elif datatype == "float":
-            out = float(value)
+            try:
+                out = float(value)
+            except:
+                out = "error"
+
         elif datatype == "int":
-            out = int(value)
+            try:
+                out = int(value)
+            except:
+                out = "error"
+
         elif datatype == "str_or_float":
             try:
                 out = float(value)
@@ -30,6 +49,7 @@ def set_default(value,default,datatype):
 
         else:
             out = value
+
     return out
 
 # 計算対象設備があるかどうかを判定する関数
@@ -1011,11 +1031,10 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
                 }
 
     # バリデーションの実行
-    if validation:
-        jsonschema.validate(data, schema_data)
+    # if validation:
+    #     jsonschema.validate(data, schema_data)
 
-    return data
-
+    return data, validation
 
 
 def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
@@ -1034,7 +1053,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
     with open( template_directory + 'webproJsonSchema.json', 'r', encoding='utf-8') as f:
         schema_data = json.load(f)
     
-
+    # 検証結果メッセージ
+    validation = {
+        "error": [],
+        "warning": []
+    }
 
     if "SP-2) 熱源特性" in wb.sheet_names():
 
@@ -1140,36 +1163,64 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
     # 様式0の読み込み
     if "0) 基本情報" in wb.sheet_names():
 
-        # シートの読み込み
-        sheet_BL = wb.sheet_by_name("0) 基本情報")
+        try:
 
-        # BL-1	建築物の名称
-        data["Building"]["Name"] = str(sheet_BL.cell(8, 2).value)
-        # BL-2	都道府県	(選択)
-        data["Building"]["BuildingAddress"]["Prefecture"] = set_default(str(sheet_BL.cell(9, 3).value), None, "str")
-        # BL-3	建築物所在地	市区町村	(選択)
-        if sheet_BL.ncols <= 5:
-            data["Building"]["BuildingAddress"]["City"]  = None
-        else:
-            data["Building"]["BuildingAddress"]["City"]  = set_default(str(sheet_BL.cell(9, 5).value), None, "str")
-        # BL-4	丁目、番地等
-        data["Building"]["BuildingAddress"]["Address"]  = set_default(str(sheet_BL.cell(10, 2).value), None, "str")
-        
-        # BL-5	地域の区分		(自動)
-        area_num = sheet_BL.cell(11, 2).value
-        if type(area_num) is str:
-            data["Building"]["Region"] = str(int(area_num.replace("地域","")))
-        else:
-            data["Building"]["Region"] = str(int(area_num))
+            # シートの読み込み
+            sheet_BL = wb.sheet_by_name("0) 基本情報")
 
-        # BL-6	年間日射地域区分		(自動)
-        data["Building"]["AnnualSolarRegion"] = set_default(str(sheet_BL.cell(17, 2).value), "A3", "str")
-        # BL-7	延べ面積 	[㎡]	(数値)
-        data["Building"]["BuildingFloorArea"] = float(sheet_BL.cell(16, 2).value)
-        # BL-8	「他人から供給された熱」	冷熱	(数値)
-        data["Building"]["Coefficient_DHC"]["Cooling"] = set_default(str(sheet_BL.cell(18, 2).value), None, "float")
-        # BL-9	の一次エネルギー換算係数	温熱	(数値)
-        data["Building"]["Coefficient_DHC"]["Heating"] = set_default(str(sheet_BL.cell(19, 2).value), None, "float")
+            # BL-1	建築物の名称
+            data["Building"]["Name"] = str(sheet_BL.cell(8, 2).value)
+
+            # BL-2	都道府県 (選択)
+            data["Building"]["BuildingAddress"]["Prefecture"] = set_default(str(sheet_BL.cell(9, 3).value), None, "str")
+            
+            # BL-3	建築物所在地 市区町村 (選択)
+            if sheet_BL.ncols <= 5:
+                data["Building"]["BuildingAddress"]["City"]  = None
+            else:
+                data["Building"]["BuildingAddress"]["City"]  = set_default(str(sheet_BL.cell(9, 5).value), None, "str")
+            
+            # BL-4	丁目、番地等
+            data["Building"]["BuildingAddress"]["Address"]  = set_default(str(sheet_BL.cell(10, 2).value), None, "str")
+            
+            # BL-5	地域の区分	(自動)
+            area_num = sheet_BL.cell(11, 2).value
+            if type(area_num) is str:
+                data["Building"]["Region"] = str(int(area_num.replace("地域","")))
+            else:
+                data["Building"]["Region"] = str(int(area_num))
+
+            # BL-6	年間日射地域区分 (自動)
+            data["Building"]["AnnualSolarRegion"] = set_default(str(sheet_BL.cell(17, 2).value), "A3", "str")
+            
+            # BL-7	延べ面積  [㎡]	(数値)
+            data["Building"]["BuildingFloorArea"] = set_default(str(sheet_BL.cell(16, 2).value), None, "float")
+            
+            # BL-8	「他人から供給された熱」	冷熱	(数値)
+            data["Building"]["Coefficient_DHC"]["Cooling"] = set_default(str(sheet_BL.cell(18, 2).value), None, "float")
+            
+            # BL-9	の一次エネルギー換算係数	温熱	(数値)
+            data["Building"]["Coefficient_DHC"]["Heating"] = set_default(str(sheet_BL.cell(19, 2).value), None, "float")
+
+            #------------------
+            # validation
+            #------------------
+            if len(data["Building"]["Name"]) > 100:
+                validation["error"].append("様式0: 建築物の名称の文字数が多すぎます。100文字以内で入力してください。")
+            if data["Building"]["Region"] not in bc.input_options["Building"]["Region"]:
+                validation["error"].append("様式0: 「地域区分」の選択が不正です。選択肢から正しく選択してください。")
+            if data["Building"]["AnnualSolarRegion"] not in bc.input_options["Building"]["AnnualSolarRegion"]:
+                validation["error"].append("様式0: 「年間日射地域区分」の選択が不正です。選択肢から正しく選択してください。")
+            if data["Building"]["BuildingFloorArea"] == "error":
+                validation["error"].append("様式0: 「延べ面積」の入力が不正です。数値を入力してください。")
+            if data["Building"]["Coefficient_DHC"]["Cooling"] == "error":
+                validation["error"].append("様式0: 「他人から供給された熱（冷熱）」の入力が不正です。数値を入力してください。")
+            if data["Building"]["Coefficient_DHC"]["Heating"] == "error":
+                validation["error"].append("様式0: 「他人から供給された熱（温熱）」の入力が不正です。数値を入力してください。")
+
+        except:
+
+            validation["error"].append("様式0：読み込み時に予期せぬエラーが発生しました。")
 
 
     # 様式1の読み込み
@@ -3110,9 +3161,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
 
 
     # バリデーションの実行
-    bc.inputdata_validation(data)
+    # bc.inputdata_validation(data)
 
-    return data
+    return data, validation
 
 
 if __name__ == '__main__':
@@ -3136,13 +3187,17 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'WEBPRO_inputSheet_sample'
+    case_name = 'WEBPRO_inputSheet_sample_error'
 
-    inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+
+    print(validation)
 
     # json出力
     with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+
+
 
 
     #-----------------------

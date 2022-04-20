@@ -93,6 +93,7 @@ energy_consumption_standard = 0
 # 入力ファイルの読み込み
 #------------------------------------
 inputdata = {}
+validation = {}
 
 # 渡されたファイルの拡張子を確認
 inputfile_name_split = os.path.splitext(inputfile_name)
@@ -101,9 +102,10 @@ if inputfile_name_split[-1] == ".xlsm":  # WEBPRO Ver2の入力シートであ�
 
     # jsonファイルの生成
     try:
-        inputdata = make_jsondata_from_Ver2_sheet(inputfile_name)
+        inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
+
     except:
-        inputdata = {
+        validation = {
             "error": "入力シートからjsonデータ生成時にエラーが発生しました。"
         }
         exec_calculation = False  # 計算は行わない。
@@ -112,23 +114,31 @@ elif inputfile_name_split[-1] == ".xlsx":  # Builelibの入力シートであれ
 
     # jsonファイルの生成
     try:
-        inputdata = make_jsondata_from_Ver4_sheet(inputfile_name)
+        inputdata, validation = make_jsondata_from_Ver4_sheet(inputfile_name)
     except:
-        inputdata = {
+        validation = {
             "error": "入力シートからjsonデータ生成時にエラーが発生しました。"
         }
         exec_calculation = False  # 計算は行わない。
 
 else:
 
-    inputdata = {
+    validation = {
         "error": "入力シートの拡張子が不正です。"
     }
     exec_calculation = False  # 計算は行わない。
 
+
+# エラーが発生したら計算は行わない。
+if len(validation["error"]) > 0:
+    exec_calculation = False
+
+
 # 出力
 with open(inputfile_name_split[0] + "_input.json",'w', encoding='utf-8') as fw:
     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+
 
 
 #------------------------------------
@@ -474,11 +484,21 @@ with open(inputfile_name_split[0] + "_result.json",'w', encoding='utf-8') as fw:
 
 
 #------------------------------------
+# バリデーションファイルの出力
+#------------------------------------
+
+with open(inputfile_name_split[0] + "_validation.json",'w', encoding='utf-8') as fw:
+    json.dump(validation, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
+
+
+#------------------------------------
 # zipファイルの作成
 #------------------------------------
 
 with zipfile.ZipFile(inputfile_name_split[0]+".zip", 'w', compression=zipfile.ZIP_DEFLATED) as new_zip:
     new_zip.write( inputfile_name_split[0] + "_input.json",     arcname='builelib_input.json')
+    new_zip.write( inputfile_name_split[0] + "_validation.json", arcname='builelib_validation.json')
     new_zip.write( inputfile_name_split[0] + "_result.json",    arcname='builelib_result.json')
     new_zip.write( inputfile_name_split[0] + "_result_AC.json", arcname='builelib_result_AC.json')
     new_zip.write( inputfile_name_split[0] + "_result_V.json",  arcname='builelib_result_V.json')
