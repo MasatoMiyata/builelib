@@ -45,16 +45,16 @@ input_options = {
     "風量制御方式": ["無","定風量制御","回転数制御"],
     "換気方式": ["一種換気","二種換気","三種換気"],
     "換気送風機の種類": ["給気","排気","空調","循環"],
-    "換気送風量制御の種類": ["無","CO濃度制御","温度制御"],
+    "換気送風量制御": ["無","CO濃度制御","温度制御"],
     "換気代替空調対象室の用途": ["電気室","機械室","エレベータ機械室","その他"],
-    "照明在室検知制御の種類": ["無","下限調光方式","点滅方式","減光方式"],
-    "照明明るさ検知制御の種類": ["無","調光方式","調光方式BL","調光方式W15","調光方式W15BL","調光方式W20","調光方式W20BL","調光方式W25","調光方式W25BL","点滅方式"],
-    "照明タイムスケジュール制御の種類": ["無","減光方式","点滅方式"],
-    "照明初期照度補正機能の種類": ["無","タイマ方式(LED)","タイマ方式(蛍光灯)","センサ方式(LED)","センサ方式(蛍光灯)"],
-    "給湯負荷の種類": ["便所","浴室","厨房","その他"],
-    "節湯器具の種類": ["自動給湯栓","節湯B1","無"],
+    "照明在室検知制御": ["無","下限調光方式","点滅方式","減光方式"],
+    "照明明るさ検知制御": ["無","調光方式","調光方式BL","調光方式W15","調光方式W15BL","調光方式W20","調光方式W20BL","調光方式W25","調光方式W25BL","点滅方式"],
+    "照明タイムスケジュール制御": ["無","減光方式","点滅方式"],
+    "照明初期照度補正機能": ["無","タイマ方式(LED)","タイマ方式(蛍光灯)","センサ方式(LED)","センサ方式(蛍光灯)"],
+    "給湯負荷": ["便所","浴室","厨房","その他"],
+    "節湯器具": ["自動給湯栓","節湯B1","無"],
     "給湯熱源の用途": ["給湯負荷用","配管保温用","貯湯槽保温用","その他"],
-    "給湯熱源の種類": ["ガス給湯機","ガス給湯暖房機","ボイラ","石油給湯機(給湯単機能)","石油給湯機(給湯機付ふろがま)","家庭用ヒートポンプ給湯機","業務用ヒートポンプ給湯機","貯湯式電気温水器","電気瞬間湯沸器","真空式温水発生機","無圧式温水発生機","地域熱供給"],
+    "給湯熱源機種": ["ガス給湯機","ガス給湯暖房機","ボイラ","石油給湯機(給湯単機能)","石油給湯機(給湯機付ふろがま)","家庭用ヒートポンプ給湯機","業務用ヒートポンプ給湯機","貯湯式電気温水器","電気瞬間湯沸器","真空式温水発生機","無圧式温水発生機","地域熱供給"],
     "配管保温仕様": ["保温仕様1","保温仕様2","保温仕様3","裸管"],
     "速度制御方式": ["VVVF(電力回生なし)","VVVF(電力回生あり)","VVVF(電力回生なし、ギアレス)","VVVF(電力回生あり、ギアレス)","交流帰還制御"],
     "太陽電池の種類": ["結晶系","結晶系以外"],
@@ -99,7 +99,7 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
                 validation["warning"].append( item_name + "が空欄であったため、デフォルト値 " + str(default) +  " を使用しました。")
 
         # 型チェック
-        if data_type != None:
+        if data_type != None and (input_data != ""):
             if data_type == "文字列":
                 input_data = str(input_data)
             elif data_type == "数値":
@@ -2744,25 +2744,37 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # 階＋室をkeyとする
                 roomKey = str(dataHW1[0]) + '_' + str(dataHW1[1])
 
-                data["HotwaterRoom"][roomKey] = {
-                    "HotwaterSystem":[
-                        {
-                            "UsageType": None,
-                            "SystemName": str(dataHW1[7]),
-                            "HotWaterSavingSystem": set_default(str(dataHW1[6]),"無","str"),
-                            "Info": str(dataHW1[8])
-                        }
-                    ]
-                }
+                if roomKey in data["HotwaterRoom"]:
+
+                    validation["error"].append( "様式5-1.給湯対象室:「①給湯対象室」に重複があります（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
+                else:
+
+                    data["HotwaterRoom"][roomKey] = {
+                        "HotwaterSystem":[
+                            {
+                                "UsageType": None,
+                                "SystemName":
+                                    check_value(dataHW1[7], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「④給湯機器名称」", True, None, "文字列", None, None, None),
+                                "HotWaterSavingSystem":
+                                    check_value(dataHW1[6], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「③節湯器具」", True, "無", "文字列", input_options["節湯器具"], None, None),
+                                "Info":
+                                    check_value(dataHW1[8], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, 0, None),
+                            }
+                        ]
+                    }
 
             elif (dataHW1[6] != "") and (dataHW1[7] != "") :
 
                 data["HotwaterRoom"][roomKey]["HotwaterSystem"].append(
                     {
                         "UsageType": None,
-                        "SystemName": str(dataHW1[7]),
-                        "HotWaterSavingSystem": set_default(str(dataHW1[6]),"無","str"),
-                        "Info": str(dataHW1[8])
+                        "SystemName":
+                            check_value(dataHW1[7], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「④給湯機器名称」", True, None, "文字列", None, None, None),
+                        "HotWaterSavingSystem":
+                            check_value(dataHW1[6], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「③節湯器具」", True, "無", "文字列", input_options["節湯器具"], None, None),
+                        "Info":
+                            check_value(dataHW1[8], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, 0, None),
                     }
                 )
 
@@ -2785,42 +2797,65 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # 給湯システム名称をkeyとする
                 unitKey = str(dataHW2[0])
 
-                if str(dataHW2[1]) == "電力" or str(dataHW2[1]) == "電気":
-                    HeatSourceType = "電気瞬間湯沸器"
-                elif str(dataHW2[1]) == "都市ガス":
-                    HeatSourceType = "ガス給湯機"
-                elif str(dataHW2[1]) == "液化石油ガス":
-                    HeatSourceType = "ガス給湯機"
-                elif str(dataHW2[1]) == "重油":
-                    HeatSourceType = "ボイラ"
-                elif str(dataHW2[1]) == "灯油":
-                    HeatSourceType = "ボイラ"
-                elif str(dataHW2[1]) == "他人から供給された熱（温水）":
-                    HeatSourceType = "地域熱供給"
-                elif str(dataHW2[1]) == "他人から供給された熱（蒸気）":
-                    HeatSourceType = "地域熱供給"
+                if unitKey in data["HotwaterSupplySystems"]:
+
+                    validation["error"].append( "様式5-2.給湯機器:「①給湯機器名称」に重複があります（"+ str(i+1) +"行目「"+ unitKey +"」）。") 
+
                 else:
-                    raise Exception("給湯の燃料種類の指定が不正です。")
 
+                    if str(dataHW2[1]) == "電力" or str(dataHW2[1]) == "電気":
+                        HeatSourceType = "電気瞬間湯沸器"
+                    elif str(dataHW2[1]) == "都市ガス":
+                        HeatSourceType = "ガス給湯機"
+                    elif str(dataHW2[1]) == "液化石油ガス":
+                        HeatSourceType = "ガス給湯機"
+                    elif str(dataHW2[1]) == "重油":
+                        HeatSourceType = "ボイラ"
+                    elif str(dataHW2[1]) == "灯油":
+                        HeatSourceType = "ボイラ"
+                    elif str(dataHW2[1]) == "他人から供給された熱（温水）":
+                        HeatSourceType = "地域熱供給"
+                    elif str(dataHW2[1]) == "他人から供給された熱（蒸気）":
+                        HeatSourceType = "地域熱供給"
+                    else:
+                        validation["error"].append( "様式5-2.給湯機器 "+ str(i+1) +"行目:「②燃料種類」の入力に誤りがあります。") 
 
-                data["HotwaterSupplySystems"][unitKey] = {
-                    "HeatSourceUnit":[
-                        {
-                            "UsageType": "給湯負荷用",
-                            "HeatSourceType": HeatSourceType,
-                            "Number": 1,
-                            "RatedCapacity": float(dataHW2[2]),
-                            "RatedPowerConsumption": 0,
-                            "RatedFuelConsumption": float(dataHW2[2])/float(dataHW2[3]),
-                        }
-                    ],
-                    "InsulationType": str(dataHW2[4]).replace("１","1"),
-                    "PipeSize": float(dataHW2[5]),
-                    "SolarSystemArea": set_default(dataHW2[6], None, "float"),
-                    "SolarSystemDirection": set_default(dataHW2[7], None, "float"),
-                    "SolarSystemAngle": set_default(dataHW2[8], None, "float"),
-                    "Info": str(dataHW2[9])
-                }
+                    RatedCapacity = check_value(dataHW2[2], "様式5-2.給湯機器 "+ str(i+1) +"行目:「③定格加熱能力」", True, None, "数値", None, 0, None)
+                    efficiency = check_value(dataHW2[3], "様式5-2.給湯機器 "+ str(i+1) +"行目:「④熱源効率」", True, None, "数値", None, 0, None)
+
+                    if RatedCapacity == None or RatedCapacity == "":
+                        RatedFuelConsumption = None
+                    elif efficiency == None  or efficiency == "" or efficiency <= 0:
+                        RatedFuelConsumption = None
+                    else:
+                        RatedFuelConsumption = RatedCapacity / efficiency
+
+                    InsulationType = str(dataHW2[4]).replace("１","1")
+
+                    data["HotwaterSupplySystems"][unitKey] = {
+                        "HeatSourceUnit":[
+                            {
+                                "UsageType": "給湯負荷用",
+                                "HeatSourceType": HeatSourceType,
+                                "Number": 1,
+                                "RatedCapacity": RatedCapacity,
+                                "RatedPowerConsumption": 0,
+                                "RatedFuelConsumption": RatedFuelConsumption,
+                            }
+                        ],
+                        "InsulationType":
+                            check_value(InsulationType, "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑤配管保温仕様」", True, None, "文字列", input_options["配管保温仕様"], None, None),
+                        "PipeSize": 
+                            check_value(dataHW2[5], "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑥接続口径」", True, None, "数値", None, 0, None),
+                        "SolarSystemArea":
+                            check_value(dataHW2[6], "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑦有効集熱面積」", False, None, "数値", None, 0, None),
+                        "SolarSystemDirection":
+                            check_value(dataHW2[7], "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑧集熱面の方位角」", False, None, "数値", None, -360, 360),
+                        "SolarSystemAngle": 
+                            check_value(dataHW2[8], "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑨集熱面の傾斜角」", False, None, "数値", None, -180, 180),
+                        "Info":
+                            check_value(dataHW2[9], "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑩備考」", False, None, "文字列", None, 0, None),
+                    }
 
 
     if "6) 昇降機" in wb.sheet_names():
