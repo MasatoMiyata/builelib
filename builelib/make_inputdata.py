@@ -1,3 +1,4 @@
+from tkinter import N
 import xlrd
 import json
 import jsonschema
@@ -10,6 +11,77 @@ import commons as bc
 
 # テンプレートファイルの保存場所
 template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
+
+input_options = {
+    "地域区分": ["1","2","3","4","5","6","7","8"],
+    "年間日射地域区分": ["A1","A2","A3","A4","A5"]
+}
+
+def check_value(input_data, item_name, required=False, default=None, data_type=None, options=None, lower_limit=None, upper_limit=None):
+    """
+    データのチェックをし、値を返す関数 
+        引数：入力値、入力値の名称、必須か否か、デフォルト値、型、選択肢、下限値、上限値
+        不整合が生じた場合、グローバル変数 validation にメッセージを格納する。
+    """
+
+    # 必須項目のチェック
+    if required and (input_data == "") and (default == None):
+        
+        validation["error"].append( item_name + "が入力されていません。必須項目です。")
+    
+    else:
+        
+        # 空欄チェック
+        if (default != None) and (input_data == ""):
+            input_data = default
+            if type(default) is str:
+                validation["warning"].append( item_name + "が空欄であったため、デフォルト値 " + default +  " を使用しました。")
+            else:
+                validation["warning"].append( item_name + "が空欄であったため、デフォルト値 " + str(default) +  " を使用しました。")
+
+        # 型チェック
+        if data_type != None:
+            if data_type == "文字列":
+                input_data = str(input_data)
+            elif data_type == "数値":
+                try:
+                    input_data = float(input_data)
+                except:
+                    input_data = None
+                    validation["error"].append( item_name + "の入力が不正です。数値を入力してください。")
+            elif data_type == "文字列か数値":
+                if type(input_data) is not float:
+                    input_data = str(input_data)
+                else:
+                    input_data = float(input_data)
+            else:
+                raise Exception('データ型の指定が不正です')
+
+        # 選択肢チェック
+        if options != None:
+            if type(input_data) is str:
+                if input_data not in options:
+                    validation["error"].append( item_name + "の入力が不正です。選択肢から正しく選択してください。")
+
+        # 閾値チェック（下限）
+        if lower_limit != None:
+            if input_data != "" and type(input_data) is str:
+                if len(input_data) < float(lower_limit):
+                    validation["error"].append( item_name + "の文字数が下限(" + str(lower_limit) + "文字）を下回っています。")
+            elif type(input_data) is float:
+                if input_data <= float(lower_limit):
+                    validation["error"].append( item_name + "の値が下限(" + str(lower_limit) + "）を下回っています。")
+
+        # 閾値チェック（上限）
+        if upper_limit != None:
+            if input_data != "" and type(input_data) is str:
+                if len(input_data) > float(upper_limit):
+                    validation["error"].append( item_name + "の文字数が上限(" + str(upper_limit) + "文字）を超えています。")
+            elif type(input_data) is float:
+                if input_data > float(upper_limit):
+                    validation["error"].append( item_name + "の値が上限(" + str(upper_limit) + "）を超えています。")
+
+    return input_data
 
 
 def set_default(value,default,datatype):
@@ -27,21 +99,21 @@ def set_default(value,default,datatype):
             try:
                 out = str(value)
             except:
-                out = "error"
+                out = "type error string"
 
         elif datatype == "float":
             try:
                 out = float(value)
             except:
-                out = "error"
+                out = "type error float"
 
         elif datatype == "int":
             try:
                 out = int(value)
             except:
-                out = "error"
+                out = "type error int"
 
-        elif datatype == "str_or_float":
+        elif datatype == "float_or_str":
             try:
                 out = float(value)
             except:
@@ -61,8 +133,13 @@ def set_isCalculatedEquipment(input):
 
     return isEquip
 
-    
-def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
+# 検証結果メッセージ （global変数）
+validation = {
+    "error": [],
+    "warning": []
+}
+
+def make_jsondata_from_Ver4_sheet(inputfileName):
     """
     WEBPRO Ver4 用の入力シートから 入力データ（辞書型）を生成するプログラム
     """
@@ -1037,7 +1114,7 @@ def make_jsondata_from_Ver4_sheet(inputfileName, validation = False):
     return data, validation
 
 
-def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
+def make_jsondata_from_Ver2_sheet(inputfileName):
     """
     WEBPRO Ver2 用の入力シートから 入力データ（辞書型）を生成するプログラム
     """
@@ -1053,11 +1130,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
     with open( template_directory + 'webproJsonSchema.json', 'r', encoding='utf-8') as f:
         schema_data = json.load(f)
     
-    # 検証結果メッセージ
-    validation = {
-        "error": [],
-        "warning": []
-    }
 
     if "SP-2) 熱源特性" in wb.sheet_names():
 
@@ -1169,58 +1241,53 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
             sheet_BL = wb.sheet_by_name("0) 基本情報")
 
             # BL-1	建築物の名称
-            data["Building"]["Name"] = str(sheet_BL.cell(8, 2).value)
+            data["Building"]["Name"] = \
+                check_value(sheet_BL.cell(8, 2).value, "様式0:「建築物の名称」", True, None, "文字列", None, 0, 100)
 
             # BL-2	都道府県 (選択)
-            data["Building"]["BuildingAddress"]["Prefecture"] = set_default(str(sheet_BL.cell(9, 3).value), None, "str")
+            data["Building"]["BuildingAddress"]["Prefecture"] = \
+                check_value(str(sheet_BL.cell(9, 3).value), "様式0:「都道府県」", False, None, "文字列", None, 0, 100)
             
             # BL-3	建築物所在地 市区町村 (選択)
             if sheet_BL.ncols <= 5:
-                data["Building"]["BuildingAddress"]["City"]  = None
+                data["Building"]["BuildingAddress"]["City"] = None
             else:
-                data["Building"]["BuildingAddress"]["City"]  = set_default(str(sheet_BL.cell(9, 5).value), None, "str")
+                data["Building"]["BuildingAddress"]["City"] = \
+                    check_value(str(sheet_BL.cell(9, 5).value), "様式0:「市区町村」", False, None, "文字列", None, 0, 100)
             
             # BL-4	丁目、番地等
-            data["Building"]["BuildingAddress"]["Address"]  = set_default(str(sheet_BL.cell(10, 2).value), None, "str")
+            data["Building"]["BuildingAddress"]["Address"] = \
+                check_value(str(sheet_BL.cell(10, 2).value), "様式0:「丁目、番地等」", False, None, "文字列", None, 0, 100)
             
             # BL-5	地域の区分	(自動)
             area_num = sheet_BL.cell(11, 2).value
-            if type(area_num) is str:
-                data["Building"]["Region"] = str(int(area_num.replace("地域","")))
-            else:
-                data["Building"]["Region"] = str(int(area_num))
+            if type(area_num) is str and (area_num.endswith("地域")):  # 
+                area_num = area_num.replace("地域","")
+            elif type(area_num) is not str:
+                area_num = str(int(area_num))
+
+            data["Building"]["Region"] = \
+                check_value(area_num, "様式0:「地域の区分」", True, None, "文字列", input_options["地域区分"], None, None)
 
             # BL-6	年間日射地域区分 (自動)
-            data["Building"]["AnnualSolarRegion"] = set_default(str(sheet_BL.cell(17, 2).value), "A3", "str")
+            data["Building"]["AnnualSolarRegion"] = \
+                check_value(str(sheet_BL.cell(17, 2).value), "様式0:「年間日射地域区分」", True, "A3", "文字列", input_options["年間日射地域区分"], None, None)
             
             # BL-7	延べ面積  [㎡]	(数値)
-            data["Building"]["BuildingFloorArea"] = set_default(str(sheet_BL.cell(16, 2).value), None, "float")
-            
-            # BL-8	「他人から供給された熱」	冷熱	(数値)
-            data["Building"]["Coefficient_DHC"]["Cooling"] = set_default(str(sheet_BL.cell(18, 2).value), None, "float")
-            
-            # BL-9	の一次エネルギー換算係数	温熱	(数値)
-            data["Building"]["Coefficient_DHC"]["Heating"] = set_default(str(sheet_BL.cell(19, 2).value), None, "float")
+            data["Building"]["BuildingFloorArea"] = \
+                check_value(str(sheet_BL.cell(16, 2).value), "様式0:「延べ面積」", True, None, "数値", None, 0, None)
 
-            #------------------
-            # validation
-            #------------------
-            if len(data["Building"]["Name"]) > 100:
-                validation["error"].append("様式0: 建築物の名称の文字数が多すぎます。100文字以内で入力してください。")
-            if data["Building"]["Region"] not in bc.input_options["Building"]["Region"]:
-                validation["error"].append("様式0: 「地域区分」の選択が不正です。選択肢から正しく選択してください。")
-            if data["Building"]["AnnualSolarRegion"] not in bc.input_options["Building"]["AnnualSolarRegion"]:
-                validation["error"].append("様式0: 「年間日射地域区分」の選択が不正です。選択肢から正しく選択してください。")
-            if data["Building"]["BuildingFloorArea"] == "error":
-                validation["error"].append("様式0: 「延べ面積」の入力が不正です。数値を入力してください。")
-            if data["Building"]["Coefficient_DHC"]["Cooling"] == "error":
-                validation["error"].append("様式0: 「他人から供給された熱（冷熱）」の入力が不正です。数値を入力してください。")
-            if data["Building"]["Coefficient_DHC"]["Heating"] == "error":
-                validation["error"].append("様式0: 「他人から供給された熱（温熱）」の入力が不正です。数値を入力してください。")
+            # BL-8	「他人から供給された熱」	冷熱	(数値)
+            data["Building"]["Coefficient_DHC"]["Cooling"] = \
+                check_value(str(sheet_BL.cell(18, 2).value), "様式0:「他人から供給された熱（冷熱）の一次エネ換算係数」", None, None, "数値", None, 0, None)
+                        
+            # BL-9	の一次エネルギー換算係数	温熱	(数値)
+            data["Building"]["Coefficient_DHC"]["Heating"] = \
+                check_value(str(sheet_BL.cell(19, 2).value), "様式0:「他人から供給された熱（温熱）の一次エネ換算係数」", None, None, "数値", None, 0, None)
 
         except:
 
-            validation["error"].append("様式0：読み込み時に予期せぬエラーが発生しました。")
+            validation["error"].append("様式0: 読み込み時に予期せぬエラーが発生しました。")
 
 
     # 様式1の読み込み
@@ -1261,6 +1328,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         "buildingGroup": None,
                         "Info": str(dataBL[12])
                 }
+
+        #------------------
+        # validation
+        #------------------
+
+
+
 
 
     ## 外皮
@@ -2472,7 +2546,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
                         "Inverter": set_default(str(dataV[9]),'無', "str"),
                         "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
-                        "VentilationRoomType": set_default(dataV[1],'無', "str_or_float"),
+                        "VentilationRoomType": set_default(dataV[1],'無', "float_or_str"),
                         "AC_CoolingCapacity": set_default(dataV[2], 0, "float"),
                         "AC_RefEfficiency": set_default(dataV[3], 0, "float"),
                         "AC_PumpPower": set_default(dataV[4], 0, "float"),
@@ -2518,7 +2592,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
                         "Inverter": set_default(str(dataV[9]),'無', "str"),
                         "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
-                        "VentilationRoomType": set_default(dataV[1],'無', "str_or_float"),
+                        "VentilationRoomType": set_default(dataV[1],'無', "float_or_str"),
                         "AC_CoolingCapacity": set_default(dataV[2], 0, "float"),
                         "AC_RefEfficiency": set_default(dataV[3], 0, "float"),
                         "AC_PumpPower": set_default(dataV[4], 0, "float"),
@@ -2579,10 +2653,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                         str(dataL[10]): {
                             "RatedPower": float(dataL[11]),
                             "Number": float(dataL[12]),
-                            "OccupantSensingCTRL": set_default(str(dataL[13]), "無", "str_or_float"),
-                            "IlluminanceSensingCTRL": set_default(str(dataL[14]), "無", "str_or_float"),
-                            "TimeScheduleCTRL": set_default(str(dataL[15]), "無", "str_or_float"),
-                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]), "無", "str_or_float")
+                            "OccupantSensingCTRL": set_default(str(dataL[13]), "無", "float_or_str"),
+                            "IlluminanceSensingCTRL": set_default(str(dataL[14]), "無", "float_or_str"),
+                            "TimeScheduleCTRL": set_default(str(dataL[15]), "無", "float_or_str"),
+                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]), "無", "float_or_str")
                         }
                     }
                 }
@@ -2593,10 +2667,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName, validation = False):
                 data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[10])] = {
                     "RatedPower": float(dataL[11]),
                     "Number": float(dataL[12]),
-                    "OccupantSensingCTRL": set_default(str(dataL[13]), "無", "str_or_float"),
-                    "IlluminanceSensingCTRL": set_default(str(dataL[14]), "無", "str_or_float"),
-                    "TimeScheduleCTRL": set_default(str(dataL[15]), "無", "str_or_float"),
-                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]), "無", "str_or_float")
+                    "OccupantSensingCTRL": set_default(str(dataL[13]), "無", "float_or_str"),
+                    "IlluminanceSensingCTRL": set_default(str(dataL[14]), "無", "float_or_str"),
+                    "TimeScheduleCTRL": set_default(str(dataL[15]), "無", "float_or_str"),
+                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]), "無", "float_or_str")
                 }
 
 
@@ -3189,7 +3263,7 @@ if __name__ == '__main__':
 
     case_name = 'WEBPRO_inputSheet_sample_error'
 
-    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
     print(validation)
 
