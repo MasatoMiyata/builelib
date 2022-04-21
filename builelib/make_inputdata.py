@@ -94,7 +94,8 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
         if (default != None) and (input_data == ""):
             input_data = default
             if type(default) is str:
-                validation["warning"].append( item_name + "が空欄であったため、デフォルト値 " + default +  " を使用しました。")
+                if input_data != "無":
+                    validation["warning"].append( item_name + "が空欄であったため、デフォルト値 " + default +  " を使用しました。")
             else:
                 validation["warning"].append( item_name + "が空欄であったため、デフォルト値 " + str(default) +  " を使用しました。")
 
@@ -2695,34 +2696,66 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 roomKey = str(dataL[0]) + '_' + str(dataL[1])
 
-                data["LightingSystems"][roomKey] = {
-                    "roomWidth": set_default(dataL[7], None, "float"),
-                    "roomDepth": set_default(dataL[8], None, "float"),
-                    "unitHeight": set_default(dataL[6], None, "float"),
-                    "roomIndex": set_default(dataL[9], None, "float"),
-                    "lightingUnit": {
-                        str(dataL[10]): {
-                            "RatedPower": float(dataL[11]),
-                            "Number": float(dataL[12]),
-                            "OccupantSensingCTRL": set_default(str(dataL[13]), "無", "float_or_str"),
-                            "IlluminanceSensingCTRL": set_default(str(dataL[14]), "無", "float_or_str"),
-                            "TimeScheduleCTRL": set_default(str(dataL[15]), "無", "float_or_str"),
-                            "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]), "無", "float_or_str")
+                if roomKey in data["LightingSystems"]:
+
+                    validation["error"].append( "様式4.照明:「①照明対象室」に重複があります（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
+                else:
+
+                    unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A", "文字列", None, None, None)
+
+                    data["LightingSystems"][roomKey] = {
+                        "roomWidth": 
+                            check_value(dataL[7], "様式4.照明 "+ str(i+1) +"行目:「②室の間口」", False, None, "数値", None, 0, None),
+                        "roomDepth":
+                            check_value(dataL[8], "様式4.照明 "+ str(i+1) +"行目:「③室の奥行」", False, None, "数値", None, 0, None),
+                        "unitHeight":
+                            check_value(dataL[6], "様式4.照明 "+ str(i+1) +"行目:「①天井高」", False, None, "数値", None, 0, None),
+                        "roomIndex":
+                            check_value(dataL[9], "様式4.照明 "+ str(i+1) +"行目:「④室指数」", False, None, "数値", None, 0, None),
+                        "lightingUnit": {
+                            unit_name: {
+                                "RatedPower":
+                                    check_value(dataL[11], "様式4.照明 "+ str(i+1) +"行目:「⑥定格消費電力」", True, None, "数値", None, 0, None),
+                                "Number":
+                                    check_value(dataL[12], "様式4.照明 "+ str(i+1) +"行目:「⑦台数」", True, None, "数値", None, 0, None),
+                                "OccupantSensingCTRL":
+                                    check_value(dataL[13], "様式4.照明 "+ str(i+1) +"行目:「⑧在室検知制御」", False, "無", "文字列か数値", input_options["照明在室検知制御"], None, None),
+                                "IlluminanceSensingCTRL":
+                                    check_value(dataL[14], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明明るさ検知制御"], None, None),
+                                "TimeScheduleCTRL":
+                                    check_value(dataL[15], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明タイムスケジュール制御"], None, None),
+                                "InitialIlluminationCorrectionCTRL":
+                                    check_value(dataL[16], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
+                            }
                         }
                     }
-                }
 
             # 階と室名が空欄であり、かつ、消費電力の入力がある場合
             elif (dataL[0] == "") and (dataL[1] == "") and (dataL[10] != ""):
 
-                data["LightingSystems"][roomKey]["lightingUnit"][str(dataL[10])] = {
-                    "RatedPower": float(dataL[11]),
-                    "Number": float(dataL[12]),
-                    "OccupantSensingCTRL": set_default(str(dataL[13]), "無", "float_or_str"),
-                    "IlluminanceSensingCTRL": set_default(str(dataL[14]), "無", "float_or_str"),
-                    "TimeScheduleCTRL": set_default(str(dataL[15]), "無", "float_or_str"),
-                    "InitialIlluminationCorrectionCTRL": set_default(str(dataL[16]), "無", "float_or_str")
-                }
+                unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A", "文字列", None, None, None)
+
+                if unit_name in data["LightingSystems"][roomKey]["lightingUnit"]:
+
+                    validation["error"].append( "様式4.照明:「⑤機器名称」に重複があります（"+ str(i+1) +"行目「"+ unit_name +"」）。")
+
+                else:
+
+                    data["LightingSystems"][roomKey]["lightingUnit"][unit_name] = {
+                        "RatedPower":
+                            check_value(dataL[11], "様式4.照明 "+ str(i+1) +"行目:「⑥定格消費電力」", True, None, "数値", None, 0, None),
+                        "Number":
+                            check_value(dataL[12], "様式4.照明 "+ str(i+1) +"行目:「⑦台数」", True, None, "数値", None, 0, None),
+                        "OccupantSensingCTRL":
+                            check_value(dataL[13], "様式4.照明 "+ str(i+1) +"行目:「⑧在室検知制御」", False, "無", "文字列か数値", input_options["照明在室検知制御"], None, None),
+                        "IlluminanceSensingCTRL":
+                            check_value(dataL[14], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明明るさ検知制御"], None, None),
+                        "TimeScheduleCTRL":
+                            check_value(dataL[15], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明タイムスケジュール制御"], None, None),
+                        "InitialIlluminationCorrectionCTRL":
+                            check_value(dataL[16], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
+                    }
 
 
     if "5-1) 給湯室" in wb.sheet_names():
