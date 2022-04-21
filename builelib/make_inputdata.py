@@ -2856,27 +2856,42 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     data["Elevators"][roomKey]["Elevator"].append(
                         {
-                            "ElevatorName": set_default(str(dataEV[4]),"-","str"),
-                            "Number": float(dataEV[5]),
-                            "LoadLimit": float(dataEV[6]),
-                            "Velocity": float(dataEV[7]),
-                            "TransportCapacityFactor": set_default(str(dataEV[8]),1,"float"),
-                            "ControlType": set_default(str(dataEV[9]),"交流帰還制御","str"),
-                            "Info": str(dataEV[8])
+                            "ElevatorName":
+                                check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
+                            "Number": 
+                                check_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),   
+                            "LoadLimit":
+                                check_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),   
+                            "Velocity":
+                                check_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),   
+                            "TransportCapacityFactor":
+                                check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
+                            "ControlType":
+                                check_value(dataEV[9], "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                            "Info":
+                                check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                         }
                     )
                     
                 else:
+
                     data["Elevators"][roomKey] = {
                         "Elevator": [
                             {
-                                "ElevatorName": set_default(str(dataEV[4]),"-","str"),
-                                "Number": float(dataEV[5]),
-                                "LoadLimit": float(dataEV[6]),
-                                "Velocity": float(dataEV[7]),
-                                "TransportCapacityFactor": set_default(str(dataEV[8]),1,"float"),
-                                "ControlType": set_default(str(dataEV[9]),"交流帰還制御","str"),
-                                "Info": str(dataEV[8])
+                                "ElevatorName":
+                                    check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
+                                "Number": 
+                                    check_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),   
+                                "LoadLimit":
+                                    check_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),   
+                                "Velocity":
+                                    check_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),   
+                                "TransportCapacityFactor":
+                                    check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
+                                "ControlType":
+                                    check_value(dataEV[9], "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                                "Info":
+                                    check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                             }
                         ]
                     }
@@ -2885,13 +2900,20 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 data["Elevators"][roomKey]["Elevator"].append(
                     {
-                        "ElevatorName": set_default(str(dataEV[4]),"-","str"),
-                        "Number": float(dataEV[5]),
-                        "LoadLimit": float(dataEV[6]),
-                        "Velocity": float(dataEV[7]),
-                        "TransportCapacityFactor": set_default(str(dataEV[8]),1,"float"),
-                        "ControlType": set_default(str(dataEV[9]),"交流帰還制御","str"),
-                        "Info": str(dataEV[8])
+                        "ElevatorName":
+                            check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
+                        "Number": 
+                            check_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),   
+                        "LoadLimit":
+                            check_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),   
+                        "Velocity":
+                            check_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),   
+                        "TransportCapacityFactor":
+                            check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
+                        "ControlType":
+                            check_value(dataEV[9], "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                        "Info":
+                            check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                     }
                 )
 
@@ -2911,24 +2933,30 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 太陽光発電システム名称が空欄でない場合
             if (dataPV[0] != ""):
 
-                data["PhotovoltaicSystems"][dataPV[0]] = {
+                if dataPV[0] in data["PhotovoltaicSystems"]:
 
-                    "PowerConditionerEfficiency":
-                        check_value(dataPV[1], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「②パワーコンディショナの効率」", False, 0.927, "数値", None, 0, 1),
-                    "CellType":
-                        check_value(dataPV[2], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「③太陽電池の種類」", True, None, "文字列", input_options["太陽電池の種類"], None, None),
-                    "ArraySetupType":
-                        check_value(dataPV[3], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「④アレイ設置方式」", True, None, "文字列", input_options["アレイ設置方式"], None, None),
-                    "ArrayCapacity":
-                        check_value(dataPV[4], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑤アレイのシステム容量」", True, None, "数値", None, 0, None),
-                    "Direction":
-                        check_value(dataPV[5], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑥パネルの方位角」", True, None, "数値", None, -360, 360),
-                    "Angle":
-                        check_value(dataPV[6], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑦パネルの傾斜角」", True, None, "数値", None, -180, 180),
-                    "Info": 
-                        check_value(dataPV[1], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑧備考」", False, "", "文字列", None, None, None),
-                
-                }
+                    validation["error"].append( "様式7-1.太陽光発電:「①太陽光発電システム名称」に重複があります（"+ str(i+1) +"行目「"+ dataPV[0] +"」）。")
+
+                else:
+
+                    data["PhotovoltaicSystems"][dataPV[0]] = {
+
+                        "PowerConditionerEfficiency":
+                            check_value(dataPV[1], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「②パワーコンディショナの効率」", False, 0.927, "数値", None, 0, 1),
+                        "CellType":
+                            check_value(dataPV[2], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「③太陽電池の種類」", True, None, "文字列", input_options["太陽電池の種類"], None, None),
+                        "ArraySetupType":
+                            check_value(dataPV[3], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「④アレイ設置方式」", True, None, "文字列", input_options["アレイ設置方式"], None, None),
+                        "ArrayCapacity":
+                            check_value(dataPV[4], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑤アレイのシステム容量」", True, None, "数値", None, 0, None),
+                        "Direction":
+                            check_value(dataPV[5], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑥パネルの方位角」", True, None, "数値", None, -360, 360),
+                        "Angle":
+                            check_value(dataPV[6], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑦パネルの傾斜角」", True, None, "数値", None, -180, 180),
+                        "Info": 
+                            check_value(dataPV[1], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
+                    
+                    }
     
     if "7-3) コージェネレーション設備" in wb.sheet_names():
 
@@ -2949,7 +2977,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # 重複チェック
                 if dataCG[0] in data["CogenerationSystems"]:
 
-                    validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称に重複があります（"+ str(i+1) +"行目「"+ dataCG[0] +"」）。")
+                    validation["error"].append( "様式7-3.コジェネ:「①コージェネレーション設備名称」に重複があります（"+ str(i+1) +"行目「"+ dataCG[0] +"」）。")
 
                 else:
 
@@ -2988,7 +3016,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "HowWaterSystem":
                             check_value(dataCG[15], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑯排熱利用系統（給湯)」", False, None, "文字列", data["HotwaterSupplySystems"], None, None),
                         "Info":
-                            check_value(dataCG[16], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑰備考)」", False, None, "文字列", None, None, None),
+                            check_value(dataCG[16], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑰備考」", False, None, "文字列", None, None, None),
 
                     }
 
