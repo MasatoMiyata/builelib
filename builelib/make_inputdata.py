@@ -1,4 +1,3 @@
-from tkinter import N
 import xlrd
 import json
 import jsonschema
@@ -3272,8 +3271,6 @@ if __name__ == '__main__':
         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
 
-
-
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
@@ -3281,7 +3278,7 @@ if __name__ == '__main__':
 
     # case_name = 'PV_case01'
 
-    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
     # # json出力
     # with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
@@ -3299,7 +3296,7 @@ if __name__ == '__main__':
     #     else:
     #         case_name = 'ACtest_Case0' + str(int(id))
 
-    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
     #     # json出力
     #     with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
@@ -3317,7 +3314,7 @@ if __name__ == '__main__':
     #     else:
     #         case_name = 'Case_office_' + str(int(id))
 
-    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm", True)
+    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
     #     # json出力
     #     with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:

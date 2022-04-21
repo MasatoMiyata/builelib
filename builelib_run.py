@@ -5,6 +5,7 @@
 # 使用方法
 # % python3 -m builelib_run (実行モード) (入力シートファイル名)
 # % python3 -m builelib_run True ./sample/WEBPRO_inputSheet_sample.xlsm
+# % python3 -m builelib_run True ./sample/WEBPRO_inputSheet_sample_error.xlsm
 #-----------------------------------------------------------------------------
 
 import json
