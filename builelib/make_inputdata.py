@@ -69,6 +69,13 @@ validation = {
     "warning": []
 }
 
+def check_duplicates(seq):
+    """
+    リストの要素の重複をチェックする関数
+    """
+    return len(seq) != len(set(seq))
+
+
 def check_value(input_data, item_name, required=False, default=None, data_type=None, options=None, lower_limit=None, upper_limit=None):
     """
     データのチェックをし、値を返す関数 
@@ -111,13 +118,13 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
 
         # 選択肢チェック
         if options != None:
-            if type(input_data) is str:
+            if (input_data != "") and type(input_data) is str:
                 if input_data not in options:
-                    validation["error"].append( item_name + "の入力が不正です。選択肢から正しく選択してください。")
+                    validation["error"].append( item_name + "の入力が不正です。選択肢から正しく選択（もしくは転記）してください。")
 
         # 閾値チェック（下限）
         if lower_limit != None:
-            if input_data != "" and type(input_data) is str:
+            if (input_data != "") and type(input_data) is str:
                 if len(input_data) < float(lower_limit):
                     validation["error"].append( item_name + "の文字数が下限(" + str(lower_limit) + "文字）を下回っています。")
             elif type(input_data) is float:
@@ -126,7 +133,7 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
 
         # 閾値チェック（上限）
         if upper_limit != None:
-            if input_data != "" and type(input_data) is str:
+            if (input_data != "") and type(input_data) is str:
                 if len(input_data) > float(upper_limit):
                     validation["error"].append( item_name + "の文字数が上限(" + str(upper_limit) + "文字）を超えています。")
             elif type(input_data) is float:
@@ -2940,23 +2947,85 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             if (dataCG[0] != ""):
 
                 data["CogenerationSystems"][dataCG[0]] = {
-                    "RatedCapacity": float(dataCG[1]),
-                    "Number": float(dataCG[2]),
-                    "PowerGenerationEfficiency_100": float(dataCG[3]),
-                    "PowerGenerationEfficiency_75": float(dataCG[4]),
-                    "PowerGenerationEfficiency_50": float(dataCG[5]),
-                    "HeatGenerationEfficiency_100": float(dataCG[6]),
-                    "HeatGenerationEfficiency_75": float(dataCG[7]),
-                    "HeatGenerationEfficiency_50": float(dataCG[8]),
-                    "HeatRecoveryPriorityCooling": set_default(dataCG[9], None, "str"),
-                    "HeatRecoveryPriorityHeating": set_default(dataCG[10], None, "str"),
-                    "HeatRecoveryPriorityHotWater": set_default(dataCG[11], None, "str"),
-                    "24hourOperation": set_default(dataCG[12],'無', "str"),
-                    "CoolingSystem": set_default(dataCG[13], None, "str"),
-                    "HeatingSystem": set_default(dataCG[14], None, "str"),
-                    "HowWaterSystem": set_default(dataCG[15], None, "str"),
-                    "Info": str(dataCG[16])
+
+                    "RatedCapacity":
+                        check_value(dataCG[1], "様式7-3.コジェネ "+ str(i+1) +"行目:「②定格発電出力」", True, None, "数値", None, 0, None),
+                    "Number":
+                        check_value(dataCG[2], "様式7-3.コジェネ "+ str(i+1) +"行目:「③設置台数」", True, None, "数値", None, 0, None),
+                    "PowerGenerationEfficiency_100":
+                        check_value(dataCG[3], "様式7-3.コジェネ "+ str(i+1) +"行目:「④発電効率（負荷率1.00)」", True, None, "数値", None, 0, 1),
+                    "PowerGenerationEfficiency_75":
+                        check_value(dataCG[4], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑤発電効率（負荷率0.75)」", True, None, "数値", None, 0, 1),                    
+                    "PowerGenerationEfficiency_50":
+                        check_value(dataCG[5], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑥発電効率（負荷率0.50)」", True, None, "数値", None, 0, 1),       
+                    "HeatGenerationEfficiency_100":
+                        check_value(dataCG[6], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑦排熱効率（負荷率1.00)」", True, None, "数値", None, 0, 1),
+                    "HeatGenerationEfficiency_75":
+                        check_value(dataCG[7], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑧排熱効率（負荷率0.75)」", True, None, "数値", None, 0, 1),
+                    "HeatGenerationEfficiency_50":
+                        check_value(dataCG[8], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑨排熱効率（負荷率0.50)」", True, None, "数値", None, 0, 1),
+
+                    "HeatRecoveryPriorityCooling":
+                        check_value(dataCG[9], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑩排熱利用優先順位（空調冷熱源)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
+                    "HeatRecoveryPriorityHeating":
+                        check_value(dataCG[10], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑪排熱利用優先順位（空調温熱源)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
+                    "HeatRecoveryPriorityHotWater":
+                        check_value(dataCG[11], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑫排熱利用優先順位（給湯)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
+                    "24hourOperation":
+                        check_value(dataCG[12], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑬24時間運転の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                    
+                    "CoolingSystem":
+                        check_value(dataCG[13], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑭排熱利用系統（空調冷熱源)」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                    "HeatingSystem":
+                        check_value(dataCG[14], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑮排熱利用系統（空調温熱源)」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                    "HowWaterSystem":
+                        check_value(dataCG[15], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑯排熱利用系統（給湯)」", False, None, "文字列", data["HotwaterSupplySystems"], None, None),
+                    "Info":
+                        check_value(dataCG[16], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑰備考)」", False, None, "文字列", None, None, None),
+
                 }
+
+        #-------------------
+        # Varidation
+        #-------------------
+        for csg_system in data["CogenerationSystems"]:
+
+            if check_duplicates([
+                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityCooling"],
+                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHeating"], 
+                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"]]):
+
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位に重複があります。")
+
+            if data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityCooling"] == "" and \
+                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHeating"] == "" and \
+                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"] == "":
+
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位が入力されていません。")
+
+            if data["CogenerationSystems"][csg_system]["CoolingSystem"] == "" and \
+                data["CogenerationSystems"][csg_system]["HeatingSystem"] == "" and \
+                data["CogenerationSystems"][csg_system]["HowWaterSystem"] == "":
+
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用系統が入力されていません。")
+
+            if (data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityCooling"] != "" and data["CogenerationSystems"][csg_system]["CoolingSystem"] == ""):
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用系統（冷熱源）が入力されていません。")
+
+            if (data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityCooling"] == "" and data["CogenerationSystems"][csg_system]["CoolingSystem"] != ""):
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位（冷熱源）が入力されていません。")
+
+            if (data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHeating"] != "" and data["CogenerationSystems"][csg_system]["HeatingSystem"] == ""):
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用系統（温熱源）が入力されていません。")
+
+            if (data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHeating"] == "" and data["CogenerationSystems"][csg_system]["HeatingSystem"] != ""):
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位（温熱源）が入力されていません。")
+
+            if (data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"] != "" and data["CogenerationSystems"][csg_system]["HowWaterSystem"] == ""):
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用系統（給湯）が入力されていません。")
+
+            if (data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"] == "" and data["CogenerationSystems"][csg_system]["HowWaterSystem"] != ""):
+                validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位（給湯）が入力されていません。")
 
 
     if "SP-1) 変流量・変風量制御" in wb.sheet_names():
