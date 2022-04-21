@@ -500,11 +500,3 @@ def trans_36524to8760(X36524):
         for hh in range(0,24):
             X.append(X36524[dd][hh])
     return X
-
-
-input_options = {
-    "Building": {
-        "Region": ["1","2","3","4","5","6","7","8"],
-        "AnnualSolarRegion": ["A1","A2","A3","A4","A5"]
-    }
-}
