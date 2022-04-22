@@ -2741,7 +2741,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     ## Varidation（換気）
     for room_name in data["VentilationRoom"]:
         for unit_name in data["VentilationRoom"][room_name]["VentilationUnitRef"]:
-            if unit_name not in data["VentilationUnit"]:
+            if (unit_name != "") and (unit_name not in data["VentilationUnit"]):
                 validation["error"].append( "様式3-1.換気対象室 ：換気対象室 "+ room_name +" の「③換気機器名称」で入力された機器 "+ unit_name +" は様式3-2、様式3-3で定義されていません。")
 
 
