@@ -1283,8 +1283,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 )
 
 
-    # %%
-    # 様式0の読み込み
+    #----------------------------------
+    # 様式0 基本情報入力シート の読み込み
+    #----------------------------------
     if "0) 基本情報" in wb.sheet_names():
 
         try:
@@ -1342,8 +1343,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             validation["error"].append("様式0.基本情報: 読み込み時に予期せぬエラーが発生しました。")
 
 
-    # 様式1の読み込み
-    # 室用途の扱いが異なる。Ver3では様式1に記された建物用途・室用途が正となる。
+    #----------------------------------
+    # 様式1 室仕様入力シート の読み込み
+    #----------------------------------
     if "1) 室仕様" in wb.sheet_names():
 
         # シートの読み込み
@@ -1363,30 +1365,42 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # 階＋室をkeyとする
                 roomKey = str(dataBL[0]) + '_' + str(dataBL[1])
 
-                if str(dataBL[3]) == "ゴミ置場等":
-                    roomType = "廃棄物保管場所等"
+                if roomKey in data["Rooms"]:
+
+                    validation["error"].append( "様式1.室仕様:「①階・室名」の組み合わせに重複があります（"+ str(i+1) +"行目「"+ roomKey +"」）。")
+
                 else:
-                    roomType = str(dataBL[3])
 
-                # ゾーンはないと想定。
-                data["Rooms"][roomKey] = {
-                        "buildingType": str(dataBL[2]),               
-                        "roomType": roomType,
-                        "floorHeight": float(dataBL[5]),
-                        "ceilingHeight": float(dataBL[6]),
-                        "roomArea": float(dataBL[4]),
-                        "zone": None,
-                        "modelBuildingType": str(dataBL[11]),  
-                        "buildingGroup": None,
-                        "Info": str(dataBL[12])
-                }
+                    # 室用途の読み替え
+                    if str(dataBL[3]) == "ゴミ置場等":
+                        roomType = "廃棄物保管場所等"
+                    else:
+                        roomType = str(dataBL[3])
 
-        #------------------
-        # validation
-        #------------------
+                    buildingType = check_value(dataBL[2], "様式1.室仕様 "+ str(i+1) +"行目:「②建物用途」", True, None, "文字列", input_options["建物用途"], None, None)
+                    
+                    if buildingType in  input_options["室用途"]:
+                        roomType = check_value(roomType, "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」", True, None, "文字列", input_options["室用途"][buildingType], None, None),   
+                    else:
+                        validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」の整合性チェックができませんでした。")
 
-
-
+                    # ゾーンはないと想定。
+                    data["Rooms"][roomKey] = {
+                            "buildingType": buildingType,  
+                            "roomType": roomType,
+                            "floorHeight": 
+                                check_value(dataBL[5], "様式1.室仕様 "+ str(i+1) +"行目:「④階高」", False, None, "数値", None, 0, None),
+                            "ceilingHeight":
+                                check_value(dataBL[6], "様式1.室仕様 "+ str(i+1) +"行目:「⑤天井高」", False, None, "数値", None, 0, None),
+                            "roomArea":
+                                check_value(dataBL[4], "様式1.室仕様 "+ str(i+1) +"行目:「③室面積」", True, None, "数値", None, 0, None),
+                            "zone": None,
+                            "modelBuildingType":
+                                check_value(dataBL[11], "様式1.室仕様 "+ str(i+1) +"行目:「⑦モデル建物」", False, None, "文字列", None, None, None),
+                            "buildingGroup": None,
+                            "Info": 
+                                check_value(dataBL[12], "様式1.室仕様 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
+                    }
 
 
     ## 外皮
@@ -2677,7 +2691,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "Info": ""
                             }
 
-
+    #----------------------------------
+    # 様式4 照明入力シート の読み込み
+    #----------------------------------
     if "4) 照明" in wb.sheet_names():
         
         # シートの読み込み
@@ -2696,7 +2712,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 roomKey = str(dataL[0]) + '_' + str(dataL[1])
 
-                if roomKey in data["LightingSystems"]:
+                if roomKey not in data["Rooms"]:
+
+                    validation["error"].append( "様式4.照明:「①照明対象室」が 様式1.室仕様入力シートで定義されてません（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
+                elif roomKey in data["LightingSystems"]:
 
                     validation["error"].append( "様式4.照明:「①照明対象室」に重複があります（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
 
@@ -2732,7 +2752,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     }
 
             # 階と室名が空欄であり、かつ、消費電力の入力がある場合
-            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[10] != ""):
+            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[10] != "") and (roomKey in data["LightingSystems"]):
 
                 unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A", "文字列", None, None, None)
 
@@ -2757,7 +2777,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataL[16], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
                     }
 
-
+    #----------------------------------
+    # 様式5-1 給湯対象室入力シート の読み込み
+    #----------------------------------
     if "5-1) 給湯室" in wb.sheet_names():
 
         # シートの読み込み
@@ -2777,7 +2799,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # 階＋室をkeyとする
                 roomKey = str(dataHW1[0]) + '_' + str(dataHW1[1])
 
-                if roomKey in data["HotwaterRoom"]:
+                if roomKey not in data["Rooms"]:
+
+                    validation["error"].append( "様式5-1.給湯対象室:「①給湯対象室」が 様式1.室仕様入力シートで定義されてません（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
+                elif roomKey in data["HotwaterRoom"]:
 
                     validation["error"].append( "様式5-1.給湯対象室:「①給湯対象室」に重複があります（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
 
@@ -2797,7 +2823,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         ]
                     }
 
-            elif (dataHW1[6] != "") and (dataHW1[7] != "") :
+            elif (dataHW1[6] != "") and (dataHW1[7] != "") and (roomKey in data["HotwaterRoom"]):
 
                 data["HotwaterRoom"][roomKey]["HotwaterSystem"].append(
                     {
@@ -2811,6 +2837,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     }
                 )
 
+    #----------------------------------
+    # 様式5-2 給湯機器入力シート の読み込み
+    #----------------------------------
     if "5-2) 給湯機器" in wb.sheet_names():
 
         # シートの読み込み
@@ -2890,7 +2919,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataHW2[9], "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑩備考」", False, None, "文字列", None, 0, None),
                     }
 
-
+    #----------------------------------
+    # 様式6 昇降機入力シート の読み込み
+    #----------------------------------
     if "6) 昇降機" in wb.sheet_names():
 
         # シートの読み込み
@@ -2920,31 +2951,15 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # 階＋室をkeyとする
                 roomKey = str(dataEV[0]) + '_' + str(dataEV[1])
 
-                if roomKey in data["Elevators"]:  # 昇降機については、室名の重複があり得る。
+                if roomKey not in data["Rooms"]:
 
-                    data["Elevators"][roomKey]["Elevator"].append(
-                        {
-                            "ElevatorName":
-                                check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
-                            "Number": 
-                                check_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),   
-                            "LoadLimit":
-                                check_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),   
-                            "Velocity":
-                                check_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),   
-                            "TransportCapacityFactor":
-                                check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
-                            "ControlType":
-                                check_value(dataEV[9], "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
-                            "Info":
-                                check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
-                        }
-                    )
-                    
+                    validation["error"].append( "様式6.昇降機:「①主要な対象室」が 様式1.室仕様入力シートで定義されてません（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
                 else:
 
-                    data["Elevators"][roomKey] = {
-                        "Elevator": [
+                    if roomKey in data["Elevators"]:  # 昇降機については、室名の重複があり得る。
+
+                        data["Elevators"][roomKey]["Elevator"].append(
                             {
                                 "ElevatorName":
                                     check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
@@ -2961,10 +2976,32 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "Info":
                                     check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                             }
-                        ]
-                    }
+                        )
+                        
+                    else:
 
-            elif (dataEV[5] != ""):
+                        data["Elevators"][roomKey] = {
+                            "Elevator": [
+                                {
+                                    "ElevatorName":
+                                        check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
+                                    "Number": 
+                                        check_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),   
+                                    "LoadLimit":
+                                        check_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),   
+                                    "Velocity":
+                                        check_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),   
+                                    "TransportCapacityFactor":
+                                        check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
+                                    "ControlType":
+                                        check_value(dataEV[9], "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                                    "Info":
+                                        check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
+                                }
+                            ]
+                        }
+
+            elif (dataEV[5] != "") and (roomKey in data["Elevators"]):
 
                 data["Elevators"][roomKey]["Elevator"].append(
                     {
@@ -2985,6 +3022,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     }
                 )
 
+    #----------------------------------
+    # 様式7-1 太陽光発電入力シート の読み込み
+    #----------------------------------
     if "7-1) 太陽光発電" in wb.sheet_names():
 
         # シートの読み込み
@@ -3026,6 +3066,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     
                     }
     
+    #----------------------------------
+    # 様式7-3 コジェネ入力シート の読み込み
+    #----------------------------------
     if "7-3) コージェネレーション設備" in wb.sheet_names():
 
         # シートの読み込み
@@ -3088,9 +3131,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     }
 
-        #-------------------
-        # Varidation
-        #-------------------
+        ## Varidation
         for csg_system in data["CogenerationSystems"]:
 
             if check_duplicates([
@@ -3129,6 +3170,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
             if (data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"] == "" and data["CogenerationSystems"][csg_system]["HowWaterSystem"] != ""):
                 validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位（給湯）が入力されていません。")
+
 
 
     if "SP-1) 変流量・変風量制御" in wb.sheet_names():
