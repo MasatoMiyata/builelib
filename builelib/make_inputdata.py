@@ -1370,6 +1370,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
     #----------------------------------
     # 様式1 室仕様入力シート の読み込み
+    # （ Builelibでは、各設備のシートに記載された建物用途・室用途は使わず、様式1の情報を使う ）
     #----------------------------------
     if "1) 室仕様" in wb.sheet_names():
 
@@ -2534,7 +2535,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             del data["HeatsourceSystem"][iREF]["暖房"]["isSimultaneous_for_ver2"]
 
 
-    ## 機械換気設備
+    #----------------------------------
+    # 様式3-1 換気対象室入力シート の読み込み
+    #----------------------------------
     if "3-1) 換気室" in wb.sheet_names():
         
         # シートの読み込み
@@ -2554,25 +2557,53 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # 階＋室をkeyとする
                 roomKey = str(dataV[0]) + '_' + str(dataV[1])
 
-                data["VentilationRoom"][roomKey] = {
-                        "VentilationType": None,
-                        "VentilationUnitRef":{
-                            str(dataV[6]):{
-                                "UnitType": str(dataV[5]),
-                                "Info": str(dataV[7])
+                if roomKey not in data["Rooms"]:
+
+                    validation["error"].append( "様式3-1.換気対象室:「①換気対象室」が 様式1.室仕様入力シートで定義されてません（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
+                elif roomKey in data["VentilationRoom"]:
+
+                    validation["error"].append( "様式3-1.換気対象室:「①換気対象室」に重複があります（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
+                else:
+
+                    unitKey = check_value(dataV[6], "様式3-1.換気対象室 "+ str(i+1) +"行目:「③換気機器名称」", True, None, "文字列", None, None, None)
+
+                    data["VentilationRoom"][roomKey] = {
+                            "VentilationType": None,
+                            "VentilationUnitRef":{
+                                unitKey :{
+                                    "UnitType":
+                                        check_value(dataV[5], "様式3-1.換気対象室 "+ str(i+1) +"行目:「②換気種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None),
+                                    "Info":
+                                        check_value(dataV[7], "様式3-1.換気対象室 "+ str(i+1) +"行目:「④備考」", None, None, "文字列", None, None, None),
+                                }
                             }
-                        }
-                }
+                    }
 
             # 階と室名が空欄であり、かつ、機器名称に入力がある場合
             # 上記 if文 内で定義された roomKey をkeyとして、機器を追加する。
-            elif (dataV[0] == "") and (dataV[1] == "") and (dataV[6] != ""):
+            elif (dataV[0] == "") and (dataV[1] == "") and (dataV[6] != "") and (roomKey in data["VentilationRoom"]):
 
-                data["VentilationRoom"][roomKey]["VentilationUnitRef"][str(dataV[6])]  = {
-                    "UnitType": str(dataV[5]),
-                    "Info": str(dataV[7])
-                }               
+                unitKey = check_value(dataV[6], "様式3-1.換気対象室 "+ str(i+1) +"行目:「③換気機器名称」", True, None, "文字列", None, None, None)
 
+                if unitKey in data["VentilationRoom"][roomKey]["VentilationUnitRef"]:
+
+                    validation["error"].append( "様式3-1.換気対象室: 同一の室において「③換気機器名称」に重複があります（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
+                else:
+
+                    data["VentilationRoom"][roomKey]["VentilationUnitRef"][unitKey]  = {
+                        "UnitType":
+                            check_value(dataV[5], "様式3-1.換気対象室 "+ str(i+1) +"行目:「②換気種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None),
+                        "Info":
+                            check_value(dataV[7], "様式3-1.換気対象室 "+ str(i+1) +"行目:「④備考」", None, None, "文字列", None, None, None),
+                    }               
+
+
+    #----------------------------------
+    # 様式3-2 換気送風機入力シート の読み込み
+    #----------------------------------
     if "3-2) 換気送風機" in wb.sheet_names():
         
         # シートの読み込み
@@ -2590,27 +2621,42 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             if (dataV[0] != ""):
 
                 unitKey = str(dataV[0])
+
+                if unitKey in data["VentilationUnit"]:
+
+                    validation["error"].append( "様式3-2.換気送風機:「①換気機器名称」に重複があります（"+ str(i+1) +"行目「"+ unitKey +"」）。") 
+
+                else:
                 
-                data["VentilationUnit"][unitKey] = {
-                    "Number": 1,
-                    "FanAirVolume": set_default(dataV[1], None, "float"),
-                    "MoterRatedPower": set_default(dataV[2], None, "float"),
-                    "PowerConsumption": None,
-                    "HighEfficiencyMotor": set_default(str(dataV[3]),'無', "str"),
-                    "Inverter": set_default(str(dataV[4]),'無', "str"),
-                    "AirVolumeControl": set_default(str(dataV[5]),'無', "str"),
-                    "VentilationRoomType": None,
-                    "AC_CoolingCapacity": None,
-                    "AC_RefEfficiency": None,
-                    "AC_PumpPower": None,
-                    "Info": str(dataV[6])
-                }
+                    data["VentilationUnit"][unitKey] = {
+                        "Number": 1,
+                        "FanAirVolume":
+                            check_value(dataV[1], "様式3-2.換気送風機 "+ str(i+1) +"行目:「②設計風量」", True, None, "数値", None, 0, None),
+                        "MoterRatedPower":
+                            check_value(dataV[2], "様式3-2.換気送風機 "+ str(i+1) +"行目:「③電動機定格出力」", True, None, "数値", None, 0, None),
+                        "PowerConsumption": None,
+                        "HighEfficiencyMotor":
+                            check_value(dataV[3], "様式3-2.換気送風機 "+ str(i+1) +"行目:「④高効率電動機の有無」", False, "無", "文字列", input_options["有無"], None, None),                        
+                        "Inverter":
+                            check_value(dataV[4], "様式3-2.換気送風機 "+ str(i+1) +"行目:「⑤インバータの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                        "AirVolumeControl":
+                            check_value(dataV[5], "様式3-2.換気送風機 "+ str(i+1) +"行目:「⑥送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
+                        "VentilationRoomType": None,
+                        "AC_CoolingCapacity": None,
+                        "AC_RefEfficiency": None,
+                        "AC_PumpPower": None,
+                        "Info":
+                            check_value(dataV[6], "様式3-2.換気送風機 "+ str(i+1) +"行目:「⑦備考」", False, "無", "文字列", None, None, None),
+                    }
 
-
+    #----------------------------------
+    # 様式3-3 換気代替空調機入力シート の読み込み
+    #----------------------------------
     if "3-3) 換気空調機" in wb.sheet_names():
         
         # シートの読み込み
         sheet_V3 = wb.sheet_by_name("3-3) 換気空調機")
+
         # 初期化
         unitKey = None
         unitNum = 0
@@ -2621,100 +2667,83 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # シートから「行」の読み込み
             dataV = sheet_V3.row_values(i)
 
-            # 換気機器名称が空欄でない場合
+            # 換気機器名称が空欄でない場合 unitKey と unitNum をリセット
             if (dataV[0] != ""):
 
-                unitKey = str(dataV[0])
+                unitKey = check_value(dataV[0], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「①換気機器名称」", True, None, "文字列", None, None, None)
                 unitNum = 0
 
-                if dataV[5] == "空調":
+            # 送風機の種類
+            if (dataV[5] != ""):
+
+                ventilation_type = check_value(dataV[5], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑤送風機の種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None)
+
+                if ventilation_type == "空調":
                     
                     data["VentilationUnit"][unitKey] = {
                         "Number": 1,
-                        "FanAirVolume": set_default(dataV[6], None, "float"),
-                        "MoterRatedPower": set_default(dataV[7], None, "float"),
+                        "FanAirVolume":
+                            check_value(dataV[6], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑦設計風量」", True, None, "数値", None, 0, None),
+                        "MoterRatedPower":
+                            check_value(dataV[7], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑧電動機定格出力」", True, None, "数値", None, 0, None),
                         "PowerConsumption": None,
-                        "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
-                        "Inverter": set_default(str(dataV[9]),'無', "str"),
-                        "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
-                        "VentilationRoomType": set_default(dataV[1],'無', "float_or_str"),
-                        "AC_CoolingCapacity": set_default(dataV[2], 0, "float"),
-                        "AC_RefEfficiency": set_default(dataV[3], 0, "float"),
-                        "AC_PumpPower": set_default(dataV[4], 0, "float"),
-                        "Info": str(dataV[11])
+                        "HighEfficiencyMotor":
+                            check_value(dataV[8], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑨高効率電動機の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                        "Inverter":
+                            check_value(dataV[9], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑩インバータの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                        "AirVolumeControl":
+                            check_value(dataV[10], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑪送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
+                        "VentilationRoomType":
+                            check_value(dataV[1], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「②換気対象室の用途」", True, None, "文字列か数値", input_options["換気代替空調対象室の用途"], None, None),
+                        "AC_CoolingCapacity":
+                            check_value(dataV[2], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「③必要冷却能力」", True, None, "数値", None, 0, None),
+                        "AC_RefEfficiency":
+                            check_value(dataV[3], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「④熱源効率」", True, None, "数値", None, 0, None),
+                        "AC_PumpPower":
+                            check_value(dataV[4], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「④ポンプ定格出力」", False, None, "数値", None, -0.01, None),
+                        "Info":
+                            check_value(dataV[11], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑫備考」", False, "無", "文字列", None, None, None),
                     }
                 
-                else:
+                elif ventilation_type in input_options["換気送風機の種類"]:
 
                     unitNum += 1
 
                     data["VentilationUnit"][unitKey + "_fan" + str(unitNum)] = {
                         "Number": 1,
-                        "FanAirVolume": set_default(dataV[6], None, "float"),
-                        "MoterRatedPower": set_default(dataV[7], None, "float"),
+                        "FanAirVolume":
+                            check_value(dataV[6], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑦設計風量」", True, None, "数値", None, 0, None),
+                        "MoterRatedPower":
+                            check_value(dataV[7], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑧電動機定格出力」", True, None, "数値", None, 0, None),
                         "PowerConsumption": None,
-                        "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
-                        "Inverter": set_default(str(dataV[9]),'無', "str"),
-                        "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
+                        "HighEfficiencyMotor":
+                            check_value(dataV[8], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑨高効率電動機の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                        "Inverter":
+                            check_value(dataV[9], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑩インバータの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                        "AirVolumeControl":
+                            check_value(dataV[10], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑪送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
                         "VentilationRoomType": None,
                         "AC_CoolingCapacity": None,
                         "AC_RefEfficiency": None,
                         "AC_PumpPower": None,
-                        "Info": str(dataV[11])
+                        "Info":
+                            check_value(dataV[11], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑫備考」", False, "無", "文字列", None, None, None),
                     }
 
                     for room_name in data["VentilationRoom"]:
                         if unitKey in data["VentilationRoom"][room_name]["VentilationUnitRef"]:
                             data["VentilationRoom"][room_name]["VentilationUnitRef"][unitKey + "_fan" + str(unitNum)] = {
-                                "UnitType": dataV[5],
+                                "UnitType": ventilation_type,
                                 "Info": ""
-                            }
-
-            else:
+                        }
 
 
-                if dataV[5] == "空調":
-                    
-                    data["VentilationUnit"][unitKey] = {
-                        "Number": 1,
-                        "FanAirVolume": set_default(dataV[6], None, "float"),
-                        "MoterRatedPower": set_default(dataV[7], None, "float"),
-                        "PowerConsumption": None,
-                        "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
-                        "Inverter": set_default(str(dataV[9]),'無', "str"),
-                        "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
-                        "VentilationRoomType": set_default(dataV[1],'無', "float_or_str"),
-                        "AC_CoolingCapacity": set_default(dataV[2], 0, "float"),
-                        "AC_RefEfficiency": set_default(dataV[3], 0, "float"),
-                        "AC_PumpPower": set_default(dataV[4], 0, "float"),
-                        "Info": str(dataV[11])
-                    }
-                
-                else:
+    ## Varidation（換気）
+    for room_name in data["VentilationRoom"]:
+        for unit_name in data["VentilationRoom"][room_name]["VentilationUnitRef"]:
+            if unit_name not in data["VentilationUnit"]:
+                validation["error"].append( "様式3-1.換気対象室 ：換気対象室 "+ room_name +" の「③換気機器名称」で入力された機器 "+ unit_name +" は様式3-2、様式3-3で定義されていません。")
 
-                    unitNum += 1
-
-                    data["VentilationUnit"][unitKey + "_fan" + str(unitNum)] = {
-                        "Number": 1,
-                        "FanAirVolume": set_default(dataV[6], None, "float"),
-                        "MoterRatedPower": set_default(dataV[7], None, "float"),
-                        "PowerConsumption": None,
-                        "HighEfficiencyMotor": set_default(str(dataV[8]),'無', "str"),
-                        "Inverter": set_default(str(dataV[9]),'無', "str"),
-                        "AirVolumeControl": set_default(str(dataV[10]),'無', "str"),
-                        "VentilationRoomType": None,
-                        "AC_CoolingCapacity": None,
-                        "AC_RefEfficiency": None,
-                        "AC_PumpPower": None,
-                        "Info": str(dataV[11])
-                    }
-
-                    for room_name in data["VentilationRoom"]:
-                        if unitKey in data["VentilationRoom"][room_name]["VentilationUnitRef"]:
-                            data["VentilationRoom"][room_name]["VentilationUnitRef"][unitKey + "_fan" + str(unitNum)] = {
-                                "UnitType": dataV[5],
-                                "Info": ""
-                            }
 
     #----------------------------------
     # 様式4 照明入力シート の読み込み
