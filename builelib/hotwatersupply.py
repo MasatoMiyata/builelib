@@ -416,7 +416,7 @@ def calc_energy(inputdata, DEBUG = False):
         # 太陽熱利用量 [KJ/day]
         inputdata["HotwaterSupplySystems"][unit_name]["Qs_solargain"] = np.zeros(365)
 
-        if inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemArea"] != None:
+        if (inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemArea"] != "") and (inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemArea"] != None):
 
             # 日積算日射量 [Wh/m2/day]
             Id, _, Is, _ = climate.solarRadiationByAzimuth( \

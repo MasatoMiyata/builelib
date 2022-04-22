@@ -140,8 +140,6 @@ with open(inputfile_name_split[0] + "_input.json",'w', encoding='utf-8') as fw:
     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
 
-
-
 #------------------------------------
 # 空気調和設備の計算の実行
 #------------------------------------

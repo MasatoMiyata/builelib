@@ -1406,7 +1406,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     buildingType = check_value(dataBL[2], "様式1.室仕様 "+ str(i+1) +"行目:「②建物用途」", True, None, "文字列", input_options["建物用途"], None, None)
                     
                     if buildingType in  input_options["室用途"]:
-                        roomType = check_value(roomType, "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」", True, None, "文字列", input_options["室用途"][buildingType], None, None),   
+                        roomType = check_value(roomType, "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」", True, None, "文字列", input_options["室用途"][buildingType], None, None)
                     else:
                         validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」の整合性チェックができませんでした。")
 
@@ -3581,7 +3581,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'WEBPRO_inputSheet_sample_error'
+    case_name = 'WEBPRO_inputSheet_sample'
 
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 

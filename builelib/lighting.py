@@ -17,7 +17,7 @@ def set_roomIndexCoeff(roomIndex):
     室の形状に応じて定められる係数（仕様書4.4）
     '''
 
-    if roomIndex == None:
+    if (roomIndex == "") or (roomIndex == None):
         roomIndexCoeff = 1
     else:
         if roomIndex < 0:
