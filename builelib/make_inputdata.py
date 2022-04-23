@@ -1630,6 +1630,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             
                             if dataBE2[4] != "":
 
+                                material_name = dataBE2[4].replace(' ', '')
+
                                 if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
                                     dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
                                 elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
