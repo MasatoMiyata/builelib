@@ -168,6 +168,10 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
 
         input_data = "無"
 
+    elif (required == False) and (input_data == "") and (default == 0) and (data_type == "数値"):
+
+        input_data = 0
+
     else:
         
         # 空欄チェック
@@ -2001,224 +2005,292 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 熱源群名称と運転モードが空欄でない場合
             if (dataAC2[0] != ""):      
                 
-                unitKey = str(dataAC2[0])
-
-                # 熱源群名称が入力されている箇所は、蓄熱有無を判定する。
-                if dataAC2[3] == "氷蓄熱" or dataAC2[3] == "水蓄熱(成層型)" or dataAC2[3] == "水蓄熱(混合型)":
-                    storage_flag = True
-                elif dataAC2[3] == "追掛":
-                    storage_flag = False
-                else:
-                    storage_flag = False
-
-                # 台数制御の有無
-                if dataAC2[2] == "有":
-                    staging_control_flag = "有"
-                else:
-                    staging_control_flag = "無"
-
-                # 冷暖同時供給の有無
-                if dataAC2[1] == "有":
-                    isSimultaneous_flag = "有"
-                else:
-                    isSimultaneous_flag = "無"
-
-
-                if (dataAC2[5] != "") and (dataAC2[6] != ""):     # 冷熱源
+                unitKey = check_value(dataAC2[0], "様式2-5.熱源 "+ str(i+1) +"行目:「①熱源群名称」", True, None, "文字列", None, None, None)
                 
+                if unitKey in data["HeatsourceSystem"]:
+
+                    validation["error"].append( "様式2-5.熱源:「①熱源群名称」に重複があります（"+ str(i+1) +"行目「"+ unitKey +"」）。")
+
+                else:
+
+                    # 冷暖同時供給の有無
+                    if dataAC2[1] == "有":
+                        isSimultaneous_flag = "有"
+                    else:
+                        isSimultaneous_flag = "無"
+
+                    # 台数制御の有無
+                    if dataAC2[2] == "有":
+                        staging_control_flag = "有"
+                    else:
+                        staging_control_flag = "無"
+
+                    # 熱源群名称が入力されている箇所は、蓄熱有無を判定する。
+                    if dataAC2[3] == "氷蓄熱" or dataAC2[3] == "水蓄熱(成層型)" or dataAC2[3] == "水蓄熱(混合型)":
+                        storage_flag = True
+                    elif dataAC2[3] == "追掛":
+                        storage_flag = False
+                    else:
+                        storage_flag = False
+
                     if storage_flag:
                         modeKey_C = "冷房(蓄熱)"
-                        StorageType = set_default(dataAC2[3], None, "str")
-                        StorageSize = set_default(dataAC2[4], None, "float")
+                        modeKey_H = "暖房(蓄熱)"
+                        StorageType = check_value(dataAC2[3], "様式2-5.熱源 "+ str(i+1) +"行目:「④蓄熱システム（運転モード）」", True, None, "文字列", input_options["蓄熱の種類"], None, None)
+                        StorageSize = check_value(dataAC2[4], "様式2-5.熱源 "+ str(i+1) +"行目:「⑤蓄熱システム（蓄熱容量）」", True, None, "数値", None, 0, None)                           
                     else:
                         modeKey_C = "冷房"
-                        StorageType = None
-                        StorageSize = None
-
-                    if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
-                        HeatsourceRatedFuelConsumption  = 0
-                    else:
-                        HeatsourceRatedPowerConsumption = 0
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
-                        HeatsourceRatedFuelConsumption  = set_default(dataAC2[10], 0, "float")
-                        
-
-                    data["HeatsourceSystem"][unitKey] = {
-                        modeKey_C : {
-                            "StorageType": StorageType,
-                            "StorageSize": StorageSize,
-                            "isStagingControl": staging_control_flag,
-                            "isSimultaneous_for_ver2" : isSimultaneous_flag,
-                            "Heatsource" :[
-                                {
-                                    "HeatsourceType": str(dataAC2[5]),
-                                    "Number": float(dataAC2[7]),
-                                    "SupplyWaterTempSummer": set_default(dataAC2[8], None, "float"),
-                                    "SupplyWaterTempMiddle": set_default(dataAC2[8], None, "float"),
-                                    "SupplyWaterTempWinter": set_default(dataAC2[8], None, "float"),
-                                    "HeatsourceRatedCapacity": float(dataAC2[9]),
-                                    "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
-                                    "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
-                                    "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                                    "PrimaryPumpPowerConsumption": set_default(dataAC2[12], 0, "float"),
-                                    "PrimaryPumpContolType": "無",
-                                    "CoolingTowerCapacity": set_default(dataAC2[13], 0, "float"),
-                                    "CoolingTowerFanPowerConsumption": set_default(dataAC2[14], 0, "float"),
-                                    "CoolingTowerPumpPowerConsumption": set_default(dataAC2[15], 0, "float"),
-                                    "CoolingTowerContolType": "無",
-                                    "Info": str(dataAC2[23])
-                                }
-                            ]
-                        }
-                    }
-
-                if (dataAC2[5] != "") and (dataAC2[16] != ""):     # 温熱源
-                    
-                    if storage_flag:
-                        modeKey_H = "暖房(蓄熱)"
-                        StorageType = set_default(dataAC2[3], None, "str")
-                        StorageSize = set_default(dataAC2[4], None, "float")
-                    else:
                         modeKey_H = "暖房"
                         StorageType = None
                         StorageSize = None
 
-                    if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
-                        HeatsourceRatedFuelConsumption  = 0
-                    else:
-                        HeatsourceRatedPowerConsumption = 0
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
-                        HeatsourceRatedFuelConsumption  = set_default(dataAC2[20], 0, "float")
-                        
-                    if unitKey in data["HeatsourceSystem"]:
 
-                        data["HeatsourceSystem"][unitKey][modeKey_H] = \
-                            {
+                    if (dataAC2[5] != ""): # 熱源機種名称が入力されている。 
+
+                        # 熱源機種
+                        HeatsourceType = check_value(dataAC2[5], "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
+
+                        if (dataAC2[6] != "") and (HeatsourceType in HeatSourcePerformance): # 冷熱源がある。
+
+                            if HeatSourcePerformance[HeatsourceType]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
+                                HeatsourceRatedPowerConsumption = \
+                                    check_value(dataAC2[10], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                                Heatsource_sub_RatedPowerConsumption = \
+                                    check_value(dataAC2[11], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                                HeatsourceRatedFuelConsumption  = 0
+                            else:
+                                HeatsourceRatedPowerConsumption = 0
+                                Heatsource_sub_RatedPowerConsumption = \
+                                    check_value(dataAC2[11], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                                HeatsourceRatedFuelConsumption = \
+                                    check_value(dataAC2[10], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+
+                            unit_spec = {
+                                    "StorageType": StorageType,
+                                    "StorageSize": StorageSize,
+                                    "isStagingControl": staging_control_flag,
+                                    "isSimultaneous_for_ver2" : isSimultaneous_flag,
+                                    "Heatsource" :[
+                                        {
+                                            "HeatsourceType": HeatsourceType,
+                                            "Number":
+                                                check_value(dataAC2[7], "様式2-5.熱源 "+ str(i+1) +"行目:「⑧台数」", True, None, "数値", None, None, None),
+                                            "SupplyWaterTempSummer": 
+                                                check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                            "SupplyWaterTempMiddle":
+                                                check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                            "SupplyWaterTempWinter":
+                                                check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                            "HeatsourceRatedCapacity":
+                                                check_value(dataAC2[9], "様式2-5.熱源 "+ str(i+1) +"行目:「⑩定格冷却能力」", True, None, "数値", None, None, None),
+                                            "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
+                                            "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                            "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
+                                            "PrimaryPumpPowerConsumption":
+                                                check_value(dataAC2[12], "様式2-5.熱源 "+ str(i+1) +"行目:「⑬一次ポンプ定格消費電力」", False, 0, "数値", None, None, None),
+                                            "PrimaryPumpContolType": "無",
+                                            "CoolingTowerCapacity":
+                                                check_value(dataAC2[13], "様式2-5.熱源 "+ str(i+1) +"行目:「⑭冷却塔定格冷却能力」", False, 0, "数値", None, None, None),
+                                            "CoolingTowerFanPowerConsumption":
+                                                check_value(dataAC2[14], "様式2-5.熱源 "+ str(i+1) +"行目:「⑮冷却塔ファン消費電力」", False, 0, "数値", None, None, None),
+                                            "CoolingTowerPumpPowerConsumption":
+                                                check_value(dataAC2[15], "様式2-5.熱源 "+ str(i+1) +"行目:「⑮冷却水ポンプ消費電力」", False, 0, "数値", None, None, None),
+                                            "CoolingTowerContolType": "無",
+                                            "Info":
+                                                check_value(dataAC2[23], "様式2-5.熱源 "+ str(i+1) +"行目:「⑰備考」", False, None, "文字列", None, None, None),
+                                        }
+                                    ]
+                                }
+
+                            if unitKey in data["HeatsourceSystem"]:
+                                data["HeatsourceSystem"][unitKey][modeKey_C] = unit_spec
+                            else:
+                                data["HeatsourceSystem"][unitKey] = {modeKey_C : unit_spec}
+
+                        elif (HeatsourceType in HeatSourcePerformance):
+
+                            # 熱源機器がない場合は、群の情報のみを入力する。
+                            unit_spec = {
+                                    "StorageType": StorageType,
+                                    "StorageSize": StorageSize,
+                                    "isStagingControl": staging_control_flag,
+                                    "isSimultaneous_for_ver2" : isSimultaneous_flag,
+                                    "Heatsource" :[],
+                                }
+                            if unitKey in data["HeatsourceSystem"]:
+                                data["HeatsourceSystem"][unitKey][modeKey_C] = unit_spec
+                            else:
+                                data["HeatsourceSystem"][unitKey] = {modeKey_C : unit_spec}
+
+
+                        if (dataAC2[16] != "") and (HeatsourceType in HeatSourcePerformance):     # 温熱源がある。
+                            
+                            if HeatSourcePerformance[HeatsourceType]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
+                                HeatsourceRatedPowerConsumption = \
+                                    check_value(dataAC2[20], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                                Heatsource_sub_RatedPowerConsumption = \
+                                    check_value(dataAC2[21], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                                HeatsourceRatedFuelConsumption  = 0
+                            else:
+                                HeatsourceRatedPowerConsumption = 0
+                                Heatsource_sub_RatedPowerConsumption = \
+                                    check_value(dataAC2[21], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                                HeatsourceRatedFuelConsumption  = \
+                                    check_value(dataAC2[20], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                                                                    
+
+                            unit_spec =  {
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
                                 "isStagingControl": staging_control_flag,
                                 "isSimultaneous_for_ver2" : isSimultaneous_flag,
                                 "Heatsource" :[
                                     {
-                                        "HeatsourceType": str(dataAC2[5]),
-                                        "Number": float(dataAC2[17]),
-                                        "SupplyWaterTempSummer": set_default(dataAC2[18], None, "float"),
-                                        "SupplyWaterTempMiddle": set_default(dataAC2[18], None, "float"),
-                                        "SupplyWaterTempWinter": set_default(dataAC2[18], None, "float"),
-                                        "HeatsourceRatedCapacity": float(dataAC2[19]),
+                                        "HeatsourceType": HeatsourceType,
+                                        "Number":
+                                            check_value(dataAC2[17], "様式2-5.熱源 "+ str(i+1) +"行目:「⑧台数」", True, None, "数値", None, None, None),
+                                        "SupplyWaterTempSummer":
+                                            check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                        "SupplyWaterTempMiddle":
+                                            check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                        "SupplyWaterTempWinter":
+                                            check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                        "HeatsourceRatedCapacity":
+                                            check_value(dataAC2[19], "様式2-5.熱源 "+ str(i+1) +"行目:「⑩定格冷却能力」", True, None, "数値", None, None, None),
                                         "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
                                         "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
                                         "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                                        "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
+                                        "PrimaryPumpPowerConsumption":
+                                            check_value(dataAC2[22], "様式2-5.熱源 "+ str(i+1) +"行目:「⑬一次ポンプ定格消費電力」", False, 0, "数値", None, None, None),
                                         "PrimaryPumpContolType": "無",
                                         "CoolingTowerCapacity": 0,
                                         "CoolingTowerFanPowerConsumption": 0,
                                         "CoolingTowerPumpPowerConsumption": 0,
                                         "CoolingTowerContolType": "無",
-                                        "Info": str(dataAC2[23])
+                                        "Info":
+                                            check_value(dataAC2[23], "様式2-5.熱源 "+ str(i+1) +"行目:「⑰備考」", False, None, "文字列", None, None, None),
                                     }
                                 ]
                             }
 
-                    else:
-                        data["HeatsourceSystem"][unitKey] = {
-                            modeKey_H : {
-                                "StorageType": StorageType,
-                                "StorageSize": StorageSize,
-                                "isStagingControl": set_default(dataAC2[2], "無", "str"),
-                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
-                                "Heatsource" :[
-                                    {
-                                        "HeatsourceType": str(dataAC2[5]),
-                                        "Number": float(dataAC2[17]),
-                                        "SupplyWaterTempSummer": set_default(dataAC2[18], None, "float"),
-                                        "SupplyWaterTempMiddle": set_default(dataAC2[18], None, "float"),
-                                        "SupplyWaterTempWinter": set_default(dataAC2[18], None, "float"),
-                                        "HeatsourceRatedCapacity": float(dataAC2[19]),
-                                        "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
-                                        "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
-                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                                        "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
-                                        "PrimaryPumpContolType": "無",
-                                        "CoolingTowerCapacity": 0,
-                                        "CoolingTowerFanPowerConsumption": 0,
-                                        "CoolingTowerPumpPowerConsumption": 0,
-                                        "CoolingTowerContolType": "無",
-                                        "Info": str(dataAC2[23])
-                                    }
-                                ]
-                            }
-                        }
+                            if unitKey in data["HeatsourceSystem"]:
+                                data["HeatsourceSystem"][unitKey][modeKey_H] = unit_spec
+                            else:
+                                data["HeatsourceSystem"][unitKey] = {modeKey_H : unit_spec}
+
+                        elif (HeatsourceType in HeatSourcePerformance):
+
+                            # 熱源機器がない場合は、群の情報のみを入力する。
+                            unit_spec = {
+                                    "StorageType": StorageType,
+                                    "StorageSize": StorageSize,
+                                    "isStagingControl": staging_control_flag,
+                                    "isSimultaneous_for_ver2" : isSimultaneous_flag,
+                                    "Heatsource" :[],
+                                }
+                            if unitKey in data["HeatsourceSystem"]:
+                                data["HeatsourceSystem"][unitKey][modeKey_H] = unit_spec
+                            else:
+                                data["HeatsourceSystem"][unitKey] = {modeKey_H : unit_spec}
+                            
 
             elif (dataAC2[3] == ""):  # 熱源機種を追加（複数台設置されている場合）
 
-                if (dataAC2[5] != "") and (dataAC2[6] != ""):     # 冷熱源
-    
-                    if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
-                        HeatsourceRatedFuelConsumption  = 0
-                    else:
-                        HeatsourceRatedPowerConsumption = 0
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
-                        HeatsourceRatedFuelConsumption  = set_default(dataAC2[10], 0, "float")
-                    
-                    data["HeatsourceSystem"][unitKey][modeKey_C]["Heatsource"].append(
-                        {
-                            "HeatsourceType": str(dataAC2[5]),
-                            "Number": float(dataAC2[7]),
-                            "SupplyWaterTempSummer": set_default(dataAC2[8], None, "float"),
-                            "SupplyWaterTempMiddle": set_default(dataAC2[8], None, "float"),
-                            "SupplyWaterTempWinter": set_default(dataAC2[8], None, "float"),
-                            "HeatsourceRatedCapacity": float(dataAC2[9]),
-                            "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
-                            "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
-                            "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                            "PrimaryPumpPowerConsumption": set_default(dataAC2[12], 0, "float"),
-                            "PrimaryPumpContolType": "無",
-                            "CoolingTowerCapacity": set_default(dataAC2[13], 0, "float"),
-                            "CoolingTowerFanPowerConsumption": set_default(dataAC2[14], 0, "float"),
-                            "CoolingTowerPumpPowerConsumption": set_default(dataAC2[15], 0, "float"),
-                            "CoolingTowerContolType": "無",
-                            "Info": str(dataAC2[23])
-                        }
-                    )
+                if (dataAC2[5] != ""): # 熱源機種名称が入力されている。 
 
-                if (dataAC2[5] != "") and (dataAC2[16] != ""):     # 温熱源
-                    
-                    if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
-                        HeatsourceRatedFuelConsumption  = 0
-                    else:
-                        HeatsourceRatedPowerConsumption = 0
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
-                        HeatsourceRatedFuelConsumption  = set_default(dataAC2[20], 0, "float")
+                    # 熱源機種
+                    HeatsourceType = check_value(dataAC2[5], "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
 
-                    data["HeatsourceSystem"][unitKey][modeKey_H]["Heatsource"].append(
-                        {
-                            "HeatsourceType": str(dataAC2[5]),
-                            "Number": float(dataAC2[17]),
-                            "SupplyWaterTempSummer": set_default(dataAC2[18], None, "float"),
-                            "SupplyWaterTempMiddle": set_default(dataAC2[18], None, "float"),
-                            "SupplyWaterTempWinter": set_default(dataAC2[18], None, "float"),
-                            "HeatsourceRatedCapacity": float(dataAC2[19]),
-                            "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
-                            "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
-                            "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                            "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
-                            "PrimaryPumpContolType": "無",
-                            "CoolingTowerCapacity": 0,
-                            "CoolingTowerFanPowerConsumption": 0,
-                            "CoolingTowerPumpPowerConsumption": 0,
-                            "CoolingTowerContolType": "無",
-                            "Info": str(dataAC2[23])
-                        }
-                    )
+                    if (dataAC2[6] != "") and (HeatsourceType in HeatSourcePerformance): # 冷熱源がある。
+
+                        if HeatSourcePerformance[HeatsourceType]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
+                            HeatsourceRatedPowerConsumption = \
+                                check_value(dataAC2[10], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                            Heatsource_sub_RatedPowerConsumption = \
+                                check_value(dataAC2[11], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                            HeatsourceRatedFuelConsumption  = 0
+                        else:
+                            HeatsourceRatedPowerConsumption = 0
+                            Heatsource_sub_RatedPowerConsumption = \
+                                check_value(dataAC2[11], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                            HeatsourceRatedFuelConsumption = \
+                                check_value(dataAC2[10], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+
+
+                        data["HeatsourceSystem"][unitKey][modeKey_C]["Heatsource"].append(
+                            {
+                                "HeatsourceType": HeatsourceType,
+                                "Number":
+                                    check_value(dataAC2[7], "様式2-5.熱源 "+ str(i+1) +"行目:「⑧台数」", True, None, "数値", None, None, None),
+                                "SupplyWaterTempSummer": 
+                                    check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                "SupplyWaterTempMiddle":
+                                    check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                "SupplyWaterTempWinter":
+                                    check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                "HeatsourceRatedCapacity":
+                                    check_value(dataAC2[9], "様式2-5.熱源 "+ str(i+1) +"行目:「⑩定格冷却能力」", True, None, "数値", None, None, None),
+                                "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
+                                "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
+                                "PrimaryPumpPowerConsumption":
+                                    check_value(dataAC2[12], "様式2-5.熱源 "+ str(i+1) +"行目:「⑬一次ポンプ定格消費電力」", False, 0, "数値", None, None, None),
+                                "PrimaryPumpContolType": "無",
+                                "CoolingTowerCapacity":
+                                    check_value(dataAC2[13], "様式2-5.熱源 "+ str(i+1) +"行目:「⑭冷却塔定格冷却能力」", False, 0, "数値", None, None, None),
+                                "CoolingTowerFanPowerConsumption":
+                                    check_value(dataAC2[14], "様式2-5.熱源 "+ str(i+1) +"行目:「⑮冷却塔ファン消費電力」", False, 0, "数値", None, None, None),
+                                "CoolingTowerPumpPowerConsumption":
+                                    check_value(dataAC2[15], "様式2-5.熱源 "+ str(i+1) +"行目:「⑮冷却水ポンプ消費電力」", False, 0, "数値", None, None, None),
+                                "CoolingTowerContolType": "無",
+                                "Info":
+                                    check_value(dataAC2[23], "様式2-5.熱源 "+ str(i+1) +"行目:「⑰備考」", False, None, "文字列", None, None, None),
+                            }
+                        )
+
+                    if (dataAC2[16] != "") and (HeatsourceType in HeatSourcePerformance):     # 温熱源がある。
+                        
+                        if HeatSourcePerformance[HeatsourceType]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
+                            HeatsourceRatedPowerConsumption = \
+                                check_value(dataAC2[20], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                            Heatsource_sub_RatedPowerConsumption = \
+                                check_value(dataAC2[21], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                            HeatsourceRatedFuelConsumption  = 0
+                        else:
+                            HeatsourceRatedPowerConsumption = 0
+                            Heatsource_sub_RatedPowerConsumption = \
+                                check_value(dataAC2[21], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                            HeatsourceRatedFuelConsumption  = \
+                                check_value(dataAC2[20], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                                                                
+
+                        data["HeatsourceSystem"][unitKey][modeKey_H]["Heatsource"].append(
+                            {
+                                "HeatsourceType": HeatsourceType,
+                                "Number":
+                                    check_value(dataAC2[17], "様式2-5.熱源 "+ str(i+1) +"行目:「⑧台数」", True, None, "数値", None, None, None),
+                                "SupplyWaterTempSummer":
+                                    check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                "SupplyWaterTempMiddle":
+                                    check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                "SupplyWaterTempWinter":
+                                    check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                "HeatsourceRatedCapacity":
+                                    check_value(dataAC2[19], "様式2-5.熱源 "+ str(i+1) +"行目:「⑩定格冷却能力」", True, None, "数値", None, None, None),
+                                "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
+                                "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
+                                "PrimaryPumpPowerConsumption":
+                                    check_value(dataAC2[22], "様式2-5.熱源 "+ str(i+1) +"行目:「⑬一次ポンプ定格消費電力」", False, 0, "数値", None, None, None),
+                                "PrimaryPumpContolType": "無",
+                                "CoolingTowerCapacity": 0,
+                                "CoolingTowerFanPowerConsumption": 0,
+                                "CoolingTowerPumpPowerConsumption": 0,
+                                "CoolingTowerContolType": "無",
+                                "Info":
+                                    check_value(dataAC2[23], "様式2-5.熱源 "+ str(i+1) +"行目:「⑰備考」", False, None, "文字列", None, None, None),
+                            }
+                        )
 
             elif (dataAC2[3] != ""):  # 熱源機種を追加（複数のモードがある場合）
 
@@ -2230,166 +2302,163 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 else:
                     storage_flag = False
 
-                if (dataAC2[5] != "") and (dataAC2[6] != ""):     # 冷熱源
-                
-                    if storage_flag:
-                        modeKey_C = "冷房(蓄熱)"
-                        StorageType = set_default(dataAC2[3], None, "str")
-                        StorageSize = set_default(dataAC2[4], None, "float")
-                    else:
-                        modeKey_C = "冷房"
-                        StorageType = None
-                        StorageSize = None
+                if storage_flag:
+                    modeKey_C = "冷房(蓄熱)"
+                    modeKey_H = "暖房(蓄熱)"
+                    StorageType = check_value(dataAC2[3], "様式2-5.熱源 "+ str(i+1) +"行目:「④蓄熱システム（運転モード）」", True, None, "文字列", input_options["蓄熱の種類"], None, None)
+                    StorageSize = check_value(dataAC2[4], "様式2-5.熱源 "+ str(i+1) +"行目:「⑤蓄熱システム（蓄熱容量）」", True, None, "数値", None, 0, None)                           
+                else:
+                    modeKey_C = "冷房"
+                    modeKey_H = "暖房"
+                    StorageType = None
+            
+                if (dataAC2[5] != ""): # 熱源機種名称が入力されている。 
 
-                    if HeatSourcePerformance[str(dataAC2[5])]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[10], 0, "float")
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
-                        HeatsourceRatedFuelConsumption  = 0
-                    else:
-                        HeatsourceRatedPowerConsumption = 0
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[11], 0, "float")
-                        HeatsourceRatedFuelConsumption  = set_default(dataAC2[10], 0, "float")
+                    # 熱源機種
+                    HeatsourceType = check_value(dataAC2[5], "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
+
+                    if (dataAC2[6] != "") and (HeatsourceType in HeatSourcePerformance): # 冷熱源がある。
+
+                        if HeatSourcePerformance[HeatsourceType]["冷房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
+                            HeatsourceRatedPowerConsumption = \
+                                check_value(dataAC2[10], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                            Heatsource_sub_RatedPowerConsumption = \
+                                check_value(dataAC2[11], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                            HeatsourceRatedFuelConsumption  = 0
+                        else:
+                            HeatsourceRatedPowerConsumption = 0
+                            Heatsource_sub_RatedPowerConsumption = \
+                                check_value(dataAC2[11], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                            HeatsourceRatedFuelConsumption = \
+                                check_value(dataAC2[10], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+
+                        unit_spec = {
+                                "StorageType": StorageType,
+                                "StorageSize": StorageSize,
+                                "isStagingControl": staging_control_flag,
+                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
+                                "Heatsource" :[
+                                    {
+                                        "HeatsourceType": HeatsourceType,
+                                        "Number":
+                                            check_value(dataAC2[7], "様式2-5.熱源 "+ str(i+1) +"行目:「⑧台数」", True, None, "数値", None, None, None),
+                                        "SupplyWaterTempSummer": 
+                                            check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                        "SupplyWaterTempMiddle":
+                                            check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                        "SupplyWaterTempWinter":
+                                            check_value(dataAC2[8], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                        "HeatsourceRatedCapacity":
+                                            check_value(dataAC2[9], "様式2-5.熱源 "+ str(i+1) +"行目:「⑩定格冷却能力」", True, None, "数値", None, None, None),
+                                        "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
+                                        "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
+                                        "PrimaryPumpPowerConsumption":
+                                            check_value(dataAC2[12], "様式2-5.熱源 "+ str(i+1) +"行目:「⑬一次ポンプ定格消費電力」", False, 0, "数値", None, None, None),
+                                        "PrimaryPumpContolType": "無",
+                                        "CoolingTowerCapacity":
+                                            check_value(dataAC2[13], "様式2-5.熱源 "+ str(i+1) +"行目:「⑭冷却塔定格冷却能力」", False, 0, "数値", None, None, None),
+                                        "CoolingTowerFanPowerConsumption":
+                                            check_value(dataAC2[14], "様式2-5.熱源 "+ str(i+1) +"行目:「⑮冷却塔ファン消費電力」", False, 0, "数値", None, None, None),
+                                        "CoolingTowerPumpPowerConsumption":
+                                            check_value(dataAC2[15], "様式2-5.熱源 "+ str(i+1) +"行目:「⑮冷却水ポンプ消費電力」", False, 0, "数値", None, None, None),
+                                        "CoolingTowerContolType": "無",
+                                        "Info":
+                                            check_value(dataAC2[23], "様式2-5.熱源 "+ str(i+1) +"行目:「⑰備考」", False, None, "文字列", None, None, None),
+                                    }
+                                ]
+                            }
+
+                        if unitKey in data["HeatsourceSystem"]:
+                            data["HeatsourceSystem"][unitKey][modeKey_C] = unit_spec
+                        else:
+                            data["HeatsourceSystem"][unitKey] = {modeKey_C : unit_spec}
+
+                    elif (HeatsourceType in HeatSourcePerformance):
+
+                        # 熱源機器がない場合は、群の情報のみを入力する。
+                        unit_spec = {
+                                "StorageType": StorageType,
+                                "StorageSize": StorageSize,
+                                "isStagingControl": staging_control_flag,
+                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
+                                "Heatsource" :[],
+                            }
+                        if unitKey in data["HeatsourceSystem"]:
+                            data["HeatsourceSystem"][unitKey][modeKey_C] = unit_spec
+                        else:
+                            data["HeatsourceSystem"][unitKey] = {modeKey_C : unit_spec}
+
+
+                    if (dataAC2[16] != "") and (HeatsourceType in HeatSourcePerformance):     # 温熱源がある。
                         
-                    if unitKey in data["HeatsourceSystem"]:
+                        if HeatSourcePerformance[HeatsourceType]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
+                            HeatsourceRatedPowerConsumption = \
+                                check_value(dataAC2[20], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                            Heatsource_sub_RatedPowerConsumption = \
+                                check_value(dataAC2[21], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                            HeatsourceRatedFuelConsumption  = 0
+                        else:
+                            HeatsourceRatedPowerConsumption = 0
+                            Heatsource_sub_RatedPowerConsumption = \
+                                check_value(dataAC2[21], "様式2-5.熱源 "+ str(i+1) +"行目:「⑫補機定格消費電力」", False, 0, "数値", None, None, None)
+                            HeatsourceRatedFuelConsumption  = \
+                                check_value(dataAC2[20], "様式2-5.熱源 "+ str(i+1) +"行目:「⑪主機定格消費エネルギー」", False, 0, "数値", None, None, None)
+                                                                
 
-                        data["HeatsourceSystem"][unitKey][modeKey_C] = \
-                            {
-                                "StorageType": StorageType,
-                                "StorageSize": StorageSize,
-                                "isStagingControl": staging_control_flag,
-                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
-                                "Heatsource" :[
-                                    {
-                                        "HeatsourceType": str(dataAC2[5]),
-                                        "Number": float(dataAC2[7]),
-                                        "SupplyWaterTempSummer": set_default(dataAC2[8], None, "float"),
-                                        "SupplyWaterTempMiddle": set_default(dataAC2[8], None, "float"),
-                                        "SupplyWaterTempWinter": set_default(dataAC2[8], None, "float"),
-                                        "HeatsourceRatedCapacity": float(dataAC2[9]),
-                                        "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
-                                        "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
-                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                                        "PrimaryPumpPowerConsumption": set_default(dataAC2[12], 0, "float"),
-                                        "PrimaryPumpContolType": "無",
-                                        "CoolingTowerCapacity": set_default(dataAC2[13], 0, "float"),
-                                        "CoolingTowerFanPowerConsumption": set_default(dataAC2[14], 0, "float"),
-                                        "CoolingTowerPumpPowerConsumption": set_default(dataAC2[15], 0, "float"),
-                                        "CoolingTowerContolType": "無",
-                                        "Info": str(dataAC2[23])
-                                    }
-                                ]
-                            }
-
-                    else:
-                        data["HeatsourceSystem"][unitKey] = {
-                            modeKey_C : {
-                                "StorageType": StorageType,
-                                "StorageSize": StorageSize,
-                                "isStagingControl": staging_control_flag,
-                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
-                                "Heatsource" :[
-                                    {
-                                        "HeatsourceType": str(dataAC2[5]),
-                                        "Number": float(dataAC2[7]),
-                                        "SupplyWaterTempSummer": set_default(dataAC2[8], None, "float"),
-                                        "SupplyWaterTempMiddle": set_default(dataAC2[8], None, "float"),
-                                        "SupplyWaterTempWinter": set_default(dataAC2[8], None, "float"),
-                                        "HeatsourceRatedCapacity": float(dataAC2[9]),
-                                        "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
-                                        "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
-                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                                        "PrimaryPumpPowerConsumption": set_default(dataAC2[12], 0, "float"),
-                                        "PrimaryPumpContolType": "無",
-                                        "CoolingTowerCapacity": set_default(dataAC2[13], 0, "float"),
-                                        "CoolingTowerFanPowerConsumption": set_default(dataAC2[14], 0, "float"),
-                                        "CoolingTowerPumpPowerConsumption": set_default(dataAC2[15], 0, "float"),
-                                        "CoolingTowerContolType": "無",
-                                        "Info": str(dataAC2[23])
-                                    }
-                                ]
-                            }
+                        unit_spec =  {
+                            "StorageType": StorageType,
+                            "StorageSize": StorageSize,
+                            "isStagingControl": staging_control_flag,
+                            "isSimultaneous_for_ver2" : isSimultaneous_flag,
+                            "Heatsource" :[
+                                {
+                                    "HeatsourceType": HeatsourceType,
+                                    "Number":
+                                        check_value(dataAC2[17], "様式2-5.熱源 "+ str(i+1) +"行目:「⑧台数」", True, None, "数値", None, None, None),
+                                    "SupplyWaterTempSummer":
+                                        check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                    "SupplyWaterTempMiddle":
+                                        check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                    "SupplyWaterTempWinter":
+                                        check_value(dataAC2[18], "様式2-5.熱源 "+ str(i+1) +"行目:「⑨送水温度」", False, None, "数値", None, None, None),
+                                    "HeatsourceRatedCapacity":
+                                        check_value(dataAC2[19], "様式2-5.熱源 "+ str(i+1) +"行目:「⑩定格冷却能力」", True, None, "数値", None, None, None),
+                                    "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
+                                    "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
+                                    "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
+                                    "PrimaryPumpPowerConsumption":
+                                        check_value(dataAC2[22], "様式2-5.熱源 "+ str(i+1) +"行目:「⑬一次ポンプ定格消費電力」", False, 0, "数値", None, None, None),
+                                    "PrimaryPumpContolType": "無",
+                                    "CoolingTowerCapacity": 0,
+                                    "CoolingTowerFanPowerConsumption": 0,
+                                    "CoolingTowerPumpPowerConsumption": 0,
+                                    "CoolingTowerContolType": "無",
+                                    "Info":
+                                        check_value(dataAC2[23], "様式2-5.熱源 "+ str(i+1) +"行目:「⑰備考」", False, None, "文字列", None, None, None),
+                                }
+                            ]
                         }
 
-                if (dataAC2[5] != "") and (dataAC2[16] != ""):     # 温熱源
-                    
-                    if storage_flag:
-                        modeKey_H = "暖房(蓄熱)"
-                        StorageType = set_default(dataAC2[3], None, "str")
-                        StorageSize = set_default(dataAC2[4], None, "float")
-                    else:
-                        modeKey_H = "暖房"
-                        StorageType = None
-                        StorageSize = None
+                        if unitKey in data["HeatsourceSystem"]:
+                            data["HeatsourceSystem"][unitKey][modeKey_H] = unit_spec
+                        else:
+                            data["HeatsourceSystem"][unitKey] = {modeKey_H : unit_spec}
 
-                    if HeatSourcePerformance[str(dataAC2[5])]["暖房時の特性"]["燃料種類"] == "電力":    # 燃料種類が電力であれば
-                        HeatsourceRatedPowerConsumption = set_default(dataAC2[20], 0, "float")
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
-                        HeatsourceRatedFuelConsumption  = 0
-                    else:
-                        HeatsourceRatedPowerConsumption = 0
-                        Heatsource_sub_RatedPowerConsumption = set_default(dataAC2[21], 0, "float")
-                        HeatsourceRatedFuelConsumption  = set_default(dataAC2[20], 0, "float")
-                        
-                    if unitKey in data["HeatsourceSystem"]:
+                    elif (HeatsourceType in HeatSourcePerformance):
 
-                        data["HeatsourceSystem"][unitKey][modeKey_H] = \
-                            {
+                        # 熱源機器がない場合は、群の情報のみを入力する。
+                        unit_spec = {
                                 "StorageType": StorageType,
                                 "StorageSize": StorageSize,
                                 "isStagingControl": staging_control_flag,
                                 "isSimultaneous_for_ver2" : isSimultaneous_flag,
-                                "Heatsource" :[
-                                    {
-                                        "HeatsourceType": str(dataAC2[5]),
-                                        "Number": float(dataAC2[17]),
-                                        "SupplyWaterTempSummer": set_default(dataAC2[18], None, "float"),
-                                        "SupplyWaterTempMiddle": set_default(dataAC2[18], None, "float"),
-                                        "SupplyWaterTempWinter": set_default(dataAC2[18], None, "float"),
-                                        "HeatsourceRatedCapacity": float(dataAC2[19]),
-                                        "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
-                                        "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
-                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                                        "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
-                                        "PrimaryPumpContolType": "無",
-                                        "CoolingTowerCapacity": 0,
-                                        "CoolingTowerFanPowerConsumption": 0,
-                                        "CoolingTowerPumpPowerConsumption": 0,
-                                        "CoolingTowerContolType": "無",
-                                        "Info": str(dataAC2[23])
-                                    }
-                                ]
+                                "Heatsource" :[],
                             }
-
-                    else:
-                        
-                        data["HeatsourceSystem"][unitKey] = {
-                            modeKey_H : {
-                                "StorageType": StorageType,
-                                "StorageSize": StorageSize,
-                                "isStagingControl": staging_control_flag,
-                                "isSimultaneous_for_ver2" : isSimultaneous_flag,
-                                "Heatsource" :[
-                                    {
-                                        "HeatsourceType": str(dataAC2[5]),
-                                        "Number": float(dataAC2[17]),
-                                        "SupplyWaterTempSummer": set_default(dataAC2[18], None, "float"),
-                                        "SupplyWaterTempMiddle": set_default(dataAC2[18], None, "float"),
-                                        "SupplyWaterTempWinter": set_default(dataAC2[18], None, "float"),
-                                        "HeatsourceRatedCapacity": float(dataAC2[19]),
-                                        "HeatsourceRatedPowerConsumption": HeatsourceRatedPowerConsumption,
-                                        "HeatsourceRatedFuelConsumption": HeatsourceRatedFuelConsumption,
-                                        "Heatsource_sub_RatedPowerConsumption": Heatsource_sub_RatedPowerConsumption,
-                                        "PrimaryPumpPowerConsumption": set_default(dataAC2[22], 0, "float"),
-                                        "PrimaryPumpContolType": "無",
-                                        "CoolingTowerCapacity": 0,
-                                        "CoolingTowerFanPowerConsumption": 0,
-                                        "CoolingTowerPumpPowerConsumption": 0,
-                                        "CoolingTowerContolType": "無",
-                                        "Info": str(dataAC2[23])
-                                    }
-                                ]
-                            }
-                        }
+                        if unitKey in data["HeatsourceSystem"]:
+                            data["HeatsourceSystem"][unitKey][modeKey_H] = unit_spec
+                        else:
+                            data["HeatsourceSystem"][unitKey] = {modeKey_H : unit_spec}
 
 
     #----------------------------------
