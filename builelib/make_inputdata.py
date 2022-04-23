@@ -36,6 +36,7 @@ input_options = {
     },
     "方位": ["北","北東","東","南東","南","南西","西","北西","水平（上）","水平（下）"],
     "外壁の種類": ["日の当たる外壁","日の当たらない外壁","地盤に接する外壁","内壁"],
+    "外壁の種類(WEBPRO)": ["外壁","接地壁"],
     "構造種別": ["木造","鉄筋コンクリート造等","鉄骨造","その他"],
     "断熱性能の入力方法": ["熱貫流率を入力","建材構成を入力","断熱材種類を入力"],
     "断熱材番号":["1","2","3","4","21","22","41","42","43","44","45","46","47","48","61","62","63","64","65","66","67","68","69","70","71","72","73","81","82","83","84","85","86","87","88","89","90",
@@ -88,6 +89,49 @@ input_options = {
 
 }
 
+def convert_window_frame_type(frame_type_webpro):
+    """
+    WEBPROの「建具の種類」からBuilelibの「建具の種類」に変換する関数
+    """
+
+    if frame_type_webpro == "木製(単板ガラス)":
+        frame_type = "木製"
+        layer_type = "単層"
+    elif frame_type_webpro == "木製(複層ガラス)":
+        frame_type = "木製"
+        layer_type = "複層"
+    elif frame_type_webpro == "樹脂製(単板ガラス)":
+        frame_type = "樹脂製"
+        layer_type = "単層"
+    elif frame_type_webpro == "樹脂製(複層ガラス)" or frame_type_webpro == "樹脂":
+        frame_type = "樹脂製"
+        layer_type = "複層"
+    elif frame_type_webpro == "金属木複合製(単板ガラス)":
+        frame_type = "金属木複合製"
+        layer_type = "単層"
+    elif frame_type_webpro == "金属木複合製(複層ガラス)":
+        frame_type = "金属木複合製"
+        layer_type = "複層"
+    elif frame_type_webpro == "金属樹脂複合製(単板ガラス)":
+        frame_type = "金属樹脂複合製"
+        layer_type = "単層"
+    elif frame_type_webpro == "金属樹脂複合製(複層ガラス)" or frame_type_webpro == "アルミ樹脂複合":
+        frame_type = "金属樹脂複合製"
+        layer_type = "複層"
+    elif frame_type_webpro == "金属製(単板ガラス)":
+        frame_type = "金属製"
+        layer_type = "単層"
+    elif frame_type_webpro == "金属製(複層ガラス)" or frame_type_webpro == "アルミ":
+        frame_type = "金属製"
+        layer_type = "複層"
+    else:
+        frame_type = None
+        layer_type = None
+
+
+    return frame_type, layer_type
+
+
 # 検証結果メッセージ （global変数）
 validation = {
     "error": [],
@@ -113,6 +157,14 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
         
         validation["error"].append( item_name + "が入力されていません。必須項目です。")
     
+    elif (required == False) and (input_data == "") and (default == None) and (data_type == "数値"):
+
+        input_data = None
+
+    elif (required == False) and (input_data == "") and (default == "無") and (data_type == "文字列"):
+
+        input_data = "無"
+
     else:
         
         # 空欄チェック
@@ -1400,11 +1452,14 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     # 室用途の読み替え
                     if str(dataBL[3]) == "ゴミ置場等":
                         roomType = "廃棄物保管場所等"
+                        validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目: 室用途「ゴミ置場等」を「廃棄物保管場所等」に置き換えました。")
                     else:
                         roomType = str(dataBL[3])
 
+                    # 建物用途の読み込み
                     buildingType = check_value(dataBL[2], "様式1.室仕様 "+ str(i+1) +"行目:「②建物用途」", True, None, "文字列", input_options["建物用途"], None, None)
                     
+                    # 室用途のチェック
                     if buildingType in  input_options["室用途"]:
                         roomType = check_value(roomType, "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」", True, None, "文字列", input_options["室用途"][buildingType], None, None)
                     else:
@@ -1429,9 +1484,250 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     }
 
 
-    ## 外皮
-    # 窓面積 →　窓の枚数と読み替え。
+    #----------------------------------
+    # 様式2-1 空調ゾーン入力シート の読み込み
+    #----------------------------------
+    if "2-1) 空調ゾーン" in wb.sheet_names():
+        
+        # シートの読み込み
+        sheet_AC1 = wb.sheet_by_name("2-1) 空調ゾーン")
+        # 初期化
+        roomKey = None
 
+        # 行のループ
+        for i in range(10,sheet_AC1.nrows):
+
+            # シートから「行」の読み込み
+            dataAC1 = sheet_AC1.row_values(i)
+
+            # 階と室名が空欄でない場合
+            if (dataAC1[7] != "") and (dataAC1[8] != ""):
+
+                # 階＋室+ゾーン名をkeyとする
+                roomKey = str(dataAC1[7]) + '_' + str(dataAC1[8])                
+
+                if roomKey not in data["Rooms"]:
+
+                    validation["error"].append( "様式2-1.空調ゾーン:「②空調ゾーン」が 様式1.室仕様入力シートで定義されてません。Builelibでは「①室の仕様」と「②空調ゾーン」の内容を等しくしてください（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
+
+                else:
+
+                    AHU_insideLoad  = check_value(dataAC1[9], "様式2-1.空調ゾーン "+ str(i+1) +"行目:「③空調機群名称（室負荷）」", True, None, "文字列", None, None, None)
+                    AHU_outdoorLoad = check_value(dataAC1[10], "様式2-1.空調ゾーン "+ str(i+1) +"行目:「④空調機群名称（外気負荷）」", True, None, "文字列", None, None, None)
+
+                    # 冷暖同時供給については、暫定で「無」を入れておく。後に再度判定。
+                    data["AirConditioningZone"][roomKey] = {
+                        "isNatualVentilation": "無",
+                        "isSimultaneousSupply": "無",
+                        "AHU_cooling_insideLoad": AHU_insideLoad,
+                        "AHU_cooling_outdoorLoad": AHU_outdoorLoad,
+                        "AHU_heating_insideLoad": AHU_insideLoad,
+                        "AHU_heating_outdoorLoad": AHU_outdoorLoad,
+                        "Info":
+                            check_value(dataAC1[11], "様式2-1.空調ゾーン "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, None, None),
+                    }
+
+
+    #----------------------------------
+    # 様式2-2 外壁構成入力シート の読み込み
+    #----------------------------------
+    if "2-2) 外壁構成 " in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_BE2 = wb.sheet_by_name("2-2) 外壁構成 ")
+        # 初期化
+        eltKey = None
+        inputMethod = None
+
+        # 行のループ
+        for i in range(10,sheet_BE2.nrows):
+
+            # シートから「行」の読み込み
+            dataBE2 = sheet_BE2.row_values(i)
+
+            # 断熱仕様名称が空欄でない場合
+            if (dataBE2[0] != ""):
+
+                # 断熱仕様名称をkeyとする（上書き）
+                eltKey = check_value(dataBE2[0], "様式2-2.外壁構成 "+ str(i+1) +"行目:「①外壁名称」", True, None, "文字列", None, 0, None)
+                
+                # 外壁の種類(WEBPRO)
+                walltype_webpro = check_value(dataBE2[1], "様式2-2.外壁構成 "+ str(i+1) +"行目:「②壁の種類」", True, None, "文字列", input_options["外壁の種類(WEBPRO)"], None, None)
+
+                # 入力方法を識別
+                if dataBE2[2] != "":
+                    inputMethod = "熱貫流率を入力"
+                else:
+                    inputMethod = "建材構成を入力"
+                
+                if inputMethod == "熱貫流率を入力":
+
+                    data["WallConfigure"][eltKey] = {
+                            "wall_type_webpro": walltype_webpro,
+                            "structureType": "その他",
+                            "solarAbsorptionRatio": None,
+                            "inputMethod": inputMethod,
+                            "Uvalue":
+                                check_value(dataBE2[2], "様式2-2.外壁構成 "+ str(i+1) +"行目:「③熱貫流率」", True, None, "数値", None, 0, None),
+                            "Info":
+                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                        }
+
+                elif inputMethod == "建材構成を入力":
+
+                    # 次の行を読み込み
+                    dataBE2 = sheet_BE2.row_values(i+1)
+
+                    if dataBE2[4] != "":
+
+                        material_name = dataBE2[4].replace(' ', '')
+
+                        if material_name == "吹付け硬質ウレタンフォームＡ種1":
+                            dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
+                        elif material_name == "吹付け硬質ウレタンフォームＡ種3":
+                            dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+
+                        data["WallConfigure"][eltKey] = {
+                                "wall_type_webpro": walltype_webpro,
+                                "structureType": "その他",
+                                "solarAbsorptionRatio": None,
+                                "inputMethod": inputMethod,
+                                "layers": [
+                                    {
+                                    "materialID": 
+                                        check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                    "conductivity": None,
+                                    "thickness":
+                                        check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                    "Info":
+                                        check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                                    }
+                                ]
+                            }
+
+                    for loop in range(2,10):
+
+                        # 次の行を読み込み
+                        dataBE2 = sheet_BE2.row_values(i+loop)
+                        
+                        if dataBE2[4] != "":
+
+                            if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
+                                dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
+                            elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
+                                dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+                                
+                            data["WallConfigure"][eltKey]["layers"].append(
+                                {
+                                    "materialID": 
+                                        check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                    "conductivity": None,
+                                    "thickness":
+                                        check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                    "Info":
+                                        check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                                }
+                            )
+
+
+    #----------------------------------
+    # 様式2-3 窓仕様入力シート の読み込み
+    #----------------------------------
+    if "2-3) 窓仕様" in wb.sheet_names():
+
+        # シートの読み込み
+        sheet_BE3 = wb.sheet_by_name("2-3) 窓仕様")
+        # 初期化
+        eltKey = None
+        inputMethod = None
+
+        # 行のループ
+        for i in range(10,sheet_BE3.nrows):
+
+            # シートから「行」の読み込み
+            dataBE3 = sheet_BE3.row_values(i)
+
+            # 開口部仕様名称が空欄でない場合
+            if (dataBE3[0] != ""):
+
+                # 開口部仕様名称をkeyとする（上書き）
+                eltKey = check_value(dataBE3[0], "様式2-3.窓仕様 "+ str(i+1) +"行目:「①開口部名称」", True, None, "文字列", None, 0, None)
+                
+                # 入力方法を識別
+                if (dataBE3[1] != "") and (dataBE3[2] != ""):
+                    inputMethod = "性能値を入力"
+                elif (dataBE3[5] != "") and (dataBE3[6] != ""):
+                    inputMethod = "ガラスの性能を入力"
+                elif (dataBE3[4] != ""):
+                    inputMethod = "ガラスの種類を入力"
+                else:
+                    validation["error"].append( "様式2-3.窓仕様 "+ str(i+1) +"行目: 入力が不正です。")
+
+                if inputMethod == "性能値を入力":
+
+                    data["WindowConfigure"][eltKey] = {
+                            "windowArea": 1,
+                            "windowWidth": None,
+                            "windowHeight": None,
+                            "inputMethod": inputMethod,
+                            "windowUvalue": 
+                                check_value(dataBE3[1], "様式2-3.窓仕様 "+ str(i+1) +"行目:「②窓の熱貫流率」", True, None, "数値", None, 0, None),
+                            "windowIvalue":
+                                check_value(dataBE3[2], "様式2-3.窓仕様 "+ str(i+1) +"行目:「③窓の日射熱取得率」", True, None, "数値", None, 0, None),
+                            "layerType": "単層",
+                            "glassUvalue":
+                                check_value(dataBE3[5], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑥ガラスの熱貫流率」", False, None, "数値", None, 0, None),
+                            "glassIvalue":
+                                check_value(dataBE3[6], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑦ガラスの日射熱取得率」", False, None, "数値", None, 0, None),
+                            "Info":
+                                check_value(dataBE3[7], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
+                        }
+
+                elif inputMethod == "ガラスの性能を入力":
+
+                    frame_type_webpro = check_value(dataBE3[3], "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None),
+                    frameType, layer_type = convert_window_frame_type(frame_type_webpro)
+
+                    data["WindowConfigure"][eltKey] = {
+                            "windowArea": 1,
+                            "windowWidth": None,
+                            "windowHeight": None,
+                            "inputMethod": inputMethod,
+                            "frameType": frameType,
+                            "layerType": layer_type,
+                            "glassUvalue":
+                                check_value(dataBE3[5], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑥ガラスの熱貫流率」", True, None, "数値", None, 0, None),
+                            "glassIvalue":
+                                check_value(dataBE3[6], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑦ガラスの日射熱取得率」", True, None, "数値", None, 0, None),
+                            "Info":
+                                check_value(dataBE3[7], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
+                        }
+
+                elif inputMethod == "ガラスの種類を入力":
+
+                    frame_type_webpro = check_value(dataBE3[3], "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None),
+                    frame_type, layer_type = convert_window_frame_type(frame_type_webpro)
+                        
+                    data["WindowConfigure"][eltKey] = {
+                            "windowArea": 1,
+                            "windowWidth": None,
+                            "windowHeight": None,
+                            "inputMethod": inputMethod,
+                            "frameType": frame_type,
+                            "glassID":
+                                check_value(dataBE3[4], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑤ガラスの種類」", True, None, "文字列", input_options["ガラスの種類"], None, None),
+                            "Info":
+                                check_value(dataBE3[7], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
+                        }
+
+                else:
+                    validation["error"].append( "様式2-3.窓仕様 "+ str(i+1) +"行目: 入力が不正です。")
+
+
+    #----------------------------------
+    # 様式2-4 外皮入力シート の読み込み
+    # （ Builelibでは、窓面積 を　窓の枚数と読み替える。 ）
+    #----------------------------------
     if "2-4) 外皮 " in wb.sheet_names():
 
         # シートの読み込み
@@ -1458,9 +1754,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 if str(dataBE1[2]) == "日陰":
                     dataBE1[2] = "北"
                     wallType = "日の当たらない外壁"
+                    validation["warning"].append( "様式2-4.外皮 "+ str(i+1) +"行目: 方位「日陰」を「北（日の当たらない外壁）」に置き換えました。")
                 elif str(dataBE1[2]) == "水平":
                     dataBE1[2] = "水平（下）"
                     wallType = "日の当たる外壁"
+                    validation["warning"].append( "様式2-4.外皮 "+ str(i+1) +"行目: 方位「水平」を「水平（下）」に置き換えました。")
                 else:
                     wallType = "日の当たる外壁"
 
@@ -1470,8 +1768,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     evaes_num += 1
 
                     data["ShadingConfigure"][EavesID] = {
-                        "shadingEffect_C": set_default(str(dataBE1[3]),None, "float"),
-                        "shadingEffect_H": set_default(str(dataBE1[4]),None, "float"),
+                        "shadingEffect_C":
+                            check_value(dataBE1[3], "様式2-4.外皮 "+ str(i+1) +"行目:「③日よけ効果係数（冷房）」", False, None, "数値", None, 0, 1),
+                        "shadingEffect_H":
+                            check_value(dataBE1[4], "様式2-4.外皮 "+ str(i+1) +"行目:「③日よけ効果係数（暖房）」", False, None, "数値", None, 0, 1),
                         "x1": None,
                         "x2": None,
                         "x3": None,
@@ -1491,19 +1791,26 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "isAirconditioned": "有",
                         "WallList": [
                             {
-                                "Direction": str(dataBE1[2]),
-                                "EnvelopeArea": set_default(str(dataBE1[6]),None, "float"),
+                                "Direction":
+                                    check_value(dataBE1[2], "様式2-4.外皮 "+ str(i+1) +"行目:「②方位」", True, None, "文字列", input_options["方位"], None, None),
+                                "EnvelopeArea":
+                                    check_value(dataBE1[6], "様式2-4.外皮 "+ str(i+1) +"行目:「⑤外皮面積（窓含）」", True, None, "数値", None, 0, None),
                                 "EnvelopeWidth": None,
                                 "EnvelopeHeight": None,
-                                "WallSpec": set_default(str(dataBE1[5]),"無","str"),
+                                "WallSpec":
+                                    check_value(dataBE1[5], "様式2-4.外皮 "+ str(i+1) +"行目:「④外壁名称」", True, None, "文字列", data["WallConfigure"], None, None),  
                                 "WallType": wallType,
                                 "WindowList":[
                                     {
-                                        "WindowID": set_default(str(dataBE1[7]),"無","str"),
-                                        "WindowNumber": set_default(str(dataBE1[8]),None, "float"),
-                                        "isBlind": set_default(str(dataBE1[9]),"無","str"),
+                                        "WindowID":
+                                            check_value(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", False, "無", "文字列", data["WindowConfigure"], None, None),  
+                                        "WindowNumber":
+                                            check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
+                                        "isBlind":
+                                            check_value(dataBE1[9], "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["有無"], None, None),
                                         "EavesID": EavesID,
-                                        "Info": set_default(str(dataBE1[10]),"無","str"),
+                                        "Info":
+                                            check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
                                     }
                                 ]       
                             }
@@ -1512,10 +1819,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
             else: # 階と室名が空欄である場合
 
-                if (dataBE1[2] == ""):  # 方位が空白である場合。
+                if (dataBE1[2] == ""):  # 方位が空白である場合 →　日よけ効果係数と窓のみ読み込む
 
                     if (dataBE1[5] != ""): # もし方位が空白で外壁名称に入力があったらエラー 
-                        raise Exception("外壁名称が入力されている場合は方位の入力が必要です。")
+                        dataBE1[5] = "無"
+                        validation["error"].append( "様式2-4.外皮 "+ str(i+1) +"行目: 「④外壁名称」が入力されている行は「②方位」の入力が必須です。")
 
                     # 日よけ効果係数
                     if dataBE1[3] != "" and dataBE1[4] != "":
@@ -1523,8 +1831,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         evaes_num += 1
 
                         data["ShadingConfigure"][EavesID] = {
-                            "shadingEffect_C": set_default(str(dataBE1[3]),None, "float"),
-                            "shadingEffect_H": set_default(str(dataBE1[4]),None, "float"),
+                            "shadingEffect_C":
+                                check_value(dataBE1[3], "様式2-4.外皮 "+ str(i+1) +"行目:「③日よけ効果係数（冷房）」", False, None, "数値", None, 0, 1),
+                            "shadingEffect_H":
+                                check_value(dataBE1[4], "様式2-4.外皮 "+ str(i+1) +"行目:「③日よけ効果係数（暖房）」", False, None, "数値", None, 0, 1),
                             "x1": None,
                             "x2": None,
                             "x3": None,
@@ -1542,11 +1852,15 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     
                     data["EnvelopeSet"][roomKey]["WallList"][-1]["WindowList"].append(
                         {
-                            "WindowID": set_default(str(dataBE1[7]),"無","str"),
-                            "WindowNumber": set_default(str(dataBE1[8]),None, "float"),
-                            "isBlind": set_default(str(dataBE1[9]),"無","str"),
+                            "WindowID":
+                                check_value(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", False, "無", "文字列", data["WindowConfigure"], None, None),  
+                            "WindowNumber":
+                                check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
+                            "isBlind":
+                                check_value(dataBE1[9], "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["有無"], None, None),
                             "EavesID": EavesID,
-                            "Info": set_default(str(dataBE1[10]),"無","str"),
+                            "Info":
+                                check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
                         }
                     )
 
@@ -1554,11 +1868,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     # 外壁の種類の判定（Ver.2のみ）
                     if str(dataBE1[2]) == "日陰":
-                        dataBE1[2] = "南"
+                        dataBE1[2] = "北"
                         wallType = "日の当たらない外壁"
+                        validation["warning"].append( "様式2-4.外皮 "+ str(i+1) +"行目: 方位「日陰」を「北（日の当たらない外壁）」に置き換えました。")
                     elif str(dataBE1[2]) == "水平":
                         dataBE1[2] = "水平（下）"
                         wallType = "日の当たる外壁"
+                        validation["warning"].append( "様式2-4.外皮 "+ str(i+1) +"行目: 方位「水平」を「水平（下）」に置き換えました。")
                     else:
                         wallType = "日の当たる外壁"
 
@@ -1568,8 +1884,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         evaes_num += 1
 
                         data["ShadingConfigure"][EavesID] = {
-                            "shadingEffect_C": set_default(str(dataBE1[3]),None, "float"),
-                            "shadingEffect_H": set_default(str(dataBE1[4]),None, "float"),
+                            "shadingEffect_C":
+                                check_value(dataBE1[3], "様式2-4.外皮 "+ str(i+1) +"行目:「③日よけ効果係数（冷房）」", False, None, "数値", None, 0, 1),
+                            "shadingEffect_H":
+                                check_value(dataBE1[4], "様式2-4.外皮 "+ str(i+1) +"行目:「③日よけ効果係数（暖房）」", False, None, "数値", None, 0, 1),
                             "x1": None,
                             "x2": None,
                             "x3": None,
@@ -1587,286 +1905,45 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     data["EnvelopeSet"][roomKey]["WallList"].append(
                         {
-                            "Direction": str(dataBE1[2]),
-                            "EnvelopeArea": set_default(str(dataBE1[6]),None, "float"),
+                            "Direction":
+                                check_value(dataBE1[2], "様式2-4.外皮 "+ str(i+1) +"行目:「②方位」", True, None, "文字列", input_options["方位"], None, None),
+                            "EnvelopeArea":
+                                check_value(dataBE1[6], "様式2-4.外皮 "+ str(i+1) +"行目:「⑤外皮面積（窓含）」", True, None, "数値", None, 0, None),
                             "EnvelopeWidth": None,
                             "EnvelopeHeight": None,
-                            "WallSpec": set_default(str(dataBE1[5]),"無","str"),
+                            "WallSpec":
+                                check_value(dataBE1[5], "様式2-4.外皮 "+ str(i+1) +"行目:「④外壁名称」", True, None, "文字列", data["WallConfigure"], None, None),  
                             "WallType": wallType,
                             "WindowList":[
                                 {
-                                    "WindowID": set_default(str(dataBE1[7]),"無","str"),
-                                    "WindowNumber": set_default(str(dataBE1[8]),None, "float"),
-                                    "isBlind": set_default(str(dataBE1[9]),"無","str"),
+                                    "WindowID":
+                                        check_value(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", False, "無", "文字列", data["WindowConfigure"], None, None),  
+                                    "WindowNumber":
+                                        check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
+                                    "isBlind":
+                                        check_value(dataBE1[9], "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["有無"], None, None),
                                     "EavesID": EavesID,
-                                    "Info": set_default(str(dataBE1[10]),"無","str"),
+                                    "Info":
+                                        check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
                                 }
                             ]       
                         }
                     )
 
-    if "2-2) 外壁構成 " in wb.sheet_names():
-
-        # シートの読み込み
-        sheet_BE2 = wb.sheet_by_name("2-2) 外壁構成 ")
-        # 初期化
-        eltKey = None
-        inputMethod = None
-
-        # 行のループ
-        for i in range(10,sheet_BE2.nrows):
-
-            # シートから「行」の読み込み
-            dataBE2 = sheet_BE2.row_values(i)
-
-            # 断熱仕様名称が空欄でない場合
-            if (dataBE2[0] != ""):
-
-                # 断熱仕様名称をkeyとする（上書き）
-                eltKey = str(dataBE2[0]) 
-
-                # 接地壁の扱い
-                if dataBE2[1] == "接地壁":
-                    for room_name in data["EnvelopeSet"]:
-                        for wall_id, wall_conf in enumerate(data["EnvelopeSet"][room_name]["WallList"]):
-                            if wall_conf["WallSpec"] == eltKey:
-                                data["EnvelopeSet"][room_name]["WallList"][wall_id]["WallType"] = "地盤に接する外壁"
-
-                # 入力方法を識別
-                if dataBE2[2] != "":
-                    inputMethod = "熱貫流率を入力"
-                else:
-                    inputMethod = "建材構成を入力"
-                
-                if inputMethod == "熱貫流率を入力":
-
-                    data["WallConfigure"][eltKey] = {
-                            "structureType": "その他",
-                            "solarAbsorptionRatio": None,
-                            "inputMethod": inputMethod,
-                            "Uvalue": set_default(dataBE2[2], None, "float"),
-                            "Info": set_default(dataBE2[6], "無","str"),
-                        }
-
-                elif inputMethod == "建材構成を入力":
-
-                    # 次の行を読み込み
-                    dataBE2 = sheet_BE2.row_values(i+1)
-
-                    if dataBE2[4] != "":
-
-                        if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
-                            dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
-                        elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
-                            dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
-
-                        data["WallConfigure"][eltKey] = {
-                                "structureType": "その他",
-                                "solarAbsorptionRatio": None,
-                                "inputMethod": inputMethod,
-                                "layers": [
-                                    {
-                                    "materialID": set_default(dataBE2[4].replace(' ', ''), None, "str"),
-                                    "conductivity": None,
-                                    "thickness": set_default(dataBE2[5], None, "float"),
-                                    "Info": set_default(dataBE2[6], "無", "str")
-                                    }
-                                ]
-                            }
-
-                    for loop in range(2,10):
-
-                        # 次の行を読み込み
-                        dataBE2 = sheet_BE2.row_values(i+loop)
-                        
-                        if dataBE2[4] != "":
-
-                            if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
-                                dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
-                            elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
-                                dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
-                                
-                            data["WallConfigure"][eltKey]["layers"].append(
-                                {
-                                "materialID": set_default(dataBE2[4], None, "str"),
-                                "conductivity": None,
-                                "thickness": set_default(dataBE2[5], None, "float"),
-                                "Info": set_default(dataBE2[6], "無", "str")
-                                }
-                            )
 
 
-    if "2-3) 窓仕様" in wb.sheet_names():
-
-        # シートの読み込み
-        sheet_BE3 = wb.sheet_by_name("2-3) 窓仕様")
-        # 初期化
-        eltKey = None
-        inputMethod = None
-
-        # 行のループ
-        for i in range(10,sheet_BE3.nrows):
-
-            # シートから「行」の読み込み
-            dataBE3 = sheet_BE3.row_values(i)
-
-            # 開口部仕様名称が空欄でない場合
-            if (dataBE3[0] != ""):
-
-                # 開口部仕様名称をkeyとする（上書き）
-                eltKey = str(dataBE3[0]) 
-
-                # 入力方法を識別
-                if (dataBE3[1] != "") and (dataBE3[2] != ""):
-                    inputMethod = "性能値を入力"
-                elif (dataBE3[5] != "") and (dataBE3[6] != ""):
-                    inputMethod = "ガラスの性能を入力"
-                elif (dataBE3[4] != ""):
-                    inputMethod = "ガラスの種類を入力"
-                else:
-                    raise Exception('Error!')
-
-                if inputMethod == "性能値を入力":
-
-                    data["WindowConfigure"][eltKey] = {
-                            "windowArea": 1,
-                            "windowWidth": None,
-                            "windowHeight": None,
-                            "inputMethod": inputMethod,
-                            "windowUvalue": set_default(dataBE3[1], None, "float"),
-                            "windowIvalue": set_default(dataBE3[2], None, "float"),
-                            "layerType": "単層",
-                            "glassUvalue": set_default(dataBE3[5], None, "float"),
-                            "glassIvalue": set_default(dataBE3[6], None, "float"),
-                            "Info": set_default(dataBE3[7], "無","str"),
-                        }
-
-                elif inputMethod == "ガラスの性能を入力":
-
-                    if dataBE3[3] == "木製(単板ガラス)":
-                        frameType = "木製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "木製(複層ガラス)":
-                        frameType = "木製"
-                        layerType = "複層"
-                    elif dataBE3[3] == "樹脂製(単板ガラス)":
-                        frameType = "樹脂製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "樹脂製(複層ガラス)" or dataBE3[3] == "樹脂":
-                        frameType = "樹脂製"
-                        layerType = "複層"
-                    elif dataBE3[3] == "金属木複合製(単板ガラス)":
-                        frameType = "金属木複合製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "金属木複合製(複層ガラス)":
-                        frameType = "金属木複合製"
-                        layerType = "複層"
-                    elif dataBE3[3] == "金属樹脂複合製(単板ガラス)":
-                        frameType = "金属樹脂複合製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "金属樹脂複合製(複層ガラス)" or dataBE3[3] == "アルミ樹脂複合":
-                        frameType = "金属樹脂複合製"
-                        layerType = "複層"
-                    elif dataBE3[3] == "金属製(単板ガラス)":
-                        frameType = "金属製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "金属製(複層ガラス)" or dataBE3[3] == "アルミ":
-                        frameType = "金属製"
-                        layerType = "複層"
-                    else:
-                        frameType = None
-                        layerType = None
-
-                    data["WindowConfigure"][eltKey] = {
-                            "windowArea": 1,
-                            "windowWidth": None,
-                            "windowHeight": None,
-                            "inputMethod": inputMethod,
-                            "frameType": frameType,
-                            "layerType": layerType,
-                            "glassUvalue": set_default(dataBE3[5], None, "float"),
-                            "glassIvalue": set_default(dataBE3[6], None, "float"),
-                            "Info": set_default(dataBE3[7], "無","str"),
-                        }
-
-                elif inputMethod == "ガラスの種類を入力":
-
-                    if dataBE3[3] == "木製(単板ガラス)":
-                        frameType = "木製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "木製(複層ガラス)":
-                        frameType = "木製"
-                        layerType = "複層"
-                    elif dataBE3[3] == "樹脂製(単板ガラス)":
-                        frameType = "樹脂製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "樹脂製(複層ガラス)" or dataBE3[3] == "樹脂":
-                        frameType = "樹脂製"
-                        layerType = "複層"
-                    elif dataBE3[3] == "金属木複合製(単板ガラス)":
-                        frameType = "金属木複合製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "金属木複合製(複層ガラス)":
-                        frameType = "金属木複合製"
-                        layerType = "複層"
-                    elif dataBE3[3] == "金属樹脂複合製(単板ガラス)":
-                        frameType = "金属樹脂複合製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "金属樹脂複合製(複層ガラス)" or dataBE3[3] == "アルミ樹脂複合":
-                        frameType = "金属樹脂複合製"
-                        layerType = "複層"
-                    elif dataBE3[3] == "金属製(単板ガラス)":
-                        frameType = "金属製"
-                        layerType = "単層"
-                    elif dataBE3[3] == "金属製(複層ガラス)" or dataBE3[3] == "アルミ":
-                        frameType = "金属製"
-                        layerType = "複層"
-                    else:
-                        frameType = None
-                        layerType = None
-                        
-                    data["WindowConfigure"][eltKey] = {
-                            "windowArea": 1,
-                            "windowWidth": None,
-                            "windowHeight": None,
-                            "inputMethod": inputMethod,
-                            "frameType": frameType,
-                            "glassID": set_default(dataBE3[4], None, "str"),
-                            "Info": set_default(dataBE3[7], "無","str"),
-                        }
+    ## 接地壁の扱い（様式2-2 → 様式2-4）
+    for eltKey in data["WallConfigure"]:
+        if data["WallConfigure"][eltKey]["wall_type_webpro"] == "接地壁":
+            for room_name in data["EnvelopeSet"]:
+                for wall_id, wall_conf in enumerate(data["EnvelopeSet"][room_name]["WallList"]):
+                    if wall_conf["WallSpec"] == eltKey:
+                        data["EnvelopeSet"][room_name]["WallList"][wall_id]["WallType"] = "地盤に接する外壁"
 
 
-    ## 空調設備
-    if "2-1) 空調ゾーン" in wb.sheet_names():
-        
-        # シートの読み込み
-        sheet_AC1 = wb.sheet_by_name("2-1) 空調ゾーン")
-        # 初期化
-        roomKey = None
-
-        # 行のループ
-        for i in range(10,sheet_AC1.nrows):
-
-            # シートから「行」の読み込み
-            dataAC1 = sheet_AC1.row_values(i)
-
-            # 階と室名が空欄でない場合
-            if (dataAC1[7] != "") and (dataAC1[8] != ""):
-
-                # 階＋室+ゾーン名をkeyとする
-                roomKey = str(dataAC1[7]) + '_' + str(dataAC1[8])
-                
-                # 冷暖同時供給については、暫定で「無」を入れておく。後に再度判定。
-                data["AirConditioningZone"][roomKey] = {
-                    "isNatualVentilation": "無",
-                    "isSimultaneousSupply": "無",
-                    "AHU_cooling_insideLoad": set_default(dataAC1[9], None, "str"),
-                    "AHU_cooling_outdoorLoad": set_default(dataAC1[10], None, "str"),
-                    "AHU_heating_insideLoad": set_default(dataAC1[9], None, "str"),
-                    "AHU_heating_outdoorLoad": set_default(dataAC1[10], None, "str"),
-                    "Info": str(dataAC1[9])
-                }
-
+    #----------------------------------
+    # 様式2-5 熱源入力シート の読み込み
+    #----------------------------------
     if "2-5) 熱源" in wb.sheet_names():
         
         # データベースファイルの保存場所
@@ -2287,6 +2364,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         }
 
 
+    #----------------------------------
+    # 様式2-6 二次ポンプ入力シート の読み込み
+    #----------------------------------
     if "2-6) 2次ﾎﾟﾝﾌﾟ" in wb.sheet_names():
         
         # シートの読み込み
@@ -2396,6 +2476,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     )
     
     
+    #----------------------------------
+    # 様式2-7 空調機入力シート の読み込み
+    #----------------------------------
     if "2-7) 空調機" in wb.sheet_names():
         
         # シートの読み込み
@@ -2494,37 +2577,40 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         AHU_h_insideload  = data["AirConditioningZone"][iZONE]["AHU_heating_insideLoad"]
         AHU_h_outdoorload = data["AirConditioningZone"][iZONE]["AHU_heating_outdoorLoad"]
 
-        # 冷熱源機群
-        iREF_c_i = data["AirHandlingSystem"][AHU_c_insideload]["HeatSource_cooling"]
-        iREF_c_o = data["AirHandlingSystem"][AHU_c_outdoorload]["HeatSource_cooling"]
+        if (AHU_c_insideload in data["AirHandlingSystem"]) and (AHU_c_outdoorload in data["AirHandlingSystem"]) \
+            and (AHU_h_insideload in data["AirHandlingSystem"]) and (AHU_h_outdoorload in data["AirHandlingSystem"]):
 
-        # 温熱源機群
-        iREF_h_i = data["AirHandlingSystem"][AHU_h_insideload]["HeatSource_heating"]
-        iREF_h_o = data["AirHandlingSystem"][AHU_h_outdoorload]["HeatSource_heating"]
+            # 冷熱源機群
+            iREF_c_i = data["AirHandlingSystem"][AHU_c_insideload]["HeatSource_cooling"]
+            iREF_c_o = data["AirHandlingSystem"][AHU_c_outdoorload]["HeatSource_cooling"]
 
-        # 両方とも冷暖同時供給有無が「有」であったら
-        if data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-            data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-            data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
-            data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
+            # 温熱源機群
+            iREF_h_i = data["AirHandlingSystem"][AHU_h_insideload]["HeatSource_heating"]
+            iREF_h_o = data["AirHandlingSystem"][AHU_h_outdoorload]["HeatSource_heating"]
 
-            data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有"
+            # 両方とも冷暖同時供給有無が「有」であったら
+            if data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
+                data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
 
-        # 外調系統だけ冷暖同時であれば（暫定措置）
-        elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
-            data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-            data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "無" and \
-            data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
+                data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有"
 
-            data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有（外気負荷）"
+            # 外調系統だけ冷暖同時であれば（暫定措置）
+            elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
+                data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "無" and \
+                data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
 
-        # 室負荷系統だけ冷暖同時であれば（暫定措置）
-        elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-            data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
-            data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
-            data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "無":
+                data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有（外気負荷）"
 
-            data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有（室負荷）"
+            # 室負荷系統だけ冷暖同時であれば（暫定措置）
+            elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
+                data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
+                data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "無":
+
+                data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有（室負荷）"
 
 
     # isSimultaneous_for_ver2 要素　を削除
@@ -3581,7 +3667,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'WEBPRO_inputSheet_sample'
+    case_name = 'WEBPRO_inputSheet_sample_error'
 
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
