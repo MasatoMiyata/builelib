@@ -1709,7 +1709,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     elif inputMethod == "ガラスの性能を入力":
 
-                        frame_type_webpro = check_value(dataBE3[3], "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None),
+                        frame_type_webpro = check_value(dataBE3[3], "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None)
                         frameType, layer_type = convert_window_frame_type(frame_type_webpro)
 
                         data["WindowConfigure"][eltKey] = {
@@ -1729,7 +1729,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     elif inputMethod == "ガラスの種類を入力":
 
-                        frame_type_webpro = check_value(dataBE3[3], "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None),
+                        frame_type_webpro = check_value(dataBE3[3], "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None)
                         frame_type, layer_type = convert_window_frame_type(frame_type_webpro)
                             
                         data["WindowConfigure"][eltKey] = {
