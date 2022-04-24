@@ -1,3 +1,4 @@
+from numpy import False_
 import xlrd
 import json
 import jsonschema
@@ -69,7 +70,7 @@ input_options = {
         "ガスヒートポンプ冷暖房機(LPG)","ルームエアコンディショナ","FF式ガス暖房機(都市ガス)","FF式ガス暖房機(LPG)","FF式石油暖房機","地域熱供給(冷水)","地域熱供給(温水)","地域熱供給(蒸気)",
         "熱交換器","電気式ヒーター","電気蓄熱暖房器","温風暖房機(都市ガス)","温風暖房機(LPG)","温風暖房機(重油)","温風暖房機(灯油)","ガスヒートポンプ冷暖房機(消費電力自給装置付、都市ガス)","ガスヒートポンプ冷暖房機(消費電力自給装置付、LPG)"],
     "流量制御方式": ["無","定流量制御","回転数制御"],               
-    "空調機群の構成機器の種類": ["空調機","FCU","送風機","室内機","全熱交ユニット","放熱器","天井放射冷暖房パネル"],
+    "空調機タイプ": ["空調機","FCU","送風機","室内機","全熱交ユニット","放熱器","天井放射冷暖房パネル"],
     "送風機の種類": ["給気","還気","外気","排気","循環","ポンプ"],
     "風量制御方式": ["無","定風量制御","回転数制御"],
     "換気方式": ["一種換気","二種換気","三種換気"],
@@ -163,6 +164,14 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
     elif (required == False) and (input_data == "") and (default == None) and (data_type == "数値"):
 
         input_data = None
+
+    elif (required == False) and (input_data == "") and (default == None) and (data_type == "文字列"):
+
+        input_data = None
+
+    elif (required == False) and (input_data == "") and (default == "") and (data_type == "文字列"):
+
+        input_data = ""
 
     elif (required == False) and (input_data == "") and (default == "無") and (data_type == "文字列"):
 
@@ -2483,81 +2492,97 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 二次ポンプ群名称と運転モードが空欄でない場合
             if (dataAC3[0] != "") and ( (dataAC3[2] != "") or (dataAC3[3] != "") ):      
                 
-                unitKey = str(dataAC3[0])
+                unitKey = check_value(dataAC3[0], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「①二次ポンプ群名称」", True, None, "文字列", None, None, None)
 
-                if dataAC3[2] != "":
-                    modeKey = "冷房"
+                if unitKey in data["SecondaryPumpSystem"]:
 
-                    data["SecondaryPumpSystem"][unitKey] = {
-                        modeKey : {
-                            "TemperatureDifference": float(dataAC3[2]),
-                            "isStagingControl": set_default(dataAC3[1], "無", "str"),
-                            "SecondaryPump" :[
-                                {
-                                    "Number": float(dataAC3[5]),
-                                    "RatedWaterFlowRate": float(dataAC3[6]),
-                                    "RatedPowerConsumption": float(dataAC3[7]),
-                                    "ContolType": set_default(dataAC3[8], "無", "str"),
-                                    "MinOpeningRate": set_default(dataAC3[9], None, "float"),
-                                    "Info": str(dataAC3[10])
-                                }
-                            ]
-                        }
-                    }
-            
-                if dataAC3[3] != "":
+                    validation["error"].append( "様式2-6.二次ポンプ:「①二次ポンプ群名称」に重複があります（"+ str(i+1) +"行目「"+ unitKey +"」）。")
 
-                    modeKey = "暖房"
+                else:
 
-                    if unitKey in data["SecondaryPumpSystem"]:
+                    if dataAC3[2] != "":
 
-                        data["SecondaryPumpSystem"][unitKey][modeKey] = \
-                            {
-                                "TemperatureDifference": float(dataAC3[3]),
-                                "isStagingControl": set_default(dataAC3[1], "無", "str"),
+                        modeKey = "冷房"
+
+                        unit_spec = {
+                                "TemperatureDifference":
+                                    check_value(dataAC3[2], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「③冷房時温度差」", True, None, "数値", None, 0, None),
+                                "isStagingControl": 
+                                    check_value(dataAC3[1], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「②台数制御の有無」", False, "無", "文字列", input_options["有無"], None, None),
                                 "SecondaryPump" :[
                                     {
-                                        "Number": float(dataAC3[5]),
-                                        "RatedWaterFlowRate": float(dataAC3[6]),
-                                        "RatedPowerConsumption": float(dataAC3[7]),
-                                        "ContolType": set_default(dataAC3[8], "無", "str"),
-                                        "MinOpeningRate": set_default(dataAC3[9], None, "float"),
-                                        "Info": str(dataAC3[10])
+                                        "Number" :
+                                            check_value(dataAC3[5], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑤台数」", True, None, "数値", None, 0, None),
+                                        "RatedWaterFlowRate":
+                                            check_value(dataAC3[6], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑥定格流量」", True, None, "数値", None, 0, None),
+                                        "RatedPowerConsumption":
+                                            check_value(dataAC3[7], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑦定格消費電力」", True, None, "数値", None, 0, None),
+                                        "ContolType":
+                                            check_value(dataAC3[8], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
+                                        "MinOpeningRate":
+                                            check_value(dataAC3[9], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑨変流量時最小流量比」", False, None, "数値", None, 0, 100),
+                                        "Info":                                        
+                                            check_value(dataAC3[10], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑩備考」", False, None, "文字列", None, None, None),
                                     }
                                 ]
                             }
 
-                    else:
+                        if unitKey in data["SecondaryPumpSystem"]:
+                            data["SecondaryPumpSystem"][unitKey][modeKey] = unit_spec
+                        else:
+                            data["SecondaryPumpSystem"][unitKey] = { modeKey : unit_spec }
+                
+                    if dataAC3[3] != "":
+
+                        modeKey = "暖房"
+
+                        unit_spec = {
+                                "TemperatureDifference":
+                                    check_value(dataAC3[3], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「③暖房時温度差」", True, None, "数値", None, 0, None),
+                                "isStagingControl": 
+                                    check_value(dataAC3[1], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「②台数制御の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                "SecondaryPump" :[
+                                    {
+                                        "Number" :
+                                            check_value(dataAC3[5], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑤台数」", True, None, "数値", None, 0, None),
+                                        "RatedWaterFlowRate":
+                                            check_value(dataAC3[6], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑥定格流量」", True, None, "数値", None, 0, None),
+                                        "RatedPowerConsumption":
+                                            check_value(dataAC3[7], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑦定格消費電力」", True, None, "数値", None, 0, None),
+                                        "ContolType":
+                                            check_value(dataAC3[8], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
+                                        "MinOpeningRate":
+                                            check_value(dataAC3[9], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑨変流量時最小流量比」", False, None, "数値", None, 0, 100),
+                                        "Info":                                        
+                                            check_value(dataAC3[10], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑩備考」", False, None, "文字列", None, None, None),
+                                    }
+                                ]
+                            }
+
+                        if unitKey in data["SecondaryPumpSystem"]:
+                            data["SecondaryPumpSystem"][unitKey][modeKey] = unit_spec
+                        else:
+                            data["SecondaryPumpSystem"][unitKey] = { modeKey : unit_spec }
                             
-                        data["SecondaryPumpSystem"][unitKey] = {
-                            modeKey : {
-                                "TemperatureDifference": float(dataAC3[3]),
-                                "isStagingControl": set_default(dataAC3[1], "無", "str"),
-                                "SecondaryPump" :[
-                                    {
-                                        "Number": float(dataAC3[5]),
-                                        "RatedWaterFlowRate": float(dataAC3[6]),
-                                        "RatedPowerConsumption": float(dataAC3[7]),
-                                        "ContolType": set_default(dataAC3[8], "無", "str"),
-                                        "MinOpeningRate": set_default(dataAC3[9], None, "float"),
-                                        "Info": str(dataAC3[10])
-                                    }
-                                ]
-                            }
-                        }
 
-            elif (dataAC3[0] == "") and (dataAC3[4] != ""):
+            elif (dataAC3[0] == "") and (dataAC3[4] != "") and (unitKey in data["SecondaryPumpSystem"]):
 
                 if "冷房" in data["SecondaryPumpSystem"][unitKey]:
 
                     data["SecondaryPumpSystem"][unitKey]["冷房"]["SecondaryPump"].append(
                         {
-                            "Number": float(dataAC3[5]),
-                            "RatedWaterFlowRate": float(dataAC3[6]),
-                            "RatedPowerConsumption": float(dataAC3[7]),
-                            "ContolType": set_default(dataAC3[8], "無", "str"),
-                            "MinOpeningRate": set_default(dataAC3[9], None, "float"),
-                            "Info": str(dataAC3[10])
+                            "Number" :
+                                check_value(dataAC3[5], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑤台数」", True, None, "数値", None, 0, None),
+                            "RatedWaterFlowRate":
+                                check_value(dataAC3[6], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑥定格流量」", True, None, "数値", None, 0, None),
+                            "RatedPowerConsumption":
+                                check_value(dataAC3[7], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑦定格消費電力」", True, None, "数値", None, 0, None),
+                            "ContolType":
+                                check_value(dataAC3[8], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
+                            "MinOpeningRate":
+                                check_value(dataAC3[9], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑨変流量時最小流量比」", False, None, "数値", None, 0, 100),
+                            "Info":                                        
+                                check_value(dataAC3[10], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑩備考」", False, None, "文字列", None, None, None),
                         }
                     )
 
@@ -2565,12 +2590,18 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     data["SecondaryPumpSystem"][unitKey]["暖房"]["SecondaryPump"].append(
                         {
-                            "Number": float(dataAC3[5]),
-                            "RatedWaterFlowRate": float(dataAC3[6]),
-                            "RatedPowerConsumption": float(dataAC3[7]),
-                            "ContolType": set_default(dataAC3[8], "無", "str"),
-                            "MinOpeningRate": set_default(dataAC3[9], None, "float"),
-                            "Info": str(dataAC3[10])
+                            "Number" :
+                                check_value(dataAC3[5], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑤台数」", True, None, "数値", None, 0, None),
+                            "RatedWaterFlowRate":
+                                check_value(dataAC3[6], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑥定格流量」", True, None, "数値", None, 0, None),
+                            "RatedPowerConsumption":
+                                check_value(dataAC3[7], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑦定格消費電力」", True, None, "数値", None, 0, None),
+                            "ContolType":
+                                check_value(dataAC3[8], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
+                            "MinOpeningRate":
+                                check_value(dataAC3[9], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑨変流量時最小流量比」", False, None, "数値", None, 0, 100),
+                            "Info":                                        
+                                check_value(dataAC3[10], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑩備考」", False, None, "文字列", None, None, None),
                         }
                     )
     
@@ -2594,122 +2625,182 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 空調機群名称が空欄でない場合
             if (dataAC4[0] != ""):      
                 
-                unitKey = str(dataAC4[0])
+                unitKey = check_value(dataAC4[0], "様式2-7.空調機 "+ str(i+1) +"行目:「①空調機群名称」", True, None, "文字列", None, None, None)
+                
+                if unitKey in data["AirHandlingSystem"]:
 
-                E_fan1 = set_default(dataAC4[6], 0, "float")
-                E_fan2 = set_default(dataAC4[7], 0, "float")
-                E_fan3 = set_default(dataAC4[8], 0, "float")
-                E_fan4 = set_default(dataAC4[9], 0, "float")
+                    validation["error"].append( "様式2-7.空調機:「①空調機群名称」に重複があります（"+ str(i+1) +"行目「"+ unitKey +"」）。")
 
-                data["AirHandlingSystem"][unitKey] = {
-                    "isEconomizer": set_default(dataAC4[13], "無", "str"),
-                    "EconomizerMaxAirVolume": set_default(dataAC4[5], None, "float"),
-                    "isOutdoorAirCut": set_default(dataAC4[12], "無", "str"),
-                    "Pump_cooling": set_default(dataAC4[19], None, "str"),
-                    "Pump_heating": set_default(dataAC4[20], None, "str"),
-                    "HeatSource_cooling": set_default(dataAC4[21], None, "str"),
-                    "HeatSource_heating": set_default(dataAC4[22], None, "str"),
-                    "AirHandlingUnit" :[
-                        {
-                            "Type": str(dataAC4[2]),
-                            "Number": float(dataAC4[1]),
-                            "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
-                            "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
-                            "FanType": None,
-                            "FanAirVolume": set_default(dataAC4[15], None, "float"),
-                            "FanPowerConsumption": set_default(E_fan1+E_fan2+E_fan3+E_fan4, None, "float"),
-                            "FanControlType": set_default(dataAC4[10], "無", "str"),
-                            "FanMinOpeningRate": set_default(dataAC4[11], None, "float"),
-                            "AirHeatExchangeRatioCooling": set_default(dataAC4[16], None, "float"),
-                            "AirHeatExchangeRatioHeating": set_default(dataAC4[16], None, "float"),
-                            "AirHeatExchangerEffectiveAirVolumeRatio": None,
-                            "AirHeatExchangerControl": set_default(dataAC4[17], "無", "str"),
-                            "AirHeatExchangerPowerConsumption": set_default(dataAC4[18], None, "float"),
-                            "Info": str(dataAC4[22])
-                        }
-                    ]
-                }
+                else:
+
+                    E_fan1 = check_value(dataAC4[6], "様式2-7.空調機 "+ str(i+1) +"行目:「⑦送風機定格消費電力（給気）」", False, 0, "数値", None, 0, None)
+                    E_fan2 = check_value(dataAC4[7], "様式2-7.空調機 "+ str(i+1) +"行目:「⑧送風機定格消費電力（還気）」", False, 0, "数値", None, 0, None)
+                    E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, 0, None)
+                    E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, 0, None)
+
+                    data["AirHandlingSystem"][unitKey] = {
+                        "isEconomizer": 
+                            check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None), 
+                        "EconomizerMaxAirVolume":
+                            check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None), 
+                        "isOutdoorAirCut":
+                            check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                        "Pump_cooling": 
+                            check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳二次ポンプ群名称（冷熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                        "Pump_heating":
+                            check_value(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑二次ポンプ群名称（温熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                        "HeatSource_cooling":
+                            check_value(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒熱源群名称（冷熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                        "HeatSource_heating":
+                            check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉓熱源群名称（温熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                        "AirHandlingUnit" :[
+                            {
+                                "Type":
+                                    check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                                "Number":
+                                    check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
+                                "RatedCapacityCooling":
+                                    check_value(dataAC4[3], "様式2-7.空調機 "+ str(i+1) +"行目:「④定格冷却能力」", False, None, "数値", None, None, None),                                 
+                                "RatedCapacityHeating":
+                                    check_value(dataAC4[4], "様式2-7.空調機 "+ str(i+1) +"行目:「⑤定格加熱能力」", False, None, "数値", None, None, None), 
+                                "FanType": None,
+                                "FanAirVolume":
+                                    check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の設計風量」", False, None, "数値", None, None, None),    
+                                "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
+                                "FanControlType":
+                                    check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                                "FanMinOpeningRate":
+                                    check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
+                                "AirHeatExchangeRatioCooling":
+                                    check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
+                                "AirHeatExchangeRatioHeating":
+                                    check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
+                                "AirHeatExchangerEffectiveAirVolumeRatio": None,
+                                "AirHeatExchangerControl":
+                                    check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                "AirHeatExchangerPowerConsumption":
+                                    check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲ローター消費電力」", False, None, "数値", None, 0, None),
+                                "Info":
+                                    check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔備考」", False, None, "文字列", None, None, None),
+                            }
+                        ]
+                    }
 
 
-            elif (dataAC4[2] != ""):     
+            elif (dataAC4[2] != "") and (unitKey in data["AirHandlingSystem"]):     
 
-                E_fan1 = set_default(dataAC4[6], 0, "float")
-                E_fan2 = set_default(dataAC4[7], 0, "float")
-                E_fan3 = set_default(dataAC4[8], 0, "float")
-                E_fan4 = set_default(dataAC4[9], 0, "float")
+                E_fan1 = check_value(dataAC4[6], "様式2-7.空調機 "+ str(i+1) +"行目:「⑦送風機定格消費電力（給気）」", False, 0, "数値", None, 0, None)
+                E_fan2 = check_value(dataAC4[7], "様式2-7.空調機 "+ str(i+1) +"行目:「⑧送風機定格消費電力（還気）」", False, 0, "数値", None, 0, None)
+                E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, 0, None)
+                E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, 0, None)
 
                 data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
                     {
-                        "Type": str(dataAC4[2]),
-                        "Number": float(dataAC4[1]),
-                        "RatedCapacityCooling": set_default(dataAC4[3], None, "float"),
-                        "RatedCapacityHeating": set_default(dataAC4[4], None, "float"),
+                        "Type":
+                            check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                        "Number":
+                            check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
+                        "RatedCapacityCooling":
+                            check_value(dataAC4[3], "様式2-7.空調機 "+ str(i+1) +"行目:「④定格冷却能力」", False, None, "数値", None, None, None),                                 
+                        "RatedCapacityHeating":
+                            check_value(dataAC4[4], "様式2-7.空調機 "+ str(i+1) +"行目:「⑤定格加熱能力」", False, None, "数値", None, None, None), 
                         "FanType": None,
-                        "FanAirVolume": set_default(dataAC4[15], None, "float"),
-                        "FanPowerConsumption": set_default(E_fan1+E_fan2+E_fan3+E_fan4, None, "float"),
-                        "FanControlType": set_default(dataAC4[10], "無", "str"),
-                        "FanMinOpeningRate": set_default(dataAC4[11], None, "float"),
-                        "AirHeatExchangeRatioCooling": set_default(dataAC4[16], None, "float"),
-                        "AirHeatExchangeRatioHeating": set_default(dataAC4[16], None, "float"),
+                        "FanAirVolume":
+                            check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の設計風量」", False, None, "数値", None, None, None),    
+                        "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
+                        "FanControlType":
+                            check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                        "FanMinOpeningRate":
+                            check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
+                        "AirHeatExchangeRatioCooling":
+                            check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
+                        "AirHeatExchangeRatioHeating":
+                            check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
                         "AirHeatExchangerEffectiveAirVolumeRatio": None,
-                        "AirHeatExchangerControl": set_default(dataAC4[17], "無", "str"),
-                        "AirHeatExchangerPowerConsumption": set_default(dataAC4[18], None, "float"),
-                        "Info": str(dataAC4[22])
+                        "AirHeatExchangerControl":
+                            check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                        "AirHeatExchangerPowerConsumption":
+                            check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲ローター消費電力」", False, None, "数値", None, 0, None),
+                        "Info":
+                            check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔備考」", False, None, "文字列", None, None, None),
                     }
                 )
 
                 # 外気冷房制御等
-                if dataAC4[13] == "有" and dataAC4[5] != "":
-                    data["AirHandlingSystem"][unitKey]["isEconomizer"] = dataAC4[13]
-                    data["AirHandlingSystem"][unitKey]["EconomizerMaxAirVolume"] = set_default(dataAC4[5], None, "float")
-                if dataAC4[12] == "有":
-                    data["AirHandlingSystem"][unitKey]["isOutdoorAirCut"] = dataAC4[12]
+                isEconomizer = check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None)
+                EconomizerMaxAirVolume = check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None)
+                if isEconomizer == "有" and EconomizerMaxAirVolume != "":
+                    data["AirHandlingSystem"][unitKey]["isEconomizer"] = isEconomizer
+                    data["AirHandlingSystem"][unitKey]["EconomizerMaxAirVolume"] = EconomizerMaxAirVolume
+
+                # 予熱時外気取り入れ停止の有無
+                isOutdoorAirCut = check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                if isOutdoorAirCut == "有":
+                    data["AirHandlingSystem"][unitKey]["isOutdoorAirCut"] = isOutdoorAirCut
 
 
+    ## Varidation
+    for zone_name in data["AirConditioningZone"]:
+
+        unit_name = data["AirConditioningZone"][zone_name]["AHU_cooling_insideLoad"]
+        if unit_name not in data["AirHandlingSystem"]:
+            validation["error"].append( "様式2-1.空調ゾーン:「③空調機群名称（室負荷処理）」が 様式2-7.空調機群入力シートで定義されてません（ ゾーン "+ zone_name +"「"+ unit_name +"」）。") 
+
+        unit_name = data["AirConditioningZone"][zone_name]["AHU_cooling_outdoorLoad"]
+        if unit_name not in data["AirHandlingSystem"]:
+            validation["error"].append( "様式2-1.空調ゾーン:「④空調機群名称（外気負荷処理）」が 様式2-7.空調機群入力シートで定義されてません（ ゾーン "+ zone_name +"「"+ unit_name +"」）。") 
+
+
+    #----------------------------------
     # 冷暖同時供給の有無の判定（冷房暖房ともに「有」であれば「有」とする）
+    #----------------------------------
+    for zone_name in data["AirConditioningZone"]:
 
-    for iZONE in data["AirConditioningZone"]:
+        # 接続している空調機群 （様式2-1）
+        AHU_c_insideload  = data["AirConditioningZone"][zone_name]["AHU_cooling_insideLoad"]
+        AHU_c_outdoorload = data["AirConditioningZone"][zone_name]["AHU_cooling_outdoorLoad"]
+        AHU_h_insideload  = data["AirConditioningZone"][zone_name]["AHU_heating_insideLoad"]
+        AHU_h_outdoorload = data["AirConditioningZone"][zone_name]["AHU_heating_outdoorLoad"]
 
-        # 接続している空調機群
-        AHU_c_insideload  = data["AirConditioningZone"][iZONE]["AHU_cooling_insideLoad"]
-        AHU_c_outdoorload = data["AirConditioningZone"][iZONE]["AHU_cooling_outdoorLoad"]
-        AHU_h_insideload  = data["AirConditioningZone"][iZONE]["AHU_heating_insideLoad"]
-        AHU_h_outdoorload = data["AirConditioningZone"][iZONE]["AHU_heating_outdoorLoad"]
-
+        # 空調機群が設定されていることを確認
         if (AHU_c_insideload in data["AirHandlingSystem"]) and (AHU_c_outdoorload in data["AirHandlingSystem"]) \
             and (AHU_h_insideload in data["AirHandlingSystem"]) and (AHU_h_outdoorload in data["AirHandlingSystem"]):
 
-            # 冷熱源機群
+            # 熱源機群名称（冷房）
             iREF_c_i = data["AirHandlingSystem"][AHU_c_insideload]["HeatSource_cooling"]
             iREF_c_o = data["AirHandlingSystem"][AHU_c_outdoorload]["HeatSource_cooling"]
 
-            # 温熱源機群
+            # 熱源機群名称（暖房）
             iREF_h_i = data["AirHandlingSystem"][AHU_h_insideload]["HeatSource_heating"]
             iREF_h_o = data["AirHandlingSystem"][AHU_h_outdoorload]["HeatSource_heating"]
 
-            # 両方とも冷暖同時供給有無が「有」であったら
-            if data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-                data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-                data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
-                data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
+            # 熱源群が設定されていることを確認。
+            if (iREF_c_i in data["HeatsourceSystem"]) and (iREF_c_o in data["HeatsourceSystem"]) \
+                and (iREF_h_i in data["HeatsourceSystem"]) and (iREF_h_o in data["HeatsourceSystem"]):
 
-                data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有"
+                # 両方とも冷暖同時供給有無が「有」であったら
+                if data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                    data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                    data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
+                    data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
 
-            # 外調系統だけ冷暖同時であれば（暫定措置）
-            elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
-                data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-                data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "無" and \
-                data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
+                    data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有"
 
-                data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有（外気負荷）"
+                # 外調系統だけ冷暖同時であれば（暫定措置）
+                elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
+                    data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                    data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "無" and \
+                    data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
 
-            # 室負荷系統だけ冷暖同時であれば（暫定措置）
-            elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-                data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
-                data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
-                data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "無":
+                    data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有（外気負荷）"
 
-                data["AirConditioningZone"][iZONE]["isSimultaneousSupply"] = "有（室負荷）"
+                # 室負荷系統だけ冷暖同時であれば（暫定措置）
+                elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                    data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
+                    data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
+                    data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "無":
+
+                    data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有（室負荷）"
 
 
     # isSimultaneous_for_ver2 要素　を削除
