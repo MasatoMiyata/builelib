@@ -3464,10 +3464,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         ## Varidation
         for csg_system in data["CogenerationSystems"]:
 
-            if check_duplicates([
-                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityCooling"],
-                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHeating"], 
-                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"]]):
+            # 重複をチェックする。ただし、空欄の重複は許可する。
+            if check_duplicates(list(filter(
+                lambda x : x != None and x != "", [
+                    data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityCooling"],
+                    data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHeating"],
+                    data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"]
+                ]))):
 
                 validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位に重複があります。")
 
