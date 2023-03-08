@@ -19,7 +19,7 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成、動的負荷計算）
-BUILELIB_MODE = False
+BUILELIB_MODE = True
 
 def count_Matrix(x, mxL):
     """
@@ -1201,7 +1201,7 @@ def calc_energy(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
     ## 動的室負荷計算
     ##----------------------------------------------------------------------------------
-    if BUILELIB_MODE:
+    if False:
 
         # 負荷計算モジュールの読み込み
         from .heat_load_calculation import Main
