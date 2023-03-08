@@ -3013,7 +3013,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "AC_RefEfficiency":
                             check_value(dataV[3], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「④熱源効率」", True, None, "数値", None, 0, None),
                         "AC_PumpPower":
-                            check_value(dataV[4], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「④ポンプ定格出力」", False, None, "数値", None, -0.01, None),
+                            check_value(dataV[4], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑤ポンプ定格出力」", False, 0, "数値", None, -0.01, None),
                         "Info":
                             check_value(dataV[11], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑫備考」", False, "無", "文字列", None, None, None),
                     }
