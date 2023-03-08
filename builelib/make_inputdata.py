@@ -1456,6 +1456,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 階と室名が空欄でない場合
             if (dataBL[0] != "") and (dataBL[1] != ""):
 
+                # 数値で入力された室名を文字列に変換
+                if sheet_BL.cell_type(i,1) == xlrd.XL_CELL_NUMBER:
+                    dataBL[1] = str(int(sheet_BL.cell_value(i,1)))
+
                 # 階＋室をkeyとする
                 roomKey = str(dataBL[0]) + '_' + str(dataBL[1])
 
@@ -1524,6 +1528,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
             # シートから「行」の読み込み
             dataAC1 = sheet_AC1.row_values(i)
+
+            # 数値で入力された室名を文字列に変換
+            if sheet_AC1.cell_type(i,8) == xlrd.XL_CELL_NUMBER:
+                dataAC1[8] = str(int(sheet_AC1.cell_value(i,8)))
 
             # 階と室名が空欄でない場合
             if (dataAC1[7] != "") and (dataAC1[8] != ""):
@@ -1800,6 +1808,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # シートから「行」の読み込み
             dataBE1 = sheet_BE1.row_values(i)
 
+            # 数値で入力された室名を文字列に変換
+            if sheet_BE1.cell_type(i,1) == xlrd.XL_CELL_NUMBER:
+                dataBE1[1] = str(int(sheet_BE1.cell_value(i,1)))
+                
             # 階と室名が空欄でない場合
             if (dataBE1[0] != "") and (dataBE1[1] != ""):
 
@@ -2848,6 +2860,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # シートから「行」の読み込み
             dataV = sheet_V1.row_values(i)
 
+            # 数値で入力された室名を文字列に変換
+            if sheet_V1.cell_type(i,1) == xlrd.XL_CELL_NUMBER:
+                dataV[1] = str(int(sheet_V1.cell_value(i,1)))
+
             # 階と室名が空欄でない場合
             if (dataV[0] != "") and (dataV[1] != ""):
 
@@ -3058,6 +3074,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # シートから「行」の読み込み
             dataL = sheet_L.row_values(i)
 
+            # 数値で入力された室名を文字列に変換
+            if sheet_L.cell_type(i,1) == xlrd.XL_CELL_NUMBER:
+                dataL[1] = str(int(sheet_L.cell_value(i,1)))
+
             # 階と室名が空欄でない場合
             if (dataL[0] != "") and (dataL[1] != ""):
 
@@ -3143,6 +3163,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
             # シートから「行」の読み込み
             dataHW1 = sheet_HW1.row_values(i)
+
+            # 数値で入力された室名を文字列に変換
+            if sheet_HW1.cell_type(i,1) == xlrd.XL_CELL_NUMBER:
+                dataHW1[1] = str(int(sheet_HW1.cell_value(i,1)))
 
             # 階と室名が空欄でない場合
             if (dataHW1[0] != "") and (dataHW1[1] != "") :
@@ -3285,6 +3309,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
             # シートから「行」の読み込み
             dataEV = sheet_EV.row_values(i)
+
+            # 数値で入力された室名を文字列に変換
+            if sheet_EV.cell_type(i,1) == xlrd.XL_CELL_NUMBER:
+                dataEV[1] = str(int(sheet_EV.cell_value(i,1)))
 
             # 全角括弧と半角括弧の置換
             if str(dataEV[9]) == "VVVF（電力回生なし）":
