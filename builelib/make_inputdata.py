@@ -1465,6 +1465,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 else:
 
+                    # 建物用途
+                    buildingType = dataBL[2]
+
                     # 室用途の読み替え
                     if str(dataBL[3]) == "ゴミ置場等":
                         roomType = "廃棄物保管場所等"
@@ -1472,21 +1475,19 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     else:
                         roomType = str(dataBL[3])
 
-                    # 建物用途の読み込み
-                    buildingType = check_value(dataBL[2], "様式1.室仕様 "+ str(i+1) +"行目:「②建物用途」", True, None, "文字列", input_options["建物用途"], None, None)
+                    # 2022.10更新のWebプログラムに対応
+                    if "-" in roomType:
+                        buildingType = roomType.split("-")[0]
+                        roomType = roomType.split("-")[1]
+
+                    # 建物用途のチェック
+                    buildingType = check_value(buildingType, "様式1.室仕様 "+ str(i+1) +"行目:「②建物用途」", True, None, "文字列", input_options["建物用途"], None, None)
                     
                     # 室用途のチェック
                     if buildingType in  input_options["室用途"]:
                         roomType = check_value(roomType, "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」", True, None, "文字列", input_options["室用途"][buildingType], None, None)
                     else:
                         validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」の整合性チェックができませんでした。")
-
-                    # 2022.10更新のWebプログラムに対応
-                    if "-" in roomType:
-                        buildingType = roomType.split("-")[0]
-                        roomType = roomType.split("-")[1]
-
-                    print(roomType)
 
 
                     # ゾーンはないと想定。
