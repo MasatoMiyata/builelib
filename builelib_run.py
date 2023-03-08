@@ -3,9 +3,9 @@
 # buileibをコマンドラインで実行するファイル
 #-----------------------------------------------------------------------------
 # 使用方法
-# % python3 -m builelib_run (実行モード) (入力シートファイル名)
-# % python3 -m builelib_run True ./sample/WEBPRO_inputSheet_sample.xlsm
-# % python3 -m builelib_run True ./sample/WEBPRO_inputSheet_sample_error.xlsm
+# % python -m builelib_run (実行モード) (入力シートファイル名)
+# % python -m builelib_run True ./sample/WEBPRO_inputSheet_sample.xlsm
+# % python -m builelib_run True ./sample/WEBPRO_inputSheet_sample_error.xlsm
 #-----------------------------------------------------------------------------
 
 import json
@@ -522,12 +522,12 @@ with zipfile.ZipFile(inputfile_name_split[0]+".zip", 'w', compression=zipfile.ZI
     new_zip.write( inputfile_name_split[0] + "_result_Other.json", arcname='builelib_result_Ohter.json')
 
 # ファイル削除
-# os.remove( inputfile_name_split[0] + "_input.json" )
-# os.remove( inputfile_name_split[0] + "_result_AC.json" )
-# os.remove( inputfile_name_split[0] + "_result_V.json" )
-# os.remove( inputfile_name_split[0] + "_result_L.json" )
-# os.remove( inputfile_name_split[0] + "_result_HW.json" )
-# os.remove( inputfile_name_split[0] + "_result_EV.json" )
-# os.remove( inputfile_name_split[0] + "_result_PV.json" )
-# os.remove( inputfile_name_split[0] + "_result_CGS.json" )
-# os.remove( inputfile_name_split[0] + "_result_Other.json" )
+os.remove( inputfile_name_split[0] + "_input.json" )
+os.remove( inputfile_name_split[0] + "_result_AC.json" )
+os.remove( inputfile_name_split[0] + "_result_V.json" )
+os.remove( inputfile_name_split[0] + "_result_L.json" )
+os.remove( inputfile_name_split[0] + "_result_HW.json" )
+os.remove( inputfile_name_split[0] + "_result_EV.json" )
+os.remove( inputfile_name_split[0] + "_result_PV.json" )
+os.remove( inputfile_name_split[0] + "_result_CGS.json" )
+os.remove( inputfile_name_split[0] + "_result_Other.json" )
