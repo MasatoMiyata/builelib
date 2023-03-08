@@ -1640,6 +1640,18 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     ]
                                 }
 
+                        else:
+                            
+                            # 1行目が空白の場合
+                            data["WallConfigure"][eltKey] = {
+                                    "wall_type_webpro": walltype_webpro,
+                                    "structureType": "その他",
+                                    "solarAbsorptionRatio": None,
+                                    "inputMethod": inputMethod,
+                                    "layers": [
+                                    ]
+                                }
+
                         for loop in range(2,10):
 
                             # 次の行を読み込み
