@@ -764,6 +764,9 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
     resultJson["年間一次エネルギー削減量(給湯)"] = np.sum(EW_red_d)/1000           # 年間一次エネルギー削減量(給湯) [GJ]
     resultJson["年間一次エネルギー削減量"] = np.sum(Etotal_cgs_red_d)/1000   # 年間一次エネルギー削減量合計 [GJ]
 
+    if np.isnan(resultJson["年間一次エネルギー削減量"]):
+        raise Exception("コジェネの計算でエラーが発生しました")
+        
     if DEBUG: # pragma: no cover
         print( f'年間一次エネルギー削減量 全体 : {resultJson["年間一次エネルギー削減量"]} GJ/年')
         resultJson["EAC_ref_c_red_d"] = EAC_ref_c_red_d
