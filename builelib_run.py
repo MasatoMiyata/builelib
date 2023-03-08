@@ -519,7 +519,7 @@ with zipfile.ZipFile(inputfile_name_split[0]+".zip", 'w', compression=zipfile.ZI
     new_zip.write( inputfile_name_split[0] + "_result_EV.json", arcname='builelib_result_EV.json')
     new_zip.write( inputfile_name_split[0] + "_result_PV.json", arcname='builelib_result_PV.json')
     new_zip.write( inputfile_name_split[0] + "_result_CGS.json", arcname='builelib_result_CGS.json')
-    new_zip.write( inputfile_name_split[0] + "_result_Other.json", arcname='builelib_result_Ohter.json')
+    new_zip.write( inputfile_name_split[0] + "_result_Other.json", arcname='builelib_result_Other.json')
 
 # ファイル削除
 os.remove( inputfile_name_split[0] + "_input.json" )

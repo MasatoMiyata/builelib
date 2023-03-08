@@ -339,7 +339,8 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
         qAC_ref_c_hr_d = np.zeros(365)
         EAC_ref_c_hr_d = np.zeros(365)
     else:
-        qAC_ref_c_hr_d = EAC_ref_c_d * ( np.sum(qAC_link_c_j_rated) / np.sum(EAC_link_c_j_rated)) * flink_d / fCOP_link_hr
+        # ゼロ除算が発生した場合、0とする。
+        qAC_ref_c_hr_d = np.nan_to_num(EAC_ref_c_d * ( np.sum(qAC_link_c_j_rated) / np.sum(EAC_link_c_j_rated)) * flink_d / fCOP_link_hr)
         EAC_ref_c_hr_d = EAC_ref_c_d * flink_d
 
 

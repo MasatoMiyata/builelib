@@ -57,7 +57,7 @@ input_options = {
         "2LgA06","2LgA07","2LgA08","2LgA09","2LgA10","2LgA11","2LgA12","2LgA13","2LgA14","2LgA15","2LgA16","2LsA06","2LsA07","2LsA08","2LsA09","2LsA10","2LsA11","2LsA12","2LsA13","2LsA14","2LsA15","2LsA16","2FA06","2FA07","2FA08","2FA09","2FA10","2FA11","2FA12","2FA13","2FA14","2FA15","2FA16","T","S"],
     "冷暖同時供給の有無": ["無","有","有（室負荷）","有（外気負荷）"],
     "蓄熱の種類": ["水蓄熱(混合型)","水蓄熱(成層型)","氷蓄熱"],
-    "熱源機種": ["ウォータチリングユニット(空冷式)","ウォータチリングユニット(水冷式)","ウォータチリングユニット(水冷式地中熱タイプ1)","ウォータチリングユニット(水冷式地中熱タイプ2)","ウォータチリングユニット(水冷式地中熱タイプ3)","ウォータチリングユニット(水冷式地中熱タイプ4)",
+    "熱源機種": ["ウォータチリングユニット(空冷式)","ウォータチリングユニット(空冷式モジュール形)","ウォータチリングユニット(水冷式)","ウォータチリングユニット(水冷式地中熱タイプ1)","ウォータチリングユニット(水冷式地中熱タイプ2)","ウォータチリングユニット(水冷式地中熱タイプ3)","ウォータチリングユニット(水冷式地中熱タイプ4)",
         "ウォータチリングユニット(水冷式地中熱タイプ5)","スクリュー冷凍機","ターボ冷凍機","インバータターボ冷凍機","ブラインターボ冷凍機(蓄熱時)","ブラインターボ冷凍機(追掛時)","ウォータチリングユニット(空冷式氷蓄熱用)",
         "ウォータチリングユニット(空冷式モジュール形氷蓄熱用)","スクリュー冷凍機(氷蓄熱用)","吸収式冷凍機(都市ガス)","吸収式冷凍機(冷却水変流量、都市ガス)","吸収式冷凍機(LPG)","吸収式冷凍機(冷却水変流量、LPG)",
         "吸収式冷凍機(重油)","吸収式冷凍機(冷却水変流量、重油)","吸収式冷凍機(灯油)","吸収式冷凍機(冷却水変流量、灯油)","吸収式冷凍機(蒸気)","吸収式冷凍機(冷却水変流量、蒸気)","吸収式冷凍機(温水)",
@@ -3464,10 +3464,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         ## Varidation
         for csg_system in data["CogenerationSystems"]:
 
-            if check_duplicates([
-                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityCooling"],
-                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHeating"], 
-                data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"]]):
+            # 重複をチェックする。ただし、空欄の重複は許可する。
+            if check_duplicates(list(filter(
+                lambda x : x != None and x != "", [
+                    data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityCooling"],
+                    data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHeating"],
+                    data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"]
+                ]))):
 
                 validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位に重複があります。")
 

@@ -2434,11 +2434,11 @@ def calc_energy(inputdata, debug=False):
                 # 負荷率の算出 [-]
                 if resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] > 0:
                     # 熱源定格負荷率（定格能力に対する比率）
-                    resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh] = \
-                        (resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] * 1000 / 3600) / inputdata["REF"][ref_name]["Qref_rated"]
-
-                if np.isnan(resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh]):  # これは必要なのか？
-                    resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh] = 0
+                    try:
+                        resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh] = \
+                            (resultJson["REF"][ref_name]["Qref_hourly"][dd][hh] * 1000 / 3600) / inputdata["REF"][ref_name]["Qref_rated"]
+                    except ZeroDivisionError:
+                        resultJson["REF"][ref_name]["load_ratio_rated"][dd][hh] = 0
 
     #----------------------------------------------------------------------------------
     # 湿球温度 （解説書 2.7.4.2）
@@ -2893,7 +2893,10 @@ def calc_energy(inputdata, debug=False):
                     else:
 
                         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] = tmpQ / Qrefr_mod_max
+                            try:
+                                resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] = tmpQ / Qrefr_mod_max
+                            except ZeroDivisionError:
+                                resultJson["REF"][ref_name]["Heatsource"][unit_id]["load_ratio"][dd][hh] = 0
 
     #----------------------------------------------------------------------------------
     # 部分負荷特性 （解説書 2.7.13）
