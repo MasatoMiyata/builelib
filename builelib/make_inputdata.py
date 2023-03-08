@@ -1481,6 +1481,14 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     else:
                         validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」の整合性チェックができませんでした。")
 
+                    # 2022.10更新のWebプログラムに対応
+                    if "-" in roomType:
+                        buildingType = roomType.split("-")[0]
+                        roomType = roomType.split("-")[1]
+
+                    print(roomType)
+
+
                     # ゾーンはないと想定。
                     data["Rooms"][roomKey] = {
                             "buildingType": buildingType,  
@@ -3858,9 +3866,9 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./sample/"
+    directory = "./"
 
-    case_name = 'WEBPRO_inputSheet_sample_error'
+    case_name = '国総研立原_01現状'
 
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
