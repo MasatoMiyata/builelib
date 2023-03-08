@@ -20,17 +20,17 @@ def set_OutdoorTemperature(region):
     if region == "1":
         Toa_ave_design = 22.7
     elif region == "2":
-        Toa_ave_design = 22.5
+        Toa_ave_design = 22.8
     elif region == "3":
         Toa_ave_design = 24.7
     elif region == "4":
-        Toa_ave_design = 27.1
+        Toa_ave_design = 26.8
     elif region == "5":
-        Toa_ave_design = 26.7
+        Toa_ave_design = 27.1
     elif region == "6":
-        Toa_ave_design = 27.5
+        Toa_ave_design = 27.6
     elif region == "7":
-        Toa_ave_design = 25.8
+        Toa_ave_design = 26.0
     elif region == "8":
         Toa_ave_design = 26.2
     else:
