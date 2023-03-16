@@ -19,7 +19,7 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成、動的負荷計算）
-BUILELIB_MODE = True
+BUILELIB_MODE = False
 
 def count_Matrix(x, mxL):
     """
@@ -1746,6 +1746,59 @@ def calc_energy(inputdata, debug = False):
 
 
     ##----------------------------------------------------------------------------------
+    ## 二次ポンプ群の一次エネルギー消費量（解説書 2.6）
+    ##----------------------------------------------------------------------------------
+
+    # 二次ポンプが空欄であった場合、ダミーの仮想ポンプを追加する。
+    number = 0
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        if inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] == None:
+
+            inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] = "dummyPump_" + str(number)
+
+            inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
+                "冷房":{
+                    "TemperatureDifference": 0,
+                    "isStagingControl": "無",
+                    "SecondaryPump": [
+                        {
+                            "Number": 0,
+                            "RatedWaterFlowRate": 0,
+                            "RatedPowerConsumption": 0,
+                            "ContolType": "無",
+                            "MinOpeningRate": 100,
+                        }
+                    ]
+                }
+            }
+
+            number += 1
+
+        if inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] == None:
+            
+            inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] = "dummyPump_" + str(number)
+
+            inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
+                "暖房":{
+                    "TemperatureDifference": 0,
+                    "isStagingControl": "無",
+                    "SecondaryPump": [
+                        {
+                            "Number": 0,
+                            "RatedWaterFlowRate": 0,
+                            "RatedPowerConsumption": 0,
+                            "ContolType": "無",
+                            "MinOpeningRate": 100,
+                        }
+                    ]
+                }
+            }
+
+            number += 1
+
+
+    ##----------------------------------------------------------------------------------
     ## 冷暖同時供給の有無の判定
     ##----------------------------------------------------------------------------------
 
@@ -2738,60 +2791,6 @@ def calc_energy(inputdata, debug = False):
 
         print( f'空調機群（送風機）のエネルギー消費量: {resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"]} MWh' )
         print( f'空調機群（全熱交換器）のエネルギー消費量: {resultJson["年間エネルギー消費量"]["空調機群全熱交換器[MWh]"]} MWh' )
-
-
-
-    ##----------------------------------------------------------------------------------
-    ## 二次ポンプ群の一次エネルギー消費量（解説書 2.6）
-    ##----------------------------------------------------------------------------------
-
-    # 二次ポンプが空欄であった場合、ダミーの仮想ポンプを追加する。
-    number = 0
-    for ahu_name in inputdata["AirHandlingSystem"]:
-
-        if inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] == None:
-
-            inputdata["AirHandlingSystem"][ahu_name]["Pump_cooling"] = "dummyPump_" + str(number)
-
-            inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
-                "冷房":{
-                    "TemperatureDifference": 0,
-                    "isStagingControl": "無",
-                    "SecondaryPump": [
-                        {
-                            "Number": 0,
-                            "RatedWaterFlowRate": 0,
-                            "RatedPowerConsumption": 0,
-                            "ContolType": "無",
-                            "MinOpeningRate": 100,
-                        }
-                    ]
-                }
-            }
-
-            number += 1
-
-        if inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] == None:
-            
-            inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] = "dummyPump_" + str(number)
-
-            inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
-                "暖房":{
-                    "TemperatureDifference": 0,
-                    "isStagingControl": "無",
-                    "SecondaryPump": [
-                        {
-                            "Number": 0,
-                            "RatedWaterFlowRate": 0,
-                            "RatedPowerConsumption": 0,
-                            "ContolType": "無",
-                            "MinOpeningRate": 100,
-                        }
-                    ]
-                }
-            }
-
-            number += 1
 
 
     # 冷房と暖房の二次ポンプ群に分ける。
