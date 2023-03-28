@@ -137,10 +137,8 @@ def convert_window_frame_type(frame_type_webpro):
 
 
 # 検証結果メッセージ （global変数）
-validation = {
-    "error": [],
-    "warning": []
-}
+validation = {}
+
 
 def check_duplicates(seq):
     """
@@ -293,6 +291,19 @@ def make_jsondata_from_Ver4_sheet(inputfileName):
     WEBPRO Ver4 用の入力シートから 入力データ（辞書型）を生成するプログラム
     """
 
+    global validation
+    validation = {
+        "error": [],
+        "warning": []
+    }
+
+    # if "validation" in locals():
+    #     print("localsにあります")
+    #     print(validation)
+    # if "validation" in globals():
+    #     print("globalsにあります")
+    #     print(validation)
+    
     # 入力シートの読み込み
     wb = xlrd.open_workbook(inputfileName)
 
@@ -1267,6 +1278,19 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     """
     WEBPRO Ver2 用の入力シートから 入力データ（辞書型）を生成するプログラム
     """
+
+    global validation
+    validation = {
+        "error": [],
+        "warning": []
+    }
+
+    # if "validation" in locals():
+    #     print("localsにあります")
+    #     print(validation)
+    # if "validation" in globals():
+    #     print("globalsにあります")
+    #     print(validation)
 
     # 入力シートの読み込み
     wb = xlrd.open_workbook(inputfileName)
