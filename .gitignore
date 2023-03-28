@@ -104,3 +104,4 @@ sample/inputdata.json
 .idea
 
 venv/
+reference/
