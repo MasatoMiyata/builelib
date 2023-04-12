@@ -3803,11 +3803,11 @@ def calc_energy(inputdata, debug = False):
             else:
                 raise Exception('熱交換機が設定されていません')
 
-        if debug: # pragma: no cover
-                
-            print( f'--- 熱源群名 {ref_name} ---')
-            print( f'熱交換器の容量: {inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]}')
-            print( f'熱源群の定格能力の合計 Qref_rated: {inputdata["REF"][ref_name]["Qref_rated"]}' )
+            if debug: # pragma: no cover
+                    
+                print( f'--- 熱源群名 {ref_name} ---')
+                print( f'熱交換器の容量: {inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]}')
+                print( f'熱源群の定格能力の合計 Qref_rated: {inputdata["REF"][ref_name]["Qref_rated"]}' )
 
 
     ##----------------------------------------------------------------------------------
