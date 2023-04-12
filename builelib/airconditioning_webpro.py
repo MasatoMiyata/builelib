@@ -3400,33 +3400,39 @@ def calc_energy(inputdata, debug = False):
     for ref_original_name in inputdata["HeatsourceSystem"]:
 
         if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
-            inputdata["REF"][ ref_original_name + "_冷房"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房"]
-            inputdata["REF"][ ref_original_name + "_冷房"]["mode"] = "cooling"
 
-            if "冷房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
-                inputdata["REF"][ ref_original_name + "_冷房_蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]
-                inputdata["REF"][ ref_original_name + "_冷房_蓄熱"]["isStorage"] = "蓄熱"
-                inputdata["REF"][ ref_original_name + "_冷房_蓄熱"]["mode"] = "cooling"
-                inputdata["REF"][ ref_original_name + "_冷房"]["isStorage"] = "追掛"
-                inputdata["REF"][ ref_original_name + "_冷房"]["StorageType"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]["StorageType"]
-                inputdata["REF"][ ref_original_name + "_冷房"]["StorageSize"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]["StorageSize"]
-            else:
-                inputdata["REF"][ ref_original_name + "_冷房"]["isStorage"] = "無"
+            if len(inputdata["HeatsourceSystem"][ref_original_name]["冷房"]["Heatsource"]) > 0:
+
+                inputdata["REF"][ ref_original_name + "_冷房"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房"]
+                inputdata["REF"][ ref_original_name + "_冷房"]["mode"] = "cooling"
+
+                if "冷房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
+                    inputdata["REF"][ ref_original_name + "_冷房_蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]
+                    inputdata["REF"][ ref_original_name + "_冷房_蓄熱"]["isStorage"] = "蓄熱"
+                    inputdata["REF"][ ref_original_name + "_冷房_蓄熱"]["mode"] = "cooling"
+                    inputdata["REF"][ ref_original_name + "_冷房"]["isStorage"] = "追掛"
+                    inputdata["REF"][ ref_original_name + "_冷房"]["StorageType"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]["StorageType"]
+                    inputdata["REF"][ ref_original_name + "_冷房"]["StorageSize"] = inputdata["HeatsourceSystem"][ref_original_name]["冷房(蓄熱)"]["StorageSize"]
+                else:
+                    inputdata["REF"][ ref_original_name + "_冷房"]["isStorage"] = "無"
 
 
         if "暖房" in inputdata["HeatsourceSystem"][ref_original_name]:
-            inputdata["REF"][ ref_original_name + "_暖房"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房"]
-            inputdata["REF"][ ref_original_name + "_暖房"]["mode"] = "heating"
 
-            if "暖房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
-                inputdata["REF"][ ref_original_name + "_暖房_蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]
-                inputdata["REF"][ ref_original_name + "_暖房_蓄熱"]["isStorage"] = "蓄熱"
-                inputdata["REF"][ ref_original_name + "_暖房_蓄熱"]["mode"] = "heating"
-                inputdata["REF"][ ref_original_name + "_暖房"]["isStorage"] = "追掛"
-                inputdata["REF"][ ref_original_name + "_暖房"]["StorageType"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]["StorageType"]
-                inputdata["REF"][ ref_original_name + "_暖房"]["StorageSize"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]["StorageSize"]
-            else:
-                inputdata["REF"][ ref_original_name + "_暖房"]["isStorage"] = "無"
+            if len(inputdata["HeatsourceSystem"][ref_original_name]["暖房"]["Heatsource"]) > 0:
+
+                inputdata["REF"][ ref_original_name + "_暖房"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房"]
+                inputdata["REF"][ ref_original_name + "_暖房"]["mode"] = "heating"
+
+                if "暖房(蓄熱)" in inputdata["HeatsourceSystem"][ref_original_name]:
+                    inputdata["REF"][ ref_original_name + "_暖房_蓄熱"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]
+                    inputdata["REF"][ ref_original_name + "_暖房_蓄熱"]["isStorage"] = "蓄熱"
+                    inputdata["REF"][ ref_original_name + "_暖房_蓄熱"]["mode"] = "heating"
+                    inputdata["REF"][ ref_original_name + "_暖房"]["isStorage"] = "追掛"
+                    inputdata["REF"][ ref_original_name + "_暖房"]["StorageType"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]["StorageType"]
+                    inputdata["REF"][ ref_original_name + "_暖房"]["StorageSize"] = inputdata["HeatsourceSystem"][ref_original_name]["暖房(蓄熱)"]["StorageSize"]
+                else:
+                    inputdata["REF"][ ref_original_name + "_暖房"]["isStorage"] = "無"
 
 
     ##----------------------------------------------------------------------------------
@@ -3920,11 +3926,13 @@ def calc_energy(inputdata, debug = False):
 
         Qcmax = 0
         if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
-            Qcmax =  np.max( resultJson["REF"][ref_original_name + "_冷房"]["Qref"] , 0) 
+            if len(inputdata["HeatsourceSystem"][ref_original_name]["冷房"]["Heatsource"]) > 0:
+                Qcmax =  np.max( resultJson["REF"][ref_original_name + "_冷房"]["Qref"] , 0) 
 
         Qhmax = 0
         if "暖房" in inputdata["HeatsourceSystem"][ref_original_name]:
-            Qhmax =  np.max( resultJson["REF"][ref_original_name + "_暖房"]["Qref"] , 0) 
+            if len(inputdata["HeatsourceSystem"][ref_original_name]["暖房"]["Heatsource"]) > 0:
+                Qhmax =  np.max( resultJson["REF"][ref_original_name + "_暖房"]["Qref"] , 0) 
 
         if Qcmax != 0 and Qhmax != 0:
 
