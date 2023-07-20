@@ -1,4 +1,4 @@
-from numpy import False_
+# from numpy import False_
 import xlrd
 import json
 import jsonschema
@@ -2096,10 +2096,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     # 熱源群名称が入力されている箇所は、蓄熱有無を判定する。
                     if dataAC2[3] == "氷蓄熱" or dataAC2[3] == "水蓄熱(成層型)" or dataAC2[3] == "水蓄熱(混合型)":
                         storage_flag = True
+                        oikake_flag  = False
                     elif dataAC2[3] == "追掛":
                         storage_flag = False
+                        oikake_flag  = True
                     else:
                         storage_flag = False
+                        oikake_flag  = False
 
                     if storage_flag:
                         modeKey_C = "冷房(蓄熱)"
@@ -2262,7 +2265,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 data["HeatsourceSystem"][unitKey] = {modeKey_H : unit_spec}
                             
 
-            elif (dataAC2[3] == ""):  # 熱源機種を追加（複数台設置されている場合）
+            elif (dataAC2[3] == "") or (dataAC2[3] == data["HeatsourceSystem"][unitKey][modeKey_C]["StorageType"] ) \
+                or (dataAC2[3] == "追掛" and oikake_flag ) :  # 蓄熱運転モードが「空欄」もしくは「前行と同じ」である場合 → 熱源機種を追加（複数台設置）
 
                 if (dataAC2[5] != ""): # 熱源機種名称が入力されている。 
 
@@ -2365,11 +2369,14 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # 熱源群名称が入力されている箇所は、蓄熱有無を判定する。
                 if dataAC2[3] == "氷蓄熱" or dataAC2[3] == "水蓄熱(成層型)" or dataAC2[3] == "水蓄熱(混合型)":
                     storage_flag = True
+                    oikake_flag  = False
                 elif dataAC2[3] == "追掛":
                     storage_flag = False
+                    oikake_flag  = True
                 else:
                     storage_flag = False
-
+                    oikake_flag  = False
+                    
                 if storage_flag:
                     modeKey_C = "冷房(蓄熱)"
                     modeKey_H = "暖房(蓄熱)"
@@ -3931,9 +3938,9 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./"
+    directory = "./sample/"
 
-    case_name = '国総研立原_01現状'
+    case_name = 'WEBPRO_inputSheet_ERRver'
 
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
