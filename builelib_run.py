@@ -543,7 +543,7 @@ def builelib_run(exec_calculation, inputfile_name):
 if __name__ == '__main__':
     
     # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
-    file_name = "./sample/WEBPRO_inputSheet_for_Ver3.2_雛形.xlsm"
+    file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
 
     builelib_run(True, file_name)
 
