@@ -2755,19 +2755,31 @@ def calc_energy(inputdata, debug = False):
         resultJson["AHU"][ahu_name]["年間空調時間（暖房）[時間]"] = \
             np.sum(resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"]) + np.sum(resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"])
 
-        resultJson["AHU"][ahu_name]["平均空調負荷（冷房）[kW]"] = \
-            resultJson["AHU"][ahu_name]["年間空調負荷（冷房）[MJ]"] * 1000 \
-            / (resultJson["AHU"][ahu_name]["年間空調時間（冷房）[時間]"] * 3600)
+        if resultJson["AHU"][ahu_name]["年間空調時間（冷房）[時間]"] != 0:
+            resultJson["AHU"][ahu_name]["平均空調負荷（冷房）[kW]"] = \
+                resultJson["AHU"][ahu_name]["年間空調負荷（冷房）[MJ]"] * 1000 \
+                / (resultJson["AHU"][ahu_name]["年間空調時間（冷房）[時間]"] * 3600)
+        else:
+            resultJson["AHU"][ahu_name]["平均空調負荷（冷房）[kW]"] = 0
 
-        resultJson["AHU"][ahu_name]["平均空調負荷（暖房）[kW]"] = \
-            resultJson["AHU"][ahu_name]["年間空調負荷（暖房）[MJ]"] * 1000 \
-            / (resultJson["AHU"][ahu_name]["年間空調時間（暖房）[時間]"] * 3600)
+        if resultJson["AHU"][ahu_name]["年間空調時間（暖房）[時間]"] != 0:
+            resultJson["AHU"][ahu_name]["平均空調負荷（暖房）[kW]"] = \
+                resultJson["AHU"][ahu_name]["年間空調負荷（暖房）[MJ]"] * 1000 \
+                / (resultJson["AHU"][ahu_name]["年間空調時間（暖房）[時間]"] * 3600)
+        else:
+            resultJson["AHU"][ahu_name]["平均空調負荷（暖房）[kW]"] = 0
 
-        resultJson["AHU"][ahu_name]["平均負荷率（冷房）[-]"] = \
-            resultJson["AHU"][ahu_name]["平均空調負荷（冷房）[kW]"] / resultJson["AHU"][ahu_name]["定格能力（冷房）[kW]"]
+        if resultJson["AHU"][ahu_name]["定格能力（冷房）[kW]"] != 0:
+            resultJson["AHU"][ahu_name]["平均負荷率（冷房）[-]"] = \
+                resultJson["AHU"][ahu_name]["平均空調負荷（冷房）[kW]"] / resultJson["AHU"][ahu_name]["定格能力（冷房）[kW]"]
+        else:
+            resultJson["AHU"][ahu_name]["平均負荷率（冷房）[-]"] = 0
 
-        resultJson["AHU"][ahu_name]["平均負荷率（暖房）[-]"] = \
-            resultJson["AHU"][ahu_name]["平均空調負荷（暖房）[kW]"] / resultJson["AHU"][ahu_name]["定格能力（暖房）[kW]"]
+        if resultJson["AHU"][ahu_name]["定格能力（暖房）[kW]"] != 0:
+            resultJson["AHU"][ahu_name]["平均負荷率（暖房）[-]"] = \
+                resultJson["AHU"][ahu_name]["平均空調負荷（暖房）[kW]"] / resultJson["AHU"][ahu_name]["定格能力（暖房）[kW]"]
+        else:
+            resultJson["AHU"][ahu_name]["平均負荷率（暖房）[-]"] = 0
 
         resultJson["AHU"][ahu_name]["電力消費量（送風機、冷房）[MWh]"] = np.sum( resultJson["AHU"][ahu_name]["E_fan_c_day"] )
         resultJson["AHU"][ahu_name]["電力消費量（送風機、暖房）[MWh]"] = np.sum( resultJson["AHU"][ahu_name]["E_fan_h_day"] )
