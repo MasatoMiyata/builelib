@@ -105,5 +105,9 @@ sample/inputdata.json
 .idea
 
 venv/
+venv310/
+venv311/
+venv312/
+
 reference/
 builelib/heat_load_calculation

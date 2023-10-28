@@ -9,11 +9,8 @@
 #-----------------------------------------------------------------------------
 
 import json
-from os import truncate
 import numpy as np
-import sys
 import os
-from distutils.util import strtobool
 import zipfile
 import math
 
