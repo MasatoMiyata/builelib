@@ -84,11 +84,11 @@ def calc_energy(inputdata, DEBUG = False):
 
             input_calendar = {}
             if "calender" in inputdata["SpecialInputData"]:
-                input_calendar = inputdata["SpecialInputData"]["calender"]
+                input_calendar = inputdata["SpecialInputData"]["calender"]   # SP-6
 
             input_room_usage_condition = {}
             if "room_usage_condition" in inputdata["SpecialInputData"]:
-                input_room_usage_condition = inputdata["SpecialInputData"]["room_usage_condition"]
+                input_room_usage_condition = inputdata["SpecialInputData"]["room_usage_condition"]   # SP-9
 
             inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_condition, input_calendar)
 
