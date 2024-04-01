@@ -322,7 +322,7 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
 
     else:
 
-        # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
+        # 各日の運転パターン（365日分）： 各室のカレンダーパターンから決定
         opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
 
         # 入力されたカレンダーパターンを使う場合（上書きする）
@@ -332,12 +332,24 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
                     opePattern_Daily = input_calendar[buildingType][roomType]
 
 
+        # SP-9シートに入力があれば、年間換気運転時間を上書きする。
+        if buildingType in input_room_usage_condition:
+            if roomType in input_room_usage_condition[buildingType]:
+                RoomUsageSchedule[buildingType][roomType]["年間換気時間"] = float(input_room_usage_condition[buildingType][roomType]["年間換気時間"])
+
+
+        # 時刻別スケジュールの設定
         if RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間空調時間"]:
 
             for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
                 opePattern_hourly_ventilation.append(
                     RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン" + str(opePattern_Daily[dd])]
                 )
+            # np.array型に変換
+            opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
+            # 0か1に変換
+            opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
+
 
         elif RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]:
         
@@ -346,22 +358,30 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
                     RoomUsageSchedule[buildingType][roomType]["スケジュール"]["照明発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
                 )
 
+            # np.array型に変換
+            opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
+            # 0か1に変換
+            opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
+
+
         elif RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == 0:
 
             for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
                 opePattern_hourly_ventilation.append(
                     np.zeros(24)
                 )
+            
+            # np.array型に変換
+            opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
+            # 0か1に変換
+            opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
 
-        else:
+        else:  # SPシートで入力された場合
 
-            raise Exception("換気運転時間が定まりません")
-
-
-        # np.array型に変換
-        opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
-        # 0か1に変換
-        opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
+            # 非空調室の場合と同じ処理を行う
+            ratio_hourly = RoomUsageSchedule[buildingType][roomType]["年間換気時間"] / 8760
+            # 365×24の行列に変換
+            opePattern_hourly_ventilation = np.array( [[ratio_hourly]*24]*365 )
 
 
     return opePattern_hourly_ventilation
