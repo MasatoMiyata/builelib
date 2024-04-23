@@ -1122,7 +1122,7 @@ def calc_energy(inputdata, debug = False):
                 Qcool[dd] = Qroom_CTC[dd]
                 Qheat[dd] = Qroom_CTH[dd] + Qroom_CSR[dd]
 
-                # 日射負荷によって暖房負荷がプラスになった場合は、超過分を冷房負荷に加算
+                # 日射負荷によって暖房負荷がプラスになった場合は、超過分を冷房負荷に加算 ＜この処理は意味をなしていない＝不要＞
                 if Qheat[dd] > 0:
                     Qcool[dd] = Qcool[dd] + Qheat[dd]
                     Qheat[dd] = 0
@@ -2478,16 +2478,20 @@ def calc_energy(inputdata, debug = False):
         for ahu_name in inputdata["AirHandlingSystem"]:
 
             # マトリックスの再現
-            LAHUc0 = np.zeros(11)
-            LAHUc1 = np.zeros(11)
-            LAHUh0 = np.zeros(11)
-            LAHUh1 = np.zeros(11)
+            matlix_AHUc_L = np.zeros(11)
+            matlix_AHUh_L = np.zeros(11)
             for dd in range(0,365):
-                LAHUc0[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
-                LAHUc1[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
-                LAHUh0[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
-                LAHUh1[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
+                matlix_AHUc_L[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
+                matlix_AHUc_L[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
+                matlix_AHUh_L[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
+                matlix_AHUh_L[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
 
+            print("matlix_AHUc_L")
+            print(matlix_AHUc_L)
+            print(np.sum(matlix_AHUc_L))
+            print("LAHUh")
+            print(matlix_AHUh_L)
+            print(np.sum(matlix_AHUh_L))
 
     ##----------------------------------------------------------------------------------
     ## 風量制御方式によって定まる係数（解説書 2.5.7）
