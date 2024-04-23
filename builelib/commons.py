@@ -266,26 +266,36 @@ def get_roomUsageSchedule(buildingType, roomType, input_calendar={}):
         roomSchedulePerson = np.array(roomSchedulePerson)
         roomScheduleOAapp  = np.array(roomScheduleOAapp)
 
-        # roomDayMode の決定
+        #--------------------------------------------------------------
+        # roomDayMode の決定（WebプログラムとBuilelibで方法が違う）
+        #--------------------------------------------------------------
 
+        # Webプログラムの方法：
         # パターン１で 使用時間帯（１：昼、２：夜、０：終日） を判断
-        roomDayMode  = 0
+        roomDayMode  = "昼"
         
         schedule_oneday  = np.array(RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン1"])
         schedule_oneday[(schedule_oneday > 0)] = 1
 
-        opetime_oneday  = np.sum(schedule_oneday)
-        opetime_daytime = np.sum(schedule_oneday[[6,7,8,9,10,11,12,13,14,15,16,17]])
-        opetime_night   = np.sum(schedule_oneday[[0,1,2,3,4,5,18,19,20,21,22,23]])
-
-        if opetime_oneday == 24:
-            roomDayMode = "終日"
-        elif opetime_daytime >= opetime_night:
-            roomDayMode = "昼"
-        elif opetime_daytime < opetime_night:
+        # Webプログラムの判断方法（
+        if schedule_oneday[0] == 1 and schedule_oneday[23] == 1:   # 日を跨ぐ場合
             roomDayMode = "夜"
-        else:
-            raise Exception('室の使用時間帯が特定できませんでした。')
+        if np.sum(schedule_oneday) == 24:
+            roomDayMode = "終日"
+
+        # # builelibの方法：
+        # opetime_oneday  = np.sum(schedule_oneday)
+        # opetime_daytime = np.sum(schedule_oneday[[6,7,8,9,10,11,12,13,14,15,16,17]])
+        # opetime_night   = np.sum(schedule_oneday[[0,1,2,3,4,5,18,19,20,21,22,23]])
+
+        # if opetime_oneday == 24:
+        #     roomDayMode = "終日"
+        # elif opetime_daytime >= opetime_night:
+        #     roomDayMode = "昼"
+        # elif opetime_daytime < opetime_night:
+        #     roomDayMode = "夜"
+        # else:
+        #     raise Exception('室の使用時間帯が特定できませんでした。')
 
 
     # # CSVファイルに出力（検証用）
