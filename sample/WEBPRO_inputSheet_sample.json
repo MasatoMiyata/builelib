@@ -3,16 +3,16 @@
         "BuildingAddress": {
             "Prefecture": "東京都",
             "City": "千代田区",
-            "Address": ""
+            "Address": null
         },
         "Coefficient_DHC": {
-            "Cooling": 1.23,
-            "Heating": 1.23
+            "Cooling": 1.36,
+            "Heating": 1.36
         },
         "Name": "サンプル事務所ビル",
         "Region": "6",
         "AnnualSolarRegion": "A3",
-        "BuildingFloorArea": 1000.0
+        "BuildingFloorArea": 10352.79
     },
     "Rooms": {
         "1F_風除け室": {
@@ -24,7 +24,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_ロビー": {
             "buildingType": "事務所等",
@@ -35,7 +35,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_EVホール": {
             "buildingType": "事務所等",
@@ -46,7 +46,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_中央監視室・警備室": {
             "buildingType": "事務所等",
@@ -57,7 +57,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_更衣室1": {
             "buildingType": "事務所等",
@@ -68,7 +68,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_更衣室2": {
             "buildingType": "事務所等",
@@ -79,7 +79,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_休憩室": {
             "buildingType": "事務所等",
@@ -90,7 +90,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_自販機コーナー": {
             "buildingType": "事務所等",
@@ -101,7 +101,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_便所1": {
             "buildingType": "事務所等",
@@ -112,7 +112,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_便所2": {
             "buildingType": "事務所等",
@@ -123,7 +123,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_DS・PS1": {
             "buildingType": "事務所等",
@@ -134,7 +134,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_DS・PS2": {
             "buildingType": "事務所等",
@@ -145,7 +145,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_ES1": {
             "buildingType": "事務所等",
@@ -156,7 +156,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_ES2": {
             "buildingType": "事務所等",
@@ -167,7 +167,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_物入": {
             "buildingType": "事務所等",
@@ -178,7 +178,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_給湯室": {
             "buildingType": "事務所等",
@@ -189,7 +189,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_機械室1": {
             "buildingType": "事務所等",
@@ -200,7 +200,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_機械室2": {
             "buildingType": "事務所等",
@@ -211,7 +211,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_電気室": {
             "buildingType": "事務所等",
@@ -222,7 +222,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_事務室1": {
             "buildingType": "事務所等",
@@ -233,7 +233,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_事務室2": {
             "buildingType": "事務所等",
@@ -244,7 +244,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_ローカ": {
             "buildingType": "事務所等",
@@ -255,7 +255,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_ローカ（湯沸脇）": {
             "buildingType": "事務所等",
@@ -266,7 +266,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_階段室": {
             "buildingType": "事務所等",
@@ -277,7 +277,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_EVホール": {
             "buildingType": "事務所等",
@@ -288,7 +288,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_自販機コーナー": {
             "buildingType": "事務所等",
@@ -299,7 +299,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_便所1": {
             "buildingType": "事務所等",
@@ -310,7 +310,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_便所2": {
             "buildingType": "事務所等",
@@ -321,7 +321,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_DS・PS1": {
             "buildingType": "事務所等",
@@ -332,7 +332,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_DS・PS2": {
             "buildingType": "事務所等",
@@ -343,7 +343,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_ES1": {
             "buildingType": "事務所等",
@@ -354,7 +354,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_ES2": {
             "buildingType": "事務所等",
@@ -365,7 +365,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_物入": {
             "buildingType": "事務所等",
@@ -376,7 +376,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_給湯室": {
             "buildingType": "事務所等",
@@ -387,7 +387,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_機械室": {
             "buildingType": "事務所等",
@@ -398,7 +398,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_事務室1": {
             "buildingType": "事務所等",
@@ -409,7 +409,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_事務室2": {
             "buildingType": "事務所等",
@@ -420,7 +420,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_ローカ": {
             "buildingType": "事務所等",
@@ -431,7 +431,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_ローカ（湯沸脇）": {
             "buildingType": "事務所等",
@@ -442,7 +442,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_階段室": {
             "buildingType": "事務所等",
@@ -453,7 +453,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_EVホール": {
             "buildingType": "事務所等",
@@ -464,7 +464,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_自販機コーナー": {
             "buildingType": "事務所等",
@@ -475,7 +475,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_便所1": {
             "buildingType": "事務所等",
@@ -486,7 +486,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_便所2": {
             "buildingType": "事務所等",
@@ -497,7 +497,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_DS・PS1": {
             "buildingType": "事務所等",
@@ -508,7 +508,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_DS・PS2": {
             "buildingType": "事務所等",
@@ -519,7 +519,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_ES1": {
             "buildingType": "事務所等",
@@ -530,7 +530,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_ES2": {
             "buildingType": "事務所等",
@@ -541,7 +541,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_物入": {
             "buildingType": "事務所等",
@@ -552,7 +552,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_給湯室": {
             "buildingType": "事務所等",
@@ -563,7 +563,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_機械室": {
             "buildingType": "事務所等",
@@ -574,7 +574,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_事務室1": {
             "buildingType": "事務所等",
@@ -585,7 +585,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_事務室2": {
             "buildingType": "事務所等",
@@ -596,7 +596,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_ローカ": {
             "buildingType": "事務所等",
@@ -607,7 +607,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_ローカ（湯沸脇）": {
             "buildingType": "事務所等",
@@ -618,7 +618,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_階段室": {
             "buildingType": "事務所等",
@@ -629,7 +629,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_EVホール": {
             "buildingType": "事務所等",
@@ -640,7 +640,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_自販機コーナー": {
             "buildingType": "事務所等",
@@ -651,7 +651,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_便所1": {
             "buildingType": "事務所等",
@@ -662,7 +662,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_便所2": {
             "buildingType": "事務所等",
@@ -673,7 +673,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_DS・PS1": {
             "buildingType": "事務所等",
@@ -684,7 +684,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_DS・PS2": {
             "buildingType": "事務所等",
@@ -695,7 +695,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_ES1": {
             "buildingType": "事務所等",
@@ -706,7 +706,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_ES2": {
             "buildingType": "事務所等",
@@ -717,7 +717,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_物入": {
             "buildingType": "事務所等",
@@ -728,7 +728,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_給湯室": {
             "buildingType": "事務所等",
@@ -739,7 +739,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_機械室": {
             "buildingType": "事務所等",
@@ -750,7 +750,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_事務室1": {
             "buildingType": "事務所等",
@@ -761,7 +761,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_事務室2": {
             "buildingType": "事務所等",
@@ -772,7 +772,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_ローカ": {
             "buildingType": "事務所等",
@@ -783,7 +783,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_ローカ（湯沸脇）": {
             "buildingType": "事務所等",
@@ -794,7 +794,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_階段室": {
             "buildingType": "事務所等",
@@ -805,7 +805,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_EVホール": {
             "buildingType": "事務所等",
@@ -816,7 +816,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_自販機コーナー": {
             "buildingType": "事務所等",
@@ -827,7 +827,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_便所1": {
             "buildingType": "事務所等",
@@ -838,7 +838,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_便所2": {
             "buildingType": "事務所等",
@@ -849,7 +849,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_DS・PS1": {
             "buildingType": "事務所等",
@@ -860,7 +860,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_DS・PS2": {
             "buildingType": "事務所等",
@@ -871,7 +871,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_ES1": {
             "buildingType": "事務所等",
@@ -882,7 +882,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_ES2": {
             "buildingType": "事務所等",
@@ -893,7 +893,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_物入": {
             "buildingType": "事務所等",
@@ -904,7 +904,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_給湯室": {
             "buildingType": "事務所等",
@@ -915,7 +915,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_機械室": {
             "buildingType": "事務所等",
@@ -926,7 +926,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_事務室1": {
             "buildingType": "事務所等",
@@ -937,7 +937,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_事務室2": {
             "buildingType": "事務所等",
@@ -948,7 +948,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_ローカ": {
             "buildingType": "事務所等",
@@ -959,7 +959,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_ローカ（湯沸脇）": {
             "buildingType": "事務所等",
@@ -970,7 +970,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_階段室": {
             "buildingType": "事務所等",
@@ -981,7 +981,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_EVホール": {
             "buildingType": "事務所等",
@@ -992,7 +992,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_自販機コーナー": {
             "buildingType": "事務所等",
@@ -1003,7 +1003,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_便所1": {
             "buildingType": "事務所等",
@@ -1014,7 +1014,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_便所2": {
             "buildingType": "事務所等",
@@ -1025,7 +1025,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_DS・PS1": {
             "buildingType": "事務所等",
@@ -1036,7 +1036,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_DS・PS2": {
             "buildingType": "事務所等",
@@ -1047,7 +1047,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_ES1": {
             "buildingType": "事務所等",
@@ -1058,7 +1058,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_ES2": {
             "buildingType": "事務所等",
@@ -1069,7 +1069,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_物入": {
             "buildingType": "事務所等",
@@ -1080,7 +1080,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_給湯室": {
             "buildingType": "事務所等",
@@ -1091,7 +1091,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_機械室": {
             "buildingType": "事務所等",
@@ -1102,7 +1102,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_事務室1": {
             "buildingType": "事務所等",
@@ -1113,7 +1113,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_事務室2": {
             "buildingType": "事務所等",
@@ -1124,7 +1124,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_ローカ": {
             "buildingType": "事務所等",
@@ -1135,7 +1135,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_ローカ（湯沸脇）": {
             "buildingType": "事務所等",
@@ -1146,7 +1146,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_階段室": {
             "buildingType": "事務所等",
@@ -1157,7 +1157,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_EVホール": {
             "buildingType": "事務所等",
@@ -1168,7 +1168,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_自販機コーナー": {
             "buildingType": "事務所等",
@@ -1179,7 +1179,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_便所1": {
             "buildingType": "事務所等",
@@ -1190,7 +1190,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_便所2": {
             "buildingType": "事務所等",
@@ -1201,7 +1201,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_DS・PS1": {
             "buildingType": "事務所等",
@@ -1212,7 +1212,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_DS・PS2": {
             "buildingType": "事務所等",
@@ -1223,7 +1223,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_ES1": {
             "buildingType": "事務所等",
@@ -1234,7 +1234,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_ES2": {
             "buildingType": "事務所等",
@@ -1245,7 +1245,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_物入": {
             "buildingType": "事務所等",
@@ -1256,7 +1256,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_給湯室": {
             "buildingType": "事務所等",
@@ -1267,7 +1267,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_機械室": {
             "buildingType": "事務所等",
@@ -1278,7 +1278,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_事務室1": {
             "buildingType": "事務所等",
@@ -1289,7 +1289,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_事務室2": {
             "buildingType": "事務所等",
@@ -1300,7 +1300,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_ローカ": {
             "buildingType": "事務所等",
@@ -1311,7 +1311,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_ローカ（湯沸脇）": {
             "buildingType": "事務所等",
@@ -1322,7 +1322,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_階段室": {
             "buildingType": "事務所等",
@@ -1333,7 +1333,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "RF_EV機械室": {
             "buildingType": "事務所等",
@@ -1344,7 +1344,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "RF_階段室": {
             "buildingType": "事務所等",
@@ -1355,7 +1355,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "1F_非空調室合計": {
             "buildingType": "事務所等",
@@ -1366,7 +1366,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "2F_非空調室合計": {
             "buildingType": "事務所等",
@@ -1377,7 +1377,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "3F_非空調室合計": {
             "buildingType": "事務所等",
@@ -1388,7 +1388,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "4F_非空調室合計": {
             "buildingType": "事務所等",
@@ -1399,7 +1399,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "5F_非空調室合計": {
             "buildingType": "事務所等",
@@ -1410,7 +1410,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "6F_非空調室合計": {
             "buildingType": "事務所等",
@@ -1421,7 +1421,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         },
         "7F_非空調室合計": {
             "buildingType": "事務所等",
@@ -1432,7 +1432,7 @@
             "zone": null,
             "modelBuildingType": "事務所モデル",
             "buildingGroup": null,
-            "Info": ""
+            "Info": null
         }
     },
     "EnvelopeSet": {
@@ -1451,15 +1451,25 @@
                             "WindowID": "G1",
                             "WindowNumber": 16.64,
                             "isBlind": "無",
-                            "EavesID": "庇0",
-                            "Info": ""
-                        },
-                        {
-                            "WindowID": "G1",
-                            "WindowNumber": 5.32,
-                            "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
+                        }
+                    ]
+                },
+                {
+                    "Direction": "北",
+                    "EnvelopeArea": 114.12,
+                    "EnvelopeWidth": null,
+                    "EnvelopeHeight": null,
+                    "WallSpec": "FG1",
+                    "WallType": "地盤に接する外壁",
+                    "WindowList": [
+                        {
+                            "WindowID": "無",
+                            "WindowNumber": null,
+                            "isBlind": "無",
+                            "EavesID": "無",
+                            "Info": null
                         }
                     ]
                 }
@@ -1481,7 +1491,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1503,7 +1513,7 @@
                             "WindowNumber": 5.32,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1520,7 +1530,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1537,7 +1547,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1559,7 +1569,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1581,7 +1591,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1603,7 +1613,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1625,7 +1635,7 @@
                             "WindowNumber": 15.96,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1642,7 +1652,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1659,7 +1669,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1681,7 +1691,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1698,7 +1708,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1715,7 +1725,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1737,7 +1747,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1754,7 +1764,7 @@
                             "WindowNumber": 31.92,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1771,7 +1781,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1793,7 +1803,7 @@
                             "WindowNumber": 26.6,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1810,7 +1820,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1832,7 +1842,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1849,7 +1859,7 @@
                             "WindowNumber": 31.92,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1866,7 +1876,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1888,7 +1898,7 @@
                             "WindowNumber": 26.6,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1905,7 +1915,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1927,7 +1937,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1944,7 +1954,7 @@
                             "WindowNumber": 31.92,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -1961,7 +1971,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -1983,7 +1993,7 @@
                             "WindowNumber": 26.6,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2000,7 +2010,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -2022,7 +2032,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2039,7 +2049,7 @@
                             "WindowNumber": 31.92,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2056,7 +2066,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -2078,7 +2088,7 @@
                             "WindowNumber": 26.6,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2095,7 +2105,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -2117,7 +2127,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2134,7 +2144,7 @@
                             "WindowNumber": 31.92,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2151,7 +2161,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -2173,7 +2183,7 @@
                             "WindowNumber": 26.6,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2190,7 +2200,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -2212,7 +2222,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2229,7 +2239,7 @@
                             "WindowNumber": 31.92,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2246,7 +2256,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2263,7 +2273,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -2285,7 +2295,7 @@
                             "WindowNumber": 26.6,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2302,7 +2312,7 @@
                             "WindowNumber": 10.64,
                             "isBlind": "有",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 },
@@ -2319,7 +2329,7 @@
                             "WindowNumber": null,
                             "isBlind": "無",
                             "EavesID": "無",
-                            "Info": ""
+                            "Info": null
                         }
                     ]
                 }
@@ -2337,55 +2347,55 @@
                     "materialID": "ロックウール化粧吸音板",
                     "conductivity": null,
                     "thickness": 12.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "せっこうボード",
                     "conductivity": null,
                     "thickness": 10.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "非密閉中空層",
                     "conductivity": null,
                     "thickness": null,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "コンクリート",
                     "conductivity": null,
                     "thickness": 150.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "セメント・モルタル",
                     "conductivity": null,
                     "thickness": 15.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "アスファルト類",
                     "conductivity": null,
                     "thickness": 5.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "セメント・モルタル",
                     "conductivity": null,
                     "thickness": 15.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "押出法ポリスチレンフォーム　保温板　1種",
                     "conductivity": null,
                     "thickness": 50.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "コンクリート",
                     "conductivity": null,
                     "thickness": 60.0,
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -2399,37 +2409,37 @@
                     "materialID": "せっこうボード",
                     "conductivity": null,
                     "thickness": 8.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "非密閉中空層",
                     "conductivity": null,
                     "thickness": null,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "押出法ポリスチレンフォーム　保温板　1種",
                     "conductivity": null,
                     "thickness": 25.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "コンクリート",
                     "conductivity": null,
                     "thickness": 150.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "セメント・モルタル",
                     "conductivity": null,
                     "thickness": 25.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "タイル",
                     "conductivity": null,
                     "thickness": 10.0,
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -2443,19 +2453,19 @@
                     "materialID": "ビニル系床材",
                     "conductivity": null,
                     "thickness": 3.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "セメント・モルタル",
                     "conductivity": null,
                     "thickness": 27.0,
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "materialID": "コンクリート",
                     "conductivity": null,
                     "thickness": 150.0,
-                    "Info": ""
+                    "Info": null
                 }
             ]
         }
@@ -2466,28 +2476,12 @@
             "windowWidth": null,
             "windowHeight": null,
             "inputMethod": "ガラスの種類を入力",
-            "frameType": "樹脂製",
+            "frameType": "金属木複合製",
             "glassID": "T",
-            "Info": ""
-        }
-    },
-    "ShadingConfigure": {
-        "庇0": {
-            "shadingEffect_C": 1.0,
-            "shadingEffect_H": 1.0,
-            "x1": null,
-            "x2": null,
-            "x3": null,
-            "y1": null,
-            "y2": null,
-            "y3": null,
-            "zxPlus": null,
-            "zxMinus": null,
-            "zyPlus": null,
-            "zyMinus": null,
             "Info": null
         }
     },
+    "ShadingConfigure": {},
     "AirConditioningZone": {
         "1F_ロビー": {
             "isNatualVentilation": "無",
@@ -2496,7 +2490,7 @@
             "AHU_cooling_outdoorLoad": "FCU1-1",
             "AHU_heating_insideLoad": "FCU1-1",
             "AHU_heating_outdoorLoad": "FCU1-1",
-            "Info": ""
+            "Info": null
         },
         "1F_EVホール": {
             "isNatualVentilation": "無",
@@ -2505,7 +2499,7 @@
             "AHU_cooling_outdoorLoad": "FCU1-2",
             "AHU_heating_insideLoad": "FCU1-2",
             "AHU_heating_outdoorLoad": "FCU1-2",
-            "Info": ""
+            "Info": null
         },
         "1F_中央監視室・警備室": {
             "isNatualVentilation": "無",
@@ -2514,16 +2508,16 @@
             "AHU_cooling_outdoorLoad": "EHP1-1",
             "AHU_heating_insideLoad": "EHP1-1",
             "AHU_heating_outdoorLoad": "EHP1-1",
-            "Info": ""
+            "Info": null
         },
         "1F_更衣室1": {
             "isNatualVentilation": "無",
             "isSimultaneousSupply": "無",
-            "AHU_cooling_insideLoad": "EHP1-2s",
+            "AHU_cooling_insideLoad": "EHP1-2",
             "AHU_cooling_outdoorLoad": "EHP1-2",
-            "AHU_heating_insideLoad": "EHP1-2s",
+            "AHU_heating_insideLoad": "EHP1-2",
             "AHU_heating_outdoorLoad": "EHP1-2",
-            "Info": ""
+            "Info": null
         },
         "1F_更衣室2": {
             "isNatualVentilation": "無",
@@ -2532,7 +2526,7 @@
             "AHU_cooling_outdoorLoad": "EHP1-3",
             "AHU_heating_insideLoad": "EHP1-3",
             "AHU_heating_outdoorLoad": "EHP1-3",
-            "Info": ""
+            "Info": null
         },
         "1F_休憩室": {
             "isNatualVentilation": "無",
@@ -2541,7 +2535,7 @@
             "AHU_cooling_outdoorLoad": "EHP1-4",
             "AHU_heating_insideLoad": "EHP1-4",
             "AHU_heating_outdoorLoad": "EHP1-4",
-            "Info": ""
+            "Info": null
         },
         "1F_事務室1": {
             "isNatualVentilation": "無",
@@ -2550,7 +2544,7 @@
             "AHU_cooling_outdoorLoad": "HU-11",
             "AHU_heating_insideLoad": "HU-11",
             "AHU_heating_outdoorLoad": "HU-11",
-            "Info": ""
+            "Info": null
         },
         "1F_事務室2": {
             "isNatualVentilation": "無",
@@ -2559,7 +2553,7 @@
             "AHU_cooling_outdoorLoad": "HU-12",
             "AHU_heating_insideLoad": "HU-12",
             "AHU_heating_outdoorLoad": "HU-12",
-            "Info": ""
+            "Info": null
         },
         "2F_EVホール": {
             "isNatualVentilation": "無",
@@ -2568,7 +2562,7 @@
             "AHU_cooling_outdoorLoad": "FCU2",
             "AHU_heating_insideLoad": "FCU2",
             "AHU_heating_outdoorLoad": "FCU2",
-            "Info": ""
+            "Info": null
         },
         "2F_事務室1": {
             "isNatualVentilation": "無",
@@ -2577,7 +2571,7 @@
             "AHU_cooling_outdoorLoad": "HU-21",
             "AHU_heating_insideLoad": "HU-21",
             "AHU_heating_outdoorLoad": "HU-21",
-            "Info": ""
+            "Info": null
         },
         "2F_事務室2": {
             "isNatualVentilation": "無",
@@ -2586,7 +2580,7 @@
             "AHU_cooling_outdoorLoad": "HU-22",
             "AHU_heating_insideLoad": "HU-22",
             "AHU_heating_outdoorLoad": "HU-22",
-            "Info": ""
+            "Info": null
         },
         "3F_EVホール": {
             "isNatualVentilation": "無",
@@ -2595,7 +2589,7 @@
             "AHU_cooling_outdoorLoad": "FCU3",
             "AHU_heating_insideLoad": "FCU3",
             "AHU_heating_outdoorLoad": "FCU3",
-            "Info": ""
+            "Info": null
         },
         "3F_事務室1": {
             "isNatualVentilation": "無",
@@ -2604,7 +2598,7 @@
             "AHU_cooling_outdoorLoad": "HU-31",
             "AHU_heating_insideLoad": "HU-31",
             "AHU_heating_outdoorLoad": "HU-31",
-            "Info": ""
+            "Info": null
         },
         "3F_事務室2": {
             "isNatualVentilation": "無",
@@ -2613,7 +2607,7 @@
             "AHU_cooling_outdoorLoad": "HU-32",
             "AHU_heating_insideLoad": "HU-32",
             "AHU_heating_outdoorLoad": "HU-32",
-            "Info": ""
+            "Info": null
         },
         "4F_EVホール": {
             "isNatualVentilation": "無",
@@ -2622,7 +2616,7 @@
             "AHU_cooling_outdoorLoad": "FCU4",
             "AHU_heating_insideLoad": "FCU4",
             "AHU_heating_outdoorLoad": "FCU4",
-            "Info": ""
+            "Info": null
         },
         "4F_事務室1": {
             "isNatualVentilation": "無",
@@ -2631,7 +2625,7 @@
             "AHU_cooling_outdoorLoad": "HU-41",
             "AHU_heating_insideLoad": "HU-41",
             "AHU_heating_outdoorLoad": "HU-41",
-            "Info": ""
+            "Info": null
         },
         "4F_事務室2": {
             "isNatualVentilation": "無",
@@ -2640,7 +2634,7 @@
             "AHU_cooling_outdoorLoad": "HU-42",
             "AHU_heating_insideLoad": "HU-42",
             "AHU_heating_outdoorLoad": "HU-42",
-            "Info": ""
+            "Info": null
         },
         "5F_EVホール": {
             "isNatualVentilation": "無",
@@ -2649,7 +2643,7 @@
             "AHU_cooling_outdoorLoad": "FCU5",
             "AHU_heating_insideLoad": "FCU5",
             "AHU_heating_outdoorLoad": "FCU5",
-            "Info": ""
+            "Info": null
         },
         "5F_事務室1": {
             "isNatualVentilation": "無",
@@ -2658,7 +2652,7 @@
             "AHU_cooling_outdoorLoad": "HU-51",
             "AHU_heating_insideLoad": "HU-51",
             "AHU_heating_outdoorLoad": "HU-51",
-            "Info": ""
+            "Info": null
         },
         "5F_事務室2": {
             "isNatualVentilation": "無",
@@ -2667,7 +2661,7 @@
             "AHU_cooling_outdoorLoad": "HU-52",
             "AHU_heating_insideLoad": "HU-52",
             "AHU_heating_outdoorLoad": "HU-52",
-            "Info": ""
+            "Info": null
         },
         "6F_EVホール": {
             "isNatualVentilation": "無",
@@ -2676,7 +2670,7 @@
             "AHU_cooling_outdoorLoad": "FCU6",
             "AHU_heating_insideLoad": "FCU6",
             "AHU_heating_outdoorLoad": "FCU6",
-            "Info": ""
+            "Info": null
         },
         "6F_事務室1": {
             "isNatualVentilation": "無",
@@ -2685,7 +2679,7 @@
             "AHU_cooling_outdoorLoad": "HU-61",
             "AHU_heating_insideLoad": "HU-61",
             "AHU_heating_outdoorLoad": "HU-61",
-            "Info": ""
+            "Info": null
         },
         "6F_事務室2": {
             "isNatualVentilation": "無",
@@ -2694,7 +2688,7 @@
             "AHU_cooling_outdoorLoad": "HU-62",
             "AHU_heating_insideLoad": "HU-62",
             "AHU_heating_outdoorLoad": "HU-62",
-            "Info": ""
+            "Info": null
         },
         "7F_EVホール": {
             "isNatualVentilation": "無",
@@ -2703,7 +2697,7 @@
             "AHU_cooling_outdoorLoad": "FCU7",
             "AHU_heating_insideLoad": "FCU7",
             "AHU_heating_outdoorLoad": "FCU7",
-            "Info": ""
+            "Info": null
         },
         "7F_事務室1": {
             "isNatualVentilation": "無",
@@ -2712,7 +2706,7 @@
             "AHU_cooling_outdoorLoad": "HU-71",
             "AHU_heating_insideLoad": "HU-71",
             "AHU_heating_outdoorLoad": "HU-71",
-            "Info": ""
+            "Info": null
         },
         "7F_事務室2": {
             "isNatualVentilation": "無",
@@ -2721,7 +2715,7 @@
             "AHU_cooling_outdoorLoad": "HU-72",
             "AHU_heating_insideLoad": "HU-72",
             "AHU_heating_outdoorLoad": "HU-72",
-            "Info": ""
+            "Info": null
         }
     },
     "HeatsourceSystem": {
@@ -2747,7 +2741,7 @@
                         "CoolingTowerFanPowerConsumption": 7.4,
                         "CoolingTowerPumpPowerConsumption": 15.0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     },
                     {
                         "HeatsourceType": "吸収式冷凍機(一重二重併用形、都市ガス)",
@@ -2765,7 +2759,7 @@
                         "CoolingTowerFanPowerConsumption": 7.4,
                         "CoolingTowerPumpPowerConsumption": 15.0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             },
@@ -2790,7 +2784,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     },
                     {
                         "HeatsourceType": "吸収式冷凍機(一重二重併用形、都市ガス)",
@@ -2808,7 +2802,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             }
@@ -2835,7 +2829,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             },
@@ -2860,7 +2854,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             }
@@ -2887,7 +2881,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             },
@@ -2912,7 +2906,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             }
@@ -2939,7 +2933,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             },
@@ -2964,7 +2958,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             }
@@ -2991,7 +2985,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             },
@@ -3016,7 +3010,7 @@
                         "CoolingTowerFanPowerConsumption": 0,
                         "CoolingTowerPumpPowerConsumption": 0,
                         "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             }
@@ -3034,7 +3028,7 @@
                         "RatedPowerConsumption": 7.5,
                         "ContolType": "定流量制御",
                         "MinOpeningRate": null,
-                        "Info": ""
+                        "Info": null
                     },
                     {
                         "Number": 1.0,
@@ -3042,7 +3036,7 @@
                         "RatedPowerConsumption": 7.5,
                         "ContolType": "定流量制御",
                         "MinOpeningRate": null,
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             },
@@ -3056,7 +3050,7 @@
                         "RatedPowerConsumption": 7.5,
                         "ContolType": "定流量制御",
                         "MinOpeningRate": null,
-                        "Info": ""
+                        "Info": null
                     },
                     {
                         "Number": 1.0,
@@ -3064,7 +3058,7 @@
                         "RatedPowerConsumption": 7.5,
                         "ContolType": "定流量制御",
                         "MinOpeningRate": null,
-                        "Info": ""
+                        "Info": null
                     }
                 ]
             }
@@ -3075,8 +3069,8 @@
             "isEconomizer": "無",
             "EconomizerMaxAirVolume": null,
             "isOutdoorAirCut": "無",
-            "Pump_cooling": "",
-            "Pump_heating": "",
+            "Pump_cooling": null,
+            "Pump_heating": null,
             "HeatSource_cooling": "EHP1-1O",
             "HeatSource_heating": "EHP1-1O",
             "AirHandlingUnit": [
@@ -3087,12 +3081,7 @@
                     "RatedCapacityHeating": 6.3,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.05,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.05,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3109,12 +3098,7 @@
                     "RatedCapacityHeating": null,
                     "FanType": null,
                     "FanAirVolume": 200.0,
-                    "FanPowerConsumption": [
-                        0.17,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.17,
                     "FanControlType": "無",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": 60.0,
@@ -3122,7 +3106,7 @@
                     "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -3130,8 +3114,8 @@
             "isEconomizer": "無",
             "EconomizerMaxAirVolume": null,
             "isOutdoorAirCut": "無",
-            "Pump_cooling": "",
-            "Pump_heating": "",
+            "Pump_cooling": null,
+            "Pump_heating": null,
             "HeatSource_cooling": "EHP1-2O",
             "HeatSource_heating": "EHP1-2O",
             "AirHandlingUnit": [
@@ -3142,12 +3126,7 @@
                     "RatedCapacityHeating": 4.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.05,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.05,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3164,12 +3143,7 @@
                     "RatedCapacityHeating": null,
                     "FanType": null,
                     "FanAirVolume": 150.0,
-                    "FanPowerConsumption": [
-                        0.17,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.17,
                     "FanControlType": "無",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": 60.0,
@@ -3177,7 +3151,7 @@
                     "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -3185,8 +3159,8 @@
             "isEconomizer": "無",
             "EconomizerMaxAirVolume": null,
             "isOutdoorAirCut": "無",
-            "Pump_cooling": "",
-            "Pump_heating": "",
+            "Pump_cooling": null,
+            "Pump_heating": null,
             "HeatSource_cooling": "EHP1-3O",
             "HeatSource_heating": "EHP1-3O",
             "AirHandlingUnit": [
@@ -3197,12 +3171,7 @@
                     "RatedCapacityHeating": 4.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.05,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.05,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3219,12 +3188,7 @@
                     "RatedCapacityHeating": null,
                     "FanType": null,
                     "FanAirVolume": 150.0,
-                    "FanPowerConsumption": [
-                        0.17,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.17,
                     "FanControlType": "無",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": 60.0,
@@ -3232,7 +3196,7 @@
                     "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -3240,8 +3204,8 @@
             "isEconomizer": "無",
             "EconomizerMaxAirVolume": null,
             "isOutdoorAirCut": "無",
-            "Pump_cooling": "",
-            "Pump_heating": "",
+            "Pump_cooling": null,
+            "Pump_heating": null,
             "HeatSource_cooling": "EHP1-4O",
             "HeatSource_heating": "EHP1-4O",
             "AirHandlingUnit": [
@@ -3252,12 +3216,7 @@
                     "RatedCapacityHeating": 4.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.05,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.05,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3274,12 +3233,7 @@
                     "RatedCapacityHeating": null,
                     "FanType": null,
                     "FanAirVolume": 300.0,
-                    "FanPowerConsumption": [
-                        0.17,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.17,
                     "FanControlType": "無",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": 60.0,
@@ -3287,7 +3241,7 @@
                     "AirHeatExchangerEffectiveAirVolumeRatio": null,
                     "AirHeatExchangerControl": "無",
                     "AirHeatExchangerPowerConsumption": null,
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -3307,12 +3261,7 @@
                     "RatedCapacityHeating": 6.77,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.08,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.08,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3340,12 +3289,7 @@
                     "RatedCapacityHeating": 2.62,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.04,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.04,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3373,12 +3317,7 @@
                     "RatedCapacityHeating": 2.62,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.04,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.04,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3406,12 +3345,7 @@
                     "RatedCapacityHeating": 2.62,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.04,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.04,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3439,12 +3373,7 @@
                     "RatedCapacityHeating": 2.62,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.04,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.04,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3472,12 +3401,7 @@
                     "RatedCapacityHeating": 2.62,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.04,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.04,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3505,12 +3429,7 @@
                     "RatedCapacityHeating": 2.62,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.04,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.04,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3538,12 +3457,7 @@
                     "RatedCapacityHeating": 2.62,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        0.04,
-                        0,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 0.04,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3571,12 +3485,7 @@
                     "RatedCapacityHeating": 29.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        3.7,
-                        1.5,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 5.2,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3604,12 +3513,7 @@
                     "RatedCapacityHeating": 21.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        3.7,
-                        1.5,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 5.2,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3637,12 +3541,7 @@
                     "RatedCapacityHeating": 43.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        2.2,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.7,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3670,12 +3569,7 @@
                     "RatedCapacityHeating": 36.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        1.5,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.0,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3703,12 +3597,7 @@
                     "RatedCapacityHeating": 43.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        2.2,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.7,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3736,12 +3625,7 @@
                     "RatedCapacityHeating": 36.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        1.5,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.0,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3769,12 +3653,7 @@
                     "RatedCapacityHeating": 43.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        2.2,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.7,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3802,12 +3681,7 @@
                     "RatedCapacityHeating": 36.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        1.5,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.0,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3835,12 +3709,7 @@
                     "RatedCapacityHeating": 43.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        2.2,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.7,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3868,12 +3737,7 @@
                     "RatedCapacityHeating": 36.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        1.5,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.0,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3901,12 +3765,7 @@
                     "RatedCapacityHeating": 43.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        2.2,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.7,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3934,12 +3793,7 @@
                     "RatedCapacityHeating": 36.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        1.5,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.0,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -3967,12 +3821,7 @@
                     "RatedCapacityHeating": 47.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        7.5,
-                        2.2,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 9.7,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -4000,12 +3849,7 @@
                     "RatedCapacityHeating": 39.0,
                     "FanType": null,
                     "FanAirVolume": null,
-                    "FanPowerConsumption": [
-                        5.5,
-                        2.2,
-                        0,
-                        0
-                    ],
+                    "FanPowerConsumption": 7.7,
                     "FanControlType": "定風量制御",
                     "FanMinOpeningRate": null,
                     "AirHeatExchangeRatioCooling": null,
@@ -7064,19 +6908,19 @@
                     "UsageType": null,
                     "SystemName": "EB2-11",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-12",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-13",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7086,25 +6930,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-11",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-12",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-13",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-11",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7114,25 +6958,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-11",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-12",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-13",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-12",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7142,25 +6986,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-11",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-12",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-13",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-12",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7170,25 +7014,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-21",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-22",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-23",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-21",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7198,25 +7042,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-21",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-22",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-23",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-21",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7226,25 +7070,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-31",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-32",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-33",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-31",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7254,25 +7098,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-31",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-32",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-33",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-31",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7282,25 +7126,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-41",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-42",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-43",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-41",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7310,25 +7154,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-41",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-42",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-43",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-41",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7338,25 +7182,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-51",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-52",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-53",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-51",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7366,25 +7210,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-51",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-52",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-53",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-51",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7394,25 +7238,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-61",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-62",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-63",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-61",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7422,25 +7266,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-61",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-62",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-63",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-61",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7450,25 +7294,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-71",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-72",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-73",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-71",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -7478,25 +7322,25 @@
                     "UsageType": null,
                     "SystemName": "EB2-71",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-72",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB2-73",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 },
                 {
                     "UsageType": null,
                     "SystemName": "EB1-71",
                     "HotWaterSavingSystem": "無",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         }
@@ -7518,7 +7362,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-12": {
             "HeatSourceUnit": [
@@ -7536,7 +7380,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-13": {
             "HeatSourceUnit": [
@@ -7554,7 +7398,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB1-11": {
             "HeatSourceUnit": [
@@ -7572,7 +7416,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB1-12": {
             "HeatSourceUnit": [
@@ -7586,11 +7430,11 @@
                 }
             ],
             "InsulationType": "保温仕様2",
-            "PipeSize": 40.0,
+            "PipeSize": 20.0,
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-21": {
             "HeatSourceUnit": [
@@ -7608,7 +7452,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-22": {
             "HeatSourceUnit": [
@@ -7626,7 +7470,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-23": {
             "HeatSourceUnit": [
@@ -7644,7 +7488,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB1-21": {
             "HeatSourceUnit": [
@@ -7662,7 +7506,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-31": {
             "HeatSourceUnit": [
@@ -7680,7 +7524,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-32": {
             "HeatSourceUnit": [
@@ -7698,7 +7542,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-33": {
             "HeatSourceUnit": [
@@ -7716,7 +7560,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB1-31": {
             "HeatSourceUnit": [
@@ -7734,7 +7578,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-41": {
             "HeatSourceUnit": [
@@ -7752,7 +7596,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-42": {
             "HeatSourceUnit": [
@@ -7770,7 +7614,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-43": {
             "HeatSourceUnit": [
@@ -7788,7 +7632,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB1-41": {
             "HeatSourceUnit": [
@@ -7806,7 +7650,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-51": {
             "HeatSourceUnit": [
@@ -7824,7 +7668,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-52": {
             "HeatSourceUnit": [
@@ -7842,7 +7686,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-53": {
             "HeatSourceUnit": [
@@ -7860,7 +7704,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB1-51": {
             "HeatSourceUnit": [
@@ -7878,7 +7722,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-61": {
             "HeatSourceUnit": [
@@ -7896,7 +7740,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-62": {
             "HeatSourceUnit": [
@@ -7914,7 +7758,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-63": {
             "HeatSourceUnit": [
@@ -7932,7 +7776,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB1-61": {
             "HeatSourceUnit": [
@@ -7950,7 +7794,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-71": {
             "HeatSourceUnit": [
@@ -7968,7 +7812,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-72": {
             "HeatSourceUnit": [
@@ -7986,7 +7830,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB2-73": {
             "HeatSourceUnit": [
@@ -8004,7 +7848,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         },
         "EB1-71": {
             "HeatSourceUnit": [
@@ -8022,7 +7866,7 @@
             "SolarSystemArea": null,
             "SolarSystemDirection": null,
             "SolarSystemAngle": null,
-            "Info": ""
+            "Info": null
         }
     },
     "Elevators": {
@@ -8035,16 +7879,7 @@
                     "Velocity": 60.0,
                     "TransportCapacityFactor": 1.0,
                     "ControlType": "VVVF(電力回生なし)",
-                    "Info": ""
-                },
-                {
-                    "ElevatorName": "常用",
-                    "Number": 2.0,
-                    "LoadLimit": 800.0,
-                    "Velocity": 60.0,
-                    "TransportCapacityFactor": 1.0,
-                    "ControlType": "VVVF(電力回生なし)",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         },
@@ -8057,38 +7892,20 @@
                     "Velocity": 60.0,
                     "TransportCapacityFactor": 1.0,
                     "ControlType": "VVVF(電力回生なし)",
-                    "Info": ""
-                },
-                {
-                    "ElevatorName": "常用",
-                    "Number": 2.0,
-                    "LoadLimit": 800.0,
-                    "Velocity": 60.0,
-                    "TransportCapacityFactor": 1.0,
-                    "ControlType": "VVVF(電力回生なし)",
-                    "Info": ""
+                    "Info": null
                 }
             ]
         }
     },
     "PhotovoltaicSystems": {
         "システムA": {
-            "PowerConditionerEfficiency": 0.2,
+            "PowerConditionerEfficiency": 0.928,
             "CellType": "結晶系",
             "ArraySetupType": "架台設置形",
-            "ArrayCapacity": 10.0,
+            "ArrayCapacity": 12.2,
             "Direction": 0.0,
             "Angle": 30.0,
-            "Info": "0.2"
-        },
-        "システムB": {
-            "PowerConditionerEfficiency": 0.2,
-            "CellType": "結晶系",
-            "ArraySetupType": "架台設置形",
-            "ArrayCapacity": 10.0,
-            "Direction": 0.0,
-            "Angle": 30.0,
-            "Info": "0.2"
+            "Info": "0.928"
         }
     },
     "CogenerationSystems": {
@@ -8101,14 +7918,14 @@
             "HeatGenerationEfficiency_100": 0.332,
             "HeatGenerationEfficiency_75": 0.337,
             "HeatGenerationEfficiency_50": 0.369,
-            "HeatRecoveryPriorityCooling": "1番目",
+            "HeatRecoveryPriorityCooling": "3番目",
             "HeatRecoveryPriorityHeating": "2番目",
-            "HeatRecoveryPriorityHotWater": "3番目",
+            "HeatRecoveryPriorityHotWater": "1番目",
             "24hourOperation": "無",
             "CoolingSystem": "AR1",
             "HeatingSystem": "AR1",
             "HowWaterSystem": "EB1-11",
-            "Info": ""
+            "Info": null
         }
     },
     "SpecialInputData": {}
