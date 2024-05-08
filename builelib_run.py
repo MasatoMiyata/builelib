@@ -1,13 +1,3 @@
-# builelib_run.py
-#-----------------------------------------------------------------------------
-# buileibをコマンドラインで実行するファイル
-#-----------------------------------------------------------------------------
-# 使用方法
-# % python -m builelib_run (実行モード) (入力シートファイル名)
-# % python -m builelib_run True ./sample/WEBPRO_inputSheet_sample.xlsm
-# % python -m builelib_run True ./sample/WEBPRO_inputSheet_sample_error.xlsm
-#-----------------------------------------------------------------------------
-
 import json
 import numpy as np
 import os
@@ -34,18 +24,17 @@ class MyEncoder(json.JSONEncoder):
 
 
 def builelib_run(exec_calculation, inputfile_name):
-    """
+    """Builelibを実行するプログラム
     Args:
-        exec_calculation (_type_): _description_
-        inputfile_name (_type_): _description_
+        exec_calculation (str): 計算の実行 （True: 計算も行う、 False: 計算は行わない）
+        inputfile_name (str): 入力ファイルの名称
     """
 
     #------------------------------------
     # 引数の受け渡し
     #------------------------------------
     exec_calculation = bool(exec_calculation)  # 計算の実行 （True: 計算も行う、 False: 計算は行わない）
-    inputfile_name   = str(inputfile_name)   # 入力ファイル指定
-
+    inputfile_name   = str(inputfile_name)     # 入力ファイルの名称
 
     #------------------------------------
     # 出力ファイルの定義
