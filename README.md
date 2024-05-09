@@ -37,6 +37,8 @@ python3 -m pip uninstall builelib
 
 builelib_run.py をご覧下さい。
 
+コマンドラインから実行する場合は、builelib_cmd.py をご利用ください。
+
 ## How to make inputdata?
 
 建築物の仕様の入力には、WEBPROの入力シートを用います。入力方法等はWEBPROと同じです。
