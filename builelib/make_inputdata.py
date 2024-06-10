@@ -220,7 +220,7 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
                 if len(input_data) < float(lower_limit):
                     validation["error"].append( item_name + "の文字数が下限(" + str(lower_limit) + "文字）を下回っています。")
             elif type(input_data) is float:
-                if input_data <= float(lower_limit):
+                if input_data < float(lower_limit):
                     validation["error"].append( item_name + "の値が下限(" + str(lower_limit) + "）を下回っています。")
 
         # 閾値チェック（上限）
@@ -2697,10 +2697,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 else:
 
-                    E_fan1 = check_value(dataAC4[6], "様式2-7.空調機 "+ str(i+1) +"行目:「⑦送風機定格消費電力（給気）」", False, 0, "数値", None, -0.001, None)
-                    E_fan2 = check_value(dataAC4[7], "様式2-7.空調機 "+ str(i+1) +"行目:「⑧送風機定格消費電力（還気）」", False, 0, "数値", None, -0.001, None)
-                    E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, -0.001, None)
-                    E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, -0.001, None)
+                    E_fan1 = check_value(dataAC4[6], "様式2-7.空調機 "+ str(i+1) +"行目:「⑦送風機定格消費電力（給気）」", False, 0, "数値", None, 0, None)
+                    E_fan2 = check_value(dataAC4[7], "様式2-7.空調機 "+ str(i+1) +"行目:「⑧送風機定格消費電力（還気）」", False, 0, "数値", None, 0, None)
+                    E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, 0, None)
+                    E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, 0, None)
 
                     data["AirHandlingSystem"][unitKey] = {
                         "isEconomizer": 
@@ -3940,7 +3940,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'InputSheet_体育館'
+    case_name = 'InputSheet'
 
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
 
