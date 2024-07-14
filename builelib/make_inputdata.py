@@ -1471,6 +1471,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         # 初期化
         roomKey = None
 
+        # シート名称
+        sheet_BL_name = sheet_BL.row_values(0)[0]
+
         # 行のループ
         for i in range(10,sheet_BL.nrows):
 
@@ -1493,20 +1496,30 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 else:
 
-                    # 建物用途
-                    buildingType = dataBL[2]
+                    # 主たる建物用途
+                    mainbuildingType = dataBL[2]
 
-                    # 室用途の読み替え
-                    if str(dataBL[3]) == "ゴミ置場等":
-                        roomType = "廃棄物保管場所等"
-                        validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目: 室用途「ゴミ置場等」を「廃棄物保管場所等」に置き換えました。")
+                    if sheet_BL_name == "様式 1. (共通)室仕様 Rev.2":  # 2024年4月以降のシート（室用途が2列に分離）
+
+                        buildingType = str(dataBL[3])
+                        roomType = str(dataBL[4])
+
                     else:
-                        roomType = str(dataBL[3])
 
-                    # 2022.10更新のWebプログラムに対応（建物用途-室用途）
-                    if "-" in roomType:
-                        buildingType = roomType.split("-")[0]
-                        roomType = roomType.split("-")[1]
+                        # 建物用途
+                        buildingType = str(dataBL[2])
+                        roomType = str(dataBL[3])                            
+
+                        # 2022.10更新のWebプログラムに対応（建物用途-室用途）
+                        if "-" in roomType:
+                            buildingType = roomType.split("-")[0]
+                            roomType = roomType.split("-")[1]
+
+                        # 室用途の読み替え
+                        if roomType == "ゴミ置場等":
+                            roomType = "廃棄物保管場所等"
+                            validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目: 室用途「ゴミ置場等」を「廃棄物保管場所等」に置き換えました。")
+
 
                     # 建物用途のチェック
                     buildingType = check_value(buildingType, "様式1.室仕様 "+ str(i+1) +"行目:「②建物用途」", True, None, "文字列", input_options["建物用途"], None, None)
@@ -1518,23 +1531,47 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」の整合性チェックができませんでした。")
 
 
-                    # ゾーンはないと想定。
-                    data["Rooms"][roomKey] = {
-                            "buildingType": buildingType,  
-                            "roomType": roomType,
-                            "floorHeight": 
-                                check_value(dataBL[5], "様式1.室仕様 "+ str(i+1) +"行目:「④階高」", False, None, "数値", None, 0, None),
-                            "ceilingHeight":
-                                check_value(dataBL[6], "様式1.室仕様 "+ str(i+1) +"行目:「⑤天井高」", False, None, "数値", None, 0, None),
-                            "roomArea":
-                                check_value(dataBL[4], "様式1.室仕様 "+ str(i+1) +"行目:「③室面積」", True, None, "数値", None, 0, None),
-                            "zone": None,
-                            "modelBuildingType":
-                                check_value(dataBL[11], "様式1.室仕様 "+ str(i+1) +"行目:「⑦モデル建物」", False, None, "文字列", None, None, None),
-                            "buildingGroup": None,
-                            "Info": 
-                                check_value(dataBL[12], "様式1.室仕様 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
-                    }
+                    if sheet_BL_name == "様式 1. (共通)室仕様 Rev.2":  # 2024年4月以降のシート（室用途が2列に分離）
+
+                        # ゾーンはないと想定。
+                        data["Rooms"][roomKey] = {
+                                "mainbuildingType": mainbuildingType,
+                                "buildingType": buildingType,  
+                                "roomType": roomType,
+                                "floorHeight": 
+                                    check_value(dataBL[5+1], "様式1.室仕様 "+ str(i+1) +"行目:「④階高」", False, None, "数値", None, 0, None),
+                                "ceilingHeight":
+                                    check_value(dataBL[6+1], "様式1.室仕様 "+ str(i+1) +"行目:「⑤天井高」", False, None, "数値", None, 0, None),
+                                "roomArea":
+                                    check_value(dataBL[4+1], "様式1.室仕様 "+ str(i+1) +"行目:「③室面積」", True, None, "数値", None, 0, None),
+                                "zone": None,
+                                "modelBuildingType":
+                                    check_value(dataBL[11+1], "様式1.室仕様 "+ str(i+1) +"行目:「⑦モデル建物」", False, None, "文字列", None, None, None),
+                                "buildingGroup": None,
+                                "Info": 
+                                    check_value(dataBL[12+1], "様式1.室仕様 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
+                        }
+
+                    else:
+
+                        # ゾーンはないと想定。
+                        data["Rooms"][roomKey] = {
+                                "mainbuildingType": mainbuildingType,
+                                "buildingType": buildingType,  
+                                "roomType": roomType,
+                                "floorHeight": 
+                                    check_value(dataBL[5], "様式1.室仕様 "+ str(i+1) +"行目:「④階高」", False, None, "数値", None, 0, None),
+                                "ceilingHeight":
+                                    check_value(dataBL[6], "様式1.室仕様 "+ str(i+1) +"行目:「⑤天井高」", False, None, "数値", None, 0, None),
+                                "roomArea":
+                                    check_value(dataBL[4], "様式1.室仕様 "+ str(i+1) +"行目:「③室面積」", True, None, "数値", None, 0, None),
+                                "zone": None,
+                                "modelBuildingType":
+                                    check_value(dataBL[11], "様式1.室仕様 "+ str(i+1) +"行目:「⑦モデル建物」", False, None, "文字列", None, None, None),
+                                "buildingGroup": None,
+                                "Info": 
+                                    check_value(dataBL[12], "様式1.室仕様 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
+                        }
 
 
     #----------------------------------
@@ -3940,9 +3977,10 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'InputSheet'
+    case_name = 'sample01_WEBPRO_inputSheet_for_Ver3.6'
 
-    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+    # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
 
     print(validation)
 
