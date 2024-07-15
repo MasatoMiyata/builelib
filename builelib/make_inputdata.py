@@ -2710,12 +2710,16 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式2-7 空調機入力シート の読み込み
     #----------------------------------
+    
     if "2-7) 空調機" in wb.sheet_names():
         
         # シートの読み込み
         sheet_AC4 = wb.sheet_by_name("2-7) 空調機")
         # 初期化
         unitKey = None
+
+        # シート名称
+        sheet_AC4_name = sheet_AC4.row_values(0)[0]
 
         # 行のループ
         for i in range(10,sheet_AC4.nrows):
@@ -2739,54 +2743,109 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, 0, None)
                     E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, 0, None)
 
-                    data["AirHandlingSystem"][unitKey] = {
-                        "isEconomizer": 
-                            check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None), 
-                        "EconomizerMaxAirVolume":
-                            check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None), 
-                        "isOutdoorAirCut":
-                            check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None),
-                        "Pump_cooling": 
-                            check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳二次ポンプ群名称（冷熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
-                        "Pump_heating":
-                            check_value(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑二次ポンプ群名称（温熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
-                        "HeatSource_cooling":
-                            check_value(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒熱源群名称（冷熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
-                        "HeatSource_heating":
-                            check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉓熱源群名称（温熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
-                        "AirHandlingUnit" :[
-                            {
-                                "Type":
-                                    check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
-                                "Number":
-                                    check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
-                                "RatedCapacityCooling":
-                                    check_value(dataAC4[3], "様式2-7.空調機 "+ str(i+1) +"行目:「④定格冷却能力」", False, None, "数値", None, None, None),                                 
-                                "RatedCapacityHeating":
-                                    check_value(dataAC4[4], "様式2-7.空調機 "+ str(i+1) +"行目:「⑤定格加熱能力」", False, None, "数値", None, None, None), 
-                                "FanType": None,
-                                "FanAirVolume":
-                                    check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の設計風量」", False, None, "数値", None, None, None),    
-                                "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
-                                "FanControlType":
-                                    check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
-                                "FanMinOpeningRate":
-                                    check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
-                                "AirHeatExchangeRatioCooling":
-                                    check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
-                                "AirHeatExchangeRatioHeating":
-                                    check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
-                                "AirHeatExchangerEffectiveAirVolumeRatio": None,
-                                "AirHeatExchangerControl":
-                                    check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
-                                "AirHeatExchangerPowerConsumption":
-                                    check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲ローター消費電力」", False, None, "数値", None, 0, None),
-                                "Info":
-                                    check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔備考」", False, None, "文字列", None, None, None),
-                            }
-                        ]
-                    }
+                    if sheet_AC4_name == "様式 2-7. (空調)空調機 Rev.2":     # 2024年4月 全熱交換器の列が追加
 
+                        data["AirHandlingSystem"][unitKey] = {
+                            "isEconomizer": 
+                                check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None), 
+                            "EconomizerMaxAirVolume":
+                                check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None), 
+                            "isOutdoorAirCut":
+                                check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            "Pump_cooling": 
+                                check_value(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒二次ポンプ群名称（冷熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                            "Pump_heating":
+                                check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉓二次ポンプ群名称（温熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                            "HeatSource_cooling":
+                                check_value(dataAC4[23], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔熱源群名称（冷熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                            "HeatSource_heating":
+                                check_value(dataAC4[24], "様式2-7.空調機 "+ str(i+1) +"行目:「㉕熱源群名称（温熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                            "AirHandlingUnit" :[
+                                {
+                                    "Type":
+                                        check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                                    "Number":
+                                        check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
+                                    "RatedCapacityCooling":
+                                        check_value(dataAC4[3], "様式2-7.空調機 "+ str(i+1) +"行目:「④定格冷却能力」", False, None, "数値", None, None, None),                                 
+                                    "RatedCapacityHeating":
+                                        check_value(dataAC4[4], "様式2-7.空調機 "+ str(i+1) +"行目:「⑤定格加熱能力」", False, None, "数値", None, None, None), 
+                                    "FanType": None,
+                                    "FanAirVolume":
+                                        check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換器の設計風量」", False, None, "数値", None, None, None),    
+                                    "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
+                                    "FanControlType":
+                                        check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                                    "FanMinOpeningRate":
+                                        check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
+                                    "AirHeatExchangeRatioCooling":
+                                        check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱全熱交換効率（冷房時）」", False, None, "数値", None, 0, 100),
+                                    "AirHeatExchangeRatioHeating":
+                                        check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲全熱交換効率（暖房時）」", False, None, "数値", None, 0, 100),
+                                    "AirHeatExchangerEffectiveAirVolumeRatio": None,
+                                    "AirHeatExchangerControl":
+                                        check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                    "AirHeatExchangerPowerConsumption":
+                                        check_value(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑ローター消費電力」", False, None, "数値", None, 0, None),
+                                    "Info":
+                                        check_value(dataAC4[25], "様式2-7.空調機 "+ str(i+1) +"行目:「㉕備考」", False, None, "文字列", None, None, None),
+                                    "isAirHeatExchanger": check_value(dataAC4[14], "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", None, None, None), 
+                                    "AirHeatExchanger_name": check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の名称」", False, "無", "文字列", None, None, None), 
+                                }
+                            ]
+                        }
+                    
+                    else:
+
+                        data["AirHandlingSystem"][unitKey] = {
+                            "isEconomizer": 
+                                check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None), 
+                            "EconomizerMaxAirVolume":
+                                check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None), 
+                            "isOutdoorAirCut":
+                                check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            "Pump_cooling": 
+                                check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳二次ポンプ群名称（冷熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                            "Pump_heating":
+                                check_value(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑二次ポンプ群名称（温熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                            "HeatSource_cooling":
+                                check_value(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒熱源群名称（冷熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                            "HeatSource_heating":
+                                check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉓熱源群名称（温熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                            "AirHandlingUnit" :[
+                                {
+                                    "Type":
+                                        check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                                    "Number":
+                                        check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
+                                    "RatedCapacityCooling":
+                                        check_value(dataAC4[3], "様式2-7.空調機 "+ str(i+1) +"行目:「④定格冷却能力」", False, None, "数値", None, None, None),                                 
+                                    "RatedCapacityHeating":
+                                        check_value(dataAC4[4], "様式2-7.空調機 "+ str(i+1) +"行目:「⑤定格加熱能力」", False, None, "数値", None, None, None), 
+                                    "FanType": None,
+                                    "FanAirVolume":
+                                        check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の設計風量」", False, None, "数値", None, None, None),    
+                                    "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
+                                    "FanControlType":
+                                        check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                                    "FanMinOpeningRate":
+                                        check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
+                                    "AirHeatExchangeRatioCooling":
+                                        check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
+                                    "AirHeatExchangeRatioHeating":
+                                        check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
+                                    "AirHeatExchangerEffectiveAirVolumeRatio": None,
+                                    "AirHeatExchangerControl":
+                                        check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                    "AirHeatExchangerPowerConsumption":
+                                        check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲ローター消費電力」", False, None, "数値", None, 0, None),
+                                    "Info":
+                                        check_value(dataAC4[23], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔備考」", False, None, "文字列", None, None, None),
+                                    "isAirHeatExchanger": check_value(dataAC4[14], "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", None, None, None), 
+                                    "AirHeatExchanger_name": None, 
+                                }
+                            ]
+                        }
 
             elif (dataAC4[2] != "") and (unitKey in data["AirHandlingSystem"]):     
 
@@ -2795,39 +2854,79 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, 0, None)
                 E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, 0, None)
 
-                data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
-                    {
-                        "Type":
-                            check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
-                        "Number":
-                            check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
-                        "RatedCapacityCooling":
-                            check_value(dataAC4[3], "様式2-7.空調機 "+ str(i+1) +"行目:「④定格冷却能力」", False, None, "数値", None, None, None),                                 
-                        "RatedCapacityHeating":
-                            check_value(dataAC4[4], "様式2-7.空調機 "+ str(i+1) +"行目:「⑤定格加熱能力」", False, None, "数値", None, None, None), 
-                        "FanType": None,
-                        "FanAirVolume":
-                            check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の設計風量」", False, None, "数値", None, None, None),    
-                        "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
-                        "FanControlType":
-                            check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
-                        "FanMinOpeningRate":
-                            check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
-                        "AirHeatExchangeRatioCooling":
-                            check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
-                        "AirHeatExchangeRatioHeating":
-                            check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
-                        "AirHeatExchangerEffectiveAirVolumeRatio": None,
-                        "AirHeatExchangerControl":
-                            check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
-                        "AirHeatExchangerPowerConsumption":
-                            check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲ローター消費電力」", False, None, "数値", None, 0, None),
-                        "Info":
-                            check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔備考」", False, None, "文字列", None, None, None),
-                    }
-                )
+                if sheet_AC4_name == "様式 2-7. (空調)空調機 Rev.2":     # 2024年4月 全熱交換器の列が追加
 
-                # 外気冷房制御等
+                    data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
+                        {
+                            "Type":
+                                check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                            "Number":
+                                check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
+                            "RatedCapacityCooling":
+                                check_value(dataAC4[3], "様式2-7.空調機 "+ str(i+1) +"行目:「④定格冷却能力」", False, None, "数値", None, None, None),                                 
+                            "RatedCapacityHeating":
+                                check_value(dataAC4[4], "様式2-7.空調機 "+ str(i+1) +"行目:「⑤定格加熱能力」", False, None, "数値", None, None, None), 
+                            "FanType": None,
+                            "FanAirVolume":
+                                check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換器の設計風量」", False, None, "数値", None, None, None),    
+                            "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
+                            "FanControlType":
+                                check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                            "FanMinOpeningRate":
+                                check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
+                            "AirHeatExchangeRatioCooling":
+                                check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱全熱交換効率（冷房時）」", False, None, "数値", None, 0, 100),
+                            "AirHeatExchangeRatioHeating":
+                                check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲全熱交換効率（暖房時）」", False, None, "数値", None, 0, 100),
+                            "AirHeatExchangerEffectiveAirVolumeRatio": None,
+                            "AirHeatExchangerControl":
+                                check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            "AirHeatExchangerPowerConsumption":
+                                check_value(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑ローター消費電力」", False, None, "数値", None, 0, None),
+                            "Info":
+                                check_value(dataAC4[25], "様式2-7.空調機 "+ str(i+1) +"行目:「㉕備考」", False, None, "文字列", None, None, None),
+                            "isAirHeatExchanger": check_value(dataAC4[14], "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", None, None, None), 
+                            "AirHeatExchanger_name": check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の名称」", False, "無", "文字列", None, None, None), 
+                        }
+                    )
+
+                else:
+
+                    data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
+                        {
+                            "Type":
+                                check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                            "Number":
+                                check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
+                            "RatedCapacityCooling":
+                                check_value(dataAC4[3], "様式2-7.空調機 "+ str(i+1) +"行目:「④定格冷却能力」", False, None, "数値", None, None, None),                                 
+                            "RatedCapacityHeating":
+                                check_value(dataAC4[4], "様式2-7.空調機 "+ str(i+1) +"行目:「⑤定格加熱能力」", False, None, "数値", None, None, None), 
+                            "FanType": None,
+                            "FanAirVolume":
+                                check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の設計風量」", False, None, "数値", None, None, None),    
+                            "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
+                            "FanControlType":
+                                check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                            "FanMinOpeningRate":
+                                check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
+                            "AirHeatExchangeRatioCooling":
+                                check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
+                            "AirHeatExchangeRatioHeating":
+                                check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
+                            "AirHeatExchangerEffectiveAirVolumeRatio": None,
+                            "AirHeatExchangerControl":
+                                check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            "AirHeatExchangerPowerConsumption":
+                                check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲ローター消費電力」", False, None, "数値", None, 0, None),
+                            "Info":
+                                check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔備考」", False, None, "文字列", None, None, None),
+                            "isAirHeatExchanger": check_value(dataAC4[14], "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", None, None, None), 
+                            "AirHeatExchanger_name": None, 
+                        }
+                    )
+
+                # 外気冷房制御のチェック（継続行に書いていれば有効にする）
                 isEconomizer = check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None)
                 EconomizerMaxAirVolume = check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None)
                 if isEconomizer == "有" and EconomizerMaxAirVolume != "":
