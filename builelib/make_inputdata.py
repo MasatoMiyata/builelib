@@ -1638,6 +1638,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         eltKey = None
         inputMethod = None
 
+        # シート名称
+        sheet_BE2_name = sheet_BE2.row_values(0)[0]
+
         # 行のループ
         for i in range(10,sheet_BE2.nrows):
 
@@ -1667,86 +1670,175 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     
                     if inputMethod == "熱貫流率を入力":
 
-                        data["WallConfigure"][eltKey] = {
-                                "wall_type_webpro": walltype_webpro,
-                                "structureType": "その他",
-                                "solarAbsorptionRatio": None,
-                                "inputMethod": inputMethod,
-                                "Uvalue":
-                                    check_value(dataBE2[2], "様式2-2.外壁構成 "+ str(i+1) +"行目:「③熱貫流率」", True, None, "数値", None, 0, None),
-                                "Info":
-                                    check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
-                            }
+                        if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":   # 2024年4月 熱伝導率が追加
+
+                            data["WallConfigure"][eltKey] = {
+                                    "wall_type_webpro": walltype_webpro,
+                                    "structureType": "その他",
+                                    "solarAbsorptionRatio": None,
+                                    "inputMethod": inputMethod,
+                                    "Uvalue":
+                                        check_value(dataBE2[2], "様式2-2.外壁構成 "+ str(i+1) +"行目:「③熱貫流率」", True, None, "数値", None, 0, None),
+                                    "Info":
+                                        check_value(dataBE2[8], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
+                                }
+                        
+                        else:
+
+                            data["WallConfigure"][eltKey] = {
+                                    "wall_type_webpro": walltype_webpro,
+                                    "structureType": "その他",
+                                    "solarAbsorptionRatio": None,
+                                    "inputMethod": inputMethod,
+                                    "Uvalue":
+                                        check_value(dataBE2[2], "様式2-2.外壁構成 "+ str(i+1) +"行目:「③熱貫流率」", True, None, "数値", None, 0, None),
+                                    "Info":
+                                        check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                                }
 
                     elif inputMethod == "建材構成を入力":
 
                         # 次の行を読み込み
                         dataBE2 = sheet_BE2.row_values(i+1)
 
-                        if dataBE2[4] != "":
+                        if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":   # 2024年4月 熱伝導率が追加
 
-                            material_name = dataBE2[4].replace(' ', '')
+                            if (dataBE2[4] != "") or (dataBE2[5] != ""):
 
-                            if material_name == "吹付け硬質ウレタンフォームＡ種1":
-                                dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
-                            elif material_name == "吹付け硬質ウレタンフォームＡ種3":
-                                dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+                                material_name = dataBE2[4].replace(' ', '')
 
-                            data["WallConfigure"][eltKey] = {
-                                    "wall_type_webpro": walltype_webpro,
-                                    "structureType": "その他",
-                                    "solarAbsorptionRatio": None,
-                                    "inputMethod": inputMethod,
-                                    "layers": [
+                                if material_name == "吹付け硬質ウレタンフォームＡ種1":
+                                    dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
+                                elif material_name == "吹付け硬質ウレタンフォームＡ種3":
+                                    dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+
+                                data["WallConfigure"][eltKey] = {
+                                        "wall_type_webpro": walltype_webpro,
+                                        "structureType": "その他",
+                                        "solarAbsorptionRatio":
+                                            check_value(dataBE2[7], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑧日射吸収率」", False, None, "数値", None, 0, None),
+                                        "inputMethod": inputMethod,
+                                        "layers": [
+                                            {
+                                            "materialID": 
+                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                            "conductivity":
+                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                            "thickness":
+                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦厚み」", False, None, "数値", None, 0, None),
+                                            "Info":
+                                                check_value(dataBE2[8], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
+                                            }
+                                        ]
+                                    }
+
+                            else:
+                                
+                                # 1行目が空白の場合
+                                data["WallConfigure"][eltKey] = {
+                                        "wall_type_webpro": walltype_webpro,
+                                        "structureType": "その他",
+                                        "solarAbsorptionRatio":
+                                            check_value(dataBE2[7], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑧日射吸収率」", False, None, "数値", None, 0, None),
+                                        "inputMethod": inputMethod,
+                                        "layers": [
+                                        ]
+                                    }
+
+                            for loop in range(2,10):
+
+                                # 次の行を読み込み
+                                dataBE2 = sheet_BE2.row_values(i+loop)
+                                
+                                if (dataBE2[4] != "") or (dataBE2[5] != ""):
+
+                                    material_name = dataBE2[4].replace(' ', '')
+
+                                    if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
+                                        dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
+                                    elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
+                                        dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+                                        
+                                    data["WallConfigure"][eltKey]["layers"].append(
                                         {
-                                        "materialID": 
-                                            check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
-                                        "conductivity": None,
-                                        "thickness":
-                                            check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
-                                        "Info":
-                                            check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                                            "materialID": 
+                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                            "conductivity":
+                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                            "thickness":
+                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦厚み」", False, None, "数値", None, 0, None),
+                                            "Info":
+                                                check_value(dataBE2[8], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
                                         }
-                                    ]
-                                }
+                                    )
+
 
                         else:
-                            
-                            # 1行目が空白の場合
-                            data["WallConfigure"][eltKey] = {
-                                    "wall_type_webpro": walltype_webpro,
-                                    "structureType": "その他",
-                                    "solarAbsorptionRatio": None,
-                                    "inputMethod": inputMethod,
-                                    "layers": [
-                                    ]
-                                }
 
-                        for loop in range(2,10):
-
-                            # 次の行を読み込み
-                            dataBE2 = sheet_BE2.row_values(i+loop)
-                            
                             if dataBE2[4] != "":
 
                                 material_name = dataBE2[4].replace(' ', '')
 
-                                if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
+                                if material_name == "吹付け硬質ウレタンフォームＡ種1":
                                     dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
-                                elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
+                                elif material_name == "吹付け硬質ウレタンフォームＡ種3":
                                     dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
-                                    
-                                data["WallConfigure"][eltKey]["layers"].append(
-                                    {
-                                        "materialID": 
-                                            check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
-                                        "conductivity": None,
-                                        "thickness":
-                                            check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
-                                        "Info":
-                                            check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+
+                                data["WallConfigure"][eltKey] = {
+                                        "wall_type_webpro": walltype_webpro,
+                                        "structureType": "その他",
+                                        "solarAbsorptionRatio": None,
+                                        "inputMethod": inputMethod,
+                                        "layers": [
+                                            {
+                                            "materialID": 
+                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                            "conductivity": None,
+                                            "thickness":
+                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                            "Info":
+                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                                            }
+                                        ]
                                     }
-                                )
+
+                            else:
+                                
+                                # 1行目が空白の場合
+                                data["WallConfigure"][eltKey] = {
+                                        "wall_type_webpro": walltype_webpro,
+                                        "structureType": "その他",
+                                        "solarAbsorptionRatio": None,
+                                        "inputMethod": inputMethod,
+                                        "layers": [
+                                        ]
+                                    }
+
+                            for loop in range(2,10):
+
+                                # 次の行を読み込み
+                                dataBE2 = sheet_BE2.row_values(i+loop)
+                                
+                                if dataBE2[4] != "":
+
+                                    material_name = dataBE2[4].replace(' ', '')
+
+                                    if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
+                                        dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
+                                    elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
+                                        dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+                                        
+                                    data["WallConfigure"][eltKey]["layers"].append(
+                                        {
+                                            "materialID": 
+                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                            "conductivity": None,
+                                            "thickness":
+                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                            "Info":
+                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                                        }
+                                    )
 
 
     #----------------------------------
