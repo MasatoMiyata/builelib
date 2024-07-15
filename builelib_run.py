@@ -108,7 +108,7 @@ def builelib_run(exec_calculation, inputfile_name):
 
         # jsonファイルの生成
         try:
-            inputdata, validation = make_jsondata_from_Ver4_sheet(inputfile_name)
+            inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
         except:
             validation = {
                 "error": "入力シートの読み込み時に予期せぬエラーが発生しました。"
@@ -530,6 +530,7 @@ if __name__ == '__main__':
     
     # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
     file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
+    # file_name = "./sample/sample01_WEBPRO_inputSheet_for_Ver3.6.xlsx"
 
     builelib_run(True, file_name)
 
