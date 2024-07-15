@@ -11,13 +11,13 @@
         },
         "Name": "サンプル事務所ビル",
         "Region": "6",
-        "AnnualSolarRegion": "A3",
+        "AnnualSolarRegion": "A3", 
         "BuildingFloorArea": 100.0
     },
     "Rooms": {
         "1F_事務室": {
-            "buildingType": "共同住宅",
-            "roomType": "集会室",
+            "buildingType": "事務所等",
+            "roomType": "事務室",
             "floorHeight": 4.0,
             "ceilingHeight": 3.0,
             "roomArea": 100.0,
@@ -36,7 +36,7 @@
                     "EnvelopeArea": 80.0,
                     "EnvelopeWidth": null,
                     "EnvelopeHeight": null,
-                    "WallSpec": "W1",
+                    "WallSpec": "R1",
                     "WallType": "日の当たる外壁",
                     "WindowList": [
                         {
@@ -90,17 +90,107 @@
             "wall_type_webpro": "外壁",
             "structureType": "その他",
             "solarAbsorptionRatio": null,
-            "inputMethod": "熱貫流率を入力",
-            "Uvalue": 0.5,
-            "Info": null
+            "inputMethod": "建材構成を入力",
+            "layers": [
+                {
+                    "materialID": "ロックウール化粧吸音板",
+                    "conductivity": null,
+                    "thickness": 12.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "せっこうボード",
+                    "conductivity": null,
+                    "thickness": 10.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "非密閉中空層",
+                    "conductivity": null,
+                    "thickness": null,
+                    "Info": null
+                },
+                {
+                    "materialID": "コンクリート",
+                    "conductivity": null,
+                    "thickness": 150.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "セメント・モルタル",
+                    "conductivity": null,
+                    "thickness": 15.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "アスファルト類",
+                    "conductivity": null,
+                    "thickness": 5.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "セメント・モルタル",
+                    "conductivity": null,
+                    "thickness": 15.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "押出法ポリスチレンフォーム保温板1種",
+                    "conductivity": null,
+                    "thickness": 100.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "コンクリート",
+                    "conductivity": null,
+                    "thickness": 60.0,
+                    "Info": null
+                }
+            ]
         },
         "W1": {
             "wall_type_webpro": "外壁",
             "structureType": "その他",
             "solarAbsorptionRatio": null,
-            "inputMethod": "熱貫流率を入力",
-            "Uvalue": 1.0,
-            "Info": null
+            "inputMethod": "建材構成を入力",
+            "layers": [
+                {
+                    "materialID": "せっこうボード",
+                    "conductivity": null,
+                    "thickness": 8.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "非密閉中空層",
+                    "conductivity": null,
+                    "thickness": null,
+                    "Info": null
+                },
+                {
+                    "materialID": "押出法ポリスチレンフォーム保温板1種",
+                    "conductivity": null,
+                    "thickness": 50.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "コンクリート",
+                    "conductivity": null,
+                    "thickness": 150.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "セメント・モルタル",
+                    "conductivity": null,
+                    "thickness": 25.0,
+                    "Info": null
+                },
+                {
+                    "materialID": "タイル",
+                    "conductivity": null,
+                    "thickness": 10.0,
+                    "Info": null
+                }
+            ]
         }
     },
     "WindowConfigure": {
