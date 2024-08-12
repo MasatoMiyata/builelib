@@ -1662,6 +1662,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     # 外壁の種類(WEBPRO)
                     walltype_webpro = check_value(dataBE2[1], "様式2-2.外壁構成 "+ str(i+1) +"行目:「②壁の種類」", True, None, "文字列", input_options["外壁の種類(WEBPRO)"], None, None)
 
+                    # 日射吸収率(2024年4月 日射吸収率が入力可能に)
+                    if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":
+                        solarAbsorptionRatio = check_value(dataBE2[7], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑧日射吸収率」", False, None, "数値", None, 0, None)
+                    else:
+                        solarAbsorptionRatio = None
+
                     # 入力方法を識別
                     if dataBE2[2] != "":
                         inputMethod = "熱貫流率を入力"
@@ -1670,12 +1676,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     
                     if inputMethod == "熱貫流率を入力":
 
-                        if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":   # 2024年4月 熱伝導率が追加
+                        if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":
 
                             data["WallConfigure"][eltKey] = {
                                     "wall_type_webpro": walltype_webpro,
                                     "structureType": "その他",
-                                    "solarAbsorptionRatio": None,
+                                    "solarAbsorptionRatio": solarAbsorptionRatio,
                                     "inputMethod": inputMethod,
                                     "Uvalue":
                                         check_value(dataBE2[2], "様式2-2.外壁構成 "+ str(i+1) +"行目:「③熱貫流率」", True, None, "数値", None, 0, None),
@@ -1688,7 +1694,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             data["WallConfigure"][eltKey] = {
                                     "wall_type_webpro": walltype_webpro,
                                     "structureType": "その他",
-                                    "solarAbsorptionRatio": None,
+                                    "solarAbsorptionRatio": solarAbsorptionRatio,
                                     "inputMethod": inputMethod,
                                     "Uvalue":
                                         check_value(dataBE2[2], "様式2-2.外壁構成 "+ str(i+1) +"行目:「③熱貫流率」", True, None, "数値", None, 0, None),
@@ -1701,7 +1707,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         # 次の行を読み込み
                         dataBE2 = sheet_BE2.row_values(i+1)
 
-                        if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":   # 2024年4月 熱伝導率が追加
+                        if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":
 
                             if (dataBE2[4] != "") or (dataBE2[5] != ""):
 
@@ -1715,8 +1721,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 data["WallConfigure"][eltKey] = {
                                         "wall_type_webpro": walltype_webpro,
                                         "structureType": "その他",
-                                        "solarAbsorptionRatio":
-                                            check_value(dataBE2[7], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑧日射吸収率」", False, None, "数値", None, 0, None),
+                                        "solarAbsorptionRatio": solarAbsorptionRatio,
                                         "inputMethod": inputMethod,
                                         "layers": [
                                             {
@@ -1738,8 +1743,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 data["WallConfigure"][eltKey] = {
                                         "wall_type_webpro": walltype_webpro,
                                         "structureType": "その他",
-                                        "solarAbsorptionRatio":
-                                            check_value(dataBE2[7], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑧日射吸収率」", False, None, "数値", None, 0, None),
+                                        "solarAbsorptionRatio": solarAbsorptionRatio,
                                         "inputMethod": inputMethod,
                                         "layers": [
                                         ]
@@ -1787,7 +1791,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 data["WallConfigure"][eltKey] = {
                                         "wall_type_webpro": walltype_webpro,
                                         "structureType": "その他",
-                                        "solarAbsorptionRatio": None,
+                                        "solarAbsorptionRatio": solarAbsorptionRatio,
                                         "inputMethod": inputMethod,
                                         "layers": [
                                             {
@@ -1808,7 +1812,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 data["WallConfigure"][eltKey] = {
                                         "wall_type_webpro": walltype_webpro,
                                         "structureType": "その他",
-                                        "solarAbsorptionRatio": None,
+                                        "solarAbsorptionRatio": solarAbsorptionRatio,
                                         "inputMethod": inputMethod,
                                         "layers": [
                                         ]
