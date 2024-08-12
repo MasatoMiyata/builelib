@@ -529,8 +529,8 @@ def builelib_run(exec_calculation, inputfile_name):
 if __name__ == '__main__':
     
     # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
-    file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
-    # file_name = "./sample/sample01_WEBPRO_inputSheet_for_Ver3.6.xlsx"
+    # file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
+    file_name = "./sample/sample01_WEBPRO_inputSheet_for_Ver3.6.xlsx"
 
     builelib_run(True, file_name)
 

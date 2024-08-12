@@ -753,6 +753,13 @@ def calc_energy(inputdata, debug = False):
                     inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"]
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
 
+            # 日射吸収率
+            if inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["solarAbsorptionRatio"] == None:
+                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["solarAbsorptionRatio"] = 0.8
+            else:
+                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["solarAbsorptionRatio"] = \
+                    float(inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["solarAbsorptionRatio"])
+
             for (window_id, window_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"]):
 
                 if window_configure["WindowID"] != "無":
@@ -860,10 +867,10 @@ def calc_energy(inputdata, debug = False):
 
                     ## ② 日射による熱取得
                     if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * 0.8 * 0.04 * \
+                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * wall_configure["solarAbsorptionRatio"] * 0.04 * \
                             (solor_radiation["直達"]["水平"]+solor_radiation["天空"]["水平"])
                     else:
-                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * 0.8 * 0.04 * \
+                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * wall_configure["solarAbsorptionRatio"] * 0.04 * \
                             (solor_radiation["直達"][ wall_configure["Direction"] ]+solor_radiation["天空"]["垂直"])
 
                     ## ③ 夜間放射による熱取得（マイナス）
@@ -902,10 +909,10 @@ def calc_energy(inputdata, debug = False):
 
                     ## ② 日射による熱取得
                     if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * 0.8 * 0.04 * \
+                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * wall_configure["solarAbsorptionRatio"] * 0.04 * \
                             (solor_radiation["直達"]["水平"]+solor_radiation["天空"]["水平"])
                     else:
-                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * 0.8 * 0.04 * \
+                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * wall_configure["solarAbsorptionRatio"] * 0.04 * \
                             (solor_radiation["直達"][ wall_configure["Direction"] ]+solor_radiation["天空"]["垂直"])
 
                     ## ③ 夜間放射による熱取得（マイナス）
