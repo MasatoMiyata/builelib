@@ -6,8 +6,7 @@ import math
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# import commons as bc
-from . import commons as bc
+import commons as bc
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -385,8 +384,13 @@ def calc_energy(inputdata, DEBUG = False):
 
 if __name__ == '__main__':
 
+    # 現在のスクリプトファイルのディレクトリを取得
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 1つ上の階層のディレクトリパスを取得
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+
     print('----- ventilation.py -----')
-    filename = './sample/WEBPRO_inputSheet_sample.json'
+    filename = parent_dir + '/sample/WEBPRO_inputSheet_sample_input.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:

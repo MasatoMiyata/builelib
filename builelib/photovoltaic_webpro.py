@@ -12,8 +12,8 @@ import math
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from . import commons as bc
-from . import climate
+import commons as bc
+import climate
 
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
