@@ -2841,6 +2841,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     if sheet_AC4_name == "様式 2-7. (空調)空調機 Rev.2":     # 2024年4月 全熱交換器の列が追加
 
+                        if dataAC4[14] == "全熱交換器あり・様式2-9記載あり":
+                            validation["error"].append( "様式2-7.空調機:「⑮全熱交換器の有無」の選択肢が「全熱交換器あり・様式2-9記載あり」である場合は計算ができません。")
+
                         data["AirHandlingSystem"][unitKey] = {
                             "isEconomizer": 
                                 check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None), 
@@ -2951,6 +2954,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, 0, None)
 
                 if sheet_AC4_name == "様式 2-7. (空調)空調機 Rev.2":     # 2024年4月 全熱交換器の列が追加
+
+                    if dataAC4[14] == "全熱交換器あり・様式2-9記載あり":
+                        validation["error"].append( "様式2-7.空調機:「⑮全熱交換器の有無」の選択肢が「全熱交換器あり・様式2-9記載あり」である場合は計算ができません。")
 
                     data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
                         {

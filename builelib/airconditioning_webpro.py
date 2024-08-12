@@ -1711,45 +1711,59 @@ def calc_energy(inputdata, debug = False):
                 inputdata["AirHandlingSystem"][ahu_name]["FanAirVolume"] += \
                     unit_configure["FanAirVolume"] * unit_configure["Number"]
         
+
+        # 全熱交換器の有無
+        inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "無"
+        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+            if unit_configure["isAirHeatExchanger"] == "全熱交換器あり・様式2-9記載無し":
+                inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "有"
+
         # 全熱交換器の効率（一番低いものを採用）
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = None
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = None
-        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
 
-            # 冷房の効率
-            if (unit_configure["AirHeatExchangeRatioCooling"] != None):
-                if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] == None:
-                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = unit_configure["AirHeatExchangeRatioCooling"]
-                elif inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] > unit_configure["AirHeatExchangeRatioCooling"]:
-                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = unit_configure["AirHeatExchangeRatioCooling"]
+        if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "有":
+            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
 
-            # 暖房の効率
-            if (unit_configure["AirHeatExchangeRatioHeating"] != None):    
-                if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] == None:
-                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = unit_configure["AirHeatExchangeRatioHeating"]
-                elif inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] > unit_configure["AirHeatExchangeRatioHeating"]:
-                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = unit_configure["AirHeatExchangeRatioHeating"]
+                # 冷房の効率
+                if (unit_configure["AirHeatExchangeRatioCooling"] != None):
+                    if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] == None:
+                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = unit_configure["AirHeatExchangeRatioCooling"]
+                    elif inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] > unit_configure["AirHeatExchangeRatioCooling"]:
+                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = unit_configure["AirHeatExchangeRatioCooling"]
+
+                # 暖房の効率
+                if (unit_configure["AirHeatExchangeRatioHeating"] != None):    
+                    if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] == None:
+                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = unit_configure["AirHeatExchangeRatioHeating"]
+                    elif inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] > unit_configure["AirHeatExchangeRatioHeating"]:
+                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = unit_configure["AirHeatExchangeRatioHeating"]
 
         # 全熱交換器のバイパス制御の有無（1つでもあればバイパス制御「有」とする）
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] = "無"
-        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-            if (unit_configure["AirHeatExchangeRatioCooling"] != None) and (unit_configure["AirHeatExchangeRatioHeating"] != None):
+
+        if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "有":
+            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
                 if unit_configure["AirHeatExchangerControl"] == "有":
                     inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] = "有"
 
-        # 全熱交換器の消費電力 [kW]
+        # 全熱交換器の消費電力 [kW]（積算する）
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerPowerConsumption"] = 0
-        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-            if unit_configure["AirHeatExchangerPowerConsumption"] != None:
-                inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerPowerConsumption"] += \
-                    unit_configure["AirHeatExchangerPowerConsumption"] * unit_configure["Number"]
+        
+        if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "有":
+            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+                if unit_configure["AirHeatExchangerPowerConsumption"] != None:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerPowerConsumption"] += \
+                        unit_configure["AirHeatExchangerPowerConsumption"] * unit_configure["Number"]
 
-        # 全熱交換器の風量 [m3/h]
+        # 全熱交換器の風量 [m3/h]（積算する）
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"] = 0
-        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-            if (unit_configure["AirHeatExchangeRatioCooling"] != None) and (unit_configure["AirHeatExchangeRatioHeating"] != None):
-                inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"]  += \
-                    unit_configure["FanAirVolume"] * unit_configure["Number"]
+
+        if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "有":
+            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+                if unit_configure["FanAirVolume"] != None:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"]  += \
+                        unit_configure["FanAirVolume"] * unit_configure["Number"]
 
 
     ##----------------------------------------------------------------------------------
@@ -2100,7 +2114,7 @@ def calc_energy(inputdata, debug = False):
                         ahuaexV = 0                    
 
                     # 外気負荷の算出
-                    if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] == None:   # 全熱交換器がない場合
+                    if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "無":   # 全熱交換器がない場合
 
                         resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] *1.293/3600
@@ -2134,7 +2148,7 @@ def calc_energy(inputdata, debug = False):
                         ahuaexV = 0
 
                     # 外気負荷の算出
-                    if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] == None:   # 全熱交換器がない場合
+                    if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "無":   # 全熱交換器がない場合
 
                         resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
@@ -5029,10 +5043,11 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './sample/ACtest_Case001.json'
-    filename = './sample/Builelib_sample_SP1_input.json'
+    # filename = './sample/Builelib_sample_SP1_input.json'
     # filename = './sample/WEBPRO_inputSheet_sample.json'
     # filename = './sample/Builelib_sample_SP10.json'
     # filename = './sample/WEBPRO_KE14_Case01.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
