@@ -8,9 +8,9 @@ import copy
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from . import commons as bc
-from . import climate
-from . import shading
+import commons as bc
+import climate
+import shading
 # from . import make_figure as mf
 
 # データベースファイルの保存場所
@@ -235,7 +235,7 @@ def calc_energy(inputdata, debug = False):
 
         # 気象データ（HASP形式）読み込み ＜365×24の行列＞
         [ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
-            climate.readHaspClimateData( climatedata_directory + "/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
+            climate.readHaspClimateData( climatedata_directory + "/" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
 
     # 緯度
     phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]

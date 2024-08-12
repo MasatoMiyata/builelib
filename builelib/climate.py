@@ -2,8 +2,6 @@
 import csv
 import math
 import numpy as np
-# import pandas as pd
-import itertools
 
 def readCsvClimateData(filename):
     """
@@ -31,31 +29,6 @@ def readCsvClimateData(filename):
     sun_azimuth = npArrayData[2:8762, 4].astype('float')
     
     return Tout, Iod, Ios, sun_altitude, sun_azimuth
-
-
-def readDatClimateData(filename):
-    """
-    気象データ（datファイル）を読み込む関数。給湯用。
-    8760の行列
-    """
-
-    with open(filename, encoding='utf-8') as f:
-        reader = csv.reader(f)
-        data = [row for row in reader]
-
-    npArrayData = np.array(data)
-    Tout = npArrayData[1:8761, 6].astype('float')
-
-    Tout_hourly = np.zeros((365,24))
-    i = 0
-    for dd in range(365):
-        for hh in range(24):
-            Tout_hourly[dd][hh] = Tout[i]
-            i += 1
-
-    Tout_daily = np.mean(Tout_hourly,1)
-
-    return Tout_daily
 
 
 def readHaspClimateData(filename):
@@ -119,15 +92,6 @@ def readHaspClimateData(filename):
     Iod  = np.array(Iod)
     Ios  = np.array(Ios)
     Inn  = np.array(Inn)
-
-    # # CSVファイルに出力（検証用）
-    # df = pd.DataFrame()
-    # df["Tout"] = list(itertools.chain.from_iterable(Tout))
-    # df["Xout"] = list(itertools.chain.from_iterable(Xout))
-    # df["Iod"] = list(itertools.chain.from_iterable(Iod))
-    # df["Ios"] = list(itertools.chain.from_iterable(Ios))
-    # df["Inn"] = list(itertools.chain.from_iterable(Inn))
-    # df.to_csv("climatedata.csv")
 
     return Tout, Xout, Iod, Ios, Inn
 
@@ -293,16 +257,29 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
     return np.sum(Id,1), np.sum(Id_ita,1), np.sum(Is,1), Insr
 
 
-#%%
 if __name__ == '__main__':
 
-    filename = "./builelib/climatedata/C1_0598195.has"
-    
-    [Tout, Xout, Iod, Ios, Inn] = readHaspClimateData(filename)
+    pass
 
-    print((np.mean(Xout[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)))
+    # # 2024.8.12 気象データを統一する際の検証：
+    # import os
+    # import json
 
+    # database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
+    # # 地域別データの読み込み
+    # with open('./builelib/database/AREA.json', 'r', encoding='utf-8') as f:
+    #     Area = json.load(f)
 
+    # Area_name = "8地域"
 
-# %%
+    # # 空調用と給湯用の気象データの比較
+    # filename_hasp = "./builelib/climatedata/C1_" +Area[Area_name]["気象データファイル名"]
+    # filename_dat  = "./builelib/climatedata/" + Area[Area_name]["気象データファイル名（給湯）"]
+
+    # Toa_ave_dat = readDatClimateData(filename_dat)
+
+    # [Tout, Xout, Iod, Ios, Inn] = readHaspClimateData(filename_hasp)
+    # Toa_ave_hasp = np.mean(Tout,1)
+
+    # np.savetxt('気象データ検証_' + Area_name + '.csv', np.stack([Toa_ave_dat, Toa_ave_hasp, Toa_ave_dat-Toa_ave_hasp], 1) ,delimiter=',',fmt='%.3f')
