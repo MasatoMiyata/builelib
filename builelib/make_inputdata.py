@@ -3521,7 +3521,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         HeatSourceType = "ボイラ"
                     elif str(dataHW2[1]) == "他人から供給された熱（温水）":
                         HeatSourceType = "地域熱供給"
+                    elif str(dataHW2[1]) == "他人から供給された熱(温水)":
+                        HeatSourceType = "地域熱供給"
                     elif str(dataHW2[1]) == "他人から供給された熱（蒸気）":
+                        HeatSourceType = "地域熱供給"
+                    elif str(dataHW2[1]) == "他人から供給された熱(蒸気)":
                         HeatSourceType = "地域熱供給"
                     else:
                         validation["error"].append( "様式5-2.給湯機器 "+ str(i+1) +"行目:「②燃料種類」の入力に誤りがあります。") 
@@ -4178,7 +4182,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'sample01_WEBPRO_inputSheet_for_Ver3.6'
+    case_name = 'sample01_WEBPRO_inputSheet_for_Ver3.6_v2'
 
     # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
