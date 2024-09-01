@@ -8,9 +8,9 @@ import copy
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
-import climate
-import shading
+from . import commons as bc
+from . import climate
+from . import shading
 # from . import make_figure as mf
 
 # データベースファイルの保存場所
@@ -48,7 +48,7 @@ def air_enthalpy(Tdb, X):
     空気のエンタルピーを算出する関数
     (WEBPROに合わせる)
     """
-    
+
     Ca = 1.006  # 乾き空気の定圧比熱 [kJ/kg･K]
     Cw = 1.805  # 水蒸気の定圧比熱 [kJ/kg･K]
     Lw = 2502   # 水の蒸発潜熱 [kJ/kg]
@@ -56,12 +56,12 @@ def air_enthalpy(Tdb, X):
     if len(Tdb) != len(X):
         raise Exception('温度と湿度のリストの長さが異なります。')
     else:
-        
+
         H = np.zeros(len(Tdb))
         for i in range(0, len(Tdb)):
             H[i] = (Ca*Tdb[i] + (Cw*Tdb[i]+Lw)*X[i])
 
-    return H   
+    return H
 
 def calc_energy(inputdata, debug = False):
 
@@ -111,7 +111,7 @@ def calc_energy(inputdata, debug = False):
             "E_ref_main_MWh_day": np.zeros(365),
             "E_ref_sub_MWh_day": np.zeros(365),
         },
-        "Matrix":{            
+        "Matrix":{
         },
         "for_CGS":{
         }
@@ -235,7 +235,7 @@ def calc_energy(inputdata, debug = False):
 
         # 気象データ（HASP形式）読み込み ＜365×24の行列＞
         [ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
-            climate.readHaspClimateData( climatedata_directory + "/" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
+            climate.readHaspClimateData( climatedata_directory + "/C1_" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
 
     # 緯度
     phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
@@ -333,7 +333,7 @@ def calc_energy(inputdata, debug = False):
             inputdata["AirConditioningZone"][room_zone_name]["roomType"]      = inputdata["Rooms"][room_zone_name]["roomType"]
             inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]      = inputdata["Rooms"][room_zone_name]["roomArea"]
             inputdata["AirConditioningZone"][room_zone_name]["ceilingHeight"] = inputdata["Rooms"][room_zone_name]["ceilingHeight"]
-                
+
         else:
 
             # 各室のゾーンを検索
@@ -466,7 +466,7 @@ def calc_energy(inputdata, debug = False):
 
                     # 熱伝導率の指定がない場合は「断熱材種類」から推定
                     if (inputdata["WallConfigure"][wall_name]["conductivity"] == None):
-                        
+
                         inputdata["WallConfigure"][wall_name]["conductivity"] = \
                             float( HeatThermalConductivity_model[ inputdata["WallConfigure"][wall_name]["materialID"] ] )
 
@@ -492,7 +492,7 @@ def calc_energy(inputdata, debug = False):
 
                             # 空気層の場合
                             Rvalue += HeatThermalConductivity[layer[1]["materialID"]]["熱抵抗値"]
-                
+
                         else:
 
                             # 空気層以外の断熱材を指定している場合
@@ -504,654 +504,10 @@ def calc_energy(inputdata, debug = False):
 
                         # 熱伝導率を入力している場合
                         Rvalue += (layer[1]["thickness"]/1000) / layer[1]["conductivity"]
-                    
+
                 inputdata["WallConfigure"][wall_name]["Uvalue"] = 1/Rvalue
 
 
-    ##----------------------------------------------------------------------------------
-    ## 窓の熱貫流率及び日射熱取得率の算出（解説書 附属書A.2）
-    ##----------------------------------------------------------------------------------
-
-    # 窓データの読み込み
-    with open(database_directory + 'WindowHeatTransferPerformance.json', 'r', encoding='utf-8') as f:
-        WindowHeatTransferPerformance = json.load(f)
-
-    with open(database_directory + 'glass2window.json', 'r', encoding='utf-8') as f:
-        glass2window = json.load(f)
-
-
-    if "WindowConfigure" in inputdata:
-
-        for window_name in inputdata["WindowConfigure"].keys():
-
-            if inputdata["WindowConfigure"][window_name]["inputMethod"] == "ガラスの種類を入力":
-
-                # 建具の種類の読み替え
-                if inputdata["WindowConfigure"][window_name]["frameType"] == "木製" or \
-                    inputdata["WindowConfigure"][window_name]["frameType"] == "樹脂製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "木製・樹脂製建具"
-
-                elif inputdata["WindowConfigure"][window_name]["frameType"] == "金属木複合製" or \
-                    inputdata["WindowConfigure"][window_name]["frameType"] == "金属樹脂複合製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "金属木複合製・金属樹脂複合製建具"
-                
-                elif inputdata["WindowConfigure"][window_name]["frameType"] == "金属製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "金属製建具"
-
-
-                # ガラスIDと建具の種類から、熱貫流率・日射熱取得率を抜き出す。
-                inputdata["WindowConfigure"][window_name]["Uvalue"] = \
-                WindowHeatTransferPerformance\
-                    [ inputdata["WindowConfigure"][window_name]["glassID"] ]\
-                    [ inputdata["WindowConfigure"][window_name]["frameType"] ]["熱貫流率"]
-
-                inputdata["WindowConfigure"][window_name]["Uvalue_blind"] = \
-                WindowHeatTransferPerformance\
-                    [ inputdata["WindowConfigure"][window_name]["glassID"] ]\
-                    [ inputdata["WindowConfigure"][window_name]["frameType"] ]["熱貫流率・ブラインド込"]
-
-                inputdata["WindowConfigure"][window_name]["Ivalue"] = \
-                WindowHeatTransferPerformance\
-                    [ inputdata["WindowConfigure"][window_name]["glassID"] ]\
-                    [ inputdata["WindowConfigure"][window_name]["frameType"] ]["日射熱取得率"]
-
-                inputdata["WindowConfigure"][window_name]["Ivalue_blind"] = \
-                WindowHeatTransferPerformance\
-                    [ inputdata["WindowConfigure"][window_name]["glassID"] ]\
-                    [ inputdata["WindowConfigure"][window_name]["frameType"] ]["日射熱取得率・ブラインド込"]
-
-
-            elif inputdata["WindowConfigure"][window_name]["inputMethod"] == "ガラスの性能を入力":
-
-                ku_a = 0
-                ku_b = 0
-                kita  = 0
-                dR = 0
-
-                # 建具の種類の読み替え
-                if inputdata["WindowConfigure"][window_name]["frameType"] == "木製" or \
-                    inputdata["WindowConfigure"][window_name]["frameType"] == "樹脂製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "木製・樹脂製建具"
-
-                elif inputdata["WindowConfigure"][window_name]["frameType"] == "金属木複合製" or \
-                    inputdata["WindowConfigure"][window_name]["frameType"] == "金属樹脂複合製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "金属木複合製・金属樹脂複合製建具"
-                
-                elif inputdata["WindowConfigure"][window_name]["frameType"] == "金属製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "金属製建具"
-
-
-                # 変換係数
-                ku_a = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a1"] \
-                    / glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a2"]
-                ku_b = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b1"] \
-                    / glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b2"]
-                kita  = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["kita"]            
-
-                # print(ku_a)
-                # print(ku_b)
-                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a1"] )
-                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a2"] )
-                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b1"] )
-                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b2"] )
-                # print(inputdata["WindowConfigure"][window_name]["glassUvalue"])
-
-                inputdata["WindowConfigure"][window_name]["Uvalue"] = ku_a * inputdata["WindowConfigure"][window_name]["glassUvalue"] + ku_b
-                inputdata["WindowConfigure"][window_name]["Ivalue"] = kita * inputdata["WindowConfigure"][window_name]["glassIvalue"]
-
-                # ガラスの熱貫流率と日射熱取得率が入力されている場合は、ブラインドの効果を見込む
-                dR = (0.021 / inputdata["WindowConfigure"][window_name]["glassUvalue"]) + 0.022
-
-                inputdata["WindowConfigure"][window_name]["Uvalue_blind"] = \
-                    1 / ( ( 1/inputdata["WindowConfigure"][window_name]["Uvalue"]) + dR )
-
-                inputdata["WindowConfigure"][window_name]["Ivalue_blind"] = \
-                    inputdata["WindowConfigure"][window_name]["Ivalue"] / inputdata["WindowConfigure"][window_name]["glassIvalue"] \
-                        * (-0.1331 * inputdata["WindowConfigure"][window_name]["glassIvalue"] ** 2 +\
-                                0.8258 * inputdata["WindowConfigure"][window_name]["glassIvalue"] )
-
-
-            elif inputdata["WindowConfigure"][window_name]["inputMethod"] == "性能値を入力":
-
-                inputdata["WindowConfigure"][window_name]["Uvalue"] = inputdata["WindowConfigure"][window_name]["windowUvalue"]
-                inputdata["WindowConfigure"][window_name]["Ivalue"] = inputdata["WindowConfigure"][window_name]["windowIvalue"]
-
-                # ブラインド込みの値を計算
-                dR = 0
-
-                if inputdata["WindowConfigure"][window_name]["glassUvalue"] == None or \
-                    inputdata["WindowConfigure"][window_name]["glassIvalue"] == None:
-
-                    inputdata["WindowConfigure"][window_name]["Uvalue_blind"] = inputdata["WindowConfigure"][window_name]["windowUvalue"]
-                    inputdata["WindowConfigure"][window_name]["Ivalue_blind"] = inputdata["WindowConfigure"][window_name]["windowIvalue"]
-
-                else:
-                    # ガラスの熱貫流率と日射熱取得率が入力されている場合は、ブラインドの効果を見込む
-                    dR = (0.021 / inputdata["WindowConfigure"][window_name]["glassUvalue"]) + 0.022
-
-                    inputdata["WindowConfigure"][window_name]["Uvalue_blind"] = \
-                        1 / ( ( 1/inputdata["WindowConfigure"][window_name]["windowUvalue"]) + dR )
-
-                    inputdata["WindowConfigure"][window_name]["Ivalue_blind"] = \
-                        inputdata["WindowConfigure"][window_name]["windowIvalue"] / inputdata["WindowConfigure"][window_name]["glassIvalue"] \
-                            * (-0.1331 * inputdata["WindowConfigure"][window_name]["glassIvalue"] ** 2 +\
-                                0.8258 * inputdata["WindowConfigure"][window_name]["glassIvalue"] )
-
-
-            if debug: # pragma: no cover
-                print(f'--- 窓名称 {window_name} ---')
-                print(f'窓の熱貫流率 Uvalue : {inputdata["WindowConfigure"][window_name]["Uvalue"]}')
-                print(f'窓+BLの熱貫流率 Uvalue_blind : {inputdata["WindowConfigure"][window_name]["Uvalue_blind"]}')
-
-    ##----------------------------------------------------------------------------------
-    ## 外壁の面積の計算（解説書 2.4.2.1）
-    ##----------------------------------------------------------------------------------
-
-    # 外皮面積の算出
-    for room_zone_name in inputdata["EnvelopeSet"]:
-
-        for wall_id, wall_configure in enumerate(inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
-            
-            if inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["EnvelopeArea"] == None:  # 外皮面積が空欄であれば、外皮の寸法から面積を計算。
-
-                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["EnvelopeArea"] = \
-                    wall_configure["EnvelopeWidth"] * wall_configure["EnvelopeHeight"]
-
-    # 窓面積の算出
-    for window_id in inputdata["WindowConfigure"]:
-        if inputdata["WindowConfigure"][window_id]["windowArea"] == None:  # 窓面積が空欄であれば、窓寸法から面積を計算。
-            inputdata["WindowConfigure"][window_id]["windowArea"] = \
-                inputdata["WindowConfigure"][window_id]["windowWidth"] * inputdata["WindowConfigure"][window_id]["windowHeight"]
-
-
-    # 外壁面積の算出
-    for room_zone_name in inputdata["EnvelopeSet"]:
-
-        for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"] ):
-
-            window_total = 0  # 窓面積の集計用
-
-            if "WindowList" in wall_configure:   # 窓がある場合
-
-                # 窓面積の合計を求める（Σ{窓面積×枚数}）
-                for (window_id, window_configure) in enumerate(wall_configure["WindowList"]):
-
-                    if window_configure["WindowID"] != "無":
-
-                        window_total += \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * window_configure["WindowNumber"]
-
-
-            # 壁のみの面積（窓がない場合は、window_total = 0）
-            if wall_configure["EnvelopeArea"] >= window_total:
-                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["EnvelopeArea"] - window_total
-            else:
-                print(room_zone_name)
-                print(wall_configure)
-                raise Exception('窓面積が外皮面積よりも大きくなっています')
-
-
-    ##----------------------------------------------------------------------------------
-    ## 室の定常熱取得の計算（解説書 2.4.2.2〜2.4.2.7）
-    ##----------------------------------------------------------------------------------
-
-    ## EnvelopeSet に WallConfigure, WindowConfigure の情報を貼り付ける。
-    for room_zone_name in inputdata["EnvelopeSet"]:
-
-        # 壁毎にループ
-        for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
-
-            if inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["inputMethod"] == "断熱材種類を入力":
-
-                if wall_configure["Direction"] == "水平（上）":  # 天井と見なす。
-
-                    # 外壁のUA（熱貫流率×面積）を計算
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
-                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_roof"] * wall_configure["WallArea"]
-
-                    # 動的負荷計算用
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
-                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_roof"]
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
-
-                elif wall_configure["Direction"] == "水平（下）":  # 床と見なす。
-
-                    # 外壁のUA（熱貫流率×面積）を計算
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
-                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_floor"] * wall_configure["WallArea"]
-
-                    # 動的負荷計算用
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
-                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_floor"]
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
-
-                else:
-
-                    # 外壁のUA（熱貫流率×面積）を計算
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
-                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_wall"] * wall_configure["WallArea"]
-
-                    # 動的負荷計算用
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
-                        inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue_wall"]
-                    inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
-
-            else:
-
-                # 外壁のUA（熱貫流率×面積）を計算
-                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["UA_wall"] = \
-                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"] * wall_configure["WallArea"]
-
-                # 動的負荷計算用
-                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] = \
-                    inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["Uvalue"]
-                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WallArea"] = wall_configure["WallArea"]
-
-            # 日射吸収率
-            if inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["solarAbsorptionRatio"] == None:
-                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["solarAbsorptionRatio"] = 0.8
-            else:
-                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["solarAbsorptionRatio"] = \
-                    float(inputdata["WallConfigure"][  wall_configure["WallSpec"]  ]["solarAbsorptionRatio"])
-
-            for (window_id, window_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"]):
-
-                if window_configure["WindowID"] != "無":
-
-                    # 日よけ効果係数の算出
-                    if window_configure["EavesID"] == "無":
-
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_C"] = 1
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_H"] = 1
-
-                    else:
-
-                        if inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["shadingEffect_C"] != None and \
-                            inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["shadingEffect_H"] != None :
-
-                            inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_C"] = \
-                                inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["shadingEffect_C"]
-                            inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_H"] = \
-                                inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["shadingEffect_H"]
-
-                        else:
-
-                            # 関数 shading.calc_shadingCoefficient で日よけ効果係数を算出。
-                            (inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_C"], \
-                                inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["shadingEffect_H"] ) =  \
-                                    shading.calc_shadingCoefficient(inputdata["Building"]["Region"],\
-                                        wall_configure["Direction"], \
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["x1"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["x2"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["x3"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["y1"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["y2"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["y3"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["zxPlus"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["zxMinus"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["zyPlus"],\
-                                        inputdata["ShadingConfigure"][ window_configure["EavesID"] ]["zyMinus"])
-
-
-                    # 窓のUA（熱貫流率×面積）を計算
-                    if window_configure["isBlind"] == "無":  # ブラインドがない場合
-
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["UA_window"] = \
-                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Uvalue"]
-
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["IA_window"] = \
-                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue"]
-
-                        # 動的負荷計算用
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["U_window"] = \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Uvalue"]
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["I_window"] = \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue"]
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["windowArea"] = \
-                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"]
-
-                    elif window_configure["isBlind"] == "有": # ブラインドがある場合
-
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["UA_window"] = \
-                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Uvalue_blind"]
-
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["IA_window"] = \
-                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue_blind"]
-
-                        # 動的負荷計算用
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["U_window"] = \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Uvalue_blind"]
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["I_window"] = \
-                            inputdata["WindowConfigure"][ window_configure["WindowID"] ]["Ivalue_blind"]
-                        inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["windowArea"] = \
-                            window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"]
-
-                    # 任意入力 SP-8
-                    if "window_Ivalue" in inputdata["SpecialInputData"]:
-                        if window_configure["WindowID"] in inputdata["SpecialInputData"]["window_Ivalue"]:
-
-                            inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"][window_id]["IA_window"] = \
-                                window_configure["WindowNumber"] * inputdata["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * \
-                                np.array(inputdata["SpecialInputData"]["window_Ivalue"][ window_configure["WindowID"] ])
-
-
-    for room_zone_name in inputdata["AirConditioningZone"]:
-
-        Qwall_T  = np.zeros(365)  # 壁からの温度差による熱取得 [W/m2]
-        Qwall_S  = np.zeros(365)  # 壁からの日射による熱取得 [W/m2]
-        Qwall_N  = np.zeros(365)  # 壁からの夜間放射による熱取得（マイナス）[W/m2]
-        Qwind_T  = np.zeros(365)  # 窓からの温度差による熱取得 [W/m2]
-        Qwind_S  = np.zeros(365)  # 窓からの日射による熱取得 [W/m2]
-        Qwind_N  = np.zeros(365)  # 窓からの夜間放射による熱取得（マイナス）[W/m2]
-
-        # 外壁があれば以下を実行
-        if room_zone_name in inputdata["EnvelopeSet"]:
-
-            # 壁毎にループ
-            for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
-
-                if wall_configure["WallType"] == "日の当たる外壁":
-                
-                    ## ① 温度差による熱取得
-                    Qwall_T = Qwall_T + wall_configure["UA_wall"] * (Toa_ave - TroomSP) * 24
-
-                    ## ② 日射による熱取得
-                    if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * wall_configure["solarAbsorptionRatio"] * 0.04 * \
-                            (solor_radiation["直達"]["水平"]+solor_radiation["天空"]["水平"])
-                    else:
-                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * wall_configure["solarAbsorptionRatio"] * 0.04 * \
-                            (solor_radiation["直達"][ wall_configure["Direction"] ]+solor_radiation["天空"]["垂直"])
-
-                    ## ③ 夜間放射による熱取得（マイナス）
-                    if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                        Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                            (solor_radiation["夜間"]["水平"])
-                    else:
-                        Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                            (solor_radiation["夜間"]["垂直"])                    
-
-                elif wall_configure["WallType"] == "日の当たらない外壁":
-
-                    ## ① 温度差による熱取得
-                    Qwall_T = Qwall_T + wall_configure["UA_wall"] * (Toa_ave - TroomSP) * 24
-
-                    ## ③ 夜間放射による熱取得（マイナス）
-                    if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                        Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                            (solor_radiation["夜間"]["水平"])
-                    else:
-                        Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                            (solor_radiation["夜間"]["垂直"])                    
-
-                elif wall_configure["WallType"] == "地盤に接する外壁":
-                
-                    ## ① 温度差による熱取得
-                    Qwall_T = Qwall_T + wall_configure["UA_wall"] * (np.mean(Toa_ave)* np.ones(365) - TroomSP) * 24
-
-                    ## ③ 夜間放射による熱取得（マイナス） ：　本当はこれは不要。Webproの実装と合わせるために追加。
-                    Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * (solor_radiation["夜間"]["垂直"])   
-
-                elif wall_configure["WallType"] == "地盤に接する外壁_Ver2":  # Webpro Ver2の互換のための処理
-                
-                    ## ① 温度差による熱取得
-                    Qwall_T = Qwall_T + wall_configure["UA_wall"] * (np.mean(Toa_ave)* np.ones(365) - TroomSP) * 24
-
-                    ## ② 日射による熱取得
-                    if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * wall_configure["solarAbsorptionRatio"] * 0.04 * \
-                            (solor_radiation["直達"]["水平"]+solor_radiation["天空"]["水平"])
-                    else:
-                        Qwall_S = Qwall_S + wall_configure["UA_wall"] * wall_configure["solarAbsorptionRatio"] * 0.04 * \
-                            (solor_radiation["直達"][ wall_configure["Direction"] ]+solor_radiation["天空"]["垂直"])
-
-                    ## ③ 夜間放射による熱取得（マイナス）
-                    if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                        Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                            (solor_radiation["夜間"]["水平"])
-                    else:
-                        Qwall_N = Qwall_N - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                            (solor_radiation["夜間"]["垂直"])   
-
-
-                # 窓毎にループ
-                for (window_id, window_configure) in enumerate( wall_configure["WindowList"]):
-
-                    if window_configure["WindowID"] != "無":  # 窓がある場合
-
-                        if wall_configure["WallType"] == "日の当たる外壁" or wall_configure["WallType"] == "地盤に接する外壁_Ver2":
-                        
-                            ## ① 温度差による熱取得
-                            Qwind_T = Qwind_T + window_configure["UA_window"]*(Toa_ave-TroomSP)*24
-
-                            ## ② 日射による熱取得
-                            shading_daily = np.zeros(365)
-
-                            for dd in range(0,365):
-
-                                if ac_mode[dd] == "冷房":
-                                    shading_daily[dd] = window_configure["shadingEffect_C"]
-                                elif ac_mode[dd] == "中間":
-                                    shading_daily[dd] = window_configure["shadingEffect_C"]
-                                elif ac_mode[dd] == "暖房":
-                                    shading_daily[dd] = window_configure["shadingEffect_H"]
-                            
-                            if isinstance(window_configure["IA_window"], float):
-
-                                # 様式2-3に入力された窓仕様を使用する場合
-                                # 0.88は標準ガラスの日射熱取得率
-                                # 0.89は標準ガラスの入射角特性の最大値
-                                # 0.808は天空・反射日射に対する標準ガラスの入射角特性 0.808/0.88 = 0.91818
-                                if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-
-                                    Qwind_S = Qwind_S + shading_daily * \
-                                        (window_configure["IA_window"] / 0.88) * \
-                                        (solor_radiation["直達_入射角特性込"]["水平"]*0.89 + solor_radiation["天空"]["水平"]*0.808)
-
-                                else:
-
-                                    Qwind_S = Qwind_S + shading_daily * \
-                                        (window_configure["IA_window"] / 0.88) * \
-                                        (solor_radiation["直達_入射角特性込"][ wall_configure["Direction"] ]*0.89 + solor_radiation["天空"]["垂直"]*0.808)
-
-                            else:
-
-                                # 任意入力の場合（SP-8）
-                                if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                                    Qwind_S = Qwind_S +   \
-                                        (window_configure["IA_window"]) * (solor_radiation["直達"]["水平"] + solor_radiation["天空"]["水平"])
-                                else:
-                                    Qwind_S = Qwind_S + shading_daily * \
-                                        (window_configure["IA_window"]) * (solor_radiation["直達"][ wall_configure["Direction"] ] + solor_radiation["天空"]["垂直"])
-
-
-                            ## ③ 夜間放射による熱取得（マイナス）
-                            if wall_configure["Direction"] == "水平（上）" or wall_configure["Direction"] == "水平（下）":
-                                Qwind_N = Qwind_N - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"]["水平"]
-                            else:
-                                Qwind_N = Qwind_N - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"]["垂直"]
-
-
-                        elif wall_configure["WallType"] == "日の当たらない外壁":
-
-                            ## ③ 夜間放射による熱取得（マイナス）
-                            Qwind_N = Qwind_N - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"]["水平"]
-
-
-
-
-        #  室面積あたりの熱量に変換 [Wh/m2/日]
-        resultJson["Qroom"][room_zone_name]["Qwall_T"] = Qwall_T / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwall_S"] = Qwall_S / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwall_N"] = Qwall_N / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwind_T"] = Qwind_T / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwind_S"] = Qwind_S / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["Qwind_N"] = Qwind_N / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-
-
-
-    ##----------------------------------------------------------------------------------
-    ## 室負荷の計算（解説書 2.4.3、2.4.4）
-    ##----------------------------------------------------------------------------------
-
-    ## 室負荷計算のための係数（解説書 A.3）
-    with open(database_directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
-        QROOM_COEFFI = json.load(f)
-
-    
-    Heat_light_hourly = {}
-    Num_of_Person_hourly = {}
-    Heat_OAapp_hourly = {}
-
-    for room_zone_name in inputdata["AirConditioningZone"]:
-
-        Qroom_CTC = np.zeros(365)
-        Qroom_CTH = np.zeros(365)
-        Qroom_CSR = np.zeros(365)
-
-        Qcool     = np.zeros(365)
-        Qheat     = np.zeros(365)
-
-        # 室が使用されているか否か＝空調運転時間（365日分）
-        room_usage = np.sum(roomScheduleRoom[room_zone_name],1)
-
-        btype = inputdata["AirConditioningZone"][room_zone_name]["buildingType"]
-        rtype = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
-
-        # 発熱量参照値 [W/m2] を読み込む関数（空調）
-        if "room_usage_condition" in inputdata["SpecialInputData"]:
-            (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
-                bc.get_roomHeatGain(btype, rtype, inputdata["SpecialInputData"]["room_usage_condition"])
-        else:
-            (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
-                bc.get_roomHeatGain(btype, rtype)
-
-        # 様式4から照明発熱量を読み込む
-        if BUILELIB_MODE:
-            if room_zone_name in inputdata["LightingSystems"]:
-                lighting_power = 0
-                for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
-                    lighting_power += inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["RatedPower"] * \
-                        inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["Number"]
-                roomHeatGain_Light = lighting_power / inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-
-
-        Heat_light_daily  = np.sum(roomScheduleLight[room_zone_name],1) * roomHeatGain_Light   # 照明からの発熱（日積算）（365日分）
-        Heat_person_daily = np.sum(roomSchedulePerson[room_zone_name],1) * roomHeatGain_Person # 人体からの発熱（日積算）（365日分）
-        Heat_OAapp_daily  = np.sum(roomScheduleOAapp[room_zone_name],1) * roomHeatGain_OAapp   # 機器からの発熱（日積算）（365日分）
-
-        # 時刻別計算用（本来はこのループに入れるべきではない → 時刻別計算の方に入れるべき）
-        Heat_light_hourly[room_zone_name]  = roomScheduleLight[room_zone_name] * roomHeatGain_Light   # 照明からの発熱 （365日分）
-        Num_of_Person_hourly[room_zone_name] = roomSchedulePerson[room_zone_name] * roomNumOfPerson   # 人員密度（365日分）
-        Heat_OAapp_hourly[room_zone_name]  = roomScheduleOAapp[room_zone_name] * roomHeatGain_OAapp   # 機器からの発熱 （365日分）
-
-
-        for dd in range(0,365):
-
-            if room_usage[dd] > 0:
-
-                # 前日の空調の有無
-                if "終日空調" in QROOM_COEFFI[ btype ][ rtype ]:
-                    onoff = "終日空調"
-                elif (dd > 0) and (room_usage[dd-1] > 0):
-                    onoff = "前日空調"
-                else:
-                    onoff = "前日休み"
-
-                if ac_mode[dd] == "冷房":
-
-                    Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
-                        resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["補正切片"]
-
-                    Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
-                        resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["補正切片"]
-
-                    Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["切片"]
-
-                elif ac_mode[dd] == "暖房":
-
-                    Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
-                        resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["切片"]
-
-                    Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
-                        resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["切片"]
-
-                    Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["切片"]
-                        
-                elif ac_mode[dd] == "中間":
-
-                    Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["冷房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
-                        resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["冷房負荷"]["補正切片"]
-
-                    Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["暖房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
-                        resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["暖房負荷"]["補正切片"]
-
-                    Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["日射量変動"]["冷房負荷"]["係数"] * \
-                        ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["日射量変動"]["冷房負荷"]["切片"]
-
-                if Qroom_CTC[dd] < 0:
-                    Qroom_CTC[dd] = 0
-
-                if Qroom_CTH[dd] > 0:
-                    Qroom_CTH[dd] = 0
-
-                if Qroom_CSR[dd] < 0:
-                    Qroom_CSR[dd] = 0
-
-                # 日射負荷 Qroom_CSR を暖房負荷 Qroom_CTH に足す
-                Qcool[dd] = Qroom_CTC[dd]
-                Qheat[dd] = Qroom_CTH[dd] + Qroom_CSR[dd]
-
-                # 日射負荷によって暖房負荷がプラスになった場合は、超過分を冷房負荷に加算 ＜この処理は意味をなしていない＝不要＞
-                if Qheat[dd] > 0:
-                    Qcool[dd] = Qcool[dd] + Qheat[dd]
-                    Qheat[dd] = 0
-                
-                # 内部発熱を暖房負荷 Qheat に足す
-                Qheat[dd] = Qheat[dd] + ( Heat_light_daily[dd] + Heat_person_daily[dd] + Heat_OAapp_daily[dd] )
-                
-                # 内部発熱によって暖房負荷がプラスになった場合は、超過分を冷房負荷に加算
-                if Qheat[dd] > 0:
-                    Qcool[dd] = Qcool[dd] + Qheat[dd]
-                    Qheat[dd] = 0
-            
-            else:
-
-                # 空調OFF時は 0 とする
-                Qcool[dd] = 0
-                Qheat[dd] = 0
-
-
-        # 日積算熱取得　　QroomDc, QroomDh [MJ/day]
-        resultJson["Qroom"][room_zone_name]["QroomDc"] = Qcool * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-        resultJson["Qroom"][room_zone_name]["QroomDh"] = Qheat * (3600/1000000) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
 
     if debug: # pragma: no cover
@@ -1193,7 +549,7 @@ def calc_energy(inputdata, debug = False):
     for room_zone_name in inputdata["AirConditioningZone"]:
 
         for dd in range(0,365):
-            
+
             # 日別の運転時間 [h]
             daily_opetime = sum(roomScheduleRoom[room_zone_name][dd])
 
@@ -1218,7 +574,7 @@ def calc_energy(inputdata, debug = False):
         with open('./builelib/heat_load_calculation/heatload_calculation_template.json', 'r', encoding='utf-8') as js:
         # with open('input_non_residential.json', 'r', encoding='utf-8') as js:
             input_heatcalc_template = json.load(js)
-            
+
         ## 入力ファイルの生成（共通）
         # 地域
         input_heatcalc_template["common"]["region"] = inputdata["Building"]["Region"]
@@ -1237,7 +593,7 @@ def calc_energy(inputdata, debug = False):
         input_heatcalc_template["rooms"][0]["schedule"]["heat_generation_cooking"] = np.zeros(8760)
         input_heatcalc_template["rooms"][0]["schedule"]["vapor_generation_cooking"] = np.zeros(8760)
         input_heatcalc_template["rooms"][0]["schedule"]["local_vent_amount"] = np.zeros(8760)
-        
+
         # 空調ゾーン毎に負荷を計算
         for room_zone_name in inputdata["AirConditioningZone"]:
 
@@ -1252,11 +608,11 @@ def calc_energy(inputdata, debug = False):
             input_heatcalc["rooms"][0]["volume"] = inputdata["AirConditioningZone"][room_zone_name]["zoneArea"] * inputdata["AirConditioningZone"][room_zone_name]["ceilingHeight"]
 
             # 室温湿度の上下限
-            input_heatcalc["rooms"][0]["schedule"]["is_upper_temp_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760) 
-            input_heatcalc["rooms"][0]["schedule"]["is_lower_temp_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760) 
-            input_heatcalc["rooms"][0]["schedule"]["is_upper_humidity_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760) 
-            input_heatcalc["rooms"][0]["schedule"]["is_lower_humidity_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760) 
-            
+            input_heatcalc["rooms"][0]["schedule"]["is_upper_temp_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760)
+            input_heatcalc["rooms"][0]["schedule"]["is_lower_temp_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760)
+            input_heatcalc["rooms"][0]["schedule"]["is_upper_humidity_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760)
+            input_heatcalc["rooms"][0]["schedule"]["is_lower_humidity_limit_set"] = np.reshape(np.array(roomScheduleRoom[room_zone_name], dtype="bool"), 8760)
+
             # 発熱量
             # 照明発熱スケジュール[W]
             input_heatcalc["rooms"][0]["schedule"]["heat_generation_lighting"] = np.reshape(Heat_light_hourly[room_zone_name],8760) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
@@ -1386,13 +742,13 @@ def calc_energy(inputdata, debug = False):
 
                 # 外壁
                 for (wall_id, wall_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
-            
+
                     # 等価R値
                     if inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] > 4:
                         equivalent_Rvalue = 0.001
                     else:
                         equivalent_Rvalue = (1/inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["U_wall"] - 0.25)
-                    
+
                     direction = ""
                     if inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["Direction"] ==  "北":
                         direction = "n"
@@ -1443,7 +799,7 @@ def calc_energy(inputdata, debug = False):
                                 "temp_dif_coef": 0,
                                 "direction": direction,
                                 "is_solar_absorbed_inside": False,
-                                "general_part_spec" : 
+                                "general_part_spec" :
                                     {
                                         "outside_emissivity": 0.9,
                                         "outside_solar_absorption": 0.8,
@@ -1479,7 +835,7 @@ def calc_energy(inputdata, debug = False):
                                 "temp_dif_coef": 0,
                                 "direction": direction,
                                 "is_solar_absorbed_inside": False,
-                                "ground_spec" : 
+                                "ground_spec" :
                                     {
                                         "inside_heat_transfer_resistance": 0.11,
                                         "layers": [
@@ -1497,11 +853,11 @@ def calc_energy(inputdata, debug = False):
                                     }
                             }
                         )
-                        
+
 
                     # 窓
                     for (window_id, window_configure) in enumerate( inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["WindowList"]):
-                        
+
                         if window_configure["WindowID"] != "無":
 
                             input_heatcalc["rooms"][0]["boundaries"].append(
@@ -1530,12 +886,12 @@ def calc_energy(inputdata, debug = False):
             # デバッグ用
             # with open("heatloadcalc_input.json",'w', encoding='utf-8') as fw:
             #     json.dump(input_heatcalc, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
-            
+
             # 負荷計算の実行
             heatload_sensible_convection, heatload_sensible_radiation, heatload_latent = Main.run(input_heatcalc)
 
             # 負荷の積算（全熱負荷）[W] (365×24)
-            heatload = np.array( 
+            heatload = np.array(
                     bc.trans_8760to36524(heatload_sensible_convection) + \
                     bc.trans_8760to36524(heatload_sensible_radiation) + \
                     bc.trans_8760to36524(heatload_latent)
@@ -1552,13 +908,13 @@ def calc_energy(inputdata, debug = False):
 
                     if heatload[dd][hh] > 0:
                         # 暖房負荷 [W] → [MJ/hour]
-                        resultJson["Qroom"][room_zone_name]["QroomHh"][dd][hh] = (-1) * heatload[dd][hh] * 3600/1000000 
+                        resultJson["Qroom"][room_zone_name]["QroomHh"][dd][hh] = (-1) * heatload[dd][hh] * 3600/1000000
                         # 暖房負荷 [W] → [MJ/day]
                         resultJson["Qroom"][room_zone_name]["QroomDh"][dd] += (-1) * heatload[dd][hh] * 3600/1000000
 
                     elif heatload[dd][hh] < 0:
                         # 冷房負荷 [W] → [MJ/hour]
-                        resultJson["Qroom"][room_zone_name]["QroomHc"][dd][hh] = (-1) * heatload[dd][hh] * 3600/1000000 
+                        resultJson["Qroom"][room_zone_name]["QroomHc"][dd][hh] = (-1) * heatload[dd][hh] * 3600/1000000
                         # 冷房負荷 [W]→ [MJ/day]
                         resultJson["Qroom"][room_zone_name]["QroomDc"][dd] += (-1) * heatload[dd][hh] * 3600/1000000
 
@@ -1628,27 +984,27 @@ def calc_energy(inputdata, debug = False):
             "E_fan_c_day": np.zeros(365),      # 空調機群のエネルギー消費量（冷房）
             "E_fan_h_day": np.zeros(365),      # 空調機群のエネルギー消費量（暖房）
             "E_AHUaex_day": np.zeros(365),     # 全熱交換器のエネルギー消費量
-            
+
             "TdAHUc_total": np.zeros(365),     # 空調機群の冷房運転時間の合計
             "TdAHUh_total": np.zeros(365),     # 空調機群の暖房運転時間の合計
 
             "Qahu_remainC": np.zeros(365),     # 空調機群の未処理負荷（冷房）[MJ/day]
             "Qahu_remainH": np.zeros(365),     # 空調機群の未処理負荷（暖房）[MJ/day]
 
-            "energy_consumption_each_LF": np.zeros(len(aveL)), 
+            "energy_consumption_each_LF": np.zeros(len(aveL)),
 
             "Qroom" :{
                 "cooling_for_room" : np.zeros(365),   # 日積算室負荷（冷房要求）の積算値 [MJ/day]
                 "heating_for_room" : np.zeros(365),   # 日積算室負荷（暖房要求）の積算値 [MJ/day]
-            },           
+            },
             "Qahu" :{
                 "cooling_for_room" : np.zeros(365),   # 室負荷が正（冷房要求）であるときの空調負荷（正であれば冷却コイル負荷、負であれば加熱コイル負荷） [MJ/day]
                 "heating_for_room" : np.zeros(365),   # 室負荷が負（暖房要求）であるときの空調負荷（正であれば冷却コイル負荷、負であれば加熱コイル負荷） [MJ/day]
-            },   
+            },
             "Tahu" :{
                 "cooling_for_room" : np.zeros(365),   # 室負荷が冷房要求である場合の空調機群の運転時間 [h/day]
                 "heating_for_room" : np.zeros(365),   # 室負荷が暖房要求である場合の空調機群の運転時間 [h/day]
-            }, 
+            },
 
             "Economizer":{
                 "AHUVovc" : np.zeros(365),   # 外気冷房運転時の外気風量 [kg/s]
@@ -1662,7 +1018,7 @@ def calc_energy(inputdata, debug = False):
             "TdAHUc": {
                 "cooling_for_room" : np.zeros(365), # 空調機群の冷房運転時間（室負荷が冷房要求である場合）
                 "heating_for_room" : np.zeros(365), # 空調機群の冷房運転時間（室負荷が冷房要求である場合）
-            },     
+            },
             "LdAHUh": {
                 "cooling_for_room" : np.zeros(365), # 空調機群の暖房負荷率帯（室負荷が冷房要求である場合）
                 "heating_for_room" : np.zeros(365), # 空調機群の暖房負荷率帯（室負荷が冷房要求である場合）
@@ -1691,7 +1047,7 @@ def calc_energy(inputdata, debug = False):
             if unit_configure["Type"] == "空調機":
                 inputdata["AirHandlingSystem"][ahu_name]["AHU_type"] = "空調機"
                 break
-        
+
         # 空調機の能力
         inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"] = 0
         inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"] = 0
@@ -1710,60 +1066,46 @@ def calc_energy(inputdata, debug = False):
             if unit_configure["FanAirVolume"] != None:
                 inputdata["AirHandlingSystem"][ahu_name]["FanAirVolume"] += \
                     unit_configure["FanAirVolume"] * unit_configure["Number"]
-        
-
-        # 全熱交換器の有無
-        inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "無"
-        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-            if unit_configure["isAirHeatExchanger"] == "全熱交換器あり・様式2-9記載無し":
-                inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "有"
 
         # 全熱交換器の効率（一番低いものを採用）
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = None
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = None
+        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
 
-        if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "有":
-            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+            # 冷房の効率
+            if (unit_configure["AirHeatExchangeRatioCooling"] != None):
+                if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] == None:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = unit_configure["AirHeatExchangeRatioCooling"]
+                elif inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] > unit_configure["AirHeatExchangeRatioCooling"]:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = unit_configure["AirHeatExchangeRatioCooling"]
 
-                # 冷房の効率
-                if (unit_configure["AirHeatExchangeRatioCooling"] != None):
-                    if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] == None:
-                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = unit_configure["AirHeatExchangeRatioCooling"]
-                    elif inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] > unit_configure["AirHeatExchangeRatioCooling"]:
-                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] = unit_configure["AirHeatExchangeRatioCooling"]
-
-                # 暖房の効率
-                if (unit_configure["AirHeatExchangeRatioHeating"] != None):    
-                    if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] == None:
-                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = unit_configure["AirHeatExchangeRatioHeating"]
-                    elif inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] > unit_configure["AirHeatExchangeRatioHeating"]:
-                        inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = unit_configure["AirHeatExchangeRatioHeating"]
+            # 暖房の効率
+            if (unit_configure["AirHeatExchangeRatioHeating"] != None):
+                if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] == None:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = unit_configure["AirHeatExchangeRatioHeating"]
+                elif inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] > unit_configure["AirHeatExchangeRatioHeating"]:
+                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] = unit_configure["AirHeatExchangeRatioHeating"]
 
         # 全熱交換器のバイパス制御の有無（1つでもあればバイパス制御「有」とする）
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] = "無"
-
-        if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "有":
-            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+            if (unit_configure["AirHeatExchangeRatioCooling"] != None) and (unit_configure["AirHeatExchangeRatioHeating"] != None):
                 if unit_configure["AirHeatExchangerControl"] == "有":
                     inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] = "有"
 
-        # 全熱交換器の消費電力 [kW]（積算する）
+        # 全熱交換器の消費電力 [kW]
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerPowerConsumption"] = 0
-        
-        if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "有":
-            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-                if unit_configure["AirHeatExchangerPowerConsumption"] != None:
-                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerPowerConsumption"] += \
-                        unit_configure["AirHeatExchangerPowerConsumption"] * unit_configure["Number"]
+        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+            if unit_configure["AirHeatExchangerPowerConsumption"] != None:
+                inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerPowerConsumption"] += \
+                    unit_configure["AirHeatExchangerPowerConsumption"] * unit_configure["Number"]
 
-        # 全熱交換器の風量 [m3/h]（積算する）
+        # 全熱交換器の風量 [m3/h]
         inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"] = 0
-
-        if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "有":
-            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-                if unit_configure["FanAirVolume"] != None:
-                    inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"]  += \
-                        unit_configure["FanAirVolume"] * unit_configure["Number"]
+        for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
+            if (unit_configure["AirHeatExchangeRatioCooling"] != None) and (unit_configure["AirHeatExchangeRatioHeating"] != None):
+                inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"]  += \
+                    unit_configure["FanAirVolume"] * unit_configure["Number"]
 
 
     ##----------------------------------------------------------------------------------
@@ -1797,7 +1139,7 @@ def calc_energy(inputdata, debug = False):
             number += 1
 
         if inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] == None:
-            
+
             inputdata["AirHandlingSystem"][ahu_name]["Pump_heating"] = "dummyPump_" + str(number)
 
             inputdata["SecondaryPumpSystem"][ "dummyPump_" + str(number) ] = {
@@ -1995,14 +1337,14 @@ def calc_energy(inputdata, debug = False):
                     (resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd] == 0): # 外調機を想定（空調運転時間は0より大きいが、Qroomが0である場合）
 
                     # 外調機の場合は「冷房側」に運転時間を割り当てる。
-                    resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]   
+                    resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
                     resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] = 0
-            
+
                 elif resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd] == 0:  # 暖房要求しかない場合。
 
                     resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = 0
                     resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
-        
+
                 elif resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd] == 0:  # 冷房要求しかない場合。
 
                     resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu_total"][dd]
@@ -2011,7 +1353,7 @@ def calc_energy(inputdata, debug = False):
                 else: # 冷房要求と暖房要求の両方が発生する場合
 
                     if abs(resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd]) < abs(resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd]):
-                        
+
                         # 暖房負荷の方が大きい場合
                         ratio = abs(resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd]) / \
                             ( abs(resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd]) + abs(resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd]) )
@@ -2044,17 +1386,17 @@ def calc_energy(inputdata, debug = False):
         if "room_usage_condition" in inputdata["SpecialInputData"]:    # SPシートで任意の入力がされている場合
 
             inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
-                bc.get_roomOutdoorAirVolume( 
-                    inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
-                    inputdata["AirConditioningZone"][room_zone_name]["roomType"], 
+                bc.get_roomOutdoorAirVolume(
+                    inputdata["AirConditioningZone"][room_zone_name]["buildingType"],
+                    inputdata["AirConditioningZone"][room_zone_name]["roomType"],
                     inputdata["SpecialInputData"]["room_usage_condition"]
                 ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
         else:
 
             inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
-                bc.get_roomOutdoorAirVolume( 
-                    inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
+                bc.get_roomOutdoorAirVolume(
+                    inputdata["AirConditioningZone"][room_zone_name]["buildingType"],
                     inputdata["AirConditioningZone"][room_zone_name]["roomType"]
                 ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
@@ -2101,7 +1443,7 @@ def calc_energy(inputdata, debug = False):
 
                 # 運転モードによって場合分け
                 if ac_mode[dd] == "暖房":
-                    
+
                     # 外気導入量 [m3/h]
                     ahuVoa  = inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"]
                     # 全熱交換風量 [m3/h]
@@ -2111,16 +1453,16 @@ def calc_energy(inputdata, debug = False):
                     if ahuaexV > ahuVoa:
                         ahuaexV = ahuVoa
                     elif ahuaexV <= 0:
-                        ahuaexV = 0                    
+                        ahuaexV = 0
 
                     # 外気負荷の算出
-                    if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "無":   # 全熱交換器がない場合
+                    if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioHeating"] == None:   # 全熱交換器がない場合
 
                         resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_heating"] *1.293/3600
 
                     else:  # 全熱交換器がある場合
-                        
+
                         if (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] > Hroom[dd]) and (inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] == "有"):
 
                             # バイパス有の場合はそのまま外気導入する。
@@ -2137,7 +1479,7 @@ def calc_energy(inputdata, debug = False):
 
 
                 elif (ac_mode[dd] == "中間") or (ac_mode[dd] == "冷房"):
-                    
+
                     ahuVoa  = inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"]
                     ahuaexV = inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerAirVolume"]
 
@@ -2148,11 +1490,11 @@ def calc_energy(inputdata, debug = False):
                         ahuaexV = 0
 
                     # 外気負荷の算出
-                    if inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] == "無":   # 全熱交換器がない場合
+                    if inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangeRatioCooling"] == None:   # 全熱交換器がない場合
 
                         resultJson["AHU"][ahu_name]["qoaAHU"][dd] = \
                             (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] - Hroom[dd]) * inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
-                            
+
                     else:  # 全熱交換器がある場合
 
                         if (resultJson["AHU"][ahu_name]["HoaDayAve"][dd] < Hroom[dd]) and  (inputdata["AirHandlingSystem"][ahu_name]["AirHeatExchangerControl"] == "有"):
@@ -2182,23 +1524,23 @@ def calc_energy(inputdata, debug = False):
 
                 # 外気冷房効果の推定
                 if (inputdata["AirHandlingSystem"][ahu_name]["isEconomizer"] == "有") and (resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]>0):   # 外気冷房があり、室負荷が冷房要求であれば
-                    
+
                     # 外気冷房運転時の外気風量 [kg/s]
                     resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] = \
                         resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd] / \
                         ((Hroom[dd]-resultJson["AHU"][ahu_name]["HoaDayAve"][dd]) * (3600/1000) * resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd])
-                    
+
                     # 上限・下限
                     if resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] < inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600:
 
                         # 下限（外気取入量） [m3/h]→[kg/s]
-                        resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] = inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600  
+                        resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] = inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
 
                     elif resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] > inputdata["AirHandlingSystem"][ahu_name]["EconomizerMaxAirVolume"] *1.293/3600:
 
                         # 上限（給気風量) [m3/h]→[kg/s]
                         resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] = inputdata["AirHandlingSystem"][ahu_name]["EconomizerMaxAirVolume"] *1.293/3600
-                    
+
                     # 追加すべき外気量（外気冷房用の追加分のみ）[kg/s]
                     resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] = \
                         resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] - inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600
@@ -2250,7 +1592,7 @@ def calc_energy(inputdata, debug = False):
 
                 # 冷房要求の室負荷を処理する必要がある場合
                 if resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] > 0:
-                    
+
                     if (inputdata["AirHandlingSystem"][ahu_name]["isOutdoorAirCut"] == "有") and \
                         (resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] > 1) and \
                         (resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] >= resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]):
@@ -2259,7 +1601,7 @@ def calc_energy(inputdata, debug = False):
                         resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] = \
                             resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd] + \
                             resultJson["AHU"][ahu_name]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] - 1) * 3600/1000
-        
+
                     else:
 
                         # 室負荷が正（冷房要求）であるときの空調負荷（正であれば冷却コイル負荷、負であれば加熱コイル負荷）
@@ -2279,7 +1621,7 @@ def calc_energy(inputdata, debug = False):
                         resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] = \
                             resultJson["AHU"][ahu_name]["Qroom"]["heating_for_room"][dd] + \
                             resultJson["AHU"][ahu_name]["qoaAHU"][dd] * (resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] - 1) * 3600/1000
-        
+
                     else:
 
                         # 室負荷が負（暖房要求）であるときの空調負荷（正であれば冷却コイル負荷、負であれば加熱コイル負荷）
@@ -2371,17 +1713,17 @@ def calc_energy(inputdata, debug = False):
 
                         # 空調負荷が正（冷却コイル負荷）である場合　→　定格冷却能力で除して負荷率を求める。
                         La[dd] = (resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] / resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] *1000/3600) / \
-                            inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]   
+                            inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]
 
                     elif resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] != 0:
 
                         # 空調負荷が負（加熱コイル負荷）である場合　→　定格加熱能力で除して負荷率を求める。
                         La[dd] = (resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] / resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd] *1000/3600) / \
                             inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]
-                
+
 
             elif requirement_type == "heating_for_room": # 室負荷が負（暖房要求）であるとき
-                
+
                 # 室負荷が負（暖房要求）であるときの平均負荷率 La [-]
                 for dd in range(0,365):
 
@@ -2389,30 +1731,30 @@ def calc_energy(inputdata, debug = False):
 
                         # 空調負荷が負（加熱コイル負荷）である場合　→　定格加熱能力で除して負荷率を求める。
                         La[dd] = (resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] / resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] *1000/3600) / \
-                            inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]   
+                            inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]
 
                     elif resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] != 0:
 
                         # 空調負荷が正（冷却コイル負荷）である場合　→　定格冷却能力で除して負荷率を求める。
                         La[dd] = (resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] / resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd] *1000/3600) / \
                             inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]
-                    
+
 
             # 定格能力＞０　→　空調機群に負荷を処理する機器があれば
             if (inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"] > 0) or (inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"] > 0):
-                
+
                 # 冷暖同時運転が「有」である場合（季節に依らず、冷却コイル負荷も加熱コイル負荷も処理する）
-                if inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "有":  
-                    
+                if inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "有":
+
                     for dd in range(0,365):
-                        
+
                         if np.isnan(La[dd]) == False:
 
                             if La[dd] > 0:    # 負荷率が正（冷却コイル負荷）である場合
-                                
+
                                 # 負荷率帯インデックスの決定
                                 iL = count_Matrix(La[dd], mxL)
-                                
+
                                 if requirement_type == "cooling_for_room":     # 室負荷が正（冷房要求）である場合
 
                                     # 室負荷が正（冷房要求）であるときの冷却コイル負荷の負荷率帯インデックス
@@ -2425,37 +1767,37 @@ def calc_energy(inputdata, debug = False):
                                     # 室負荷が負（暖房要求）であるときの冷却コイル負荷の負荷率帯インデックス
                                     resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd] = iL
                                     # 室負荷が負（暖房要求）であるときの空調運転時間
-                                    resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]       
-                                
+                                    resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]
+
                             elif La[dd] < 0:  # 負荷率が負（加熱コイル負荷）である場合
 
                                 # 負荷率帯インデックスの決定
                                 iL = count_Matrix((-1)*La[dd], mxL)
-                                
+
                                 if requirement_type == "cooling_for_room":     # 室負荷が正（冷房要求）である場合
 
                                     # 室負荷が正（冷房要求）であるときの加熱コイル負荷の負荷率帯インデックス
-                                    resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd] = iL           
+                                    resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd] = iL
                                     # 室負荷が正（冷房要求）であるときの空調運転時間
-                                    resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]   
+                                    resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]
 
                                 elif requirement_type == "heating_for_room":   # 室負荷が負（暖房要求）である場合
 
                                     # 室負荷が負（暖房要求）であるときの加熱コイル負荷の負荷率帯インデックス
-                                    resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] = iL           
+                                    resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] = iL
                                     # 室負荷が負（暖房要求）であるときの空調運転時間
-                                    resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]       
+                                    resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]
 
 
                 # 冷暖同時供給が「無」である場合（季節により、冷却コイル負荷か加熱コイル負荷のどちらか一方を処理する）
-                elif inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "無":  
+                elif inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply"] == "無":
 
                     for dd in range(0,365):
 
                         if np.isnan(La[dd]) == False:   # 日付dの負荷率が NaN で無い場合
 
                             # 冷房モード で動く期間の場合、かつ、空調負荷（冷却コイル負荷か加熱コイル負荷）が発生しているとき
-                            if (La[dd] != 0) and (ac_mode[dd] == "冷房" or ac_mode[dd] == "中間"):   
+                            if (La[dd] != 0) and (ac_mode[dd] == "冷房" or ac_mode[dd] == "中間"):
 
                                 # 負荷率帯インデックスの決定
                                 iL = count_Matrix(La[dd], mxL)
@@ -2463,19 +1805,19 @@ def calc_energy(inputdata, debug = False):
                                 if requirement_type == "cooling_for_room":     # 室負荷が正（冷房要求）である場合
 
                                     # 室負荷が正（冷房要求）であるときの空調負荷の負荷率帯インデックス（ただし、加熱コイル負荷は 負荷率帯 0　となる）
-                                    resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd] = iL           
+                                    resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd] = iL
                                     # 室負荷が正（冷房要求）であるときの空調運転時間(加熱コイル負荷発生時も 負荷率=0として送風機は動く想定)
-                                    resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]       
+                                    resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]
 
                                 elif requirement_type == "heating_for_room":   # 室負荷が負（暖房要求）である場合
-                                    
+
                                     # 室負荷が負（暖房要求）であるときの空調負荷の負荷率帯インデックス（ただし、加熱コイル負荷は 負荷率帯 0　となる）
-                                    resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd] = iL           
+                                    resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd] = iL
                                     # 室負荷が負（暖房要求）であるときの空調運転時間(加熱コイル負荷発生時も 負荷率=0として送風機は動く想定)
-                                    resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]  
-                                    
+                                    resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]
+
                             # 暖房モード で動く期間の場合、かつ、空調負荷（冷却コイル負荷か加熱コイル負荷）が発生しているとき
-                            elif (La[dd] != 0) and (ac_mode[dd] == "暖房"):  
+                            elif (La[dd] != 0) and (ac_mode[dd] == "暖房"):
 
                                 # 負荷率帯インデックスの決定
                                 iL = count_Matrix((-1)*La[dd], mxL)
@@ -2486,33 +1828,29 @@ def calc_energy(inputdata, debug = False):
                                     resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd] = iL
                                     # 室負荷が正（冷房要求）であるときの空調運転時間(冷却コイル負荷発生時も 負荷率=0として送風機は動く想定)
                                     resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]
-                                    
+
                                 elif requirement_type == "heating_for_room":   # 室負荷が負（暖房要求）である場合
 
                                     # 室負荷が負（暖房要求）であるときの空調負荷の負荷率帯インデックス（ただし、冷却コイル負荷は 負荷率帯 0　となる）
-                                    resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] = iL                  
+                                    resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] = iL
                                     # 室負荷が負（暖房要求）であるときの空調運転時間(冷却コイル負荷発生時も 負荷率=0として送風機は動く想定)
-                                    resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]      
-        
+                                    resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]
+
     if debug: # pragma: no cover
 
         for ahu_name in inputdata["AirHandlingSystem"]:
 
             # マトリックスの再現
-            matlix_AHUc_L = np.zeros(11)
-            matlix_AHUh_L = np.zeros(11)
+            LAHUc0 = np.zeros(11)
+            LAHUc1 = np.zeros(11)
+            LAHUh0 = np.zeros(11)
+            LAHUh1 = np.zeros(11)
             for dd in range(0,365):
-                matlix_AHUc_L[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
-                matlix_AHUc_L[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
-                matlix_AHUh_L[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
-                matlix_AHUh_L[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
+                LAHUc0[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
+                LAHUc1[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
+                LAHUh0[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
+                LAHUh1[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
 
-            print("matlix_AHUc_L")
-            print(matlix_AHUc_L)
-            print(np.sum(matlix_AHUc_L))
-            print("LAHUh")
-            print(matlix_AHUh_L)
-            print(np.sum(matlix_AHUh_L))
 
     ##----------------------------------------------------------------------------------
     ## 風量制御方式によって定まる係数（解説書 2.5.7）
@@ -2526,10 +1864,10 @@ def calc_energy(inputdata, debug = False):
 
             # 初期化
             inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"] = np.ones(len(aveL))
-                
+
             # 係数の取得
             if unit_configure["FanControlType"] in FLOWCONTROL.keys():
-                
+
                 a4 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a4"]
                 a3 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a3"]
                 a2 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a2"]
@@ -2566,14 +1904,14 @@ def calc_energy(inputdata, debug = False):
                         a3 * (Vmin)**3 + \
                         a2 * (Vmin)**2 + \
                         a1 * (Vmin)**1 + \
-                        a0    
+                        a0
                 else:
                     inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"][iL] = \
                         a4 * (aveL[iL])**4 + \
                         a3 * (aveL[iL])**3 + \
                         a2 * (aveL[iL])**2 + \
                         a1 * (aveL[iL])**1 + \
-                        a0    
+                        a0
 
     if debug: # pragma: no cover
 
@@ -2611,7 +1949,7 @@ def calc_energy(inputdata, debug = False):
                 print( f'送風機単体の定格消費電力: {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["FanPowerConsumption_total"]}')
 
 
-                    
+
     ##----------------------------------------------------------------------------------
     ## 送風機の消費電力 （解説書 2.5.9）
     ##----------------------------------------------------------------------------------
@@ -2718,7 +2056,7 @@ def calc_energy(inputdata, debug = False):
 
             ##------------------------
             # 空調負荷が正（冷却コイル負荷）のときと負（加熱コイル負荷）のときを合計する。
-            ##------------------------            
+            ##------------------------
             resultJson["AHU"][ahu_name]["E_fan_day"][dd] = \
                 resultJson["AHU"][ahu_name]["E_fan_c_day"][dd] + resultJson["AHU"][ahu_name]["E_fan_h_day"][dd]
 
@@ -2754,14 +2092,14 @@ def calc_energy(inputdata, debug = False):
 
     for ahu_name in inputdata["AirHandlingSystem"]:
 
-        resultJson["AHU"][ahu_name]["定格能力（冷房）[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"] 
-        resultJson["AHU"][ahu_name]["定格能力（暖房）[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"] 
-        resultJson["AHU"][ahu_name]["定格消費電力[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["FanPowerConsumption_total"] 
+        resultJson["AHU"][ahu_name]["定格能力（冷房）[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityCooling"]
+        resultJson["AHU"][ahu_name]["定格能力（暖房）[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["RatedCapacityHeating"]
+        resultJson["AHU"][ahu_name]["定格消費電力[kW]"] = inputdata["AirHandlingSystem"][ahu_name]["FanPowerConsumption_total"]
 
         cooling_load = 0
         heating_load = 0
         for dd in range(0,365):
-            
+
             if resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] >= 0:
                 cooling_load += resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd]
             else:
@@ -2899,7 +2237,7 @@ def calc_energy(inputdata, debug = False):
             inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"] = \
                 inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption"] * \
                 inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["Number"]
-        
+
             # 二次ポンプ群全体の定格消費電力の合計
             inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"] += \
                 inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["RatedPowerConsumption_total"]
@@ -2960,7 +2298,7 @@ def calc_energy(inputdata, debug = False):
 
                 # 室負荷が冷房要求である場合において空調負荷が正の値である場合、かつ、冷暖同時供給が無い場合
                 if (resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] > 0) and \
-                    (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):   
+                    (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_heating"] == "無"):
 
                     resultJson["AHU"][ahu_name]["Qahu_remainC"][dd] += ( resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] )
                     resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] = 0
@@ -2976,7 +2314,7 @@ def calc_energy(inputdata, debug = False):
 
                 # 室負荷が冷房要求である場合において空調負荷が負の値である場合、かつ、冷暖同時供給が無い場合
                 if (resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] < 0) and \
-                    (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):   
+                    (inputdata["AirHandlingSystem"][ahu_name]["isSimultaneousSupply_cooling"] == "無"):
 
                     resultJson["AHU"][ahu_name]["Qahu_remainH"][dd] += (-1)*( resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] )
                     resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"][dd] = 0
@@ -3032,7 +2370,7 @@ def calc_energy(inputdata, debug = False):
 
                     # 室負荷が暖房要求である場合において空調負荷が正である場合
                     if resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] > 0:
-                        
+
                         resultJson["PUMP"][pump_name]["Qps"][dd] += \
                             resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"][dd] - resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd] + resultJson["PUMP"][pump_name]["Qpsahu_fan"][dd]
 
@@ -3077,7 +2415,7 @@ def calc_energy(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     for pump_name in inputdata["PUMP"]:
-        
+
         for ahu_name in inputdata["PUMP"][pump_name]["AHU_list"]:
 
             resultJson["PUMP"][ pump_name ]["schedule"] += resultJson["AHU"][ ahu_name ]["schedule"]
@@ -3130,10 +2468,10 @@ def calc_energy(inputdata, debug = False):
 
     for pump_name in inputdata["PUMP"]:
 
-        Lpump = np.zeros(365) 
+        Lpump = np.zeros(365)
         Mxc = np.zeros(365)  # ポンプの負荷率区分
         Tdc = np.zeros(365)  # ポンプの運転時間
-        
+
         if inputdata["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
 
             for dd in range(0,365):
@@ -3144,9 +2482,9 @@ def calc_energy(inputdata, debug = False):
                         /inputdata["PUMP"][pump_name]["Qpsr"]
 
             for dd in range(0,365):
-            
+
                 if (resultJson["PUMP"][pump_name]["Tps"][dd] > 0) and (inputdata["PUMP"][pump_name]["Qpsr"] > 0):  # ゼロ割でNaNになっている値を飛ばす
-                    
+
                     if Lpump[dd] > 0:
 
                         # 出現時間マトリックスを作成
@@ -3157,7 +2495,7 @@ def calc_energy(inputdata, debug = False):
 
         resultJson["PUMP"][pump_name]["LdPUMP"] = Mxc
         resultJson["PUMP"][pump_name]["TdPUMP"] = Tdc
-        
+
 
     ##----------------------------------------------------------------------------------
     ## 流量制御方式によって定まる係数（解説書 2.6.7）
@@ -3205,7 +2543,7 @@ def calc_energy(inputdata, debug = False):
         if inputdata["PUMP"][pump_name]["Qpsr"] != 0:   # 仮想ポンプ（二次ポンプがないシステム用の仮想ポンプ）は除く
 
             if inputdata["PUMP"][pump_name]["isStagingControl"] == "無":    # 台数制御なし
-            
+
                 # 運転台数
                 MxPUMPNum = np.ones(divL) * inputdata["PUMP"][pump_name]["number_of_pumps"]
 
@@ -3256,7 +2594,7 @@ def calc_energy(inputdata, debug = False):
 
                         if Qpsr_iL < tmpQmax:
                             break
-                    
+
                     MxPUMPNum[iL] = rr+1   # pythonのインデックスと実台数は「1」ずれることに注意。
 
 
@@ -3265,7 +2603,7 @@ def calc_energy(inputdata, debug = False):
                     numVWV = MxPUMPNum[iL]  # MxPUMPNum[iL]は、負荷率帯 iL のときの運転台数（定流量＋変流量）
 
                     for rr in range(0, int(MxPUMPNum[iL])):
-                        
+
                         if (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "無") or \
                             (inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["ContolType"] == "定流量制御"):
 
@@ -3283,7 +2621,7 @@ def calc_energy(inputdata, debug = False):
                             PUMPvwvfac = np.ones(divL)
                             if aveL[iL] > 1.0:
                                 PUMPvwvfac[iL] = 1.2
-                            
+
                             if aveL[iL] > 1.0:
                                 MxPUMPPower[iL] += inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["RatedPowerConsumption_total"] * PUMPvwvfac[iL]
                             else:
@@ -3298,7 +2636,7 @@ def calc_energy(inputdata, debug = False):
                             # 最小流量の制限
                             if tmpL < inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100:
                                 tmpL = inputdata["PUMP"][pump_name]["SecondaryPump"][rr]["MinOpeningRate"]/100
-                            
+
                             # 変流量制御による省エネ効果
                             PUMPvwvfac = np.ones(divL)
                             if aveL[iL] > 1.0:
@@ -3342,7 +2680,7 @@ def calc_energy(inputdata, debug = False):
         resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"] += np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
         resultJson["日別エネルギー消費量"]["E_pump_MWh_day"] += resultJson["PUMP"][pump_name]["E_pump_day"]
-    
+
         resultJson["PUMP"][pump_name]["TcPUMP"]  = np.sum(resultJson["PUMP"][pump_name]["TdPUMP"], 0)
         resultJson["PUMP"][pump_name]["MxPUMPE"]  = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
@@ -3369,7 +2707,7 @@ def calc_energy(inputdata, debug = False):
             print( f'二次ポンプ群の負荷 Qps: {np.sum(resultJson["PUMP"][pump_name]["Qps"],0)}' )
             print( f'二次ポンプ群の運転時間 Tps: {np.sum(resultJson["PUMP"][pump_name]["Tps"],0)}' )
             print( f'二次ポンプ群の電力消費量 E_pump_day: {np.sum(resultJson["PUMP"][pump_name]["E_pump_day"],0)}' )
-        
+
         print( f'二次ポンプ群のエネルギー消費量 E_pump: {resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"]} MWh' )
 
 
@@ -3379,7 +2717,7 @@ def calc_energy(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     for pump_name in inputdata["PUMP"]:
-    
+
         if resultJson["PUMP"][pump_name]["TcPUMP"] > 0:
 
             for dd in range(0,365):
@@ -3403,17 +2741,17 @@ def calc_energy(inputdata, debug = False):
         if pump_name.startswith("dummyPump") == False:
 
             if inputdata["PUMP"][pump_name]["mode"] == "cooling":
-                resultJson["PUMP"][pump_name]["運転モード"] = "冷房" 
+                resultJson["PUMP"][pump_name]["運転モード"] = "冷房"
             elif inputdata["PUMP"][pump_name]["mode"] == "heating":
                 resultJson["PUMP"][pump_name]["運転モード"] = "暖房"
             else:
                 raise Exception("運転モードが不正です")
 
-            resultJson["PUMP"][pump_name]["台数"] = inputdata["PUMP"][pump_name]["number_of_pumps"] 
+            resultJson["PUMP"][pump_name]["台数"] = inputdata["PUMP"][pump_name]["number_of_pumps"]
 
             resultJson["PUMP"][pump_name]["定格能力[kW]"] = inputdata["PUMP"][pump_name]["Qpsr"]
-            resultJson["PUMP"][pump_name]["定格消費電力[kW]"] = inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"] 
-            resultJson["PUMP"][pump_name]["定格流量[m3/h]"] = inputdata["PUMP"][pump_name]["Vpsr"] 
+            resultJson["PUMP"][pump_name]["定格消費電力[kW]"] = inputdata["PUMP"][pump_name]["RatedPowerConsumption_total"]
+            resultJson["PUMP"][pump_name]["定格流量[m3/h]"] = inputdata["PUMP"][pump_name]["Vpsr"]
 
             resultJson["PUMP"][pump_name]["運転時間[時間]"] = np.sum(resultJson["PUMP"][pump_name]["Tps"],0)
             resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] = np.sum(resultJson["PUMP"][pump_name]["Qps"],0)
@@ -3496,7 +2834,7 @@ def calc_energy(inputdata, debug = False):
 
             for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
                 if unit_id == 0 and inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceType"] != "熱交換器":
-                
+
                     # 1台目が熱交換器では無い場合、熱交換器を追加する。
                     inputdata["REF"][ref_name]["Heatsource"].insert(0,
                         {
@@ -3531,7 +2869,7 @@ def calc_energy(inputdata, debug = False):
 
         inputdata["REF"][ref_name]["pump_list"] = set()
         inputdata["REF"][ref_name]["num_of_unit"] = 0
-        
+
 
         # 熱源群全体の性能
         inputdata["REF"][ref_name]["Qref_rated"] = 0
@@ -3563,12 +2901,12 @@ def calc_energy(inputdata, debug = False):
             # 冷却塔ファンの消費電力の合計
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["CoolingTowerFanPowerConsumption_total"] = \
                 unit_configure["CoolingTowerFanPowerConsumption"] * unit_configure["Number"]
-            
+
             # 冷却塔ポンプの消費電力の合計
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["CoolingTowerPumpPowerConsumption_total"] = \
                 unit_configure["CoolingTowerPumpPowerConsumption"] * unit_configure["Number"]
 
-        
+
         # 蓄熱システムの追掛運転用熱交換器の制約
         if inputdata["REF"][ref_name]["isStorage"] == "追掛":
 
@@ -3624,13 +2962,13 @@ def calc_energy(inputdata, debug = False):
         resultJson["REF"][ref_name]["E_PPc_day"]     = np.zeros(365)      # 一次ポンプ電力 [MWh]
         resultJson["REF"][ref_name]["E_CTfan_day"]   = np.zeros(365)      # 冷却塔ファン電力 [MWh]
         resultJson["REF"][ref_name]["E_CTpump_day"]  = np.zeros(365)      # 冷却水ポンプ電力 [MWh]
-        
+
         resultJson["REF"][ref_name]["Heatsource"]    = {}
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
             # 熱源群に属する各熱源機器の値
             resultJson["REF"][ref_name]["Heatsource"][unit_id] = {}
-            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"]  = np.zeros(365) 
+            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"]  = np.zeros(365)
             resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit"] = np.zeros(365)
             resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"] = np.zeros(365)
 
@@ -3641,7 +2979,7 @@ def calc_energy(inputdata, debug = False):
     # 熱源群の合計定格能力
     for ref_name in inputdata["REF"]:
         inputdata["REF"][ref_name]["Qref_rated"] = 0
-        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):    
+        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
             inputdata["REF"][ref_name]["Qref_rated"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
 
 
@@ -3650,7 +2988,7 @@ def calc_energy(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     for ref_name in inputdata["REF"]:
-        
+
         # 蓄熱の場合: 熱損失量 [MJ/day] を足す。損失量は 蓄熱槽容量の3%。
         if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
             resultJson["REF"][ref_name]["Qref_thermal_loss"] = inputdata["REF"][ref_name]["StorageSize"] * 0.03
@@ -3663,7 +3001,7 @@ def calc_energy(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     for ref_name in inputdata["REF"]:
-        
+
         for dd in range(0,365):
 
             if inputdata["REF"][ref_name]["mode"] == "cooling": # 冷熱生成用熱源
@@ -3678,9 +3016,9 @@ def calc_energy(inputdata, debug = False):
 
 
             elif inputdata["REF"][ref_name]["mode"] == "heating": # 温熱生成用熱源
-                    
+
                 for pump_name in inputdata["REF"][ref_name]["pump_list"]:
-                    
+
                     if ( resultJson["PUMP"][pump_name]["Qps"][dd] + \
                         (-1) * resultJson["PUMP"][pump_name]["Qpsahu_pump"][dd] ) > 0:
 
@@ -3692,7 +3030,7 @@ def calc_energy(inputdata, debug = False):
             if (resultJson["REF"][ref_name]["Qref"][dd] != 0) and (inputdata["REF"][ref_name]["isStorage"] == "蓄熱"):
 
                 resultJson["REF"][ref_name]["Qref"][dd] += resultJson["REF"][ref_name]["Qref_thermal_loss"]
-            
+
                 # 蓄熱処理追加（蓄熱槽容量以上の負荷を処理しないようにする）
                 if resultJson["REF"][ref_name]["Qref"][dd] > \
                     inputdata["REF"][ref_name]["storageEffratio"] * inputdata["REF"][ref_name]["StorageSize"]:
@@ -3717,7 +3055,7 @@ def calc_energy(inputdata, debug = False):
         # 日積算運転時間（熱源負荷が0より大きい場合のみ積算する）
         for dd in range(0,365):
             if resultJson["REF"][ref_name]["Qref"][dd] > 0:
-                resultJson["REF"][ref_name]["Tref"][dd] = np.sum(resultJson["REF"][ref_name]["schedule"][dd])        
+                resultJson["REF"][ref_name]["Tref"][dd] = np.sum(resultJson["REF"][ref_name]["schedule"][dd])
 
 
         # 日平均負荷[kW] と 過負荷[MJ/day] を求める。（検証用）
@@ -3728,7 +3066,7 @@ def calc_energy(inputdata, debug = False):
             else:
                 resultJson["REF"][ref_name]["Qref_kW"][dd] = resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000 /3600
 
-        
+
             # 過負荷分を集計 [MJ/day]
             if resultJson["REF"][ref_name]["Qref_kW"][dd] > inputdata["REF"][ref_name]["Qref_rated"]:
 
@@ -3786,34 +3124,34 @@ def calc_energy(inputdata, debug = False):
             # 燃料種類＋一次エネルギー換算 [kW]
             if fuel_type == "電力":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 1
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = (bc.fprime/3600) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = (bc.fprime/3600) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"]
             elif fuel_type == "ガス":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 2
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] 
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]
             elif fuel_type == "重油":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 3
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] 
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]
             elif fuel_type == "灯油":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 4
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]        
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]
             elif fuel_type == "液化石油ガス":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 5
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]     
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]
             elif fuel_type == "蒸気":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 6
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = \
-                    (inputdata["Building"]["Coefficient_DHC"]["Heating"]) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+                    (inputdata["Building"]["Coefficient_DHC"]["Heating"]) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
             elif fuel_type == "温水":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 7
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = \
-                    (inputdata["Building"]["Coefficient_DHC"]["Heating"])*inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+                    (inputdata["Building"]["Coefficient_DHC"]["Heating"])*inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
             elif fuel_type == "冷水":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 8
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = \
-                    (inputdata["Building"]["Coefficient_DHC"]["Cooling"])*inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]  
+                    (inputdata["Building"]["Coefficient_DHC"]["Cooling"])*inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
 
             # 熱源群ごとに積算
             inputdata["REF"][ref_name]["Eref_rated_primary"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"]
@@ -3847,7 +3185,7 @@ def calc_energy(inputdata, debug = False):
                 raise Exception('熱交換機が設定されていません')
 
             if debug: # pragma: no cover
-                    
+
                 print( f'--- 熱源群名 {ref_name} ---')
                 print( f'熱交換器の容量: {inputdata["REF"][ref_name]["Heatsource"][0]["HeatsourceRatedCapacity_total"]}')
                 print( f'熱源群の定格能力の合計 Qref_rated: {inputdata["REF"][ref_name]["Qref_rated"]}' )
@@ -3862,7 +3200,7 @@ def calc_energy(inputdata, debug = False):
         resultJson["REF"][ref_name]["Lref"] = np.zeros(365)      # 日積算熱源負荷 [MJ/Day] の 定格能力に対する比率（熱源定格負荷率）
 
         for dd in range(0,365):
-            
+
             # 負荷率の算出 [-]
             if resultJson["REF"][ref_name]["Tref"][dd] > 0:
 
@@ -3870,7 +3208,7 @@ def calc_energy(inputdata, debug = False):
                 resultJson["REF"][ref_name]["Lref"][dd] = \
                     (resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000/3600) / \
                     inputdata["REF"][ref_name]["Qref_rated"]
-        
+
             if np.isnan(resultJson["REF"][ref_name]["Lref"][dd]) == True:
                 resultJson["REF"][ref_name]["Lref"][dd] = 0
 
@@ -3887,16 +3225,16 @@ def calc_energy(inputdata, debug = False):
         for dd in range(0,365):
 
             if resultJson["REF"][ref_name]["Lref"][dd] > 0:
-                
+
                 # 負荷率帯マトリックス
                 resultJson["REF"][ref_name]["matrix_iL"][dd] = count_Matrix(resultJson["REF"][ref_name]["Lref"][dd], mxL)
 
                 # 外気温帯マトリックス
                 if inputdata["REF"][ref_name]["mode"] == "cooling":
-                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTC) 
+                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTC)
                 elif inputdata["REF"][ref_name]["mode"] == "heating":
-                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTH) 
-    
+                    resultJson["REF"][ref_name]["matrix_iT"][dd] = count_Matrix(Toa_ave[dd], mxTH)
+
 
     #----------------------------------------------------------------------------------
     # 蓄熱システムによる外気温帯の補正
@@ -3907,7 +3245,7 @@ def calc_energy(inputdata, debug = False):
         if inputdata["REF"][ref_name]["isStorage"] == "蓄熱":
 
             for dd in range(0,365):
-        
+
                 if resultJson["REF"][ref_name]["matrix_iT"][dd] > 1:
                     resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd] - 1   # 外気温帯を1つ下げる。
                 elif resultJson["REF"][ref_name]["matrix_iT"][dd] == 1:
@@ -3930,7 +3268,7 @@ def calc_energy(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
     ## 冷却水温度 （解説書 2.7.4.3）
     ##----------------------------------------------------------------------------------
-    
+
     TctwC  = ToawbC + 3  # 冷却水温度 [℃]
     TctwH  = 15.5 * np.ones(6)  #  水冷式の暖房時熱源水温度（暫定） [℃]
 
@@ -3964,12 +3302,12 @@ def calc_energy(inputdata, debug = False):
         Qcmax = 0
         if "冷房" in inputdata["HeatsourceSystem"][ref_original_name]:
             if len(inputdata["HeatsourceSystem"][ref_original_name]["冷房"]["Heatsource"]) > 0:
-                Qcmax =  np.max( resultJson["REF"][ref_original_name + "_冷房"]["Qref"] , 0) 
+                Qcmax =  np.max( resultJson["REF"][ref_original_name + "_冷房"]["Qref"] , 0)
 
         Qhmax = 0
         if "暖房" in inputdata["HeatsourceSystem"][ref_original_name]:
             if len(inputdata["HeatsourceSystem"][ref_original_name]["暖房"]["Heatsource"]) > 0:
-                Qhmax =  np.max( resultJson["REF"][ref_original_name + "_暖房"]["Qref"] , 0) 
+                Qhmax =  np.max( resultJson["REF"][ref_original_name + "_暖房"]["Qref"] , 0)
 
         if Qcmax != 0 and Qhmax != 0:
 
@@ -4022,7 +3360,7 @@ def calc_energy(inputdata, debug = False):
 
                         # マトリックス化せずに日別のデータに変換（将来的にはこちらにすべき）
                         # inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = heatsource_temperature
-                            
+
                     elif inputdata["REF"][ref_name]["mode"] == "heating":
 
                         # 日別の熱源水還り温度（暖房期）
@@ -4070,7 +3408,7 @@ def calc_energy(inputdata, debug = False):
                             inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"] = \
                                 ( gshp_cc[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_dc[igsType] ) * ( ToadbC - gshpToa_c[iAREA] ) + \
                                 (ghspToa_ave[iAREA] + gshp_ac[igsType] * resultJson["REF"][ref_name]["ghsp_Rq"] + gshp_bc[igsType])
-                        
+
                         elif unit_configure["parameter"]["熱源種類"] == "地盤"+str(int(gound_type)) and inputdata["REF"][ref_name]["mode"] == "heating":
                             igsType = int(gound_type)-1
                             iAREA = int(inputdata["Building"]["Region"])-1
@@ -4090,7 +3428,7 @@ def calc_energy(inputdata, debug = False):
                         iT = int(resultJson["REF"][ref_name]["matrix_iT"][dd]) - 1
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
                             inputdata["REF"][ref_name]["Heatsource"][unit_id]["matrix_T"][ iT ]
-            
+
 
     ##----------------------------------------------------------------------------------
     ## 任意評定用　熱源水温度（ SP-3 ）
@@ -4100,7 +3438,7 @@ def calc_energy(inputdata, debug = False):
         if "heatsource_temperature_monthly" in inputdata["SpecialInputData"]:
 
             for ref_original_name in inputdata["SpecialInputData"]["heatsource_temperature_monthly"]:
-                
+
                 # 入力された熱源群名称から、計算上使用する熱源群名称（冷暖、蓄熱分離）に変換
                 for ref_name in [ref_original_name + "_冷房", ref_original_name + "_暖房", ref_original_name + "_冷房_蓄熱", ref_original_name + "_暖房_蓄熱"]:
 
@@ -4167,14 +3505,14 @@ def calc_energy(inputdata, debug = False):
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"] = np.zeros(365)
-            
+
             for dd in range(0,365):
-                
+
                 # 各外気温区分における最大能力 [kW]
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd] = \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] * \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["xQratio"][dd]
-            
+
             if debug: # pragma: no cover
                 print( f'--- 熱源群名 {ref_name} ---')
                 print( f'- {unit_id+1} 台目の熱源機器 -')
@@ -4200,19 +3538,19 @@ def calc_energy(inputdata, debug = False):
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd]
 
             for dd in range(0,365):
-            
+
                 if resultJson["REF"][ref_name]["matrix_iL"][dd] > 0:   # これを入れないと aveL(matrix_iL)でエラーとなる。
-                
+
                     # 負荷率帯 matrix_iL のときの熱負荷
                     timeQmax =  aveL[ int(resultJson["REF"][ref_name]["matrix_iL"][dd]) - 1 ] \
                         * resultJson["REF"][ref_name]["Tref"][dd] * inputdata["REF"][ref_name]["Qref_rated"]
-                
+
                     # 負荷率帯を「負荷率帯 10」にする。
-                    resultJson["REF"][ref_name]["matrix_iL"][dd] = len(aveL) - 1 
-    
+                    resultJson["REF"][ref_name]["matrix_iL"][dd] = len(aveL) - 1
+
                     # 運転時間を書き換え ＝ 全負荷相当運転時間（熱負荷を最大負荷で除す）とする。
                     resultJson["REF"][ref_name]["Tref"][dd] = \
-                        timeQmax / ( inputdata["REF"][ref_name]["Q_ref_max_total"][dd] )                 
+                        timeQmax / ( inputdata["REF"][ref_name]["Q_ref_max_total"][dd] )
 
 
 
@@ -4227,9 +3565,9 @@ def calc_energy(inputdata, debug = False):
             # 入力比（各外気温帯における最大入力）
             inputdata["REF"][ref_name]["Heatsource"][unit_id]["xPratio"] = np.zeros(365)
 
-            # 外気温度帯マトリックス 
+            # 外気温度帯マトリックス
             for dd in range(0,365):
-                
+
                 # 外気温度帯
                 temperature = inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd]
 
@@ -4286,7 +3624,7 @@ def calc_energy(inputdata, debug = False):
     # 運転台数マトリックス
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["num_of_operation"] = np.zeros(365) 
+        resultJson["REF"][ref_name]["num_of_operation"] = np.zeros(365)
 
         for dd in range(0,365):
 
@@ -4297,12 +3635,12 @@ def calc_energy(inputdata, debug = False):
                 if inputdata["REF"][ref_name]["isStagingControl"] == "無":   # 運転台数制御が「無」の場合
 
                     resultJson["REF"][ref_name]["num_of_operation"][dd] = inputdata["REF"][ref_name]["num_of_unit"]
-                
+
                 elif inputdata["REF"][ref_name]["isStagingControl"] == "有":  # 運転台数制御が「有」の場合
 
                     # 処理熱量 [kW]
                     tmpQ  = inputdata["REF"][ref_name]["Qref_rated"] * aveL[iL]
-        
+
                     # 運転台数 num_of_operation
                     tmpQmax = 0
                     for rr in range(0, inputdata["REF"][ref_name]["num_of_unit"]):
@@ -4310,9 +3648,9 @@ def calc_energy(inputdata, debug = False):
 
                         if tmpQ < tmpQmax:
                             break
-                    
+
                     resultJson["REF"][ref_name]["num_of_operation"][dd] = rr+1
-        
+
         if debug: # pragma: no cover
             print( f'--- 熱源群名 {ref_name} ---')
             print( f' num_of_operation {resultJson["REF"][ref_name]["num_of_operation"]}')
@@ -4323,9 +3661,9 @@ def calc_energy(inputdata, debug = False):
 
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["load_ratio"] = np.zeros(365) 
+        resultJson["REF"][ref_name]["load_ratio"] = np.zeros(365)
 
-        for dd in range(0,365):    
+        for dd in range(0,365):
 
             if resultJson["REF"][ref_name]["Tref"][dd] > 0:  # 運転していれば
 
@@ -4333,7 +3671,7 @@ def calc_energy(inputdata, debug = False):
 
                 # 処理熱量 [kW]
                 tmpQ  = inputdata["REF"][ref_name]["Qref_rated"] * aveL[iL]
-                
+
                 Qrefr_mod_max = 0
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
                     Qrefr_mod_max += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Q_ref_max"][dd]
@@ -4361,10 +3699,10 @@ def calc_energy(inputdata, debug = False):
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"] = np.zeros(365) 
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"] = np.zeros(365)
 
         for dd in range(0,365):
-            
+
             iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1    # 負荷率帯のマトリックス番号
 
             # 部分負荷特性（各負荷率・各温度帯について）
@@ -4379,14 +3717,14 @@ def calc_energy(inputdata, debug = False):
                         if inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][para_id]["冷却水温度下限"] and \
                             inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] <= inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][para_id]["冷却水温度上限"]:
                             xCurveNum = para_id
-    
+
                 # 機器特性による上下限を考慮した部分負荷率 tmpL
                 tmpL = 0
                 if resultJson["REF"][ref_name]["load_ratio"][dd] < inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["下限"]:
                     tmpL = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["下限"]
                 elif resultJson["REF"][ref_name]["load_ratio"][dd] > inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["上限"]:
                     tmpL = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["部分負荷特性"][xCurveNum]["上限"]
-                else:            
+                else:
                     tmpL = resultJson["REF"][ref_name]["load_ratio"][dd]
 
                 # 部分負荷特性
@@ -4412,10 +3750,10 @@ def calc_energy(inputdata, debug = False):
 
         # 送水温度特性（各負荷率・各温度帯について）
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"] = np.ones(365) 
+            inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_tw"] = np.ones(365)
 
         for dd in range(0,365):
-            
+
             # iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1    # 負荷率帯のマトリックス番号
 
             # 送水温度特性（各負荷率・各温度帯について）
@@ -4439,7 +3777,7 @@ def calc_energy(inputdata, debug = False):
                             TCtmp = 50
                         else:
                             TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"]
-                            
+
                     # 送水温度の上下限
                     if TCtmp < inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["下限"]:
                         TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["下限"]
@@ -4463,12 +3801,12 @@ def calc_energy(inputdata, debug = False):
     # 蓄熱槽を持つシステムの追い掛け時運転時間補正（追い掛け運転開始時に蓄熱量がすべて使われない問題を解消） 2014/1/10
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["hoseiStorage"] = np.ones(365) 
+        resultJson["REF"][ref_name]["hoseiStorage"] = np.ones(365)
 
         if inputdata["REF"][ref_name]["isStorage"] == "追掛":
 
-            for dd in range(0,365):      
-                
+            for dd in range(0,365):
+
                 # iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1
 
                 if int(resultJson["REF"][ref_name]["num_of_operation"][dd]) >= 2:
@@ -4498,13 +3836,13 @@ def calc_energy(inputdata, debug = False):
 
     for ref_name in inputdata["REF"]:
 
-        resultJson["REF"][ref_name]["E_ref_sub"]      = np.zeros(365) 
-        resultJson["REF"][ref_name]["E_ref_pri_pump"] = np.zeros(365) 
-        resultJson["REF"][ref_name]["E_ref_ct_fan"]   = np.zeros(365) 
-        resultJson["REF"][ref_name]["E_ref_ct_pump"]  = np.zeros(365) 
+        resultJson["REF"][ref_name]["E_ref_sub"]      = np.zeros(365)
+        resultJson["REF"][ref_name]["E_ref_pri_pump"] = np.zeros(365)
+        resultJson["REF"][ref_name]["E_ref_ct_fan"]   = np.zeros(365)
+        resultJson["REF"][ref_name]["E_ref_ct_pump"]  = np.zeros(365)
 
-        for dd in range(0,365):        
-            
+        for dd in range(0,365):
+
             iL = int(resultJson["REF"][ref_name]["matrix_iL"][dd]) -1
 
             # 熱源主機（機器毎）：エネルギー消費量 kW のマトリックス E_ref_main
@@ -4520,9 +3858,9 @@ def calc_energy(inputdata, debug = False):
             aveLperU = resultJson["REF"][ref_name]["load_ratio"][dd]
 
             # 過負荷の場合は 平均負荷率＝1.2 とする。
-            if iL == divL-1:   
+            if iL == divL-1:
                 aveLperU = 1.2
-        
+
             # 発電機能付きの熱源機器が1台でもある場合
             if inputdata["REF"][ref_name]["checkGEGHP"] == 1:
 
@@ -4537,7 +3875,7 @@ def calc_energy(inputdata, debug = False):
                             E_nonGE = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"] * 0.012
 
                         E_GEkW = inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"]  #  発電時の消費電力 [kW]
-            
+
                         if aveLperU <= 0.3:
                             resultJson["REF"][ref_name]["E_ref_sub"][dd] += ( 0.3 * E_nonGE - (E_nonGE - E_GEkW) * aveLperU )
                         else:
@@ -4546,12 +3884,12 @@ def calc_energy(inputdata, debug = False):
                     else:
 
                         if aveLperU <= 0.3:
-                            resultJson["REF"][ref_name]["E_ref_sub"][dd] += 0.3 * inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"] 
+                            resultJson["REF"][ref_name]["E_ref_sub"][dd] += 0.3 * inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"]
                         else:
-                            resultJson["REF"][ref_name]["E_ref_sub"][dd] += aveLperU * inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"] 
+                            resultJson["REF"][ref_name]["E_ref_sub"][dd] += aveLperU * inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"]
 
             else:
-                
+
                 # 負荷に比例させる（発電機能なし）
                 refset_SubPower = 0
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
@@ -4574,8 +3912,8 @@ def calc_energy(inputdata, debug = False):
             for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
                 resultJson["REF"][ref_name]["E_ref_ct_fan"][dd] += \
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["CoolingTowerFanPowerConsumption_total"]
-                        
-            
+
+
             # 冷却水ポンプ
             if inputdata["REF"][ref_name]["checkCTVWV"] == 1:  # 変流量制御がある場合
 
@@ -4609,16 +3947,16 @@ def calc_energy(inputdata, debug = False):
         for dd in range(0,365):
 
             if resultJson["REF"][ref_name]["Tref"][dd] == 0:
-                
+
                 resultJson["REF"][ref_name]["E_ref_day"][dd]     =  0   # 熱源主機エネルギー消費量 [MJ]
                 resultJson["REF"][ref_name]["E_ref_day_MWh"][dd] =  0   # 熱源主機電力消費量 [MWh]
                 resultJson["REF"][ref_name]["E_ref_ACc_day"][dd] =  0   # 熱源補機電力 [MWh]
                 resultJson["REF"][ref_name]["E_PPc_day"][dd]     =  0   # 一次ポンプ電力 [MWh]
                 resultJson["REF"][ref_name]["E_CTfan_day"][dd]   =  0   # 冷却塔ファン電力 [MWh]
                 resultJson["REF"][ref_name]["E_CTpump_day"][dd]  =  0   # 冷却水ポンプ電力 [MWh]
-                
+
             else:
-                
+
                 # 熱源主機 [MJ/day]
                 for unit_id in range(0,len(inputdata["REF"][ref_name]["Heatsource"])):
 
@@ -4741,7 +4079,7 @@ def calc_energy(inputdata, debug = False):
     for ref_name in inputdata["REF"]:
 
         if inputdata["REF"][ref_name]["mode"] == "cooling":
-            resultJson["REF"][ref_name]["運転モード"] = "冷房" 
+            resultJson["REF"][ref_name]["運転モード"] = "冷房"
         elif inputdata["REF"][ref_name]["mode"] == "heating":
             resultJson["REF"][ref_name]["運転モード"] = "暖房"
         else:
@@ -4749,7 +4087,7 @@ def calc_energy(inputdata, debug = False):
 
         resultJson["REF"][ref_name]["定格能力[kW]"] = inputdata["REF"][ref_name]["Qref_rated"]
         resultJson["REF"][ref_name]["熱源主機_定格消費エネルギー[kW]"] = inputdata["REF"][ref_name]["Eref_rated_primary"]
-        resultJson["REF"][ref_name]["年間運転時間[時間]"] = np.sum( resultJson["REF"][ref_name]["Tref"] ) 
+        resultJson["REF"][ref_name]["年間運転時間[時間]"] = np.sum( resultJson["REF"][ref_name]["Tref"] )
         resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] = np.sum( resultJson["REF"][ref_name]["Qref"] ) /1000
         resultJson["REF"][ref_name]["年積算過負荷[GJ]"] = np.sum( resultJson["REF"][ref_name]["Qref_OVER"] ) /1000
         resultJson["REF"][ref_name]["年積算エネルギー消費量[GJ]"] = \
@@ -4761,7 +4099,7 @@ def calc_energy(inputdata, debug = False):
 
         resultJson["REF"][ref_name]["年間平均負荷率[-]"] = \
             (resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] *1000000 / (resultJson["REF"][ref_name]["年間運転時間[時間]"]*3600) ) \
-            / resultJson["REF"][ref_name]["熱源主機_定格消費エネルギー[kW]"] 
+            / resultJson["REF"][ref_name]["熱源主機_定格消費エネルギー[kW]"]
 
         resultJson["REF"][ref_name]["年間運転効率[-]"] = \
             resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] \
@@ -4780,14 +4118,14 @@ def calc_energy(inputdata, debug = False):
         + resultJson["年間エネルギー消費量"]["熱源群熱源補機[GJ]"] *1000 \
         + resultJson["年間エネルギー消費量"]["熱源群一次ポンプ[GJ]"] *1000 \
         + resultJson["年間エネルギー消費量"]["熱源群冷却塔ファン[GJ]"] *1000 \
-        + resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[GJ]"] *1000 
+        + resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[GJ]"] *1000
 
 
     ##----------------------------------------------------------------------------------
     ## 基準一次エネルギー消費量 （解説書 10.1）
-    ##----------------------------------------------------------------------------------    
+    ##----------------------------------------------------------------------------------
     for room_zone_name in inputdata["AirConditioningZone"]:
-    
+
         # 建物用途・室用途、ゾーン面積等の取得
         buildingType = inputdata["Rooms"][room_zone_name]["buildingType"]
         roomType     = inputdata["Rooms"][room_zone_name]["roomType"]
@@ -4817,7 +4155,7 @@ def calc_energy(inputdata, debug = False):
 
     ##----------------------------------------------------------------------------------
     ## CGS計算用変数 （解説書 ８章 附属書 G.10 他の設備の計算結果の読み込み）
-    ##----------------------------------------------------------------------------------    
+    ##----------------------------------------------------------------------------------
 
     if len(inputdata["CogenerationSystems"]) == 1: # コジェネがあれば実行
 
@@ -4871,10 +4209,10 @@ def calc_energy(inputdata, debug = False):
         resultJson["for_CGS"]["EAC_link_c_j_rated"] = 0
 
         for ref_name in inputdata["REF"]:
-            
+
             # CGS系統の「排熱利用する冷熱源」　。　蓄熱がある場合は「追い掛け運転」を採用（2020/7/6変更）
             if ref_name == resultJson["for_CGS"]["CGS_refName_C"]:
-                
+
                 for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
 
                     heatsource_using_exhaust_heat = [
@@ -4893,13 +4231,13 @@ def calc_energy(inputdata, debug = False):
 
                         # CGS系統の「排熱利用する冷熱源」の「吸収式冷凍機（都市ガス）」の一次エネルギー消費量 [MJ]
                         resultJson["for_CGS"]["E_ref_cgsC_ABS_day"] += resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit"]
-            
+
                         # 排熱投入型吸収式冷温水機jの定格冷却能力
                         resultJson["for_CGS"]["qAC_link_c_j_rated"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedCapacity_total"]
 
                         # 排熱投入型吸収式冷温水機jの主機定格消費エネルギー
                         resultJson["for_CGS"]["EAC_link_c_j_rated"] += inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"]
-                        
+
                         resultJson["for_CGS"]["NAC_ref_link"] += 1
 
                 # CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての負荷率 [-]
@@ -4914,14 +4252,14 @@ def calc_energy(inputdata, debug = False):
 
                 # CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の運転時間 [h/日]
                 resultJson["for_CGS"]["T_ref_cgsC_day"] = resultJson["REF"][ref_name]["Tref"]
-            
+
             # CGS系統の「排熱利用する温熱源」
             if ref_name == resultJson["for_CGS"]["CGS_refName_H"]:
-                
+
                 # 当該温熱源群の主機の消費電力を差し引く。
                 for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
                     resultJson["for_CGS"]["E_ref_main_MWh_day"] -= resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"]
-                
+
                 # CGSの排熱利用が可能な温熱源群の主機の一次エネルギー消費量 [MJ/日]
                 resultJson["for_CGS"]["E_ref_cgsH_day"] = resultJson["REF"][ref_name]["E_ref_day"]
 
@@ -5043,11 +4381,10 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './sample/ACtest_Case001.json'
-    # filename = './sample/Builelib_sample_SP1_input.json'
+    filename = './sample/Builelib_sample_SP1_input.json'
     # filename = './sample/WEBPRO_inputSheet_sample.json'
     # filename = './sample/Builelib_sample_SP10.json'
     # filename = './sample/WEBPRO_KE14_Case01.json'
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
@@ -5062,7 +4399,7 @@ if __name__ == '__main__':  # pragma: no cover
     with open("resultJson_AC.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
-    print( f'BEI/AC: {resultJson["BEI/AC"]}')        
+    print( f'BEI/AC: {resultJson["BEI/AC"]}')
     print( f'設計一次エネルギー消費量 全体: {resultJson["設計一次エネルギー消費量[GJ/年]"]} GJ')
     print( f'設計一次エネルギー消費量 空調ファン: {resultJson["年間エネルギー消費量"]["空調機群ファン[GJ]"]} GJ')
     print( f'設計一次エネルギー消費量 空調全熱交換器: {resultJson["年間エネルギー消費量"]["空調機群全熱交換器[GJ]"]} GJ')
@@ -5079,5 +4416,5 @@ if __name__ == '__main__':  # pragma: no cover
     # for ref_name in inputdata["REF"]:
     #     print( f'--- 熱源群名 {ref_name} ---')
     #     print( f'熱源群の熱源負荷 Qref: {np.sum(resultJson["REF"][ref_name]["Qref"],0)}' )
-        
-    print( f'設計一次エネルギー消費量 全体: {resultJson["設計一次エネルギー消費量[MJ/年]"]}') 
+
+    print( f'設計一次エネルギー消費量 全体: {resultJson["設計一次エネルギー消費量[MJ/年]"]}')

@@ -1,0 +1,1255 @@
+{
+    "設計一次エネルギー消費量[MJ/年]": 626738.5455418882,
+    "基準一次エネルギー消費量[MJ/年]": 695143.3600000002,
+    "設計一次エネルギー消費量[GJ/年]": 626.7385455418882,
+    "基準一次エネルギー消費量[GJ/年]": 695.1433600000003,
+    "設計一次エネルギー消費量[MJ/m2年]": 534.9880883840276,
+    "基準一次エネルギー消費量[MJ/m2年]": 593.3788817755018,
+    "計算対象面積": 1171.4999999999998,
+    "BEI/V": 0.91,
+    "ventilation": {
+        "1F_便所1": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.28,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13744.640000000001,
+            "設計値/基準値": 0.45681073446327675,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 188.6628333333333
+        },
+        "1F_便所2": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-2": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.77,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13947.010000000002,
+            "設計値/基準値": 0.45018244722942996,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 185.92535070575457
+        },
+        "1F_物入": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "roomArea": 7.59,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 100.0,
+            "設計値[MJ]": 896.9570133333332,
+            "基準値[MJ]": 1047.42,
+            "設計値/基準値": 0.8563489462997967,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 118.17615458937196
+        },
+        "1F_給湯室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "roomArea": 5.28,
+            "opeTime": 1999.999999999999,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 300.0,
+            "設計値[MJ]": 1717.76,
+            "基準値[MJ]": 464.64000000000004,
+            "設計値/基準値": 3.696969696969697,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 325.3333333333333
+        },
+        "1F_休憩室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-5": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "roomArea": 29.25,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 400.0,
+            "設計値[MJ]": 3587.8280533333327,
+            "基準値[MJ]": 4036.5,
+            "設計値/基準値": 0.8888462909286096,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 122.66078814814813
+        },
+        "1F_機械室1": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-6": {
+                    "UnitType": "排気",
+                    "Info": ""
+                },
+                "SF-6": {
+                    "UnitType": "給気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 164.31,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 4100.0,
+            "totalAirVolume_exhaust": 4100.0,
+            "設計値[MJ]": 195367.71584000005,
+            "基準値[MJ]": 126354.39,
+            "設計値/基準値": 1.5461885878282509,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 1189.0190240399247
+        },
+        "1F_機械室2": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-7": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 45.5,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 1100.0,
+            "設計値[MJ]": 27587.225599999994,
+            "基準値[MJ]": 34989.5,
+            "設計値/基準値": 0.7884429786078679,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 606.3126505494504
+        },
+        "1F_電気室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-8": {
+                    "UnitType": "排気",
+                    "Info": ""
+                },
+                "SF-8": {
+                    "UnitType": "給気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "電気室",
+            "roomArea": 50.0,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 2500.0,
+            "totalAirVolume_exhaust": 2500.0,
+            "設計値[MJ]": 125396.47999999995,
+            "基準値[MJ]": 76950.0,
+            "設計値/基準値": 1.6295838856400253,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 2507.929599999999
+        },
+        "2F_便所1": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-2-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.28,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13744.640000000001,
+            "設計値/基準値": 0.45681073446327675,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 188.6628333333333
+        },
+        "2F_便所2": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-2-2": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.77,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13947.010000000002,
+            "設計値/基準値": 0.45018244722942996,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 185.92535070575457
+        },
+        "2F_物入": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-2-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "roomArea": 7.59,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 100.0,
+            "設計値[MJ]": 896.9570133333332,
+            "基準値[MJ]": 1047.42,
+            "設計値/基準値": 0.8563489462997967,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 118.17615458937196
+        },
+        "2F_給湯室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-2-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "roomArea": 5.28,
+            "opeTime": 1999.999999999999,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 300.0,
+            "設計値[MJ]": 1717.76,
+            "基準値[MJ]": 464.64000000000004,
+            "設計値/基準値": 3.696969696969697,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 325.3333333333333
+        },
+        "2F_機械室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-2-5": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 45.5,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 900.0,
+            "設計値[MJ]": 21442.798080000008,
+            "基準値[MJ]": 34989.5,
+            "設計値/基準値": 0.6128352242815704,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 471.2702874725276
+        },
+        "3F_便所1": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-3-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.28,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13744.640000000001,
+            "設計値/基準値": 0.45681073446327675,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 188.6628333333333
+        },
+        "3F_便所2": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-3-2": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.77,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13947.010000000002,
+            "設計値/基準値": 0.45018244722942996,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 185.92535070575457
+        },
+        "3F_物入": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-3-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "roomArea": 7.59,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 100.0,
+            "設計値[MJ]": 896.9570133333332,
+            "基準値[MJ]": 1047.42,
+            "設計値/基準値": 0.8563489462997967,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 118.17615458937196
+        },
+        "3F_給湯室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-3-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "roomArea": 5.28,
+            "opeTime": 1999.999999999999,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 300.0,
+            "設計値[MJ]": 1717.76,
+            "基準値[MJ]": 464.64000000000004,
+            "設計値/基準値": 3.696969696969697,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 325.3333333333333
+        },
+        "3F_機械室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-3-5": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 45.5,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 900.0,
+            "設計値[MJ]": 21442.798080000008,
+            "基準値[MJ]": 34989.5,
+            "設計値/基準値": 0.6128352242815704,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 471.2702874725276
+        },
+        "4F_便所1": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-4-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.28,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13744.640000000001,
+            "設計値/基準値": 0.45681073446327675,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 188.6628333333333
+        },
+        "4F_便所2": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-4-2": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.77,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13947.010000000002,
+            "設計値/基準値": 0.45018244722942996,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 185.92535070575457
+        },
+        "4F_物入": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-4-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "roomArea": 7.59,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 100.0,
+            "設計値[MJ]": 896.9570133333332,
+            "基準値[MJ]": 1047.42,
+            "設計値/基準値": 0.8563489462997967,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 118.17615458937196
+        },
+        "4F_給湯室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-4-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "roomArea": 5.28,
+            "opeTime": 1999.999999999999,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 300.0,
+            "設計値[MJ]": 1717.76,
+            "基準値[MJ]": 464.64000000000004,
+            "設計値/基準値": 3.696969696969697,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 325.3333333333333
+        },
+        "4F_機械室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-4-5": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 45.5,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 900.0,
+            "設計値[MJ]": 21442.798080000008,
+            "基準値[MJ]": 34989.5,
+            "設計値/基準値": 0.6128352242815704,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 471.2702874725276
+        },
+        "5F_便所1": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-5-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.28,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13744.640000000001,
+            "設計値/基準値": 0.45681073446327675,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 188.6628333333333
+        },
+        "5F_便所2": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-5-2": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.77,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13947.010000000002,
+            "設計値/基準値": 0.45018244722942996,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 185.92535070575457
+        },
+        "5F_物入": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-5-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "roomArea": 7.59,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 100.0,
+            "設計値[MJ]": 896.9570133333332,
+            "基準値[MJ]": 1047.42,
+            "設計値/基準値": 0.8563489462997967,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 118.17615458937196
+        },
+        "5F_給湯室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-5-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "roomArea": 5.28,
+            "opeTime": 1999.999999999999,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 300.0,
+            "設計値[MJ]": 1717.76,
+            "基準値[MJ]": 464.64000000000004,
+            "設計値/基準値": 3.696969696969697,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 325.3333333333333
+        },
+        "5F_機械室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-5-5": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 45.5,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 900.0,
+            "設計値[MJ]": 21442.798080000008,
+            "基準値[MJ]": 34989.5,
+            "設計値/基準値": 0.6128352242815704,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 471.2702874725276
+        },
+        "6F_便所1": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-6-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.28,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13744.640000000001,
+            "設計値/基準値": 0.45681073446327675,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 188.6628333333333
+        },
+        "6F_便所2": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-6-2": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.77,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13947.010000000002,
+            "設計値/基準値": 0.45018244722942996,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 185.92535070575457
+        },
+        "6F_物入": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-6-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "roomArea": 7.59,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 100.0,
+            "設計値[MJ]": 896.9570133333332,
+            "基準値[MJ]": 1047.42,
+            "設計値/基準値": 0.8563489462997967,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 118.17615458937196
+        },
+        "6F_給湯室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-6-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "roomArea": 5.28,
+            "opeTime": 1999.999999999999,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 300.0,
+            "設計値[MJ]": 1717.76,
+            "基準値[MJ]": 464.64000000000004,
+            "設計値/基準値": 3.696969696969697,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 325.3333333333333
+        },
+        "6F_機械室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-6-5": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 45.5,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 900.0,
+            "設計値[MJ]": 21442.798080000008,
+            "基準値[MJ]": 34989.5,
+            "設計値/基準値": 0.6128352242815704,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 471.2702874725276
+        },
+        "7F_便所1": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-7-1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.28,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13744.640000000001,
+            "設計値/基準値": 0.45681073446327675,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 188.6628333333333
+        },
+        "7F_便所2": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-7-2": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "便所",
+            "roomArea": 33.77,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 700.0,
+            "設計値[MJ]": 6278.699093333333,
+            "基準値[MJ]": 13947.010000000002,
+            "設計値/基準値": 0.45018244722942996,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 185.92535070575457
+        },
+        "7F_物入": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-7-3": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "更衣室又は倉庫",
+            "roomArea": 7.59,
+            "opeTime": 3133,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 100.0,
+            "設計値[MJ]": 896.9570133333332,
+            "基準値[MJ]": 1047.42,
+            "設計値/基準値": 0.8563489462997967,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 118.17615458937196
+        },
+        "7F_給湯室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-7-4": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "湯沸室等",
+            "roomArea": 5.28,
+            "opeTime": 1999.999999999999,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 300.0,
+            "設計値[MJ]": 1717.76,
+            "基準値[MJ]": 464.64000000000004,
+            "設計値/基準値": 3.696969696969697,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 325.3333333333333
+        },
+        "7F_機械室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "EF-7-5": {
+                    "UnitType": "排気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 45.5,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": false,
+            "AC_CoolingCapacity_total": 0,
+            "totalAirVolume_supply": 0,
+            "totalAirVolume_exhaust": 900.0,
+            "設計値[MJ]": 21442.798080000008,
+            "基準値[MJ]": 34989.5,
+            "設計値/基準値": 0.6128352242815704,
+            "換気システムの種類": "換気送風機",
+            "設計値[MJ/m2]": 471.2702874725276
+        },
+        "RF_EV機械室": {
+            "VentilationType": null,
+            "VentilationUnitRef": {
+                "PAC1": {
+                    "UnitType": "空調",
+                    "Info": ""
+                },
+                "PAC1_fan1": {
+                    "UnitType": "排気",
+                    "Info": ""
+                },
+                "PAC1_fan2": {
+                    "UnitType": "給気",
+                    "Info": ""
+                }
+            },
+            "buildingType": "事務所等",
+            "roomType": "機械室",
+            "roomArea": 50.0,
+            "opeTime": 8760.0,
+            "isVentilationUsingAC": true,
+            "AC_CoolingCapacity_total": 4.5,
+            "totalAirVolume_supply": 2000.0,
+            "totalAirVolume_exhaust": 2000.0,
+            "設計値[MJ]": 39937.70116855497,
+            "基準値[MJ]": 38450.0,
+            "設計値/基準値": 1.0386918379338095,
+            "換気システムの種類": "換気代替空調機",
+            "設計値[MJ/m2]": 798.7540233710995
+        }
+    },
+    "for_CGS": {
+        "Edesign_MWh_day": [
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.19005237327510147,
+            0.14848703994176823,
+            0.14848703994176823,
+            0.14848703994176823
+        ]
+    }
+}

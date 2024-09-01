@@ -1,3 +1,13 @@
+# builelib_run.py
+#-----------------------------------------------------------------------------
+# buileibをコマンドラインで実行するファイル
+#-----------------------------------------------------------------------------
+# 使用方法
+# % python -m builelib_run (実行モード) (入力シートファイル名)
+# % python -m builelib_run True ./sample/WEBPRO_inputSheet_sample.xlsm
+# % python -m builelib_run True ./sample/WEBPRO_inputSheet_sample_error.xlsm
+#-----------------------------------------------------------------------------
+
 import json
 import numpy as np
 import os
@@ -6,7 +16,6 @@ import math
 
 from builelib.make_inputdata import make_jsondata_from_Ver2_sheet, make_jsondata_from_Ver4_sheet
 from builelib import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
-
 
 # json.dump用のクラス
 class MyEncoder(json.JSONEncoder):
@@ -22,49 +31,48 @@ class MyEncoder(json.JSONEncoder):
         else:
             return super(MyEncoder, self).default(obj)
 
-
 def builelib_run(exec_calculation, inputfile_name):
-    """Builelibを実行するプログラム
+    """
     Args:
-        exec_calculation (str): 計算の実行 （True: 計算も行う、 False: 計算は行わない）
-        inputfile_name (str): 入力ファイルの名称
+        exec_calculation (_type_): _description_
+        inputfile_name (_type_): _description_
     """
 
     #------------------------------------
     # 引数の受け渡し
     #------------------------------------
     exec_calculation = bool(exec_calculation)  # 計算の実行 （True: 計算も行う、 False: 計算は行わない）
-    inputfile_name   = str(inputfile_name)     # 入力ファイルの名称
+    inputfile_name   = str(inputfile_name)   # 入力ファイル指定
 
     #------------------------------------
     # 出力ファイルの定義
     #------------------------------------
     calc_reuslt = {
         "設計一次エネルギー消費量[MJ]" : 0,
-        "基準一次エネルギー消費量[MJ]" : 0, 
+        "基準一次エネルギー消費量[MJ]" : 0,
         "設計一次エネルギー消費量（その他除き）[MJ]" : 0,
-        "基準一次エネルギー消費量（その他除き）[MJ]" : 0, 
+        "基準一次エネルギー消費量（その他除き）[MJ]" : 0,
         "BEI": "",
         "設計一次エネルギー消費量（再エネ、その他除き）[MJ]" : 0,
         "BEI（再エネ除き）": "",
         "設計一次エネルギー消費量（空調）[MJ]": 0,
         "基準一次エネルギー消費量（空調）[MJ]": 0,
         "BEI_AC": "-",   # BEI（空調）
-        "設計一次エネルギー消費量（換気）[MJ]": 0, 
+        "設計一次エネルギー消費量（換気）[MJ]": 0,
         "基準一次エネルギー消費量（換気）[MJ]": 0,
         "BEI_V": "-",    # BEI（換気）
         "設計一次エネルギー消費量（照明）[MJ]": 0,
         "基準一次エネルギー消費量（照明）[MJ]": 0,
         "BEI_L": "-",    # BEI（照明）
         "設計一次エネルギー消費量（給湯）[MJ]": 0,
-        "基準一次エネルギー消費量（給湯）[MJ]": 0, 
+        "基準一次エネルギー消費量（給湯）[MJ]": 0,
         "BEI_HW": "-",   # BEI（給湯）
-        "設計一次エネルギー消費量（昇降機）[MJ]": 0, 
-        "基準一次エネルギー消費量（昇降機）[MJ]": 0, 
+        "設計一次エネルギー消費量（昇降機）[MJ]": 0,
+        "基準一次エネルギー消費量（昇降機）[MJ]": 0,
         "BEI_EV": "-",   # BEI（昇降機）
         "その他一次エネルギー消費量[MJ]" : 0,
-        "創エネルギー量（太陽光）[MJ]": 0, 
-        "創エネルギー量（コジェネ）[MJ]": 0, 
+        "創エネルギー量（太陽光）[MJ]": 0,
+        "創エネルギー量（コジェネ）[MJ]": 0,
     }
 
     # CGSの計算に必要となる変数
@@ -108,7 +116,7 @@ def builelib_run(exec_calculation, inputfile_name):
 
         # jsonファイルの生成
         try:
-            inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
+            inputdata, validation = make_jsondata_from_Ver4_sheet(inputfile_name)
         except:
             validation = {
                 "error": "入力シートの読み込み時に予期せぬエラーが発生しました。"
@@ -141,7 +149,7 @@ def builelib_run(exec_calculation, inputfile_name):
     resultdata_AC = {}
 
     if exec_calculation:
-        
+
         try:
             if inputdata["AirConditioningZone"]:   # AirConditioningZone が 空 でなければ
 
@@ -274,9 +282,9 @@ def builelib_run(exec_calculation, inputfile_name):
 
         try:
             if inputdata["HotwaterRoom"]:   # HotwaterRoom が 空 でなければ
-            
+
                 resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
-        
+
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["HW"] = resultdata_HW["for_CGS"]
 
@@ -286,7 +294,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
-            
+
             else:
                 resultdata_HW = {
                     "message": "給湯設備はありません。"
@@ -466,12 +474,12 @@ def builelib_run(exec_calculation, inputfile_name):
         calc_reuslt["設計一次エネルギー消費量（その他除き）[MJ]"] = energy_consumption_design
         calc_reuslt["基準一次エネルギー消費量（その他除き）[MJ]"] = energy_consumption_standard
 
-        calc_reuslt["BEI"] = energy_consumption_design / energy_consumption_standard 
+        calc_reuslt["BEI"] = energy_consumption_design / energy_consumption_standard
         calc_reuslt["BEI"] = math.ceil(calc_reuslt["BEI"] * 100) / 100
 
         calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] = energy_consumption_design + calc_reuslt["創エネルギー量（太陽光）[MJ]"]
 
-        calc_reuslt["BEI（再エネ除き）"] = calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] / calc_reuslt["基準一次エネルギー消費量（その他除き）[MJ]"] 
+        calc_reuslt["BEI（再エネ除き）"] = calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] / calc_reuslt["基準一次エネルギー消費量（その他除き）[MJ]"]
         calc_reuslt["BEI（再エネ除き）"] = math.ceil(calc_reuslt["BEI（再エネ除き）"] * 100) / 100
 
         # 設計一次エネ・基準一次エネにその他を追加
@@ -527,10 +535,8 @@ def builelib_run(exec_calculation, inputfile_name):
 
 
 if __name__ == '__main__':
-    
+
     # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
-    # file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
-    file_name = "./sample/sample01_WEBPRO_inputSheet_for_Ver3.6.xlsx"
-
+    file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
+    #def builelib_run(exec_calculation, inputfile_name):
     builelib_run(True, file_name)
-

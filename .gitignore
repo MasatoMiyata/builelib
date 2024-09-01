@@ -111,10 +111,3 @@ venv312/
 
 reference/
 builelib/heat_load_calculation
-builelib/pyHASP
-builelib/database_pyhasp
-
-test_PAL/
-standard_spec/
-
-builelib/climatedata_pyhasp/

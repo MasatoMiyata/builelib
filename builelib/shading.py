@@ -8,7 +8,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import climate
+from . import climate
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -314,7 +314,7 @@ def calc_shadingCoefficient(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym):
 
     with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
         areaDB = json.load(f)
-    climatefilename = climatedata_directory + '/' + areaDB[AREA+"地域"]["気象データファイル名"] # 気象データ
+    climatefilename = climatedata_directory + '/C1_' + areaDB[AREA+"地域"]["気象データファイル名"] # 気象データ
 
     # 気象データ読み込み
     # IodALL : 法線面直達日射量[W/m2]

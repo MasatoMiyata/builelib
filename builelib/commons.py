@@ -75,7 +75,7 @@ def air_enthalpy(Tdb, X):
     """
     空気のエンタルピーを算出する関数
     """
-    
+
     Ca = 1.006  # 乾き空気の定圧比熱 [kJ/kg･K]
     Cw = 1.86   # 水蒸気の定圧比熱 [kJ/kg･K]
     Lw = 2501   # 水の蒸発潜熱 [kJ/kg]
@@ -83,12 +83,12 @@ def air_enthalpy(Tdb, X):
     if len(Tdb) != len(X):
         raise Exception('温度と湿度のリストの長さが異なります。')
     else:
-        
+
         H = np.zeros(len(Tdb))
         for i in range(0, len(Tdb)):
             H[i] = (Ca*Tdb[i] + (Cw*Tdb[i]+Lw)*X[i])
 
-    return H   
+    return H
 
 
 def get_roomOutdoorAirVolume(buildingType, roomType, input_room_usage_condition={}):
@@ -98,7 +98,7 @@ def get_roomOutdoorAirVolume(buildingType, roomType, input_room_usage_condition=
 
     # 外気導入量 [m3/h/m2] 標準室使用条件より取得
     roomOutdoorAirVolume  = RoomUsageSchedule[buildingType][roomType]["外気導入量"]
-    
+
     # SP-9シートによる任意入力があれば上書き
     if buildingType in input_room_usage_condition:
         if roomType in input_room_usage_condition[buildingType]:
@@ -126,7 +126,7 @@ def get_roomHotwaterDemand(buildingType, roomType, input_room_usage_condition={}
             * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
         hotwater_demand_other = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（その他）"]\
             * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
-    
+
     elif RoomUsageSchedule[buildingType][roomType]["年間湯使用量の単位"] == "[L/m2日]":
 
         hotwater_demand  = RoomUsageSchedule[buildingType][roomType]["年間湯使用量"]
@@ -180,7 +180,7 @@ def get_roomHeatGain(buildingType, roomType, input_room_usage_condition={}):
 
             if input_room_usage_condition[buildingType][roomType]["人体発熱参照値"] != "":
                 roomNumOfPerson = float(input_room_usage_condition[buildingType][roomType]["人体発熱参照値"])
-            
+
             if input_room_usage_condition[buildingType][roomType]["機器発熱参照値"] != "":
                 roomHeatGain_OAapp = float(input_room_usage_condition[buildingType][roomType]["機器発熱参照値"])
 
@@ -201,7 +201,7 @@ def get_roomHeatGain(buildingType, roomType, input_room_usage_condition={}):
         roomHeatGain_Person = roomNumOfPerson * 145
     else:
         roomHeatGain_Person = np.nan
-    
+
     return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson
 
 
@@ -266,36 +266,26 @@ def get_roomUsageSchedule(buildingType, roomType, input_calendar={}):
         roomSchedulePerson = np.array(roomSchedulePerson)
         roomScheduleOAapp  = np.array(roomScheduleOAapp)
 
-        #--------------------------------------------------------------
-        # roomDayMode の決定（WebプログラムとBuilelibで方法が違う）
-        #--------------------------------------------------------------
+        # roomDayMode の決定
 
-        # Webプログラムの方法：
         # パターン１で 使用時間帯（１：昼、２：夜、０：終日） を判断
-        roomDayMode  = "昼"
-        
+        roomDayMode  = 0
+
         schedule_oneday  = np.array(RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン1"])
         schedule_oneday[(schedule_oneday > 0)] = 1
 
-        # Webプログラムの判断方法（
-        if schedule_oneday[0] == 1 and schedule_oneday[23] == 1:   # 日を跨ぐ場合
-            roomDayMode = "夜"
-        if np.sum(schedule_oneday) == 24:
+        opetime_oneday  = np.sum(schedule_oneday)
+        opetime_daytime = np.sum(schedule_oneday[[6,7,8,9,10,11,12,13,14,15,16,17]])
+        opetime_night   = np.sum(schedule_oneday[[0,1,2,3,4,5,18,19,20,21,22,23]])
+
+        if opetime_oneday == 24:
             roomDayMode = "終日"
-
-        # # builelibの方法：
-        # opetime_oneday  = np.sum(schedule_oneday)
-        # opetime_daytime = np.sum(schedule_oneday[[6,7,8,9,10,11,12,13,14,15,16,17]])
-        # opetime_night   = np.sum(schedule_oneday[[0,1,2,3,4,5,18,19,20,21,22,23]])
-
-        # if opetime_oneday == 24:
-        #     roomDayMode = "終日"
-        # elif opetime_daytime >= opetime_night:
-        #     roomDayMode = "昼"
-        # elif opetime_daytime < opetime_night:
-        #     roomDayMode = "夜"
-        # else:
-        #     raise Exception('室の使用時間帯が特定できませんでした。')
+        elif opetime_daytime >= opetime_night:
+            roomDayMode = "昼"
+        elif opetime_daytime < opetime_night:
+            roomDayMode = "夜"
+        else:
+            raise Exception('室の使用時間帯が特定できませんでした。')
 
 
     # # CSVファイルに出力（検証用）
@@ -316,7 +306,7 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
 
     # 各日時における運転状態（365×24の行列）
     opePattern_hourly_ventilation = []
-    
+
     if RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン1"] == []:  # 非空調室の場合
 
         # 非空調室は、年間一律で運転することにする。
@@ -332,7 +322,7 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
 
     else:
 
-        # 各日の運転パターン（365日分）： 各室のカレンダーパターンから決定
+        # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
         opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
 
         # 入力されたカレンダーパターンを使う場合（上書きする）
@@ -342,37 +332,19 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
                     opePattern_Daily = input_calendar[buildingType][roomType]
 
 
-        # SP-9シートに入力があれば、年間換気運転時間を上書きする。
-        if buildingType in input_room_usage_condition:
-            if roomType in input_room_usage_condition[buildingType]:
-                RoomUsageSchedule[buildingType][roomType]["年間換気時間"] = float(input_room_usage_condition[buildingType][roomType]["年間換気時間"])
-
-
-        # 時刻別スケジュールの設定
         if RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間空調時間"]:
 
             for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
                 opePattern_hourly_ventilation.append(
                     RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン" + str(opePattern_Daily[dd])]
                 )
-            # np.array型に変換
-            opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
-            # 0か1に変換
-            opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
-
 
         elif RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]:
-        
+
             for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
                 opePattern_hourly_ventilation.append(
                     RoomUsageSchedule[buildingType][roomType]["スケジュール"]["照明発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
                 )
-
-            # np.array型に変換
-            opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
-            # 0か1に変換
-            opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
-
 
         elif RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == 0:
 
@@ -380,18 +352,16 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
                 opePattern_hourly_ventilation.append(
                     np.zeros(24)
                 )
-            
-            # np.array型に変換
-            opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
-            # 0か1に変換
-            opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
 
-        else:  # SPシートで入力された場合
+        else:
 
-            # 非空調室の場合と同じ処理を行う
-            ratio_hourly = RoomUsageSchedule[buildingType][roomType]["年間換気時間"] / 8760
-            # 365×24の行列に変換
-            opePattern_hourly_ventilation = np.array( [[ratio_hourly]*24]*365 )
+            raise Exception("換気運転時間が定まりません")
+
+
+        # np.array型に変換
+        opePattern_hourly_ventilation = np.array(opePattern_hourly_ventilation)
+        # 0か1に変換
+        opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
 
 
     return opePattern_hourly_ventilation
@@ -414,7 +384,7 @@ def get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar={}):
 
     # 各日時における運転状態（365×24の行列）
     opePattern_hourly_lighting = []
-    
+
     if RoomUsageSchedule[buildingType][roomType]["スケジュール"]["室同時使用率"]["パターン1"] == []:  # 非空調室の場合
 
         # 非空調室は稼働率にする。
@@ -430,7 +400,7 @@ def get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar={}):
             opePattern_hourly_lighting.append(
                 RoomUsageSchedule[buildingType][roomType]["スケジュール"]["照明発熱密度比率"]["パターン" + str(opePattern_Daily[dd])]
             )
-        
+
         # np.array型に変換
         opePattern_hourly_lighting = np.array(opePattern_hourly_lighting)
         # 0か1に変換
@@ -444,7 +414,7 @@ def inputdata_validation(inputdata):
 
     # スキーマの読み込み
     with open( template_directory + '/webproJsonSchema.json', encoding='utf-8') as f:
-        schema_data = json.load(f)    
+        schema_data = json.load(f)
 
     # 任意評定用（SP-1）
     if "SpecialInputData" in inputdata:
@@ -477,7 +447,7 @@ def day2month(dd: np.array) -> str:
     """
     日数から月を返す関数
     """
-    
+
     month = str()
     if dd < 31:
         month = "1月"

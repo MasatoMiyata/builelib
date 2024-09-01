@@ -6,7 +6,7 @@ import math
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import commons as bc
+from . import commons as bc
 
 def calc_energy(inputdata, DEBUG = False):
 

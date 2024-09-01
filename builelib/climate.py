@@ -2,6 +2,8 @@
 import csv
 import math
 import numpy as np
+# import pandas as pd
+import itertools
 
 def readCsvClimateData(filename):
     """
@@ -27,8 +29,33 @@ def readCsvClimateData(filename):
     sun_altitude = npArrayData[2:8762, 3].astype('float')
     # 太陽方位角[°]
     sun_azimuth = npArrayData[2:8762, 4].astype('float')
-    
+
     return Tout, Iod, Ios, sun_altitude, sun_azimuth
+
+
+def readDatClimateData(filename):
+    """
+    気象データ（datファイル）を読み込む関数。給湯用。
+    8760の行列
+    """
+
+    with open(filename, encoding='utf-8') as f:
+        reader = csv.reader(f)
+        data = [row for row in reader]
+
+    npArrayData = np.array(data)
+    Tout = npArrayData[1:8761, 6].astype('float')
+
+    Tout_hourly = np.zeros((365,24))
+    i = 0
+    for dd in range(365):
+        for hh in range(24):
+            Tout_hourly[dd][hh] = Tout[i]
+            i += 1
+
+    Tout_daily = np.mean(Tout_hourly,1)
+
+    return Tout_daily
 
 
 def readHaspClimateData(filename):
@@ -93,6 +120,15 @@ def readHaspClimateData(filename):
     Ios  = np.array(Ios)
     Inn  = np.array(Inn)
 
+    # # CSVファイルに出力（検証用）
+    # df = pd.DataFrame()
+    # df["Tout"] = list(itertools.chain.from_iterable(Tout))
+    # df["Xout"] = list(itertools.chain.from_iterable(Xout))
+    # df["Iod"] = list(itertools.chain.from_iterable(Iod))
+    # df["Ios"] = list(itertools.chain.from_iterable(Ios))
+    # df["Inn"] = list(itertools.chain.from_iterable(Inn))
+    # df.to_csv("climatedata.csv")
+
     return Tout, Xout, Iod, Ios, Inn
 
 
@@ -120,7 +156,7 @@ def eqt04(month,day):
     """
     均時差を求める関数
     入力  month : 月
-    入力  day   : 日 
+    入力  day   : 日
     出力  e     : 均時差 [h]
     """
 
@@ -141,7 +177,7 @@ def deg2rad(degree):
     degree 度[°] を ラジアン [rad]に変換する関数
     """
     radian = degree * math.pi /180
-    
+
     return radian
 
 
@@ -174,20 +210,20 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
     Id_ita = np.zeros((365,24))
     Is     = np.zeros((365,24))
     ita    = np.zeros((365,24))
-    
+
     # 通算日数(1月1日が1、12月31日が365)
     DN = 0
-    
+
     for month in range(1,13):
         for day in range(1,monthly_daynum[month-1]+1):
 
             for hour in range(0,24):
-                
+
                 # 日射量 [W/m2]
                 Iod  = IodALL[DN,hour] # 法線面直達日射量 [W/m2]
                 Ios  = IosALL[DN,hour] # 水平面天空日射量 [W/m2]
                 Ion  = InnALL[DN,hour] # 水平面夜間放射量 [W/m2]
-                
+
                 # 中央標準時を求める
                 t = (hour+1) + 0 / 60
                 # 日赤緯を求める(HASP教科書P24(2-22)参照)
@@ -196,7 +232,7 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
                 equal_time_difference = eqt04(month,day)
                 # 時角を求める
                 Tim = (15.0 * t + 15.0 * equal_time_difference + longi - 315.0) * rad
-                
+
                 sinPhi = math.sin(deg2rad(phi)) # 緯度の正弦
                 cosPhi = math.cos(deg2rad(phi)) # 緯度の余弦
                 sinAlp = math.sin(alp * rad)    # 方位角正弦
@@ -207,7 +243,7 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
                 cosDel = math.cos(declination)          # 日赤緯の余弦
                 sinTim = math.sin(Tim)          # 時角の正弦
                 cosTim = math.cos(Tim)          # 時角の余弦
-                
+
                 # 太陽高度の正弦を求める(HASP教科書 P25 (2.25)参照 )
                 sinh   = sinPhi * sinDel + cosPhi * cosDel * cosTim
 
@@ -215,22 +251,22 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
                 cosh   = math.sqrt(1 - sinh**2)                     # 太陽高度の余弦
                 sinA   = cosDel * sinTim / cosh                     # 太陽方位の正弦
                 cosA   = (sinh * sinPhi - sinDel)/(cosh * cosPhi)   # 太陽方位の余弦
-                
+
                 # 傾斜壁から見た太陽高度を求める(HASP 教科書 P26(2.26)参照)
                 sinh2  = sinh * cosBet + cosh * sinBet * (cosA * cosAlp + sinA * sinAlp)
 
                 if sinh2 < 0:
                     sinh2 = 0
-                
+
                 # 入射角特性
                 ita[DN,hour] = 2.392 * sinh2 - 3.8636 * sinh2**3 + 3.7568 * sinh2**5 - 1.3952 * sinh2**7
-                
+
                 # 傾斜面入射日射量(直達日射量)（W/m2）
                 Id[DN,hour]  = go * Iod * sinh2
-                
+
                 # 傾斜面入射日射量(直達日射量)（W/m2）　入射角特性込み（0.89で除して基準化済み）
                 Id_ita[DN,hour] = go * Iod * sinh2 * ita[DN,hour]/0.89
-                
+
                 # 傾斜面入射日射量(天空日射量)（W/m2）
                 if bet == 90:
                     Is[DN,hour] = 0.5*Ios + 0.1*0.5*(Ios + Iod*sinh)
@@ -257,29 +293,14 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
     return np.sum(Id,1), np.sum(Id_ita,1), np.sum(Is,1), Insr
 
 
+#%%
 if __name__ == '__main__':
 
-    pass
+    filename = "./builelib/climatedata/C1_0598195.has"
 
-    # # 2024.8.12 気象データを統一する際の検証：
-    # import os
-    # import json
+    print((np.mean(Xout[:,[6,7,8,9,10,11,12,13,14,15,16,17]],1)))
 
-    # database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
-    # # 地域別データの読み込み
-    # with open('./builelib/database/AREA.json', 'r', encoding='utf-8') as f:
-    #     Area = json.load(f)
 
-    # Area_name = "8地域"
 
-    # # 空調用と給湯用の気象データの比較
-    # filename_hasp = "./builelib/climatedata/C1_" +Area[Area_name]["気象データファイル名"]
-    # filename_dat  = "./builelib/climatedata/" + Area[Area_name]["気象データファイル名（給湯）"]
-
-    # Toa_ave_dat = readDatClimateData(filename_dat)
-
-    # [Tout, Xout, Iod, Ios, Inn] = readHaspClimateData(filename_hasp)
-    # Toa_ave_hasp = np.mean(Tout,1)
-
-    # np.savetxt('気象データ検証_' + Area_name + '.csv', np.stack([Toa_ave_dat, Toa_ave_hasp, Toa_ave_dat-Toa_ave_hasp], 1) ,delimiter=',',fmt='%.3f')
+# %%
