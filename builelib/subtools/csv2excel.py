@@ -1,6 +1,8 @@
-import openpyxl as px
 import csv
 import glob
+
+import openpyxl as px
+
 
 def write_list_2d(sheet, l_2d, start_row, start_col):
     """
@@ -10,8 +12,9 @@ def write_list_2d(sheet, l_2d, start_row, start_col):
     for y, row in enumerate(l_2d):
         for x, cell in enumerate(row):
             sheet.cell(row=start_row + y,
-                        column=start_col + x,
-                        value=l_2d[y][x])
+                       column=start_col + x,
+                       value=l_2d[y][x])
+
 
 def csv2excel(csv_directory, output_filename):
     """
@@ -26,29 +29,29 @@ def csv2excel(csv_directory, output_filename):
         raise Exception("CSVファイルが見つかりません。")
 
     # テンプレートファイル（Excelファイル）を読み込む
-    excel_workbook = px.load_workbook('./builelib/subtools/inputSheet_template.xlsm',read_only=False, keep_vba=True)
+    excel_workbook = px.load_workbook('./builelib/subtools/inputSheet_template.xlsm', read_only=False, keep_vba=True)
 
     for csvfile_name in csvfile_list:
-        
+
         # CSVファイルを読み込む
-        with open(csvfile_name , newline='', encoding='cp932', errors='ignore') as data:
+        with open(csvfile_name, newline='', encoding='cp932', errors='ignore') as data:
             csvdata = list(csv.reader(data, delimiter=','))
 
         if "様式0" in csvfile_name:
 
-            excel_workbook['0) 基本情報'].cell(row=9,  column=3, value=csvdata[8][2]) # 建物名称
-            excel_workbook['0) 基本情報'].cell(row=10, column=4, value=csvdata[9][3]) # 都道府県
+            excel_workbook['0) 基本情報'].cell(row=9, column=3, value=csvdata[8][2])  # 建物名称
+            excel_workbook['0) 基本情報'].cell(row=10, column=4, value=csvdata[9][3])  # 都道府県
 
             if len(csvdata[9]) >= 6:
-                excel_workbook['0) 基本情報'].cell(row=10, column=6, value=csvdata[9][5]) # 市区町村
+                excel_workbook['0) 基本情報'].cell(row=10, column=6, value=csvdata[9][5])  # 市区町村
             excel_workbook['0) 基本情報'].cell(row=11, column=3, value=csvdata[10][2])  # 住所
 
             excel_workbook['0) 基本情報'].cell(row=12, column=3, value=csvdata[11][2])  # 地域区分
             excel_workbook['0) 基本情報'].cell(row=13, column=3, value=csvdata[12][2])  # 構造
 
-            excel_workbook['0) 基本情報'].cell(row=14, column=4, value=csvdata[13][3]) # 階数（地上）
+            excel_workbook['0) 基本情報'].cell(row=14, column=4, value=csvdata[13][3])  # 階数（地上）
             if len(csvdata[13]) >= 6:
-                excel_workbook['0) 基本情報'].cell(row=14, column=6, value=csvdata[13][5]) # 階数（地下）
+                excel_workbook['0) 基本情報'].cell(row=14, column=6, value=csvdata[13][5])  # 階数（地下）
 
             excel_workbook['0) 基本情報'].cell(row=15, column=3, value=csvdata[14][2])  # 敷地面積
             excel_workbook['0) 基本情報'].cell(row=16, column=3, value=csvdata[15][2])  # 建築面積
@@ -130,7 +133,5 @@ if __name__ == '__main__':
     #     csv2excel("./tests/cogeneration/Case_hotel_0"+str(i), "Case_hotel_0"+str(i))
 
     # コジェネテスト用（事務所）
-    for i in range(3,5):
-        csv2excel("./tests/cogeneration/Case_office_0"+str(i), "Case_office_0"+str(i))
-
-
+    for i in range(3, 5):
+        csv2excel("./tests/cogeneration/Case_office_0" + str(i), "Case_office_0" + str(i))

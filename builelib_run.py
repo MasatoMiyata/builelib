@@ -1,11 +1,13 @@
 import json
-import numpy as np
+import math
 import os
 import zipfile
-import math
 
-from builelib.make_inputdata import make_jsondata_from_Ver2_sheet, make_jsondata_from_Ver4_sheet
-from builelib import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
+import numpy as np
+
+from builelib import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevator, photovoltaic, \
+    other_energy, cogeneration
+from builelib.make_inputdata import make_jsondata_from_Ver2_sheet
 
 
 # json.dump用のクラス
@@ -30,52 +32,52 @@ def builelib_run(exec_calculation, inputfile_name):
         inputfile_name (str): 入力ファイルの名称
     """
 
-    #------------------------------------
+    # ------------------------------------
     # 引数の受け渡し
-    #------------------------------------
+    # ------------------------------------
     exec_calculation = bool(exec_calculation)  # 計算の実行 （True: 計算も行う、 False: 計算は行わない）
-    inputfile_name   = str(inputfile_name)     # 入力ファイルの名称
+    inputfile_name = str(inputfile_name)  # 入力ファイルの名称
 
-    #------------------------------------
+    # ------------------------------------
     # 出力ファイルの定義
-    #------------------------------------
+    # ------------------------------------
     calc_reuslt = {
-        "設計一次エネルギー消費量[MJ]" : 0,
-        "基準一次エネルギー消費量[MJ]" : 0, 
-        "設計一次エネルギー消費量（その他除き）[MJ]" : 0,
-        "基準一次エネルギー消費量（その他除き）[MJ]" : 0, 
+        "設計一次エネルギー消費量[MJ]": 0,
+        "基準一次エネルギー消費量[MJ]": 0,
+        "設計一次エネルギー消費量（その他除き）[MJ]": 0,
+        "基準一次エネルギー消費量（その他除き）[MJ]": 0,
         "BEI": "",
-        "設計一次エネルギー消費量（再エネ、その他除き）[MJ]" : 0,
+        "設計一次エネルギー消費量（再エネ、その他除き）[MJ]": 0,
         "BEI（再エネ除き）": "",
         "設計一次エネルギー消費量（空調）[MJ]": 0,
         "基準一次エネルギー消費量（空調）[MJ]": 0,
-        "BEI_AC": "-",   # BEI（空調）
-        "設計一次エネルギー消費量（換気）[MJ]": 0, 
+        "BEI_AC": "-",  # BEI（空調）
+        "設計一次エネルギー消費量（換気）[MJ]": 0,
         "基準一次エネルギー消費量（換気）[MJ]": 0,
-        "BEI_V": "-",    # BEI（換気）
+        "BEI_V": "-",  # BEI（換気）
         "設計一次エネルギー消費量（照明）[MJ]": 0,
         "基準一次エネルギー消費量（照明）[MJ]": 0,
-        "BEI_L": "-",    # BEI（照明）
+        "BEI_L": "-",  # BEI（照明）
         "設計一次エネルギー消費量（給湯）[MJ]": 0,
-        "基準一次エネルギー消費量（給湯）[MJ]": 0, 
-        "BEI_HW": "-",   # BEI（給湯）
-        "設計一次エネルギー消費量（昇降機）[MJ]": 0, 
-        "基準一次エネルギー消費量（昇降機）[MJ]": 0, 
-        "BEI_EV": "-",   # BEI（昇降機）
-        "その他一次エネルギー消費量[MJ]" : 0,
-        "創エネルギー量（太陽光）[MJ]": 0, 
-        "創エネルギー量（コジェネ）[MJ]": 0, 
+        "基準一次エネルギー消費量（給湯）[MJ]": 0,
+        "BEI_HW": "-",  # BEI（給湯）
+        "設計一次エネルギー消費量（昇降機）[MJ]": 0,
+        "基準一次エネルギー消費量（昇降機）[MJ]": 0,
+        "BEI_EV": "-",  # BEI（昇降機）
+        "その他一次エネルギー消費量[MJ]": 0,
+        "創エネルギー量（太陽光）[MJ]": 0,
+        "創エネルギー量（コジェネ）[MJ]": 0,
     }
 
     # CGSの計算に必要となる変数
     resultJson_for_CGS = {
-        "AC":{},
-        "V":{},
-        "L":{},
-        "HW":{},
-        "EV":{},
-        "PV":{},
-        "OT":{},
+        "AC": {},
+        "V": {},
+        "L": {},
+        "HW": {},
+        "EV": {},
+        "PV": {},
+        "OT": {},
     }
 
     # 設計一次エネルギー消費量[MJ]
@@ -83,9 +85,9 @@ def builelib_run(exec_calculation, inputfile_name):
     # 基準一次エネルギー消費量[MJ]
     energy_consumption_standard = 0
 
-    #------------------------------------
+    # ------------------------------------
     # 入力ファイルの読み込み
-    #------------------------------------
+    # ------------------------------------
     inputdata = {}
     validation = {}
 
@@ -122,30 +124,27 @@ def builelib_run(exec_calculation, inputfile_name):
         }
         exec_calculation = False  # 計算は行わない。
 
-
     # エラーが発生したら計算は行わない。
     if len(validation["error"]) > 0:
         exec_calculation = False
 
-
     # 出力
-    with open(inputfile_name_split[0] + "_input.json",'w', encoding='utf-8') as fw:
-        json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_input.json", 'w', encoding='utf-8') as fw:
+        json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # 空気調和設備の計算の実行
-    #------------------------------------
+    # ------------------------------------
 
     # 実行
     resultdata_AC = {}
 
     if exec_calculation:
-        
-        try:
-            if inputdata["AirConditioningZone"]:   # AirConditioningZone が 空 でなければ
 
-                resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug = False)
+        try:
+            if inputdata["AirConditioningZone"]:  # AirConditioningZone が 空 でなければ
+
+                resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug=False)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
@@ -173,22 +172,21 @@ def builelib_run(exec_calculation, inputfile_name):
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_AC.json",'w', encoding='utf-8') as fw:
-        json.dump(resultdata_AC, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result_AC.json", 'w', encoding='utf-8') as fw:
+        json.dump(resultdata_AC, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # 機械換気設備の計算の実行
-    #------------------------------------
+    # ------------------------------------
 
     # 実行
     resultdata_V = {}
     if exec_calculation:
 
         try:
-            if inputdata["VentilationRoom"]:   # VentilationRoom が 空 でなければ
+            if inputdata["VentilationRoom"]:  # VentilationRoom が 空 でなければ
 
-                resultdata_V = ventilation.calc_energy(inputdata, DEBUG = False)
+                resultdata_V = ventilation.calc_energy(inputdata, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["V"] = resultdata_V["for_CGS"]
@@ -216,22 +214,21 @@ def builelib_run(exec_calculation, inputfile_name):
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_V.json",'w', encoding='utf-8') as fw:
-        json.dump(resultdata_V, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result_V.json", 'w', encoding='utf-8') as fw:
+        json.dump(resultdata_V, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # 照明設備の計算の実行
-    #------------------------------------
+    # ------------------------------------
 
     # 実行
     resultdata_L = {}
     if exec_calculation:
 
         try:
-            if inputdata["LightingSystems"]:   # LightingSystems が 空 でなければ
+            if inputdata["LightingSystems"]:  # LightingSystems が 空 でなければ
 
-                resultdata_L = lighting.calc_energy(inputdata, DEBUG = False)
+                resultdata_L = lighting.calc_energy(inputdata, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["L"] = resultdata_L["for_CGS"]
@@ -259,13 +256,12 @@ def builelib_run(exec_calculation, inputfile_name):
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_L.json",'w', encoding='utf-8') as fw:
-        json.dump(resultdata_L, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result_L.json", 'w', encoding='utf-8') as fw:
+        json.dump(resultdata_L, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # 給湯設備の計算の実行
-    #------------------------------------
+    # ------------------------------------
 
     # 実行
     resultdata_HW = {}
@@ -273,10 +269,10 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["HotwaterRoom"]:   # HotwaterRoom が 空 でなければ
-            
-                resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
-        
+            if inputdata["HotwaterRoom"]:  # HotwaterRoom が 空 でなければ
+
+                resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG=False)
+
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["HW"] = resultdata_HW["for_CGS"]
 
@@ -286,7 +282,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
-            
+
             else:
                 resultdata_HW = {
                     "message": "給湯設備はありません。"
@@ -303,22 +299,21 @@ def builelib_run(exec_calculation, inputfile_name):
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_HW.json",'w', encoding='utf-8') as fw:
-        json.dump(resultdata_HW, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result_HW.json", 'w', encoding='utf-8') as fw:
+        json.dump(resultdata_HW, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # 昇降機の計算の実行
-    #------------------------------------
+    # ------------------------------------
 
     # 実行
     resultdata_EV = {}
     if exec_calculation:
 
         try:
-            if inputdata["Elevators"]:   # Elevators が 空 でなければ
+            if inputdata["Elevators"]:  # Elevators が 空 でなければ
 
-                resultdata_EV = elevator.calc_energy(inputdata, DEBUG = False)
+                resultdata_EV = elevator.calc_energy(inputdata, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["EV"] = resultdata_EV["for_CGS"]
@@ -346,22 +341,21 @@ def builelib_run(exec_calculation, inputfile_name):
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_EV.json",'w', encoding='utf-8') as fw:
-        json.dump(resultdata_EV, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result_EV.json", 'w', encoding='utf-8') as fw:
+        json.dump(resultdata_EV, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # 太陽光発電の計算の実行
-    #------------------------------------
+    # ------------------------------------
 
     # 実行
     resultdata_PV = {}
     if exec_calculation:
 
         try:
-            if inputdata["PhotovoltaicSystems"]:   # PhotovoltaicSystems が 空 でなければ
+            if inputdata["PhotovoltaicSystems"]:  # PhotovoltaicSystems が 空 でなければ
 
-                resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG = False)
+                resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["PV"] = resultdata_PV["for_CGS"]
@@ -384,22 +378,21 @@ def builelib_run(exec_calculation, inputfile_name):
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_PV.json",'w', encoding='utf-8') as fw:
-        json.dump(resultdata_PV, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result_PV.json", 'w', encoding='utf-8') as fw:
+        json.dump(resultdata_PV, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # その他の計算の実行
-    #------------------------------------
+    # ------------------------------------
 
     # 実行
     resultdata_OT = {}
     if exec_calculation:
 
         try:
-            if inputdata["Rooms"]:   # Rooms が 空 でなければ
+            if inputdata["Rooms"]:  # Rooms が 空 でなければ
 
-                resultdata_OT = other_energy.calc_energy(inputdata, DEBUG = False)
+                resultdata_OT = other_energy.calc_energy(inputdata, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["OT"] = resultdata_OT["for_CGS"]
@@ -419,21 +412,20 @@ def builelib_run(exec_calculation, inputfile_name):
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_Other.json",'w', encoding='utf-8') as fw:
-        json.dump(resultdata_OT, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result_Other.json", 'w', encoding='utf-8') as fw:
+        json.dump(resultdata_OT, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # コジェネの計算の実行
-    #------------------------------------
+    # ------------------------------------
 
     # 実行
     resultdata_CGS = {}
     if exec_calculation:
 
         try:
-            if inputdata["CogenerationSystems"]:   # CogenerationSystems が 空 でなければ
-                resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG = False)
+            if inputdata["CogenerationSystems"]:  # CogenerationSystems が 空 でなければ
+                resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG=False)
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design -= resultdata_CGS["年間一次エネルギー削減量"] * 1000
@@ -453,25 +445,26 @@ def builelib_run(exec_calculation, inputfile_name):
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_CGS.json",'w', encoding='utf-8') as fw:
-        json.dump(resultdata_CGS, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result_CGS.json", 'w', encoding='utf-8') as fw:
+        json.dump(resultdata_CGS, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # BEIの計算
-    #------------------------------------
+    # ------------------------------------
 
-    if energy_consumption_standard  != 0:
+    if energy_consumption_standard != 0:
 
         calc_reuslt["設計一次エネルギー消費量（その他除き）[MJ]"] = energy_consumption_design
         calc_reuslt["基準一次エネルギー消費量（その他除き）[MJ]"] = energy_consumption_standard
 
-        calc_reuslt["BEI"] = energy_consumption_design / energy_consumption_standard 
+        calc_reuslt["BEI"] = energy_consumption_design / energy_consumption_standard
         calc_reuslt["BEI"] = math.ceil(calc_reuslt["BEI"] * 100) / 100
 
-        calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] = energy_consumption_design + calc_reuslt["創エネルギー量（太陽光）[MJ]"]
+        calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] = energy_consumption_design + calc_reuslt[
+            "創エネルギー量（太陽光）[MJ]"]
 
-        calc_reuslt["BEI（再エネ除き）"] = calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] / calc_reuslt["基準一次エネルギー消費量（その他除き）[MJ]"] 
+        calc_reuslt["BEI（再エネ除き）"] = calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] / calc_reuslt[
+            "基準一次エネルギー消費量（その他除き）[MJ]"]
         calc_reuslt["BEI（再エネ除き）"] = math.ceil(calc_reuslt["BEI（再エネ除き）"] * 100) / 100
 
         # 設計一次エネ・基準一次エネにその他を追加
@@ -479,39 +472,36 @@ def builelib_run(exec_calculation, inputfile_name):
             calc_reuslt["設計一次エネルギー消費量[MJ]"] = energy_consumption_design + resultdata_OT["E_other"]
             calc_reuslt["基準一次エネルギー消費量[MJ]"] = energy_consumption_standard + resultdata_OT["E_other"]
 
-
-    #------------------------------------
+    # ------------------------------------
     # 計算結果ファイルの出力
-    #------------------------------------
+    # ------------------------------------
 
-    with open(inputfile_name_split[0] + "_result.json",'w', encoding='utf-8') as fw:
-        json.dump(calc_reuslt, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_result.json", 'w', encoding='utf-8') as fw:
+        json.dump(calc_reuslt, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # バリデーションファイルの出力
-    #------------------------------------
+    # ------------------------------------
 
-    with open(inputfile_name_split[0] + "_validation.json",'w', encoding='utf-8') as fw:
-        json.dump(validation, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_validation.json", 'w', encoding='utf-8') as fw:
+        json.dump(validation, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
-
-    #------------------------------------
+    # ------------------------------------
     # zipファイルの作成
-    #------------------------------------
+    # ------------------------------------
 
-    with zipfile.ZipFile(inputfile_name_split[0]+".zip", 'w', compression=zipfile.ZIP_DEFLATED) as new_zip:
-        new_zip.write( inputfile_name_split[0] + "_input.json",     arcname='builelib_input.json')
-        new_zip.write( inputfile_name_split[0] + "_validation.json", arcname='builelib_validation.json')
-        new_zip.write( inputfile_name_split[0] + "_result.json",    arcname='builelib_result.json')
-        new_zip.write( inputfile_name_split[0] + "_result_AC.json", arcname='builelib_result_AC.json')
-        new_zip.write( inputfile_name_split[0] + "_result_V.json",  arcname='builelib_result_V.json')
-        new_zip.write( inputfile_name_split[0] + "_result_L.json",  arcname='builelib_result_L.json')
-        new_zip.write( inputfile_name_split[0] + "_result_HW.json", arcname='builelib_result_HW.json')
-        new_zip.write( inputfile_name_split[0] + "_result_EV.json", arcname='builelib_result_EV.json')
-        new_zip.write( inputfile_name_split[0] + "_result_PV.json", arcname='builelib_result_PV.json')
-        new_zip.write( inputfile_name_split[0] + "_result_CGS.json", arcname='builelib_result_CGS.json')
-        new_zip.write( inputfile_name_split[0] + "_result_Other.json", arcname='builelib_result_Other.json')
+    with zipfile.ZipFile(inputfile_name_split[0] + ".zip", 'w', compression=zipfile.ZIP_DEFLATED) as new_zip:
+        new_zip.write(inputfile_name_split[0] + "_input.json", arcname='builelib_input.json')
+        new_zip.write(inputfile_name_split[0] + "_validation.json", arcname='builelib_validation.json')
+        new_zip.write(inputfile_name_split[0] + "_result.json", arcname='builelib_result.json')
+        new_zip.write(inputfile_name_split[0] + "_result_AC.json", arcname='builelib_result_AC.json')
+        new_zip.write(inputfile_name_split[0] + "_result_V.json", arcname='builelib_result_V.json')
+        new_zip.write(inputfile_name_split[0] + "_result_L.json", arcname='builelib_result_L.json')
+        new_zip.write(inputfile_name_split[0] + "_result_HW.json", arcname='builelib_result_HW.json')
+        new_zip.write(inputfile_name_split[0] + "_result_EV.json", arcname='builelib_result_EV.json')
+        new_zip.write(inputfile_name_split[0] + "_result_PV.json", arcname='builelib_result_PV.json')
+        new_zip.write(inputfile_name_split[0] + "_result_CGS.json", arcname='builelib_result_CGS.json')
+        new_zip.write(inputfile_name_split[0] + "_result_Other.json", arcname='builelib_result_Other.json')
 
     # ファイル削除
     # これを有効にするとブラウザで結果が表示されなくなるので注意
@@ -527,10 +517,8 @@ def builelib_run(exec_calculation, inputfile_name):
 
 
 if __name__ == '__main__':
-    
     # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
     # file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
     file_name = "./sample/sample01_WEBPRO_inputSheet_for_Ver3.6.xlsx"
 
     builelib_run(True, file_name)
-

@@ -1,6 +1,5 @@
-import pandas as pd
 import csv
-import pprint as pp
+
 import pytest
 
 from builelib import hotwatersupply
@@ -37,27 +36,26 @@ def read_testcasefile(filename):
 
 
 def make_inputdata(data):
-
     if data[3] == "物品販売業を営む店舗等":
         data[3] = "物販店舗等"
     if data[14] == "物品販売業を営む店舗等":
         data[14] = "物販店舗等"
 
     inputdata = {
-        "Building":{
+        "Building": {
             "Region": str(data[41])
         },
         "Rooms": {
-            data[1]+"_"+data[2]: {
+            data[1] + "_" + data[2]: {
                 "floorName": data[1],
                 "roomName": data[2],
                 "buildingType": data[3],
                 "roomType": data[4],
-                "roomArea": convert2number(data[5],None)
+                "roomArea": convert2number(data[5], None)
             }
         },
         "HotwaterRoom": {
-            data[1]+"_"+data[2]: {
+            data[1] + "_" + data[2]: {
                 "HotwaterSystem": [
                     {
                         "UsageType": "便所",
@@ -68,106 +66,101 @@ def make_inputdata(data):
                 ]
             }
         },
-        "HotwaterSupplySystems":{
+        "HotwaterSupplySystems": {
         },
-        "CogenerationSystems":{
+        "CogenerationSystems": {
         },
-        "SpecialInputData":{
+        "SpecialInputData": {
         }
     }
 
     if data[9] != "":
-
-        inputdata["HotwaterRoom"][data[1]+"_"+data[2]]["HotwaterSystem"].append(
-                {
-                    "UsageType": "便所",
-                    "SystemName": data[11],
-                    "HotWaterSavingSystem": data[10],
-                    "Info": data[9]
-                }
-            )
+        inputdata["HotwaterRoom"][data[1] + "_" + data[2]]["HotwaterSystem"].append(
+            {
+                "UsageType": "便所",
+                "SystemName": data[11],
+                "HotWaterSavingSystem": data[10],
+                "Info": data[9]
+            }
+        )
 
     if data[13] != "":
+        inputdata["Rooms"][data[12] + "_" + data[13]] = {
+            "floorName": data[12],
+            "roomName": data[13],
+            "buildingType": data[14],
+            "roomType": data[15],
+            "roomArea": convert2number(data[16], None)
+        }
 
-        inputdata["Rooms"][data[12]+"_"+data[13]] = {
-                "floorName": data[12],
-                "roomName": data[13],
-                "buildingType": data[14],
-                "roomType": data[15],
-                "roomArea": convert2number(data[16],None)
-            }
-
-        inputdata["HotwaterRoom"][data[12]+"_"+data[13]] = {
-                "HotwaterSystem": [
-                        {
-                            "UsageType": "便所",
-                            "SystemName": data[19],
-                            "HotWaterSavingSystem": data[18],
-                            "Info": data[17]
-                        }
-                    ]
-            }
-
-    if data[20] != "":
-
-        inputdata["HotwaterRoom"][data[12]+"_"+data[13]]["HotwaterSystem"].append(
+        inputdata["HotwaterRoom"][data[12] + "_" + data[13]] = {
+            "HotwaterSystem": [
                 {
                     "UsageType": "便所",
-                    "SystemName": data[22],
-                    "HotWaterSavingSystem": data[21],
-                    "Info": data[20]
+                    "SystemName": data[19],
+                    "HotWaterSavingSystem": data[18],
+                    "Info": data[17]
                 }
-            )
+            ]
+        }
+
+    if data[20] != "":
+        inputdata["HotwaterRoom"][data[12] + "_" + data[13]]["HotwaterSystem"].append(
+            {
+                "UsageType": "便所",
+                "SystemName": data[22],
+                "HotWaterSavingSystem": data[21],
+                "Info": data[20]
+            }
+        )
 
     if data[23] != "":
-
         inputdata["HotwaterSupplySystems"][data[23]] = {
-                "HeatSourceUnit": [
-                    {
-                        "UsageType": "給湯負荷用",
-                        "HeatSourceType": "ガス給湯機",
-                        "Number": 1,
-                        "RatedCapacity": convert2number(data[25],None),
-                        "RatedPowerConsumption": 0,
-                        "RatedFuelConsumption": convert2number(data[25],None) / convert2number(data[26],None)
-                    }
-                ],
-                "InsulationType": data[27],
-                "PipeSize": convert2number(data[28],None),
-                "SolarSystemArea": convert2number(data[29],None),
-                "SolarSystemDirection": convert2number(data[30],None),
-                "SolarSystemAngle": convert2number(data[31],None),
-                "Info": ""
-            }
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "ガス給湯機",
+                    "Number": 1,
+                    "RatedCapacity": convert2number(data[25], None),
+                    "RatedPowerConsumption": 0,
+                    "RatedFuelConsumption": convert2number(data[25], None) / convert2number(data[26], None)
+                }
+            ],
+            "InsulationType": data[27],
+            "PipeSize": convert2number(data[28], None),
+            "SolarSystemArea": convert2number(data[29], None),
+            "SolarSystemDirection": convert2number(data[30], None),
+            "SolarSystemAngle": convert2number(data[31], None),
+            "Info": ""
+        }
 
     if data[32] != "":
-
         inputdata["HotwaterSupplySystems"][data[32]] = {
-                "HeatSourceUnit": [
-                    {
-                        "UsageType": "給湯負荷用",
-                        "HeatSourceType": "ガス給湯機",
-                        "Number": 1,
-                        "RatedCapacity": convert2number(data[34],None),
-                        "RatedPowerConsumption": 0,
-                        "RatedFuelConsumption": convert2number(data[34],None) / convert2number(data[35],None)
-                    }
-                ],
-                "InsulationType": data[36],
-                "PipeSize": convert2number(data[37],None),
-                "SolarSystemArea": convert2number(data[38],None),
-                "SolarSystemDirection": convert2number(data[39],None),
-                "SolarSystemAngle": convert2number(data[40],None),
-                "Info": ""
-            }
+            "HeatSourceUnit": [
+                {
+                    "UsageType": "給湯負荷用",
+                    "HeatSourceType": "ガス給湯機",
+                    "Number": 1,
+                    "RatedCapacity": convert2number(data[34], None),
+                    "RatedPowerConsumption": 0,
+                    "RatedFuelConsumption": convert2number(data[34], None) / convert2number(data[35], None)
+                }
+            ],
+            "InsulationType": data[36],
+            "PipeSize": convert2number(data[37], None),
+            "SolarSystemArea": convert2number(data[38], None),
+            "SolarSystemDirection": convert2number(data[39], None),
+            "SolarSystemAngle": convert2number(data[40], None),
+            "Info": ""
+        }
 
     return inputdata
 
 
 #### テストケースファイルの読み込み（換気送風機）
 
-test_to_try  = []  # テスト用入力ファイルと期待値のリスト
-testcase_id  = []  # テスト名称のリスト
+test_to_try = []  # テスト用入力ファイルと期待値のリスト
+testcase_id = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -179,14 +172,13 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
-
         # 入力データの作成
         inputdata = make_inputdata(testdata)
         # 期待値
         expectedvalue = testdata[42]
 
         # テストケースの集約
-        test_to_try.append( (inputdata, expectedvalue) )
+        test_to_try.append((inputdata, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
@@ -194,13 +186,12 @@ for case_name in testcase_dict:
 # テストの実施
 @pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
 def test_calc(inputdata, expectedvalue):
-
     if expectedvalue != "err":  # passが期待されるテスト
         # 計算実行        
         resultJson = hotwatersupply.calc_energy(inputdata)
 
         # 比較
-        assert abs(resultJson["E_hotwatersupply"] - convert2number(expectedvalue,0))   < 0.0001
+        assert abs(resultJson["E_hotwatersupply"] - convert2number(expectedvalue, 0)) < 0.0001
 
     else:
 
