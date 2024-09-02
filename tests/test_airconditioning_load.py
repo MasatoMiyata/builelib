@@ -1,7 +1,7 @@
-import pandas as pd
 import csv
-import pytest
 import json
+
+import pytest
 
 from builelib import airconditioning
 
@@ -36,7 +36,6 @@ def read_testcasefile(filename):
 
 
 def make_inputdata(data):
-
     if data[2] == "物品販売業を営む店舗等":
         data[2] = "物販店舗等"
 
@@ -49,7 +48,7 @@ def make_inputdata(data):
         data[7] = "水平（上）"
 
     inputdata = {
-        "Building":{
+        "Building": {
             "Region": str(data[1]),
             "Coefficient_DHC": {
                 "Cooling": 1.36,
@@ -62,7 +61,7 @@ def make_inputdata(data):
                 "roomName": "room1",
                 "buildingType": data[2],
                 "roomType": data[3],
-                "roomArea": convert2number(data[4],None),
+                "roomArea": convert2number(data[4], None),
                 "zone": None,
             }
         },
@@ -72,7 +71,7 @@ def make_inputdata(data):
                 "WallList": [
                     {
                         "Direction": data[7],
-                        "EnvelopeArea": convert2number(data[10],None),
+                        "EnvelopeArea": convert2number(data[10], None),
                         "EnvelopeWidth": None,
                         "EnvelopeHeight": None,
                         "WallSpec": "OW1",
@@ -95,18 +94,18 @@ def make_inputdata(data):
                 "structureType": "木造",
                 "solarAbsorptionRatio": None,
                 "inputMethod": "熱貫流率を入力",
-                "Uvalue": convert2number(data[12],None),
+                "Uvalue": convert2number(data[12], None),
                 "Info": "無"
             }
         },
         "WindowConfigure": {
             "WIND1": {
-                "windowArea": convert2number(data[11],None),
+                "windowArea": convert2number(data[11], None),
                 "windowWidth": None,
                 "windowHeight": None,
                 "inputMethod": "性能値を入力",
-                "windowUvalue": convert2number(data[13],None),
-                "windowIvalue": convert2number(data[14],None),
+                "windowUvalue": convert2number(data[13], None),
+                "windowIvalue": convert2number(data[14], None),
                 "layerType": "単層",
                 "glassUvalue": None,
                 "glassIvalue": None,
@@ -115,8 +114,8 @@ def make_inputdata(data):
         },
         "ShadingConfigure": {
             "日よけ1": {
-                "shadingEffect_C": convert2number(data[8],None),
-                "shadingEffect_H": convert2number(data[9],None),
+                "shadingEffect_C": convert2number(data[8], None),
+                "shadingEffect_H": convert2number(data[9], None),
                 "x1": None,
                 "x2": None,
                 "x3": None,
@@ -141,7 +140,7 @@ def make_inputdata(data):
                 "Info": ""
             }
         },
-        "HeatsourceSystem":{
+        "HeatsourceSystem": {
             "PAC1": {
                 "冷房": {
                     "StorageType": None,
@@ -236,11 +235,11 @@ def make_inputdata(data):
 
         if data[16] == "水平":
             data[16] = "水平（上）"
-            
+
         inputdata["EnvelopeSet"]["1F_room1"]["WallList"].append(
             {
                 "Direction": data[16],
-                "EnvelopeArea": convert2number(data[19],None),
+                "EnvelopeArea": convert2number(data[19], None),
                 "EnvelopeWidth": None,
                 "EnvelopeHeight": None,
                 "WallSpec": "OW2",
@@ -260,24 +259,24 @@ def make_inputdata(data):
             "structureType": "木造",
             "solarAbsorptionRatio": None,
             "inputMethod": "熱貫流率を入力",
-            "Uvalue": convert2number(data[21],None),
+            "Uvalue": convert2number(data[21], None),
             "Info": "無"
         }
         inputdata["WindowConfigure"]["WIND2"] = {
-            "windowArea": convert2number(data[20],None),
+            "windowArea": convert2number(data[20], None),
             "windowWidth": None,
             "windowHeight": None,
             "inputMethod": "性能値を入力",
-            "windowUvalue": convert2number(data[22],None),
-            "windowIvalue": convert2number(data[23],None),
+            "windowUvalue": convert2number(data[22], None),
+            "windowIvalue": convert2number(data[23], None),
             "layerType": "単層",
             "glassUvalue": None,
             "glassIvalue": None,
             "Info": "無"
         }
         inputdata["ShadingConfigure"]["日よけ2"] = {
-            "shadingEffect_C": convert2number(data[17],None),
-            "shadingEffect_H": convert2number(data[18],None),
+            "shadingEffect_C": convert2number(data[17], None),
+            "shadingEffect_H": convert2number(data[18], None),
             "x1": None,
             "x2": None,
             "x3": None,
@@ -296,8 +295,8 @@ def make_inputdata(data):
 
 #### テストケースファイルの読み込み（換気送風機）
 
-test_to_try  = []  # テスト用入力ファイルと期待値のリスト
-testcase_id  = []  # テスト名称のリスト
+test_to_try = []  # テスト用入力ファイルと期待値のリスト
+testcase_id = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -309,14 +308,13 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
-
         # 入力データの作成
         inputdata = make_inputdata(testdata)
         # 期待値
-        expectedvalue = (testdata[24],testdata[25])
+        expectedvalue = (testdata[24], testdata[25])
 
         # テストケースの集約
-        test_to_try.append( (inputdata, expectedvalue) )
+        test_to_try.append((inputdata, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
@@ -324,9 +322,8 @@ for case_name in testcase_dict:
 # テストの実施
 @pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
 def test_calc(inputdata, expectedvalue):
-
     # 検証用
-    with open("inputdata.json",'w', encoding='utf-8') as fw:
+    with open("inputdata.json", 'w', encoding='utf-8') as fw:
         json.dump(inputdata, fw, indent=4, ensure_ascii=False)
 
     if expectedvalue[0] != "err":  # passが期待されるテスト
@@ -334,15 +331,19 @@ def test_calc(inputdata, expectedvalue):
         # 計算実行        
         resultJson = airconditioning.calc_energy(inputdata)
 
-        if convert2number(expectedvalue[0],0) == 0:
+        if convert2number(expectedvalue[0], 0) == 0:
             diff_Dc = 0
         else:
-            diff_Dc = (abs(resultJson["Qroom"]["1F_room1"]["QroomDc_anual"] - convert2number(expectedvalue[0],0))) / abs( convert2number(expectedvalue[0],0) )
+            diff_Dc = (abs(
+                resultJson["Qroom"]["1F_room1"]["QroomDc_anual"] - convert2number(expectedvalue[0], 0))) / abs(
+                convert2number(expectedvalue[0], 0))
 
-        if convert2number(expectedvalue[1],0) == 0:
+        if convert2number(expectedvalue[1], 0) == 0:
             diff_Dh = 0
         else:
-            diff_Dh = (abs(resultJson["Qroom"]["1F_room1"]["QroomDh_anual"] - convert2number(expectedvalue[1],0))) / abs( convert2number(expectedvalue[1],0) )
+            diff_Dh = (abs(
+                resultJson["Qroom"]["1F_room1"]["QroomDh_anual"] - convert2number(expectedvalue[1], 0))) / abs(
+                convert2number(expectedvalue[1], 0))
 
         # 比較（0.01%まで）
         assert diff_Dc < 0.0001

@@ -1,9 +1,10 @@
-import pandas as pd
+import json
+
+import pytest
+import xlrd
+
 from builelib import airconditioning
 from builelib import commons as bc
-import pytest
-import json
-import xlrd
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -37,8 +38,8 @@ def read_testcasefile(filename):
 
 #### テストケースファイルの読み込み
 
-test_to_try  = []  # テスト用入力ファイルと期待値のリスト
-testcase_id  = []  # テスト名称のリスト
+test_to_try = []  # テスト用入力ファイルと期待値のリスト
+testcase_id = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -52,14 +53,13 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
-
         filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_base.json"
         # 入力データの読み込み
         with open(filename, 'r', encoding='utf-8') as f:
             inputdata = json.load(f)
 
         # 地域
-        inputdata["Building"]["Region"] = str(testdata[3]).replace("地域","")
+        inputdata["Building"]["Region"] = str(testdata[3]).replace("地域", "")
         # 冷熱源
         inputdata["HeatsourceSystem"]["PAC1"]["冷房"]["Heatsource"][0]["HeatsourceType"] = testdata[1]
         # 温熱源
@@ -69,7 +69,7 @@ for case_name in testcase_dict:
         expectedvalue = (testdata[4])
 
         # テストケースの集約
-        test_to_try.append( (inputdata, expectedvalue) )
+        test_to_try.append((inputdata, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
@@ -77,11 +77,10 @@ for case_name in testcase_dict:
 # テストの実施
 @pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
 def test_calc(inputdata, expectedvalue):
-
-    # 計算実行        
+    # 計算実行
     resultJson = airconditioning.calc_energy(inputdata)
 
-    diff_Eac = (abs(resultJson["E_airconditioning"] - expectedvalue)) / abs( expectedvalue )
+    diff_Eac = (abs(resultJson["E_airconditioning"] - expectedvalue)) / abs(expectedvalue)
 
     # 比較（0.01%まで）
     assert diff_Eac < 0.0001
@@ -105,14 +104,13 @@ if __name__ == '__main__':
 
         # テストケース（行）に対するループ
         for testdata in testfiledata:
-
             filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_base.json"
             # 入力データの読み込み
             with open(filename, 'r', encoding='utf-8') as f:
                 inputdata = json.load(f)
 
             # 地域
-            inputdata["Building"]["Region"] = str(testdata[3]).replace("地域","")
+            inputdata["Building"]["Region"] = str(testdata[3]).replace("地域", "")
             # 冷熱源
             inputdata["HeatsourceSystem"]["PAC1"]["冷房"]["Heatsource"][0]["HeatsourceType"] = testdata[1]
             # 温熱源
@@ -123,20 +121,18 @@ if __name__ == '__main__':
 
             # 結果
             resultALL = [
-                str(resultJson["E_airconditioning"]), 
-                str(resultJson["ENERGY"]["E_fan"] * bc.fprime), 
-                str(resultJson["ENERGY"]["E_aex"] * bc.fprime), 
-                str(resultJson["ENERGY"]["E_pump"] * bc.fprime), 
-                str(resultJson["ENERGY"]["E_refsysr"]), 
-                str(resultJson["ENERGY"]["E_refac"] * bc.fprime), 
-                str(resultJson["ENERGY"]["E_pumpP"] * bc.fprime), 
-                str(resultJson["ENERGY"]["E_ctfan"] * bc.fprime), 
+                str(resultJson["E_airconditioning"]),
+                str(resultJson["ENERGY"]["E_fan"] * bc.fprime),
+                str(resultJson["ENERGY"]["E_aex"] * bc.fprime),
+                str(resultJson["ENERGY"]["E_pump"] * bc.fprime),
+                str(resultJson["ENERGY"]["E_refsysr"]),
+                str(resultJson["ENERGY"]["E_refac"] * bc.fprime),
+                str(resultJson["ENERGY"]["E_pumpP"] * bc.fprime),
+                str(resultJson["ENERGY"]["E_ctfan"] * bc.fprime),
                 str(resultJson["ENERGY"]["E_ctpump"] * bc.fprime)
             ]
 
-            with open("resultALL.txt",'a', encoding='utf-8') as fw:
-                fw.write(testdata[0]+",")
+            with open("resultALL.txt", 'a', encoding='utf-8') as fw:
+                fw.write(testdata[0] + ",")
                 fw.write(",".join(resultALL))
                 fw.write("\n")
-
-

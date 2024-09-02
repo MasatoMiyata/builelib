@@ -1,9 +1,9 @@
-import pandas as pd
-import csv
-from builelib import airconditioning
-import pytest
 import json
+
+import pytest
 import xlrd
+
+from builelib import airconditioning
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -37,8 +37,8 @@ def read_testcasefile(filename):
 
 #### テストケースファイルの読み込み
 
-test_to_try  = []  # テスト用入力ファイルと期待値のリスト
-testcase_id  = []  # テスト名称のリスト
+test_to_try = []  # テスト用入力ファイルと期待値のリスト
+testcase_id = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -50,7 +50,6 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
-
         filename = "./tests/airconditioning/ACtest_" + testdata[0] + ".json"
         # 入力データの作成
         with open(filename, 'r', encoding='utf-8') as f:
@@ -60,7 +59,7 @@ for case_name in testcase_dict:
         expectedvalue = (testdata[4])
 
         # テストケースの集約
-        test_to_try.append( (inputdata, expectedvalue) )
+        test_to_try.append((inputdata, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
@@ -68,15 +67,14 @@ for case_name in testcase_dict:
 # テストの実施
 @pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
 def test_calc(inputdata, expectedvalue):
-
     # 検証用
-    with open("inputdata.json",'w', encoding='utf-8') as fw:
+    with open("inputdata.json", 'w', encoding='utf-8') as fw:
         json.dump(inputdata, fw, indent=4, ensure_ascii=False)
 
     # 計算実行        
     resultJson = airconditioning.calc_energy(inputdata)
 
-    diff_Eac = (abs(resultJson["E_airconditioning"] - expectedvalue)) / abs( expectedvalue )
+    diff_Eac = (abs(resultJson["E_airconditioning"] - expectedvalue)) / abs(expectedvalue)
 
     # 比較（0.01%まで）
     assert diff_Eac < 0.0001
