@@ -41,7 +41,7 @@ def set_roomIndexCoeff(roomIndex):
 
 def calc_energy(inputdata, DEBUG=False):
     # データベースjsonの読み込み
-    with open(database_directory + 'lightingControl.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'lighting_control.json', 'r', encoding='utf-8') as f:
         lightingCtrl = json.load(f)
 
     # 計算結果を格納する変数

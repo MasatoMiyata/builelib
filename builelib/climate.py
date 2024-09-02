@@ -271,7 +271,7 @@ if __name__ == '__main__':
     # database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
     # # 地域別データの読み込み
-    # with open('./builelib/database/AREA.json', 'r', encoding='utf-8') as f:
+    # with open('./builelib/database/area.json', 'r', encoding='utf-8') as f:
     #     Area = json.load(f)
 
     # Area_name = "8地域"

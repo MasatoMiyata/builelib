@@ -40,7 +40,7 @@ def calc_energy(inputdata, DEBUG=False):
     }
 
     # 地域別データの読み込み
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
     ##----------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ def calc_energy(inputdata, DEBUG=False):
     # ----------------------------------------------------------------------------------
 
     # 給湯配管の線熱損失係数の読み込み
-    with open(database_directory + 'ThermalConductivityPiping.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'thermal_conductivity_piping.json', 'r', encoding='utf-8') as f:
         thermal_conductivity_dict = json.load(f)
 
     for unit_name in inputdata["HotwaterSupplySystems"]:
@@ -266,7 +266,7 @@ def calc_energy(inputdata, DEBUG=False):
     Toa_ave = np.mean(Tout, 1)
 
     # 空調運転モード
-    with open(database_directory + 'ACoperationMode.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_operation_mode.json', 'r', encoding='utf-8') as f:
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）

@@ -307,7 +307,7 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
 
     ## 地域別データ読み込み
 
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
         areaDB = json.load(f)
     climatefilename = climatedata_directory + '/' + areaDB[AREA + "地域"]["気象データファイル名"]  # 気象データ
 

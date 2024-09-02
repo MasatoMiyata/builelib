@@ -19,15 +19,15 @@ database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 template_directory = os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
 
 # 基準値データベースの読み込み
-with open(database_directory + 'ROOM_STANDARDVALUE.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'room_standard_value.json', 'r', encoding='utf-8') as f:
     RoomStandardValue = json.load(f)
 
 # 室使用条件データの読み込み
-with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'room_usage_schedule.json', 'r', encoding='utf-8') as f:
     RoomUsageSchedule = json.load(f)
 
 # カレンダーパターンの読み込み
-with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'calender.json', 'r', encoding='utf-8') as f:
     Calendar = json.load(f)
 
 

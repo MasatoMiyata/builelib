@@ -2356,7 +2356,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     if "2-5) 熱源" in wb.sheet_names():
 
         ## 熱源機器特性
-        with open(database_directory + "HeatSourcePerformance.json", 'r', encoding='utf-8') as f:
+        with open(database_directory + "heat_source_performance.json", 'r', encoding='utf-8') as f:
             HeatSourcePerformance = json.load(f)
 
         # SP-2で作成した機種を追加

@@ -84,7 +84,7 @@ def caclulation(inputdata):
     climate_directory = "./builelib/climatedata/"
 
     # 地域別データの読み込み
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
     # 直達日射量、天空日射量 [W/m2]

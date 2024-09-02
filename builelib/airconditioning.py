@@ -95,7 +95,7 @@ def calc_energy(inputdata, debug=False):
     # 流量制御データベースファイルの読み込み
     # ----------------------------------------------------------------------------------
 
-    with open(database_directory + 'FLOWCONTROL.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'flow_control.json', 'r', encoding='utf-8') as f:
         FLOWCONTROL = json.load(f)
 
     # 任意評定用 （SP-1: 流量制御)の入力があれば追加
@@ -107,7 +107,7 @@ def calc_energy(inputdata, debug=False):
     # 熱源機器特性データベースファイルの読み込み
     # ----------------------------------------------------------------------------------
 
-    with open(database_directory + "HeatSourcePerformance.json", 'r', encoding='utf-8') as f:
+    with open(database_directory + "heat_source_performance.json", 'r', encoding='utf-8') as f:
         HeatSourcePerformance = json.load(f)
 
     # 任意評定 （SP-2：　熱源機器特性)用の入力があれば追加
@@ -120,7 +120,7 @@ def calc_energy(inputdata, debug=False):
     # ----------------------------------------------------------------------------------
 
     # 地域別データの読み込み
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
     # ----------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ def calc_energy(inputdata, debug=False):
     # ----------------------------------------------------------------------------------
 
     # 空調運転モード
-    with open(database_directory + 'ACoperationMode.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_operation_mode.json', 'r', encoding='utf-8') as f:
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
@@ -322,11 +322,11 @@ def calc_energy(inputdata, debug=False):
     # todo : 二つのデータベースにわかれてしまっているので統一する。
 
     # 標準入力法建材データの読み込み
-    with open(database_directory + 'HeatThermalConductivity.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'heat_thermal_conductivity.json', 'r', encoding='utf-8') as f:
         HeatThermalConductivity = json.load(f)
 
     # モデル建物法建材データの読み込み
-    with open(database_directory + 'HeatThermalConductivity_model.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'heat_thermal_conductivity_model.json', 'r', encoding='utf-8') as f:
         HeatThermalConductivity_model = json.load(f)
 
     if "WallConfigure" in inputdata:  # WallConfigure があれば以下を実行
@@ -394,7 +394,7 @@ def calc_energy(inputdata, debug=False):
     # ----------------------------------------------------------------------------------
 
     # 窓データの読み込み
-    with open(database_directory + 'WindowHeatTransferPerformance.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'window_heat_transfer_performance.json', 'r', encoding='utf-8') as f:
         WindowHeatTransferPerformance = json.load(f)
 
     with open(database_directory + 'glass2window.json', 'r', encoding='utf-8') as f:
@@ -2763,7 +2763,7 @@ def calc_energy(inputdata, debug=False):
     # ----------------------------------------------------------------------------------
 
     # 地中熱オープンループの地盤特性の読み込み
-    with open(database_directory + 'AC_gshp_openloop.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_gshp_openloop.json', 'r', encoding='utf-8') as f:
         AC_gshp_openloop = json.load(f)
 
     for ref_name in inputdata["REF"]:

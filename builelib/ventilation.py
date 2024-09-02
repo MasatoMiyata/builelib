@@ -189,7 +189,7 @@ def calc_energy(inputdata, DEBUG=False):
     ##----------------------------------------------------------------------------------
     ## 送風機の制御方式に応じて定められる係数（解説書 3.2）
     ##----------------------------------------------------------------------------------
-    with open(database_directory + '/ventilationControl.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + '/ventilation_control.json', 'r', encoding='utf-8') as f:
         ventilationCtrl = json.load(f)
 
     ##----------------------------------------------------------------------------------

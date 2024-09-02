@@ -119,5 +119,5 @@ for d in REFLIST:
 
 
 # JSONに書き込み
-fw = open('HeatSourcePerformance.json','w')
+fw = open('heat_source_performance.json','w')
 json.dump(DictData, fw, indent=4, ensure_ascii=False)
