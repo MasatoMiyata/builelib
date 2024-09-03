@@ -9,13 +9,13 @@ with open('LICENSE', encoding='utf-8') as f:
 setup(
     name='builelib',
     version='1.1.4',
-    description='builelib: Building Energy-modeling Library',
+    description='builelib: building Energy-modeling Library',
     author='Masato Miyata',
     author_email='builelib@gmail.com',
     url='https://github.com/MasatoMiyata/builelib',
     license=license,
     packages=find_packages(exclude=('tests', 'docs')),
-    package_data={'builelib': ['inputdata/*', 'database/*', 'climatedata/*']},
+    package_data={'builelib': ['input_data/*', 'database/*', 'climatedata/*']},
     include_package_data=True,
     python_requires='>=3.7',
 )

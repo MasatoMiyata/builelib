@@ -9,7 +9,7 @@ from builelib import airconditioning
 # 辞書型 テスト名とファイル名
 
 testcase_dict = {
-    "AHU_basic": "./tests/airconditioning/★空調設備テストケース一覧.xlsx",
+    "ahu_basic": "./tests/airconditioning/★空調設備テストケース一覧.xlsx",
 }
 
 
@@ -53,28 +53,28 @@ for case_name in testcase_dict:
         filename = "./tests/airconditioning/ACtest_" + testdata[0] + ".json"
         # 入力データの作成
         with open(filename, 'r', encoding='utf-8') as f:
-            inputdata = json.load(f)
+            input_data = json.load(f)
 
         # 期待値
         expectedvalue = (testdata[4])
 
         # テストケースの集約
-        test_to_try.append((inputdata, expectedvalue))
+        test_to_try.append((input_data, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
 # テストの実施
-@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(inputdata, expectedvalue):
+@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(input_data, expectedvalue):
     # 検証用
-    with open("inputdata.json", 'w', encoding='utf-8') as fw:
-        json.dump(inputdata, fw, indent=4, ensure_ascii=False)
+    with open("input_data.json", 'w', encoding='utf-8') as fw:
+        json.dump(input_data, fw, indent=4, ensure_ascii=False)
 
     # 計算実行        
-    resultJson = airconditioning.calc_energy(inputdata)
+    result_json = airconditioning.calc_energy(input_data)
 
-    diff_Eac = (abs(resultJson["E_airconditioning"] - expectedvalue)) / abs(expectedvalue)
+    diff_Eac = (abs(result_json["E_airconditioning"] - expectedvalue)) / abs(expectedvalue)
 
     # 比較（0.01%まで）
     assert diff_Eac < 0.0001

@@ -14,14 +14,14 @@ with open('./builelib/database_make/csv/REFCURVE.csv',encoding='Shift_JIS') as f
 #%%
 # 機種名称リストの作成
 
-refNameList = []
+refnameList = []
 for i in range(1,len(REFLIST)):
-    refNameList.append(REFLIST[i][1])
+    refnameList.append(REFLIST[i][1])
 
 #重複削除(set)してループ
 DictData = {}
-for unitName in set(refNameList):
-    DictData[unitName] = {
+for unitname in set(refnameList):
+    DictData[unitname] = {
         "ID": "",
         "冷房時の特性": {
             "燃料種類": "",
@@ -84,35 +84,35 @@ for d in REFLIST:
                 "基整促係数": float(d[9])
             }
 
-        if (d[4] == "Cooling") and (d[5] == "能力比"):
+        if (d[4] == "cooling") and (d[5] == "能力比"):
             DictData[d[1]]["冷房時の特性"]["燃料種類"] = d[2]
             DictData[d[1]]["冷房時の特性"]["熱源種類"] = d[3]
             DictData[d[1]]["冷房時の特性"]["能力比"].append(addDict)
-        elif (d[4] == "Cooling") and (d[5] == "入力比"):
+        elif (d[4] == "cooling") and (d[5] == "入力比"):
             DictData[d[1]]["冷房時の特性"]["燃料種類"] = d[2]
             DictData[d[1]]["冷房時の特性"]["熱源種類"] = d[3]
             DictData[d[1]]["冷房時の特性"]["入力比"].append(addDict)
-        elif (d[4] == "Cooling") and (d[5] == "部分負荷特性"):
+        elif (d[4] == "cooling") and (d[5] == "部分負荷特性"):
             DictData[d[1]]["冷房時の特性"]["燃料種類"] = d[2]
             DictData[d[1]]["冷房時の特性"]["熱源種類"] = d[3]
             DictData[d[1]]["冷房時の特性"]["部分負荷特性"].append(addDict)
-        elif (d[4] == "Cooling") and (d[5] == "送水温度特性"):
+        elif (d[4] == "cooling") and (d[5] == "送水温度特性"):
             DictData[d[1]]["冷房時の特性"]["燃料種類"] = d[2]
             DictData[d[1]]["冷房時の特性"]["熱源種類"] = d[3]
             DictData[d[1]]["冷房時の特性"]["送水温度特性"].append(addDict)
-        elif (d[4] == "Heating") and (d[5] == "能力比"):
+        elif (d[4] == "heating") and (d[5] == "能力比"):
             DictData[d[1]]["暖房時の特性"]["燃料種類"] = d[2]
             DictData[d[1]]["暖房時の特性"]["熱源種類"] = d[3]
             DictData[d[1]]["暖房時の特性"]["能力比"].append(addDict)
-        elif (d[4] == "Heating") and (d[5] == "入力比"):
+        elif (d[4] == "heating") and (d[5] == "入力比"):
             DictData[d[1]]["暖房時の特性"]["燃料種類"] = d[2]
             DictData[d[1]]["暖房時の特性"]["熱源種類"] = d[3]
             DictData[d[1]]["暖房時の特性"]["入力比"].append(addDict)
-        elif (d[4] == "Heating") and (d[5] == "部分負荷特性"):
+        elif (d[4] == "heating") and (d[5] == "部分負荷特性"):
             DictData[d[1]]["暖房時の特性"]["燃料種類"] = d[2]
             DictData[d[1]]["暖房時の特性"]["熱源種類"] = d[3]
             DictData[d[1]]["暖房時の特性"]["部分負荷特性"].append(addDict)
-        elif (d[4] == "Heating") and (d[5] == "送水温度特性"):
+        elif (d[4] == "heating") and (d[5] == "送水温度特性"):
             DictData[d[1]]["暖房時の特性"]["燃料種類"] = d[2]
             DictData[d[1]]["暖房時の特性"]["熱源種類"] = d[3]
             DictData[d[1]]["暖房時の特性"]["送水温度特性"].append(addDict)

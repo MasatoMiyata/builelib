@@ -23,7 +23,7 @@ class MyEncoder(json.JSONEncoder):
             return super(MyEncoder, self).default(obj)
 
 
-def convert_heatsource_name(name):
+def convert_heat_source_name(name):
     """熱源機種の読み替え
     Args:
         name: H25基準Webプログラムの機種名
@@ -47,7 +47,7 @@ def convert_heatsource_name(name):
     return builelib_name
 
 
-def convert_heatsource_energy(name, energy):
+def convert_heat_source_energy(name, energy):
     """熱源機種ごとにエネルギー消費量を算出
     Args:
         name: 機種名
@@ -120,7 +120,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     Sf = 200
 
                 # 方位
-                for DIRECTION in ["北", "東", "南", "西"]:
+                for direction in ["北", "東", "南", "西"]:
 
                     # ---------------------------
                     # テンプレートファイルの読み込み
@@ -131,16 +131,16 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     # ---------------------------
                     # 地域
                     # ---------------------------
-                    bldgdata["Building"]["Region"] = str(iRESION)
+                    bldgdata["building"]["region"] = str(iRESION)
 
                     # ---------------------------
                     # 建物用途・室用途、階高、天井高、床面積
                     # ---------------------------
-                    bldgdata["Rooms"]["室"]["buildingType"] = df["建物用途大分類"]
-                    bldgdata["Rooms"]["室"]["roomType"] = df["建物用途小分類"]
-                    bldgdata["Rooms"]["室"]["floorHeight"] = df["階高"]
-                    bldgdata["Rooms"]["室"]["ceilingHeight"] = df["階高"] - 1
-                    bldgdata["Rooms"]["室"]["roomArea"] = Sf
+                    bldgdata["rooms"]["室"]["building_type"] = df["建物用途大分類"]
+                    bldgdata["rooms"]["室"]["room_type"] = df["建物用途小分類"]
+                    bldgdata["rooms"]["室"]["floor_height"] = df["階高"]
+                    bldgdata["rooms"]["室"]["ceiling_height"] = df["階高"] - 1
+                    bldgdata["rooms"]["室"]["room_area"] = Sf
 
                     # ---------------------------
                     # 外皮
@@ -150,188 +150,188 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
 
                     if iBLDG == "中間階":
 
-                        bldgdata["EnvelopeSet"]["室"]["WallList"][0]["Direction"] = DIRECTION
-                        bldgdata["EnvelopeSet"]["室"]["WallList"][0]["EnvelopeArea"] = St
-                        bldgdata["EnvelopeSet"]["室"]["WallList"][0]["WallSpec"] = df["外壁材質構成（WCON）"]
+                        bldgdata["envelope_set"]["室"]["wall_list"][0]["direction"] = direction
+                        bldgdata["envelope_set"]["室"]["wall_list"][0]["envelope_area"] = St
+                        bldgdata["envelope_set"]["室"]["wall_list"][0]["wall_spec"] = df["外壁材質構成（WCON）"]
 
                         if df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "複層_空気層6mm":
-                            Uvalue = 4.11
+                            u_value = 4.11
                             Mvalue = 0.63
-                            layerType = "複層"
+                            layer_type = "複層"
                         elif df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "複層_空気層6mm_ブラインド":
-                            Uvalue = 3.68
+                            u_value = 3.68
                             Mvalue = 0.46
-                            layerType = "複層"
+                            layer_type = "複層"
                         elif df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "複層_空気層6mm_lowE":
-                            Uvalue = 3.65
+                            u_value = 3.65
                             Mvalue = 0.32
-                            layerType = "複層"
+                            layer_type = "複層"
                         elif df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "単板ガラス":
-                            Uvalue = 6.09
+                            u_value = 6.09
                             Mvalue = 0.70
-                            layerType = "単層"
+                            layer_type = "単層"
                         elif df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "単板ガラス_ブラインド":
-                            Uvalue = 5.27
+                            u_value = 5.27
                             Mvalue = 0.50
-                            layerType = "単層"
+                            layer_type = "単層"
 
-                        bldgdata["WindowConfigure"]["WIND"] = {
-                            "windowArea": St * df["窓面積率"],
-                            "windowWidth": None,
-                            "windowHeight": None,
-                            "inputMethod": "性能値を入力",
-                            "windowUvalue": Uvalue,
-                            "windowIvalue": Mvalue,
-                            "layerType": layerType,
-                            "glassUvalue": None,
-                            "glassIvalue": None,
-                            "Info": ""
+                        bldgdata["window_configure"]["WIND"] = {
+                            "window_area": St * df["窓面積率"],
+                            "window_width": None,
+                            "window_height": None,
+                            "input_method": "性能値を入力",
+                            "windowu_value": u_value,
+                            "windowi_value": Mvalue,
+                            "layer_type": layer_type,
+                            "glassu_value": None,
+                            "glassi_value": None,
+                            "info": ""
                         }
 
                     elif iBLDG == "最上階":
 
-                        bldgdata["EnvelopeSet"]["室"]["WallList"][0]["Direction"] = DIRECTION
-                        bldgdata["EnvelopeSet"]["室"]["WallList"][0]["EnvelopeArea"] = St
-                        bldgdata["EnvelopeSet"]["室"]["WallList"][0]["WallSpec"] = df["外壁材質構成（WCON）"]
+                        bldgdata["envelope_set"]["室"]["wall_list"][0]["direction"] = direction
+                        bldgdata["envelope_set"]["室"]["wall_list"][0]["envelope_area"] = St
+                        bldgdata["envelope_set"]["室"]["wall_list"][0]["wall_spec"] = df["外壁材質構成（WCON）"]
 
                         if df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "複層_空気層6mm":
-                            Uvalue = 4.11
+                            u_value = 4.11
                             Mvalue = 0.63
                         elif df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "複層_空気層6mm_ブラインド":
-                            Uvalue = 3.68
+                            u_value = 3.68
                             Mvalue = 0.46
                         elif df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "複層_空気層6mm_lowE":
-                            Uvalue = 3.65
+                            u_value = 3.65
                             Mvalue = 0.32
                         elif df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "単板ガラス":
-                            Uvalue = 6.09
+                            u_value = 6.09
                             Mvalue = 0.70
                         elif df["窓ガラス種類、厚さ、ブラインドの有無（WIND）"] == "単板ガラス_ブラインド":
-                            Uvalue = 5.27
+                            u_value = 5.27
                             Mvalue = 0.50
 
-                        bldgdata["WindowConfigure"]["WIND"] = {
-                            "windowArea": St * df["窓面積率"],
-                            "windowWidth": None,
-                            "windowHeight": None,
-                            "inputMethod": "性能値を入力",
-                            "windowUvalue": Uvalue,
-                            "windowIvalue": Mvalue,
-                            "layerType": "単層",
-                            "glassUvalue": None,
-                            "glassIvalue": None,
-                            "Info": ""
+                        bldgdata["window_configure"]["WIND"] = {
+                            "window_area": St * df["窓面積率"],
+                            "window_width": None,
+                            "window_height": None,
+                            "input_method": "性能値を入力",
+                            "windowu_value": u_value,
+                            "windowi_value": Mvalue,
+                            "layer_type": "単層",
+                            "glassu_value": None,
+                            "glassi_value": None,
+                            "info": ""
                         }
 
-                        bldgdata["EnvelopeSet"]["室"]["WallList"].append(
+                        bldgdata["envelope_set"]["室"]["wall_list"].append(
                             {
-                                "Direction": "水平",
-                                "EnvelopeArea": Sf,
-                                "EnvelopeWidth": None,
-                                "EnvelopeHeight": None,
-                                "WallSpec": df["屋根材質構成（WCON）"],
-                                "WallType": "日の当たる外壁",
-                                "WindowList": [
+                                "direction": "水平",
+                                "envelope_area": Sf,
+                                "envelope_width": None,
+                                "envelope_height": None,
+                                "wall_spec": df["屋根材質構成（WCON）"],
+                                "wall_type": "日の当たる外壁",
+                                "window_list": [
                                 ]
                             }
                         )
 
                     elif iBLDG == "オールインテリア":
-                        bldgdata["EnvelopeSet"]["室"]["WallList"] = []
+                        bldgdata["envelope_set"]["室"]["wall_list"] = []
 
                     # ---------------------------
                     # 熱源仕様（冷熱）
                     # ---------------------------
                     if df["台数制御（冷熱）"] == "有":
-                        bldgdata["HeatsourceSystem"]["RCH"]["冷房"]["isStagingControl"] = "有"
+                        bldgdata["heat_source_system"]["RCH"]["冷房"]["is_staging_control"] = "有"
                     elif df["台数制御（冷熱）"] == "無":
-                        bldgdata["HeatsourceSystem"]["RCH"]["冷房"]["isStagingControl"] = "無"
+                        bldgdata["heat_source_system"]["RCH"]["冷房"]["is_staging_control"] = "無"
 
                     if df["一次ポンプWTF（冷熱1台目）"] == 0:
-                        PrimaryPumpPowerConsumption = 0
+                        primary_pump_power_consumption = 0
                     else:
-                        PrimaryPumpPowerConsumption = df["床面積あたりの熱源容量（冷熱1台目）"] * Sf / df[
+                        primary_pump_power_consumption = df["床面積あたりの熱源容量（冷熱1台目）"] * Sf / df[
                             "一次ポンプWTF（冷熱1台目）"]
 
-                    bldgdata["HeatsourceSystem"]["RCH"]["冷房"]["Heatsource"].append({
-                        "HeatsourceType": convert_heatsource_name(df["熱源種類（冷熱1台目）"]),
-                        "Number": 1.0,
-                        "SupplyWaterTempSummer": 7,
-                        "SupplyWaterTempMiddle": 7,
-                        "SupplyWaterTempWinter": 7,
-                        "HeatsourceRatedCapacity": df["床面積あたりの熱源容量（冷熱1台目）"] * Sf,
-                        "HeatsourceRatedPowerConsumption": convert_heatsource_energy(df["熱源種類（冷熱1台目）"], df[
+                    bldgdata["heat_source_system"]["RCH"]["冷房"]["heat_source"].append({
+                        "heat_source_type": convert_heat_source_name(df["熱源種類（冷熱1台目）"]),
+                        "number": 1.0,
+                        "supply_water_temp_summer": 7,
+                        "supply_water_temp_middle": 7,
+                        "supply_water_temp_winter": 7,
+                        "heat_source_rated_capacity": df["床面積あたりの熱源容量（冷熱1台目）"] * Sf,
+                        "heat_source_rated_power_consumption": convert_heat_source_energy(df["熱源種類（冷熱1台目）"], df[
                             "床面積あたりの主機定格エネルギー消費量（冷熱1台目）"] * Sf)[0],
-                        "HeatsourceRatedFuelConsumption": convert_heatsource_energy(df["熱源種類（冷熱1台目）"], df[
+                        "heat_source_rated_fuel_consumption": convert_heat_source_energy(df["熱源種類（冷熱1台目）"], df[
                             "床面積あたりの主機定格エネルギー消費量（冷熱1台目）"] * Sf)[1],
-                        "Heatsource_sub_RatedPowerConsumption": df["床面積あたりの補機定格消費電力（冷熱1台目）"] * Sf,
-                        "PrimaryPumpPowerConsumption": PrimaryPumpPowerConsumption,
-                        "PrimaryPumpContolType": "無",
-                        "CoolingTowerCapacity": df["床面積あたりの熱源容量（冷熱1台目）"] * Sf,
-                        "CoolingTowerFanPowerConsumption": df["冷却塔ファン定格消費電力（冷熱1台目）"] * Sf,
-                        "CoolingTowerPumpPowerConsumption": df["冷却水ポンプ定格消費電力（冷熱1台目）"] * Sf,
-                        "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "heat_source_sub_rated_power_consumption": df["床面積あたりの補機定格消費電力（冷熱1台目）"] * Sf,
+                        "primary_pump_power_consumption": primary_pump_power_consumption,
+                        "primary_pump_control_type": "無",
+                        "cooling_tower_capacity": df["床面積あたりの熱源容量（冷熱1台目）"] * Sf,
+                        "cooling_tower_fan_power_consumption": df["冷却塔ファン定格消費電力（冷熱1台目）"] * Sf,
+                        "cooling_tower_pump_power_consumption": df["冷却水ポンプ定格消費電力（冷熱1台目）"] * Sf,
+                        "cooling_tower_control_type": "無",
+                        "info": ""
                     }
                     )
 
                     if pd.isna(df["熱源種類（冷熱2台目）"]) == False:
 
                         if df["一次ポンプWTF（冷熱2台目）"] == 0:
-                            PrimaryPumpPowerConsumption = 0
+                            primary_pump_power_consumption = 0
                         else:
-                            PrimaryPumpPowerConsumption = df["床面積あたりの熱源容量（冷熱2台目）"] * Sf / df[
+                            primary_pump_power_consumption = df["床面積あたりの熱源容量（冷熱2台目）"] * Sf / df[
                                 "一次ポンプWTF（冷熱2台目）"]
 
-                        bldgdata["HeatsourceSystem"]["RCH"]["冷房"]["Heatsource"].append({
-                            "HeatsourceType": convert_heatsource_name(df["熱源種類（冷熱2台目）"]),
-                            "Number": 1.0,
-                            "SupplyWaterTempSummer": 7,
-                            "SupplyWaterTempMiddle": 7,
-                            "SupplyWaterTempWinter": 7,
-                            "HeatsourceRatedCapacity": df["床面積あたりの熱源容量（冷熱2台目）"] * Sf,
-                            "HeatsourceRatedPowerConsumption": convert_heatsource_energy(df["熱源種類（冷熱2台目）"], df[
+                        bldgdata["heat_source_system"]["RCH"]["冷房"]["heat_source"].append({
+                            "heat_source_type": convert_heat_source_name(df["熱源種類（冷熱2台目）"]),
+                            "number": 1.0,
+                            "supply_water_temp_summer": 7,
+                            "supply_water_temp_middle": 7,
+                            "supply_water_temp_winter": 7,
+                            "heat_source_rated_capacity": df["床面積あたりの熱源容量（冷熱2台目）"] * Sf,
+                            "heat_source_rated_power_consumption": convert_heat_source_energy(df["熱源種類（冷熱2台目）"], df[
                                 "床面積あたりの主機定格エネルギー消費量（冷熱2台目）"] * Sf)[0],
-                            "HeatsourceRatedFuelConsumption": convert_heatsource_energy(df["熱源種類（冷熱2台目）"], df[
+                            "heat_source_rated_fuel_consumption": convert_heat_source_energy(df["熱源種類（冷熱2台目）"], df[
                                 "床面積あたりの主機定格エネルギー消費量（冷熱2台目）"] * Sf)[1],
-                            "Heatsource_sub_RatedPowerConsumption": df["床面積あたりの補機定格消費電力（冷熱2台目）"] * Sf,
-                            "PrimaryPumpPowerConsumption": PrimaryPumpPowerConsumption,
-                            "PrimaryPumpContolType": "無",
-                            "CoolingTowerCapacity": df["床面積あたりの熱源容量（冷熱2台目）"] * Sf,
-                            "CoolingTowerFanPowerConsumption": df["冷却塔ファン定格消費電力（冷熱2台目）"] * Sf,
-                            "CoolingTowerPumpPowerConsumption": df["冷却水ポンプ定格消費電力（冷熱2台目）"] * Sf,
-                            "CoolingTowerContolType": "無",
-                            "Info": ""
+                            "heat_source_sub_rated_power_consumption": df["床面積あたりの補機定格消費電力（冷熱2台目）"] * Sf,
+                            "primary_pump_power_consumption": primary_pump_power_consumption,
+                            "primary_pump_control_type": "無",
+                            "cooling_tower_capacity": df["床面積あたりの熱源容量（冷熱2台目）"] * Sf,
+                            "cooling_tower_fan_power_consumption": df["冷却塔ファン定格消費電力（冷熱2台目）"] * Sf,
+                            "cooling_tower_pump_power_consumption": df["冷却水ポンプ定格消費電力（冷熱2台目）"] * Sf,
+                            "cooling_tower_control_type": "無",
+                            "info": ""
                         }
                         )
 
                     if pd.isna(df["熱源種類（冷熱3台目）"]) == False:
 
                         if df["一次ポンプWTF（冷熱3台目）"] == 0:
-                            PrimaryPumpPowerConsumption = 0
+                            primary_pump_power_consumption = 0
                         else:
-                            PrimaryPumpPowerConsumption = df["床面積あたりの熱源容量（冷熱3台目）"] * Sf / df[
+                            primary_pump_power_consumption = df["床面積あたりの熱源容量（冷熱3台目）"] * Sf / df[
                                 "一次ポンプWTF（冷熱3台目）"]
 
-                        bldgdata["HeatsourceSystem"]["RCH"]["冷房"]["Heatsource"].append({
-                            "HeatsourceType": convert_heatsource_name(df["熱源種類（冷熱3台目）"]),
-                            "Number": 1.0,
-                            "SupplyWaterTempSummer": 7,
-                            "SupplyWaterTempMiddle": 7,
-                            "SupplyWaterTempWinter": 7,
-                            "HeatsourceRatedCapacity": df["床面積あたりの熱源容量（冷熱3台目）"] * Sf,
-                            "HeatsourceRatedPowerConsumption": convert_heatsource_energy(df["熱源種類（冷熱3台目）"], df[
+                        bldgdata["heat_source_system"]["RCH"]["冷房"]["heat_source"].append({
+                            "heat_source_type": convert_heat_source_name(df["熱源種類（冷熱3台目）"]),
+                            "number": 1.0,
+                            "supply_water_temp_summer": 7,
+                            "supply_water_temp_middle": 7,
+                            "supply_water_temp_winter": 7,
+                            "heat_source_rated_capacity": df["床面積あたりの熱源容量（冷熱3台目）"] * Sf,
+                            "heat_source_rated_power_consumption": convert_heat_source_energy(df["熱源種類（冷熱3台目）"], df[
                                 "床面積あたりの主機定格エネルギー消費量（冷熱3台目）"] * Sf)[0],
-                            "HeatsourceRatedFuelConsumption": convert_heatsource_energy(df["熱源種類（冷熱3台目）"], df[
+                            "heat_source_rated_fuel_consumption": convert_heat_source_energy(df["熱源種類（冷熱3台目）"], df[
                                 "床面積あたりの主機定格エネルギー消費量（冷熱3台目）"] * Sf)[1],
-                            "Heatsource_sub_RatedPowerConsumption": df["床面積あたりの補機定格消費電力（冷熱3台目）"] * Sf,
-                            "PrimaryPumpPowerConsumption": PrimaryPumpPowerConsumption,
-                            "PrimaryPumpContolType": "無",
-                            "CoolingTowerCapacity": df["床面積あたりの熱源容量（冷熱3台目）"] * Sf,
-                            "CoolingTowerFanPowerConsumption": df["冷却塔ファン定格消費電力（冷熱3台目）"] * Sf,
-                            "CoolingTowerPumpPowerConsumption": df["冷却水ポンプ定格消費電力（冷熱3台目）"] * Sf,
-                            "CoolingTowerContolType": "無",
-                            "Info": ""
+                            "heat_source_sub_rated_power_consumption": df["床面積あたりの補機定格消費電力（冷熱3台目）"] * Sf,
+                            "primary_pump_power_consumption": primary_pump_power_consumption,
+                            "primary_pump_control_type": "無",
+                            "cooling_tower_capacity": df["床面積あたりの熱源容量（冷熱3台目）"] * Sf,
+                            "cooling_tower_fan_power_consumption": df["冷却塔ファン定格消費電力（冷熱3台目）"] * Sf,
+                            "cooling_tower_pump_power_consumption": df["冷却水ポンプ定格消費電力（冷熱3台目）"] * Sf,
+                            "cooling_tower_control_type": "無",
+                            "info": ""
                         }
                         )
 
@@ -339,95 +339,95 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     # 熱源仕様（温熱）
                     # ---------------------------
                     if df["台数制御（温熱）"] == "有":
-                        bldgdata["HeatsourceSystem"]["RCH"]["暖房"]["isStagingControl"] = "有"
+                        bldgdata["heat_source_system"]["RCH"]["暖房"]["is_staging_control"] = "有"
                     elif df["台数制御（温熱）"] == "無":
-                        bldgdata["HeatsourceSystem"]["RCH"]["暖房"]["isStagingControl"] = "無"
+                        bldgdata["heat_source_system"]["RCH"]["暖房"]["is_staging_control"] = "無"
 
                     if df["一次ポンプWTF（温熱1台目）"] == 0:
-                        PrimaryPumpPowerConsumption = 0
+                        primary_pump_power_consumption = 0
                     else:
-                        PrimaryPumpPowerConsumption = df["床面積あたりの熱源容量（温熱1台目）"] * Sf / df[
+                        primary_pump_power_consumption = df["床面積あたりの熱源容量（温熱1台目）"] * Sf / df[
                             "一次ポンプWTF（温熱1台目）"]
 
-                    bldgdata["HeatsourceSystem"]["RCH"]["暖房"]["Heatsource"].append({
-                        "HeatsourceType": convert_heatsource_name(df["熱源種類（温熱1台目）"]),
-                        "Number": 1.0,
-                        "SupplyWaterTempSummer": 42,
-                        "SupplyWaterTempMiddle": 42,
-                        "SupplyWaterTempWinter": 42,
-                        "HeatsourceRatedCapacity": df["床面積あたりの熱源容量（温熱1台目）"] * Sf,
-                        "HeatsourceRatedPowerConsumption": convert_heatsource_energy(df["熱源種類（温熱1台目）"], df[
+                    bldgdata["heat_source_system"]["RCH"]["暖房"]["heat_source"].append({
+                        "heat_source_type": convert_heat_source_name(df["熱源種類（温熱1台目）"]),
+                        "number": 1.0,
+                        "supply_water_temp_summer": 42,
+                        "supply_water_temp_middle": 42,
+                        "supply_water_temp_winter": 42,
+                        "heat_source_rated_capacity": df["床面積あたりの熱源容量（温熱1台目）"] * Sf,
+                        "heat_source_rated_power_consumption": convert_heat_source_energy(df["熱源種類（温熱1台目）"], df[
                             "床面積あたりの主機定格エネルギー消費量（温熱1台目）"] * Sf)[0],
-                        "HeatsourceRatedFuelConsumption": convert_heatsource_energy(df["熱源種類（温熱1台目）"], df[
+                        "heat_source_rated_fuel_consumption": convert_heat_source_energy(df["熱源種類（温熱1台目）"], df[
                             "床面積あたりの主機定格エネルギー消費量（温熱1台目）"] * Sf)[1],
-                        "Heatsource_sub_RatedPowerConsumption": df["床面積あたりの補機定格消費電力（温熱1台目）"] * Sf,
-                        "PrimaryPumpPowerConsumption": PrimaryPumpPowerConsumption,
-                        "PrimaryPumpContolType": "無",
-                        "CoolingTowerCapacity": 0,
-                        "CoolingTowerFanPowerConsumption": 0,
-                        "CoolingTowerPumpPowerConsumption": 0,
-                        "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "heat_source_sub_rated_power_consumption": df["床面積あたりの補機定格消費電力（温熱1台目）"] * Sf,
+                        "primary_pump_power_consumption": primary_pump_power_consumption,
+                        "primary_pump_control_type": "無",
+                        "cooling_tower_capacity": 0,
+                        "cooling_tower_fan_power_consumption": 0,
+                        "cooling_tower_pump_power_consumption": 0,
+                        "cooling_tower_control_type": "無",
+                        "info": ""
                     }
                     )
 
                     if pd.isna(df["熱源種類（温熱2台目）"]) == False:
 
                         if df["一次ポンプWTF（温熱2台目）"] == 0:
-                            PrimaryPumpPowerConsumption = 0
+                            primary_pump_power_consumption = 0
                         else:
-                            PrimaryPumpPowerConsumption = df["床面積あたりの熱源容量（温熱2台目）"] * Sf / df[
+                            primary_pump_power_consumption = df["床面積あたりの熱源容量（温熱2台目）"] * Sf / df[
                                 "一次ポンプWTF（温熱2台目）"]
 
-                        bldgdata["HeatsourceSystem"]["RCH"]["暖房"]["Heatsource"].append({
-                            "HeatsourceType": convert_heatsource_name(df["熱源種類（温熱2台目）"]),
-                            "Number": 1.0,
-                            "SupplyWaterTempSummer": 42,
-                            "SupplyWaterTempMiddle": 42,
-                            "SupplyWaterTempWinter": 42,
-                            "HeatsourceRatedCapacity": df["床面積あたりの熱源容量（温熱2台目）"] * Sf,
-                            "HeatsourceRatedPowerConsumption": convert_heatsource_energy(df["熱源種類（温熱2台目）"], df[
+                        bldgdata["heat_source_system"]["RCH"]["暖房"]["heat_source"].append({
+                            "heat_source_type": convert_heat_source_name(df["熱源種類（温熱2台目）"]),
+                            "number": 1.0,
+                            "supply_water_temp_summer": 42,
+                            "supply_water_temp_middle": 42,
+                            "supply_water_temp_winter": 42,
+                            "heat_source_rated_capacity": df["床面積あたりの熱源容量（温熱2台目）"] * Sf,
+                            "heat_source_rated_power_consumption": convert_heat_source_energy(df["熱源種類（温熱2台目）"], df[
                                 "床面積あたりの主機定格エネルギー消費量（温熱2台目）"] * Sf)[0],
-                            "HeatsourceRatedFuelConsumption": convert_heatsource_energy(df["熱源種類（温熱2台目）"], df[
+                            "heat_source_rated_fuel_consumption": convert_heat_source_energy(df["熱源種類（温熱2台目）"], df[
                                 "床面積あたりの主機定格エネルギー消費量（温熱2台目）"] * Sf)[1],
-                            "Heatsource_sub_RatedPowerConsumption": df["床面積あたりの補機定格消費電力（温熱2台目）"] * Sf,
-                            "PrimaryPumpPowerConsumption": PrimaryPumpPowerConsumption,
-                            "PrimaryPumpContolType": "無",
-                            "CoolingTowerCapacity": 0,
-                            "CoolingTowerFanPowerConsumption": 0,
-                            "CoolingTowerPumpPowerConsumption": 0,
-                            "CoolingTowerContolType": "無",
-                            "Info": ""
+                            "heat_source_sub_rated_power_consumption": df["床面積あたりの補機定格消費電力（温熱2台目）"] * Sf,
+                            "primary_pump_power_consumption": primary_pump_power_consumption,
+                            "primary_pump_control_type": "無",
+                            "cooling_tower_capacity": 0,
+                            "cooling_tower_fan_power_consumption": 0,
+                            "cooling_tower_pump_power_consumption": 0,
+                            "cooling_tower_control_type": "無",
+                            "info": ""
                         }
                         )
 
                     if pd.isna(df["熱源種類（温熱3台目）"]) == False:
 
                         if df["一次ポンプWTF（温熱3台目）"] == 0:
-                            PrimaryPumpPowerConsumption = 0
+                            primary_pump_power_consumption = 0
                         else:
-                            PrimaryPumpPowerConsumption = df["床面積あたりの熱源容量（温熱3台目）"] * Sf / df[
+                            primary_pump_power_consumption = df["床面積あたりの熱源容量（温熱3台目）"] * Sf / df[
                                 "一次ポンプWTF（温熱3台目）"]
 
-                        bldgdata["HeatsourceSystem"]["RCH"]["暖房"]["Heatsource"].append({
-                            "HeatsourceType": convert_heatsource_name(df["熱源種類（温熱3台目）"]),
-                            "Number": 1.0,
-                            "SupplyWaterTempSummer": 42,
-                            "SupplyWaterTempMiddle": 42,
-                            "SupplyWaterTempWinter": 42,
-                            "HeatsourceRatedCapacity": df["床面積あたりの熱源容量（温熱3台目）"] * Sf,
-                            "HeatsourceRatedPowerConsumption": convert_heatsource_energy(df["熱源種類（温熱3台目）"], df[
+                        bldgdata["heat_source_system"]["RCH"]["暖房"]["heat_source"].append({
+                            "heat_source_type": convert_heat_source_name(df["熱源種類（温熱3台目）"]),
+                            "number": 1.0,
+                            "supply_water_temp_summer": 42,
+                            "supply_water_temp_middle": 42,
+                            "supply_water_temp_winter": 42,
+                            "heat_source_rated_capacity": df["床面積あたりの熱源容量（温熱3台目）"] * Sf,
+                            "heat_source_rated_power_consumption": convert_heat_source_energy(df["熱源種類（温熱3台目）"], df[
                                 "床面積あたりの主機定格エネルギー消費量（温熱3台目）"] * Sf)[0],
-                            "HeatsourceRatedFuelConsumption": convert_heatsource_energy(df["熱源種類（温熱3台目）"], df[
+                            "heat_source_rated_fuel_consumption": convert_heat_source_energy(df["熱源種類（温熱3台目）"], df[
                                 "床面積あたりの主機定格エネルギー消費量（温熱3台目）"] * Sf)[1],
-                            "Heatsource_sub_RatedPowerConsumption": df["床面積あたりの補機定格消費電力（温熱3台目）"] * Sf,
-                            "PrimaryPumpPowerConsumption": PrimaryPumpPowerConsumption,
-                            "PrimaryPumpContolType": "無",
-                            "CoolingTowerCapacity": 0,
-                            "CoolingTowerFanPowerConsumption": 0,
-                            "CoolingTowerPumpPowerConsumption": 0,
-                            "CoolingTowerContolType": "無",
-                            "Info": ""
+                            "heat_source_sub_rated_power_consumption": df["床面積あたりの補機定格消費電力（温熱3台目）"] * Sf,
+                            "primary_pump_power_consumption": primary_pump_power_consumption,
+                            "primary_pump_control_type": "無",
+                            "cooling_tower_capacity": 0,
+                            "cooling_tower_fan_power_consumption": 0,
+                            "cooling_tower_pump_power_consumption": 0,
+                            "cooling_tower_control_type": "無",
+                            "info": ""
                         }
                         )
 
@@ -435,37 +435,37 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     # 二次ポンプ（冷水ポンプ）
                     # ---------------------------
                     if df["冷水ポンプ台数"] > 0 or df["温水ポンプ台数"] > 0:
-                        bldgdata["SecondaryPumpSystem"]["PCH"] = {}
+                        bldgdata["secondary_pump_system"]["PCH"] = {}
 
                     if df["冷水ポンプ台数"] > 0:
 
                         if df["冷水ポンプ制御方式"] == "VWV":
-                            ContolType = "回転数制御"
-                            MinOpeningRate = 60
+                            control_type = "回転数制御"
+                            min_opening_rate = 60
                         else:
-                            ContolType = "定流量制御"
-                            MinOpeningRate = 100
+                            control_type = "定流量制御"
+                            min_opening_rate = 100
 
                         Qpump = df["冷水ポンプ能力"] * Sf
 
-                        SecondaryPump = []
+                        secondary_pump = []
                         for ipump in range(df["冷水ポンプ台数"]):
-                            SecondaryPump.append(
+                            secondary_pump.append(
                                 {
-                                    "Number": 1.0,
-                                    "RatedWaterFlowRate": 3600 * Qpump / (4200 * df["冷水ポンプ往還温度差"]) / df[
+                                    "number": 1.0,
+                                    "rated_water_flow_rate": 3600 * Qpump / (4200 * df["冷水ポンプ往還温度差"]) / df[
                                         "冷水ポンプ台数"],
-                                    "RatedPowerConsumption": Qpump / df["冷水ポンプWTF"] / df["冷水ポンプ台数"],
-                                    "ContolType": ContolType,
-                                    "MinOpeningRate": MinOpeningRate,
-                                    "Info": ""
+                                    "rated_power_consumption": Qpump / df["冷水ポンプWTF"] / df["冷水ポンプ台数"],
+                                    "control_type": control_type,
+                                    "min_opening_rate": min_opening_rate,
+                                    "info": ""
                                 }
                             )
 
-                        bldgdata["SecondaryPumpSystem"]["PCH"]["冷房"] = {
-                            "TemperatureDifference": df["冷水ポンプ往還温度差"],
-                            "isStagingControl": df["冷水ポンプ台数制御"],
-                            "SecondaryPump": SecondaryPump
+                        bldgdata["secondary_pump_system"]["PCH"]["冷房"] = {
+                            "temperature_difference": df["冷水ポンプ往還温度差"],
+                            "is_staging_control": df["冷水ポンプ台数制御"],
+                            "secondary_pump": secondary_pump
                         }
 
                     # ---------------------------
@@ -474,32 +474,32 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     if df["温水ポンプ台数"] > 0:
 
                         if df["温水ポンプ制御方式"] == "VWV":
-                            ContolType = "回転数制御"
-                            MinOpeningRate = 60
+                            control_type = "回転数制御"
+                            min_opening_rate = 60
                         else:
-                            ContolType = "定流量制御"
-                            MinOpeningRate = 100
+                            control_type = "定流量制御"
+                            min_opening_rate = 100
 
                         Qpump = df["温水ポンプ能力"] * Sf
 
-                        SecondaryPump = []
+                        secondary_pump = []
                         for ipump in range(df["温水ポンプ台数"]):
-                            SecondaryPump.append(
+                            secondary_pump.append(
                                 {
-                                    "Number": 1.0,
-                                    "RatedWaterFlowRate": 3600 * Qpump / (4200 * df["温水ポンプ往還温度差"]) / df[
+                                    "number": 1.0,
+                                    "rated_water_flow_rate": 3600 * Qpump / (4200 * df["温水ポンプ往還温度差"]) / df[
                                         "温水ポンプ台数"],
-                                    "RatedPowerConsumption": Qpump / df["温水ポンプWTF"] / df["温水ポンプ台数"],
-                                    "ContolType": ContolType,
-                                    "MinOpeningRate": MinOpeningRate,
-                                    "Info": ""
+                                    "rated_power_consumption": Qpump / df["温水ポンプWTF"] / df["温水ポンプ台数"],
+                                    "control_type": control_type,
+                                    "min_opening_rate": min_opening_rate,
+                                    "info": ""
                                 }
                             )
 
-                        bldgdata["SecondaryPumpSystem"]["PCH"]["暖房"] = {
-                            "TemperatureDifference": df["温水ポンプ往還温度差"],
-                            "isStagingControl": df["温水ポンプ台数制御"],
-                            "SecondaryPump": SecondaryPump
+                        bldgdata["secondary_pump_system"]["PCH"]["暖房"] = {
+                            "temperature_difference": df["温水ポンプ往還温度差"],
+                            "is_staging_control": df["温水ポンプ台数制御"],
+                            "secondary_pump": secondary_pump
                         }
 
                     # ---------------------------
@@ -507,50 +507,50 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     # ---------------------------
                     if df["空調機タイプ（１台目）"] == "室内機":
                         if df["冷水ポンプ台数"] == 0:
-                            bldgdata["AirHandlingSystem"]["ACP-1"]["Pump_cooling"] = None
+                            bldgdata["air_handling_system"]["ACP-1"]["pump_cooling"] = None
                         if df["温水ポンプ台数"] == 0:
-                            bldgdata["AirHandlingSystem"]["ACP-1"]["Pump_heating"] = None
+                            bldgdata["air_handling_system"]["ACP-1"]["pump_heating"] = None
 
-                    bldgdata["AirHandlingSystem"]["ACP-1"]["isOutdoorAirCut"] = df["外気カット制御（１台目）"]
-                    bldgdata["AirHandlingSystem"]["ACP-1"]["isEconomizer"] = df["外気冷房制御（１台目）"]
-                    bldgdata["AirHandlingSystem"]["ACP-1"]["EconomizerMaxAirVolume"] = df[
+                    bldgdata["air_handling_system"]["ACP-1"]["is_outdoor_air_cut"] = df["外気カット制御（１台目）"]
+                    bldgdata["air_handling_system"]["ACP-1"]["is_economizer"] = df["外気冷房制御（１台目）"]
+                    bldgdata["air_handling_system"]["ACP-1"]["economizer_max_air_volume"] = df[
                                                                                            "床面積あたりの定格給気風量（１台目）"] * Sf * 1000
 
                     if df["風量制御方式（１台目）"] == "CAV":
-                        FanControlType = "無"
-                        FanMinOpeningRate = 100
+                        fan_control_type = "無"
+                        fan_min_opening_rate = 100
                     elif df["風量制御方式（１台目）"] == "VAV":
-                        FanControlType = "回転数制御"
-                        FanMinOpeningRate = 65
+                        fan_control_type = "回転数制御"
+                        fan_min_opening_rate = 65
 
                     if pd.isna(df["空調機タイプ（2台目）"]) and df["全熱交換機制御"] == "有":
-                        AirHeatExchangeRatioCooling = 50
-                        AirHeatExchangeRatioHeating = 50
-                        AirHeatExchangerControl = "無"
-                        AirHeatExchangerPowerConsumption = df["全熱交換機ローター消費電力"] * Sf
+                        air_heat_exchange_ratio_cooling = 50
+                        air_heat_exchange_ratio_heating = 50
+                        air_heat_exchanger_control = "無"
+                        air_heat_exchanger_power_consumption = df["全熱交換機ローター消費電力"] * Sf
                     else:
-                        AirHeatExchangeRatioCooling = None
-                        AirHeatExchangeRatioHeating = None
-                        AirHeatExchangerControl = "無"
-                        AirHeatExchangerPowerConsumption = 0
+                        air_heat_exchange_ratio_cooling = None
+                        air_heat_exchange_ratio_heating = None
+                        air_heat_exchanger_control = "無"
+                        air_heat_exchanger_power_consumption = 0
 
-                    bldgdata["AirHandlingSystem"]["ACP-1"]["AirHandlingUnit"].append({
-                        "Type": df["空調機タイプ（１台目）"],
-                        "Number": 1.0,
-                        "RatedCapacityCooling": df["床面積あたりの定格冷房能力（１台目）"] * Sf,
-                        "RatedCapacityHeating": df["床面積あたりの定格暖房能力（１台目）"] * Sf,
-                        "FanType": None,
-                        "FanAirVolume": df["床面積あたりの定格給気風量（１台目）"] * Sf * 1000,
-                        "FanPowerConsumption": df["床面積あたりの定格冷房能力（１台目）"] * Sf / df[
+                    bldgdata["air_handling_system"]["ACP-1"]["air_handling_unit"].append({
+                        "type": df["空調機タイプ（１台目）"],
+                        "number": 1.0,
+                        "rated_capacity_cooling": df["床面積あたりの定格冷房能力（１台目）"] * Sf,
+                        "rated_capacity_heating": df["床面積あたりの定格暖房能力（１台目）"] * Sf,
+                        "fan_type": None,
+                        "fan_air_volume": df["床面積あたりの定格給気風量（１台目）"] * Sf * 1000,
+                        "fan_power_consumption": df["床面積あたりの定格冷房能力（１台目）"] * Sf / df[
                             "給気/排気/外気ファンATF（１台目）"],
-                        "FanControlType": FanControlType,
-                        "FanMinOpeningRate": FanMinOpeningRate,
-                        "AirHeatExchangeRatioCooling": AirHeatExchangeRatioCooling,
-                        "AirHeatExchangeRatioHeating": AirHeatExchangeRatioHeating,
-                        "AirHeatExchangerEffectiveAirVolumeRatio": None,
-                        "AirHeatExchangerControl": AirHeatExchangerControl,
-                        "AirHeatExchangerPowerConsumption": AirHeatExchangerPowerConsumption,
-                        "Info": ""
+                        "fan_control_type": fan_control_type,
+                        "fan_min_opening_rate": fan_min_opening_rate,
+                        "air_heat_exchange_ratio_cooling": air_heat_exchange_ratio_cooling,
+                        "air_heat_exchange_ratio_heating": air_heat_exchange_ratio_heating,
+                        "air_heat_exchanger_effective_air_volume_ratio": None,
+                        "air_heat_exchanger_control": air_heat_exchanger_control,
+                        "air_heat_exchanger_power_consumption": air_heat_exchanger_power_consumption,
+                        "info": ""
                     })
 
                     # ---------------------------
@@ -558,72 +558,72 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     # ---------------------------
                     if pd.isna(df["空調機タイプ（2台目）"]) == False:
 
-                        bldgdata["AirHandlingSystem"]["ACP-2"] = {
-                            "isEconomizer": "無",
-                            "EconomizerMaxAirVolume": None,
-                            "isOutdoorAirCut": "無",
-                            "Pump_cooling": "PCH",
-                            "Pump_heating": "PCH",
-                            "HeatSource_cooling": "RCH",
-                            "HeatSource_heating": "RCH",
-                            "AirHandlingUnit": []
+                        bldgdata["air_handling_system"]["ACP-2"] = {
+                            "is_economizer": "無",
+                            "economizer_max_air_volume": None,
+                            "is_outdoor_air_cut": "無",
+                            "pump_cooling": "PCH",
+                            "pump_heating": "PCH",
+                            "heat_source_cooling": "RCH",
+                            "heat_source_heating": "RCH",
+                            "air_handling_unit": []
                         }
 
                         if df["風量制御方式（2台目）"] == "CAV":
-                            FanControlType = "無"
-                            FanMinOpeningRate = 100
+                            fan_control_type = "無"
+                            fan_min_opening_rate = 100
                         elif df["風量制御方式（2台目）"] == "VAV":
-                            FanControlType = "回転数制御"
-                            FanMinOpeningRate = 65
+                            fan_control_type = "回転数制御"
+                            fan_min_opening_rate = 65
 
                         if df["全熱交換機制御"] == "有":
-                            AirHeatExchangeRatioCooling = 50
-                            AirHeatExchangeRatioHeating = 50
-                            AirHeatExchangerControl = "無"
-                            AirHeatExchangerPowerConsumption = df["全熱交換機ローター消費電力"] * Sf
+                            air_heat_exchange_ratio_cooling = 50
+                            air_heat_exchange_ratio_heating = 50
+                            air_heat_exchanger_control = "無"
+                            air_heat_exchanger_power_consumption = df["全熱交換機ローター消費電力"] * Sf
                         else:
-                            AirHeatExchangeRatioCooling = None
-                            AirHeatExchangeRatioHeating = None
-                            AirHeatExchangerControl = "無"
-                            AirHeatExchangerPowerConsumption = 0
+                            air_heat_exchange_ratio_cooling = None
+                            air_heat_exchange_ratio_heating = None
+                            air_heat_exchanger_control = "無"
+                            air_heat_exchanger_power_consumption = 0
 
                         if df["空調機タイプ（2台目）"] == "室内機":
                             if df["冷水ポンプ台数"] == 0:
-                                bldgdata["AirHandlingSystem"]["ACP-2"]["Pump_cooling"] = None
+                                bldgdata["air_handling_system"]["ACP-2"]["pump_cooling"] = None
                             if df["温水ポンプ台数"] == 0:
-                                bldgdata["AirHandlingSystem"]["ACP-2"]["Pump_heating"] = None
+                                bldgdata["air_handling_system"]["ACP-2"]["pump_heating"] = None
 
-                        bldgdata["AirHandlingSystem"]["ACP-2"]["isOutdoorAirCut"] = df["外気カット制御（2台目）"]
-                        bldgdata["AirHandlingSystem"]["ACP-2"]["isEconomizer"] = df["外気冷房制御（2台目）"]
-                        bldgdata["AirHandlingSystem"]["ACP-2"]["EconomizerMaxAirVolume"] = df[
+                        bldgdata["air_handling_system"]["ACP-2"]["is_outdoor_air_cut"] = df["外気カット制御（2台目）"]
+                        bldgdata["air_handling_system"]["ACP-2"]["is_economizer"] = df["外気冷房制御（2台目）"]
+                        bldgdata["air_handling_system"]["ACP-2"]["economizer_max_air_volume"] = df[
                                                                                                "床面積あたりの定格給気風量（2台目）"] * Sf * 1000
 
                         if df["空調機タイプ（2台目）"] == "外調機":
-                            Type = "空調機"
+                            type = "空調機"
                         else:
-                            Type = df["空調機タイプ（2台目）"]
+                            type = df["空調機タイプ（2台目）"]
 
-                        bldgdata["AirHandlingSystem"]["ACP-2"]["AirHandlingUnit"].append({
-                            "Type": Type,
-                            "Number": 1.0,
-                            "RatedCapacityCooling": df["床面積あたりの定格冷房能力（2台目）"] * Sf,
-                            "RatedCapacityHeating": df["床面積あたりの定格暖房能力（2台目）"] * Sf,
-                            "FanType": None,
-                            "FanAirVolume": df["床面積あたりの定格給気風量（2台目）"] * Sf * 1000,
-                            "FanPowerConsumption": df["床面積あたりの定格冷房能力（2台目）"] * Sf / df[
+                        bldgdata["air_handling_system"]["ACP-2"]["air_handling_unit"].append({
+                            "type": type,
+                            "number": 1.0,
+                            "rated_capacity_cooling": df["床面積あたりの定格冷房能力（2台目）"] * Sf,
+                            "rated_capacity_heating": df["床面積あたりの定格暖房能力（2台目）"] * Sf,
+                            "fan_type": None,
+                            "fan_air_volume": df["床面積あたりの定格給気風量（2台目）"] * Sf * 1000,
+                            "fan_power_consumption": df["床面積あたりの定格冷房能力（2台目）"] * Sf / df[
                                 "給気/排気/外気ファンATF（2台目）"],
-                            "FanControlType": FanControlType,
-                            "FanMinOpeningRate": FanMinOpeningRate,
-                            "AirHeatExchangeRatioCooling": AirHeatExchangeRatioCooling,
-                            "AirHeatExchangeRatioHeating": AirHeatExchangeRatioHeating,
-                            "AirHeatExchangerEffectiveAirVolumeRatio": None,
-                            "AirHeatExchangerControl": AirHeatExchangerControl,
-                            "AirHeatExchangerPowerConsumption": AirHeatExchangerPowerConsumption,
-                            "Info": ""
+                            "fan_control_type": fan_control_type,
+                            "fan_min_opening_rate": fan_min_opening_rate,
+                            "air_heat_exchange_ratio_cooling": air_heat_exchange_ratio_cooling,
+                            "air_heat_exchange_ratio_heating": air_heat_exchange_ratio_heating,
+                            "air_heat_exchanger_effective_air_volume_ratio": None,
+                            "air_heat_exchanger_control": air_heat_exchanger_control,
+                            "air_heat_exchanger_power_consumption": air_heat_exchanger_power_consumption,
+                            "info": ""
                         })
 
-                        bldgdata["AirConditioningZone"]["室"]["AHU_cooling_outdoorLoad"] = "ACP-2"
-                        bldgdata["AirConditioningZone"]["室"]["AHU_heating_outdoorLoad"] = "ACP-2"
+                        bldgdata["air_conditioning_zone"]["室"]["ahu_cooling_outdoor_load"] = "ACP-2"
+                        bldgdata["air_conditioning_zone"]["室"]["ahu_heating_outdoor_load"] = "ACP-2"
 
                     # ---------------------------
                     # 計算実行
@@ -632,14 +632,14 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     is_calc = False
                     # オールインテリアは5m, 北側のみ計算
                     if iBLDG == "オールインテリア":
-                        if iMODEL == "5m" and DIRECTION == "北":
+                        if iMODEL == "5m" and direction == "北":
                             is_calc = True
                     else:
                         is_calc = True
 
                     if is_calc:
                         print(
-                            f"計算中: {iRESION}地域  {df['建物用途大分類']} - {df['建物用途小分類']}, {iBLDG}, {iMODEL}, {DIRECTION}")
+                            f"計算中: {iRESION}地域  {df['建物用途大分類']} - {df['建物用途小分類']}, {iBLDG}, {iMODEL}, {direction}")
 
                         # json出力（検証用）
                         # with open("standard_value_input.json",'w', encoding='utf-8') as fw:

@@ -11,7 +11,7 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "Name": {
+                "name": {
                     "description": "名称",
                     "type": "string",
                     "maxLength": 100

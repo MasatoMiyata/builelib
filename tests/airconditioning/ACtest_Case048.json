@@ -1,279 +1,279 @@
 {
-    "Building": {
-        "BuildingAddress": {
+    "building": {
+        "building_address": {
             "Prefecture": "東京都",
-            "City": "千代田区",
-            "Address": null
+            "city": "千代田区",
+            "address": null
         },
-        "Coefficient_DHC": {
-            "Cooling": 1.36,
-            "Heating": 1.36
+        "coefficient_dhc": {
+            "cooling": 1.36,
+            "heating": 1.36
         },
-        "Name": "サンプル事務所ビル",
-        "Region": "5",
-        "AnnualSolarRegion": "A3",
-        "BuildingFloorArea": 10352.79
+        "name": "サンプル事務所ビル",
+        "region": "5",
+        "annual_solar_region": "A3",
+        "building_floor_area": 10352.79
     },
-    "Rooms": {
+    "rooms": {
         "1F_事務室": {
-            "buildingType": "事務所等",
-            "roomType": "事務室",
-            "floorHeight": 5.0,
-            "ceilingHeight": 2.6,
-            "roomArea": 200.0,
+            "building_type": "事務所等",
+            "room_type": "事務室",
+            "floor_height": 5.0,
+            "ceiling_height": 2.6,
+            "room_area": 200.0,
             "zone": null,
-            "modelBuildingType": "事務所モデル",
-            "buildingGroup": null,
-            "Info": ""
+            "model_building_type": "事務所モデル",
+            "building_group": null,
+            "info": ""
         }
     },
-    "EnvelopeSet": {
+    "envelope_set": {
         "1F_事務室": {
-            "isAirconditioned": "有",
-            "WallList": [
+            "is_airconditioned": "有",
+            "wall_list": [
                 {
-                    "Direction": "東",
-                    "EnvelopeArea": 120.0,
-                    "EnvelopeWidth": null,
-                    "EnvelopeHeight": null,
-                    "WallSpec": "OW1",
-                    "WallType": "日の当たる外壁",
-                    "WindowList": [
+                    "direction": "東",
+                    "envelope_area": 120.0,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "OW1",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
                         {
-                            "WindowID": "無",
-                            "WindowNumber": null,
-                            "isBlind": "無",
-                            "EavesID": "無",
-                            "Info": "無"
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": "無"
                         }
                     ]
                 },
                 {
-                    "Direction": "東",
-                    "EnvelopeArea": 40.0,
-                    "EnvelopeWidth": null,
-                    "EnvelopeHeight": null,
-                    "WallSpec": "OW1",
-                    "WallType": "日の当たる外壁",
-                    "WindowList": [
+                    "direction": "東",
+                    "envelope_area": 40.0,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "OW1",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
                         {
-                            "WindowID": "WIND1",
-                            "WindowNumber": 40.0,
-                            "isBlind": "無",
-                            "EavesID": "無",
-                            "Info": "無"
+                            "window_id": "WIND1",
+                            "window_number": 40.0,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": "無"
                         }
                     ]
                 },
                 {
-                    "Direction": "東",
-                    "EnvelopeArea": 20.0,
-                    "EnvelopeWidth": null,
-                    "EnvelopeHeight": null,
-                    "WallSpec": "OW1",
-                    "WallType": "日の当たる外壁",
-                    "WindowList": [
+                    "direction": "東",
+                    "envelope_area": 20.0,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "OW1",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
                         {
-                            "WindowID": "WIND2",
-                            "WindowNumber": 20.0,
-                            "isBlind": "無",
-                            "EavesID": "無",
-                            "Info": "無"
+                            "window_id": "WIND2",
+                            "window_number": 20.0,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": "無"
                         }
                     ]
                 }
             ]
         }
     },
-    "WallConfigure": {
+    "wall_configure": {
         "OW1": {
-            "structureType": "その他",
-            "solarAbsorptionRatio": null,
-            "inputMethod": "熱貫流率を入力",
-            "Uvalue": 0.92,
-            "Info": "無"
+            "structure_type": "その他",
+            "solar_absorption_ratio": null,
+            "input_method": "熱貫流率を入力",
+            "u_value": 0.92,
+            "info": "無"
         }
     },
-    "WindowConfigure": {
+    "window_configure": {
         "WIND1": {
-            "windowArea": 1,
-            "windowWidth": null,
-            "windowHeight": null,
-            "inputMethod": "性能値を入力",
-            "windowUvalue": 4.5,
-            "windowIvalue": 0.45,
-            "layerType": "単層",
-            "glassUvalue": null,
-            "glassIvalue": null,
-            "Info": "無"
+            "window_area": 1,
+            "window_width": null,
+            "window_height": null,
+            "input_method": "性能値を入力",
+            "windowu_value": 4.5,
+            "windowi_value": 0.45,
+            "layer_type": "単層",
+            "glassu_value": null,
+            "glassi_value": null,
+            "info": "無"
         },
         "WIND2": {
-            "windowArea": 1,
-            "windowWidth": null,
-            "windowHeight": null,
-            "inputMethod": "性能値を入力",
-            "windowUvalue": 2.4,
-            "windowIvalue": 0.3,
-            "layerType": "単層",
-            "glassUvalue": null,
-            "glassIvalue": null,
-            "Info": "無"
+            "window_area": 1,
+            "window_width": null,
+            "window_height": null,
+            "input_method": "性能値を入力",
+            "windowu_value": 2.4,
+            "windowi_value": 0.3,
+            "layer_type": "単層",
+            "glassu_value": null,
+            "glassi_value": null,
+            "info": "無"
         }
     },
-    "ShadingConfigure": {},
-    "AirConditioningZone": {
+    "shading_config": {},
+    "air_conditioning_zone": {
         "1F_事務室": {
-            "isNatualVentilation": "無",
-            "isSimultaneousSupply": "無",
-            "AHU_cooling_insideLoad": "ACP1",
-            "AHU_cooling_outdoorLoad": "ACP1",
-            "AHU_heating_insideLoad": "ACP1",
-            "AHU_heating_outdoorLoad": "ACP1",
-            "Info": "ACP1"
+            "is_natual_ventilation": "無",
+            "is_simultaneous_supply": "無",
+            "ahu_cooling_inside_load": "ACP1",
+            "ahu_cooling_outdoor_load": "ACP1",
+            "ahu_heating_inside_load": "ACP1",
+            "ahu_heating_outdoor_load": "ACP1",
+            "info": "ACP1"
         }
     },
-    "HeatsourceSystem": {
+    "heat_source_system": {
         "PAC1": {
             "冷房": {
-                "StorageType": null,
-                "StorageSize": null,
-                "isStagingControl": "無",
-                "Heatsource": [
+                "storage_type": null,
+                "storage_size": null,
+                "is_staging_control": "無",
+                "heat_source": [
                     {
-                        "HeatsourceType": "ウォータチリングユニット(空冷式)",
-                        "Number": 1.0,
-                        "SupplyWaterTempSummer": null,
-                        "SupplyWaterTempMiddle": null,
-                        "SupplyWaterTempWinter": null,
-                        "HeatsourceRatedCapacity": 16.0,
-                        "HeatsourceRatedPowerConsumption": 12.0,
-                        "HeatsourceRatedFuelConsumption": 0,
-                        "Heatsource_sub_RatedPowerConsumption": 0,
-                        "PrimaryPumpPowerConsumption": 0,
-                        "PrimaryPumpContolType": "無",
-                        "CoolingTowerCapacity": 0,
-                        "CoolingTowerFanPowerConsumption": 0,
-                        "CoolingTowerPumpPowerConsumption": 0,
-                        "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "heat_source_type": "ウォータチリングユニット(空冷式)",
+                        "number": 1.0,
+                        "supply_water_temp_summer": null,
+                        "supply_water_temp_middle": null,
+                        "supply_water_temp_winter": null,
+                        "heat_source_rated_capacity": 16.0,
+                        "heat_source_rated_power_consumption": 12.0,
+                        "heat_source_rated_fuel_consumption": 0,
+                        "heat_source_sub_rated_power_consumption": 0,
+                        "primary_pump_power_consumption": 0,
+                        "primary_pump_control_type": "無",
+                        "cooling_tower_capacity": 0,
+                        "cooling_tower_fan_power_consumption": 0,
+                        "cooling_tower_pump_power_consumption": 0,
+                        "cooling_tower_control_type": "無",
+                        "info": ""
                     }
                 ]
             },
             "暖房": {
-                "StorageType": null,
-                "StorageSize": null,
-                "isStagingControl": "無",
-                "Heatsource": [
+                "storage_type": null,
+                "storage_size": null,
+                "is_staging_control": "無",
+                "heat_source": [
                     {
-                        "HeatsourceType": "ウォータチリングユニット(空冷式)",
-                        "Number": 1.0,
-                        "SupplyWaterTempSummer": null,
-                        "SupplyWaterTempMiddle": null,
-                        "SupplyWaterTempWinter": null,
-                        "HeatsourceRatedCapacity": 16.0,
-                        "HeatsourceRatedPowerConsumption": 12.0,
-                        "HeatsourceRatedFuelConsumption": 0,
-                        "Heatsource_sub_RatedPowerConsumption": 0,
-                        "PrimaryPumpPowerConsumption": 0,
-                        "PrimaryPumpContolType": "無",
-                        "CoolingTowerCapacity": 0,
-                        "CoolingTowerFanPowerConsumption": 0,
-                        "CoolingTowerPumpPowerConsumption": 0,
-                        "CoolingTowerContolType": "無",
-                        "Info": ""
+                        "heat_source_type": "ウォータチリングユニット(空冷式)",
+                        "number": 1.0,
+                        "supply_water_temp_summer": null,
+                        "supply_water_temp_middle": null,
+                        "supply_water_temp_winter": null,
+                        "heat_source_rated_capacity": 16.0,
+                        "heat_source_rated_power_consumption": 12.0,
+                        "heat_source_rated_fuel_consumption": 0,
+                        "heat_source_sub_rated_power_consumption": 0,
+                        "primary_pump_power_consumption": 0,
+                        "primary_pump_control_type": "無",
+                        "cooling_tower_capacity": 0,
+                        "cooling_tower_fan_power_consumption": 0,
+                        "cooling_tower_pump_power_consumption": 0,
+                        "cooling_tower_control_type": "無",
+                        "info": ""
                     }
                 ]
             }
         }
     },
-    "SecondaryPumpSystem": {
+    "secondary_pump_system": {
         "PUMP1": {
             "冷房": {
                 "TempelatureDifference": 5.0,
-                "isStagingControl": "有",
-                "SecondaryPump": [
+                "is_staging_control": "有",
+                "secondary_pump": [
                     {
-                        "Number": 1.0,
-                        "RatedWaterFlowRate": 150.0,
-                        "RatedPowerConsumption": 1.5,
-                        "ContolType": "定流量制御",
-                        "MinOpeningRate": null,
-                        "Info": ""
+                        "number": 1.0,
+                        "rated_water_flow_rate": 150.0,
+                        "rated_power_consumption": 1.5,
+                        "control_type": "定流量制御",
+                        "min_opening_rate": null,
+                        "info": ""
                     },
                     {
-                        "Number": 1.0,
-                        "RatedWaterFlowRate": 150.0,
-                        "RatedPowerConsumption": 1.5,
-                        "ContolType": "回転数制御",
-                        "MinOpeningRate": 30.0,
-                        "Info": ""
+                        "number": 1.0,
+                        "rated_water_flow_rate": 150.0,
+                        "rated_power_consumption": 1.5,
+                        "control_type": "回転数制御",
+                        "min_opening_rate": 30.0,
+                        "info": ""
                     }
                 ]
             },
             "暖房": {
                 "TempelatureDifference": 6.0,
-                "isStagingControl": "有",
-                "SecondaryPump": [
+                "is_staging_control": "有",
+                "secondary_pump": [
                     {
-                        "Number": 1.0,
-                        "RatedWaterFlowRate": 150.0,
-                        "RatedPowerConsumption": 1.5,
-                        "ContolType": "定流量制御",
-                        "MinOpeningRate": null,
-                        "Info": ""
+                        "number": 1.0,
+                        "rated_water_flow_rate": 150.0,
+                        "rated_power_consumption": 1.5,
+                        "control_type": "定流量制御",
+                        "min_opening_rate": null,
+                        "info": ""
                     },
                     {
-                        "Number": 1.0,
-                        "RatedWaterFlowRate": 150.0,
-                        "RatedPowerConsumption": 1.5,
-                        "ContolType": "回転数制御",
-                        "MinOpeningRate": 30.0,
-                        "Info": ""
+                        "number": 1.0,
+                        "rated_water_flow_rate": 150.0,
+                        "rated_power_consumption": 1.5,
+                        "control_type": "回転数制御",
+                        "min_opening_rate": 30.0,
+                        "info": ""
                     }
                 ]
             }
         }
     },
-    "AirHandlingSystem": {
+    "air_handling_system": {
         "ACP1": {
-            "isEconomizer": "無",
-            "EconomizerMaxAirVolume": null,
-            "isOutdoorAirCut": "無",
-            "Pump_cooling": "PUMP1",
-            "Pump_heating": "PUMP1",
-            "HeatSource_cooling": "PAC1",
-            "HeatSource_heating": "PAC1",
-            "AirHandlingUnit": [
+            "is_economizer": "無",
+            "economizer_max_air_volume": null,
+            "is_outdoor_air_cut": "無",
+            "pump_cooling": "PUMP1",
+            "pump_heating": "PUMP1",
+            "heat_source_cooling": "PAC1",
+            "heat_source_heating": "PAC1",
+            "air_handling_unit": [
                 {
-                    "Type": "空調機",
-                    "Number": 1.0,
-                    "RatedCapacityCooling": 16.0,
-                    "RatedCapacityHeating": 16.0,
-                    "FanType": null,
-                    "FanAirVolume": null,
-                    "FanPowerConsumption": 3.7,
-                    "FanControlType": "無",
-                    "FanMinOpeningRate": null,
-                    "AirHeatExchangeRatioCooling": null,
-                    "AirHeatExchangeRatioHeating": null,
-                    "AirHeatExchangerEffectiveAirVolumeRatio": null,
-                    "AirHeatExchangerControl": "無",
-                    "AirHeatExchangerPowerConsumption": null,
-                    "Info": "PAC1"
+                    "type": "空調機",
+                    "number": 1.0,
+                    "rated_capacity_cooling": 16.0,
+                    "rated_capacity_heating": 16.0,
+                    "fan_type": null,
+                    "fan_air_volume": null,
+                    "fan_power_consumption": 3.7,
+                    "fan_control_type": "無",
+                    "fan_min_opening_rate": null,
+                    "air_heat_exchange_ratio_cooling": null,
+                    "air_heat_exchange_ratio_heating": null,
+                    "air_heat_exchanger_effective_air_volume_ratio": null,
+                    "air_heat_exchanger_control": "無",
+                    "air_heat_exchanger_power_consumption": null,
+                    "info": "PAC1"
                 }
             ]
         }
     },
-    "VentilationRoom": {},
-    "VentilationUnit": {},
-    "LightingSystems": {},
-    "HotwaterRoom": {},
-    "HotwaterSupplySystems": {},
-    "Elevators": {},
-    "PhotovoltaicSystems": {},
-    "CogenerationSystems": {},
-    "SpecialInputData": {
-        "heatsource_performance": {},
+    "ventilation_room": {},
+    "ventilation_unit": {},
+    "lighting_systems": {},
+    "hot_water_room": {},
+    "hot_water_supply_systems": {},
+    "elevators": {},
+    "photovoltaic_systems": {},
+    "cogeneration_systems": {},
+    "special_input_data": {
+        "heat_source_performance": {},
         "flow_control": {}
     }
 }

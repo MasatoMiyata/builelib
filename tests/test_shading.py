@@ -20,7 +20,7 @@ def calculation(filename):
         print("ケース " + str(data[0]) + "を実行中")  # 確認用
 
         AREA = str(data[1])
-        Direction = str(data[2])
+        direction = str(data[2])
         x1 = float(data[3])
         x2 = float(data[4])
         x3 = float(data[5])
@@ -35,7 +35,7 @@ def calculation(filename):
         try:
 
             # 計算実行        
-            r_wind_SUM, r_wind_WIN = shading.calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm,
+            r_wind_SUM, r_wind_WIN = shading.calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm,
                                                                      zyp, zym)
 
             # 期待値

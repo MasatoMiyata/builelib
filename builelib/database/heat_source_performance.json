@@ -970,7 +970,7 @@
         }
     },
     "温水発生機(都市ガス)": {
-        "ID": "HotWaterGenerator_CityGas",
+        "ID": "HotWaterGenerator_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -2135,7 +2135,7 @@
         }
     },
     "温水ボイラ(都市ガス)": {
-        "ID": "HotwaterBoiler_CityGas",
+        "ID": "HotwaterBoiler_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3362,7 +3362,7 @@
         }
     },
     "貫流ボイラ(都市ガス)": {
-        "ID": "OnePassBoiler_L_CityGas",
+        "ID": "OnePassBoiler_L_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3875,7 +3875,7 @@
         }
     },
     "地域熱供給(冷水)": {
-        "ID": "DHC_CoolingWater",
+        "ID": "DHC_coolingWater",
         "冷房時の特性": {
             "燃料種類": "冷水",
             "熱源種類": "不要",
@@ -4202,7 +4202,7 @@
         }
     },
     "FF式ガス暖房機(都市ガス)": {
-        "ID": "FFtypeHeater_CityGas",
+        "ID": "FFtypeHeater_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -4281,7 +4281,7 @@
         }
     },
     "小型貫流ボイラ(都市ガス)": {
-        "ID": "OnePassBoiler_CityGas",
+        "ID": "OnePassBoiler_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -4687,7 +4687,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(消費電力自給装置付、都市ガス)": {
-        "ID": "GasHeatPumpAirConditioner_GE_CityGas",
+        "ID": "GasHeatPumpAirConditioner_GE_cityGas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "空気",
@@ -5200,7 +5200,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、冷却水変流量、都市ガス)": {
-        "ID": "AbsorptionChiller_Combination_CityGas_CTVWV",
+        "ID": "AbsorptionChiller_Combination_cityGas_CTVWV",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -5699,7 +5699,7 @@
         }
     },
     "温風暖房機(都市ガス)": {
-        "ID": "WarmAirHeater_CityGas",
+        "ID": "WarmAirHeater_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -6759,7 +6759,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(都市ガス)": {
-        "ID": "GasHeatPumpAirConditioner_CityGas",
+        "ID": "GasHeatPumpAirConditioner_cityGas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "空気",
@@ -7086,7 +7086,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、都市ガス)": {
-        "ID": "AbsorptionChiller_CityGas_CTVWV",
+        "ID": "AbsorptionChiller_cityGas_CTVWV",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -7225,7 +7225,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、都市ガス)": {
-        "ID": "AbsorptionChiller_Combination_CityGas",
+        "ID": "AbsorptionChiller_Combination_cityGas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -7582,7 +7582,7 @@
         }
     },
     "地域熱供給(温水)": {
-        "ID": "DHC_HeatingWater",
+        "ID": "DHC_heatingWater",
         "冷房時の特性": {
             "燃料種類": "温水",
             "熱源種類": "不要",
@@ -8217,7 +8217,7 @@
         }
     },
     "吸収式冷凍機(都市ガス)": {
-        "ID": "AbsorptionChiller_CityGas",
+        "ID": "AbsorptionChiller_cityGas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -10049,7 +10049,7 @@
         }
     },
     "蒸気ボイラ(都市ガス)": {
-        "ID": "SteamBoiler_CityGas",
+        "ID": "SteamBoiler_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",

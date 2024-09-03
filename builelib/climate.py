@@ -20,17 +20,17 @@ def readCsvClimateData(filename):
     npArrayData = np.array(data)
 
     # 外気温 [℃]
-    Tout = npArrayData[2:8762, 0].astype('float')
+    tout = npArrayData[2:8762, 0].astype('float')
     # 法線面直達日射量 [MJ/m2h]
-    Iod = npArrayData[2:8762, 1].astype('float')
+    iod = npArrayData[2:8762, 1].astype('float')
     # 水平面天空日射量 [MJ/m2h]
-    Ios = npArrayData[2:8762, 2].astype('float')
+    ios = npArrayData[2:8762, 2].astype('float')
     # 太陽高度[°]
     sun_altitude = npArrayData[2:8762, 3].astype('float')
     # 太陽方位角[°]
     sun_azimuth = npArrayData[2:8762, 4].astype('float')
 
-    return Tout, Iod, Ios, sun_altitude, sun_azimuth
+    return tout, iod, ios, sun_altitude, sun_azimuth
 
 
 def readHaspClimateData(filename):
@@ -43,11 +43,11 @@ def readHaspClimateData(filename):
     with open(filename, encoding='utf-8') as f:
         hasData = f.readlines()
 
-    Tout = list()  # 最終的に365×24の行列になる。
-    Xout = list()  # 最終的に365×24の行列になる。
-    Iod = list()  # 最終的に365×24の行列になる。
-    Ios = list()  # 最終的に365×24の行列になる。
-    Inn = list()  # 最終的に365×24の行列になる。
+    tout = list()  # 最終的に365×24の行列になる。
+    xout = list()  # 最終的に365×24の行列になる。
+    iod = list()  # 最終的に365×24の行列になる。
+    ios = list()  # 最終的に365×24の行列になる。
+    inn = list()  # 最終的に365×24の行列になる。
 
     for line in hasData:
 
@@ -59,43 +59,43 @@ def readHaspClimateData(filename):
             # 時刻別の気温を読み込み、格納
             for hh in range(0, 24):
                 tmp.append((float(line[3 * hh:3 * (hh + 1)]) - 500) / 10)
-            Tout.append(tmp)
+            tout.append(tmp)
 
         elif line[-2] == '2':  # 外気絶対湿度 [kg/kgDA]
 
             # 時刻別の湿度を読み込み、格納
             for hh in range(0, 24):
                 tmp.append((float(line[3 * hh:3 * (hh + 1)]) / 1000) / 10)
-            Xout.append(tmp)
+            xout.append(tmp)
 
         elif line[-2] == '3':  # 法線面直達日射量 [kcal/m2h] → [W/m2]
 
             # 時刻別の湿度を読み込み、格納
             for hh in range(0, 24):
                 tmp.append(float(line[3 * hh:3 * (hh + 1)]) * 4.18 * 1000 / 3600)
-            Iod.append(tmp)
+            iod.append(tmp)
 
         elif line[-2] == '4':  # 水平面天空日射量 [kcal/m2h] → [W/m2]
 
             # 時刻別の湿度を読み込み、格納
             for hh in range(0, 24):
                 tmp.append(float(line[3 * hh:3 * (hh + 1)]) * 4.18 * 1000 / 3600)
-            Ios.append(tmp)
+            ios.append(tmp)
 
         elif line[-2] == '5':  # 水平面夜間放射量 [kcal/m2h] → [W/m2]
 
             # 時刻別の湿度を読み込み、格納
             for hh in range(0, 24):
                 tmp.append(float(line[3 * hh:3 * (hh + 1)]) * 4.18 * 1000 / 3600)
-            Inn.append(tmp)
+            inn.append(tmp)
 
-    Tout = np.array(Tout)
-    Xout = np.array(Xout)
-    Iod = np.array(Iod)
-    Ios = np.array(Ios)
-    Inn = np.array(Inn)
+    tout = np.array(tout)
+    xout = np.array(xout)
+    iod = np.array(iod)
+    ios = np.array(ios)
+    inn = np.array(inn)
 
-    return Tout, Xout, Iod, Ios, Inn
+    return tout, xout, iod, ios, inn
 
 
 def del04(month, day):
@@ -151,16 +151,16 @@ def deg2rad(degree):
     return radian
 
 
-def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
+def solar_radiation_by_azimuth(alp, bet, phi, longi, iod_all, ios_all, inn_all):
     """
     方位角・傾斜角別の日射量を算出する関数
     入力 alp : 方位角（0が南、45が南西、180が北）
     入力 bet : 傾斜角（0が水平、90が垂直）
     入力 phi : 緯度
     入力 longi : 経度
-    入力 IodALL : 直達日射量（365×24、np.array） [W/m2]
-    入力 IosALL : 天空日射量（365×24、np.array） [W/m2]
-    入力 InnALL : 夜間日射量（365×24、np.array） [W/m2]
+    入力 iod_all : 直達日射量（365×24、np.array） [W/m2]
+    入力 ios_all : 天空日射量（365×24、np.array） [W/m2]
+    入力 inn_all : 夜間日射量（365×24、np.array） [W/m2]
     出力 DSR    : 方位別の積算直達日射量（365日分） [Wh/m2/day]
     出力 DSRita : 方位別の積算直達日射量、入射角特性込み（365日分）[Wh/m2/day]
     出力 ISR    : 積算天空日射量（365日分）[Wh/m2/day]
@@ -190,9 +190,9 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
             for hour in range(0, 24):
 
                 # 日射量 [W/m2]
-                Iod = IodALL[DN, hour]  # 法線面直達日射量 [W/m2]
-                Ios = IosALL[DN, hour]  # 水平面天空日射量 [W/m2]
-                Ion = InnALL[DN, hour]  # 水平面夜間放射量 [W/m2]
+                iod = iod_all[DN, hour]  # 法線面直達日射量 [W/m2]
+                ios = ios_all[DN, hour]  # 水平面天空日射量 [W/m2]
+                Ion = inn_all[DN, hour]  # 水平面夜間放射量 [W/m2]
 
                 # 中央標準時を求める
                 t = (hour + 1) + 0 / 60
@@ -232,29 +232,29 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
                 ita[DN, hour] = 2.392 * sinh2 - 3.8636 * sinh2 ** 3 + 3.7568 * sinh2 ** 5 - 1.3952 * sinh2 ** 7
 
                 # 傾斜面入射日射量(直達日射量)（W/m2）
-                Id[DN, hour] = go * Iod * sinh2
+                Id[DN, hour] = go * iod * sinh2
 
                 # 傾斜面入射日射量(直達日射量)（W/m2）　入射角特性込み（0.89で除して基準化済み）
-                Id_ita[DN, hour] = go * Iod * sinh2 * ita[DN, hour] / 0.89
+                Id_ita[DN, hour] = go * iod * sinh2 * ita[DN, hour] / 0.89
 
                 # 傾斜面入射日射量(天空日射量)（W/m2）
                 if bet == 90:
-                    Is[DN, hour] = 0.5 * Ios + 0.1 * 0.5 * (Ios + Iod * sinh)
+                    Is[DN, hour] = 0.5 * ios + 0.1 * 0.5 * (ios + iod * sinh)
                 elif bet == 0:
-                    Is[DN, hour] = Ios
+                    Is[DN, hour] = ios
                 else:
                     # 太陽熱利用の計算用：要検証
                     rhoG = 0.8
-                    Is[DN, hour] = (1 + cosBet) / 2 * Ios + (1 - cosBet) / 2 * rhoG * (Ios + Iod * sinh)
+                    Is[DN, hour] = (1 + cosBet) / 2 * ios + (1 - cosBet) / 2 * rhoG * (ios + iod * sinh)
 
             # 日数カウント
             DN += 1
 
     # 長波長放射
     if bet == 90:
-        Insr = np.sum(InnALL, 1) / 2
+        Insr = np.sum(inn_all, 1) / 2
     elif bet == 0:
-        Insr = np.sum(InnALL, 1)
+        Insr = np.sum(inn_all, 1)
     else:
         Insr = None
 
@@ -280,9 +280,9 @@ if __name__ == '__main__':
     # filename_hasp = "./builelib/climatedata/C1_" +Area[Area_name]["気象データファイル名"]
     # filename_dat  = "./builelib/climatedata/" + Area[Area_name]["気象データファイル名（給湯）"]
 
-    # Toa_ave_dat = readDatClimateData(filename_dat)
+    # toa_ave_dat = readDatClimateData(filename_dat)
 
-    # [Tout, Xout, Iod, Ios, Inn] = readHaspClimateData(filename_hasp)
-    # Toa_ave_hasp = np.mean(Tout,1)
+    # [tout, xout, iod, ios, inn] = readHaspClimateData(filename_hasp)
+    # toa_ave_hasp = np.mean(tout,1)
 
-    # np.savetxt('気象データ検証_' + Area_name + '.csv', np.stack([Toa_ave_dat, Toa_ave_hasp, Toa_ave_dat-Toa_ave_hasp], 1) ,delimiter=',',fmt='%.3f')
+    # np.savetxt('気象データ検証_' + Area_name + '.csv', np.stack([toa_ave_dat, toa_ave_hasp, toa_ave_dat-toa_ave_hasp], 1) ,delimiter=',',fmt='%.3f')

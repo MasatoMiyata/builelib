@@ -4,162 +4,162 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
-        "Building": {
+        "building": {
             "description": "様式BL",
-            "$ref": "#/definitions/Building"
+            "$ref": "#/definitions/building"
         },
-        "Rooms": {
+        "rooms": {
             "description": "様式RM",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/Rooms"
+                "$ref": "#/definitions/rooms"
             }
         },
-        "EnvelopeSet":{
+        "envelope_set":{
             "description": "様式BE1",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/EnvelopeSet"
+                "$ref": "#/definitions/envelope_set"
             }
         },
-        "WallConfigure":{
+        "wall_configure":{
             "description": "様式BE2",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/WallConfigure"
+                "$ref": "#/definitions/wall_configure"
             }
         },
-        "WindowConfigure":{
+        "window_configure":{
             "description": "様式BE3",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/WindowConfigure"
+                "$ref": "#/definitions/window_configure"
             }
         },
-        "ShadingConfigure":{
+        "shading_config":{
             "description": "様式BE4",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/ShadingConfigure"
+                "$ref": "#/definitions/shading_config"
             }
         },
-        "AirConditioningZone":{
+        "air_conditioning_zone":{
             "description": "様式AC1",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/AirConditioningZone"
+                "$ref": "#/definitions/air_conditioning_zone"
             }
         },
-        "HeatsourceSystem":{
-            "description": "様式AC2",
+        "heat_source_system":{
+            "description": "様式ac2",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/HeatsourceSystem"
+                "$ref": "#/definitions/heat_source_system"
             }
         },
-        "SecondaryPumpSystem":{
+        "secondary_pump_system":{
             "description": "様式AC3",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/SecondaryPumpSystem"
+                "$ref": "#/definitions/secondary_pump_system"
             }
         },
-        "AirHandlingSystem":{
+        "air_handling_system":{
             "description": "様式AC4",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/AirHandlingSystem"
+                "$ref": "#/definitions/air_handling_system"
             }
         },
-        "VentilationRoom":{
+        "ventilation_room":{
             "description": "様式V1",
             "type": "object",
             "additionalProperties":{
-                "$ref": "#/definitions/VentilationRoom"
+                "$ref": "#/definitions/ventilation_room"
             }
         },
-        "VentilationUnit":{
+        "ventilation_unit":{
             "description": "様式V2",
             "type": "object",
             "additionalProperties": {
-                "$ref": "#/definitions/VentilationUnit"
+                "$ref": "#/definitions/ventilation_unit"
             }
         },
-        "LightingSystems": {
+        "lighting_systems": {
             "description": "様式L",
             "type": "object",
             "additionalProperties": {
                 "$ref": "#/definitions/LightingRoom"
             }
         },
-        "HotwaterRoom":{
+        "hot_water_room":{
             "description": "様式HW1",
             "type": "object",
             "additionalProperties": {
-                "$ref": "#/definitions/HotwaterRoom"
+                "$ref": "#/definitions/hot_water_room"
             }
         },
-        "HotwaterSupplySystems":{
+        "hot_water_supply_systems":{
             "description": "様式HW2",
             "type": "object",
             "additionalProperties": {
-                "$ref": "#/definitions/HotwaterSupplySystems"
+                "$ref": "#/definitions/hot_water_supply_systems"
             }
         },
-        "Elevators": {
+        "elevators": {
             "description": "様式EV",
             "type": "object",
             "additionalProperties": {
-                "$ref": "#/definitions/Elevators"
+                "$ref": "#/definitions/elevators"
             }
         },
-        "PhotovoltaicSystems":{
+        "photovoltaic_systems":{
             "description": "様式PV",
             "type": "object",
             "additionalProperties": {
-                "$ref": "#/definitions/PhotovoltaicSystems"
+                "$ref": "#/definitions/photovoltaic_systems"
             }
         },
-        "CogenerationSystems":{
+        "cogeneration_systems":{
             "description": "様式CG",
             "type": "object",
             "additionalProperties": {
-                "$ref": "#/definitions/CogenerationSystems"
+                "$ref": "#/definitions/cogeneration_systems"
             }
         },
-        "SpecialInputData":{
+        "special_input_data":{
             "description": "様式SP",
             "type": "object"
         }
     },
     "dependencies": {
-        "EnvelopeSet": ["Building","Rooms","WallConfigure","WindowConfigure"],
-        "VentilationRoom": ["Building","Rooms","VentilationUnit"],
-        "LightingSystems": ["Building","Rooms"],
-        "HotwaterRoom": ["Building","Rooms","HotwaterSupplySystems"],
-        "Elevators": ["Building","Rooms"]
+        "envelope_set": ["building","rooms","wall_configure","window_configure"],
+        "ventilation_room": ["building","rooms","ventilation_unit"],
+        "lighting_systems": ["building","rooms"],
+        "hot_water_room": ["building","rooms","hot_water_supply_systems"],
+        "elevators": ["building","rooms"]
     },
     "required": [
-        "Building",
-        "Rooms"
+        "building",
+        "rooms"
     ],
     "definitions": {
-        "Building": {
+        "building": {
             "description": "様式BL",
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "Name": {
+                "name": {
                     "description": "BL-1:建築物の名称",
                     "default":"-",
                     "type": "string",
                     "maxLength": 1000
                 },
-                "BuildingAddress": {
+                "building_address": {
                     "description": "BL-2,3,4:建築物所在地",
-                    "$ref": "#/definitions/BuildingAddress"
+                    "$ref": "#/definitions/building_address"
                 },
-                "Region": {
+                "region": {
                     "description": "BL-5:地域の区分",
                     "type": "string",
                     "enum":[
@@ -173,7 +173,7 @@
                         "8"
                     ]
                 },
-                "AnnualSolarRegion": {
+                "annual_solar_region": {
                     "description": "BL-6:年間日射地域区分",
                     "type": "string",
                     "enum":[
@@ -184,23 +184,23 @@
                         "A5"
                     ]
                 },
-                "BuildingFloorArea": {
+                "building_floor_area": {
                     "description": "BL-7:延べ面積 [m2]",
                     "type": "number",
                     "minimum": 0.01,
                     "maximum": 100000000
                 },
-                "Coefficient_DHC": {
+                "coefficient_dhc": {
                     "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
                     "$ref": "#/definitions/CoefficientDHC"
                 }
             },
             "required": [
-                "Region"
+                "region"
             ],
             "title": "Model"
         },
-        "BuildingAddress": {
+        "building_address": {
             "description": "BL-2,3,4:建築物所在地",
             "type": "object",
             "additionalProperties": false,
@@ -218,7 +218,7 @@
                         }
                     ]
                 },
-                "City": {
+                "city": {
                     "description": "BL-3:市区町村",
                     "anyOf":[
                         {
@@ -231,7 +231,7 @@
                         }
                     ]
                 },
-                "Address": {
+                "address": {
                     "description": "BL-4:丁目、番地等",
                     "anyOf":[
                         {
@@ -246,18 +246,18 @@
                 }
             },
             "required": [
-                "Address",
-                "City",
+                "address",
+                "city",
                 "Prefecture"
             ],
-            "title": "BuildingAddress"
+            "title": "building_address"
         },
         "CoefficientDHC": {
             "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "Cooling": {
+                "cooling": {
                     "description": "BL-8:冷熱",
                     "default":1.36,
                     "type": [
@@ -265,7 +265,7 @@
                         "null"
                     ]
                 },
-                "Heating": {
+                "heating": {
                     "description": "BL-9:温熱",
                     "default":1.36,
                     "type": [
@@ -275,14 +275,14 @@
                 }
             },
             "required": [
-                "Cooling",
-                "Heating"
+                "cooling",
+                "heating"
             ],
             "title": "CoefficientDHC"
         },
-        "Rooms":{
+        "rooms":{
             "properties": {
-                "buildingType": {
+                "building_type": {
                     "description": "RM-3:建物用途",
                     "type": "string",
                     "enum":[
@@ -297,23 +297,23 @@
                         "共同住宅"
                     ]
                 },
-                "roomType": {
+                "room_type": {
                     "description": "RM-4:室用途",
                     "type": "string"
                 },
-                "floorHeight": {
+                "floor_height": {
                     "description": "RM-5:階高",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
                 },
-                "ceilingHeight": {
+                "ceiling_height": {
                     "description": "RM-6:天井高",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
                 },
-                "roomArea": {
+                "room_area": {
                     "description": "RM-7:床面積",
                     "type": "number",
                     "minimum": 0,
@@ -325,7 +325,7 @@
                             "type": "object",
                             "additionalProperties":{
                                 "properties": {
-                                    "zoneArea": {
+                                    "zone_area": {
                                         "description": "RM-9:ゾーン面積",
                                         "type": "number",
                                         "minimum": 0,
@@ -339,19 +339,19 @@
                         }
                     ]
                 },
-                "modelBuildingType":{
+                "model_building_type":{
                     "description": "RM-10:モデル建物",
                     "type": [ "string", "null" ]
                 },
-                "buildingGroup":{
+                "building_group":{
                     "description": "RM-11:建物群名称",
                     "type": [ "string", "null" ]
                 }
             }
         },
-        "EnvelopeSet":{
+        "envelope_set":{
             "properties": {
-                "isAirconditioned": {
+                "is_airconditioned": {
                     "description": "BE1-4:空調の有無",
                     "type": "string",
                     "enum":[
@@ -359,12 +359,12 @@
                         "有"
                     ]
                 },
-                "WallList":{
+                "wall_list":{
                     "type": "array",
                     "items": {
                         "type": "object",
                         "properties": {
-                            "Direction": {
+                            "direction": {
                                 "description": "BE1-5:方位",
                                 "type": "string",
                                 "enum":[
@@ -380,7 +380,7 @@
                                     "水平（下）"
                                 ]
                             },
-                            "EnvelopeArea":{
+                            "envelope_area":{
                                 "description": "BE1-6:外皮面積",
                                 "anyOf":[
                                     {
@@ -393,7 +393,7 @@
                                     }
                                 ]
                             },
-                            "EnvelopeWidth":{
+                            "envelope_width":{
                                 "description": "BE1-7:外皮の幅",
                                 "anyOf":[
                                     {
@@ -406,7 +406,7 @@
                                     }
                                 ]
                             },
-                            "EnvelopeHeight":{
+                            "envelope_height":{
                                 "description": "BE1-8:外皮の高さ",
                                 "anyOf":[
                                     {
@@ -419,11 +419,11 @@
                                     }
                                 ]
                             },
-                            "WallSpec": {
+                            "wall_spec": {
                                 "description": "BE1-9:断熱仕様名称",
                                 "type": "string"
                             },
-                            "WallType":{
+                            "wall_type":{
                                 "description": "BE1-10:外壁の種類",
                                 "type": "string",
                                 "enum":[
@@ -433,16 +433,16 @@
                                     "内壁"
                                 ]
                             },
-                            "WindowList":{
+                            "window_list":{
                                 "type": "array",
                                 "items": {
                                     "type": "object",
                                     "properties": {
-                                        "WindowID": {
+                                        "window_id": {
                                             "description": "BE1-11:開口部仕様名称",
                                             "type": "string"
                                         },
-                                        "WindowNumber":{
+                                        "window_number":{
                                             "description": "BE1-12:建具等個数",
                                             "anyOf":[
                                                 {
@@ -455,7 +455,7 @@
                                                 }
                                             ]
                                         },
-                                        "isBlind":{
+                                        "is_blind":{
                                             "type": "string",
                                             "description": "BE1-13:ブラインドの有無",
                                             "enum":[
@@ -463,11 +463,11 @@
                                                 "無"
                                             ]
                                         },
-                                        "EavesID":{
+                                        "eaves_id":{
                                             "description": "BE1-14:日除けの名称",
                                             "type": "string"
                                         },
-                                        "Info": {
+                                        "info": {
                                             "description": "BE1-15:備考",
                                             "type": "string"
                                         }
@@ -479,9 +479,9 @@
                 }
             }
         },
-        "WallConfigure":{
+        "wall_configure":{
             "properties": {
-                "structureType": {
+                "structure_type": {
                     "description": "BE2-2:構造種別",
                     "type": "string",
                     "enum":[
@@ -491,7 +491,7 @@
                         "その他"
                     ]
                 },
-                "solarAbsorptionRatio":{
+                "solar_absorption_ratio":{
                     "description": "BE2-3:日射吸収率",
                     "anyOf":[
                         {
@@ -504,7 +504,7 @@
                         }
                     ]
                 },
-                "inputMethod":{
+                "input_method":{
                     "description": "断熱性能の入力方法",
                     "type": "string",
                     "enum":[
@@ -513,7 +513,7 @@
                         "断熱材種類を入力"
                     ]
                 },
-                "materialID":{
+                "material_id":{
                     "description": "BE2-4:断熱材の種類",
                     "anyOf":[
                         {
@@ -550,13 +550,13 @@
                         }
                     ]
                 },
-                "Uvalue":{
+                "u_value":{
                     "description": "BE2-10:熱貫流率",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 10
                 },
-                "Info": {
+                "info": {
                     "description": "BE2-11:備考",
                     "type": "string"
                 },
@@ -565,7 +565,7 @@
                     "items":{
                         "type": "object",
                         "properties": {
-                            "materialID":{
+                            "material_id":{
                                 "description": "BE2-7:断熱材の種類",
                                 "anyOf":[
                                     {
@@ -602,7 +602,7 @@
                                     }
                                 ]
                             },
-                            "Info": {
+                            "info": {
                                 "description": "BE2-11:備考",
                                 "type": "string"
                             }
@@ -611,9 +611,9 @@
                 }
             }
         },
-        "WindowConfigure":{
+        "window_configure":{
             "properties": {
-                "windowArea": {
+                "window_area": {
                     "description": "BE3-2:窓面積",
                     "anyOf":[
                         {
@@ -626,7 +626,7 @@
                         }
                     ]
                 },
-                "windowWidth": {
+                "window_width": {
                     "description": "BE3-3:窓の幅",
                     "anyOf":[
                         {
@@ -639,7 +639,7 @@
                         }
                     ]
                 },
-                "windowHeight": {
+                "window_height": {
                     "description": "BE3-4:窓の高さ",
                     "anyOf":[
                         {
@@ -652,7 +652,7 @@
                         }
                     ]
                 },
-                "inputMethod":{
+                "input_method":{
                     "description": "窓性能の入力方法",
                     "type": "string",
                     "enum":[
@@ -661,7 +661,7 @@
                         "ガラスの種類を入力"
                     ]
                 },
-                "frameType": {
+                "frame_type": {
                     "description": "BE3-5:建具の種類",
                     "type": "string",
                     "enum":[
@@ -672,11 +672,11 @@
                         "金属製"
                     ]
                 },
-                "glassID":{
+                "glass_id":{
                     "description": "BE3-6:ガラス建築確認記号",
                     "type": "string"
                 },
-                "layerType": {
+                "layer_type": {
                     "description": "BE3-7:ガラスの層数",
                     "type": "string",
                     "enum":[
@@ -684,7 +684,7 @@
                         "単層"
                     ]
                 },
-                "glassUvalue":{
+                "glassu_value":{
                     "description": "BE3-8:ガラスの熱貫流率",
                     "anyOf":[
                         {
@@ -697,7 +697,7 @@
                         }
                     ]
                 },
-                "glassIvalue":{
+                "glassi_value":{
                     "description": "BE3-9:ガラスの日射熱取得率",
                     "anyOf":[
                         {
@@ -710,7 +710,7 @@
                         }
                     ]
                 }, 
-                "windowUvalue":{
+                "windowu_value":{
                     "description": "BE3-10:窓の熱貫流率",
                     "anyOf":[
                         {
@@ -723,7 +723,7 @@
                         }
                     ]
                 },
-                "windowIvalue":{
+                "windowi_value":{
                     "description": "BE3-11:窓の日射熱取得率",
                     "anyOf":[
                         {
@@ -736,15 +736,15 @@
                         }
                     ]
                 }, 
-                "Info": {
+                "info": {
                     "description": "BE3-12:備考",
                     "type": "string"
                 }
             }
         },
-        "ShadingConfigure":{
+        "shading_config":{
             "properties": {
-                "shadingEffect_C": {
+                "shading_effect_C": {
                     "description": "BE4-2:日除け効果係数（冷房）",
                     "anyOf":[
                         {
@@ -757,7 +757,7 @@
                         }
                     ]
                 },
-                "shadingEffect_H": {
+                "shading_effect_H": {
                     "description": "BE4-3:日除け効果係数（暖房）",
                     "anyOf":[
                         {
@@ -788,19 +788,19 @@
                 "y3": {
                     "$ref": "#/definitions/ShadingLength"
                 },
-                "zxPlus": {
+                "zxplus": {
                     "$ref": "#/definitions/ShadingLength"
                 },
-                "zxMinus": {
+                "zxminus": {
                     "$ref": "#/definitions/ShadingLength"
                 },
-                "zyPlus": {
+                "zyplus": {
                     "$ref": "#/definitions/ShadingLength"
                 },
-                "zyMinus": {
+                "zyminus": {
                     "$ref": "#/definitions/ShadingLength"
                 },
-                "Info": {
+                "info": {
                     "description": "BE4-14:備考",
                     "anyOf": [
                         {
@@ -826,9 +826,9 @@
                 }
             ]
         },
-        "AirConditioningZone":{
+        "air_conditioning_zone":{
             "properties": {
-                "isNatualVentilation": {
+                "is_natual_ventilation": {
                     "description": "AC1-4:自然換気の有無",
                     "type": "string",
                     "enum":[
@@ -836,7 +836,7 @@
                         "有"
                     ]
                 },
-                "isSimultaneousSupply": {
+                "is_simultaneous_supply": {
                     "description": "AC1-5:冷暖同時供給の有無",
                     "type": "string",
                     "enum":[
@@ -846,52 +846,52 @@
                         "有（外気負荷）"
                     ]
                 },
-                "AHU_cooling_insideLoad": {
+                "ahu_cooling_inside_load": {
                     "description": "AC1-6:空調機群名称 冷房 室負荷処理",
                     "type": "string"
                 },
-                "AHU_cooling_outdoorLoad": {
+                "ahu_cooling_outdoor_load": {
                     "description": "AC1-7:空調機群名称 冷房 外気負荷処理",
                     "type": "string"
                 },
-                "AHU_heating_insideLoad": {
+                "ahu_heating_inside_load": {
                     "description": "AC1-8:空調機群名称 暖房 室負荷処理",
                     "type": "string"
                 },
-                "AHU_heeating_outdoorLoad": {
+                "ahu_heeating_outdoor_load": {
                     "description": "AC1-9:空調機群名称 暖房 外気負荷処理",
                     "type": "string"
                 },
-                "Info": {
+                "info": {
                     "description": "AC1-10:備考",
                     "type": "string"
                 }
             }
         },
-        "HeatsourceSystem":{
+        "heat_source_system":{
             "properties": {
                 "冷房": {
                     "type": "object",
-                    "$ref": "#/definitions/Heatsource"
+                    "$ref": "#/definitions/heat_source"
                 },
                 "冷房(蓄熱)": {
                     "type": "object",
-                    "$ref": "#/definitions/Heatsource"
+                    "$ref": "#/definitions/heat_source"
                 },
                 "暖房": {
                     "type": "object",
-                    "$ref": "#/definitions/Heatsource"
+                    "$ref": "#/definitions/heat_source"
                 },
                 "暖房(蓄熱)": {
                     "type": "object",
-                    "$ref": "#/definitions/Heatsource"
+                    "$ref": "#/definitions/heat_source"
                 }
             }
         },
-        "Heatsource":{
+        "heat_source":{
             "properties": {
-                "StorageType": {
-                    "description": "AC2-3:蓄熱の種類",
+                "storage_type": {
+                    "description": "ac2-3:蓄熱の種類",
                     "anyOf":[
                         {
                             "type": "string",
@@ -906,8 +906,8 @@
                         }
                     ]
                 },
-                "StorageSize":{
-                    "description": "AC2-4:蓄熱容量",
+                "storage_size":{
+                    "description": "ac2-4:蓄熱容量",
                     "anyOf":[
                         {
                             "type": "number",
@@ -919,31 +919,31 @@
                         }
                     ]
                 },
-                "isStagingControl":{
-                    "description": "AC2-5:台数制御",
+                "is_staging_control":{
+                    "description": "ac2-5:台数制御",
                     "type": "string",
                     "enum":[
                         "有",
                         "無"
                     ]
                 },
-                "Heatsource":{
+                "heat_source":{
                     "type": "array",
                     "items":{
                         "type": "object",
                         "properties": {
-                            "HeatsourceType": {
-                                "description": "AC2-6:熱源機種",
+                            "heat_source_type": {
+                                "description": "ac2-6:熱源機種",
                                 "type": "string"
                             },
-                            "Number": {
-                                "description": "AC2-7:台数",
+                            "number": {
+                                "description": "ac2-7:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 100000
                             },
-                            "SupplyWaterTempSummer": {
-                                "description": "AC2-8:送水温度 夏期",
+                            "supply_water_temp_summer": {
+                                "description": "ac2-8:送水温度 夏期",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -955,8 +955,8 @@
                                     }
                                 ]
                             },
-                            "SupplyWaterTempMiddle": {
-                                "description": "AC2-9:送水温度 中間期",
+                            "supply_water_temp_middle": {
+                                "description": "ac2-9:送水温度 中間期",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -968,8 +968,8 @@
                                     }
                                 ]
                             },
-                            "SupplyWaterTempWinter": {
-                                "description": "AC2-10:送水温度 冬期",
+                            "supply_water_temp_winter": {
+                                "description": "ac2-10:送水温度 冬期",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -981,14 +981,14 @@
                                     }
                                 ]
                             },
-                            "HeatsourceRatedCapacity": {
-                                "description": "AC2-11:熱源本体 定格能力",
+                            "heat_source_rated_capacity": {
+                                "description": "ac2-11:熱源本体 定格能力",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
-                            "HeatsourceRatedPowerConsumption": {
-                                "description": "AC2-12:熱源主機 定格消費電力",
+                            "heat_source_rated_power_consumption": {
+                                "description": "ac2-12:熱源主機 定格消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1000,8 +1000,8 @@
                                     }
                                 ]
                             },
-                            "HeatsourceRatedFuelConsumption": {
-                                "description": "AC2-13:熱源主機 定格燃料消費量",
+                            "heat_source_rated_fuel_consumption": {
+                                "description": "ac2-13:熱源主機 定格燃料消費量",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1013,8 +1013,8 @@
                                     }
                                 ]
                             },
-                            "Heatsource_sub_RatedPowerConsumption": {
-                                "description": "AC2-14:熱源補機 定格消費電力",
+                            "heat_source_sub_rated_power_consumption": {
+                                "description": "ac2-14:熱源補機 定格消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1026,8 +1026,8 @@
                                     }
                                 ]
                             },
-                            "PrimaryPumpPowerConsumption": {
-                                "description": "AC2-15:一次ポンプ 定格消費電力",
+                            "primary_pump_power_consumption": {
+                                "description": "ac2-15:一次ポンプ 定格消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1039,16 +1039,16 @@
                                     }
                                 ]
                             },
-                            "PrimaryPumpContolType": {
-                                "description": "AC2-16:一次ポンプ 制御方式",
+                            "primary_pump_control_type": {
+                                "description": "ac2-16:一次ポンプ 制御方式",
                                 "type": "string",
                                 "enum":[
                                     "有",
                                     "無"
                                 ]
                             },
-                            "CoolingTowerCapacity": {
-                                "description": "AC2-17:冷却塔 定格能力",
+                            "cooling_tower_capacity": {
+                                "description": "ac2-17:冷却塔 定格能力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1060,8 +1060,8 @@
                                     }
                                 ]
                             },
-                            "CoolingTowerFanPowerConsumption": {
-                                "description": "AC2-18:冷却塔 ファン消費電力",
+                            "cooling_tower_fan_power_consumption": {
+                                "description": "ac2-18:冷却塔 ファン消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1073,8 +1073,8 @@
                                     }
                                 ]
                             },
-                            "CoolingTowerPumpPowerConsumption": {
-                                "description": "AC2-19:冷却塔 ポンプ消費電力",
+                            "cooling_tower_pump_power_consumption": {
+                                "description": "ac2-19:冷却塔 ポンプ消費電力",
                                 "anyOf":[
                                     {
                                         "type": "number",
@@ -1086,16 +1086,16 @@
                                     }
                                 ]
                             },
-                            "CoolingTowerContolType": {
-                                "description": "AC2-20:冷却塔 制御方式",
+                            "cooling_tower_control_type": {
+                                "description": "ac2-20:冷却塔 制御方式",
                                 "type": "string",
                                 "enum":[
                                     "有",
                                     "無"
                                 ]
                             },
-                            "Info": {
-                                "description": "AC2-21:備考",
+                            "info": {
+                                "description": "ac2-21:備考",
                                 "type": "string"
                             }
                         }
@@ -1103,19 +1103,19 @@
                 }
             }
         },
-        "SecondaryPumpSystem":{
+        "secondary_pump_system":{
             "properties": {
                 "冷房": {
                     "type": "object",
-                    "$ref": "#/definitions/SecondaryPump"
+                    "$ref": "#/definitions/secondary_pump"
                 },
                 "暖房": {
                     "type": "object",
-                    "$ref": "#/definitions/SecondaryPump"
+                    "$ref": "#/definitions/secondary_pump"
                 }
             }
         },
-        "SecondaryPump":{
+        "secondary_pump":{
             "properties": {
                 "TempelatureDifference": {
                     "description": "AC3-3:設計温度差",
@@ -1123,7 +1123,7 @@
                     "minimum": 0,
                     "maximum": 100
                 },
-                "isStagingControl":{
+                "is_staging_control":{
                     "description": "AC3-4:台数制御の有無",
                     "type": "string",
                     "enum":[
@@ -1131,30 +1131,30 @@
                         "無"
                     ]
                 },
-                "SecondaryPump":{
+                "secondary_pump":{
                     "type": "array",
                     "items":{
                         "type": "object",
                         "properties": {
-                            "Number": {
+                            "number": {
                                 "description": "AC3-5:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 100000
                             },
-                            "RatedWaterFlowRate": {
+                            "rated_water_flow_rate": {
                                 "description": "AC3-6:定格流量",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 100000
                             },
-                            "RatedPowerConsumption": {
+                            "rated_power_consumption": {
                                 "description": "AC3-7:定格消費電力",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 100000
                             },
-                            "ContolType": {
+                            "control_type": {
                                 "description": "AC3-8:制御方式",
                                 "anyOf":[
                                     {
@@ -1170,7 +1170,7 @@
                                     }
                                 ]
                             },
-                            "MinOpeningRate":{
+                            "min_opening_rate":{
                                 "description": "AC3-9:最小流量比",
                                 "anyOf":[
                                     {
@@ -1183,7 +1183,7 @@
                                     }
                                 ]
                             },
-                            "Info": {
+                            "info": {
                                 "description": "AC3-10:備考",
                                 "type": "string"
                             }
@@ -1192,9 +1192,9 @@
                 }
             }
         },
-        "AirHandlingSystem":{
+        "air_handling_system":{
             "properties": {
-                "isEconomizer": {
+                "is_economizer": {
                     "description": "AC4-16:外気冷房制御の有無",
                     "type": "string",
                     "enum":[
@@ -1202,7 +1202,7 @@
                         "有"
                     ]
                 },
-                "EconomizerMaxAirVolume": {
+                "economizer_max_air_volume": {
                     "description": "AC4-17:外気冷房制御 最大外気取入量",
                     "anyOf":[
                         {
@@ -1215,7 +1215,7 @@
                         }
                     ]
                 },
-                "isOutdoorAirCut": {
+                "is_outdoor_air_cut": {
                     "description": "AC4-18:予熱時外気取入量制御の有無",
                     "type": "string",
                     "enum":[
@@ -1223,7 +1223,7 @@
                         "有"
                     ]
                 },
-                "Pump_cooling": {
+                "pump_cooling": {
                     "description": "AC4-19:二次ポンプ群名称 冷房",
                     "anyOf":[
                         {
@@ -1234,7 +1234,7 @@
                         }
                     ]
                 },
-                "Pump_heating": {
+                "pump_heating": {
                     "description": "AC4-20:二次ポンプ群名称 暖房",
                     "anyOf":[
                         {
@@ -1253,12 +1253,12 @@
                     "description": "AC4-22:熱源群名称 暖房",
                     "type": "string"
                 },
-                "AirHandlingUnit":{
+                "air_handling_unit":{
                     "type": "array",
                     "items":{
                         "type": "object",
                         "properties": {
-                            "Type":{
+                            "type":{
                                 "description": "AC4-2:構成機種",
                                 "enum":[
                                     "空調機",
@@ -1270,13 +1270,13 @@
                                     "天井放射冷暖房パネル"
                                 ]
                             },
-                            "Number": {
+                            "number": {
                                 "description": "AC4-3:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 100000
                             },
-                            "RatedCapacityCooling": {
+                            "rated_capacity_cooling": {
                                 "description": "AC4-4:定格能力（冷却）",
                                 "anyOf":[
                                     {
@@ -1289,7 +1289,7 @@
                                     }
                                 ]
                             },
-                            "RatedCapacityHeating": {
+                            "rated_capacity_heating": {
                                 "description": "AC4-5:定格能力（暖房）",
                                 "anyOf":[
                                     {
@@ -1302,7 +1302,7 @@
                                     }
                                 ]
                             },
-                            "FanType":{
+                            "fan_type":{
                                 "description": "AC4-6:送風機種類",
                                 "anyOf":[
                                     {
@@ -1321,7 +1321,7 @@
                                     }
                                 ]
                             },
-                            "FanAirVolume": {
+                            "fan_air_volume": {
                                 "description": "AC4-7:設計風量",
                                 "anyOf":[
                                     {
@@ -1334,7 +1334,7 @@
                                     }
                                 ]
                             },
-                            "FanPowerConsumption": {
+                            "fan_power_consumption": {
                                 "description": "AC4-8:定格消費電力",
                                 "anyOf":[
                                     {
@@ -1347,7 +1347,7 @@
                                     }
                                 ]
                             },
-                            "FanControlType":{
+                            "fan_control_type":{
                                 "description": "AC4-9:風量制御方式",
                                 "anyOf":[
                                     {
@@ -1363,7 +1363,7 @@
                                     }
                                 ]
                             },
-                            "FanMinOpeningRate":{
+                            "fan_min_opening_rate":{
                                 "description": "AC4-10:最小風量比",
                                 "anyOf":[
                                     {
@@ -1376,7 +1376,7 @@
                                     }
                                 ]
                             },
-                            "AirHeatExchangeRatioCooling":{
+                            "air_heat_exchange_ratio_cooling":{
                                 "description": "AC4-11:全熱交換効率 冷房時",
                                 "anyOf":[
                                     {
@@ -1389,7 +1389,7 @@
                                     }
                                 ]
                             },
-                            "AirHeatExchangeRatioHeating":{
+                            "air_heat_exchange_ratio_heating":{
                                 "description": "AC4-12:全熱交換効率 暖房時",
                                 "anyOf":[
                                     {
@@ -1402,7 +1402,7 @@
                                     }
                                 ]
                             },
-                            "AirHeatExchangerEffectiveAirVolumeRatio":{
+                            "air_heat_exchanger_effective_air_volume_ratio":{
                                 "description": "AC4-13:全熱交換器 有効換気量率",
                                 "anyOf":[
                                     {
@@ -1415,7 +1415,7 @@
                                     }
                                 ]
                             },
-                            "AirHeatExchangerControl":{
+                            "air_heat_exchanger_control":{
                                 "description": "AC4-14:自動換気切替機能の有無",
                                 "anyOf":[
                                     {
@@ -1430,7 +1430,7 @@
                                     }
                                 ]
                             },
-                            "AirHeatExchangerPowerConsumption":{
+                            "air_heat_exchanger_power_consumption":{
                                 "description": "AC4-15:ローター回転用電動機消費電力",
                                 "anyOf":[
                                     {
@@ -1443,7 +1443,7 @@
                                     }
                                 ]
                             },
-                            "Info": {
+                            "info": {
                                 "description": "AC4-23:備考",
                                 "type": "string"
                             }
@@ -1452,9 +1452,9 @@
                 }
             }
         },
-        "VentilationRoom":{
+        "ventilation_room":{
             "properties": {
-                "VentilationType": {
+                "ventilation_type": {
                     "description": "V1-3:換気方式",
                     "anyOf":[
                         {
@@ -1470,11 +1470,11 @@
                         }
                     ]
                 },
-                "VentilationUnitRef": {
+                "ventilation_unit_ref": {
                     "type": "object",
                     "additionalProperties": {
                         "properties": {
-                            "UnitType": {
+                            "unit_type": {
                                 "description": "V1-4:機器の種類",
                                 "type": "string",
                                 "enum":[
@@ -1484,7 +1484,7 @@
                                     "循環"
                                 ]
                             },
-                            "Info": {
+                            "info": {
                                 "description": "V1-6:備考",
                                 "type": "string"
                             }
@@ -1493,20 +1493,20 @@
                 }
             },
             "required": [
-                "VentilationUnitRef"
+                "ventilation_unit_ref"
             ],
-            "title": "VentilationRoom"
+            "title": "ventilation_room"
         },
-        "VentilationUnit":{
+        "ventilation_unit":{
             "type": "object",
             "properties": {
-                "Number": {
+                "number": {
                     "description": "V2-2:台数",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
                 },
-                "FanAirVolume": {
+                "fan_air_volume": {
                     "description": "V2-3:設計風量",
                     "anyOf":[
                         {
@@ -1519,7 +1519,7 @@
                         }
                     ]
                 },
-                "MoterRatedPower": {
+                "motor_rated_power": {
                     "description": "V2-4:定格電動機出力",
                     "anyOf":[
                         {
@@ -1532,7 +1532,7 @@
                         }
                     ]
                 },
-                "PowerConsumption": {
+                "power_consumption": {
                     "description": "V2-5:定格消費電力",
                     "anyOf":[
                         {
@@ -1545,7 +1545,7 @@
                         }
                     ]
                 },
-                "HighEfficiencyMotor": {
+                "high_efficiency_motor": {
                     "description": "V2-6:高効率電動機の有無",
                     "type": "string",
                     "enum":[
@@ -1554,7 +1554,7 @@
                     ],
                     "default":"無"
                 },
-                "Inverter": {
+                "inverter": {
                     "description": "V2-7:インバータの有無",
                     "type": "string",
                     "enum":[
@@ -1563,7 +1563,7 @@
                     ],
                     "default":"無"
                 },
-                "AirVolumeControl": {
+                "air_volume_control": {
                     "description": "V2-8:送風量制御",
                     "type": "string",
                     "enum":[
@@ -1573,7 +1573,7 @@
                     ],
                     "default":"無"
                 },
-                "VentilationRoomType": {
+                "ventilation_room_type": {
                     "description": "V2-9:対象室の用途",
                     "anyOf":[
                         {
@@ -1594,7 +1594,7 @@
                         }
                     ]
                 },
-                "AC_CoolingCapacity": {
+                "ac_cooling_capacity": {
                     "description": "V2-10:必要冷却能力",
                     "anyOf":[
                         {
@@ -1607,7 +1607,7 @@
                         }
                     ]
                 },
-                "AC_RefEfficiency": {
+                "ac_ref_efficiency": {
                     "description": "V2-11:熱源効率(一次換算値)",
                     "anyOf":[
                         {
@@ -1620,7 +1620,7 @@
                         }
                     ]
                 },
-                "AC_PumpPower": {
+                "ac_pump_power": {
                     "description": "V2-12:ポンプの定格消費電力",
                     "anyOf":[
                         {
@@ -1633,30 +1633,30 @@
                         }
                     ]
                 },
-                "Info": {
+                "info": {
                     "description": "V1-6:備考",
                     "type": "string"
                 }
             },
             "required": [
-                "Number",
-                "FanAirVolume",
-                "MoterRatedPower",
-                "PowerConsumption",
-                "HighEfficiencyMotor",
-                "Inverter",
-                "AirVolumeControl",
-                "VentilationRoomType",
-                "AC_CoolingCapacity",
-                "AC_RefEfficiency",
-                "AC_PumpPower",
-                "Info"
+                "number",
+                "fan_air_volume",
+                "motor_rated_power",
+                "power_consumption",
+                "high_efficiency_motor",
+                "inverter",
+                "air_volume_control",
+                "ventilation_room_type",
+                "ac_cooling_capacity",
+                "ac_ref_efficiency",
+                "ac_pump_power",
+                "info"
             ],
-            "title": "VentilationUnit"
+            "title": "ventilation_unit"
         },
         "LightingRoom": {
             "properties": {
-                "roomWidth": {
+                "room_width": {
                     "description": "L-4:室指数　室の間口 [m]",
                     "anyOf":[
                         {
@@ -1669,7 +1669,7 @@
                         }
                     ]
                 },
-                "roomDepth": {
+                "room_depth": {
                     "description": "L-5:室指数　室の奥行 [m]",
                     "anyOf":[
                         {
@@ -1682,7 +1682,7 @@
                         }
                     ]
                 },
-                "unitHeight": {
+                "unit_height": {
                     "description": "L-6:室指数　器具高さ [m]",
                     "anyOf":[
                         {
@@ -1695,7 +1695,7 @@
                         }
                     ]
                 },
-                "roomIndex": {
+                "room_index": {
                     "description": "L-7:室指数 [-]",
                     "anyOf":[
                         {
@@ -1709,46 +1709,46 @@
                         }
                     ]
                 },
-                "lightingUnit": {
+                "lighting_unit": {
                     "type": "object",
                     "additionalProperties": {
                         "additionalProperties": false,
                         "properties": {
-                            "RatedPower": {
+                            "rated_power": {
                                 "description": "L-9:定格消費電力 [W/台]",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000000
                             },
-                            "Number": {
+                            "number": {
                                 "description": "L-10:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000000,
                                 "default": 1
                             },
-                            "OccupantSensingCTRL": {
-                                "$ref": "#/definitions/Lighting_OccupantSensingCTRL"
+                            "occupant_sensing_ctrl": {
+                                "$ref": "#/definitions/lighting_occupant_sensing_ctrl"
                             },
-                            "IlluminanceSensingCTRL": {
-                                "$ref": "#/definitions/Lighting_IlluminanceSensingCTRL"
+                            "illuminance_sensing_ctrl": {
+                                "$ref": "#/definitions/lighting_illuminance_sensing_ctrl"
                             },
-                            "TimeScheduleCTRL": {
-                                "$ref": "#/definitions/Lighting_TimeScheduleCTRL"
+                            "time_schedule_ctrl": {
+                                "$ref": "#/definitions/lighting_time_schedule_ctrl"
                             },
-                            "InitialIlluminationCorrectionCTRL": {
-                                "$ref": "#/definitions/Lighting_InitialIlluminationCorrectionCTRL"
+                            "initial_illumination_correction_ctrl": {
+                                "$ref": "#/definitions/lighting_initial_illumination_correction_ctrl"
                             }
                         }
                     }
                 }
             },
             "required": [
-                "lightingUnit"
+                "lighting_unit"
             ],
             "title": "LightingRoom"
         },
-        "Lighting_OccupantSensingCTRL": {
+        "lighting_occupant_sensing_ctrl": {
             "description": "L-11:在室検知制御",
             "anyOf":[
                 {
@@ -1766,7 +1766,7 @@
                 }
             ]
         },
-        "Lighting_IlluminanceSensingCTRL": {
+        "lighting_illuminance_sensing_ctrl": {
             "description": "L-12:明るさ検知制御",
             "anyOf":[
                 {
@@ -1790,7 +1790,7 @@
                 }
             ]
         },
-        "Lighting_TimeScheduleCTRL": {
+        "lighting_time_schedule_ctrl": {
             "description": "L-13:タイムスケジュール制御",
             "anyOf":[
                 {
@@ -1807,7 +1807,7 @@
                 }
             ]
         },
-        "Lighting_InitialIlluminationCorrectionCTRL": {
+        "lighting_initial_illumination_correction_ctrl": {
             "description": "L-14:初期照度補正機能",
             "anyOf":[
                 {
@@ -1826,14 +1826,14 @@
                 }
             ]
         },
-        "HotwaterRoom":{
+        "hot_water_room":{
             "properties": {
-                "HotwaterSystem":{
+                "hot_water_system":{
                     "type": "array",
                     "items":{
                         "type": "object",
                         "properties": {
-                            "UsageType":{
+                            "usage_type":{
                                 "description": "HW1-3:給湯用途",
                                 "anyOf":[
                                     {
@@ -1850,11 +1850,11 @@
                                     }
                                 ]
                             },
-                            "SystemName":{
+                            "system_name":{
                                 "description": "HW1-4:給湯システム名称",
                                 "type": "string"
                             },
-                            "HotWaterSavingSystem":{
+                            "hot_water_saving_system":{
                                 "description": "HW1-5:節湯器具",
                                 "type": "string",
                                 "enum":[
@@ -1863,7 +1863,7 @@
                                     "無"
                                 ]
                             },
-                            "Info": {
+                            "info": {
                                 "description": "HW1-6:備考",
                                 "type": "string"
                             }
@@ -1872,14 +1872,14 @@
                 }
             }
         },
-        "HotwaterSupplySystems":{
+        "hot_water_supply_systems":{
             "properties": {
-                "HeatSourceUnit":{
+                "heat_sourceUnit":{
                     "type": "array",
                     "items":{
                         "type": "object",
                         "properties": {
-                            "UsageType":{
+                            "usage_type":{
                                 "description": "HW2-2:給湯用途",
                                 "anyOf":[
                                     {
@@ -1896,7 +1896,7 @@
                                     }
                                 ]
                             },
-                            "HeatSourceType":{
+                            "heat_source_type":{
                                 "description": "HW2-3:熱源機種",
                                 "anyOf":[
                                     {
@@ -1921,38 +1921,38 @@
                                     }
                                 ]
                             },
-                            "Number":{
+                            "number":{
                                 "description": "HW2-4:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000
                             },
-                            "RatedCapacity":{
+                            "rated_capacity":{
                                 "description": "HW2-5:定格加熱能力",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
-                            "RatedPowerConsumption":{
+                            "rated_power_consumption":{
                                 "description": "HW2-6:定格消費電力",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
-                            "RatedFuelConsumption":{
+                            "rated_fuel_consumption":{
                                 "description": "HW2-7:定格燃料消費量(高位)",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
-                            "Info": {
+                            "info": {
                                 "description": "HW2-13:備考",
                                 "type": "string"
                             }
                         }
                     }
                 },
-                "InsulationType":{
+                "insulation_type":{
                     "description": "HW2-8:配管保温仕様",
                     "type": "string",
                     "enum":[
@@ -1962,13 +1962,13 @@
                         "裸管"
                     ]
                 },
-                "PipeSize":{
+                "pipe_size":{
                     "description": "HW2-9:配管最大口径",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
                 },
-                "SolarSystemArea":{
+                "solar_system_area":{
                     "description": "HW2-10:太陽熱利用 有効集熱面積",
                     "anyOf":[
                         {
@@ -1981,7 +1981,7 @@
                         }
                     ]
                 },
-                "SolarSystemDirection":{
+                "solar_system_direction":{
                     "description": "HW2-11:太陽熱利用 集熱面の方位角",
                     "anyOf":[
                         {
@@ -1994,7 +1994,7 @@
                         }
                     ]
                 },
-                "SolarSystemAngle":{
+                "solar_system_angle":{
                     "description": "HW2-12:太陽熱利用 集熱面の傾斜角",
                     "anyOf":[
                         {
@@ -2009,36 +2009,36 @@
                 }
             }
         },
-        "Elevators":{
+        "elevators":{
             "properties": {
-                "Elevator":{
+                "elevator":{
                     "type": "array",
                     "items":{
                         "type": "object",
                         "properties": {
-                            "ElevatorName":{
+                            "elevator_name":{
                                 "description": "EV-3:昇降機系統の名称",
                                 "type": "string"
                             },
-                            "Number":{
+                            "number":{
                                 "description": "EV-4:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000
                             },
-                            "LoadLimit":{
+                            "load_limit":{
                                 "description": "EV-5:積載量",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 10000
                             },
-                            "Velocity":{
+                            "velocity":{
                                 "description": "EV-6:速度",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 10000
                             },
-                            "TransportCapacityFactor":{
+                            "transport_capacity_factor":{
                                 "description": "EV-7:輸送能力係数",
                                 "anyOf":[
                                     {
@@ -2051,7 +2051,7 @@
                                     }
                                 ]
                             },
-                            "ControlType":{
+                            "control_type":{
                                 "description": "EV-6:速度",
                                 "type": "string",
                                 "enum":[
@@ -2062,7 +2062,7 @@
                                     "交流帰還制御"
                                 ]
                             },
-                            "Info": {
+                            "info": {
                                 "description": "EV-7:備考",
                                 "type": "string"
                             }
@@ -2071,9 +2071,9 @@
                 }
             }
         },
-        "PhotovoltaicSystems":{
+        "photovoltaic_systems":{
             "properties": {
-                "PowerConditionerEfficiency":{
+                "power_conditioner_efficiency":{
                     "description": "PV-2:パワーコンディショナの効率",
                     "anyOf":[
                         {
@@ -2086,7 +2086,7 @@
                         }
                     ]
                 },
-                "CellType":{
+                "cell_type":{
                     "description": "PV-3:太陽電池の種類",
                     "type": "string",
                     "enum":[
@@ -2094,7 +2094,7 @@
                         "結晶系以外"
                     ]
                 },
-                "ArraySetupType":{
+                "array_setup_type":{
                     "description": "PV-4:アレイ設置方式",
                     "type": "string",
                     "enum":[
@@ -2103,81 +2103,81 @@
                         "その他"
                     ]
                 },
-                "ArrayCapacity":{
+                "array_capacity":{
                     "description": "PV-5:アレイのシステム容量",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 100000
                 },
-                "Direction":{
+                "direction":{
                     "description": "PV-6:パネルの方位角",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 360
                 },
-                "Angle":{
+                "angle":{
                     "description": "PV-7:パネルの傾斜角",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 180
                 },
-                "Info": {
+                "info": {
                     "description": "PV-8:備考",
                     "type": "string"
                 }
             }
         },
-        "CogenerationSystems":{
+        "cogeneration_systems":{
             "properties": {
-                "RatedCapacity":{
+                "rated_capacity":{
                     "description": "CG-2:定格発電出力",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 100000
                 },
-                "Number":{
+                "number":{
                     "description": "CG-3:台数",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 100
                 },
-                "PowerGenerationEfficiency_100":{
+                "power_generation_efficiency_100":{
                     "description": "CG-4:発電効率 負荷率1.00",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1
                 },
-                "PowerGenerationEfficiency_75":{
+                "power_generation_efficiency_75":{
                     "description": "CG-5:発電効率 負荷率0.75",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1
                 },
-                "PowerGenerationEfficiency_50":{
+                "power_generation_efficiency_50":{
                     "description": "CG-6:発電効率 負荷率0.50",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1
                 },
-                "HeatGenerationEfficiency_100":{
+                "heat_generation_efficiency_100":{
                     "description": "CG-7:排熱効率 負荷率1.00",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1
                 },
-                "HeatGenerationEfficiency_75":{
+                "heat_generation_efficiency_75":{
                     "description": "CG-8:排熱効率 負荷率0.75",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1
                 },
-                "HeatGenerationEfficiency_50":{
+                "heat_generation_efficiency_50":{
                     "description": "CG-9:排熱効率 負荷率0.50",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1
                 },
-                "HeatRecoveryPriorityCooling":{
+                "heat_recovery_priority_cooling":{
                     "description": "CG-10:排熱利用優先順位 空調冷熱源",
                     "anyOf":[
                         {
@@ -2193,7 +2193,7 @@
                         }
                     ]
                 },
-                "HeatRecoveryPriorityHeating":{
+                "heat_recovery_priority_heating":{
                     "description": "CG-11:排熱利用優先順位 空調温熱源",
                     "anyOf":[
                         {
@@ -2209,7 +2209,7 @@
                         }
                     ]
                 },
-                "HeatRecoveryPriorityHotWater":{
+                "heat_recovery_priority_hot_water":{
                     "description": "CG-12:排熱利用優先順位 給湯",
                     "anyOf":[
                         {
@@ -2233,7 +2233,7 @@
                         "無"
                     ]
                 },
-                "CoolingSystem":{
+                "cooling_system":{
                     "description": "CG-14:排熱利用系統 空調 冷熱",
                     "anyOf":[
                         {
@@ -2244,7 +2244,7 @@
                         }
                     ]
                 },
-                "HeatingSystem":{
+                "heating_system":{
                     "description": "CG-14:排熱利用系統 空調 温熱",
                     "anyOf":[
                         {
@@ -2255,7 +2255,7 @@
                         }
                     ]
                 },
-                "HowWaterSystem":{
+                "hot_water_system":{
                     "description": "CG-14:排熱利用系統 給湯",
                     "anyOf":[
                         {
@@ -2266,7 +2266,7 @@
                         }
                     ]
                 },
-                "Info": {
+                "info": {
                     "description": "PV-8:備考",
                     "type": "string"
                 }

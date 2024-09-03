@@ -11,12 +11,12 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "Name": {
+                "name": {
                     "description": "名前",
                     "type": "string",
                     "maxLength": 100
                 },
-                "Type": {
+                "type": {
                     "description": "制御の種類",
                     "type": "string",
                     "enum":[
