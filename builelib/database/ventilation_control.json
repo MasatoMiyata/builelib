@@ -1,13 +1,13 @@
 {
-    "HighEfficiencyMotor" : {
+    "high_efficiency_motor" : {
         "無": 1.00,
         "有": 0.95
     },
-    "Inverter" : {
+    "inverter" : {
         "無": 1.00,
         "有": 0.60
     },
-    "AirVolumeControl":{
+    "air_volume_control":{
         "無": 1.00,
         "CO濃度制御": 0.60,
         "温度制御": 0.70

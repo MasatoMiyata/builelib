@@ -10,7 +10,7 @@ plt.rcParams['grid.linestyle'] = '--'
 plt.rcParams['grid.linewidth'] = 0.5
 
 # データベースjsonの読み込み
-with open('./builelib/database/HeatSourcePerformance.json', 'r', encoding='utf-8') as f:
+with open('./builelib/database/heat_source_performance.json', 'r', encoding='utf-8') as f:
     db = json.load(f)
 
 
@@ -79,26 +79,26 @@ def calcQuarticCurve(dataSetALL, T, CW):
     return y, ylimit
 
 
-for typeName in db:
+for typename in db:
 
     ## 冷房の特性
 
-    if db[typeName]["冷房時の特性"]["燃料種類"] != "":
+    if db[typename]["冷房時の特性"]["燃料種類"] != "":
 
-        if db[typeName]["冷房時の特性"]["熱源種類"] == "空気" or db[typeName]["冷房時の特性"]["熱源種類"] == "不要":
+        if db[typename]["冷房時の特性"]["熱源種類"] == "空気" or db[typename]["冷房時の特性"]["熱源種類"] == "不要":
             xlabel = "外気乾球温度[℃]"
             xmin = -10
             xmax = 50
-        elif db[typeName]["冷房時の特性"]["熱源種類"] == "水":
+        elif db[typename]["冷房時の特性"]["熱源種類"] == "水":
             xlabel = "冷却水温度[℃]"
             xmin = -10
             xmax = 50
-        elif db[typeName]["冷房時の特性"]["熱源種類"].startswith("地盤"):
+        elif db[typename]["冷房時の特性"]["熱源種類"].startswith("地盤"):
             xlabel = "熱源水温度[℃]"
             xmin = -10
             xmax = 50
 
-        if typeName == "ルームエアコンディショナ":
+        if typename == "ルームエアコンディショナ":
             ymin = 0.6
             ymax = 2.2
         else:
@@ -106,7 +106,7 @@ for typeName in db:
             ymax = 1.8
 
         # 冷却水温度
-        if typeName == "インバータターボ冷凍機":
+        if typename == "インバータターボ冷凍機":
             CW = [20, 26, 36]
         else:
             CW = 32
@@ -120,18 +120,18 @@ for typeName in db:
         yCapacity_C = list()
         yCapacity_C_limit = list()
         for T in xCapacity_C:
-            yCapacity_C.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["能力比"], T, CW)[0])
-            yCapacity_C_limit.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["能力比"], T, CW)[1])
+            yCapacity_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["能力比"], T, CW)[0])
+            yCapacity_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["能力比"], T, CW)[1])
 
         ## 入力比
         yInput_C = list()
         yInput_C_limit = list()
         for T in xInput_C:
-            yInput_C.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["入力比"], T, CW)[0])
-            yInput_C_limit.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["入力比"], T, CW)[1])
+            yInput_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["入力比"], T, CW)[0])
+            yInput_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["入力比"], T, CW)[1])
 
         ## 部分負荷特性
-        if typeName == "インバータターボ冷凍機":  # インバータターボ冷凍機のみ場合分け
+        if typename == "インバータターボ冷凍機":  # インバータターボ冷凍機のみ場合分け
 
             yLoad_C_low = list()
             yLoad_C_mid = list()
@@ -140,34 +140,34 @@ for typeName in db:
             yLoad_C_high_limit = list()
             yLoad_C_low_limit = list()
             for T in xLoad_C:
-                yLoad_C_low.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["部分負荷特性"], T, CW[0])[0])
-                yLoad_C_mid.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["部分負荷特性"], T, CW[1])[0])
-                yLoad_C_high.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["部分負荷特性"], T, CW[2])[0])
-                yLoad_C_low_limit.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["部分負荷特性"], T, CW[0])[1])
-                yLoad_C_mid_limit.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["部分負荷特性"], T, CW[1])[1])
-                yLoad_C_high_limit.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["部分負荷特性"], T, CW[2])[1])
+                yLoad_C_low.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[0])[0])
+                yLoad_C_mid.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[1])[0])
+                yLoad_C_high.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[2])[0])
+                yLoad_C_low_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[0])[1])
+                yLoad_C_mid_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[1])[1])
+                yLoad_C_high_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[2])[1])
 
         else:
             yLoad_C = list()
             yLoad_C_limit = list()
             for T in xLoad_C:
-                yLoad_C.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["部分負荷特性"], T, CW)[0])
-                yLoad_C_limit.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["部分負荷特性"], T, CW)[1])
+                yLoad_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW)[0])
+                yLoad_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW)[1])
 
         ## 送水温度特性
         ySupply_C = list()
         ySupply_C_limit = list()
         for T in xSupply_C:
-            if len(db[typeName]["冷房時の特性"]["送水温度特性"]) != 0:
-                ySupply_C.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["送水温度特性"], T, CW)[0])
-                ySupply_C_limit.append(calcQuarticCurve(db[typeName]["冷房時の特性"]["送水温度特性"], T, CW)[1])
+            if len(db[typename]["冷房時の特性"]["送水温度特性"]) != 0:
+                ySupply_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["送水温度特性"], T, CW)[0])
+                ySupply_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["送水温度特性"], T, CW)[1])
             else:
                 ySupply_C.append(None)
                 ySupply_C_limit.append(None)
 
         ## グラフ作成
         fig1 = plt.figure(figsize=(10, 6.5))
-        fig1.suptitle(typeName + " 冷房")
+        fig1.suptitle(typename + " 冷房")
         fig1.subplots_adjust(left=0.07, bottom=0.09, right=0.98, top=0.92, wspace=0.16, hspace=0.27)
 
         ax1 = fig1.add_subplot(2, 2, 1)
@@ -189,7 +189,7 @@ for typeName in db:
         ax2.grid()
 
         ax3 = fig1.add_subplot(2, 2, 3)
-        if typeName == "インバータターボ冷凍機":  # インバータターボ冷凍機のみ場合分け
+        if typename == "インバータターボ冷凍機":  # インバータターボ冷凍機のみ場合分け
             ax3.plot(xLoad_C, yLoad_C_low, 'ko', markerfacecolor='w', linestyle="dotted")
             ax3.plot(xLoad_C, yLoad_C_low_limit, 'ko-')
             ax3.plot(xLoad_C, yLoad_C_mid, 'ko', markerfacecolor='w', linestyle="dotted")
@@ -217,29 +217,29 @@ for typeName in db:
         ax4.set_ylabel("入力比（冷房）[-]")
         ax4.grid()
 
-        fig1.savefig("./tools/figures/" + typeName + '_冷房.png')
+        fig1.savefig("./tools/figures/" + typename + '_冷房.png')
 
     ## 暖房のグラフ化
-    if db[typeName]["暖房時の特性"]["燃料種類"] != "":
+    if db[typename]["暖房時の特性"]["燃料種類"] != "":
 
-        if db[typeName]["暖房時の特性"]["熱源種類"] == "空気":
+        if db[typename]["暖房時の特性"]["熱源種類"] == "空気":
             xlabel = "外気湿球温度[℃]"
             xmin = -20
             xmax = 20
-        elif db[typeName]["暖房時の特性"]["熱源種類"] == "不要":
+        elif db[typename]["暖房時の特性"]["熱源種類"] == "不要":
             xlabel = "外気乾球温度[℃]"
             xmin = -20
             xmax = 20
-        elif db[typeName]["暖房時の特性"]["熱源種類"] == "水":
+        elif db[typename]["暖房時の特性"]["熱源種類"] == "水":
             xlabel = "冷却水温度[℃]"
             xmin = -10
             xmax = 50
-        elif db[typeName]["暖房時の特性"]["熱源種類"].startswith("地盤"):
+        elif db[typename]["暖房時の特性"]["熱源種類"].startswith("地盤"):
             xlabel = "熱源水温度[℃]"
             xmin = -10
             xmax = 50
 
-        if typeName == "ルームエアコンディショナ":
+        if typename == "ルームエアコンディショナ":
             ymin = 0.6
             ymax = 2.2
         else:
@@ -258,37 +258,37 @@ for typeName in db:
         yCapacity_H = list()
         yCapacity_H_limit = list()
         for T in xCapacity_H:
-            yCapacity_H.append(calcQuarticCurve(db[typeName]["暖房時の特性"]["能力比"], T, CW)[0])
-            yCapacity_H_limit.append(calcQuarticCurve(db[typeName]["暖房時の特性"]["能力比"], T, CW)[1])
+            yCapacity_H.append(calcQuarticCurve(db[typename]["暖房時の特性"]["能力比"], T, CW)[0])
+            yCapacity_H_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["能力比"], T, CW)[1])
 
         ## 入力比
         yInput_H = list()
         yInput_H_limit = list()
         for T in xInput_H:
-            yInput_H.append(calcQuarticCurve(db[typeName]["暖房時の特性"]["入力比"], T, CW)[0])
-            yInput_H_limit.append(calcQuarticCurve(db[typeName]["暖房時の特性"]["入力比"], T, CW)[1])
+            yInput_H.append(calcQuarticCurve(db[typename]["暖房時の特性"]["入力比"], T, CW)[0])
+            yInput_H_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["入力比"], T, CW)[1])
 
         ## 部分負荷特性
         yLoad_H = list()
         yLoad_H_limit = list()
         for T in xLoad_H:
-            yLoad_H.append(calcQuarticCurve(db[typeName]["暖房時の特性"]["部分負荷特性"], T, CW)[0])
-            yLoad_H_limit.append(calcQuarticCurve(db[typeName]["暖房時の特性"]["部分負荷特性"], T, CW)[1])
+            yLoad_H.append(calcQuarticCurve(db[typename]["暖房時の特性"]["部分負荷特性"], T, CW)[0])
+            yLoad_H_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["部分負荷特性"], T, CW)[1])
 
         ## 送水温度特性
         ySupply_H = list()
         ySupply_H_limit = list()
         for T in xSupply_H:
-            if len(db[typeName]["暖房時の特性"]["送水温度特性"]) != 0:
-                ySupply_H.append(calcQuarticCurve(db[typeName]["暖房時の特性"]["送水温度特性"], T, CW)[0])
-                ySupply_H_limit.append(calcQuarticCurve(db[typeName]["暖房時の特性"]["送水温度特性"], T, CW)[1])
+            if len(db[typename]["暖房時の特性"]["送水温度特性"]) != 0:
+                ySupply_H.append(calcQuarticCurve(db[typename]["暖房時の特性"]["送水温度特性"], T, CW)[0])
+                ySupply_H_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["送水温度特性"], T, CW)[1])
             else:
                 ySupply_H.append(None)
                 ySupply_H_limit.append(None)
 
         ## グラフ作成
         fig2 = plt.figure(figsize=(10, 6.5))
-        fig2.suptitle(typeName + " 暖房")
+        fig2.suptitle(typename + " 暖房")
         fig2.subplots_adjust(left=0.07, bottom=0.09, right=0.98, top=0.92, wspace=0.16, hspace=0.27)
 
         ax1 = fig2.add_subplot(2, 2, 1)
@@ -327,4 +327,4 @@ for typeName in db:
         ax4.set_ylabel("入力比（暖房） [-]")
         ax4.grid()
 
-        fig2.savefig("./tools/figures/" + typeName + '_暖房.png')
+        fig2.savefig("./tools/figures/" + typename + '_暖房.png')

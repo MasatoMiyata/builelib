@@ -20,11 +20,11 @@ import climate
 climatedata_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 
-def calc_energy(inputdata, DEBUG=False):
+def calc_energy(input_data, DEBUG=False):
     # 計算結果を格納する変数
-    resultJson = {
+    result_json = {
         "E_photovoltaic": 0,
-        "PhotovoltaicSystems": {},
+        "photovoltaic_systems": {},
         "for_CGS": {
             "Edesign_MWh_day": np.zeros(365)
         }
@@ -90,9 +90,9 @@ def calc_energy(inputdata, DEBUG=False):
         }
     }
 
-    for system_name in inputdata["PhotovoltaicSystems"]:
+    for system_name in input_data["photovoltaic_systems"]:
 
-        resultJson["PhotovoltaicSystems"][system_name] = {
+        result_json["photovoltaic_systems"][system_name] = {
             "Ep_kWh": 0,
             "Ep": np.zeros(8760),
         }
@@ -102,10 +102,10 @@ def calc_energy(inputdata, DEBUG=False):
         ##----------------------------------------------------------------------------------
 
         # 傾斜面の方位角（南が0°、西が90°、北180°、東270°）
-        slope_azimuth = inputdata["PhotovoltaicSystems"][system_name]["Direction"]
+        slope_azimuth = input_data["photovoltaic_systems"][system_name]["direction"]
 
         # 傾斜面の傾斜角（水平0°、垂直90°） 一の位を四捨五入
-        slope_angle = round(inputdata["PhotovoltaicSystems"][system_name]["Angle"], -1)
+        slope_angle = round(input_data["photovoltaic_systems"][system_name]["angle"], -1)
 
         # 90度を超えた場合でも計算できるように調整
         # if slope_angle > 90:
@@ -116,18 +116,18 @@ def calc_energy(inputdata, DEBUG=False):
         ##----------------------------------------------------------------------------------
 
         # 気象データの読み込み（日射量は MJ/m2h）
-        if climate_data_file[inputdata["Building"]["Region"] + "地域"][
-            inputdata["Building"]["AnnualSolarRegion"]] != None:
-            [Tout, Iod, Ios, sun_altitude, sun_azimuth] = \
+        if climate_data_file[input_data["building"]["region"] + "地域"][
+            input_data["building"]["annual_solar_region"]] != None:
+            [tout, iod, ios, sun_altitude, sun_azimuth] = \
                 climate.readCsvClimateData(
-                    climatedata_directory + climate_data_file[inputdata["Building"]["Region"] + "地域"][
-                        inputdata["Building"]["AnnualSolarRegion"]])
+                    climatedata_directory + climate_data_file[input_data["building"]["region"] + "地域"][
+                        input_data["building"]["annual_solar_region"]])
         else:
             raise Exception('日射地域区分の指定が不正です')
 
         # 傾斜面における単位面積あたりの直達・天空日射量 [W/m2]
-        Iod_slope = np.zeros(8760)
-        Ios_slope = np.zeros(8760)
+        iod_slope = np.zeros(8760)
+        ios_slope = np.zeros(8760)
         sun_altitude_rad = np.zeros(8760)
         sun_azimuth_rad = np.zeros(8760)
         for hh in range(0, 8760):
@@ -140,54 +140,54 @@ def calc_energy(inputdata, DEBUG=False):
                 sun_azimuth_rad[hh] = math.radians(sun_azimuth[hh])
 
             # 傾斜面の単位面積当たりの直達日射量 [W/m2]
-            Iod_slope[hh] = Iod[hh] / 3.6 * 10 ** 3 * \
+            iod_slope[hh] = iod[hh] / 3.6 * 10 ** 3 * \
                             (math.sin(sun_altitude_rad[hh]) * math.cos(math.radians(slope_angle)) + \
                              math.cos(sun_altitude_rad[hh]) * math.sin(math.radians(slope_angle)) * \
                              math.cos(math.radians(slope_azimuth) - sun_azimuth_rad[hh]))
 
             # 傾斜面の単位面積当たりの天空日射量 [W/m2]
-            Ios_slope[hh] = Ios[hh] / 3.6 * 10 ** 3 * (1 + math.cos(math.radians(slope_angle))) / 2
+            ios_slope[hh] = ios[hh] / 3.6 * 10 ** 3 * (1 + math.cos(math.radians(slope_angle))) / 2
 
         # 傾斜面における単位面積あたりの平均日射量 [W/m2]
         Is_slope = np.zeros(8760)
         for hh in range(0, 8760):
 
-            if Iod_slope[hh] >= 0:
-                Is_slope[hh] = Iod_slope[hh] + Ios_slope[hh]
+            if iod_slope[hh] >= 0:
+                Is_slope[hh] = iod_slope[hh] + ios_slope[hh]
             else:
-                Is_slope[hh] = Ios_slope[hh]
+                Is_slope[hh] = ios_slope[hh]
 
         # 結果を保存
-        resultJson["PhotovoltaicSystems"][system_name]["Tout"] = Tout
-        resultJson["PhotovoltaicSystems"][system_name]["Iod_W/m2"] = Iod / 3.6 * 10 ** 3
-        resultJson["PhotovoltaicSystems"][system_name]["Ios_W/m2"] = Ios / 3.6 * 10 ** 3
-        resultJson["PhotovoltaicSystems"][system_name]["slope_azimuth_rad"] = math.radians(slope_azimuth)
-        resultJson["PhotovoltaicSystems"][system_name]["slope_angle_rad"] = math.radians(slope_angle)
-        resultJson["PhotovoltaicSystems"][system_name]["sun_altitude_rad"] = sun_altitude_rad
-        resultJson["PhotovoltaicSystems"][system_name]["sun_azimuth_rad"] = sun_azimuth_rad
-        resultJson["PhotovoltaicSystems"][system_name]["Is_slope_W/m2"] = Is_slope
-        resultJson["PhotovoltaicSystems"][system_name]["Iod_slope_W/m2"] = Iod_slope
-        resultJson["PhotovoltaicSystems"][system_name]["Ios_slope_W/m2"] = Ios_slope
+        result_json["photovoltaic_systems"][system_name]["tout"] = tout
+        result_json["photovoltaic_systems"][system_name]["iod_W/m2"] = iod / 3.6 * 10 ** 3
+        result_json["photovoltaic_systems"][system_name]["ios_W/m2"] = ios / 3.6 * 10 ** 3
+        result_json["photovoltaic_systems"][system_name]["slope_azimuth_rad"] = math.radians(slope_azimuth)
+        result_json["photovoltaic_systems"][system_name]["slope_angle_rad"] = math.radians(slope_angle)
+        result_json["photovoltaic_systems"][system_name]["sun_altitude_rad"] = sun_altitude_rad
+        result_json["photovoltaic_systems"][system_name]["sun_azimuth_rad"] = sun_azimuth_rad
+        result_json["photovoltaic_systems"][system_name]["Is_slope_W/m2"] = Is_slope
+        result_json["photovoltaic_systems"][system_name]["iod_slope_W/m2"] = iod_slope
+        result_json["photovoltaic_systems"][system_name]["ios_slope_W/m2"] = ios_slope
 
         ##----------------------------------------------------------------------------------
         ## 第九章 自然エネルギー利用設備　第一節 太陽光発電設備
         ##----------------------------------------------------------------------------------
 
         # 太陽電池アレイ設置方式によって決まる係数
-        if inputdata["PhotovoltaicSystems"][system_name]["ArraySetupType"] == "架台設置形":
+        if input_data["photovoltaic_systems"][system_name]["array_setup_type"] == "架台設置形":
             fa = 46
             fb = 0.41
-        elif inputdata["PhotovoltaicSystems"][system_name]["ArraySetupType"] == "屋根置き形":
+        elif input_data["photovoltaic_systems"][system_name]["array_setup_type"] == "屋根置き形":
             fa = 50
             fb = 0.38
-        elif inputdata["PhotovoltaicSystems"][system_name]["ArraySetupType"] == "その他":
+        elif input_data["photovoltaic_systems"][system_name]["array_setup_type"] == "その他":
             fa = 57
             fb = 0.33
         else:
             raise Exception("太陽電池アレイの設置方式が不正です")
 
         # 太陽電池アレイの総合設計係数
-        if inputdata["PhotovoltaicSystems"][system_name]["CellType"] == "結晶系":
+        if input_data["photovoltaic_systems"][system_name]["cell_type"] == "結晶系":
             K_hs = 1.00  # 日陰補正係数
             K_pd = 0.96  # 経時変化補正係数
             K_pm = 0.94  # アレイ負荷整合補正係数
@@ -201,10 +201,10 @@ def calc_energy(inputdata, DEBUG=False):
             alpha_p_max = -0.0020  # 太陽電池アレイの最大出力温度係数
 
         # インバータ回路補正係数
-        if inputdata["PhotovoltaicSystems"][system_name]["PowerConditionerEfficiency"] == None:
+        if input_data["photovoltaic_systems"][system_name]["power_conditioner_efficiency"] == None:
             K_in = 0.927 * 0.97  # デフォルト値変更
         else:
-            K_in = inputdata["PhotovoltaicSystems"][system_name]["PowerConditionerEfficiency"] * 0.97
+            K_in = input_data["photovoltaic_systems"][system_name]["power_conditioner_efficiency"] * 0.97
 
         # 太陽電池アレイ𝑖の温度補正係数
         T_cr = np.zeros(8760)
@@ -212,7 +212,7 @@ def calc_energy(inputdata, DEBUG=False):
         K_pi = np.zeros(8760)
         for hh in range(0, 8760):
             # 太陽電池アレイ𝑖の加重平均太陽電池モジュール温度
-            T_cr[hh] = Tout[hh] + (fa / (fb * (1.5) ** (0.8) + 1) + 2) * Is_slope[hh] * 10 ** (-3) - 2
+            T_cr[hh] = tout[hh] + (fa / (fb * (1.5) ** (0.8) + 1) + 2) * Is_slope[hh] * 10 ** (-3) - 2
 
             # 太陽電池アレイ𝑖の温度補正係数
             K_pt[hh] = 1 + alpha_p_max * (T_cr[hh] - 25)
@@ -223,35 +223,35 @@ def calc_energy(inputdata, DEBUG=False):
         # 1時間当たりの太陽電池アレイ𝑖の発電量 [kWh]
         Ep = np.zeros(8760)
         for hh in range(0, 8760):
-            Ep[hh] = inputdata["PhotovoltaicSystems"][system_name]["ArrayCapacity"] * \
+            Ep[hh] = input_data["photovoltaic_systems"][system_name]["array_capacity"] * \
                      (1 / 1) * Is_slope[hh] * K_pi[hh] * 10 ** (-3)
 
         # 結果を保存
-        resultJson["PhotovoltaicSystems"][system_name]["Ep"] = Ep
-        resultJson["PhotovoltaicSystems"][system_name]["T_cr"] = T_cr
-        resultJson["PhotovoltaicSystems"][system_name]["K_pi"] = K_pi
+        result_json["photovoltaic_systems"][system_name]["Ep"] = Ep
+        result_json["photovoltaic_systems"][system_name]["T_cr"] = T_cr
+        result_json["photovoltaic_systems"][system_name]["K_pi"] = K_pi
 
         # 発電量 [kWh]
-        resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] = np.sum(
-            resultJson["PhotovoltaicSystems"][system_name]["Ep"], 0)
+        result_json["photovoltaic_systems"][system_name]["Ep_kWh"] = np.sum(
+            result_json["photovoltaic_systems"][system_name]["Ep"], 0)
 
         # 発電量（一次エネ換算） [kWh] * [kJ/kWh] / 1000 = [MJ]
-        resultJson["PhotovoltaicSystems"][system_name]["Ep_MJ"] = resultJson["PhotovoltaicSystems"][system_name][
+        result_json["photovoltaic_systems"][system_name]["Ep_MJ"] = result_json["photovoltaic_systems"][system_name][
                                                                       "Ep_kWh"] * bc.fprime / 1000
 
         # 発電量を積算
-        resultJson["E_photovoltaic"] += resultJson["PhotovoltaicSystems"][system_name]["Ep_MJ"]
+        result_json["E_photovoltaic"] += result_json["photovoltaic_systems"][system_name]["Ep_MJ"]
 
         # 発電量（日積算） [MWh/day]
         for dd in range(0, 365):
             for hh in range(0, 24):
                 tt = 24 * dd + hh
-                resultJson["for_CGS"]["Edesign_MWh_day"][dd] += resultJson["PhotovoltaicSystems"][system_name]["Ep"][
+                result_json["for_CGS"]["Edesign_MWh_day"][dd] += result_json["photovoltaic_systems"][system_name]["Ep"][
                                                                     tt] / 1000
 
-        resultJson["E_photovoltaic_GJ"] = resultJson["E_photovoltaic"] / 1000
+        result_json["E_photovoltaic_GJ"] = result_json["E_photovoltaic"] / 1000
 
-    return resultJson
+    return result_json
 
 
 if __name__ == '__main__':
@@ -262,12 +262,12 @@ if __name__ == '__main__':
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
-        inputdata = json.load(f)
+        input_data = json.load(f)
 
-    resultJson = calc_energy(inputdata, DEBUG=True)
+    result_json = calc_energy(input_data, DEBUG=True)
 
-    with open("resultJson_PV.json", 'w', encoding='utf-8') as fw:
-        json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls=bc.MyEncoder)
+    with open("result_json_PV.json", 'w', encoding='utf-8') as fw:
+        json.dump(result_json, fw, indent=4, ensure_ascii=False, cls=bc.MyEncoder)
 
-    for system_name in resultJson["PhotovoltaicSystems"]:
-        print(resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"])
+    for system_name in result_json["photovoltaic_systems"]:
+        print(result_json["photovoltaic_systems"][system_name]["Ep_kWh"])

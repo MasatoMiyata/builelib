@@ -1,11 +1,11 @@
 {
-    "OccupantSensingCTRL": {
+    "occupant_sensing_ctrl": {
         "無": 1.00,
         "下限調光方式": 0.95,
         "点滅方式": 0.70,
         "減光方式": 0.80
     },
-    "IlluminanceSensingCTRL":{
+    "illuminance_sensing_ctrl":{
         "無": 1.00,
         "調光方式": 0.90,
         "調光方式BL": 0.85,
@@ -17,12 +17,12 @@
         "調光方式W25BL": 0.63,
         "点滅方式": 0.80
     },
-    "TimeScheduleCTRL": {
+    "time_schedule_ctrl": {
         "無": 1.00,
         "減光方式": 0.95,
         "点滅方式": 0.90
     },
-    "InitialIlluminationCorrectionCTRL": {
+    "initial_illumination_correction_ctrl": {
         "無": 1.00,
         "タイマ方式(LED)": 0.95,
         "タイマ方式(蛍光灯)": 0.85,

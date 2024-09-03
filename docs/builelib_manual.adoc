@@ -23,7 +23,7 @@ Ver.1.1.1 (2021.06)
 
 == はじめに
 
-Builelib (Builelib: Building Energy-modeling Library) は 非住宅建築物の年間一次エネルギー消費量を計算するためのプログラムです。 +
+Builelib (Builelib: building Energy-modeling Library) は 非住宅建築物の年間一次エネルギー消費量を計算するためのプログラムです。 +
 
 * Builelib: https://builelib.net/
 
@@ -201,7 +201,7 @@ image::images/fig-SP2-2.png[width="95%"]
 WEBPROにおいて選択できる熱源機種及び特性については、次の仕様書をご覧下さい。
 
 * link:https://webpro-nr.github.io/BESJP_EngineeringReference/EngineeringReference_chapter02.html#_a_4_%E7%86%B1%E6%BA%90%E7%89%B9%E6%80%A7[WEBPRO仕様書　2.A.4 熱源特性]
-* link:https://webpro-nr.github.io/BESJP_EngineeringReference/pdf/heatsource_performance_curve.pdf[WEBPRO仕様書　熱源機器特性一覧]
+* link:https://webpro-nr.github.io/BESJP_EngineeringReference/pdf/heat_source_performance_curve.pdf[WEBPRO仕様書　熱源機器特性一覧]
 ====
 
 ==== 入力シートの作成方法

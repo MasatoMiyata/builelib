@@ -1,3 +1,3 @@
-“à•”¯•Êq,BuildingType,RoomType,Area,RoomHeight,Width,Depth,RoomIndex,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
-C1	Hê“™	‘qŒÉ	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	5270.4	21100
-C2	Hê“™	‰®ŠO’“Ôê–”‚Í’“—Öê	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	5270.4	10500
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êq,building_type,room_type,Area,RoomHeight,Width,Depth,room_index,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
+C1	ï¿½Hï¿½ê“™	ï¿½qï¿½ï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	5270.4	21100
+C2	ï¿½Hï¿½ê“™	ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Ôê–”ï¿½Í’ï¿½ï¿½Öï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	5270.4	10500

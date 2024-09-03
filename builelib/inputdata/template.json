@@ -1,44 +1,44 @@
 {
-    "Building":{
-        "BuildingAddress": {
+    "building":{
+        "building_address": {
         },
-        "Coefficient_DHC": {
+        "coefficient_dhc": {
         }
     },
-    "Rooms":{
+    "rooms":{
     },
-    "EnvelopeSet":{
+    "envelope_set":{
     },
-    "WallConfigure":{
+    "wall_configure":{
     },
-    "WindowConfigure":{
+    "window_configure":{
     },
-    "ShadingConfigure":{
+    "shading_config":{
     },
-    "AirConditioningZone":{
+    "air_conditioning_zone":{
     },
-    "HeatsourceSystem":{
+    "heat_source_system":{
     },
-    "SecondaryPumpSystem":{
+    "secondary_pump_system":{
     },
-    "AirHandlingSystem":{
+    "air_handling_system":{
     },
-    "VentilationRoom":{
+    "ventilation_room":{
     },
-    "VentilationUnit":{
+    "ventilation_unit":{
     },
-    "LightingSystems":{
+    "lighting_systems":{
     },
-    "HotwaterRoom":{
+    "hot_water_room":{
     },
-    "HotwaterSupplySystems":{
+    "hot_water_supply_systems":{
     },
-    "Elevators":{
+    "elevators":{
     },
-    "PhotovoltaicSystems":{        
+    "photovoltaic_systems":{
     },
-    "CogenerationSystems":{
+    "cogeneration_systems":{
     },
-    "SpecialInputData":{
+    "special_input_data":{
     }
 }

@@ -51,7 +51,7 @@ for case_name in testcase_dict:
     # テストケース（行）に対するループ
     for testdata in testfiledata:
         # 入力データの作成
-        inputdata = (
+        input_data = (
             convert2number(testdata[1], None),
             convert2number(testdata[2], None),
             testdata[3]
@@ -66,16 +66,16 @@ for case_name in testcase_dict:
         )
 
         # テストケースの集約
-        test_to_try.append((inputdata, expectedvalue))
+        test_to_try.append((input_data, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
-def caclulation(inputdata):
+def caclulation(input_data):
     # 入力
-    alp = inputdata[0]  # alp : 方位角（0が南、45が南西、180が北）
-    bet = inputdata[1]  # bet : 傾斜角（0が水平、90が垂直）
-    climate_area = inputdata[2]
+    alp = input_data[0]  # alp : 方位角（0が南、45が南西、180が北）
+    bet = input_data[1]  # bet : 傾斜角（0が水平、90が垂直）
+    climate_area = input_data[2]
 
     print(alp)
     print(bet)
@@ -84,25 +84,25 @@ def caclulation(inputdata):
     climate_directory = "./builelib/climatedata/"
 
     # 地域別データの読み込み
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
     # 直達日射量、天空日射量 [W/m2]
-    _, _, Iod, Ios, Inn = climate.readHaspClimateData(climate_directory +
+    _, _, iod, ios, inn = climate.readHaspClimateData(climate_directory +
                                                       Area[climate_area + "地域"]["気象データファイル名"])
 
-    # np.savetxt("直達日射量.txt", Iod)
-    # np.savetxt("天空日射量.txt", Ios)
+    # np.savetxt("直達日射量.txt", iod)
+    # np.savetxt("天空日射量.txt", ios)
     # print(Area[climate_area+"地域"]["緯度"])
     # print(Area[climate_area+"地域"]["経度"])
 
     # 日積算日射量 [Wh/m2/day]
-    Id, _, Is, _ = climate.solarRadiationByAzimuth( \
+    Id, _, Is, _ = climate.solar_radiation_by_azimuth( \
         alp, \
         bet, \
         Area[climate_area + "地域"]["緯度"], \
         Area[climate_area + "地域"]["経度"], \
-        Iod, Ios, Inn)
+        iod, ios, inn)
 
     # np.savetxt("積算直達日射量.txt", Id)
     # np.savetxt("積算天空日射量.txt", Is)
@@ -112,10 +112,10 @@ def caclulation(inputdata):
 
 
 # テストの実施
-@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(inputdata, expectedvalue):
+@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(input_data, expectedvalue):
     # 計算実行
-    IdIs_MJ, IdIs, Id, Is = caclulation(inputdata)
+    IdIs_MJ, IdIs, Id, Is = caclulation(input_data)
 
     # 比較
     assert abs(IdIs_MJ - expectedvalue[0]) < 0.0001

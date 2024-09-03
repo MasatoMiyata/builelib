@@ -104,13 +104,13 @@ def func_03(I_ALL, sin_hsdt_ALL):
     return I_ALL_10min
 
 
-def func_15(x, y, zyPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
+def func_15(x, y, zyplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     X = x3 + x2 / 2 - x
     Y = y1 + y2 / 2 - y
-    A = zyPlus * tanA_ZWjdt
-    B = zyPlus * tanh_Sdt / cosA_ZWjdt
+    A = zyplus * tanA_ZWjdt
+    B = zyplus * tanh_Sdt / cosA_ZWjdt
 
-    if (zyPlus == 0):
+    if (zyplus == 0):
         Aoh0p = 0
     else:
         if (X >= A and Y >= B):
@@ -125,13 +125,13 @@ def func_15(x, y, zyPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     return Aoh0p
 
 
-def func_16(x, y, zxPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
+def func_16(x, y, zxplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     Y = x3 + x2 / 2 - x
     X = y1 + y2 / 2 - y
-    B = zxPlus * tanA_ZWjdt
-    A = zxPlus * tanh_Sdt / cosA_ZWjdt
+    B = zxplus * tanA_ZWjdt
+    A = zxplus * tanh_Sdt / cosA_ZWjdt
 
-    if (zxPlus == 0):
+    if (zxplus == 0):
         Asf0p = 0
     else:
         if (X >= A and Y >= B):
@@ -146,23 +146,23 @@ def func_16(x, y, zxPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     return Asf0p
 
 
-def func_14(x2, x3, y1, y2, zxPlus, zyPlus, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
+def func_14(x2, x3, y1, y2, zxplus, zyplus, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     if tanh_Sdt > 0:
 
-        inputAs = [zxPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt]
+        inputAs = [zxplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt]
 
         Awind_j_xp_t = (x2 + x3) * (y1 + y2) \
-                       - func_15(-x2 / 2, -y2 / 2, zyPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
-                       - func_16(-x2 / 2, -y2 / 2, zxPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                       - func_15(-x2 / 2, -y2 / 2, zyplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                       - func_16(-x2 / 2, -y2 / 2, zxplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
                        - ((x2 + x3) * y1 \
-                          - func_15(-x2 / 2, y2 / 2, zyPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
-                          - func_16(-x2 / 2, y2 / 2, zxPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)) \
+                          - func_15(-x2 / 2, y2 / 2, zyplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                          - func_16(-x2 / 2, y2 / 2, zxplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)) \
                        - (x3 * (y1 + y2) \
-                          - func_15(x2 / 2, -y2 / 2, zyPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
-                          - func_16(x2 / 2, -y2 / 2, zxPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)) \
+                          - func_15(x2 / 2, -y2 / 2, zyplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                          - func_16(x2 / 2, -y2 / 2, zxplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)) \
                        + x3 * y1 \
-                       - func_15(x2 / 2, y2 / 2, zyPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
-                       - func_16(x2 / 2, y2 / 2, zxPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)
+                       - func_15(x2 / 2, y2 / 2, zyplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                       - func_16(x2 / 2, y2 / 2, zxplus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)
 
     else:
 
@@ -171,13 +171,13 @@ def func_14(x2, x3, y1, y2, zxPlus, zyPlus, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     return Awind_j_xp_t
 
 
-def func_19(x, y, zyPlus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
+def func_19(x, y, zyplus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     X = x1 + x2 / 2 + x
     Y = y1 + y2 / 2 - y
-    A = zyPlus * tanA_ZWjdt
-    B = zyPlus * tanh_Sdt / cosA_ZWjdt
+    A = zyplus * tanA_ZWjdt
+    B = zyplus * tanh_Sdt / cosA_ZWjdt
 
-    if (zyPlus == 0):
+    if (zyplus == 0):
         Aoh0m = 0
     else:
         if (X >= A and Y >= B):
@@ -192,13 +192,13 @@ def func_19(x, y, zyPlus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     return Aoh0m
 
 
-def func_20(x, y, zxMinus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
+def func_20(x, y, zxminus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     Y = x1 + x2 / 2 + x
     X = y1 + y2 / 2 - y
-    B = zxMinus * tanA_ZWjdt
-    A = zxMinus * tanh_Sdt / cosA_ZWjdt
+    B = zxminus * tanA_ZWjdt
+    A = zxminus * tanh_Sdt / cosA_ZWjdt
 
-    if (zxMinus == 0):
+    if (zxminus == 0):
         Asf0m = 0
     else:
         if (X >= A and Y >= B):
@@ -213,24 +213,24 @@ def func_20(x, y, zxMinus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     return Asf0m
 
 
-def func_18(x2, x1, y1, y2, zxMinus, zyPlus, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
+def func_18(x2, x1, y1, y2, zxminus, zyplus, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
     if tanh_Sdt > 0:
 
-        inputAo = [zyPlus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt]
-        inputAs = [zxMinus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt]
+        inputAo = [zyplus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt]
+        inputAs = [zxminus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt]
 
         Awind_j_xm_t = (x1 + x2) * (y1 + y2) \
-                       - func_19(x2 / 2, -y2 / 2, zyPlus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
-                       - func_20(x2 / 2, -y2 / 2, zxMinus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                       - func_19(x2 / 2, -y2 / 2, zyplus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                       - func_20(x2 / 2, -y2 / 2, zxminus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
                        - ((x1 + x2) * y1 \
-                          - func_19(x2 / 2, y2 / 2, zyPlus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
-                          - func_20(x2 / 2, y2 / 2, zxMinus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)) \
+                          - func_19(x2 / 2, y2 / 2, zyplus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                          - func_20(x2 / 2, y2 / 2, zxminus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)) \
                        - (x1 * (y1 + y2) \
-                          - func_19(-x2 / 2, -y2 / 2, zyPlus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
-                          - func_20(-x2 / 2, -y2 / 2, zxMinus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)) \
+                          - func_19(-x2 / 2, -y2 / 2, zyplus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                          - func_20(-x2 / 2, -y2 / 2, zxminus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)) \
                        + x1 * y1 \
-                       - func_19(-x2 / 2, y2 / 2, zyPlus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
-                       - func_20(-x2 / 2, y2 / 2, zxMinus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)
+                       - func_19(-x2 / 2, y2 / 2, zyplus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt) \
+                       - func_20(-x2 / 2, y2 / 2, zxminus, x1, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt)
 
     else:
 
@@ -296,7 +296,7 @@ def func_25(x1, x2, x3, y3, y2, zxp, zxm, zym):
     return r_isr_j_ym
 
 
-def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym):
+def calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym):
     ## 入力チェック
     if x1 < 0 or x2 < 0 or x3 < 0:
         raise Exception('Error!')
@@ -307,14 +307,14 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
 
     ## 地域別データ読み込み
 
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
         areaDB = json.load(f)
     climatefilename = climatedata_directory + '/' + areaDB[AREA + "地域"]["気象データファイル名"]  # 気象データ
 
     # 気象データ読み込み
-    # IodALL : 法線面直達日射量[W/m2]
-    # IosALL : 水平面天空日射量[W/m2]
-    [_, _, Iod_ALL, Ios_ALL, _] = climate.readHaspClimateData(climatefilename)
+    # iod_all : 法線面直達日射量[W/m2]
+    # ios_all : 水平面天空日射量[W/m2]
+    [_, _, iod_all, ios_ALL, _] = climate.readHaspClimateData(climatefilename)
 
     phi = areaDB[AREA + "地域"]["緯度"]  # 緯度 [deg]
     L = areaDB[AREA + "地域"]["経度"]  # 経度 [deg]
@@ -338,21 +338,21 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
     Awind = x2 * y2
 
     # 方位
-    if Direction == '南':
+    if direction == '南':
         Azw = 0
-    elif Direction == '南西':
+    elif direction == '南西':
         Azw = 45
-    elif Direction == '西':
+    elif direction == '西':
         Azw = 90
-    elif Direction == '北西':
+    elif direction == '北西':
         Azw = 135
-    elif Direction == '北':
+    elif direction == '北':
         Azw = 180
-    elif Direction == '北東':
+    elif direction == '北東':
         Azw = -135
-    elif Direction == '東':
+    elif direction == '東':
         Azw = -90
-    elif Direction == '南東':
+    elif direction == '南東':
         Azw = -45
     else:
         raise Exception('Error!')
@@ -452,9 +452,9 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
             Ita_ALL[dd][hh] = Ita
 
     # 直達日射量 10分間隔 [kcal/m2h]
-    Iod_ALL_10min = func_03(Iod_ALL, sin_hsdt_ALL)
+    iod_all_10min = func_03(iod_all, sin_hsdt_ALL)
     # 天空日射量 10分間隔 [kcal/m2h]
-    Ios_ALL_10min = func_03(Ios_ALL, sin_hsdt_ALL)
+    ios_ALL_10min = func_03(ios_ALL, sin_hsdt_ALL)
 
     ##------------------ 直達日射に関する日除け効果係数 ------------------##
 
@@ -464,7 +464,7 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
     for dd in range(0, 365):  # 日のループ
         for hh in range(0, 24 * 6):  # 時刻のループ（10分間隔）
 
-            if sin_hsdt_ALL[dd][hh] > 0 and Iod_ALL_10min[dd][hh] > 0:
+            if sin_hsdt_ALL[dd][hh] > 0 and iod_all_10min[dd][hh] > 0:
 
                 if (Azwj_ALL[dd][hh] >= -90 and Azwj_ALL[dd][hh] <= 0):  # x+側
                     Awind_j_xp[dd][hh] = func_14(x2, x3, y1, y2, zxp, zyp, tan_hsdt_ALL[dd][hh], cos_Azwj_ALL[dd][hh],
@@ -488,11 +488,11 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
     for dd in range(0, 365):  # 日のループ
         for hh in range(0, 24 * 6):  # 時刻のループ（10分間隔）
 
-            if sin_hsdt_ALL[dd][hh] > 0 and Iod_ALL_10min[dd][hh] > 0 and (
+            if sin_hsdt_ALL[dd][hh] > 0 and iod_all_10min[dd][hh] > 0 and (
                     Azwj_ALL[dd][hh] >= -90 and Azwj_ALL[dd][hh] <= 90):
 
                 # 日射量 [kcal/m2]
-                S_dt = (Iod_ALL_10min[dd][hh] * Ita_ALL[dd][hh] * cos_hsdt_ALL[dd][hh] * cos_Azwj_ALL[dd][hh])
+                S_dt = (iod_all_10min[dd][hh] * Ita_ALL[dd][hh] * cos_hsdt_ALL[dd][hh] * cos_Azwj_ALL[dd][hh])
 
                 temp[dd][hh] = S_dt
 
@@ -559,15 +559,15 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
         for hh in range(0, 24 * 6):  # 時刻のループ（10分間隔）
 
             # 直達日射量 [kcal/m2]
-            S_dt = Iod_ALL_10min[dd][hh] * Ita_ALL[dd][hh] * cos_hsdt_ALL[dd][hh] * cos_Azwj_ALL[dd][hh]
+            S_dt = iod_all_10min[dd][hh] * Ita_ALL[dd][hh] * cos_hsdt_ALL[dd][hh] * cos_Azwj_ALL[dd][hh]
             # 天空日射量 [kcal/m2]
-            S_st = 0.808 * 0.5 * Ios_ALL_10min[dd][hh]
+            S_st = 0.808 * 0.5 * ios_ALL_10min[dd][hh]
             # 反射日射量 [kcal/m2]
-            S_rt = 0.808 * 0.1 * 0.5 * (Ios_ALL_10min[dd][hh] + Iod_ALL_10min[dd][hh] * sin_hsdt_ALL[dd][hh])
+            S_rt = 0.808 * 0.1 * 0.5 * (ios_ALL_10min[dd][hh] + iod_all_10min[dd][hh] * sin_hsdt_ALL[dd][hh])
 
             if dd + 1 in SUM:
 
-                if sin_hsdt_ALL[dd][hh] > 0 and Iod_ALL_10min[dd][hh] > 0:
+                if sin_hsdt_ALL[dd][hh] > 0 and iod_all_10min[dd][hh] > 0:
                     if (Azwj_ALL[dd][hh] >= -90 and Azwj_ALL[dd][hh] <= 0):  # 直達日射（x+側）
                         ST_xp_SUM = ST_xp_SUM + S_dt
                     elif (Azwj_ALL[dd][hh] > 0 and Azwj_ALL[dd][hh] <= 90):  # 直達日射（x-側）
@@ -578,7 +578,7 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
 
             elif dd + 1 in WIN:
 
-                if sin_hsdt_ALL[dd][hh] > 0 and Iod_ALL_10min[dd][hh] > 0:
+                if sin_hsdt_ALL[dd][hh] > 0 and iod_all_10min[dd][hh] > 0:
                     if (Azwj_ALL[dd][hh] >= -90 and Azwj_ALL[dd][hh] <= 0):  # 直達日射（x+側）
                         ST_xp_WIN = ST_xp_WIN + S_dt
                     elif (Azwj_ALL[dd][hh] > 0 and Azwj_ALL[dd][hh] <= 90):  # 直達日射（x-側）
@@ -604,7 +604,7 @@ def calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
 # %%
 if __name__ == '__main__':
     # AREA = "6"
-    # Direction = "南"
+    # direction = "南"
     # x1=0
     # x2=5
     # x3=0
@@ -617,7 +617,7 @@ if __name__ == '__main__':
     # zym=0
 
     AREA = "7"
-    Direction = "北東"
+    direction = "北東"
     x1 = 0.2
     x2 = 1
     x3 = 0.2
@@ -629,7 +629,7 @@ if __name__ == '__main__':
     zyp = 0.2
     zym = 0.35
 
-    r_wind_SUM, r_wind_WIN = calc_shadingCoefficient(AREA, Direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym)
+    r_wind_SUM, r_wind_WIN = calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym)
 
     print("日よけ効果係数（冷房）：" + str(r_wind_SUM))
     print("日よけ効果係数（暖房）：" + str(r_wind_WIN))

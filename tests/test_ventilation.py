@@ -52,109 +52,109 @@ def read_testcasefile(filename):
     return testdata
 
 
-def make_inputdata_fan(data):
+def make_input_data_fan(data):
     if data[3] == "物品販売業を営む店舗等":
         data[3] = "物販店舗等"
     if data[12] == "物品販売業を営む店舗等":
         data[12] = "物販店舗等"
 
-    inputdata = {
-        "Building": {
-            "Region": "6"
+    input_data = {
+        "building": {
+            "region": "6"
         },
-        "Rooms": {
+        "rooms": {
             data[1] + "_" + data[2]: {
-                "floorName": data[1],
-                "roomName": data[2],
-                "buildingType": data[3],
-                "roomType": data[4],
-                "roomArea": convert2number(data[5], None)
+                "floorname": data[1],
+                "roomname": data[2],
+                "building_type": data[3],
+                "room_type": data[4],
+                "room_area": convert2number(data[5], None)
             }
         },
-        "VentilationRoom": {
+        "ventilation_room": {
             data[1] + "_" + data[2]: {
-                "VentilationType": "一種換気",
-                "VentilationUnitRef": {
+                "ventilation_type": "一種換気",
+                "ventilation_unit_ref": {
                     data[7]: {
-                        "UnitType": data[6],
-                        "Info": ""
+                        "unit_type": data[6],
+                        "info": ""
                     }
                 }
             },
         },
-        "VentilationUnit": {
+        "ventilation_unit": {
             data[19]: {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[20], None),
-                "MoterRatedPower": convert2number(data[21], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[22],
-                "Inverter": data[23],
-                "AirVolumeControl": data[24],
-                "VentilationRoomType": None,
-                "AC_CoolingCapacity": None,
-                "AC_RefEfficiency": None,
-                "AC_PumpPower": None,
-                "Info": ""
+                "number": 1,
+                "fan_air_volume": convert2number(data[20], None),
+                "motor_rated_power": convert2number(data[21], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[22],
+                "inverter": data[23],
+                "air_volume_control": data[24],
+                "ventilation_room_type": None,
+                "ac_cooling_capacity": None,
+                "ac_ref_efficiency": None,
+                "ac_pump_power": None,
+                "info": ""
             }
         }
     }
 
     # 1室目の2台目追加
     if data[9] != "":
-        inputdata["VentilationRoom"][data[1] + "_" + data[2]]["VentilationUnitRef"][data[9]] = {
-            "UnitType": data[8],
-            "Info": ""
+        input_data["ventilation_room"][data[1] + "_" + data[2]]["ventilation_unit_ref"][data[9]] = {
+            "unit_type": data[8],
+            "info": ""
         }
 
     # 2室目追加
     if data[11] != "":
-        inputdata["Rooms"][data[10] + "_" + data[11]] = {
-            "floorName": data[10],
-            "roomName": data[11],
-            "buildingType": data[12],
-            "roomType": data[13],
-            "roomArea": convert2number(data[14], None)
+        input_data["rooms"][data[10] + "_" + data[11]] = {
+            "floorname": data[10],
+            "roomname": data[11],
+            "building_type": data[12],
+            "room_type": data[13],
+            "room_area": convert2number(data[14], None)
         }
 
-        inputdata["VentilationRoom"][data[10] + "_" + data[11]] = {
-            "VentilationType": "一種換気",
-            "VentilationUnitRef": {
+        input_data["ventilation_room"][data[10] + "_" + data[11]] = {
+            "ventilation_type": "一種換気",
+            "ventilation_unit_ref": {
                 data[16]: {
-                    "UnitType": data[15],
-                    "Info": ""
+                    "unit_type": data[15],
+                    "info": ""
                 }
             }
         }
 
     # 2室目の2台目追加
     if data[18] != "":
-        inputdata["VentilationRoom"][data[10] + "_" + data[11]]["VentilationUnitRef"][data[18]] = {
-            "UnitType": data[17],
-            "Info": ""
+        input_data["ventilation_room"][data[10] + "_" + data[11]]["ventilation_unit_ref"][data[18]] = {
+            "unit_type": data[17],
+            "info": ""
         }
 
     # 2機種目の追加
     if data[25] != "":
-        inputdata["VentilationUnit"][data[25]] = {
-            "Number": 1,
-            "FanAirVolume": convert2number(data[26], None),
-            "MoterRatedPower": convert2number(data[27], None),
-            "PowerConsumption": None,
-            "HighEfficiencyMotor": data[28],
-            "Inverter": data[29],
-            "AirVolumeControl": data[30],
-            "VentilationRoomType": None,
-            "AC_CoolingCapacity": None,
-            "AC_RefEfficiency": None,
-            "AC_PumpPower": None,
-            "Info": ""
+        input_data["ventilation_unit"][data[25]] = {
+            "number": 1,
+            "fan_air_volume": convert2number(data[26], None),
+            "motor_rated_power": convert2number(data[27], None),
+            "power_consumption": None,
+            "high_efficiency_motor": data[28],
+            "inverter": data[29],
+            "air_volume_control": data[30],
+            "ventilation_room_type": None,
+            "ac_cooling_capacity": None,
+            "ac_ref_efficiency": None,
+            "ac_pump_power": None,
+            "info": ""
         }
 
-    return inputdata
+    return input_data
 
 
-def make_inputdata_ac(data):
+def make_input_data_ac(data):
     print(data)
 
     if data[4] == "物品販売業を営む店舗等":
@@ -162,66 +162,66 @@ def make_inputdata_ac(data):
     if data[12] == "物品販売業を営む店舗等":
         data[12] = "物販店舗等"
 
-    inputdata = {
-        "Building": {
-            "Region": str(data[53])
+    input_data = {
+        "building": {
+            "region": str(data[53])
         },
-        "Rooms": {
+        "rooms": {
             data[1] + "_" + data[2]: {
-                "floorName": data[1],
-                "roomName": data[2],
-                "buildingType": data[3],
-                "roomType": data[4],
-                "roomArea": convert2number(data[5], None)
+                "floorname": data[1],
+                "roomname": data[2],
+                "building_type": data[3],
+                "room_type": data[4],
+                "room_area": convert2number(data[5], None)
             }
         },
-        "VentilationRoom": {
+        "ventilation_room": {
             data[1] + "_" + data[2]: {
-                "VentilationType": "一種換気",
-                "VentilationUnitRef": {
+                "ventilation_type": "一種換気",
+                "ventilation_unit_ref": {
                     data[7]: {
-                        "UnitType": data[6],
-                        "Info": ""
+                        "unit_type": data[6],
+                        "info": ""
                     }
                 }
             }
         },
-        "VentilationUnit": {
+        "ventilation_unit": {
         }
     }
 
     # 1室目の2台目追加
     if data[9] != "":
-        inputdata["VentilationRoom"][data[1] + "_" + data[2]]["VentilationUnitRef"][data[9]] = {
-            "UnitType": data[8],
-            "Info": ""
+        input_data["ventilation_room"][data[1] + "_" + data[2]]["ventilation_unit_ref"][data[9]] = {
+            "unit_type": data[8],
+            "info": ""
         }
 
     # 2室目追加
     if data[11] != "":
-        inputdata["Rooms"][data[10] + "_" + data[11]] = {
-            "floorName": data[10],
-            "roomName": data[11],
-            "buildingType": data[12],
-            "roomType": data[13],
-            "roomArea": convert2number(data[14], None)
+        input_data["rooms"][data[10] + "_" + data[11]] = {
+            "floorname": data[10],
+            "roomname": data[11],
+            "building_type": data[12],
+            "room_type": data[13],
+            "room_area": convert2number(data[14], None)
         }
 
-        inputdata["VentilationRoom"][data[10] + "_" + data[11]] = {
-            "VentilationType": "一種換気",
-            "VentilationUnitRef": {
+        input_data["ventilation_room"][data[10] + "_" + data[11]] = {
+            "ventilation_type": "一種換気",
+            "ventilation_unit_ref": {
                 data[16]: {
-                    "UnitType": data[15],
-                    "Info": ""
+                    "unit_type": data[15],
+                    "info": ""
                 }
             }
         }
 
     # 2室目の2台目追加
     if data[18] != "":
-        inputdata["VentilationRoom"][data[10] + "_" + data[11]]["VentilationUnitRef"][data[18]] = {
-            "UnitType": data[17],
-            "Info": ""
+        input_data["ventilation_room"][data[10] + "_" + data[11]]["ventilation_unit_ref"][data[18]] = {
+            "unit_type": data[17],
+            "info": ""
         }
 
     # 換気代替空調機1台目
@@ -229,36 +229,36 @@ def make_inputdata_ac(data):
 
         if data[24] == "空調":
 
-            inputdata["VentilationUnit"][data[19]] = {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[25], None),
-                "MoterRatedPower": convert2number(data[26], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[27],
-                "Inverter": data[28],
-                "AirVolumeControl": data[29],
-                "VentilationRoomType": data[20],
-                "AC_CoolingCapacity": convert2number(data[21], None),
-                "AC_RefEfficiency": convert2number(data[22], None),
-                "AC_PumpPower": convert2number(data[23], None),
-                "Info": ""
+            input_data["ventilation_unit"][data[19]] = {
+                "number": 1,
+                "fan_air_volume": convert2number(data[25], None),
+                "motor_rated_power": convert2number(data[26], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[27],
+                "inverter": data[28],
+                "air_volume_control": data[29],
+                "ventilation_room_type": data[20],
+                "ac_cooling_capacity": convert2number(data[21], None),
+                "ac_ref_efficiency": convert2number(data[22], None),
+                "ac_pump_power": convert2number(data[23], None),
+                "info": ""
             }
 
         elif data[30] == "空調":
 
-            inputdata["VentilationUnit"][data[19]] = {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[31], None),
-                "MoterRatedPower": convert2number(data[32], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[33],
-                "Inverter": data[34],
-                "AirVolumeControl": data[35],
-                "VentilationRoomType": data[20],
-                "AC_CoolingCapacity": convert2number(data[21], None),
-                "AC_RefEfficiency": convert2number(data[22], None),
-                "AC_PumpPower": convert2number(data[23], None),
-                "Info": ""
+            input_data["ventilation_unit"][data[19]] = {
+                "number": 1,
+                "fan_air_volume": convert2number(data[31], None),
+                "motor_rated_power": convert2number(data[32], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[33],
+                "inverter": data[34],
+                "air_volume_control": data[35],
+                "ventilation_room_type": data[20],
+                "ac_cooling_capacity": convert2number(data[21], None),
+                "ac_ref_efficiency": convert2number(data[22], None),
+                "ac_pump_power": convert2number(data[23], None),
+                "info": ""
             }
 
         else:
@@ -267,34 +267,34 @@ def make_inputdata_ac(data):
         # ファンの追加
         if data[24] != "" and data[24] != "空調":
 
-            inputdata["VentilationUnit"][data[19] + "_fan"] = {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[25], None),
-                "MoterRatedPower": convert2number(data[26], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[27],
-                "Inverter": data[28],
-                "AirVolumeControl": data[29],
-                "VentilationRoomType": None,
-                "AC_CoolingCapacity": None,
-                "AC_RefEfficiency": None,
-                "AC_PumpPower": None,
-                "Info": ""
+            input_data["ventilation_unit"][data[19] + "_fan"] = {
+                "number": 1,
+                "fan_air_volume": convert2number(data[25], None),
+                "motor_rated_power": convert2number(data[26], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[27],
+                "inverter": data[28],
+                "air_volume_control": data[29],
+                "ventilation_room_type": None,
+                "ac_cooling_capacity": None,
+                "ac_ref_efficiency": None,
+                "ac_pump_power": None,
+                "info": ""
             }
 
-            # VentilationRoom要素に追加
+            # ventilation_room要素に追加
             if data[19] == data[7] or data[19] == data[9]:
 
-                inputdata["VentilationRoom"][data[1] + "_" + data[2]]["VentilationUnitRef"][data[19] + "_fan"] = {
-                    "UnitType": data[24],
-                    "Info": ""
+                input_data["ventilation_room"][data[1] + "_" + data[2]]["ventilation_unit_ref"][data[19] + "_fan"] = {
+                    "unit_type": data[24],
+                    "info": ""
                 }
 
             elif data[19] == data[16] or data[19] == data[18]:
 
-                inputdata["VentilationRoom"][data[10] + "_" + data[11]]["VentilationUnitRef"][data[19] + "_fan"] = {
-                    "UnitType": data[24],
-                    "Info": ""
+                input_data["ventilation_room"][data[10] + "_" + data[11]]["ventilation_unit_ref"][data[19] + "_fan"] = {
+                    "unit_type": data[24],
+                    "info": ""
                 }
 
             else:
@@ -303,34 +303,34 @@ def make_inputdata_ac(data):
 
         elif data[30] != "" and data[30] != "空調":
 
-            inputdata["VentilationUnit"][data[19] + "_fan"] = {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[31], None),
-                "MoterRatedPower": convert2number(data[32], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[33],
-                "Inverter": data[34],
-                "AirVolumeControl": data[35],
-                "VentilationRoomType": None,
-                "AC_CoolingCapacity": None,
-                "AC_RefEfficiency": None,
-                "AC_PumpPower": None,
-                "Info": ""
+            input_data["ventilation_unit"][data[19] + "_fan"] = {
+                "number": 1,
+                "fan_air_volume": convert2number(data[31], None),
+                "motor_rated_power": convert2number(data[32], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[33],
+                "inverter": data[34],
+                "air_volume_control": data[35],
+                "ventilation_room_type": None,
+                "ac_cooling_capacity": None,
+                "ac_ref_efficiency": None,
+                "ac_pump_power": None,
+                "info": ""
             }
 
-            # VentilationRoom要素に追加
+            # ventilation_room要素に追加
             if data[19] == data[7] or data[19] == data[9]:
 
-                inputdata["VentilationRoom"][data[1] + "_" + data[2]]["VentilationUnitRef"][data[19] + "_fan"] = {
-                    "UnitType": data[30],
-                    "Info": ""
+                input_data["ventilation_room"][data[1] + "_" + data[2]]["ventilation_unit_ref"][data[19] + "_fan"] = {
+                    "unit_type": data[30],
+                    "info": ""
                 }
 
             elif data[19] == data[16] or data[19] == data[18]:
 
-                inputdata["VentilationRoom"][data[10] + "_" + data[11]]["VentilationUnitRef"][data[19] + "_fan"] = {
-                    "UnitType": data[30],
-                    "Info": ""
+                input_data["ventilation_room"][data[10] + "_" + data[11]]["ventilation_unit_ref"][data[19] + "_fan"] = {
+                    "unit_type": data[30],
+                    "info": ""
                 }
 
             else:
@@ -341,36 +341,36 @@ def make_inputdata_ac(data):
 
         if data[41] == "空調":
 
-            inputdata["VentilationUnit"][data[36]] = {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[42], None),
-                "MoterRatedPower": convert2number(data[43], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[44],
-                "Inverter": data[45],
-                "AirVolumeControl": data[46],
-                "VentilationRoomType": data[37],
-                "AC_CoolingCapacity": convert2number(data[38], None),
-                "AC_RefEfficiency": convert2number(data[39], None),
-                "AC_PumpPower": convert2number(data[40], None),
-                "Info": ""
+            input_data["ventilation_unit"][data[36]] = {
+                "number": 1,
+                "fan_air_volume": convert2number(data[42], None),
+                "motor_rated_power": convert2number(data[43], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[44],
+                "inverter": data[45],
+                "air_volume_control": data[46],
+                "ventilation_room_type": data[37],
+                "ac_cooling_capacity": convert2number(data[38], None),
+                "ac_ref_efficiency": convert2number(data[39], None),
+                "ac_pump_power": convert2number(data[40], None),
+                "info": ""
             }
 
         elif data[47] == "空調":
 
-            inputdata["VentilationUnit"][data[36]] = {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[48], None),
-                "MoterRatedPower": convert2number(data[49], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[50],
-                "Inverter": data[51],
-                "AirVolumeControl": data[52],
-                "VentilationRoomType": data[37],
-                "AC_CoolingCapacity": convert2number(data[38], None),
-                "AC_RefEfficiency": convert2number(data[39], None),
-                "AC_PumpPower": convert2number(data[40], None),
-                "Info": ""
+            input_data["ventilation_unit"][data[36]] = {
+                "number": 1,
+                "fan_air_volume": convert2number(data[48], None),
+                "motor_rated_power": convert2number(data[49], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[50],
+                "inverter": data[51],
+                "air_volume_control": data[52],
+                "ventilation_room_type": data[37],
+                "ac_cooling_capacity": convert2number(data[38], None),
+                "ac_ref_efficiency": convert2number(data[39], None),
+                "ac_pump_power": convert2number(data[40], None),
+                "info": ""
             }
 
         else:
@@ -379,34 +379,34 @@ def make_inputdata_ac(data):
         # ファンの追加
         if data[41] != "" and data[41] != "空調":
 
-            inputdata["VentilationUnit"][data[36] + "_fan"] = {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[42], None),
-                "MoterRatedPower": convert2number(data[43], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[44],
-                "Inverter": data[45],
-                "AirVolumeControl": data[46],
-                "VentilationRoomType": None,
-                "AC_CoolingCapacity": None,
-                "AC_RefEfficiency": None,
-                "AC_PumpPower": None,
-                "Info": ""
+            input_data["ventilation_unit"][data[36] + "_fan"] = {
+                "number": 1,
+                "fan_air_volume": convert2number(data[42], None),
+                "motor_rated_power": convert2number(data[43], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[44],
+                "inverter": data[45],
+                "air_volume_control": data[46],
+                "ventilation_room_type": None,
+                "ac_cooling_capacity": None,
+                "ac_ref_efficiency": None,
+                "ac_pump_power": None,
+                "info": ""
             }
 
-            # VentilationRoom要素に追加
+            # ventilation_room要素に追加
             if data[36] == data[7] or data[36] == data[9]:
 
-                inputdata["VentilationRoom"][data[1] + "_" + data[2]]["VentilationUnitRef"][data[36] + "_fan"] = {
-                    "UnitType": data[41],
-                    "Info": ""
+                input_data["ventilation_room"][data[1] + "_" + data[2]]["ventilation_unit_ref"][data[36] + "_fan"] = {
+                    "unit_type": data[41],
+                    "info": ""
                 }
 
             elif data[36] == data[16] or data[36] == data[18]:
 
-                inputdata["VentilationRoom"][data[10] + "_" + data[11]]["VentilationUnitRef"][data[36] + "_fan"] = {
-                    "UnitType": data[41],
-                    "Info": ""
+                input_data["ventilation_room"][data[10] + "_" + data[11]]["ventilation_unit_ref"][data[36] + "_fan"] = {
+                    "unit_type": data[41],
+                    "info": ""
                 }
 
             else:
@@ -415,40 +415,40 @@ def make_inputdata_ac(data):
 
         elif data[47] != "" and data[47] != "空調":
 
-            inputdata["VentilationUnit"][data[36] + "_fan"] = {
-                "Number": 1,
-                "FanAirVolume": convert2number(data[48], None),
-                "MoterRatedPower": convert2number(data[49], None),
-                "PowerConsumption": None,
-                "HighEfficiencyMotor": data[50],
-                "Inverter": data[51],
-                "AirVolumeControl": data[52],
-                "VentilationRoomType": None,
-                "AC_CoolingCapacity": None,
-                "AC_RefEfficiency": None,
-                "AC_PumpPower": None,
-                "Info": ""
+            input_data["ventilation_unit"][data[36] + "_fan"] = {
+                "number": 1,
+                "fan_air_volume": convert2number(data[48], None),
+                "motor_rated_power": convert2number(data[49], None),
+                "power_consumption": None,
+                "high_efficiency_motor": data[50],
+                "inverter": data[51],
+                "air_volume_control": data[52],
+                "ventilation_room_type": None,
+                "ac_cooling_capacity": None,
+                "ac_ref_efficiency": None,
+                "ac_pump_power": None,
+                "info": ""
             }
 
-            # VentilationRoom要素に追加
+            # ventilation_room要素に追加
             if data[36] == data[7] or data[36] == data[9]:
 
-                inputdata["VentilationRoom"][data[1] + "_" + data[2]]["VentilationUnitRef"][data[36] + "_fan"] = {
-                    "UnitType": data[47],
-                    "Info": ""
+                input_data["ventilation_room"][data[1] + "_" + data[2]]["ventilation_unit_ref"][data[36] + "_fan"] = {
+                    "unit_type": data[47],
+                    "info": ""
                 }
 
             elif data[36] == data[16] or data[36] == data[18]:
 
-                inputdata["VentilationRoom"][data[10] + "_" + data[11]]["VentilationUnitRef"][data[36] + "_fan"] = {
-                    "UnitType": data[47],
-                    "Info": ""
+                input_data["ventilation_room"][data[10] + "_" + data[11]]["ventilation_unit_ref"][data[36] + "_fan"] = {
+                    "unit_type": data[47],
+                    "info": ""
                 }
 
             else:
                 raise Exception("室と換気代替空調機が適切にリンクされていません")
 
-    return inputdata
+    return input_data
 
 
 #### テストケースファイルの読み込み（換気送風機）
@@ -467,12 +467,12 @@ for case_name in testcase_dict_fan:
     # テストケース（行）に対するループ
     for testdata in testfiledata:
         # 入力データの作成
-        inputdata = make_inputdata_fan(testdata)
+        input_data = make_input_data_fan(testdata)
         # 期待値
         expectedvalue = convert2number(testdata[31], 0)
 
         # テストケースの集約
-        test_to_try.append((inputdata, expectedvalue))
+        test_to_try.append((input_data, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
@@ -487,31 +487,31 @@ for case_name in testcase_dict_ac:
     # テストケース（行）に対するループ
     for testdata in testfiledata:
         # 入力データの作成
-        inputdata = make_inputdata_ac(testdata)
+        input_data = make_input_data_ac(testdata)
         # 期待値
         expectedvalue = convert2number(testdata[54], 0)
 
         # テストケースの集約
-        test_to_try.append((inputdata, expectedvalue))
+        test_to_try.append((input_data, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
 # テストの実施
-@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(inputdata, expectedvalue):
+@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(input_data, expectedvalue):
     if expectedvalue != "err":  # passが期待されるテスト
         # 計算実行        
-        resultJson = ventilation.calc_energy(inputdata)
+        result_json = ventilation.calc_energy(input_data)
 
         # 比較
-        assert abs(resultJson["E_ventilation"] - expectedvalue) < 0.0001
+        assert abs(result_json["E_ventilation"] - expectedvalue) < 0.0001
 
     else:
 
         # エラーが期待される場合
         with pytest.raises(Exception):
-            resultJson = ventilation.calc_energy(inputdata)
+            result_json = ventilation.calc_energy(input_data)
 
 
 if __name__ == '__main__':

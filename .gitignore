@@ -4,8 +4,8 @@ memo.md
 sample/backup/*
 .vscode
 .pypirc
-inputdata.json
-resultJson.json
+input_data.json
+result_json.json
 sample/入力シートV3/*
 sample/基整促E14/*
 sample/国総研/*
@@ -102,7 +102,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
-sample/inputdata.json
+sample/input_data.json
 
 .idea
 

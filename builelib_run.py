@@ -7,7 +7,7 @@ import numpy as np
 
 from builelib import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevator, photovoltaic, \
     other_energy, cogeneration
-from builelib.make_inputdata import make_jsondata_from_Ver2_sheet
+from builelib.make_input_data import make_jsondata_from_Ver2_sheet
 
 
 # json.dump用のクラス
@@ -70,7 +70,7 @@ def builelib_run(exec_calculation, inputfile_name):
     }
 
     # CGSの計算に必要となる変数
-    resultJson_for_CGS = {
+    result_json_for_CGS = {
         "AC": {},
         "V": {},
         "L": {},
@@ -88,7 +88,7 @@ def builelib_run(exec_calculation, inputfile_name):
     # ------------------------------------
     # 入力ファイルの読み込み
     # ------------------------------------
-    inputdata = {}
+    input_data = {}
     validation = {}
 
     # 渡されたファイルの拡張子を確認
@@ -98,7 +98,7 @@ def builelib_run(exec_calculation, inputfile_name):
 
         # jsonファイルの生成
         try:
-            inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
+            input_data, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
 
         except:
             validation = {
@@ -110,7 +110,7 @@ def builelib_run(exec_calculation, inputfile_name):
 
         # jsonファイルの生成
         try:
-            inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
+            input_data, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
         except:
             validation = {
                 "error": "入力シートの読み込み時に予期せぬエラーが発生しました。"
@@ -130,7 +130,7 @@ def builelib_run(exec_calculation, inputfile_name):
 
     # 出力
     with open(inputfile_name_split[0] + "_input.json", 'w', encoding='utf-8') as fw:
-        json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
+        json.dump(input_data, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
     # ------------------------------------
     # 空気調和設備の計算の実行
@@ -142,12 +142,12 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["AirConditioningZone"]:  # AirConditioningZone が 空 でなければ
+            if input_data["air_conditioning_zone"]:  # air_conditioning_zone が 空 でなければ
 
-                resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug=False)
+                resultdata_AC = airconditioning_webpro.calc_energy(input_data, debug=False)
 
                 # CGSの計算に必要となる変数
-                resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
+                result_json_for_CGS["AC"] = resultdata_AC["for_CGS"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
@@ -184,12 +184,12 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["VentilationRoom"]:  # VentilationRoom が 空 でなければ
+            if input_data["ventilation_room"]:  # ventilation_room が 空 でなければ
 
-                resultdata_V = ventilation.calc_energy(inputdata, DEBUG=False)
+                resultdata_V = ventilation.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                resultJson_for_CGS["V"] = resultdata_V["for_CGS"]
+                result_json_for_CGS["V"] = resultdata_V["for_CGS"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_V["設計一次エネルギー消費量[MJ/年]"]
@@ -226,12 +226,12 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["LightingSystems"]:  # LightingSystems が 空 でなければ
+            if input_data["lighting_systems"]:  # lighting_systems が 空 でなければ
 
-                resultdata_L = lighting.calc_energy(inputdata, DEBUG=False)
+                resultdata_L = lighting.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                resultJson_for_CGS["L"] = resultdata_L["for_CGS"]
+                result_json_for_CGS["L"] = resultdata_L["for_CGS"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_L["E_lighting"]
@@ -269,12 +269,12 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["HotwaterRoom"]:  # HotwaterRoom が 空 でなければ
+            if input_data["hot_water_room"]:  # hot_water_room が 空 でなければ
 
-                resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG=False)
+                resultdata_HW = hotwatersupply.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                resultJson_for_CGS["HW"] = resultdata_HW["for_CGS"]
+                result_json_for_CGS["HW"] = resultdata_HW["for_CGS"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
@@ -311,12 +311,12 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["Elevators"]:  # Elevators が 空 でなければ
+            if input_data["elevators"]:  # elevators が 空 でなければ
 
-                resultdata_EV = elevator.calc_energy(inputdata, DEBUG=False)
+                resultdata_EV = elevator.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                resultJson_for_CGS["EV"] = resultdata_EV["for_CGS"]
+                result_json_for_CGS["EV"] = resultdata_EV["for_CGS"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_EV["E_elevator"]
@@ -353,12 +353,12 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["PhotovoltaicSystems"]:  # PhotovoltaicSystems が 空 でなければ
+            if input_data["photovoltaic_systems"]:  # photovoltaic_systems が 空 でなければ
 
-                resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG=False)
+                resultdata_PV = photovoltaic.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                resultJson_for_CGS["PV"] = resultdata_PV["for_CGS"]
+                result_json_for_CGS["PV"] = resultdata_PV["for_CGS"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design -= resultdata_PV["E_photovoltaic"]
@@ -390,12 +390,12 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["Rooms"]:  # Rooms が 空 でなければ
+            if input_data["rooms"]:  # rooms が 空 でなければ
 
-                resultdata_OT = other_energy.calc_energy(inputdata, DEBUG=False)
+                resultdata_OT = other_energy.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                resultJson_for_CGS["OT"] = resultdata_OT["for_CGS"]
+                result_json_for_CGS["OT"] = resultdata_OT["for_CGS"]
                 calc_reuslt["その他一次エネルギー消費量[MJ]"] = resultdata_OT["E_other"]
 
             else:
@@ -424,8 +424,8 @@ def builelib_run(exec_calculation, inputfile_name):
     if exec_calculation:
 
         try:
-            if inputdata["CogenerationSystems"]:  # CogenerationSystems が 空 でなければ
-                resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG=False)
+            if input_data["cogeneration_systems"]:  # cogeneration_systems が 空 でなければ
+                resultdata_CGS = cogeneration.calc_energy(input_data, result_json_for_CGS, DEBUG=False)
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design -= resultdata_CGS["年間一次エネルギー削減量"] * 1000
