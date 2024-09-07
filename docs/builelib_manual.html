@@ -2219,8 +2219,8 @@ MathJax.hub.Config({
   },
   TeX: { equationnumbers: { autonumber: "none" } }
 })
-MathJax.hub.Register.Startuphook("AsciiMath Jax Ready", function () {
-  MathJax.InputJax.AsciiMath.postfilterhooks.Add(function (data, node) {
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
     if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
       data.math.root.display = "block"
     }
@@ -2228,6 +2228,6 @@ MathJax.hub.Register.Startuphook("AsciiMath Jax Ready", function () {
   })
 })
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_hTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 </body>
 </html>
