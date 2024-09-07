@@ -1880,7 +1880,7 @@
                         "type": "object",
                         "properties": {
                             "usage_type":{
-                                "description": "hW2-2:給湯用途",
+                                "description": "HW2-2:給湯用途",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1897,7 +1897,7 @@
                                 ]
                             },
                             "heat_source_type":{
-                                "description": "hW2-3:熱源機種",
+                                "description": "HW2-3:熱源機種",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1922,38 +1922,38 @@
                                 ]
                             },
                             "number":{
-                                "description": "hW2-4:台数",
+                                "description": "HW2-4:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000
                             },
                             "rated_capacity":{
-                                "description": "hW2-5:定格加熱能力",
+                                "description": "HW2-5:定格加熱能力",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
                             "rated_power_consumption":{
-                                "description": "hW2-6:定格消費電力",
+                                "description": "HW2-6:定格消費電力",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
                             "rated_fuel_consumption":{
-                                "description": "hW2-7:定格燃料消費量(高位)",
+                                "description": "HW2-7:定格燃料消費量(高位)",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
                             "info": {
-                                "description": "hW2-13:備考",
+                                "description": "HW2-13:備考",
                                 "type": "string"
                             }
                         }
                     }
                 },
                 "insulation_type":{
-                    "description": "hW2-8:配管保温仕様",
+                    "description": "HW2-8:配管保温仕様",
                     "type": "string",
                     "enum":[
                         "保温仕様1",
@@ -1963,13 +1963,13 @@
                     ]
                 },
                 "pipe_size":{
-                    "description": "hW2-9:配管最大口径",
+                    "description": "HW2-9:配管最大口径",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
                 },
                 "solar_system_area":{
-                    "description": "hW2-10:太陽熱利用 有効集熱面積",
+                    "description": "HW2-10:太陽熱利用 有効集熱面積",
                     "anyOf":[
                         {
                             "type": "number",
@@ -1982,7 +1982,7 @@
                     ]
                 },
                 "solar_system_direction":{
-                    "description": "hW2-11:太陽熱利用 集熱面の方位角",
+                    "description": "HW2-11:太陽熱利用 集熱面の方位角",
                     "anyOf":[
                         {
                             "type": "number",
@@ -1995,7 +1995,7 @@
                     ]
                 },
                 "solar_system_angle":{
-                    "description": "hW2-12:太陽熱利用 集熱面の傾斜角",
+                    "description": "HW2-12:太陽熱利用 集熱面の傾斜角",
                     "anyOf":[
                         {
                             "type": "number",

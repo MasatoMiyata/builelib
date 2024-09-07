@@ -1,6 +1,6 @@
 {
     "horizontal": {
-        boilers_load
+        "EXPS名": "HOR",
         "傾斜角": 0,
         "方位角": 0,
         "隣棟距離": 0,

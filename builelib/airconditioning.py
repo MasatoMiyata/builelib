@@ -572,7 +572,7 @@ def calc_energy(input_data, debug=False):
 
             # 壁のみの面積（窓がない場合は、window_total = 0）
             if wall_configure["envelope_area"] >= window_total:
-                input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["Wallarea"] = wall_configure[
+                input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["wall_area"] = wall_configure[
                                                                                                 "envelope_area"] - window_total
             else:
                 print(room_zone_name)
@@ -595,28 +595,28 @@ def calc_energy(input_data, debug=False):
 
                     input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["U_wall"] = \
                         input_data["wall_configure"][wall_configure["wall_spec"]]["u_value_roof"]
-                    input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["Wallarea"] = wall_configure[
-                        "Wallarea"]
+                    input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["wall_area"] = wall_configure[
+                        "wall_area"]
 
                 elif wall_configure["direction"] == "水平（下）":  # 床と見なす。
 
                     input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["U_wall"] = \
                         input_data["wall_configure"][wall_configure["wall_spec"]]["u_value_floor"]
-                    input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["Wallarea"] = wall_configure[
-                        "Wallarea"]
+                    input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["wall_area"] = wall_configure[
+                        "wall_area"]
 
                 else:
 
                     input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["U_wall"] = \
                         input_data["wall_configure"][wall_configure["wall_spec"]]["u_value_wall"]
-                    input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["Wallarea"] = wall_configure[
-                        "Wallarea"]
+                    input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["wall_area"] = wall_configure[
+                        "wall_area"]
 
             else:
 
                 input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["U_wall"] = \
                     input_data["wall_configure"][wall_configure["wall_spec"]]["u_value"]
-                input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["Wallarea"] = wall_configure["Wallarea"]
+                input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["wall_area"] = wall_configure["wall_area"]
 
             for (window_id, window_configure) in enumerate(
                     input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"]):
@@ -715,7 +715,7 @@ def calc_energy(input_data, debug=False):
 
     heat_light_hourly = {}
     Num_of_Person_hourly = {}
-    heat_OAapp_hourly = {}
+    heat_oaapp_hourly = {}
 
     for room_zone_name in input_data["air_conditioning_zone"]:
 
@@ -744,7 +744,7 @@ def calc_energy(input_data, debug=False):
         # 時刻別計算用（本来はこのループに入れるべきではない → 時刻別計算の方に入れるべき）
         heat_light_hourly[room_zone_name] = room_schedule_light[room_zone_name] * room_heat_gain_light  # 照明からの発熱 （365日分）
         Num_of_Person_hourly[room_zone_name] = room_schedule_person[room_zone_name] * room_num_of_person  # 人員密度（365日分）
-        heat_OAapp_hourly[room_zone_name] = room_schedule_oa_app[room_zone_name] * room_heat_gain_oaapp  # 機器からの発熱 （365日分）
+        heat_oaapp_hourly[room_zone_name] = room_schedule_oa_app[room_zone_name] * room_heat_gain_oaapp  # 機器からの発熱 （365日分）
 
     # ----------------------------------------------------------------------------------
     # 動的室負荷計算
@@ -813,7 +813,7 @@ def calc_energy(input_data, debug=False):
                                                                                  "zone_area"]
         # 機器発熱スケジュール[W]
         input_heatcalc["rooms"][0]["schedule"]["heat_generation_appliances"] = np.reshape(
-            heat_OAapp_hourly[room_zone_name], 8760) * \
+            heat_oaapp_hourly[room_zone_name], 8760) * \
                                                                                input_data["air_conditioning_zone"][
                                                                                    room_zone_name]["zone_area"]
         # 人員数[人]
@@ -888,7 +888,7 @@ def calc_energy(input_data, debug=False):
                         {
                             "name": "wall",
                             "boundary_type": boundary_type,
-                            "area": input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["Wallarea"],
+                            "area": input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["wall_area"],
                             "is_sun_striked_outside": is_sun_striked_outside,
                             "temp_dif_coef": 0,
                             "direction": direction,
@@ -924,7 +924,7 @@ def calc_energy(input_data, debug=False):
                         {
                             "name": "wall",
                             "boundary_type": boundary_type,
-                            "area": input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["Wallarea"],
+                            "area": input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["wall_area"],
                             "is_sun_striked_outside": is_sun_striked_outside,
                             "temp_dif_coef": 0,
                             "direction": direction,

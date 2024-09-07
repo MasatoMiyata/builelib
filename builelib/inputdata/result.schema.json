@@ -40,7 +40,7 @@
                 "title": "PAL＊基準値 [MJ/m2年]",
                 "type": "number"
               },
-              "Perimeterarea": {
+              "perimeter_area": {
                 "title": "ペリメータ面積 [m2]",
                 "type": "number"
               },
@@ -62,7 +62,7 @@
               "name",
               "PALStar",
               "StandardPALStar",
-              "Perimeterarea",
+              "perimeter_area",
               "coolingLoad",
               "heatingLoad",
               "TotalLoad"
@@ -133,7 +133,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "heatGainBySolarRadiation": {
+              "heat_gain_by_solar_radiation": {
                 "title": "日射による定常熱取得 [Wh/(m2・day)]",
                 "type": "array",
                 "items": {
@@ -178,7 +178,7 @@
               "Floor",
               "name",
               "heat_gain_by_temperature_difference",
-              "heatGainBySolarRadiation",
+              "heat_gain_by_solar_radiation",
               "heat_gain_by_interior_heat",
               "DailyRoomLoad_cooling",
               "DailyRoomLoad_heating",
@@ -206,7 +206,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "heatexchanger_operating_time": {
+              "heat_exchanger_operating_time": {
                 "title": "全熱交換器の運転時間 [h/day]",
                 "type": "array",
                 "items": {
@@ -338,7 +338,7 @@
             "required": [
               "name",
               "OperatingTime",
-              "heatexchanger_operating_time",
+              "heat_exchanger_operating_time",
               "OperatingTime_cooling",
               "OperatingTime_heating",
               "OutsideAirIntroduction",
@@ -889,7 +889,7 @@
                 "title": "基準一次エネルギー消費量 [MJ/年]",
                 "type": "number"
               },
-              "coefficientByroomshape": {
+              "coefficient_by_room_shape": {
                 "title": "室の形状によって定められる係数 [-]",
                 "type": "number"
               },
@@ -924,7 +924,7 @@
               "Room",
               "Energy",
               "StandardEnergy",
-              "coefficientByroomshape",
+              "coefficient_by_room_shape",
               "OperatingTime",
               "Unit"
             ],
@@ -978,7 +978,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "StandardhotWaterSupply": {
+              "standard_hot_water_supply": {
                 "title": "基準設定日積算湯供給量 [L/day]",
                 "type": "array",
                 "items": {
@@ -993,7 +993,7 @@
               "name",
               "StandardEnergy",
               "hotWaterSupply",
-              "StandardhotWaterSupply"
+              "standard_hot_water_supply"
             ],
             "additionalProperties": false
           }
@@ -1038,7 +1038,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "StandardhotWaterSupply": {
+              "standard_hot_water_supply": {
                 "title": "基準設定日積算湯供給量 [L/day]",
                 "type": "array",
                 "items": {
@@ -1055,7 +1055,7 @@
               "PipeheatLoss",
               "PipeLength",
               "hotWaterSupply",
-              "StandardhotWaterSupply"
+              "standard_hot_water_supply"
             ],
             "additionalProperties": false
           }

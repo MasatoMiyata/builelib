@@ -3,7 +3,7 @@ import csv
 import json
 
 # CSVファイル読み込み
-with open('./builelib/database_make/csv/ref_list.csv',encoding='Shift_JIS') as f:
+with open('./builelib/database_make/csv/REFLIST.csv',encoding='Shift_JIS') as f:
     reader = csv.reader(f)
     ref_list = [row for row in reader]
 

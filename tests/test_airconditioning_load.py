@@ -216,7 +216,7 @@ def make_input_data(data):
                         "fan_min_opening_rate": 80.0,
                         "air_heat_exchange_ratio_cooling": None,
                         "air_heat_exchange_ratio_heating": None,
-                        "AirheatExchangereffectiveAirVolume": None,
+                        "Airheat_exchangereffectiveAirVolume": None,
                         "air_heat_exchanger_control": "無",
                         "air_heat_exchanger_power_consumption": None,
                         "info": ""

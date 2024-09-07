@@ -317,7 +317,7 @@ def calc_energy(input_data, DEBUG=False):
     for unit_name in input_data["hot_water_supply_systems"]:
 
         input_data["hot_water_supply_systems"][unit_name]["Qsr_eqp_daily"] = np.zeros(365)
-        input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] = np.zeros(365)
+        input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"] = np.zeros(365)
 
         for room_name in input_data["hot_water_room"]:
             for unit_id, unit_configure in enumerate(input_data["hot_water_room"][room_name]["hot_water_system"]):
@@ -331,7 +331,7 @@ def calc_energy(input_data, DEBUG=False):
                     # 係数は 解説書 附属書 D.3 節湯器具による湯使用量削減率
                     if unit_configure["hot_water_saving_system"] == "無":
 
-                        input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] += \
+                        input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"] += \
                             input_data["hot_water_room"][room_name]["hotwater_demand_wasroom_enthalpy_setting_daily"] * 1.0 * \
                             unit_configure["roomPowerRatio"] + \
                             input_data["hot_water_room"][room_name]["hotwater_demand_shower_daily"] * 1.0 * unit_configure[
@@ -343,7 +343,7 @@ def calc_energy(input_data, DEBUG=False):
 
                     elif unit_configure["hot_water_saving_system"] == "自動給湯栓":
 
-                        input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] += \
+                        input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"] += \
                             input_data["hot_water_room"][room_name]["hotwater_demand_wasroom_enthalpy_setting_daily"] * 0.6 * \
                             unit_configure["roomPowerRatio"] + \
                             input_data["hot_water_room"][room_name]["hotwater_demand_shower_daily"] * 1.0 * unit_configure[
@@ -355,7 +355,7 @@ def calc_energy(input_data, DEBUG=False):
 
                     elif unit_configure["hot_water_saving_system"] == "節湯B1":
 
-                        input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] += \
+                        input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"] += \
                             input_data["hot_water_room"][room_name]["hotwater_demand_wasroom_enthalpy_setting_daily"] * 1.0 * \
                             unit_configure["roomPowerRatio"] + \
                             input_data["hot_water_room"][room_name]["hotwater_demand_shower_daily"] * 0.75 * \
@@ -369,7 +369,7 @@ def calc_energy(input_data, DEBUG=False):
             print(f'機器名称 {unit_name}')
             print(f'  - 日積算湯供給量 {np.sum(input_data["hot_water_supply_systems"][unit_name]["Qsr_eqp_daily"])}')
             print(
-                f'  - 日積算湯供給量（節湯込み） {np.sum(input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"])}')
+                f'  - 日積算湯供給量（節湯込み） {np.sum(input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"])}')
 
     # ----------------------------------------------------------------------------------
     # 解説書 5.3 配管長さ
@@ -403,22 +403,22 @@ def calc_energy(input_data, DEBUG=False):
     # 配管熱損失 [kJ/day]
     for unit_name in input_data["hot_water_supply_systems"]:
 
-        input_data["hot_water_supply_systems"][unit_name]["Qp_eqp"] = np.zeros(365)
+        input_data["hot_water_supply_systems"][unit_name]["qp_eqp"] = np.zeros(365)
 
         for dd in range(0, 365):
 
             # デバッグ出力用
             Taround[dd] = (toa_ave[dd] + Troom[dd]) / 2
 
-            if input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"][dd] > 0:
-                input_data["hot_water_supply_systems"][unit_name]["Qp_eqp"][dd] = \
+            if input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"][dd] > 0:
+                input_data["hot_water_supply_systems"][unit_name]["qp_eqp"][dd] = \
                     input_data["hot_water_supply_systems"][unit_name]["L_eqp"] * \
                     input_data["hot_water_supply_systems"][unit_name]["heatloss_coefficient"] * \
                     (60 - (toa_ave[dd] + Troom[dd]) / 2) * 24 * 3600 * 0.001
 
         if DEBUG:
             print(f'機器名称 {unit_name}')
-            print(f'  - 配管熱損失 {np.sum(input_data["hot_water_supply_systems"][unit_name]["Qp_eqp"])}')
+            print(f'  - 配管熱損失 {np.sum(input_data["hot_water_supply_systems"][unit_name]["qp_eqp"])}')
             print(f'  - 配管熱損失係数 {input_data["hot_water_supply_systems"][unit_name]["heatloss_coefficient"]}')
 
             # np.savetxt("配管周囲温度.txt", Taround)
@@ -464,12 +464,12 @@ def calc_energy(input_data, DEBUG=False):
 
             # 太陽熱利用が無い場合
             input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"] = \
-                4.2 * input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] * (43 - TWdata)
+                4.2 * input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"] * (43 - TWdata)
 
         else:
 
             # 太陽熱利用がある場合
-            tmp_qh = 4.2 * input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] * (43 - TWdata)
+            tmp_qh = 4.2 * input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"] * (43 - TWdata)
 
             for dd in range(0, 365):
                 if (toa_ave[dd] > 5) and (tmp_qh[dd] > 0):  # 日平均外気温が５度を超えていれば集熱
@@ -499,7 +499,7 @@ def calc_energy(input_data, DEBUG=False):
         # 日別給湯負荷＋配管熱損失（＝給湯加熱負荷） [kJ/day]
         input_data["hot_water_supply_systems"][unit_name]["Q_eqp"] = \
             input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"] + \
-            input_data["hot_water_supply_systems"][unit_name]["Qp_eqp"] * 2.5
+            input_data["hot_water_supply_systems"][unit_name]["qp_eqp"] * 2.5
 
         # 日別消費エネルギー消費量 [kJ/day]
         input_data["hot_water_supply_systems"][unit_name]["E_eqp"] = \
@@ -526,13 +526,13 @@ def calc_energy(input_data, DEBUG=False):
         result_json["hot_water_supply_systems"][unit_name] = input_data["hot_water_supply_systems"][unit_name]
 
         result_json["hot_water_supply_systems"][unit_name]["湯使用量（節湯込）[L/年]"] = np.sum(
-            input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] / 1000)
+            input_data["hot_water_supply_systems"][unit_name]["qs_eqp_daily"] / 1000)
         result_json["hot_water_supply_systems"][unit_name]["太陽熱利用量[MJ/年]"] = np.sum(
             input_data["hot_water_supply_systems"][unit_name]["qs_solar_gain"] / 1000)
         result_json["hot_water_supply_systems"][unit_name]["給湯加熱負荷[MJ/年]"] = np.sum(
             input_data["hot_water_supply_systems"][unit_name]["Q_eqp"] / 1000)
         result_json["hot_water_supply_systems"][unit_name]["配管熱損失[MJ/年]"] = np.sum(
-            input_data["hot_water_supply_systems"][unit_name]["Qp_eqp"] / 1000)
+            input_data["hot_water_supply_systems"][unit_name]["qp_eqp"] / 1000)
         result_json["hot_water_supply_systems"][unit_name]["設計一次エネルギー消費量[MJ/年]"] = np.sum(
             input_data["hot_water_supply_systems"][unit_name]["E_eqp"] / 1000)
 
@@ -632,9 +632,9 @@ def calc_energy(input_data, DEBUG=False):
 
     for unit_id, isys in result_json["hot_water_supply_systems"].items():
         del result_json["hot_water_supply_systems"][unit_id]["Qsr_eqp_daily"]
-        del result_json["hot_water_supply_systems"][unit_id]["Qs_eqp_daily"]
+        del result_json["hot_water_supply_systems"][unit_id]["qs_eqp_daily"]
         del result_json["hot_water_supply_systems"][unit_id]["L_eqp"]
-        del result_json["hot_water_supply_systems"][unit_id]["Qp_eqp"]
+        del result_json["hot_water_supply_systems"][unit_id]["qp_eqp"]
         del result_json["hot_water_supply_systems"][unit_id]["qs_solar_gain"]
         del result_json["hot_water_supply_systems"][unit_id]["qh_eqp_daily"]
         del result_json["hot_water_supply_systems"][unit_id]["Q_eqp"]
@@ -655,5 +655,5 @@ if __name__ == '__main__':
 
     result_json = calc_energy(input_data, DEBUG=True)
 
-    with open("result_json_hW.json", 'w', encoding='utf-8') as fw:
+    with open("result_json_HW.json", 'w', encoding='utf-8') as fw:
         json.dump(result_json, fw, indent=4, ensure_ascii=False, cls=bc.MyEncoder)

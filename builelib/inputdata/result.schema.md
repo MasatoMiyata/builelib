@@ -21,7 +21,7 @@
 | **air_handling_unit/EnthalpyDifferenceBetweenOutsideAndInterior** | *array* |  | `[null]` |
 | **air_handling_unit/fan_heat_cooling** | *array* |  | `[null]` |
 | **air_handling_unit/fan_heat_heating** | *array* |  | `[null]` |
-| **air_handling_unit/heatexchanger_operating_time** | *array* |  | `[null]` |
+| **air_handling_unit/heat_exchanger_operating_time** | *array* |  | `[null]` |
 | **air_handling_unit/heat_exchanger_rotor_power_consumption** | *number* |  | `42.0` |
 | **air_handling_unit/LoadRatio_cooling** | *array* |  | `[null]` |
 | **air_handling_unit/LoadRatio_heating** | *array* |  | `[null]` |
@@ -77,7 +77,7 @@
 | **Zone/DailyRoomLoad_heating** | *array* |  | `[null]` |
 | **Zone/Floor** | *string* |  | `"example"` |
 | **Zone/heat_gain_by_interior_heat** | *array* |  | `[null]` |
-| **Zone/heatGainBySolarRadiation** | *array* |  | `[null]` |
+| **Zone/heat_gain_by_solar_radiation** | *array* |  | `[null]` |
 | **Zone/heat_gain_by_temperature_difference** | *array* |  | `[null]` |
 | **Zone/name** | *string* |  | `"example"` |
 | **Zone/StandardEnergy** | *number* |  | `42.0` |
@@ -225,13 +225,13 @@
 | **Boiler/PipeheatLoss** | *number* |  | `42.0` |
 | **Boiler/PipeLength** | *number* |  | `42.0` |
 | **Boiler/SolarheatUse** | *array* |  | `[null]` |
-| **Boiler/StandardhotWaterSupply** | *array* |  | `[null]` |
+| **Boiler/standard_hot_water_supply** | *array* |  | `[null]` |
 | **Energy** | *number* |  | `42.0` |
 | **Room/Floor** | *string* |  | `"example"` |
 | **Room/hotWaterSupply** | *array* |  | `[null]` |
 | **Room/name** | *string* |  | `"example"` |
 | **Room/StandardEnergy** | *number* |  | `42.0` |
-| **Room/StandardhotWaterSupply** | *array* |  | `[null]` |
+| **Room/standard_hot_water_supply** | *array* |  | `[null]` |
 | **StandardEnergy** | *number* |  | `42.0` |
 
 </details>
@@ -253,7 +253,7 @@
 | name | type | Description | Example |
 | ------- | ------- | ------- | ------- |
 | **Energy** | *number* |  | `42.0` |
-| **Room/coefficientByroomshape** | *number* |  | `42.0` |
+| **Room/coefficient_by_room_shape** | *number* |  | `42.0` |
 | **Room/Energy** | *number* |  | `42.0` |
 | **Room/Floor** | *string* |  | `"example"` |
 | **Room/OperatingTime** | *number* |  | `42.0` |
@@ -312,7 +312,7 @@
 | **Room/heatingLoad** | *number* |  | `42.0` |
 | **Room/name** | *string* |  | `"example"` |
 | **Room/PALStar** | *number* |  | `42.0` |
-| **Room/Perimeterarea** | *number* |  | `42.0` |
+| **Room/perimeter_area** | *number* |  | `42.0` |
 | **Room/StandardPALStar** | *number* |  | `42.0` |
 | **Room/TotalLoad** | *number* |  | `42.0` |
 | **StandardPALStar** | *number* |  | `42.0` |
