@@ -1,17 +1,16 @@
-import pandas as pd
-import csv
-import pytest
 import json
+
+import other_energy
+import pytest
 import xlrd
 
 import airconditioning
-import ventilation
-import lighting
-import hotwatersupply
-import elevetor
-import photovoltaic
-import other_energy
 import cogeneration
+import elevetor
+import hotwatersupply
+import lighting
+import photovoltaic
+import ventilation
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -45,8 +44,8 @@ def read_testcasefile(filename):
 
 #### テストケースファイルの読み込み
 
-test_to_try  = []  # テスト用入力ファイルと期待値のリスト
-testcase_id  = []  # テスト名称のリスト
+test_to_try = []  # テスト用入力ファイルと期待値のリスト
+testcase_id = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -62,68 +61,67 @@ for case_name in testcase_dict:
         filename = "./tests/cogeneration/" + testdata[0] + ".json"
         # 入力データの作成
         with open(filename, 'r', encoding='utf-8') as f:
-            inputdata = json.load(f)
+            input_data = json.load(f)
 
-        if "SpecialInputData" not in inputdata:
-            inputdata["SpecialInputData"] = {}
+        if "special_input_data" not in input_data:
+            input_data["special_input_data"] = {}
 
         # 期待値
         expectedvalue = (testdata[16])
 
         # テストケースの集約
-        test_to_try.append( (inputdata, expectedvalue) )
+        test_to_try.append((input_data, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
 # テストの実施
-@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(inputdata, expectedvalue):
-
+@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(input_data, expectedvalue):
     # 検証用
-    # with open("inputdata.json",'w', encoding='utf-8') as fw:
-    #     json.dump(inputdata, fw, indent=4, ensure_ascii=False)
+    # with open("input_data.json",'w', encoding='utf-8') as fw:
+    #     json.dump(input_data, fw, indent=4, ensure_ascii=False)
 
-# 各設備の計算
-    resultJson_for_CGS = {
-        "AC":{},
-        "V":{},
-        "L":{},
-        "HW":{},
-        "EV":{},
-        "PV":{},
-        "OT":{},
+    # 各設備の計算
+    result_json_for_cgs = {
+        "AC": {},
+        "V": {},
+        "L": {},
+        "hW": {},
+        "EV": {},
+        "PV": {},
+        "OT": {},
     }
 
     # 計算実行
-    if inputdata["AirConditioningZone"]:
-        resultJsonAC = airconditioning.calc_energy(inputdata, DEBUG = False)
-        resultJson_for_CGS["AC"] = resultJsonAC["for_CGS"]
-    if inputdata["VentilationRoom"]:
-        resultJsonV = ventilation.calc_energy(inputdata, DEBUG = False)
-        resultJson_for_CGS["V"] = resultJsonV["for_CGS"]
-    if inputdata["LightingSystems"]:
-        resultJsonL = lighting.calc_energy(inputdata, DEBUG = False)
-        resultJson_for_CGS["L"] = resultJsonL["for_CGS"]
-    if inputdata["HotwaterRoom"]:
-        resultJsonHW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
-        resultJson_for_CGS["HW"] = resultJsonHW["for_CGS"]
-    if inputdata["Elevators"]: 
-        resultJsonEV = elevetor.calc_energy(inputdata, DEBUG = False)
-        resultJson_for_CGS["EV"] = resultJsonEV["for_CGS"]
-    if inputdata["PhotovoltaicSystems"]:
-        resultJsonPV = photovoltaic.calc_energy(inputdata, DEBUG = False)
-        resultJson_for_CGS["PV"] = resultJsonPV["for_CGS"]
-    if inputdata["Rooms"]:
-        resultJsonOT = other_energy.calc_energy(inputdata, DEBUG = False)
-        resultJson_for_CGS["OT"] = resultJsonOT["for_CGS"]
+    if input_data["air_conditioning_zone"]:
+        result_jsonAC = airconditioning.calc_energy(input_data, DEBUG=False)
+        result_json_for_cgs["AC"] = result_jsonAC["for_cgs"]
+    if input_data["ventilation_room"]:
+        result_jsonV = ventilation.calc_energy(input_data, DEBUG=False)
+        result_json_for_cgs["V"] = result_jsonV["for_cgs"]
+    if input_data["lighting_systems"]:
+        result_jsonL = lighting.calc_energy(input_data, DEBUG=False)
+        result_json_for_cgs["L"] = result_jsonL["for_cgs"]
+    if input_data["hot_water_room"]:
+        result_jsonhW = hotwatersupply.calc_energy(input_data, DEBUG=False)
+        result_json_for_cgs["hW"] = result_jsonhW["for_cgs"]
+    if input_data["elevators"]:
+        result_jsonEV = elevetor.calc_energy(input_data, DEBUG=False)
+        result_json_for_cgs["EV"] = result_jsonEV["for_cgs"]
+    if input_data["photovoltaic_systems"]:
+        result_jsonPV = photovoltaic.calc_energy(input_data, DEBUG=False)
+        result_json_for_cgs["PV"] = result_jsonPV["for_cgs"]
+    if input_data["rooms"]:
+        result_jsonOT = other_energy.calc_energy(input_data, DEBUG=False)
+        result_json_for_cgs["OT"] = result_jsonOT["for_cgs"]
 
-    resultJson = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG = False)
+    result_json = cogeneration.calc_energy(input_data, result_json_for_cgs, DEBUG=False)
 
-    if abs( expectedvalue ) == 0:
-        diff_Eac = (abs(resultJson["年間一次エネルギー削減量"] - expectedvalue)) 
+    if abs(expectedvalue) == 0:
+        diff_Eac = (abs(result_json["年間一次エネルギー削減量"] - expectedvalue))
     else:
-        diff_Eac = (abs(resultJson["年間一次エネルギー削減量"] - expectedvalue)) / abs( expectedvalue )
+        diff_Eac = (abs(result_json["年間一次エネルギー削減量"] - expectedvalue)) / abs(expectedvalue)
 
     # 比較（0.01%まで）
     assert diff_Eac < 0.0001

@@ -1,6 +1,5 @@
-import pandas as pd
 import csv
-import pprint as pp
+
 import pytest
 
 from builelib import hotwatersupply
@@ -36,138 +35,132 @@ def read_testcasefile(filename):
     return testdata
 
 
-def make_inputdata(data):
-
+def make_input_data(data):
     if data[3] == "物品販売業を営む店舗等":
         data[3] = "物販店舗等"
     if data[14] == "物品販売業を営む店舗等":
         data[14] = "物販店舗等"
 
-    inputdata = {
-        "Building":{
-            "Region": str(data[41])
+    input_data = {
+        "building": {
+            "region": str(data[41])
         },
-        "Rooms": {
-            data[1]+"_"+data[2]: {
-                "floorName": data[1],
-                "roomName": data[2],
-                "buildingType": data[3],
-                "roomType": data[4],
-                "roomArea": convert2number(data[5],None)
+        "rooms": {
+            data[1] + "_" + data[2]: {
+                "floorname": data[1],
+                "roomname": data[2],
+                "building_type": data[3],
+                "room_type": data[4],
+                "room_area": convert2number(data[5], None)
             }
         },
-        "HotwaterRoom": {
-            data[1]+"_"+data[2]: {
-                "HotwaterSystem": [
+        "hot_water_room": {
+            data[1] + "_" + data[2]: {
+                "hot_water_system": [
                     {
-                        "UsageType": "便所",
-                        "SystemName": data[8],
-                        "HotWaterSavingSystem": data[7],
-                        "Info": data[6]
+                        "usage_type": "便所",
+                        "system_name": data[8],
+                        "hot_water_saving_system": data[7],
+                        "info": data[6]
                     }
                 ]
             }
         },
-        "HotwaterSupplySystems":{
+        "hot_water_supply_systems": {
         },
-        "CogenerationSystems":{
+        "cogeneration_systems": {
         },
-        "SpecialInputData":{
+        "special_input_data": {
         }
     }
 
     if data[9] != "":
-
-        inputdata["HotwaterRoom"][data[1]+"_"+data[2]]["HotwaterSystem"].append(
-                {
-                    "UsageType": "便所",
-                    "SystemName": data[11],
-                    "HotWaterSavingSystem": data[10],
-                    "Info": data[9]
-                }
-            )
+        input_data["hot_water_room"][data[1] + "_" + data[2]]["hot_water_system"].append(
+            {
+                "usage_type": "便所",
+                "system_name": data[11],
+                "hot_water_saving_system": data[10],
+                "info": data[9]
+            }
+        )
 
     if data[13] != "":
+        input_data["rooms"][data[12] + "_" + data[13]] = {
+            "floorname": data[12],
+            "roomname": data[13],
+            "building_type": data[14],
+            "room_type": data[15],
+            "room_area": convert2number(data[16], None)
+        }
 
-        inputdata["Rooms"][data[12]+"_"+data[13]] = {
-                "floorName": data[12],
-                "roomName": data[13],
-                "buildingType": data[14],
-                "roomType": data[15],
-                "roomArea": convert2number(data[16],None)
-            }
-
-        inputdata["HotwaterRoom"][data[12]+"_"+data[13]] = {
-                "HotwaterSystem": [
-                        {
-                            "UsageType": "便所",
-                            "SystemName": data[19],
-                            "HotWaterSavingSystem": data[18],
-                            "Info": data[17]
-                        }
-                    ]
-            }
+        input_data["hot_water_room"][data[12] + "_" + data[13]] = {
+            "hot_water_system": [
+                {
+                    "usage_type": "便所",
+                    "system_name": data[19],
+                    "hot_water_saving_system": data[18],
+                    "info": data[17]
+                }
+            ]
+        }
 
     if data[20] != "":
-
-        inputdata["HotwaterRoom"][data[12]+"_"+data[13]]["HotwaterSystem"].append(
-                {
-                    "UsageType": "便所",
-                    "SystemName": data[22],
-                    "HotWaterSavingSystem": data[21],
-                    "Info": data[20]
-                }
-            )
+        input_data["hot_water_room"][data[12] + "_" + data[13]]["hot_water_system"].append(
+            {
+                "usage_type": "便所",
+                "system_name": data[22],
+                "hot_water_saving_system": data[21],
+                "info": data[20]
+            }
+        )
 
     if data[23] != "":
-
-        inputdata["HotwaterSupplySystems"][data[23]] = {
-                "HeatSourceUnit": [
-                    {
-                        "UsageType": "給湯負荷用",
-                        "HeatSourceType": "ガス給湯機",
-                        "Number": 1,
-                        "RatedCapacity": convert2number(data[25],None),
-                        "RatedPowerConsumption": 0,
-                        "RatedFuelConsumption": convert2number(data[25],None) / convert2number(data[26],None)
-                    }
-                ],
-                "InsulationType": data[27],
-                "PipeSize": convert2number(data[28],None),
-                "SolarSystemArea": convert2number(data[29],None),
-                "SolarSystemDirection": convert2number(data[30],None),
-                "SolarSystemAngle": convert2number(data[31],None),
-                "Info": ""
-            }
+        input_data["hot_water_supply_systems"][data[23]] = {
+            "heat_sourceUnit": [
+                {
+                    "usage_type": "給湯負荷用",
+                    "heat_source_type": "ガス給湯機",
+                    "number": 1,
+                    "rated_capacity": convert2number(data[25], None),
+                    "rated_power_consumption": 0,
+                    "rated_fuel_consumption": convert2number(data[25], None) / convert2number(data[26], None)
+                }
+            ],
+            "insulation_type": data[27],
+            "pipe_size": convert2number(data[28], None),
+            "solar_system_area": convert2number(data[29], None),
+            "solar_system_direction": convert2number(data[30], None),
+            "solar_system_angle": convert2number(data[31], None),
+            "info": ""
+        }
 
     if data[32] != "":
+        input_data["hot_water_supply_systems"][data[32]] = {
+            "heat_sourceUnit": [
+                {
+                    "usage_type": "給湯負荷用",
+                    "heat_source_type": "ガス給湯機",
+                    "number": 1,
+                    "rated_capacity": convert2number(data[34], None),
+                    "rated_power_consumption": 0,
+                    "rated_fuel_consumption": convert2number(data[34], None) / convert2number(data[35], None)
+                }
+            ],
+            "insulation_type": data[36],
+            "pipe_size": convert2number(data[37], None),
+            "solar_system_area": convert2number(data[38], None),
+            "solar_system_direction": convert2number(data[39], None),
+            "solar_system_angle": convert2number(data[40], None),
+            "info": ""
+        }
 
-        inputdata["HotwaterSupplySystems"][data[32]] = {
-                "HeatSourceUnit": [
-                    {
-                        "UsageType": "給湯負荷用",
-                        "HeatSourceType": "ガス給湯機",
-                        "Number": 1,
-                        "RatedCapacity": convert2number(data[34],None),
-                        "RatedPowerConsumption": 0,
-                        "RatedFuelConsumption": convert2number(data[34],None) / convert2number(data[35],None)
-                    }
-                ],
-                "InsulationType": data[36],
-                "PipeSize": convert2number(data[37],None),
-                "SolarSystemArea": convert2number(data[38],None),
-                "SolarSystemDirection": convert2number(data[39],None),
-                "SolarSystemAngle": convert2number(data[40],None),
-                "Info": ""
-            }
-
-    return inputdata
+    return input_data
 
 
 #### テストケースファイルの読み込み（換気送風機）
 
-test_to_try  = []  # テスト用入力ファイルと期待値のリスト
-testcase_id  = []  # テスト名称のリスト
+test_to_try = []  # テスト用入力ファイルと期待値のリスト
+testcase_id = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -179,34 +172,32 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
-
         # 入力データの作成
-        inputdata = make_inputdata(testdata)
+        input_data = make_input_data(testdata)
         # 期待値
         expectedvalue = testdata[42]
 
         # テストケースの集約
-        test_to_try.append( (inputdata, expectedvalue) )
+        test_to_try.append((input_data, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
 # テストの実施
-@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(inputdata, expectedvalue):
-
+@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(input_data, expectedvalue):
     if expectedvalue != "err":  # passが期待されるテスト
         # 計算実行        
-        resultJson = hotwatersupply.calc_energy(inputdata)
+        result_json = hotwatersupply.calc_energy(input_data)
 
         # 比較
-        assert abs(resultJson["E_hotwatersupply"] - convert2number(expectedvalue,0))   < 0.0001
+        assert abs(result_json["E_hotwatersupply"] - convert2number(expectedvalue, 0)) < 0.0001
 
     else:
 
         # エラーが期待される場合
         with pytest.raises(Exception):
-            resultJson = hotwatersupply.calc_energy(inputdata)
+            result_json = hotwatersupply.calc_energy(input_data)
 
 
 if __name__ == '__main__':

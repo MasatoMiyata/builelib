@@ -1,6 +1,5 @@
-import pandas as pd
 import csv
-import pprint as pp
+
 import pytest
 
 from builelib import lighting
@@ -9,23 +8,23 @@ from builelib import lighting
 # 辞書型 テスト名とファイル名
 
 testcase_dict = {
-    "roomDepth":'./tests/lighting/◇奥行寸法_20190730-183436.txt',
-    "roomWidth":'./tests/lighting/◇開口寸法_20190730-183436.txt',
-    "unitHeight":'./tests/lighting/◇器具高さ_20190730-183436.txt',
-    "roomDepth":'./tests/lighting/◇境界値エラー側_20190730-183436.txt',
-    "roomIndex":'./tests/lighting/◇室指数_20190730-183436.txt',
-    "roomArea":'./tests/lighting/◇室面積_20190730-183436.txt',
-    "unitEnergy":'./tests/lighting/◇消費電力_20190730-183436.txt',
-    "unitNum":'./tests/lighting/◇台数_20190730-183436.txt',
-    "Hotel":'./tests/lighting/◇用途_ホテル等_20190730-183437.txt',
-    "Restraunt":'./tests/lighting/◇用途_飲食店等_20190730-183437.txt',
-    "school":'./tests/lighting/◇用途_学校等_20190730-183437.txt',
-    "apartment":'./tests/lighting/◇用途_共同住宅_20190730-183437.txt',
-    "factory":'./tests/lighting/◇用途_工場等_20190730-183437.txt',
-    "office":'./tests/lighting/◇用途_事務所等_20190730-183436.txt',
-    "meetingplace":'./tests/lighting/◇用途_集会所等_20190730-183437.txt',
-    "hospital":'./tests/lighting/◇用途_病院等_20190730-183437.txt',
-    "department":'./tests/lighting/◇用途_物品販売業を営む店舗等_20190730-183437.txt'
+    "room_depth": './tests/lighting/◇奥行寸法_20190730-183436.txt',
+    "room_width": './tests/lighting/◇開口寸法_20190730-183436.txt',
+    "unit_height": './tests/lighting/◇器具高さ_20190730-183436.txt',
+    "room_depth": './tests/lighting/◇境界値エラー側_20190730-183436.txt',
+    "room_index": './tests/lighting/◇室指数_20190730-183436.txt',
+    "room_area": './tests/lighting/◇室面積_20190730-183436.txt',
+    "unitEnergy": './tests/lighting/◇消費電力_20190730-183436.txt',
+    "unitNum": './tests/lighting/◇台数_20190730-183436.txt',
+    "hotel": './tests/lighting/◇用途_ホテル等_20190730-183437.txt',
+    "Restraunt": './tests/lighting/◇用途_飲食店等_20190730-183437.txt',
+    "school": './tests/lighting/◇用途_学校等_20190730-183437.txt',
+    "apartment": './tests/lighting/◇用途_共同住宅_20190730-183437.txt',
+    "factory": './tests/lighting/◇用途_工場等_20190730-183437.txt',
+    "office": './tests/lighting/◇用途_事務所等_20190730-183436.txt',
+    "meetingplace": './tests/lighting/◇用途_集会所等_20190730-183437.txt',
+    "hospital": './tests/lighting/◇用途_病院等_20190730-183437.txt',
+    "department": './tests/lighting/◇用途_物品販売業を営む店舗等_20190730-183437.txt'
 }
 
 
@@ -50,60 +49,60 @@ def read_testcasefile(filename):
     return testdata
 
 
-def make_inputdata(data):
+def make_input_data(data):
     '''
     インプットデータを作成する関数
     '''
-    inputdata = {
-        "Building":{
-            "Region": "6"
+    input_data = {
+        "building": {
+            "region": "6"
         },
-        "Rooms": {
+        "rooms": {
             "1F_室": {
-                "floorName": "1F",
-                "roomName": "室",
-                "buildingType": data[1],
-                "roomType": data[2],
-                "roomArea": convert2number(data[3],None),
+                "floorname": "1F",
+                "roomname": "室",
+                "building_type": data[1],
+                "room_type": data[2],
+                "room_area": convert2number(data[3], None),
             }
         },
-        "LightingSystems": {
+        "lighting_systems": {
             "1F_室": {
-                "roomWidth": convert2number(data[5],None),
-                "roomDepth": convert2number(data[6],None),
-                "unitHeight": convert2number(data[4],None),
-                "roomIndex": convert2number(data[7],None),
-                "lightingUnit": {
+                "room_width": convert2number(data[5], None),
+                "room_depth": convert2number(data[6], None),
+                "unit_height": convert2number(data[4], None),
+                "room_index": convert2number(data[7], None),
+                "lighting_unit": {
                     "照明1": {
-                        "RatedPower": convert2number(data[8],None),
-                        "Number": convert2number(data[9],None),
-                        "OccupantSensingCTRL": data[10],
-                        "IlluminanceSensingCTRL": data[11],
-                        "TimeScheduleCTRL": data[12],
-                        "InitialIlluminationCorrectionCTRL": data[13]
+                        "rated_power": convert2number(data[8], None),
+                        "number": convert2number(data[9], None),
+                        "occupant_sensing_ctrl": data[10],
+                        "illuminance_sensing_ctrl": data[11],
+                        "time_schedule_ctrl": data[12],
+                        "initial_illumination_correction_ctrl": data[13]
                     },
                     "照明2": {
-                        "RatedPower": convert2number(data[14],0),
-                        "Number": convert2number(data[15],0),
-                        "OccupantSensingCTRL": data[16],
-                        "IlluminanceSensingCTRL": data[17],
-                        "TimeScheduleCTRL": data[18],
-                        "InitialIlluminationCorrectionCTRL": data[19]
+                        "rated_power": convert2number(data[14], 0),
+                        "number": convert2number(data[15], 0),
+                        "occupant_sensing_ctrl": data[16],
+                        "illuminance_sensing_ctrl": data[17],
+                        "time_schedule_ctrl": data[18],
+                        "initial_illumination_correction_ctrl": data[19]
                     }
                 }
             }
         },
-        "SpecialInputData":{
+        "special_input_data": {
         }
     }
 
-    return inputdata
+    return input_data
 
 
 #### テストケースファイルの読み込み
 
-test_to_try = []   # テスト用入力ファイルと期待値のリスト
-testcase_id  = []  # テスト名称のリスト
+test_to_try = []  # テスト用入力ファイルと期待値のリスト
+testcase_id = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -115,29 +114,27 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
-
         # 入力データの作成
-        inputdata = make_inputdata(testdata)
+        input_data = make_input_data(testdata)
         # 期待値
         expectedvalue = (testdata[20], testdata[21])
 
         # テストケースの集約
-        test_to_try.append( (inputdata, expectedvalue) )
+        test_to_try.append((input_data, expectedvalue))
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
 # テストの実施
-@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(inputdata, expectedvalue):
-
+@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(input_data, expectedvalue):
     if expectedvalue[0] != "err":  # passが期待されるテスト
 
         # 計算実行        
-        resultJson = lighting.calc_energy(inputdata, True)
+        result_json = lighting.calc_energy(input_data, True)
         # 比較
-        assert abs(resultJson["E_lighting"] - convert2number(expectedvalue[0],0))   < 0.0001
-        assert abs(resultJson["Es_lighting"] - convert2number(expectedvalue[1],0))   < 0.0001
+        assert abs(result_json["E_lighting"] - convert2number(expectedvalue[0], 0)) < 0.0001
+        assert abs(result_json["Es_lighting"] - convert2number(expectedvalue[1], 0)) < 0.0001
 
     else:
 
@@ -145,7 +142,7 @@ def test_calc(inputdata, expectedvalue):
 
         # # エラーが期待される場合
         # with pytest.raises(Exception):
-        #     resultJson = lighting.calc_energy(inputdata)
+        #     result_json = lighting.calc_energy(input_data)
 
 
 if __name__ == '__main__':
