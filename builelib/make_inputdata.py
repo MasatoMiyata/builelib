@@ -1189,15 +1189,15 @@ def make_json_from_v4_sheet(inputfilename):
     if "様式hW2" in wb.sheet_names():
 
         # シートの読み込み
-        sheet_hW2 = wb.sheet_by_name("様式hW2")
+        sheet_HW2 = wb.sheet_by_name("様式hW2")
         # 初期化
         unit_key = None
 
         # 行のループ
-        for i in range(10, sheet_hW2.nrows):
+        for i in range(10, sheet_HW2.nrows):
 
             # シートから「行」の読み込み
-            datahW2 = sheet_hW2.row_values(i)
+            datahW2 = sheet_HW2.row_values(i)
 
             # 給湯システム名称が空欄でない場合
             if (datahW2[0] != ""):
@@ -4009,15 +4009,15 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
     if "5-2) 給湯機器" in wb.sheet_names():
 
         # シートの読み込み
-        sheet_hW2 = wb.sheet_by_name("5-2) 給湯機器")
+        sheet_HW2 = wb.sheet_by_name("5-2) 給湯機器")
         # 初期化
         unit_key = None
 
         # 行のループ
-        for i in range(10, sheet_hW2.nrows):
+        for i in range(10, sheet_HW2.nrows):
 
             # シートから「行」の読み込み
-            datahW2 = sheet_hW2.row_values(i)
+            datahW2 = sheet_HW2.row_values(i)
 
             # 給湯システム名称が空欄でない場合
             if (datahW2[0] != ""):

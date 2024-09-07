@@ -60,7 +60,7 @@ def builelib_run(exec_calculation, inputfile_name):
         "BEI_L": "-",  # BEI（照明）
         "設計一次エネルギー消費量（給湯）[MJ]": 0,
         "基準一次エネルギー消費量（給湯）[MJ]": 0,
-        "BEI_hW": "-",  # BEI（給湯）
+        "BEI_HW": "-",  # BEI（給湯）
         "設計一次エネルギー消費量（昇降機）[MJ]": 0,
         "基準一次エネルギー消費量（昇降機）[MJ]": 0,
         "BEI_EV": "-",  # BEI（昇降機）
@@ -264,43 +264,43 @@ def builelib_run(exec_calculation, inputfile_name):
     # ------------------------------------
 
     # 実行
-    resultdata_hW = {}
+    result_data_HW = {}
 
     if exec_calculation:
 
         try:
             if input_data["hot_water_room"]:  # hot_water_room が 空 でなければ
 
-                resultdata_hW = hotwatersupply.calc_energy(input_data, DEBUG=False)
+                result_data_HW = hotwatersupply.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_cgs["hW"] = resultdata_hW["for_cgs"]
+                result_json_for_cgs["hW"] = result_data_HW["for_cgs"]
 
                 # 設計一次エネ・基準一次エネに追加
-                energy_consumption_design += resultdata_hW["設計一次エネルギー消費量[MJ/年]"]
-                energy_consumption_standard += resultdata_hW["基準一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_hW["設計一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_hW["基準一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["BEI_hW"] = math.ceil(resultdata_hW["BEI/hW"] * 100) / 100
+                energy_consumption_design += result_data_HW["設計一次エネルギー消費量[MJ/年]"]
+                energy_consumption_standard += result_data_HW["基準一次エネルギー消費量[MJ/年]"]
+                calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = result_data_HW["設計一次エネルギー消費量[MJ/年]"]
+                calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = result_data_HW["基準一次エネルギー消費量[MJ/年]"]
+                calc_reuslt["BEI_HW"] = math.ceil(result_data_HW["BEI/hW"] * 100) / 100
 
             else:
-                resultdata_hW = {
+                result_data_HW = {
                     "message": "給湯設備はありません。"
                 }
 
         except:
-            resultdata_hW = {
+            result_data_HW = {
                 "error": "給湯設備の計算時に予期せぬエラーが発生しました。"
             }
 
     else:
-        resultdata_hW = {
+        result_data_HW = {
             "error": "給湯設備の計算は実行されませんでした。"
         }
 
     # 出力
-    with open(inputfile_name_split[0] + "_result_hW.json", 'w', encoding='utf-8') as fw:
-        json.dump(resultdata_hW, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
+    with open(inputfile_name_split[0] + "_result_HW.json", 'w', encoding='utf-8') as fw:
+        json.dump(result_data_HW, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
     # ------------------------------------
     # 昇降機の計算の実行
@@ -497,7 +497,7 @@ def builelib_run(exec_calculation, inputfile_name):
         new_zip.write(inputfile_name_split[0] + "_result_AC.json", arcname='builelib_result_AC.json')
         new_zip.write(inputfile_name_split[0] + "_result_V.json", arcname='builelib_result_V.json')
         new_zip.write(inputfile_name_split[0] + "_result_L.json", arcname='builelib_result_L.json')
-        new_zip.write(inputfile_name_split[0] + "_result_hW.json", arcname='builelib_result_hW.json')
+        new_zip.write(inputfile_name_split[0] + "_result_HW.json", arcname='builelib_result_HW.json')
         new_zip.write(inputfile_name_split[0] + "_result_EV.json", arcname='builelib_result_EV.json')
         new_zip.write(inputfile_name_split[0] + "_result_PV.json", arcname='builelib_result_PV.json')
         new_zip.write(inputfile_name_split[0] + "_result_CGS.json", arcname='builelib_result_CGS.json')
@@ -509,7 +509,7 @@ def builelib_run(exec_calculation, inputfile_name):
     # os.remove( inputfile_name_split[0] + "_result_AC.json" )
     # os.remove( inputfile_name_split[0] + "_result_V.json" )
     # os.remove( inputfile_name_split[0] + "_result_L.json" )
-    # os.remove( inputfile_name_split[0] + "_result_hW.json" )
+    # os.remove( inputfile_name_split[0] + "_result_HW.json" )
     # os.remove( inputfile_name_split[0] + "_result_EV.json" )
     # os.remove( inputfile_name_split[0] + "_result_PV.json" )
     # os.remove( inputfile_name_split[0] + "_result_CGS.json" )
