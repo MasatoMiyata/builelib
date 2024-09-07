@@ -42,7 +42,7 @@ def calc_energy(input_data, DEBUG=False):
             "E_other_standard": 0,  # 告示の値 [MJ/m2]
             "E_other": 0,  # その他一次エネルギー消費量 [MJ/年]
             "E_ratio": 1,
-            "roomheatGain_daily": np.zeros(365)  # 日別の機器発熱量 [MJ/m2/day]
+            "room_heat_gain_daily": np.zeros(365)  # 日別の機器発熱量 [MJ/m2/day]
         }
 
         ##----------------------------------------------------------------------------------
@@ -109,20 +109,20 @@ def calc_energy(input_data, DEBUG=False):
         if room_heat_gain_oaapp[room_name] != None:
 
             # 機器からの発熱（日積算）（365日分） [MJ/m2/day]
-            result_json["E_other_room"][room_name]["roomheatGain_daily"] = \
+            result_json["E_other_room"][room_name]["room_heat_gain_daily"] = \
                 np.sum(room_schedule_oa_app[room_name], 1) * room_heat_gain_oaapp[room_name] / 1000000 * bc.fprime
 
             # その他一次エネルギー消費量原単位（告示の値） [MJ/m2] の算出（端数処理）
             result_json["E_other_room"][room_name]["E_other_standard"] = \
-                round(np.sum(result_json["E_other_room"][room_name]["roomheatGain_daily"]))
+                round(np.sum(result_json["E_other_room"][room_name]["room_heat_gain_daily"]))
 
             # 年積算値（端数調整前）が告示の値と一致するように補正する係数を求める（コジェネ計算時に日別消費電力を年積算値と一致させるために必要）。
-            if np.sum(result_json["E_other_room"][room_name]["roomheatGain_daily"]) == 0:
+            if np.sum(result_json["E_other_room"][room_name]["room_heat_gain_daily"]) == 0:
                 result_json["E_other_room"][room_name]["E_ratio"] = 1
             else:
                 result_json["E_other_room"][room_name]["E_ratio"] = \
                     result_json["E_other_room"][room_name]["E_other_standard"] / np.sum(
-                        result_json["E_other_room"][room_name]["roomheatGain_daily"])
+                        result_json["E_other_room"][room_name]["room_heat_gain_daily"])
 
         if DEBUG:
             print(f'室名: {room_name}')
@@ -141,7 +141,7 @@ def calc_energy(input_data, DEBUG=False):
 
         # 日別の電力消費量（告示に掲載の年積算値と一致させるために E_ratio で一律補正する）
         result_json["for_cgs"]["Edesign_MWh_day"] += \
-            result_json["E_other_room"][room_name]["roomheatGain_daily"] * input_data["rooms"][room_name]["room_area"] * \
+            result_json["E_other_room"][room_name]["room_heat_gain_daily"] * input_data["rooms"][room_name]["room_area"] * \
             result_json["E_other_room"][room_name]["E_ratio"] / bc.fprime
 
     ##----------------------------------------------------------------------------------
@@ -207,7 +207,7 @@ def calc_energy(input_data, DEBUG=False):
     ##----------------------------------------------------------------------------------
 
     for room_id, isys in result_json["E_other_room"].items():
-        del result_json["E_other_room"][room_id]["roomheatGain_daily"]
+        del result_json["E_other_room"][room_id]["room_heat_gain_daily"]
 
     return result_json
 
