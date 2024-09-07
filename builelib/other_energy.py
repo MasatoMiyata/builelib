@@ -19,9 +19,9 @@ def calc_energy(input_data, DEBUG=False):
         "E_other_room": {},
         "for_cgs": {
             "Edesign_MWh_day": np.zeros(365),
-            "ratio_areaWeightedSchedule_AC": np.zeros((365, 24)),  # 空調
-            "ratio_areaWeightedSchedule_LT": np.zeros((365, 24)),  # 照明
-            "ratio_areaWeightedSchedule_OA": np.zeros((365, 24))  # 機器発熱
+            "ratio_area_weighted_schedule_AC": np.zeros((365, 24)),  # 空調
+            "ratio_area_weighted_schedule_LT": np.zeros((365, 24)),  # 照明
+            "ratio_area_weighted_schedule_OA": np.zeros((365, 24))  # 機器発熱
         }
     }
 
@@ -147,15 +147,15 @@ def calc_energy(input_data, DEBUG=False):
     ##----------------------------------------------------------------------------------
     # コジェネ計算用のスケジュール
     ##----------------------------------------------------------------------------------
-    areaWeightedSchedule_AC = np.zeros((365, 24))
-    areaWeightedSchedule_LT = np.zeros((365, 24))
-    areaWeightedSchedule_OA = np.zeros((365, 24))
+    area_weighted_schedule_AC = np.zeros((365, 24))
+    area_weighted_schedule_LT = np.zeros((365, 24))
+    area_weighted_schedule_OA = np.zeros((365, 24))
 
     # 空調スケジュール
     for room_zone_name in input_data["air_conditioning_zone"]:
         if room_zone_name in input_data["rooms"]:  # ゾーン分けがない場合
 
-            areaWeightedSchedule_AC += room_schedule_room[room_zone_name] * input_data["rooms"][room_zone_name]["room_area"]
+            area_weighted_schedule_AC += room_schedule_room[room_zone_name] * input_data["rooms"][room_zone_name]["room_area"]
 
         else:
 
@@ -164,14 +164,14 @@ def calc_energy(input_data, DEBUG=False):
                 if input_data["rooms"][room_name]["zone"] != None:  # ゾーンがあれば
                     for zone_name in input_data["rooms"][room_name]["zone"]:  # ゾーン名を検索
                         if room_zone_name == (room_name + "_" + zone_name):
-                            areaWeightedSchedule_AC += room_schedule_room[room_name] * \
+                            area_weighted_schedule_AC += room_schedule_room[room_name] * \
                                                        input_data["rooms"][room_name]["zone"][zone_name]["zone_area"]
 
     # 照明スケジュール
     for room_zone_name in input_data["lighting_systems"]:
         if room_zone_name in input_data["rooms"]:  # ゾーン分けがない場合
 
-            areaWeightedSchedule_LT += room_schedule_light[room_zone_name] * input_data["rooms"][room_zone_name][
+            area_weighted_schedule_LT += room_schedule_light[room_zone_name] * input_data["rooms"][room_zone_name][
                 "room_area"]
 
         else:
@@ -181,23 +181,23 @@ def calc_energy(input_data, DEBUG=False):
                 if input_data["rooms"][room_name]["zone"] != None:  # ゾーンがあれば
                     for zone_name in input_data["rooms"][room_name]["zone"]:  # ゾーン名を検索
                         if room_zone_name == (room_name + "_" + zone_name):
-                            areaWeightedSchedule_LT += room_schedule_light[room_name] * \
+                            area_weighted_schedule_LT += room_schedule_light[room_name] * \
                                                        input_data["rooms"][room_name]["zone"][zone_name]["zone_area"]
 
                             # 機器発熱スケジュール
     for room_name in input_data["rooms"]:
-        areaWeightedSchedule_OA += room_schedule_oa_app[room_name] * input_data["rooms"][room_name]["room_area"]
+        area_weighted_schedule_OA += room_schedule_oa_app[room_name] * input_data["rooms"][room_name]["room_area"]
 
     for dd in range(0, 365):
-        if np.sum(areaWeightedSchedule_AC[dd]) != 0:
-            result_json["for_cgs"]["ratio_areaWeightedSchedule_AC"][dd] = \
-                areaWeightedSchedule_AC[dd] / np.sum(areaWeightedSchedule_AC[dd])
-        if np.sum(areaWeightedSchedule_LT[dd]) != 0:
-            result_json["for_cgs"]["ratio_areaWeightedSchedule_LT"][dd] = \
-                areaWeightedSchedule_LT[dd] / np.sum(areaWeightedSchedule_LT[dd])
-        if np.sum(areaWeightedSchedule_OA[dd]) != 0:
-            result_json["for_cgs"]["ratio_areaWeightedSchedule_OA"][dd] = \
-                areaWeightedSchedule_OA[dd] / np.sum(areaWeightedSchedule_OA[dd])
+        if np.sum(area_weighted_schedule_AC[dd]) != 0:
+            result_json["for_cgs"]["ratio_area_weighted_schedule_AC"][dd] = \
+                area_weighted_schedule_AC[dd] / np.sum(area_weighted_schedule_AC[dd])
+        if np.sum(area_weighted_schedule_LT[dd]) != 0:
+            result_json["for_cgs"]["ratio_area_weighted_schedule_LT"][dd] = \
+                area_weighted_schedule_LT[dd] / np.sum(area_weighted_schedule_LT[dd])
+        if np.sum(area_weighted_schedule_OA[dd]) != 0:
+            result_json["for_cgs"]["ratio_area_weighted_schedule_OA"][dd] = \
+                area_weighted_schedule_OA[dd] / np.sum(area_weighted_schedule_OA[dd])
 
     if DEBUG:
         print(f'その他一次エネルギー消費量 MJ: {result_json["E_other"]}')

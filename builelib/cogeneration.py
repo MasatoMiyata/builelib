@@ -231,20 +231,20 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
     # 排熱を給湯のみに利用する場合のCGSの最小稼働時間 [時間/日] (2020/06/13追加 for Ver3)
     Tstmin_w = 10
 
-    ratio_areaWeightedSchedule_AC = result_json_for_cgs["OT"]["ratio_areaWeightedSchedule_AC"]
-    ratio_areaWeightedSchedule_LT = result_json_for_cgs["OT"]["ratio_areaWeightedSchedule_LT"]
-    ratio_areaWeightedSchedule_OA = result_json_for_cgs["OT"]["ratio_areaWeightedSchedule_OA"]
+    ratio_area_weighted_schedule_AC = result_json_for_cgs["OT"]["ratio_area_weighted_schedule_AC"]
+    ratio_area_weighted_schedule_LT = result_json_for_cgs["OT"]["ratio_area_weighted_schedule_LT"]
+    ratio_area_weighted_schedule_OA = result_json_for_cgs["OT"]["ratio_area_weighted_schedule_OA"]
 
     Ee_total_hour = np.zeros((365, 24))
 
     for dd in range(0, 365):
         for hh in range(0, 24):
-            Ee_total_hour[dd][hh] = EAC_total_d[dd] * ratio_areaWeightedSchedule_AC[dd][hh] \
+            Ee_total_hour[dd][hh] = EAC_total_d[dd] * ratio_area_weighted_schedule_AC[dd][hh] \
                                     + EV_total_d[dd] / 24 \
-                                    + EL_total_d[dd] * ratio_areaWeightedSchedule_LT[dd][hh] \
+                                    + EL_total_d[dd] * ratio_area_weighted_schedule_LT[dd][hh] \
                                     + EW_total_d[dd] / 24 \
                                     + EEV_total_d[dd] / 24 \
-                                    + EM_total_d[dd] * ratio_areaWeightedSchedule_OA[dd][hh]
+                                    + EM_total_d[dd] * ratio_area_weighted_schedule_OA[dd][hh]
 
     feopehi = np.ones(365)
 

@@ -204,9 +204,9 @@ def calc_energy(input_data, DEBUG=False):
 
         # 床面積あたりの設計一次エネルギー消費量 [MJ/m2]
         if room_area <= 0:
-            PrimaryEnergyPerarea = None
+            primary_energy_per_area = None
         else:
-            PrimaryEnergyPerarea = E_room / room_area
+            primary_energy_per_area = E_room / room_area
 
         # 基準一次エネルギー消費量 [MJ]
         Es_room = bc.room_standard_value[building_type][room_type]["照明"] * room_area
@@ -223,7 +223,7 @@ def calc_energy(input_data, DEBUG=False):
             "unitPower": unitPower,
             "primaryEnergy": E_room,
             "standardEnergy": Es_room,
-            "primaryEnergyPerarea": PrimaryEnergyPerarea,
+            "primary_energy_per_area": primary_energy_per_area,
             "energyRatio": E_room / Es_room
         }
 
