@@ -1,15 +1,15 @@
-import json
-
-import pytest
-import xlrd
-
+import pandas as pd
+import csv
 from builelib import airconditioning
+import pytest
+import json
+import xlrd
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
 
 testcase_dict = {
-    "ahu_basic": "./tests/airconditioning/★空調設備テストケース一覧.xlsx",
+    "AHU_basic": "./tests/airconditioning/★空調設備テストケース一覧.xlsx",
 }
 
 
@@ -37,8 +37,8 @@ def read_testcasefile(filename):
 
 #### テストケースファイルの読み込み
 
-test_to_try = []  # テスト用入力ファイルと期待値のリスト
-testcase_id = []  # テスト名称のリスト
+test_to_try  = []  # テスト用入力ファイルと期待値のリスト
+testcase_id  = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -50,31 +50,33 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
+
         filename = "./tests/airconditioning/ACtest_" + testdata[0] + ".json"
         # 入力データの作成
         with open(filename, 'r', encoding='utf-8') as f:
-            input_data = json.load(f)
+            inputdata = json.load(f)
 
         # 期待値
         expectedvalue = (testdata[4])
 
         # テストケースの集約
-        test_to_try.append((input_data, expectedvalue))
+        test_to_try.append( (inputdata, expectedvalue) )
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
 # テストの実施
-@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(input_data, expectedvalue):
+@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(inputdata, expectedvalue):
+
     # 検証用
-    with open("input_data.json", 'w', encoding='utf-8') as fw:
-        json.dump(input_data, fw, indent=4, ensure_ascii=False)
+    with open("inputdata.json",'w', encoding='utf-8') as fw:
+        json.dump(inputdata, fw, indent=4, ensure_ascii=False)
 
     # 計算実行        
-    result_json = airconditioning.calc_energy(input_data)
+    resultJson = airconditioning.calc_energy(inputdata)
 
-    diff_Eac = (abs(result_json["E_airconditioning"] - expectedvalue)) / abs(expectedvalue)
+    diff_Eac = (abs(resultJson["E_airconditioning"] - expectedvalue)) / abs( expectedvalue )
 
     # 比較（0.01%まで）
     assert diff_Eac < 0.0001

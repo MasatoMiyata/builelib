@@ -1,5 +1,6 @@
+import pandas as pd
 import csv
-
+import pprint as pp
 import pytest
 
 from builelib import elevetor
@@ -34,7 +35,7 @@ def read_testcasefile(filename):
     return testdata
 
 
-def make_input_data(data):
+def make_inputdata(data):
     '''
     インプットデータを作成する関数
     '''
@@ -42,30 +43,30 @@ def make_input_data(data):
     if (data[11] == "") and (data[16] == ""):
 
         # 計算モデルの作成（1室1系統）
-        input_data = {
-            "building": {
-                "region": "6"
+        inputdata = {
+            "Building":{
+                "Region": "6"
             },
-            "rooms": {
+            "Rooms": {
                 "1F_室": {
-                    "floorname": data[1],
-                    "roomname": data[2],
-                    "building_type": data[3],
-                    "room_type": data[4],
-                    "room_area": 100,
+                    "floorName": data[1],
+                    "roomName": data[2],
+                    "buildingType": data[3],
+                    "roomType": data[4],
+                    "roomArea": 100,
                 }
             },
-            "elevators": {
+            "Elevators": {
                 "1F_室": {
-                    "elevator": [
+                    "Elevator": [
                         {
-                            "elevator_name": data[5],
-                            "number": convert2number(data[6], 0),
-                            "load_limit": convert2number(data[7], 0),
-                            "velocity": convert2number(data[8], 0),
-                            "transport_capacity_factor": convert2number(data[9], 0),
-                            "control_type": data[10],
-                            "info": ""
+                            "ElevatorName": data[5],
+                            "Number": convert2number(data[6],0),
+                            "LoadLimit": convert2number(data[7],0),
+                            "Velocity": convert2number(data[8],0),
+                            "TransportCapacityFactor": convert2number(data[9],0),
+                            "ControlType": data[10],
+                            "Info": ""
                         }
                     ]
                 }
@@ -75,39 +76,39 @@ def make_input_data(data):
     elif (data[11] == ""):
 
         # 計算モデルの作成（1室2系統）
-        input_data = {
-            "building": {
-                "region": "6"
+        inputdata = {
+            "Building":{
+                "Region": "6"
             },
-            "rooms": {
+            "Rooms": {
                 "1F_室": {
-                    "floorname": data[1],
-                    "roomname": data[2],
-                    "building_type": data[3],
-                    "room_type": data[4],
-                    "room_area": 100,
+                    "floorName": data[1],
+                    "roomName": data[2],
+                    "buildingType": data[3],
+                    "roomType": data[4],
+                    "roomArea": 100,
                 }
             },
-            "elevators": {
+            "Elevators": {
                 "1F_室": {
-                    "elevator": [
+                    "Elevator": [
                         {
-                            "elevator_name": data[5],
-                            "number": convert2number(data[6], 0),
-                            "load_limit": convert2number(data[7], 0),
-                            "velocity": convert2number(data[8], 0),
-                            "transport_capacity_factor": convert2number(data[9], 0),
-                            "control_type": data[10],
-                            "info": ""
+                            "ElevatorName": data[5],
+                            "Number": convert2number(data[6],0),
+                            "LoadLimit": convert2number(data[7],0),
+                            "Velocity": convert2number(data[8],0),
+                            "TransportCapacityFactor": convert2number(data[9],0),
+                            "ControlType": data[10],
+                            "Info": ""
                         },
                         {
-                            "elevator_name": data[15],
-                            "number": convert2number(data[16], 0),
-                            "load_limit": convert2number(data[17], 0),
-                            "velocity": convert2number(data[18], 0),
-                            "transport_capacity_factor": convert2number(data[19], 0),
-                            "control_type": data[20],
-                            "info": ""
+                            "ElevatorName": data[15],
+                            "Number": convert2number(data[16],0),
+                            "LoadLimit": convert2number(data[17],0),
+                            "Velocity": convert2number(data[18],0),
+                            "TransportCapacityFactor": convert2number(data[19],0),
+                            "ControlType": data[20],
+                            "Info": ""
                         }
                     ]
                 }
@@ -117,63 +118,63 @@ def make_input_data(data):
     else:
 
         # 計算モデルの作成（2室の場合）
-        input_data = {
-            "building": {
-                "region": "6"
+        inputdata = {
+            "Building":{
+                "Region": "6"
             },
-            "rooms": {
+            "Rooms": {
                 "1F_室": {
-                    "floorname": data[1],
-                    "roomname": data[2],
-                    "building_type": data[3],
-                    "room_type": data[4],
-                    "room_area": 100,
+                    "floorName": data[1],
+                    "roomName": data[2],
+                    "buildingType": data[3],
+                    "roomType": data[4],
+                    "roomArea": 100,
                 },
                 "2F_室": {
-                    "floorname": data[11],
-                    "roomname": data[12],
-                    "building_type": data[13],
-                    "room_type": data[14],
-                    "room_area": 100,
+                    "floorName": data[11],
+                    "roomName": data[12],
+                    "buildingType": data[13],
+                    "roomType": data[14],
+                    "roomArea": 100,
                 },
             },
-            "elevators": {
+            "Elevators": {
                 "1F_室": {
-                    "elevator": [
+                    "Elevator": [
                         {
-                            "elevator_name": data[5],
-                            "number": convert2number(data[6], 0),
-                            "load_limit": convert2number(data[7], 0),
-                            "velocity": convert2number(data[8], 0),
-                            "transport_capacity_factor": convert2number(data[9], 0),
-                            "control_type": data[10],
-                            "info": ""
+                            "ElevatorName": data[5],
+                            "Number": convert2number(data[6],0),
+                            "LoadLimit": convert2number(data[7],0),
+                            "Velocity": convert2number(data[8],0),
+                            "TransportCapacityFactor": convert2number(data[9],0),
+                            "ControlType": data[10],
+                            "Info": ""
                         }
                     ]
                 },
                 "2F_室": {
-                    "elevator": [
+                    "Elevator": [
                         {
-                            "elevator_name": data[15],
-                            "number": convert2number(data[16], 0),
-                            "load_limit": convert2number(data[17], 0),
-                            "velocity": convert2number(data[18], 0),
-                            "transport_capacity_factor": convert2number(data[19], 0),
-                            "control_type": data[20],
-                            "info": ""
+                            "ElevatorName": data[15],
+                            "Number": convert2number(data[16],0),
+                            "LoadLimit": convert2number(data[17],0),
+                            "Velocity": convert2number(data[18],0),
+                            "TransportCapacityFactor": convert2number(data[19],0),
+                            "ControlType": data[20],
+                            "Info": ""
                         }
                     ]
                 },
             }
         }
 
-    return input_data
+    return inputdata
 
 
 #### テストケースファイルの読み込み
 
-test_to_try = []  # テスト用入力ファイルと期待値のリスト
-testcase_id = []  # テスト名称のリスト
+test_to_try = []   # テスト用入力ファイルと期待値のリスト
+testcase_id  = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -185,32 +186,34 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
+
         # 入力データの作成
-        input_data = make_input_data(testdata)
+        inputdata = make_inputdata(testdata)
         # 期待値
-        expectedvalue = convert2number(testdata[21], 0)
+        expectedvalue = convert2number(testdata[21],0)
 
         # テストケースの集約
-        test_to_try.append((input_data, expectedvalue))
+        test_to_try.append( (inputdata, expectedvalue) )
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
 # テストの実施
-@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(input_data, expectedvalue):
+@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(inputdata, expectedvalue):
+
     if expectedvalue != "err":  # passが期待されるテスト
         # 計算実行        
-        result_json = elevetor.calc_energy(input_data)
+        resultJson = elevetor.calc_energy(inputdata)
 
         # 比較
-        assert abs(result_json["E_elevetor"] - expectedvalue) < 0.0001
+        assert abs(resultJson["E_elevetor"] - expectedvalue)   < 0.0001
 
     else:
 
         # エラーが期待される場合
         with pytest.raises(Exception):
-            result_json = elevetor(input_data)
+            resultJson = elevetor(inputdata)
 
 
 if __name__ == '__main__':

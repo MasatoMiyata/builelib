@@ -1,10 +1,10 @@
-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÊŽq,building_type,room_type,area,Roomheight,Width,Depth,room_index,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
-C1	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	15389.568	51300
-C2	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½ï¿½ï¿½rï¿½[	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	15389.568	102600
-C3	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½Ç—ï¿½ï¿½lï¿½ï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	4079.2896	36900
-C4	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½Wï¿½ïŽº	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	1872.7488	11300
-C5	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½ï¿½ï¿½Oï¿½Lï¿½ï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	7694.784	25600
-C6	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	15389.568	30800
-C7	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½@ï¿½Bï¿½ï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	351.36	1000
-C8	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½dï¿½Cï¿½ï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	351.36	1000
-C9	ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½	ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ÛŠÇêŠï¿½ï¿½	100	2.7	10	20	2	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	100	1	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	ï¿½ï¿½	15389.568	30800
+“à•”Ž¯•ÊŽq,BuildingType,RoomType,Area,RoomHeight,Width,Depth,RoomIndex,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
+C1	‹¤“¯Z‘î	‰®“à˜L‰º	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	15389.568	51300
+C2	‹¤“¯Z‘î	ƒƒr[	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	15389.568	102600
+C3	‹¤“¯Z‘î	ŠÇ—lŽº	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	4079.2896	36900
+C4	‹¤“¯Z‘î	W‰ïŽº	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	1872.7488	11300
+C5	‹¤“¯Z‘î	‰®ŠO˜L‰º	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	7694.784	25600
+C6	‹¤“¯Z‘î	‰®“à’“ŽÔê	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	15389.568	30800
+C7	‹¤“¯Z‘î	‹@ŠBŽº	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	351.36	1000
+C8	‹¤“¯Z‘î	“d‹CŽº	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	351.36	1000
+C9	‹¤“¯Z‘î	”pŠü•¨•ÛŠÇêŠ“™	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	15389.568	30800

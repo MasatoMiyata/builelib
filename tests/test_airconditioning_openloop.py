@@ -1,10 +1,9 @@
-import json
-
-import pytest
-import xlrd
-
+import pandas as pd
 from builelib import airconditioning
 from builelib import commons as bc
+import pytest
+import json
+import xlrd
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -38,8 +37,8 @@ def read_testcasefile(filename):
 
 #### テストケースファイルの読み込み
 
-test_to_try = []  # テスト用入力ファイルと期待値のリスト
-testcase_id = []  # テスト名称のリスト
+test_to_try  = []  # テスト用入力ファイルと期待値のリスト
+testcase_id  = []  # テスト名称のリスト
 
 for case_name in testcase_dict:
 
@@ -53,34 +52,36 @@ for case_name in testcase_dict:
 
     # テストケース（行）に対するループ
     for testdata in testfiledata:
+
         filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_base.json"
         # 入力データの読み込み
         with open(filename, 'r', encoding='utf-8') as f:
-            input_data = json.load(f)
+            inputdata = json.load(f)
 
         # 地域
-        input_data["building"]["region"] = str(testdata[3]).replace("地域", "")
+        inputdata["Building"]["Region"] = str(testdata[3]).replace("地域","")
         # 冷熱源
-        input_data["heat_source_system"]["PAC1"]["冷房"]["heat_source"][0]["heat_source_type"] = testdata[1]
+        inputdata["HeatsourceSystem"]["PAC1"]["冷房"]["Heatsource"][0]["HeatsourceType"] = testdata[1]
         # 温熱源
-        input_data["heat_source_system"]["PAC1"]["暖房"]["heat_source"][0]["heat_source_type"] = testdata[2]
+        inputdata["HeatsourceSystem"]["PAC1"]["暖房"]["Heatsource"][0]["HeatsourceType"] = testdata[2]
 
         # 期待値
         expectedvalue = (testdata[4])
 
         # テストケースの集約
-        test_to_try.append((input_data, expectedvalue))
+        test_to_try.append( (inputdata, expectedvalue) )
         # テストケース名
         testcase_id.append(case_name + testdata[0])
 
 
 # テストの実施
-@pytest.mark.parametrize('input_data, expectedvalue', test_to_try, ids=testcase_id)
-def test_calc(input_data, expectedvalue):
-    # 計算実行
-    result_json = airconditioning.calc_energy(input_data)
+@pytest.mark.parametrize('inputdata, expectedvalue', test_to_try, ids=testcase_id)
+def test_calc(inputdata, expectedvalue):
 
-    diff_Eac = (abs(result_json["E_airconditioning"] - expectedvalue)) / abs(expectedvalue)
+    # 計算実行        
+    resultJson = airconditioning.calc_energy(inputdata)
+
+    diff_Eac = (abs(resultJson["E_airconditioning"] - expectedvalue)) / abs( expectedvalue )
 
     # 比較（0.01%まで）
     assert diff_Eac < 0.0001
@@ -104,35 +105,38 @@ if __name__ == '__main__':
 
         # テストケース（行）に対するループ
         for testdata in testfiledata:
+
             filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_base.json"
             # 入力データの読み込み
             with open(filename, 'r', encoding='utf-8') as f:
-                input_data = json.load(f)
+                inputdata = json.load(f)
 
             # 地域
-            input_data["building"]["region"] = str(testdata[3]).replace("地域", "")
+            inputdata["Building"]["Region"] = str(testdata[3]).replace("地域","")
             # 冷熱源
-            input_data["heat_source_system"]["PAC1"]["冷房"]["heat_source"][0]["heat_source_type"] = testdata[1]
+            inputdata["HeatsourceSystem"]["PAC1"]["冷房"]["Heatsource"][0]["HeatsourceType"] = testdata[1]
             # 温熱源
-            input_data["heat_source_system"]["PAC1"]["暖房"]["heat_source"][0]["heat_source_type"] = testdata[2]
+            inputdata["HeatsourceSystem"]["PAC1"]["暖房"]["Heatsource"][0]["HeatsourceType"] = testdata[2]
 
             # 実行
-            result_json = airconditioning.calc_energy(input_data)
+            resultJson = airconditioning.calc_energy(inputdata)
 
             # 結果
             resultALL = [
-                str(result_json["E_airconditioning"]),
-                str(result_json["ENERGY"]["E_fan"] * bc.fprime),
-                str(result_json["ENERGY"]["E_aex"] * bc.fprime),
-                str(result_json["ENERGY"]["E_pump"] * bc.fprime),
-                str(result_json["ENERGY"]["E_refsysr"]),
-                str(result_json["ENERGY"]["E_refac"] * bc.fprime),
-                str(result_json["ENERGY"]["E_pumpP"] * bc.fprime),
-                str(result_json["ENERGY"]["E_ctfan"] * bc.fprime),
-                str(result_json["ENERGY"]["E_ctpump"] * bc.fprime)
+                str(resultJson["E_airconditioning"]), 
+                str(resultJson["ENERGY"]["E_fan"] * bc.fprime), 
+                str(resultJson["ENERGY"]["E_aex"] * bc.fprime), 
+                str(resultJson["ENERGY"]["E_pump"] * bc.fprime), 
+                str(resultJson["ENERGY"]["E_refsysr"]), 
+                str(resultJson["ENERGY"]["E_refac"] * bc.fprime), 
+                str(resultJson["ENERGY"]["E_pumpP"] * bc.fprime), 
+                str(resultJson["ENERGY"]["E_ctfan"] * bc.fprime), 
+                str(resultJson["ENERGY"]["E_ctpump"] * bc.fprime)
             ]
 
-            with open("resultALL.txt", 'a', encoding='utf-8') as fw:
-                fw.write(testdata[0] + ",")
+            with open("resultALL.txt",'a', encoding='utf-8') as fw:
+                fw.write(testdata[0]+",")
                 fw.write(",".join(resultALL))
                 fw.write("\n")
+
+
