@@ -5,7 +5,7 @@ import math
 import numpy as np
 
 
-def readCsvclimate_data(filename):
+def read_csv_climate_data(filename):
     """
     気象データ（csvファイル）を読み込む関数。太陽光発電用。
     8760の行列
@@ -33,7 +33,7 @@ def readCsvclimate_data(filename):
     return tout, iod, ios, sun_altitude, sun_azimuth
 
 
-def readhaspclimate_data(filename):
+def read_hasp_climate_data(filename):
     """
     気象データ（hasファイル）を読み込む関数。
     365×24の行列
@@ -113,7 +113,7 @@ def del04(month, day):
     # 一年を周期とする角度を計算する
     w = n * 2.0 * math.pi / 366.0
 
-    # hASP教科書等より2項目の括弧内の2項目の係数を変更（+0.2070988 → -0.2070988）
+    # HASP教科書等より2項目の括弧内の2項目の係数を変更（+0.2070988 → -0.2070988）
     declination = 0.006322 - 0.405748 * math.cos(w + 0.153231) - 0.005880 * math.cos(
         2.0 * w - 0.207099) - 0.003233 * math.cos(3 * w + 0.620129)
 
@@ -132,7 +132,7 @@ def eqt04(month, day):
     n = math.floor(
         30 * (month - 1) + math.floor((month + math.floor(month / 8)) / 2) - math.floor((month + 7) / 10) + day)
 
-    # 均時差を計算する(hASP 教科書 p24)
+    # 均時差を計算する(HASP 教科書 p24)
     # 一年を周期とする角度を計算する
 
     w = n * 2.0 * math.pi / 366.0
@@ -196,7 +196,7 @@ def solar_radiation_by_azimuth(alp, bet, latitude, longitude, iod_all, ios_all, 
 
                 # 中央標準時を求める
                 t = (hour + 1) + 0 / 60
-                # 日赤緯を求める(hASP教科書P24(2-22)参照)
+                # 日赤緯を求める(HASP教科書P24(2-22)参照)
                 declination = del04(month, day)
                 # 均時差を求める
                 equal_time_difference = eqt04(month, day)
@@ -214,15 +214,15 @@ def solar_radiation_by_azimuth(alp, bet, latitude, longitude, iod_all, ios_all, 
                 sinTim = math.sin(Tim)  # 時角の正弦
                 cosTim = math.cos(Tim)  # 時角の余弦
 
-                # 太陽高度の正弦を求める(hASP教科書 P25 (2.25)参照 )
+                # 太陽高度の正弦を求める(HASP教科書 P25 (2.25)参照 )
                 sinh = sinlatitude * sinDel + coslatitude * cosDel * cosTim
 
-                # 太陽高度の余弦、太陽方位の正弦・余弦を求める(hASP 教科書P25 (2.25)参照)
+                # 太陽高度の余弦、太陽方位の正弦・余弦を求める(HASP 教科書P25 (2.25)参照)
                 cosh = math.sqrt(1 - sinh ** 2)  # 太陽高度の余弦
                 sinA = cosDel * sinTim / cosh  # 太陽方位の正弦
                 cosA = (sinh * sinlatitude - sinDel) / (cosh * coslatitude)  # 太陽方位の余弦
 
-                # 傾斜壁から見た太陽高度を求める(hASP 教科書 P26(2.26)参照)
+                # 傾斜壁から見た太陽高度を求める(HASP 教科書 P26(2.26)参照)
                 sinh2 = sinh * cosBet + cosh * sinBet * (cosA * cosAlp + sinA * sinAlp)
 
                 if sinh2 < 0:
@@ -277,12 +277,12 @@ if __name__ == '__main__':
     # area_name = "8地域"
 
     # # 空調用と給湯用の気象データの比較
-    # filename_hasp = "./builelib/climate_data/C1_" +area[area_name]["気象データファイル名"]
+    # filename_HASP = "./builelib/climate_data/C1_" +area[area_name]["気象データファイル名"]
     # filename_dat  = "./builelib/climate_data/" + area[area_name]["気象データファイル名（給湯）"]
 
     # toa_ave_dat = readDatclimate_data(filename_dat)
 
-    # [tout, xout, iod, ios, inn] = readhaspclimate_data(filename_hasp)
+    # [tout, xout, iod, ios, inn] = read_hasp_climate_data(filename_hasp)
     # toa_ave_hasp = np.mean(tout,1)
 
     # np.savetxt('気象データ検証_' + area_name + '.csv', np.stack([toa_ave_dat, toa_ave_hasp, toa_ave_dat-toa_ave_hasp], 1) ,delimiter=',',fmt='%.3f')

@@ -46,7 +46,7 @@ def calc_energy(input_data, DEBUG=False):
     ##----------------------------------------------------------------------------------
     ## 気象データの読み込み
     ##----------------------------------------------------------------------------------
-    tout, _, iod, ios, inn = climate.readhaspclimate_data(climate_data_directory + "/" +
+    tout, _, iod, ios, inn = climate.read_hasp_climate_data(climate_data_directory + "/" +
                                                          area[input_data["building"]["region"] + "地域"][
                                                              "気象データファイル名"])
 

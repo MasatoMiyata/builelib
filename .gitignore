@@ -74,7 +74,7 @@ instance/
 # Scrapy stuff:
 .scrapy
 
-# Slatitudenx documentation
+# Sphinx documentation
 docs/_build/
 
 # PyBuilder
@@ -113,10 +113,10 @@ venv312/
 
 reference/
 builelib/heat_load_calculation
-builelib/pyhASP
+builelib/pyHASP
 builelib/database_pyhasp
 
 test_PAL/
 standard_spec/
 
-builelib/climate_data_pyhasp/
+builelib/climatedata_pyhasp/

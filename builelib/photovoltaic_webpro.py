@@ -119,7 +119,7 @@ def calc_energy(input_data, DEBUG=False):
         if climate_data_file[input_data["building"]["region"] + "地域"][
             input_data["building"]["annual_solar_region"]] != None:
             [tout, iod, ios, sun_altitude, sun_azimuth] = \
-                climate.readCsvclimate_data(
+                climate.read_csv_climate_data(
                     climate_data_directory + climate_data_file[input_data["building"]["region"] + "地域"][
                         input_data["building"]["annual_solar_region"]])
         else:

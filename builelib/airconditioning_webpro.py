@@ -232,9 +232,9 @@ def calc_energy(input_data, debug=False):
 
     else:
 
-        # 気象データ（hASP形式）読み込み ＜365×24の行列＞
+        # 気象データ（HASP形式）読み込み ＜365×24の行列＞
         [t_out_all, x_out_all, iod_all, ios_all, inn_all] = \
-            climate.readhaspclimate_data(
+            climate.read_hasp_climate_data(
                 climate_data_directory + "/" + area[input_data["building"]["region"] + "地域"]["気象データファイル名"])
 
     # 緯度

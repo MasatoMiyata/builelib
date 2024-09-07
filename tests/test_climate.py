@@ -88,7 +88,7 @@ def caclulation(input_data):
         area = json.load(f)
 
     # 直達日射量、天空日射量 [W/m2]
-    _, _, iod, ios, inn = climate.readhaspclimate_data(climate_directory +
+    _, _, iod, ios, inn = climate.read_hasp_climate_data(climate_directory +
                                                       area[climate_area + "地域"]["気象データファイル名"])
 
     # np.savetxt("直達日射量.txt", iod)

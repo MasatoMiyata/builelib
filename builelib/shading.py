@@ -314,7 +314,7 @@ def calc_shadingCoefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
     # 気象データ読み込み
     # iod_all : 法線面直達日射量[W/m2]
     # ios_all : 水平面天空日射量[W/m2]
-    [_, _, iod_all, ios_ALL, _] = climate.readhaspclimate_data(climatefilename)
+    [_, _, iod_all, ios_ALL, _] = climate.read_hasp_climate_data(climatefilename)
 
     latitude = areaDB[area + "地域"]["緯度"]  # 緯度 [deg]
     L = areaDB[area + "地域"]["経度"]  # 経度 [deg]

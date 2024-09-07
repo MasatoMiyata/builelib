@@ -153,11 +153,11 @@ def calc_energy(input_data, debug=False):
 
     else:
 
-        # 気象データ（hASP形式）読み込み ＜365×24の行列＞
+        # 気象データ（HASP形式）読み込み ＜365×24の行列＞
         [result_json["climate"]["tout"], result_json["climate"]["xout"],
          result_json["climate"]["iod"], result_json["climate"]["ios"],
          result_json["climate"]["inn"]] = \
-            climate.readhaspclimate_data(
+            climate.read_hasp_climate_data(
                 climate_data_directory + "/" + area[input_data["building"]["region"] + "地域"]["気象データファイル名"])
 
     # ----------------------------------------------------------------------------------
