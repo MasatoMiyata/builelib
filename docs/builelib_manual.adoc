@@ -25,15 +25,15 @@ Ver.1.1.1 (2021.06)
 
 Builelib (Builelib: building Energy-modeling Library) は 非住宅建築物の年間一次エネルギー消費量を計算するためのプログラムです。 +
 
-* Builelib: htt_ps://builelib.net/
+* Builelib: https://builelib.net/
 
 計算ロジックは建築物省エネ基準に基づくエネルギー消費性能計算プログラム（WEBPRO）と同じですが、一部、WEBPROにはない機能を追加で実装しています。
 
 * 建築物省エネ基準に基づく「建築物のエネルギー消費量計算プログラム（非住宅版）」（WEBPRO） +
-htt_ps://building.app.lowenergy.jp/
+https://building.app.lowenergy.jp/
 
-* 「建築物のエネルギー消費量計算プログラム（非住宅版）」の計算方法（hTML） +
-htt_ps://webpro-nr.github.io/BESJP_Engineeringreference/index.html
+* 「建築物のエネルギー消費量計算プログラム（非住宅版）」の計算方法（HTML） +
+https://webpro-nr.github.io/BESJP_Engineeringreference/index.html
 
 
 [IMPORTANT]
@@ -46,7 +46,7 @@ htt_ps://webpro-nr.github.io/BESJP_Engineeringreference/index.html
 [TIP]
 ====
 Builelibはpythonでコーディングされています。コマンドラインで実行することも可能です。 +
-詳細は htt_ps://github.com/MasatoMiyata/builelib[githubのページ]をご覧下さい。
+詳細は https://github.com/MasatoMiyata/builelib[githubのページ]をご覧下さい。
 ====
 
 
@@ -57,7 +57,7 @@ Builelibでは、入力シート（Excel形式）に室の形状、外皮・設�
 
 [TIP]
 ====
-入力シート及び入力シートのサンプルについては、link:htt_ps://builelib.net/inputsheet.php[こちら]をご覧下さい。
+入力シート及び入力シートのサンプルについては、link:https://builelib.net/inputsheet.php[こちら]をご覧下さい。
 ====
 
 === WEBPRO入力シートの作成
@@ -70,7 +70,7 @@ Builelibでは、入力シート（Excel形式）に室の形状、外皮・設�
 入力シートの作成方法については、国土技術政策総合研究所及び建築研究所による技術資料をご覧下さい。
 
 * 入力シートの作成方法（エネルギー消費性能計算プログラム（非住宅版）Ver.2 の入力マニュアル） +
-htt_ps://www.kenken.go.jp/becc/building.html#1-2
+https://www.kenken.go.jp/becc/building.html#1-2
 ====
 
 === Builelib用 SPシートの作成
@@ -149,8 +149,8 @@ WEBPROにおいては、流量制御方式／風量制御方式として、以�
 
 詳細はWEBPROの仕様書をご覧下さい。
 
-* link:++htt_ps://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_2_5_7_%E9%A2%A8%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0++[WEBPRO仕様書　2.5.7 風量制御方式によって定まる係数]
-* link:++htt_ps://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_2_6_7_%E6%B5%81%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0++[WEBPRO仕様書　2.6.7 流量制御方式によって定まる係数]
+* link:++https://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_2_5_7_%E9%A2%A8%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0++[WEBPRO仕様書　2.5.7 風量制御方式によって定まる係数]
+* link:++https://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_2_6_7_%E6%B5%81%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0++[WEBPRO仕様書　2.6.7 流量制御方式によって定まる係数]
 ====
 
 
@@ -200,8 +200,8 @@ image::images/fig-SP2-2.png[width="95%"]
 ====
 WEBPROにおいて選択できる熱源機種及び特性については、次の仕様書をご覧下さい。
 
-* link:htt_ps://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_a_4_%E7%86%B1%E6%BA%90%E7%89%B9%E6%80%A7[WEBPRO仕様書　2.A.4 熱源特性]
-* link:htt_ps://webpro-nr.github.io/BESJP_Engineeringreference/pdf/heat_source_performance_curve.pdf[WEBPRO仕様書　熱源機器特性一覧]
+* link:https://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_a_4_%E7%86%B1%E6%BA%90%E7%89%B9%E6%80%A7[WEBPRO仕様書　2.A.4 熱源特性]
+* link:https://webpro-nr.github.io/BESJP_Engineeringreference/pdf/heat_source_performance_curve.pdf[WEBPRO仕様書　熱源機器特性一覧]
 ====
 
 ==== 入力シートの作成方法
@@ -470,7 +470,7 @@ image::images/fig-SP6-1.png[width="95%"]
 ====
 WEBPROのカレンダーパターンについては、次の仕様書をご覧下さい。
 
-* link:htt_ps://www.kenken.go.jp/becc/documents/building/Definitions/CalenderPattern_20140303.pdf[WEBPRO仕様書　計算に必要となるデータ集 カレンダーパターン]
+* link:https://www.kenken.go.jp/becc/documents/building/Definitions/CalenderPattern_20140303.pdf[WEBPRO仕様書　計算に必要となるデータ集 カレンダーパターン]
 ====
 
 
@@ -515,7 +515,7 @@ image::images/fig-SP7-1.png[width="95%"]
 ====
 WEBPROの室スケジュールについては、次の仕様書をご覧下さい。
 
-* link:htt_ps://www.kenken.go.jp/becc/documents/building/Definitions/RoomUsageCondition_20140303.pdf[WEBPRO仕様書　計算に必要となるデータ集 標準室使用条件の詳細]
+* link:https://www.kenken.go.jp/becc/documents/building/Definitions/RoomUsageCondition_20140303.pdf[WEBPRO仕様書　計算に必要となるデータ集 標準室使用条件の詳細]
 ====
 
 
@@ -618,7 +618,7 @@ image::images/fig-SP9-1.png[width="95%"]
 ====
 WEBPROの標準室使用条件については、次の仕様書をご覧下さい。
 
-* link:htt_ps://www.kenken.go.jp/becc/documents/building/Definitions/RoomUsageCondition_20140303.pdf[WEBPRO仕様書　計算に必要となるデータ集 標準室使用条件の詳細]
+* link:https://www.kenken.go.jp/becc/documents/building/Definitions/RoomUsageCondition_20140303.pdf[WEBPRO仕様書　計算に必要となるデータ集 標準室使用条件の詳細]
 ====
 
 === 空調負荷（様式SP-10）【空調】
