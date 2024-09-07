@@ -1948,56 +1948,56 @@
         "1F_中央監視室・警備室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EhP1-1",
-            "ahu_cooling_outdoor_load": "EhP1-1",
-            "ahu_heating_inside_load": "EhP1-1",
-            "ahu_heating_outdoor_load": "EhP1-1",
-            "info": "EhP1-1"
+            "ahu_cooling_inside_load": "EHP1-1",
+            "ahu_cooling_outdoor_load": "EHP1-1",
+            "ahu_heating_inside_load": "EHP1-1",
+            "ahu_heating_outdoor_load": "EHP1-1",
+            "info": "EHP1-1"
         },
         "1F_更衣室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EhP1-2",
-            "ahu_cooling_outdoor_load": "EhP1-2",
-            "ahu_heating_inside_load": "EhP1-2",
-            "ahu_heating_outdoor_load": "EhP1-2",
-            "info": "EhP1-2"
+            "ahu_cooling_inside_load": "EHP1-2",
+            "ahu_cooling_outdoor_load": "EHP1-2",
+            "ahu_heating_inside_load": "EHP1-2",
+            "ahu_heating_outdoor_load": "EHP1-2",
+            "info": "EHP1-2"
         },
         "1F_更衣室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EhP1-3",
-            "ahu_cooling_outdoor_load": "EhP1-3",
-            "ahu_heating_inside_load": "EhP1-3",
-            "ahu_heating_outdoor_load": "EhP1-3",
-            "info": "EhP1-3"
+            "ahu_cooling_inside_load": "EHP1-3",
+            "ahu_cooling_outdoor_load": "EHP1-3",
+            "ahu_heating_inside_load": "EHP1-3",
+            "ahu_heating_outdoor_load": "EHP1-3",
+            "info": "EHP1-3"
         },
         "1F_休憩室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EhP1-4",
-            "ahu_cooling_outdoor_load": "EhP1-4",
-            "ahu_heating_inside_load": "EhP1-4",
-            "ahu_heating_outdoor_load": "EhP1-4",
-            "info": "EhP1-4"
+            "ahu_cooling_inside_load": "EHP1-4",
+            "ahu_cooling_outdoor_load": "EHP1-4",
+            "ahu_heating_inside_load": "EHP1-4",
+            "ahu_heating_outdoor_load": "EHP1-4",
+            "info": "EHP1-4"
         },
         "1F_事務室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-11",
-            "ahu_cooling_outdoor_load": "hU-11",
-            "ahu_heating_inside_load": "hU-11",
-            "ahu_heating_outdoor_load": "hU-11",
-            "info": "hU-11"
+            "ahu_cooling_inside_load": "HU-11",
+            "ahu_cooling_outdoor_load": "HU-11",
+            "ahu_heating_inside_load": "HU-11",
+            "ahu_heating_outdoor_load": "HU-11",
+            "info": "HU-11"
         },
         "1F_事務室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-12",
-            "ahu_cooling_outdoor_load": "hU-12",
-            "ahu_heating_inside_load": "hU-12",
-            "ahu_heating_outdoor_load": "hU-12",
-            "info": "hU-12"
+            "ahu_cooling_inside_load": "HU-12",
+            "ahu_cooling_outdoor_load": "HU-12",
+            "ahu_heating_inside_load": "HU-12",
+            "ahu_heating_outdoor_load": "HU-12",
+            "info": "HU-12"
         },
         "2F_EVホール": {
             "is_natual_ventilation": "無",
@@ -2011,20 +2011,20 @@
         "2F_事務室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-21",
-            "ahu_cooling_outdoor_load": "hU-21",
-            "ahu_heating_inside_load": "hU-21",
-            "ahu_heating_outdoor_load": "hU-21",
-            "info": "hU-21"
+            "ahu_cooling_inside_load": "HU-21",
+            "ahu_cooling_outdoor_load": "HU-21",
+            "ahu_heating_inside_load": "HU-21",
+            "ahu_heating_outdoor_load": "HU-21",
+            "info": "HU-21"
         },
         "2F_事務室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-22",
-            "ahu_cooling_outdoor_load": "hU-22",
-            "ahu_heating_inside_load": "hU-22",
-            "ahu_heating_outdoor_load": "hU-22",
-            "info": "hU-22"
+            "ahu_cooling_inside_load": "HU-22",
+            "ahu_cooling_outdoor_load": "HU-22",
+            "ahu_heating_inside_load": "HU-22",
+            "ahu_heating_outdoor_load": "HU-22",
+            "info": "HU-22"
         },
         "3F_EVホール": {
             "is_natual_ventilation": "無",
@@ -2038,20 +2038,20 @@
         "3F_事務室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-31",
-            "ahu_cooling_outdoor_load": "hU-31",
-            "ahu_heating_inside_load": "hU-31",
-            "ahu_heating_outdoor_load": "hU-31",
-            "info": "hU-31"
+            "ahu_cooling_inside_load": "HU-31",
+            "ahu_cooling_outdoor_load": "HU-31",
+            "ahu_heating_inside_load": "HU-31",
+            "ahu_heating_outdoor_load": "HU-31",
+            "info": "HU-31"
         },
         "3F_事務室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-32",
-            "ahu_cooling_outdoor_load": "hU-32",
-            "ahu_heating_inside_load": "hU-32",
-            "ahu_heating_outdoor_load": "hU-32",
-            "info": "hU-32"
+            "ahu_cooling_inside_load": "HU-32",
+            "ahu_cooling_outdoor_load": "HU-32",
+            "ahu_heating_inside_load": "HU-32",
+            "ahu_heating_outdoor_load": "HU-32",
+            "info": "HU-32"
         },
         "4F_EVホール": {
             "is_natual_ventilation": "無",
@@ -2065,20 +2065,20 @@
         "4F_事務室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-41",
-            "ahu_cooling_outdoor_load": "hU-41",
-            "ahu_heating_inside_load": "hU-41",
-            "ahu_heating_outdoor_load": "hU-41",
-            "info": "hU-41"
+            "ahu_cooling_inside_load": "HU-41",
+            "ahu_cooling_outdoor_load": "HU-41",
+            "ahu_heating_inside_load": "HU-41",
+            "ahu_heating_outdoor_load": "HU-41",
+            "info": "HU-41"
         },
         "4F_事務室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-42",
-            "ahu_cooling_outdoor_load": "hU-42",
-            "ahu_heating_inside_load": "hU-42",
-            "ahu_heating_outdoor_load": "hU-42",
-            "info": "hU-42"
+            "ahu_cooling_inside_load": "HU-42",
+            "ahu_cooling_outdoor_load": "HU-42",
+            "ahu_heating_inside_load": "HU-42",
+            "ahu_heating_outdoor_load": "HU-42",
+            "info": "HU-42"
         },
         "5F_EVホール": {
             "is_natual_ventilation": "無",
@@ -2092,20 +2092,20 @@
         "5F_事務室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-51",
-            "ahu_cooling_outdoor_load": "hU-51",
-            "ahu_heating_inside_load": "hU-51",
-            "ahu_heating_outdoor_load": "hU-51",
-            "info": "hU-51"
+            "ahu_cooling_inside_load": "HU-51",
+            "ahu_cooling_outdoor_load": "HU-51",
+            "ahu_heating_inside_load": "HU-51",
+            "ahu_heating_outdoor_load": "HU-51",
+            "info": "HU-51"
         },
         "5F_事務室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-52",
-            "ahu_cooling_outdoor_load": "hU-52",
-            "ahu_heating_inside_load": "hU-52",
-            "ahu_heating_outdoor_load": "hU-52",
-            "info": "hU-52"
+            "ahu_cooling_inside_load": "HU-52",
+            "ahu_cooling_outdoor_load": "HU-52",
+            "ahu_heating_inside_load": "HU-52",
+            "ahu_heating_outdoor_load": "HU-52",
+            "info": "HU-52"
         },
         "6F_EVホール": {
             "is_natual_ventilation": "無",
@@ -2119,20 +2119,20 @@
         "6F_事務室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-61",
-            "ahu_cooling_outdoor_load": "hU-61",
-            "ahu_heating_inside_load": "hU-61",
-            "ahu_heating_outdoor_load": "hU-61",
-            "info": "hU-61"
+            "ahu_cooling_inside_load": "HU-61",
+            "ahu_cooling_outdoor_load": "HU-61",
+            "ahu_heating_inside_load": "HU-61",
+            "ahu_heating_outdoor_load": "HU-61",
+            "info": "HU-61"
         },
         "6F_事務室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-62",
-            "ahu_cooling_outdoor_load": "hU-62",
-            "ahu_heating_inside_load": "hU-62",
-            "ahu_heating_outdoor_load": "hU-62",
-            "info": "hU-62"
+            "ahu_cooling_inside_load": "HU-62",
+            "ahu_cooling_outdoor_load": "HU-62",
+            "ahu_heating_inside_load": "HU-62",
+            "ahu_heating_outdoor_load": "HU-62",
+            "info": "HU-62"
         },
         "7F_EVホール": {
             "is_natual_ventilation": "無",
@@ -2146,20 +2146,20 @@
         "7F_事務室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-71",
-            "ahu_cooling_outdoor_load": "hU-71",
-            "ahu_heating_inside_load": "hU-71",
-            "ahu_heating_outdoor_load": "hU-71",
-            "info": "hU-71"
+            "ahu_cooling_inside_load": "HU-71",
+            "ahu_cooling_outdoor_load": "HU-71",
+            "ahu_heating_inside_load": "HU-71",
+            "ahu_heating_outdoor_load": "HU-71",
+            "info": "HU-71"
         },
         "7F_事務室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "hU-72",
-            "ahu_cooling_outdoor_load": "hU-72",
-            "ahu_heating_inside_load": "hU-72",
-            "ahu_heating_outdoor_load": "hU-72",
-            "info": "hU-72"
+            "ahu_cooling_inside_load": "HU-72",
+            "ahu_cooling_outdoor_load": "HU-72",
+            "ahu_heating_inside_load": "HU-72",
+            "ahu_heating_outdoor_load": "HU-72",
+            "info": "HU-72"
         }
     },
     "heat_source_system": {
@@ -2287,7 +2287,7 @@
                 ]
             }
         },
-        "EhP1-1O": {
+        "EHP1-1O": {
             "冷房": {
                 "storage_type": null,
                 "storage_size": null,
@@ -2339,7 +2339,7 @@
                 ]
             }
         },
-        "EhP1-2O": {
+        "EHP1-2O": {
             "冷房": {
                 "storage_type": null,
                 "storage_size": null,
@@ -2391,7 +2391,7 @@
                 ]
             }
         },
-        "EhP1-3O": {
+        "EHP1-3O": {
             "冷房": {
                 "storage_type": null,
                 "storage_size": null,
@@ -2443,7 +2443,7 @@
                 ]
             }
         },
-        "EhP1-4O": {
+        "EHP1-4O": {
             "冷房": {
                 "storage_type": null,
                 "storage_size": null,
@@ -2497,7 +2497,7 @@
         }
     },
     "secondary_pump_system": {
-        "ChP2": {
+        "CHP2": {
             "冷房": {
                 "TempelatureDifference": 7.0,
                 "is_staging_control": "有",
@@ -2561,14 +2561,14 @@
         }
     },
     "air_handling_system": {
-        "EhP1-1": {
+        "EHP1-1": {
             "is_economizer": "無",
             "economizer_max_air_volume": 1290.0,
             "is_outdoor_air_cut": "無",
             "pump_cooling": null,
             "pump_heating": null,
-            "heat_source_cooling": "EhP1-1O",
-            "heat_source_heating": "EhP1-1O",
+            "heat_source_cooling": "EHP1-1O",
+            "heat_source_heating": "EHP1-1O",
             "air_handling_unit": [
                 {
                     "type": "室内機",
@@ -2585,7 +2585,7 @@
                     "air_heat_exchanger_effective_air_volume_ratio": null,
                     "air_heat_exchanger_control": "無",
                     "air_heat_exchanger_power_consumption": null,
-                    "info": "EhP1-1O"
+                    "info": "EHP1-1O"
                 },
                 {
                     "type": "全熱交ユニット",
@@ -2606,14 +2606,14 @@
                 }
             ]
         },
-        "EhP1-2": {
+        "EHP1-2": {
             "is_economizer": "無",
             "economizer_max_air_volume": 960.0,
             "is_outdoor_air_cut": "無",
             "pump_cooling": null,
             "pump_heating": null,
-            "heat_source_cooling": "EhP1-2O",
-            "heat_source_heating": "EhP1-2O",
+            "heat_source_cooling": "EHP1-2O",
+            "heat_source_heating": "EHP1-2O",
             "air_handling_unit": [
                 {
                     "type": "室内機",
@@ -2630,7 +2630,7 @@
                     "air_heat_exchanger_effective_air_volume_ratio": null,
                     "air_heat_exchanger_control": "無",
                     "air_heat_exchanger_power_consumption": null,
-                    "info": "EhP1-2O"
+                    "info": "EHP1-2O"
                 },
                 {
                     "type": "全熱交ユニット",
@@ -2651,14 +2651,14 @@
                 }
             ]
         },
-        "EhP1-3": {
+        "EHP1-3": {
             "is_economizer": "無",
             "economizer_max_air_volume": 960.0,
             "is_outdoor_air_cut": "無",
             "pump_cooling": null,
             "pump_heating": null,
-            "heat_source_cooling": "EhP1-3O",
-            "heat_source_heating": "EhP1-3O",
+            "heat_source_cooling": "EHP1-3O",
+            "heat_source_heating": "EHP1-3O",
             "air_handling_unit": [
                 {
                     "type": "室内機",
@@ -2675,7 +2675,7 @@
                     "air_heat_exchanger_effective_air_volume_ratio": null,
                     "air_heat_exchanger_control": "無",
                     "air_heat_exchanger_power_consumption": null,
-                    "info": "EhP1-3O"
+                    "info": "EHP1-3O"
                 },
                 {
                     "type": "全熱交ユニット",
@@ -2696,14 +2696,14 @@
                 }
             ]
         },
-        "EhP1-4": {
+        "EHP1-4": {
             "is_economizer": "無",
             "economizer_max_air_volume": 960.0,
             "is_outdoor_air_cut": "無",
             "pump_cooling": null,
             "pump_heating": null,
-            "heat_source_cooling": "EhP1-4O",
-            "heat_source_heating": "EhP1-4O",
+            "heat_source_cooling": "EHP1-4O",
+            "heat_source_heating": "EHP1-4O",
             "air_handling_unit": [
                 {
                     "type": "室内機",
@@ -2720,7 +2720,7 @@
                     "air_heat_exchanger_effective_air_volume_ratio": null,
                     "air_heat_exchanger_control": "無",
                     "air_heat_exchanger_power_consumption": null,
-                    "info": "EhP1-4O"
+                    "info": "EHP1-4O"
                 },
                 {
                     "type": "全熱交ユニット",
@@ -2745,8 +2745,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": 1680.0,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2773,8 +2773,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": 280.0,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2801,8 +2801,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": 280.0,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2829,8 +2829,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": 280.0,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2857,8 +2857,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": 280.0,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2885,8 +2885,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": 280.0,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2913,8 +2913,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": 280.0,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2941,8 +2941,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": 280.0,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2965,12 +2965,12 @@
                 }
             ]
         },
-        "hU-11": {
+        "HU-11": {
             "is_economizer": "無",
             "economizer_max_air_volume": 7000.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -2993,12 +2993,12 @@
                 }
             ]
         },
-        "hU-12": {
+        "HU-12": {
             "is_economizer": "無",
             "economizer_max_air_volume": 5600.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3021,12 +3021,12 @@
                 }
             ]
         },
-        "hU-21": {
+        "HU-21": {
             "is_economizer": "無",
             "economizer_max_air_volume": 11900.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3049,12 +3049,12 @@
                 }
             ]
         },
-        "hU-22": {
+        "HU-22": {
             "is_economizer": "無",
             "economizer_max_air_volume": 10300.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3077,12 +3077,12 @@
                 }
             ]
         },
-        "hU-31": {
+        "HU-31": {
             "is_economizer": "無",
             "economizer_max_air_volume": 11900.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3105,12 +3105,12 @@
                 }
             ]
         },
-        "hU-32": {
+        "HU-32": {
             "is_economizer": "無",
             "economizer_max_air_volume": 10300.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3133,12 +3133,12 @@
                 }
             ]
         },
-        "hU-41": {
+        "HU-41": {
             "is_economizer": "無",
             "economizer_max_air_volume": 11900.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3161,12 +3161,12 @@
                 }
             ]
         },
-        "hU-42": {
+        "HU-42": {
             "is_economizer": "無",
             "economizer_max_air_volume": 10300.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3189,12 +3189,12 @@
                 }
             ]
         },
-        "hU-51": {
+        "HU-51": {
             "is_economizer": "無",
             "economizer_max_air_volume": 11900.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3217,12 +3217,12 @@
                 }
             ]
         },
-        "hU-52": {
+        "HU-52": {
             "is_economizer": "無",
             "economizer_max_air_volume": 10300.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3245,12 +3245,12 @@
                 }
             ]
         },
-        "hU-61": {
+        "HU-61": {
             "is_economizer": "無",
             "economizer_max_air_volume": 11900.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3273,12 +3273,12 @@
                 }
             ]
         },
-        "hU-62": {
+        "HU-62": {
             "is_economizer": "無",
             "economizer_max_air_volume": 10300.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3301,12 +3301,12 @@
                 }
             ]
         },
-        "hU-71": {
+        "HU-71": {
             "is_economizer": "無",
             "economizer_max_air_volume": 13200.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [
@@ -3329,12 +3329,12 @@
                 }
             ]
         },
-        "hU-72": {
+        "HU-72": {
             "is_economizer": "無",
             "economizer_max_air_volume": 11400.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "ChP2",
-            "pump_heating": "ChP2",
+            "pump_cooling": "CHP2",
+            "pump_heating": "CHP2",
             "heat_source_cooling": "AR1",
             "heat_source_heating": "AR1",
             "air_handling_unit": [

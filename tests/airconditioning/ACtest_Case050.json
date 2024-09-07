@@ -114,7 +114,7 @@
                 ]
             }
         },
-        "hS1": {
+        "HS1": {
             "暖房": {
                 "storage_type": null,
                 "storage_size": null,
@@ -198,7 +198,7 @@
             "pump_cooling": null,
             "pump_heating": "pump1",
             "heat_source_cooling": "PAC1",
-            "heat_source_heating": "hS1",
+            "heat_source_heating": "HS1",
             "air_handling_unit": [
                 {
                     "type": "空調機",
@@ -215,7 +215,7 @@
                     "air_heat_exchanger_effective_air_volume_ratio": null,
                     "air_heat_exchanger_control": "無",
                     "air_heat_exchanger_power_consumption": null,
-                    "info": "hS1"
+                    "info": "HS1"
                 }
             ]
         }
