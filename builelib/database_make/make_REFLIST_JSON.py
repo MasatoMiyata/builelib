@@ -3,20 +3,20 @@ import csv
 import json
 
 # CSVファイル読み込み
-with open('./builelib/database_make/csv/refLIST.csv',encoding='Shift_JIS') as f:
+with open('./builelib/database_make/csv/ref_list.csv',encoding='Shift_JIS') as f:
     reader = csv.reader(f)
-    refLIST = [row for row in reader]
+    ref_list = [row for row in reader]
 
-with open('./builelib/database_make/csv/refCURVE.csv',encoding='Shift_JIS') as f:
+with open('./builelib/database_make/csv/ref_curve.csv',encoding='Shift_JIS') as f:
     reader = csv.reader(f)
-    refCURVE = [row for row in reader]
+    ref_curve = [row for row in reader]
 
 #%%
 # 機種名称リストの作成
 
 refnameList = []
-for i in range(1,len(refLIST)):
-    refnameList.append(refLIST[i][1])
+for i in range(1,len(ref_list)):
+    refnameList.append(ref_list[i][1])
 
 #重複削除(set)してループ
 DictData = {}
@@ -41,8 +41,8 @@ for unitname in set(refnameList):
         }
     }
 
-def convert_curveID2dict(refCURVE,ID):
-    for para in refCURVE:
+def convert_curveID2dict(ref_curve,ID):
+    for para in ref_curve:
         if para[1] == ID:
             addData = {
                 "a4": float(para[3]),
@@ -56,7 +56,7 @@ def convert_curveID2dict(refCURVE,ID):
 
 
 # %%
-for d in refLIST:
+for d in ref_list:
     
     if d[0] != "名称":  # 先頭行はスキップ
 
@@ -71,7 +71,7 @@ for d in refLIST:
                 "上限": float(d[7]),
                 "冷却水温度下限": None,
                 "冷却水温度上限": None,
-                "係数": convert_curveID2dict(refCURVE,d[8]),
+                "係数": convert_curveID2dict(ref_curve,d[8]),
                 "基整促係数": float(d[9])
             }
         else:
@@ -80,7 +80,7 @@ for d in refLIST:
                 "上限": float(d[7]),
                 "冷却水温度下限": float(d[10]),
                 "冷却水温度上限": float(d[11]),
-                "係数": convert_curveID2dict(refCURVE,d[8]),
+                "係数": convert_curveID2dict(ref_curve,d[8]),
                 "基整促係数": float(d[9])
             }
 

@@ -1,7 +1,7 @@
 import jsonschema
 import json
 
-targetFile = 'refLIST.json'
+targetFile = 'ref_list.json'
 schemaFile = './builelib/database_make/schema/q_room_COEFFI_schema.json'
 
 # スキーマの読み込み

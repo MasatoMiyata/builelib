@@ -280,7 +280,7 @@ if __name__ == '__main__':
     # filename_HASP = "./builelib/climate_data/C1_" +area[area_name]["気象データファイル名"]
     # filename_dat  = "./builelib/climate_data/" + area[area_name]["気象データファイル名（給湯）"]
 
-    # toa_ave_dat = readDatclimate_data(filename_dat)
+    # toa_ave_dat = read_dat_climate_data(filename_dat)
 
     # [tout, xout, iod, ios, inn] = read_hasp_climate_data(filename_hasp)
     # toa_ave_hasp = np.mean(tout,1)

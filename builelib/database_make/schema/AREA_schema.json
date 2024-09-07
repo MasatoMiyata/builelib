@@ -7,49 +7,49 @@
         "1地域": {
             "description": "1地域の情報",
             "type": "object",
-            "$ref": "#/definitions/areainfo"
+            "$ref": "#/definitions/area_info"
         },
         "2地域": {
             "description": "2地域の情報",
             "type": "object",
-            "$ref": "#/definitions/areainfo"
+            "$ref": "#/definitions/area_info"
         },
         "3地域": {
             "description": "3地域の情報",
             "type": "object",
-            "$ref": "#/definitions/areainfo"
+            "$ref": "#/definitions/area_info"
         },
         "4地域": {
             "description": "4地域の情報",
             "type": "object",
-            "$ref": "#/definitions/areainfo"
+            "$ref": "#/definitions/area_info"
         },
         "5地域": {
             "description": "5地域の情報",
             "type": "object",
-            "$ref": "#/definitions/areainfo"
+            "$ref": "#/definitions/area_info"
         },
         "6地域": {
             "description": "6地域の情報",
             "type": "object",
-            "$ref": "#/definitions/areainfo"
+            "$ref": "#/definitions/area_info"
         },
         "7地域": {
             "description": "7地域の情報",
             "type": "object",
-            "$ref": "#/definitions/areainfo"
+            "$ref": "#/definitions/area_info"
         },
         "8地域": {
             "description": "8地域の情報",
             "type": "object",
-            "$ref": "#/definitions/areainfo"
+            "$ref": "#/definitions/area_info"
         }
     },
     "required": [
         "1地域","2地域","3地域","4地域","5地域","6地域","7地域","8地域"
     ],
     "definitions": {
-        "areainfo": {
+        "area_info": {
             "description": "地域ごとに必要となる情報",
             "type": "object",
             "additionalProperties": false,
