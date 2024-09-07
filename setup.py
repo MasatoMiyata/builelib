@@ -15,7 +15,7 @@ setup(
     url='https://github.com/MasatoMiyata/builelib',
     license=license,
     packages=find_packages(exclude=('tests', 'docs')),
-    package_data={'builelib': ['input_data/*', 'database/*', 'climate_data/*']},
+    package_data={'builelib': ['input_data/*', 'database/*', 'climatedata/*']},
     include_package_data=True,
     python_requires='>=3.7',
 )

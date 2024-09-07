@@ -26,7 +26,7 @@ class MyEncoder(json.JSONEncoder):
 def convert_heat_source_name(name):
     """熱源機種の読み替え
     Args:
-        name: h25基準Webプログラムの機種名
+        name: H25基準Webプログラムの機種名
     Returns:
         builelib_name: Builelibの機種名
     """
@@ -243,9 +243,9 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     # 熱源仕様（冷熱）
                     # ---------------------------
                     if df["台数制御（冷熱）"] == "有":
-                        bldgdata["heat_source_system"]["RCh"]["冷房"]["is_staging_control"] = "有"
+                        bldgdata["heat_source_system"]["RCH"]["冷房"]["is_staging_control"] = "有"
                     elif df["台数制御（冷熱）"] == "無":
-                        bldgdata["heat_source_system"]["RCh"]["冷房"]["is_staging_control"] = "無"
+                        bldgdata["heat_source_system"]["RCH"]["冷房"]["is_staging_control"] = "無"
 
                     if df["一次ポンプWTF（冷熱1台目）"] == 0:
                         primary_pump_power_consumption = 0
@@ -253,7 +253,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                         primary_pump_power_consumption = df["床面積あたりの熱源容量（冷熱1台目）"] * Sf / df[
                             "一次ポンプWTF（冷熱1台目）"]
 
-                    bldgdata["heat_source_system"]["RCh"]["冷房"]["heat_source"].append({
+                    bldgdata["heat_source_system"]["RCH"]["冷房"]["heat_source"].append({
                         "heat_source_type": convert_heat_source_name(df["熱源種類（冷熱1台目）"]),
                         "number": 1.0,
                         "supply_water_temp_summer": 7,
@@ -283,7 +283,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                             primary_pump_power_consumption = df["床面積あたりの熱源容量（冷熱2台目）"] * Sf / df[
                                 "一次ポンプWTF（冷熱2台目）"]
 
-                        bldgdata["heat_source_system"]["RCh"]["冷房"]["heat_source"].append({
+                        bldgdata["heat_source_system"]["RCH"]["冷房"]["heat_source"].append({
                             "heat_source_type": convert_heat_source_name(df["熱源種類（冷熱2台目）"]),
                             "number": 1.0,
                             "supply_water_temp_summer": 7,
@@ -313,7 +313,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                             primary_pump_power_consumption = df["床面積あたりの熱源容量（冷熱3台目）"] * Sf / df[
                                 "一次ポンプWTF（冷熱3台目）"]
 
-                        bldgdata["heat_source_system"]["RCh"]["冷房"]["heat_source"].append({
+                        bldgdata["heat_source_system"]["RCH"]["冷房"]["heat_source"].append({
                             "heat_source_type": convert_heat_source_name(df["熱源種類（冷熱3台目）"]),
                             "number": 1.0,
                             "supply_water_temp_summer": 7,
@@ -339,9 +339,9 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     # 熱源仕様（温熱）
                     # ---------------------------
                     if df["台数制御（温熱）"] == "有":
-                        bldgdata["heat_source_system"]["RCh"]["暖房"]["is_staging_control"] = "有"
+                        bldgdata["heat_source_system"]["RCH"]["暖房"]["is_staging_control"] = "有"
                     elif df["台数制御（温熱）"] == "無":
-                        bldgdata["heat_source_system"]["RCh"]["暖房"]["is_staging_control"] = "無"
+                        bldgdata["heat_source_system"]["RCH"]["暖房"]["is_staging_control"] = "無"
 
                     if df["一次ポンプWTF（温熱1台目）"] == 0:
                         primary_pump_power_consumption = 0
@@ -349,7 +349,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                         primary_pump_power_consumption = df["床面積あたりの熱源容量（温熱1台目）"] * Sf / df[
                             "一次ポンプWTF（温熱1台目）"]
 
-                    bldgdata["heat_source_system"]["RCh"]["暖房"]["heat_source"].append({
+                    bldgdata["heat_source_system"]["RCH"]["暖房"]["heat_source"].append({
                         "heat_source_type": convert_heat_source_name(df["熱源種類（温熱1台目）"]),
                         "number": 1.0,
                         "supply_water_temp_summer": 42,
@@ -379,7 +379,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                             primary_pump_power_consumption = df["床面積あたりの熱源容量（温熱2台目）"] * Sf / df[
                                 "一次ポンプWTF（温熱2台目）"]
 
-                        bldgdata["heat_source_system"]["RCh"]["暖房"]["heat_source"].append({
+                        bldgdata["heat_source_system"]["RCH"]["暖房"]["heat_source"].append({
                             "heat_source_type": convert_heat_source_name(df["熱源種類（温熱2台目）"]),
                             "number": 1.0,
                             "supply_water_temp_summer": 42,
@@ -409,7 +409,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                             primary_pump_power_consumption = df["床面積あたりの熱源容量（温熱3台目）"] * Sf / df[
                                 "一次ポンプWTF（温熱3台目）"]
 
-                        bldgdata["heat_source_system"]["RCh"]["暖房"]["heat_source"].append({
+                        bldgdata["heat_source_system"]["RCH"]["暖房"]["heat_source"].append({
                             "heat_source_type": convert_heat_source_name(df["熱源種類（温熱3台目）"]),
                             "number": 1.0,
                             "supply_water_temp_summer": 42,
@@ -564,8 +564,8 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                             "is_outdoor_air_cut": "無",
                             "pump_cooling": "PCh",
                             "pump_heating": "PCh",
-                            "heat_source_cooling": "RCh",
-                            "heat_source_heating": "RCh",
+                            "heat_source_cooling": "RCH",
+                            "heat_source_heating": "RCH",
                             "air_handling_unit": []
                         }
 

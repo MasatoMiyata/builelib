@@ -246,7 +246,7 @@ blockquote, blockquote p { line-height: 1.6; color: #777777; }
   h2 { font-size: 2.3125em; }
   h3, #toctitle, .sidebarblock > .content > .title { font-size: 1.6875em; }
   h4 { font-size: 1.4375em; } }
-/* Print styles.  Inlined to avoid required hTTP connection: www.phpied.com/delay-loading-your-print-css/ Credit to Paul Irish and HTML5 Boilerplate (html5boilerplate.com)
+/* Print styles.  Inlined to avoid required HTTP connection: www.phpied.com/delay-loading-your-print-css/ Credit to Paul Irish and HTML5 Boilerplate (html5boilerplate.com)
 */
 .print-only { display: none !important; }
 
