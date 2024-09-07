@@ -1145,44 +1145,44 @@ def make_json_from_v4_sheet(inputfilename):
                         "lighting_initial_illumination_correction_ctrl"]["default"], "str")
                 }
 
-    if "様式hW1" in wb.sheet_names():
+    if "様式HW1" in wb.sheet_names():
 
         # シートの読み込み
-        sheet_hW1 = wb.sheet_by_name("様式hW1")
+        sheet_HW1 = wb.sheet_by_name("様式HW1")
         # 初期化
         room_key = None
 
         # 行のループ
-        for i in range(10, sheet_hW1.nrows):
+        for i in range(10, sheet_HW1.nrows):
 
             # シートから「行」の読み込み
-            datahW1 = sheet_hW1.row_values(i)
+            dataHW1 = sheet_HW1.row_values(i)
 
             # 階と室名が空欄でない場合
-            if (datahW1[0] != "") and (datahW1[1] != ""):
+            if (dataHW1[0] != "") and (dataHW1[1] != ""):
 
                 # 階＋室をkeyとする
-                room_key = str(datahW1[0]) + '_' + str(datahW1[1])
+                room_key = str(dataHW1[0]) + '_' + str(dataHW1[1])
 
                 data["hot_water_room"][room_key] = {
                     "hot_water_system": [
                         {
-                            "usage_type": str(datahW1[2]),
-                            "system_name": str(datahW1[3]),
-                            "hot_water_saving_system": set_default(str(datahW1[4]), "無", "str"),
-                            "info": str(datahW1[5])
+                            "usage_type": str(dataHW1[2]),
+                            "system_name": str(dataHW1[3]),
+                            "hot_water_saving_system": set_default(str(dataHW1[4]), "無", "str"),
+                            "info": str(dataHW1[5])
                         }
                     ]
                 }
 
-            elif (datahW1[2] != "") and (datahW1[3] != ""):
+            elif (dataHW1[2] != "") and (dataHW1[3] != ""):
 
                 data["hot_water_room"][room_key]["hot_water_system"].append(
                     {
-                        "usage_type": str(datahW1[2]),
-                        "system_name": str(datahW1[3]),
-                        "hot_water_saving_system": set_default(str(datahW1[4]), "無", "str"),
-                        "info": str(datahW1[5])
+                        "usage_type": str(dataHW1[2]),
+                        "system_name": str(dataHW1[3]),
+                        "hot_water_saving_system": set_default(str(dataHW1[4]), "無", "str"),
+                        "info": str(dataHW1[5])
                     }
                 )
 
@@ -3936,25 +3936,25 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
     if "5-1) 給湯室" in wb.sheet_names():
 
         # シートの読み込み
-        sheet_hW1 = wb.sheet_by_name("5-1) 給湯室")
+        sheet_HW1 = wb.sheet_by_name("5-1) 給湯室")
         # 初期化
         room_key = None
 
         # 行のループ
-        for i in range(10, sheet_hW1.nrows):
+        for i in range(10, sheet_HW1.nrows):
 
             # シートから「行」の読み込み
-            datahW1 = sheet_hW1.row_values(i)
+            dataHW1 = sheet_HW1.row_values(i)
 
             # 数値で入力された室名を文字列に変換
-            if sheet_hW1.cell_type(i, 1) == xlrd.XL_CELL_number:
-                datahW1[1] = str(int(sheet_hW1.cell_value(i, 1)))
+            if sheet_HW1.cell_type(i, 1) == xlrd.XL_CELL_number:
+                dataHW1[1] = str(int(sheet_HW1.cell_value(i, 1)))
 
             # 階と室名が空欄でない場合
-            if (datahW1[0] != "") and (datahW1[1] != ""):
+            if (dataHW1[0] != "") and (dataHW1[1] != ""):
 
                 # 階＋室をkeyとする
-                room_key = str(datahW1[0]) + '_' + str(datahW1[1])
+                room_key = str(dataHW1[0]) + '_' + str(dataHW1[1])
 
                 if room_key not in data["rooms"]:
 
@@ -3974,31 +3974,31 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                             {
                                 "usage_type": None,
                                 "system_name":
-                                    check_value(datahW1[7], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「④給湯機器名称」",
+                                    check_value(dataHW1[7], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「④給湯機器名称」",
                                                 True, None, "文字列", None, None, None),
                                 "hot_water_saving_system":
-                                    check_value(datahW1[6], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「③節湯器具」",
+                                    check_value(dataHW1[6], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「③節湯器具」",
                                                 True, "無", "文字列", input_options["節湯器具"], None, None),
                                 "info":
-                                    check_value(datahW1[8], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「⑤備考」", False,
+                                    check_value(dataHW1[8], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「⑤備考」", False,
                                                 None, "文字列", None, 0, None),
                             }
                         ]
                     }
 
-            elif (datahW1[6] != "") and (datahW1[7] != "") and (room_key in data["hot_water_room"]):
+            elif (dataHW1[6] != "") and (dataHW1[7] != "") and (room_key in data["hot_water_room"]):
 
                 data["hot_water_room"][room_key]["hot_water_system"].append(
                     {
                         "usage_type": None,
                         "system_name":
-                            check_value(datahW1[7], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「④給湯機器名称」", True,
+                            check_value(dataHW1[7], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「④給湯機器名称」", True,
                                         None, "文字列", None, None, None),
                         "hot_water_saving_system":
-                            check_value(datahW1[6], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「③節湯器具」", True, "無",
+                            check_value(dataHW1[6], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「③節湯器具」", True, "無",
                                         "文字列", input_options["節湯器具"], None, None),
                         "info":
-                            check_value(datahW1[8], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「⑤備考」", False, None,
+                            check_value(dataHW1[8], "様式5-1.給湯対象室 " + str(i + 1) + "行目:「⑤備考」", False, None,
                                         "文字列", None, 0, None),
                     }
                 )
