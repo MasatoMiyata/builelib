@@ -123,7 +123,7 @@ def calc_energy(input_data, DEBUG=False):
 
         # 日積算湯使用利用 [L/m2/day]
         hotwater_demand, hotwater_demand_wasroom_enthalpy_setting, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
-            bc.get_roomhotwaterDemand(
+            bc.get_room_hot_water_demand(
                 input_data["rooms"][room_name]["building_type"],
                 input_data["rooms"][room_name]["room_type"],
                 input_room_usage_condition

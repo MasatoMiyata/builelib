@@ -1109,11 +1109,11 @@ def calc_energy(input_data, debug=False):
 
         # 発熱量参照値 [W/m2] を読み込む関数（空調）
         if "room_usage_condition" in input_data["special_input_data"]:
-            (roomheatGain_Light, roomheatGain_Person, roomheatGain_OAapp, roomNumOfPerson) = \
-                bc.get_roomheatGain(btype, rtype, input_data["special_input_data"]["room_usage_condition"])
+            (room_heat_gain_light, room_heat_gain_person, room_heat_gain_oaapp, room_num_of_person) = \
+                bc.get_room_heat_gain(btype, rtype, input_data["special_input_data"]["room_usage_condition"])
         else:
-            (roomheatGain_Light, roomheatGain_Person, roomheatGain_OAapp, roomNumOfPerson) = \
-                bc.get_roomheatGain(btype, rtype)
+            (room_heat_gain_light, room_heat_gain_person, room_heat_gain_oaapp, room_num_of_person) = \
+                bc.get_room_heat_gain(btype, rtype)
 
         # 様式4から照明発熱量を読み込む
         if BUILELIB_MODE:
@@ -1123,16 +1123,16 @@ def calc_energy(input_data, debug=False):
                     lighting_power += input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name][
                                           "rated_power"] * \
                                       input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name]["number"]
-                roomheatGain_Light = lighting_power / input_data["air_conditioning_zone"][room_zone_name]["zone_area"]
+                room_heat_gain_light = lighting_power / input_data["air_conditioning_zone"][room_zone_name]["zone_area"]
 
-        heat_light_daily = np.sum(room_schedule_light[room_zone_name], 1) * roomheatGain_Light  # 照明からの発熱（日積算）（365日分）
-        heat_person_daily = np.sum(room_schedule_person[room_zone_name], 1) * roomheatGain_Person  # 人体からの発熱（日積算）（365日分）
-        heat_OAapp_daily = np.sum(room_schedule_oa_app[room_zone_name], 1) * roomheatGain_OAapp  # 機器からの発熱（日積算）（365日分）
+        heat_light_daily = np.sum(room_schedule_light[room_zone_name], 1) * room_heat_gain_light  # 照明からの発熱（日積算）（365日分）
+        heat_person_daily = np.sum(room_schedule_person[room_zone_name], 1) * room_heat_gain_person  # 人体からの発熱（日積算）（365日分）
+        heat_OAapp_daily = np.sum(room_schedule_oa_app[room_zone_name], 1) * room_heat_gain_oaapp  # 機器からの発熱（日積算）（365日分）
 
         # 時刻別計算用（本来はこのループに入れるべきではない → 時刻別計算の方に入れるべき）
-        heat_light_hourly[room_zone_name] = room_schedule_light[room_zone_name] * roomheatGain_Light  # 照明からの発熱 （365日分）
-        Num_of_Person_hourly[room_zone_name] = room_schedule_person[room_zone_name] * roomNumOfPerson  # 人員密度（365日分）
-        heat_OAapp_hourly[room_zone_name] = room_schedule_oa_app[room_zone_name] * roomheatGain_OAapp  # 機器からの発熱 （365日分）
+        heat_light_hourly[room_zone_name] = room_schedule_light[room_zone_name] * room_heat_gain_light  # 照明からの発熱 （365日分）
+        Num_of_Person_hourly[room_zone_name] = room_schedule_person[room_zone_name] * room_num_of_person  # 人員密度（365日分）
+        heat_OAapp_hourly[room_zone_name] = room_schedule_oa_app[room_zone_name] * room_heat_gain_oaapp  # 機器からの発熱 （365日分）
 
         for dd in range(0, 365):
 

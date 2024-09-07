@@ -98,17 +98,17 @@ def get_room_outdoor_air_volume(building_type, room_type, input_room_usage_condi
     """
 
     # 外気導入量 [m3/h/m2] 標準室使用条件より取得
-    roomoutdoor_air_volume = RoomUsageSchedule[building_type][room_type]["外気導入量"]
+    room_outdoor_air_volume = RoomUsageSchedule[building_type][room_type]["外気導入量"]
 
     # SP-9シートによる任意入力があれば上書き
     if building_type in input_room_usage_condition:
         if room_type in input_room_usage_condition[building_type]:
-            roomoutdoor_air_volume = float(input_room_usage_condition[building_type][room_type]["外気導入量"])
+            room_outdoor_air_volume = float(input_room_usage_condition[building_type][room_type]["外気導入量"])
 
-    return roomoutdoor_air_volume
+    return room_outdoor_air_volume
 
 
-def get_roomhotwaterDemand(building_type, room_type, input_room_usage_condition={}):
+def get_room_hot_water_demand(building_type, room_type, input_room_usage_condition={}):
     """
     湯使用量（L/m2日）を読み込む関数（給湯）
     """
@@ -162,14 +162,14 @@ def get_roomhotwaterDemand(building_type, room_type, input_room_usage_condition=
     return hotwater_demand, hotwater_demand_wasroom_enthalpy_setting, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other
 
 
-def get_roomheatGain(building_type, room_type, input_room_usage_condition={}):
+def get_room_heat_gain(building_type, room_type, input_room_usage_condition={}):
     """
     発熱量参照値を読み込む関数（空調）
     """
 
-    roomheatGain_Light = RoomUsageSchedule[building_type][room_type]["照明発熱参照値"]
-    roomNumOfPerson = RoomUsageSchedule[building_type][room_type]["人体発熱参照値"]
-    roomheatGain_OAapp = RoomUsageSchedule[building_type][room_type]["機器発熱参照値"]
+    room_heat_gain_light = RoomUsageSchedule[building_type][room_type]["照明発熱参照値"]
+    room_num_of_person = RoomUsageSchedule[building_type][room_type]["人体発熱参照値"]
+    room_heat_gain_oaapp = RoomUsageSchedule[building_type][room_type]["機器発熱参照値"]
     work_load_index = RoomUsageSchedule[building_type][room_type]["作業強度指数"]
 
     # SP-9シートによる任意入力があれば上書き
@@ -177,32 +177,32 @@ def get_roomheatGain(building_type, room_type, input_room_usage_condition={}):
         if room_type in input_room_usage_condition[building_type]:
 
             if input_room_usage_condition[building_type][room_type]["照明発熱参照値"] != "":
-                roomheatGain_Light = float(input_room_usage_condition[building_type][room_type]["照明発熱参照値"])
+                room_heat_gain_light = float(input_room_usage_condition[building_type][room_type]["照明発熱参照値"])
 
             if input_room_usage_condition[building_type][room_type]["人体発熱参照値"] != "":
-                roomNumOfPerson = float(input_room_usage_condition[building_type][room_type]["人体発熱参照値"])
+                room_num_of_person = float(input_room_usage_condition[building_type][room_type]["人体発熱参照値"])
 
             if input_room_usage_condition[building_type][room_type]["機器発熱参照値"] != "":
-                roomheatGain_OAapp = float(input_room_usage_condition[building_type][room_type]["機器発熱参照値"])
+                room_heat_gain_oaapp = float(input_room_usage_condition[building_type][room_type]["機器発熱参照値"])
 
             if input_room_usage_condition[building_type][room_type]["作業強度指数"] != "":
                 work_load_index = float(input_room_usage_condition[building_type][room_type]["作業強度指数"])
 
     # 人体発熱量参照値 [人/m2 * W/人 = W/m2]
     if work_load_index == 1:
-        roomheatGain_Person = roomNumOfPerson * 92
+        room_heat_gain_person = room_num_of_person * 92
     elif work_load_index == 2:
-        roomheatGain_Person = roomNumOfPerson * 106
+        room_heat_gain_person = room_num_of_person * 106
     elif work_load_index == 3:
-        roomheatGain_Person = roomNumOfPerson * 119
+        room_heat_gain_person = room_num_of_person * 119
     elif work_load_index == 4:
-        roomheatGain_Person = roomNumOfPerson * 131
+        room_heat_gain_person = room_num_of_person * 131
     elif work_load_index == 5:
-        roomheatGain_Person = roomNumOfPerson * 145
+        room_heat_gain_person = room_num_of_person * 145
     else:
-        roomheatGain_Person = np.nan
+        room_heat_gain_person = np.nan
 
-    return roomheatGain_Light, roomheatGain_Person, roomheatGain_OAapp, roomNumOfPerson
+    return room_heat_gain_light, room_heat_gain_person, room_heat_gain_oaapp, room_num_of_person
 
 
 def get_room_usage_schedule(building_type, room_type, input_calendar={}):

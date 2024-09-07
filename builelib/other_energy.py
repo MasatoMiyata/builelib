@@ -34,7 +34,7 @@ def calc_energy(input_data, DEBUG=False):
     room_schedule_light = {}
     room_schedule_person = {}
     room_schedule_oa_app = {}
-    roomheatGain_OAapp = {}
+    room_heat_gain_oaapp = {}
 
     for room_name in input_data["rooms"]:
 
@@ -67,7 +67,7 @@ def calc_energy(input_data, DEBUG=False):
             room_schedule_light[room_name] = np.zeros((365, 24))
             room_schedule_person[room_name] = np.zeros((365, 24))
             room_schedule_oa_app[room_name] = np.zeros((365, 24))
-            roomheatGain_OAapp[room_name] = 0
+            room_heat_gain_oaapp[room_name] = 0
 
         else:
 
@@ -78,8 +78,8 @@ def calc_energy(input_data, DEBUG=False):
                                          input_data["rooms"][room_name]["room_type"], input_calendar)
 
             # 機器発熱量参照値 [W/m2]の読み込み。SP-9に入力がある場合、任意の値を使用。
-            (_, _, roomheatGain_OAapp[room_name], _) = \
-                bc.get_roomheatGain(input_data["rooms"][room_name]["building_type"],
+            (_, _, room_heat_gain_oaapp[room_name], _) = \
+                bc.get_room_heat_gain(input_data["rooms"][room_name]["building_type"],
                                     input_data["rooms"][room_name]["room_type"], input_room_usage_condition)
 
             ##----------------------------------------------------------------------------------
@@ -106,11 +106,11 @@ def calc_energy(input_data, DEBUG=False):
                         room_schedule_oa_app[room_name] = np.array(
                             input_data["special_input_data"]["room_schedule"][room_name]["schedule"]["機器発熱密度比率"])
 
-        if roomheatGain_OAapp[room_name] != None:
+        if room_heat_gain_oaapp[room_name] != None:
 
             # 機器からの発熱（日積算）（365日分） [MJ/m2/day]
             result_json["E_other_room"][room_name]["roomheatGain_daily"] = \
-                np.sum(room_schedule_oa_app[room_name], 1) * roomheatGain_OAapp[room_name] / 1000000 * bc.fprime
+                np.sum(room_schedule_oa_app[room_name], 1) * room_heat_gain_oaapp[room_name] / 1000000 * bc.fprime
 
             # その他一次エネルギー消費量原単位（告示の値） [MJ/m2] の算出（端数処理）
             result_json["E_other_room"][room_name]["E_other_standard"] = \
