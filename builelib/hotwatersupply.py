@@ -13,7 +13,7 @@ import climate
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
-climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climate_data/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 
 def calc_energy(input_data, DEBUG=False):
@@ -33,7 +33,7 @@ def calc_energy(input_data, DEBUG=False):
         },
 
         "for_cgs": {
-            "Edesign_MWh_Ele_day": 0,  # 給湯設備（エネルギー源を電力とする給湯機器のみが対象）の電力消費量
+            "edesign_mwh_ele_day": 0,  # 給湯設備（エネルギー源を電力とする給湯機器のみが対象）の電力消費量
             "Edesign_MJ_CGS_day": 0,  # 排熱利用する給湯系統の一次エネルギー消費量
             "Q_eqp_CGS_day": 0  # 排熱が利用できる系統の給湯設備の給湯負荷
         }
@@ -430,7 +430,7 @@ def calc_energy(input_data, DEBUG=False):
     for unit_name in input_data["hot_water_supply_systems"]:
 
         # 太陽熱利用量 [KJ/day]
-        input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"] = np.zeros(365)
+        input_data["hot_water_supply_systems"][unit_name]["qs_solar_gain"] = np.zeros(365)
 
         if (input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] != "") and (
                 input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] != None):
@@ -443,14 +443,14 @@ def calc_energy(input_data, DEBUG=False):
                 iod, ios, inn)
 
             # 太陽熱利用量 [KJ/day]
-            input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"] = \
+            input_data["hot_water_supply_systems"][unit_name]["qs_solar_gain"] = \
                 (input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] * 0.4 * 0.85) * \
                 (Id + Is) * 3600 / 1000000 * 1000
 
         if DEBUG:
             print(f'機器名称 {unit_name}')
             print(
-                f'  - 太陽熱利用システムの熱利用量 {np.sum(input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"])}')
+                f'  - 太陽熱利用システムの熱利用量 {np.sum(input_data["hot_water_supply_systems"][unit_name]["qs_solar_gain"])}')
 
     # ----------------------------------------------------------------------------------
     # 解説書 5.6 年間給湯負荷
@@ -458,12 +458,12 @@ def calc_energy(input_data, DEBUG=False):
 
     for unit_name in input_data["hot_water_supply_systems"]:
 
-        input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"] = np.zeros(365)
+        input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"] = np.zeros(365)
 
         if input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] == None:
 
             # 太陽熱利用が無い場合
-            input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"] = \
+            input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"] = \
                 4.2 * input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] * (43 - TWdata)
 
         else:
@@ -475,20 +475,20 @@ def calc_energy(input_data, DEBUG=False):
                 if (toa_ave[dd] > 5) and (tmp_qh[dd] > 0):  # 日平均外気温が５度を超えていれば集熱
 
                     if tmp_qh[dd] * 0.1 > (
-                            tmp_qh[dd] - input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"][dd]):
+                            tmp_qh[dd] - input_data["hot_water_supply_systems"][unit_name]["qs_solar_gain"][dd]):
 
-                        input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"][dd] = tmp_qh[dd] * 0.1
+                        input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"][dd] = tmp_qh[dd] * 0.1
 
                     else:
-                        input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"][dd] = \
-                            tmp_qh[dd] - input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"][dd]
+                        input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"][dd] = \
+                            tmp_qh[dd] - input_data["hot_water_supply_systems"][unit_name]["qs_solar_gain"][dd]
 
                 else:
-                    input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"][dd] = tmp_qh[dd]
+                    input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"][dd] = tmp_qh[dd]
 
         if DEBUG:
             print(f'機器名称 {unit_name}')
-            print(f'  - 日積算給湯負荷 {np.sum(input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"])}')
+            print(f'  - 日積算給湯負荷 {np.sum(input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"])}')
 
     # ----------------------------------------------------------------------------------
     # 解説書 5.7 給湯設備の設計一次エネルギー消費量
@@ -498,7 +498,7 @@ def calc_energy(input_data, DEBUG=False):
 
         # 日別給湯負荷＋配管熱損失（＝給湯加熱負荷） [kJ/day]
         input_data["hot_water_supply_systems"][unit_name]["Q_eqp"] = \
-            input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"] + \
+            input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"] + \
             input_data["hot_water_supply_systems"][unit_name]["Qp_eqp"] * 2.5
 
         # 日別消費エネルギー消費量 [kJ/day]
@@ -528,7 +528,7 @@ def calc_energy(input_data, DEBUG=False):
         result_json["hot_water_supply_systems"][unit_name]["湯使用量（節湯込）[L/年]"] = np.sum(
             input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] / 1000)
         result_json["hot_water_supply_systems"][unit_name]["太陽熱利用量[MJ/年]"] = np.sum(
-            input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"] / 1000)
+            input_data["hot_water_supply_systems"][unit_name]["qs_solar_gain"] / 1000)
         result_json["hot_water_supply_systems"][unit_name]["給湯加熱負荷[MJ/年]"] = np.sum(
             input_data["hot_water_supply_systems"][unit_name]["Q_eqp"] / 1000)
         result_json["hot_water_supply_systems"][unit_name]["配管熱損失[MJ/年]"] = np.sum(
@@ -622,7 +622,7 @@ def calc_energy(input_data, DEBUG=False):
                                     Edesign_MWh_Ele_hour[dd] += input_data["hot_water_supply_systems"][unit_name]["E_eqp"][
                                                                     dd] / 24 / 1000 / 9760 * np.ones(24)
 
-        result_json["for_cgs"]["Edesign_MWh_Ele_day"] = np.sum(Edesign_MWh_Ele_hour, 1)
+        result_json["for_cgs"]["edesign_mwh_ele_day"] = np.sum(Edesign_MWh_Ele_hour, 1)
         result_json["for_cgs"]["Edesign_MJ_CGS_day"] = np.sum(Edesign_MJ_CGS_hour, 1)
         result_json["for_cgs"]["Q_eqp_CGS_day"] = np.sum(Q_eqp_CGS_hour, 1)
 
@@ -635,8 +635,8 @@ def calc_energy(input_data, DEBUG=False):
         del result_json["hot_water_supply_systems"][unit_id]["Qs_eqp_daily"]
         del result_json["hot_water_supply_systems"][unit_id]["L_eqp"]
         del result_json["hot_water_supply_systems"][unit_id]["Qp_eqp"]
-        del result_json["hot_water_supply_systems"][unit_id]["Qs_solargain"]
-        del result_json["hot_water_supply_systems"][unit_id]["Qh_eqp_daily"]
+        del result_json["hot_water_supply_systems"][unit_id]["qs_solar_gain"]
+        del result_json["hot_water_supply_systems"][unit_id]["qh_eqp_daily"]
         del result_json["hot_water_supply_systems"][unit_id]["Q_eqp"]
         del result_json["hot_water_supply_systems"][unit_id]["E_eqp"]
 

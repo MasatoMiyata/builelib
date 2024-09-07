@@ -14,7 +14,7 @@ import climate
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
-climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climate_data/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # 定数（deg→radへの変換係数）
 deg2rad = math.pi / 180
@@ -296,7 +296,7 @@ def func_25(x1, x2, x3, y3, y2, zxp, zxm, zym):
     return r_isr_j_ym
 
 
-def calc_shadingCoefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym):
+def calc_shadingcoefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym):
     ## 入力チェック
     if x1 < 0 or x2 < 0 or x3 < 0:
         raise Exception('Error!')
@@ -629,7 +629,7 @@ if __name__ == '__main__':
     zyp = 0.2
     zym = 0.35
 
-    r_wind_SUM, r_wind_WIN = calc_shadingCoefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym)
+    r_wind_SUM, r_wind_WIN = calc_shadingcoefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym)
 
     print("日よけ効果係数（冷房）：" + str(r_wind_SUM))
     print("日よけ効果係数（暖房）：" + str(r_wind_WIN))

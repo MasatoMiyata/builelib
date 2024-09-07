@@ -125,7 +125,7 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
 
     # 日付dにおける給湯設備の電力消費量	MWh/日
     if result_json_for_cgs["hW"]:
-        EW_total_d = np.array(result_json_for_cgs["hW"]["Edesign_MWh_Ele_day"])
+        EW_total_d = np.array(result_json_for_cgs["hW"]["edesign_mwh_ele_day"])
     else:
         EW_total_d = np.zeros(365)
 

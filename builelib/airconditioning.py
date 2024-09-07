@@ -15,7 +15,7 @@ import make_figure as mf
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
-climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climate_data/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成）
 BUILELIB_MODE = True
@@ -645,12 +645,12 @@ def calc_energy(input_data, debug=False):
 
                         else:
 
-                            # 関数 shading.calc_shadingCoefficient で日よけ効果係数を算出。
+                            # 関数 shading.calc_shadingcoefficient で日よけ効果係数を算出。
                             (input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"][window_id][
                                  "shading_effect_C"],
                              input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"][window_id][
                                  "shading_effect_h"]) = \
-                                shading.calc_shadingCoefficient(input_data["building"]["region"],
+                                shading.calc_shadingcoefficient(input_data["building"]["region"],
                                                                 wall_configure["direction"],
                                                                 input_data["shading_config"][
                                                                     window_configure["eaves_id"]]["x1"],
@@ -755,7 +755,7 @@ def calc_energy(input_data, debug=False):
     import copy
 
     # ファイルの読み込み
-    with open('./builelib/heat_load_calculation/heatload_calculation_template.json', 'r', encoding='utf-8') as js:
+    with open('./builelib/heat_load_calculation/heat_load_calculation_template.json', 'r', encoding='utf-8') as js:
         # with open('input_non_residential.json', 'r', encoding='utf-8') as js:
         input_heatcalc_template = json.load(js)
 
@@ -982,11 +982,11 @@ def calc_energy(input_data, debug=False):
                         )
 
         # デバッグ用
-        # with open("heatloadcalc_input.json",'w', encoding='utf-8') as fw:
+        # with open("heat_loadcalc_input.json",'w', encoding='utf-8') as fw:
         #     json.dump(input_heatcalc, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
         # 負荷計算の実行
-        room_air_temperature, mean_radiant_temperature, heatload_sensible_convection, heatload_sensible_radiation, heatload_latent \
+        room_air_temperature, mean_radiant_temperature, heat_load_sensible_convection, heat_load_sensible_radiation, heat_load_latent \
             = Main.run(input_heatcalc)
 
         # 室温
@@ -994,16 +994,16 @@ def calc_energy(input_data, debug=False):
         result_json["q_room"][room_zone_name]["MRTroom"] = bc.trans_8760to36524(mean_radiant_temperature)
 
         # 負荷の積算（全熱負荷）[W] (365×24)
-        heatload = np.array(
-            bc.trans_8760to36524(heatload_sensible_convection) + \
-            bc.trans_8760to36524(heatload_sensible_radiation) + \
-            bc.trans_8760to36524(heatload_latent)
+        heat_load = np.array(
+            bc.trans_8760to36524(heat_load_sensible_convection) + \
+            bc.trans_8760to36524(heat_load_sensible_radiation) + \
+            bc.trans_8760to36524(heat_load_latent)
         )
 
         for dd in range(0, 365):
             for hh in range(0, 24):
                 # 時刻別室負荷 [W] → [MJ/hour]
-                result_json["q_room"][room_zone_name]["q_room_hourly"][dd][hh] = (-1) * heatload[dd][hh] * 3600 / 1000000
+                result_json["q_room"][room_zone_name]["q_room_hourly"][dd][hh] = (-1) * heat_load[dd][hh] * 3600 / 1000000
 
     if debug:  # pragma: no cover
 

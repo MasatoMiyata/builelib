@@ -2,7 +2,7 @@ import jsonschema
 import json
 
 targetFile = 'ref_list.json'
-schemaFile = './builelib/database_make/schema/q_room_COEFFI_schema.json'
+schemaFile = './builelib/database_make/schema/q_room_coeffi_schema.json'
 
 # スキーマの読み込み
 with open(schemaFile, encoding='utf-8') as file_obj:

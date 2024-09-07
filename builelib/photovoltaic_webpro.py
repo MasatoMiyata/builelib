@@ -17,7 +17,7 @@ import commons as bc
 import climate
 
 # 気象データファイルの保存場所
-climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climate_data/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 
 def calc_energy(input_data, DEBUG=False):

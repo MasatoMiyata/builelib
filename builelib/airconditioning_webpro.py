@@ -17,7 +17,7 @@ import shading
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
-climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climate_data/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成、動的負荷計算）
 BUILELIB_MODE = False
@@ -820,12 +820,12 @@ def calc_energy(input_data, debug=False):
 
                         else:
 
-                            # 関数 shading.calc_shadingCoefficient で日よけ効果係数を算出。
+                            # 関数 shading.calc_shadingcoefficient で日よけ効果係数を算出。
                             (input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"][window_id][
                                  "shading_effect_C"], \
                              input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"][window_id][
                                  "shading_effect_h"]) = \
-                                shading.calc_shadingCoefficient(input_data["building"]["region"], \
+                                shading.calc_shadingcoefficient(input_data["building"]["region"], \
                                                                 wall_configure["direction"], \
                                                                 input_data["shading_config"][
                                                                     window_configure["eaves_id"]]["x1"], \
@@ -1084,9 +1084,9 @@ def calc_energy(input_data, debug=False):
     ##----------------------------------------------------------------------------------
 
     ## 室負荷計算のための係数（解説書 A.3）
-    with open(database_directory + 'q_room_COEFFI_area' + input_data["building"]["region"] + '.json', 'r',
+    with open(database_directory + 'q_room_coeffi_area' + input_data["building"]["region"] + '.json', 'r',
               encoding='utf-8') as f:
-        q_room_COEFFI = json.load(f)
+        q_room_coeffi = json.load(f)
 
     heat_light_hourly = {}
     Num_of_Person_hourly = {}
@@ -1139,7 +1139,7 @@ def calc_energy(input_data, debug=False):
             if room_usage[dd] > 0:
 
                 # 前日の空調の有無
-                if "終日空調" in q_room_COEFFI[btype][rtype]:
+                if "終日空調" in q_room_coeffi[btype][rtype]:
                     onoff = "終日空調"
                 elif (dd > 0) and (room_usage[dd - 1] > 0):
                     onoff = "前日空調"
@@ -1148,66 +1148,66 @@ def calc_energy(input_data, debug=False):
 
                 if ac_mode[dd] == "冷房":
 
-                    q_room_CTC[dd] = q_room_COEFFI[btype][rtype][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    q_room_CTC[dd] = q_room_coeffi[btype][rtype][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_temperatureemperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_wall_nightight"][dd] + \
                                      result_json["q_room"][room_zone_name]["q_window_temperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_night"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["補正切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["補正切片"]
 
-                    q_room_CTh[dd] = q_room_COEFFI[btype][rtype][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    q_room_CTh[dd] = q_room_coeffi[btype][rtype][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_temperatureemperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_wall_nightight"][dd] + \
                                      result_json["q_room"][room_zone_name]["q_window_temperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_night"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["補正切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["補正切片"]
 
-                    q_room_CSR[dd] = q_room_COEFFI[btype][rtype][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    q_room_CSR[dd] = q_room_coeffi[btype][rtype][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_sunshadeolar"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_solar"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["切片"]
 
                 elif ac_mode[dd] == "暖房":
 
-                    q_room_CTC[dd] = q_room_COEFFI[btype][rtype][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    q_room_CTC[dd] = q_room_coeffi[btype][rtype][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_temperatureemperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_wall_nightight"][dd] + \
                                      result_json["q_room"][room_zone_name]["q_window_temperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_night"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["切片"]
 
-                    q_room_CTh[dd] = q_room_COEFFI[btype][rtype][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    q_room_CTh[dd] = q_room_coeffi[btype][rtype][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_temperatureemperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_wall_nightight"][dd] + \
                                      result_json["q_room"][room_zone_name]["q_window_temperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_night"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["切片"]
 
-                    q_room_CSR[dd] = q_room_COEFFI[btype][rtype][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    q_room_CSR[dd] = q_room_coeffi[btype][rtype][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_sunshadeolar"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_solar"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["切片"]
 
                 elif ac_mode[dd] == "中間":
 
-                    q_room_CTC[dd] = q_room_COEFFI[btype][rtype][onoff]["中間期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    q_room_CTC[dd] = q_room_coeffi[btype][rtype][onoff]["中間期"]["外気温変動"]["冷房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_temperatureemperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_wall_nightight"][dd] + \
                                      result_json["q_room"][room_zone_name]["q_window_temperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_night"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["中間期"]["外気温変動"]["冷房負荷"]["補正切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["中間期"]["外気温変動"]["冷房負荷"]["補正切片"]
 
-                    q_room_CTh[dd] = q_room_COEFFI[btype][rtype][onoff]["中間期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    q_room_CTh[dd] = q_room_coeffi[btype][rtype][onoff]["中間期"]["外気温変動"]["暖房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_temperatureemperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_wall_nightight"][dd] + \
                                      result_json["q_room"][room_zone_name]["q_window_temperature"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_night"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["中間期"]["外気温変動"]["暖房負荷"]["補正切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["中間期"]["外気温変動"]["暖房負荷"]["補正切片"]
 
-                    q_room_CSR[dd] = q_room_COEFFI[btype][rtype][onoff]["中間期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    q_room_CSR[dd] = q_room_coeffi[btype][rtype][onoff]["中間期"]["日射量変動"]["冷房負荷"]["係数"] * \
                                     (result_json["q_room"][room_zone_name]["q_wall_sunshadeolar"][dd] +
                                      result_json["q_room"][room_zone_name]["q_window_solar"][dd]) + \
-                                    q_room_COEFFI[btype][rtype][onoff]["中間期"]["日射量変動"]["冷房負荷"]["切片"]
+                                    q_room_coeffi[btype][rtype][onoff]["中間期"]["日射量変動"]["冷房負荷"]["切片"]
 
                 if q_room_CTC[dd] < 0:
                     q_room_CTC[dd] = 0
@@ -1308,7 +1308,7 @@ def calc_energy(input_data, debug=False):
         import copy
 
         # ファイルの読み込み
-        with open('./builelib/heat_load_calculation/heatload_calculation_template.json', 'r', encoding='utf-8') as js:
+        with open('./builelib/heat_load_calculation/heat_load_calculation_template.json', 'r', encoding='utf-8') as js:
             # with open('input_non_residential.json', 'r', encoding='utf-8') as js:
             input_heatcalc_template = json.load(js)
 
@@ -1639,17 +1639,17 @@ def calc_energy(input_data, debug=False):
                             )
 
             # デバッグ用
-            # with open("heatloadcalc_input.json",'w', encoding='utf-8') as fw:
+            # with open("heat_loadcalc_input.json",'w', encoding='utf-8') as fw:
             #     json.dump(input_heatcalc, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
 
             # 負荷計算の実行
-            heatload_sensible_convection, heatload_sensible_radiation, heatload_latent = Main.run(input_heatcalc)
+            heat_load_sensible_convection, heat_load_sensible_radiation, heat_load_latent = Main.run(input_heatcalc)
 
             # 負荷の積算（全熱負荷）[W] (365×24)
-            heatload = np.array(
-                bc.trans_8760to36524(heatload_sensible_convection) + \
-                bc.trans_8760to36524(heatload_sensible_radiation) + \
-                bc.trans_8760to36524(heatload_latent)
+            heat_load = np.array(
+                bc.trans_8760to36524(heat_load_sensible_convection) + \
+                bc.trans_8760to36524(heat_load_sensible_radiation) + \
+                bc.trans_8760to36524(heat_load_latent)
             )
 
             # 冷房負荷と暖房負荷に分離する。
@@ -1661,24 +1661,24 @@ def calc_energy(input_data, debug=False):
             for dd in range(0, 365):
                 for hh in range(0, 24):
 
-                    if heatload[dd][hh] > 0:
+                    if heat_load[dd][hh] > 0:
                         # 暖房負荷 [W] → [MJ/hour]
-                        result_json["q_room"][room_zone_name]["q_room_hourly_heating"][dd][hh] = (-1) * heatload[dd][
+                        result_json["q_room"][room_zone_name]["q_room_hourly_heating"][dd][hh] = (-1) * heat_load[dd][
                             hh] * 3600 / 1000000
                         # 暖房負荷 [W] → [MJ/day]
-                        result_json["q_room"][room_zone_name]["q_room_daily_heating"][dd] += (-1) * heatload[dd][hh] * 3600 / 1000000
+                        result_json["q_room"][room_zone_name]["q_room_daily_heating"][dd] += (-1) * heat_load[dd][hh] * 3600 / 1000000
 
-                    elif heatload[dd][hh] < 0:
+                    elif heat_load[dd][hh] < 0:
                         # 冷房負荷 [W] → [MJ/hour]
-                        result_json["q_room"][room_zone_name]["q_room_hourly_cooling"][dd][hh] = (-1) * heatload[dd][
+                        result_json["q_room"][room_zone_name]["q_room_hourly_cooling"][dd][hh] = (-1) * heat_load[dd][
                             hh] * 3600 / 1000000
                         # 冷房負荷 [W]→ [MJ/day]
-                        result_json["q_room"][room_zone_name]["q_room_daily_cooling"][dd] += (-1) * heatload[dd][hh] * 3600 / 1000000
+                        result_json["q_room"][room_zone_name]["q_room_daily_cooling"][dd] += (-1) * heat_load[dd][hh] * 3600 / 1000000
 
             print(
-                f'室負荷（冷房要求）の合計 heatload_for_cooling: {np.sum(result_json["q_room"][room_zone_name]["q_room_daily_cooling"], 0)}')
+                f'室負荷（冷房要求）の合計 heat_load_for_cooling: {np.sum(result_json["q_room"][room_zone_name]["q_room_daily_cooling"], 0)}')
             print(
-                f'室負荷（暖房要求）の合計 heatload_for_heating: {np.sum(result_json["q_room"][room_zone_name]["q_room_daily_heating"], 0)}')
+                f'室負荷（暖房要求）の合計 heat_load_for_heating: {np.sum(result_json["q_room"][room_zone_name]["q_room_daily_heating"], 0)}')
 
     ##----------------------------------------------------------------------------------
     ## 負荷計算結果の集約

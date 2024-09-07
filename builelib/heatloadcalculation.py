@@ -7,8 +7,8 @@ with open('input_non_residential.json', 'r', encoding='utf-8') as js:
     d = json.load(js)
 
 # 実行
-heatload_sensible_convection, heatload_sensible_radiation, heatload_latent = Main.run(d)
+heat_load_sensible_convection, heat_load_sensible_radiation, heat_load_latent = Main.run(d)
 
 # 熱負荷の単純合計
-total_heat_load = sum(heatload_sensible_convection + heatload_sensible_radiation + heatload_latent)
+total_heat_load = sum(heat_load_sensible_convection + heat_load_sensible_radiation + heat_load_latent)
 print(f'熱負荷の単純合計値 [MWh] {total_heat_load / 1000}')

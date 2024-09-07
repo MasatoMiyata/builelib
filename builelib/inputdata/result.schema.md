@@ -19,10 +19,10 @@
 | **air_handling_unit/DailyAirConditioningLoad_heating** | *array* |  | `[null]` |
 | **air_handling_unit/Energy** | *number* |  | `42.0` |
 | **air_handling_unit/EnthalpyDifferenceBetweenOutsideAndInterior** | *array* |  | `[null]` |
-| **air_handling_unit/Fanheat_cooling** | *array* |  | `[null]` |
-| **air_handling_unit/Fanheat_heating** | *array* |  | `[null]` |
-| **air_handling_unit/heatExchangerOperatingTime** | *array* |  | `[null]` |
-| **air_handling_unit/heatExchangerRotorpower_consumption** | *number* |  | `42.0` |
+| **air_handling_unit/fan_heat_cooling** | *array* |  | `[null]` |
+| **air_handling_unit/fan_heat_heating** | *array* |  | `[null]` |
+| **air_handling_unit/heatexchanger_operating_time** | *array* |  | `[null]` |
+| **air_handling_unit/heat_exchanger_rotor_power_consumption** | *number* |  | `42.0` |
 | **air_handling_unit/LoadRatio_cooling** | *array* |  | `[null]` |
 | **air_handling_unit/LoadRatio_heating** | *array* |  | `[null]` |
 | **air_handling_unit/LoadReductionWithOutsideAirControl** | *array* |  | `[null]` |
@@ -38,8 +38,8 @@
 | **heat_source/cooling_tower_fan_power_consumption** | *array* |  | `[null]` |
 | **heat_source/cooling_tower_pump_power_consumption** | *array* |  | `[null]` |
 | **heat_source/Energy** | *number* |  | `42.0` |
-| **heat_source/heatLoad** | *array* |  | `[null]` |
-| **heat_source/heatLossByThermalStorage** | *number* |  | `42.0` |
+| **heat_source/heat_load** | *array* |  | `[null]` |
+| **heat_source/heat_loss_by_thermal_storage** | *number* |  | `42.0` |
 | **heat_source/heat_sourceUnit/cooling_tower_fan_power_consumption** | *array* |  | `[null]` |
 | **heat_source/heat_sourceUnit/cooling_tower_pump_power_consumption** | *array* |  | `[null]` |
 | **heat_source/heat_sourceUnit/heat_sourceWaterTemperature** | *array* |  | `[null]` |
@@ -70,15 +70,15 @@
 | **secondary_pump/Operatingnumber** | *array* |  | `[null]` |
 | **secondary_pump/OperatingTime** | *array* |  | `[null]` |
 | **secondary_pump/power_consumption** | *array* |  | `[null]` |
-| **secondary_pump/pumpheat** | *array* |  | `[null]` |
+| **secondary_pump/pump_heat** | *array* |  | `[null]` |
 | **secondary_pump/Virtualrated_capacity** | *number* |  | `42.0` |
 | **StandardEnergy** | *number* |  | `42.0` |
 | **Zone/DailyRoomLoad_cooling** | *array* |  | `[null]` |
 | **Zone/DailyRoomLoad_heating** | *array* |  | `[null]` |
 | **Zone/Floor** | *string* |  | `"example"` |
-| **Zone/heatGainByInteriorheat** | *array* |  | `[null]` |
+| **Zone/heat_gain_by_interior_heat** | *array* |  | `[null]` |
 | **Zone/heatGainBySolarRadiation** | *array* |  | `[null]` |
-| **Zone/heatGainBytemperature_difference** | *array* |  | `[null]` |
+| **Zone/heat_gain_by_temperature_difference** | *array* |  | `[null]` |
 | **Zone/name** | *string* |  | `"example"` |
 | **Zone/StandardEnergy** | *number* |  | `42.0` |
 
@@ -108,15 +108,15 @@
 | name | type | Description | Example |
 | ------- | ------- | ------- | ------- |
 | **Energy** | *number* |  | `42.0` |
-| **Input:absorption_chillersLoadRatio** | *array* |  | `[null]` |
+| **Input:absorption_chillers_load_ratio** | *array* |  | `[null]` |
 | **Input:absorption_chillersMainEngineEnergyConsumption** | *array* |  | `[null]` |
-| **Input:absorption_chillersWorkingTime** | *array* |  | `[null]` |
+| **Input:absorption_chillers_working_time** | *array* |  | `[null]` |
 | **Input:AveragePowerDifference** | *array* |  | `[null]` |
 | **Input:heatingheat_sourcesLoad** | *array* |  | `[null]` |
 | **Input:heatingheat_sourcesMainEngineEnergyConsumption** | *array* |  | `[null]` |
 | **Input:heatingheat_sourcesWorkingTime** | *array* |  | `[null]` |
-| **Input:hot_water_boilersEnergyConsumption** | *array* |  | `[null]` |
-| **Input:hot_water_boilersLoad** | *array* |  | `[null]` |
+| **Input:hot_water_boilers_energy_consumption** | *array* |  | `[null]` |
+| **Input:hot_water_boilers_load** | *array* |  | `[null]` |
 | **Input:power_consumptionAirConditioning** | *array* |  | `[null]` |
 | **Input:power_consumptionair_handling_units** | *array* |  | `[null]` |
 | **Input:power_consumptionelevator** | *array* |  | `[null]` |
@@ -131,8 +131,8 @@
 | **IntermediateResult:AnnualReducedEnergy** | *number* |  | `42.0` |
 | **IntermediateResult:AuxiliaryEquipmentsPowerRatio** | *array* |  | `[null]` |
 | **IntermediateResult:coolingEnergyReduction** | *array* |  | `[null]` |
-| **IntermediateResult:coolingheat_sourceExhaustheatLoad** | *array* |  | `[null]` |
-| **IntermediateResult:coolingheat_sourceExhaustheatLoadInOperation** | *array* |  | `[null]` |
+| **IntermediateResult:coolingheat_sourceExhaustheat_load** | *array* |  | `[null]` |
+| **IntermediateResult:coolingheat_sourceExhaustheat_loadInOperation** | *array* |  | `[null]` |
 | **IntermediateResult:coolingheat_sourceReducibleEnergy** | *array* |  | `[null]` |
 | **IntermediateResult:coolingheat_sourceWasteheatUsage** | *array* |  | `[null]` |
 | **IntermediateResult:EffectiveGenerationAmount** | *array* |  | `[null]` |
@@ -145,7 +145,7 @@
 | **IntermediateResult:GenerationAmount** | *array* |  | `[null]` |
 | **IntermediateResult:GenerationEfficiency** | *array* |  | `[null]` |
 | **IntermediateResult:GenerationLoadRatio** | *array* |  | `[null]` |
-| **IntermediateResult:heatLoad** | *array* |  | `[null]` |
+| **IntermediateResult:heat_load** | *array* |  | `[null]` |
 | **IntermediateResult:heatRecoveryEfficiency** | *array* |  | `[null]` |
 | **IntermediateResult:heatRecoveryPossibleProportion** | *array* |  | `[null]` |
 | **IntermediateResult:heatingEnergyReduction** | *array* |  | `[null]` |
@@ -165,7 +165,7 @@
 | **IntermediateResult:ReducibleEnergyOfcoolingheat_sourceMainEngineInOperation** | *array* |  | `[null]` |
 | **IntermediateResult:TemporaryMaxnumberOfActiveUnits** | *array* |  | `[null]` |
 | **IntermediateResult:TemporarynumberOfActiveUnits** | *array* |  | `[null]` |
-| **IntermediateResult:TotalExhaustheatLoadInOperation** | *array* |  | `[null]` |
+| **IntermediateResult:TotalExhaustheat_loadInOperation** | *array* |  | `[null]` |
 | **IntermediateResult:WasteheatDemandForPriority1Purpose** | *array* |  | `[null]` |
 | **IntermediateResult:WasteheatDemandForPriority2Purpose** | *array* |  | `[null]` |
 | **IntermediateResult:WasteheatDemandForPriority3Purpose** | *array* |  | `[null]` |
@@ -192,7 +192,7 @@
 
 | name | type | Description | Example |
 | ------- | ------- | ------- | ------- |
-| **elevator/CoefficientByControl** | *number* |  | `42.0` |
+| **elevator/coefficientByControl** | *number* |  | `42.0` |
 | **elevator/Energy** | *number* |  | `42.0` |
 | **elevator/name** | *string* |  | `"example"` |
 | **elevator/OperatingTime** | *number* |  | `42.0` |
@@ -253,13 +253,13 @@
 | name | type | Description | Example |
 | ------- | ------- | ------- | ------- |
 | **Energy** | *number* |  | `42.0` |
-| **Room/CoefficientByroomshape** | *number* |  | `42.0` |
+| **Room/coefficientByroomshape** | *number* |  | `42.0` |
 | **Room/Energy** | *number* |  | `42.0` |
 | **Room/Floor** | *string* |  | `"example"` |
 | **Room/OperatingTime** | *number* |  | `42.0` |
 | **Room/Room** | *string* |  | `"example"` |
 | **Room/StandardEnergy** | *number* |  | `42.0` |
-| **Room/Unit/CoefficientByControls** | *number* |  | `42.0` |
+| **Room/Unit/coefficientByControls** | *number* |  | `42.0` |
 | **Room/Unit/name** | *string* |  | `"example"` |
 | **Room/Unit/power_consumption** | *number* |  | `42.0` |
 | **StandardEnergy** | *number* |  | `42.0` |
@@ -357,7 +357,7 @@
 
 | name | type | Description | Example |
 | ------- | ------- | ------- | ------- |
-| **AirConditioner:Fan:CoefficientByflow_control** | *number* |  | `42.0` |
+| **AirConditioner:Fan:coefficientByflow_control** | *number* |  | `42.0` |
 | **AirConditioner:Fan:name** | *string* |  | `"example"` |
 | **AirConditioner:Fan:OperatingTime** | *number* |  | `42.0` |
 | **AirConditioner:Fan:power_consumption** | *number* |  | `42.0` |
@@ -365,7 +365,7 @@
 | **AirConditioner:OperatingTime** | *number* |  | `42.0` |
 | **AirConditioner:power_consumption** | *number* |  | `42.0` |
 | **Energy** | *number* |  | `42.0` |
-| **Fan:CoefficientByflow_control** | *number* |  | `42.0` |
+| **Fan:coefficientByflow_control** | *number* |  | `42.0` |
 | **Fan:name** | *string* |  | `"example"` |
 | **Fan:OperatingTime** | *number* |  | `42.0` |
 | **Fan:power_consumption** | *number* |  | `42.0` |

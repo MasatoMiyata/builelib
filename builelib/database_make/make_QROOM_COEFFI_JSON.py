@@ -247,7 +247,7 @@ def convert_CSV2DICT(d):
 # %%
 
 # CSVファイル読み込み
-with open('q_room_COEFFI.csv',encoding='Shift_JIS') as f:
+with open('q_room_coeffi.csv',encoding='Shift_JIS') as f:
     reader = csv.reader(f)
     csvdata = [row for row in reader]
 
@@ -289,7 +289,7 @@ for i in range(int(len(csvdata)/9)):
 
 #%%
 # JSONに書き込み
-fw = open('q_room_COEFFI_area'+ str(area) +'.json','w')
+fw = open('q_room_coeffi_area'+ str(area) +'.json','w')
 json.dump(DictData, fw, indent=4, ensure_ascii=False)
 
 

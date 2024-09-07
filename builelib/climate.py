@@ -277,8 +277,8 @@ if __name__ == '__main__':
     # area_name = "8地域"
 
     # # 空調用と給湯用の気象データの比較
-    # filename_HASP = "./builelib/climate_data/C1_" +area[area_name]["気象データファイル名"]
-    # filename_dat  = "./builelib/climate_data/" + area[area_name]["気象データファイル名（給湯）"]
+    # filename_HASP = "./builelib/climatedata/C1_" +area[area_name]["気象データファイル名"]
+    # filename_dat  = "./builelib/climatedata/" + area[area_name]["気象データファイル名（給湯）"]
 
     # toa_ave_dat = read_dat_climate_data(filename_dat)
 

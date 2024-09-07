@@ -12,7 +12,7 @@ import commons as bc
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
-climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climate_data/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 
 ## 中間期平均外気温（附属書B.1）

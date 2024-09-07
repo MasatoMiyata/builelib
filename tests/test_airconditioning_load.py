@@ -201,8 +201,8 @@ def make_input_data(data):
                 "is_outdoor_air_cut": "無",
                 "pump_cooling": None,
                 "pump_heating": None,
-                "heatSorce_cooling": "PAC1",
-                "heatSorce_heating": "PAC1",
+                "heat_sorce_cooling": "PAC1",
+                "heat_sorce_heating": "PAC1",
                 "air_handling_unit": [
                     {
                         "type": "室内機",

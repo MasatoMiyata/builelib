@@ -93,14 +93,14 @@
             }
         },
         "hot_water_room":{
-            "description": "様式hW1",
+            "description": "様式HW1",
             "type": "object",
             "additionalProperties": {
                 "$ref": "#/definitions/hot_water_room"
             }
         },
         "hot_water_supply_systems":{
-            "description": "様式hW2",
+            "description": "様式HW2",
             "type": "object",
             "additionalProperties": {
                 "$ref": "#/definitions/hot_water_supply_systems"
@@ -192,7 +192,7 @@
                 },
                 "coefficient_dhc": {
                     "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
-                    "$ref": "#/definitions/CoefficientDhC"
+                    "$ref": "#/definitions/coefficient_dhc"
                 }
             },
             "required": [
@@ -252,7 +252,7 @@
             ],
             "title": "building_address"
         },
-        "CoefficientDhC": {
+        "coefficient_dhc": {
             "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
             "type": "object",
             "additionalProperties": false,
@@ -278,7 +278,7 @@
                 "cooling",
                 "heating"
             ],
-            "title": "CoefficientDhC"
+            "title": "coefficient_dhc"
         },
         "rooms":{
             "properties": {
@@ -1245,11 +1245,11 @@
                         }
                     ]
                 },
-                "heatSorce_cooling": {
+                "heat_sorce_cooling": {
                     "description": "AC4-21:熱源群名称 冷房",
                     "type": "string"
                 },
-                "heatSorce_heating": {
+                "heat_sorce_heating": {
                     "description": "AC4-22:熱源群名称 暖房",
                     "type": "string"
                 },
@@ -1834,7 +1834,7 @@
                         "type": "object",
                         "properties": {
                             "usage_type":{
-                                "description": "hW1-3:給湯用途",
+                                "description": "HW1-3:給湯用途",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1851,11 +1851,11 @@
                                 ]
                             },
                             "system_name":{
-                                "description": "hW1-4:給湯システム名称",
+                                "description": "HW1-4:給湯システム名称",
                                 "type": "string"
                             },
                             "hot_water_saving_system":{
-                                "description": "hW1-5:節湯器具",
+                                "description": "HW1-5:節湯器具",
                                 "type": "string",
                                 "enum":[
                                     "自動給湯栓",
@@ -1864,7 +1864,7 @@
                                 ]
                             },
                             "info": {
-                                "description": "hW1-6:備考",
+                                "description": "HW1-6:備考",
                                 "type": "string"
                             }
                         }

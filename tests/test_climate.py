@@ -81,7 +81,7 @@ def caclulation(input_data):
     print(bet)
 
     database_directory = "./builelib/database/"
-    climate_directory = "./builelib/climate_data/"
+    climate_directory = "./builelib/climatedata/"
 
     # 地域別データの読み込み
     with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
