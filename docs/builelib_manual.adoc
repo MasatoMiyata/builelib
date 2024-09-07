@@ -33,7 +33,7 @@ Builelib (Builelib: building Energy-modeling Library) は 非住宅建築物の�
 https://building.app.lowenergy.jp/
 
 * 「建築物のエネルギー消費量計算プログラム（非住宅版）」の計算方法（HTML） +
-https://webpro-nr.github.io/BESJP_Engineeringreference/index.html
+https://webpro-nr.github.io/BESJP_EngineeringReference/index.html
 
 
 [IMPORTANT]
@@ -149,8 +149,8 @@ WEBPROにおいては、流量制御方式／風量制御方式として、以�
 
 詳細はWEBPROの仕様書をご覧下さい。
 
-* link:++https://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_2_5_7_%E9%A2%A8%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0++[WEBPRO仕様書　2.5.7 風量制御方式によって定まる係数]
-* link:++https://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_2_6_7_%E6%B5%81%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0++[WEBPRO仕様書　2.6.7 流量制御方式によって定まる係数]
+* link:++https://webpro-nr.github.io/BESJP_EngineeringReference/Engineeringreference_chapter02.html#_2_5_7_%E9%A2%A8%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0++[WEBPRO仕様書　2.5.7 風量制御方式によって定まる係数]
+* link:++https://webpro-nr.github.io/BESJP_EngineeringReference/Engineeringreference_chapter02.html#_2_6_7_%E6%B5%81%E9%87%8F%E5%88%B6%E5%BE%A1%E6%96%B9%E5%BC%8F%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%AE%9A%E3%81%BE%E3%82%8B%E4%BF%82%E6%95%B0++[WEBPRO仕様書　2.6.7 流量制御方式によって定まる係数]
 ====
 
 
@@ -200,8 +200,8 @@ image::images/fig-SP2-2.png[width="95%"]
 ====
 WEBPROにおいて選択できる熱源機種及び特性については、次の仕様書をご覧下さい。
 
-* link:https://webpro-nr.github.io/BESJP_Engineeringreference/Engineeringreference_chapter02.html#_a_4_%E7%86%B1%E6%BA%90%E7%89%B9%E6%80%A7[WEBPRO仕様書　2.A.4 熱源特性]
-* link:https://webpro-nr.github.io/BESJP_Engineeringreference/pdf/heat_source_performance_curve.pdf[WEBPRO仕様書　熱源機器特性一覧]
+* link:https://webpro-nr.github.io/BESJP_EngineeringReference/Engineeringreference_chapter02.html#_a_4_%E7%86%B1%E6%BA%90%E7%89%B9%E6%80%A7[WEBPRO仕様書　2.A.4 熱源特性]
+* link:https://webpro-nr.github.io/BESJP_EngineeringReference/pdf/heat_source_performance_curve.pdf[WEBPRO仕様書　熱源機器特性一覧]
 ====
 
 ==== 入力シートの作成方法
