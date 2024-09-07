@@ -435,7 +435,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                     # 二次ポンプ（冷水ポンプ）
                     # ---------------------------
                     if df["冷水ポンプ台数"] > 0 or df["温水ポンプ台数"] > 0:
-                        bldgdata["secondary_pump_system"]["PCh"] = {}
+                        bldgdata["secondary_pump_system"]["PCH"] = {}
 
                     if df["冷水ポンプ台数"] > 0:
 
@@ -462,7 +462,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                                 }
                             )
 
-                        bldgdata["secondary_pump_system"]["PCh"]["冷房"] = {
+                        bldgdata["secondary_pump_system"]["PCH"]["冷房"] = {
                             "temperature_difference": df["冷水ポンプ往還温度差"],
                             "is_staging_control": df["冷水ポンプ台数制御"],
                             "secondary_pump": secondary_pump
@@ -496,7 +496,7 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                                 }
                             )
 
-                        bldgdata["secondary_pump_system"]["PCh"]["暖房"] = {
+                        bldgdata["secondary_pump_system"]["PCH"]["暖房"] = {
                             "temperature_difference": df["温水ポンプ往還温度差"],
                             "is_staging_control": df["温水ポンプ台数制御"],
                             "secondary_pump": secondary_pump
@@ -562,8 +562,8 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                             "is_economizer": "無",
                             "economizer_max_air_volume": None,
                             "is_outdoor_air_cut": "無",
-                            "pump_cooling": "PCh",
-                            "pump_heating": "PCh",
+                            "pump_cooling": "PCH",
+                            "pump_heating": "PCH",
                             "heat_source_cooling": "RCH",
                             "heat_source_heating": "RCH",
                             "air_handling_unit": []
