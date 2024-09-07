@@ -5,7 +5,7 @@ import math
 import numpy as np
 
 
-def readCsvClimateData(filename):
+def readCsvclimate_data(filename):
     """
     気象データ（csvファイル）を読み込む関数。太陽光発電用。
     8760の行列
@@ -33,7 +33,7 @@ def readCsvClimateData(filename):
     return tout, iod, ios, sun_altitude, sun_azimuth
 
 
-def readHaspClimateData(filename):
+def readhaspclimate_data(filename):
     """
     気象データ（hasファイル）を読み込む関数。
     365×24の行列
@@ -113,7 +113,7 @@ def del04(month, day):
     # 一年を周期とする角度を計算する
     w = n * 2.0 * math.pi / 366.0
 
-    # HASP教科書等より2項目の括弧内の2項目の係数を変更（+0.2070988 → -0.2070988）
+    # hASP教科書等より2項目の括弧内の2項目の係数を変更（+0.2070988 → -0.2070988）
     declination = 0.006322 - 0.405748 * math.cos(w + 0.153231) - 0.005880 * math.cos(
         2.0 * w - 0.207099) - 0.003233 * math.cos(3 * w + 0.620129)
 
@@ -132,7 +132,7 @@ def eqt04(month, day):
     n = math.floor(
         30 * (month - 1) + math.floor((month + math.floor(month / 8)) / 2) - math.floor((month + 7) / 10) + day)
 
-    # 均時差を計算する(HASP 教科書 p24)
+    # 均時差を計算する(hASP 教科書 p24)
     # 一年を周期とする角度を計算する
 
     w = n * 2.0 * math.pi / 366.0
@@ -151,13 +151,13 @@ def deg2rad(degree):
     return radian
 
 
-def solar_radiation_by_azimuth(alp, bet, phi, longi, iod_all, ios_all, inn_all):
+def solar_radiation_by_azimuth(alp, bet, latitude, longitude, iod_all, ios_all, inn_all):
     """
     方位角・傾斜角別の日射量を算出する関数
     入力 alp : 方位角（0が南、45が南西、180が北）
     入力 bet : 傾斜角（0が水平、90が垂直）
-    入力 phi : 緯度
-    入力 longi : 経度
+    入力 latitude : 緯度
+    入力 longitude : 経度
     入力 iod_all : 直達日射量（365×24、np.array） [W/m2]
     入力 ios_all : 天空日射量（365×24、np.array） [W/m2]
     入力 inn_all : 夜間日射量（365×24、np.array） [W/m2]
@@ -196,15 +196,15 @@ def solar_radiation_by_azimuth(alp, bet, phi, longi, iod_all, ios_all, inn_all):
 
                 # 中央標準時を求める
                 t = (hour + 1) + 0 / 60
-                # 日赤緯を求める(HASP教科書P24(2-22)参照)
+                # 日赤緯を求める(hASP教科書P24(2-22)参照)
                 declination = del04(month, day)
                 # 均時差を求める
                 equal_time_difference = eqt04(month, day)
                 # 時角を求める
-                Tim = (15.0 * t + 15.0 * equal_time_difference + longi - 315.0) * rad
+                Tim = (15.0 * t + 15.0 * equal_time_difference + longitude - 315.0) * rad
 
-                sinPhi = math.sin(deg2rad(phi))  # 緯度の正弦
-                cosPhi = math.cos(deg2rad(phi))  # 緯度の余弦
+                sinlatitude = math.sin(deg2rad(latitude))  # 緯度の正弦
+                coslatitude = math.cos(deg2rad(latitude))  # 緯度の余弦
                 sinAlp = math.sin(alp * rad)  # 方位角正弦
                 cosAlp = math.cos(alp * rad)  # 方位角余弦
                 sinBet = math.sin(bet * rad)  # 傾斜角正弦
@@ -214,15 +214,15 @@ def solar_radiation_by_azimuth(alp, bet, phi, longi, iod_all, ios_all, inn_all):
                 sinTim = math.sin(Tim)  # 時角の正弦
                 cosTim = math.cos(Tim)  # 時角の余弦
 
-                # 太陽高度の正弦を求める(HASP教科書 P25 (2.25)参照 )
-                sinh = sinPhi * sinDel + cosPhi * cosDel * cosTim
+                # 太陽高度の正弦を求める(hASP教科書 P25 (2.25)参照 )
+                sinh = sinlatitude * sinDel + coslatitude * cosDel * cosTim
 
-                # 太陽高度の余弦、太陽方位の正弦・余弦を求める(HASP 教科書P25 (2.25)参照)
+                # 太陽高度の余弦、太陽方位の正弦・余弦を求める(hASP 教科書P25 (2.25)参照)
                 cosh = math.sqrt(1 - sinh ** 2)  # 太陽高度の余弦
                 sinA = cosDel * sinTim / cosh  # 太陽方位の正弦
-                cosA = (sinh * sinPhi - sinDel) / (cosh * cosPhi)  # 太陽方位の余弦
+                cosA = (sinh * sinlatitude - sinDel) / (cosh * coslatitude)  # 太陽方位の余弦
 
-                # 傾斜壁から見た太陽高度を求める(HASP 教科書 P26(2.26)参照)
+                # 傾斜壁から見た太陽高度を求める(hASP 教科書 P26(2.26)参照)
                 sinh2 = sinh * cosBet + cosh * sinBet * (cosA * cosAlp + sinA * sinAlp)
 
                 if sinh2 < 0:
@@ -272,17 +272,17 @@ if __name__ == '__main__':
 
     # # 地域別データの読み込み
     # with open('./builelib/database/area.json', 'r', encoding='utf-8') as f:
-    #     Area = json.load(f)
+    #     area = json.load(f)
 
-    # Area_name = "8地域"
+    # area_name = "8地域"
 
     # # 空調用と給湯用の気象データの比較
-    # filename_hasp = "./builelib/climatedata/C1_" +Area[Area_name]["気象データファイル名"]
-    # filename_dat  = "./builelib/climatedata/" + Area[Area_name]["気象データファイル名（給湯）"]
+    # filename_hasp = "./builelib/climate_data/C1_" +area[area_name]["気象データファイル名"]
+    # filename_dat  = "./builelib/climate_data/" + area[area_name]["気象データファイル名（給湯）"]
 
-    # toa_ave_dat = readDatClimateData(filename_dat)
+    # toa_ave_dat = readDatclimate_data(filename_dat)
 
-    # [tout, xout, iod, ios, inn] = readHaspClimateData(filename_hasp)
+    # [tout, xout, iod, ios, inn] = readhaspclimate_data(filename_hasp)
     # toa_ave_hasp = np.mean(tout,1)
 
-    # np.savetxt('気象データ検証_' + Area_name + '.csv', np.stack([toa_ave_dat, toa_ave_hasp, toa_ave_dat-toa_ave_hasp], 1) ,delimiter=',',fmt='%.3f')
+    # np.savetxt('気象データ検証_' + area_name + '.csv', np.stack([toa_ave_dat, toa_ave_hasp, toa_ave_dat-toa_ave_hasp], 1) ,delimiter=',',fmt='%.3f')

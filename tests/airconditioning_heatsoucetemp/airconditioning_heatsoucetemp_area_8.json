@@ -79,11 +79,11 @@
         "1F_事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "AHU",
-            "ahu_cooling_outdoor_load": "AHU",
-            "ahu_heating_inside_load": "AHU",
-            "ahu_heating_outdoor_load": "AHU",
-            "info": "AHU"
+            "ahu_cooling_inside_load": "ahu",
+            "ahu_cooling_outdoor_load": "ahu",
+            "ahu_heating_inside_load": "ahu",
+            "ahu_heating_outdoor_load": "ahu",
+            "info": "ahu"
         }
     },
     "heat_source_system": {
@@ -189,7 +189,7 @@
         }
     },
     "air_handling_system": {
-        "AHU": {
+        "ahu": {
             "is_economizer": "無",
             "economizer_max_air_volume": null,
             "is_outdoor_air_cut": "無",

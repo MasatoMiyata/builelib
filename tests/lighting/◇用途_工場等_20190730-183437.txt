@@ -1,3 +1,3 @@
-�������ʎq,building_type,room_type,Area,RoomHeight,Width,Depth,room_index,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
-C1	�H�ꓙ	�q��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5270.4	21100
-C2	�H�ꓙ	���O���ԏꖔ�͒��֏�	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5270.4	10500
+�������ʎq,building_type,room_type,area,Roomheight,Width,Depth,room_index,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
+C1	�h�ꓙ	�q��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5270.4	21100
+C2	�h�ꓙ	���O���ԏꖔ�͒��֏�	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5270.4	10500

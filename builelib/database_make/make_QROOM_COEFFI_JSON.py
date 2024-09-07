@@ -289,7 +289,7 @@ for i in range(int(len(csvdata)/9)):
 
 #%%
 # JSONに書き込み
-fw = open('q_room_COEFFI_AREA'+ str(area) +'.json','w')
+fw = open('q_room_COEFFI_area'+ str(area) +'.json','w')
 json.dump(DictData, fw, indent=4, ensure_ascii=False)
 
 

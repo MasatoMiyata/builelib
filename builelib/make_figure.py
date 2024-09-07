@@ -61,31 +61,31 @@ def hourlyplot(x, lable_text, color_name, title_text):
 def matrix_load(load_ratio):
     if load_ratio > 0:
         if load_ratio <= 0.1:
-            matrix_iL = 0
+            matrix_i_l = 0
         elif load_ratio <= 0.2:
-            matrix_iL = 1
+            matrix_i_l = 1
         elif load_ratio <= 0.3:
-            matrix_iL = 2
+            matrix_i_l = 2
         elif load_ratio <= 0.4:
-            matrix_iL = 3
+            matrix_i_l = 3
         elif load_ratio <= 0.5:
-            matrix_iL = 4
+            matrix_i_l = 4
         elif load_ratio <= 0.6:
-            matrix_iL = 5
+            matrix_i_l = 5
         elif load_ratio <= 0.7:
-            matrix_iL = 6
+            matrix_i_l = 6
         elif load_ratio <= 0.8:
-            matrix_iL = 7
+            matrix_i_l = 7
         elif load_ratio <= 0.9:
-            matrix_iL = 8
+            matrix_i_l = 8
         elif load_ratio <= 1.0:
-            matrix_iL = 9
+            matrix_i_l = 9
         else:
-            matrix_iL = 10
+            matrix_i_l = 10
     else:
         raise Exception("負荷率が負の値です")
 
-    return matrix_iL
+    return matrix_i_l
 
 
 def histgram_matrix_ahu(load_ratio, heat_amount, energy):
@@ -104,14 +104,14 @@ def histgram_matrix_ahu(load_ratio, heat_amount, energy):
             if load_ratio[dd][hh] > 0:
 
                 # 負荷率帯の区分
-                matrix_iL = matrix_load(load_ratio[dd][hh])
+                matrix_i_l = matrix_load(load_ratio[dd][hh])
 
                 if heat_amount[dd][hh] >= 0:
-                    time_cooling[matrix_iL] += 1
-                    energy_cooling[matrix_iL] += energy[dd][hh]
+                    time_cooling[matrix_i_l] += 1
+                    energy_cooling[matrix_i_l] += energy[dd][hh]
                 else:
-                    time_heating[matrix_iL] += 1
-                    energy_heating[matrix_iL] += energy[dd][hh]
+                    time_heating[matrix_i_l] += 1
+                    energy_heating[matrix_i_l] += energy[dd][hh]
 
     print("負荷出現時間[h]のマトリックス")
     print(time_cooling)
@@ -156,11 +156,11 @@ def histgram_matrix_pump(load_ratio, number_of_operation, energy_consumption):
             # 負荷率帯の区分
             if load_ratio[dd][hh] > 0:
                 # 負荷率帯の区分
-                matrix_iL = matrix_load(load_ratio[dd][hh])
+                matrix_i_l = matrix_load(load_ratio[dd][hh])
 
-                time[matrix_iL] += 1
-                number[matrix_iL] += number_of_operation[dd][hh]
-                energy[matrix_iL] += energy_consumption[dd][hh]
+                time[matrix_i_l] += 1
+                number[matrix_i_l] += number_of_operation[dd][hh]
+                energy[matrix_i_l] += energy_consumption[dd][hh]
 
     print("負荷出現時間[h]のマトリックス")
     print(time)
@@ -201,11 +201,11 @@ def histgram_matrix_ref(load_ratio, number_of_operation, energy_consumption):
             # 負荷率帯の区分
             if load_ratio[dd][hh] > 0:
                 # 負荷率帯の区分
-                matrix_iL = matrix_load(load_ratio[dd][hh])
+                matrix_i_l = matrix_load(load_ratio[dd][hh])
 
-                time[matrix_iL] += 1
-                number[matrix_iL] += number_of_operation[dd][hh]
-                energy[matrix_iL] += energy_consumption[dd][hh]
+                time[matrix_i_l] += 1
+                number[matrix_i_l] += number_of_operation[dd][hh]
+                energy[matrix_i_l] += energy_consumption[dd][hh]
 
     print("負荷出現時間[h]のマトリックス")
     print(time)

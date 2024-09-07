@@ -15,8 +15,8 @@ with open('./builelib/database/heat_source_performance.json', 'r', encoding='utf
 
 
 # 性能曲線の4次式計算（冷却水温度による変化がない場合）
-def calcQuarticCurve(dataSetALL, T, CW):
-    # 冷却水温度 CW に該当するパラメータリストのみを抽出する。
+def calcQuarticCurve(dataSetALL, T, cw):
+    # 冷却水温度 cw に該当するパラメータリストのみを抽出する。
     dataSet = list()
 
     if dataSetALL[0]["冷却水温度下限"] != None:
@@ -25,11 +25,11 @@ def calcQuarticCurve(dataSetALL, T, CW):
         dataSetALL = sorted(dataSetALL, key=lambda x: x['冷却水温度下限'], reverse=False)
 
         for i in range(0, len(dataSetALL)):
-            if i == 0 and CW < dataSetALL[0]["冷却水温度下限"]:
+            if i == 0 and cw < dataSetALL[0]["冷却水温度下限"]:
                 dataSet.append(dataSetALL[0])
-            elif dataSetALL[i]["冷却水温度下限"] <= CW and CW < dataSetALL[i]["冷却水温度上限"]:
+            elif dataSetALL[i]["冷却水温度下限"] <= cw and cw < dataSetALL[i]["冷却水温度上限"]:
                 dataSet.append(dataSetALL[i])
-            elif i == len(dataSetALL) - 1 and dataSetALL[-1]["冷却水温度上限"] <= CW:
+            elif i == len(dataSetALL) - 1 and dataSetALL[-1]["冷却水温度上限"] <= cw:
                 dataSet.append(dataSetALL[-1])
 
     else:
@@ -107,9 +107,9 @@ for typename in db:
 
         # 冷却水温度
         if typename == "インバータターボ冷凍機":
-            CW = [20, 26, 36]
+            cw = [20, 26, 36]
         else:
-            CW = 32
+            cw = 32
 
         xCapacity_C = np.arange(xmin, xmax + 2.5, 2.5)  # 能力比 冷房
         xInput_C = np.arange(xmin, xmax + 2.5, 2.5)  # 入力比 冷房
@@ -120,15 +120,15 @@ for typename in db:
         yCapacity_C = list()
         yCapacity_C_limit = list()
         for T in xCapacity_C:
-            yCapacity_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["能力比"], T, CW)[0])
-            yCapacity_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["能力比"], T, CW)[1])
+            yCapacity_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["能力比"], T, cw)[0])
+            yCapacity_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["能力比"], T, cw)[1])
 
         ## 入力比
         yInput_C = list()
         yInput_C_limit = list()
         for T in xInput_C:
-            yInput_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["入力比"], T, CW)[0])
-            yInput_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["入力比"], T, CW)[1])
+            yInput_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["入力比"], T, cw)[0])
+            yInput_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["入力比"], T, cw)[1])
 
         ## 部分負荷特性
         if typename == "インバータターボ冷凍機":  # インバータターボ冷凍機のみ場合分け
@@ -140,27 +140,27 @@ for typename in db:
             yLoad_C_high_limit = list()
             yLoad_C_low_limit = list()
             for T in xLoad_C:
-                yLoad_C_low.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[0])[0])
-                yLoad_C_mid.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[1])[0])
-                yLoad_C_high.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[2])[0])
-                yLoad_C_low_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[0])[1])
-                yLoad_C_mid_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[1])[1])
-                yLoad_C_high_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW[2])[1])
+                yLoad_C_low.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, cw[0])[0])
+                yLoad_C_mid.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, cw[1])[0])
+                yLoad_C_high.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, cw[2])[0])
+                yLoad_C_low_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, cw[0])[1])
+                yLoad_C_mid_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, cw[1])[1])
+                yLoad_C_high_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, cw[2])[1])
 
         else:
             yLoad_C = list()
             yLoad_C_limit = list()
             for T in xLoad_C:
-                yLoad_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW)[0])
-                yLoad_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, CW)[1])
+                yLoad_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, cw)[0])
+                yLoad_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["部分負荷特性"], T, cw)[1])
 
         ## 送水温度特性
         ySupply_C = list()
         ySupply_C_limit = list()
         for T in xSupply_C:
             if len(db[typename]["冷房時の特性"]["送水温度特性"]) != 0:
-                ySupply_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["送水温度特性"], T, CW)[0])
-                ySupply_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["送水温度特性"], T, CW)[1])
+                ySupply_C.append(calcQuarticCurve(db[typename]["冷房時の特性"]["送水温度特性"], T, cw)[0])
+                ySupply_C_limit.append(calcQuarticCurve(db[typename]["冷房時の特性"]["送水温度特性"], T, cw)[1])
             else:
                 ySupply_C.append(None)
                 ySupply_C_limit.append(None)
@@ -247,44 +247,44 @@ for typename in db:
             ymax = 1.8
 
         # 冷却水温度
-        CW = 10
+        cw = 10
 
-        xCapacity_H = np.arange(xmin, xmax + 2.5, 2.5)  # 能力比 暖房
-        xInput_H = np.arange(xmin, xmax + 2.5, 2.5)  # 入力比 暖房
-        xLoad_H = np.arange(0, 1 + 0.05, 0.05)  # 部分負荷率 暖房
-        xSupply_H = np.arange(30, 60 + 1, 2.5)  # 送水温度 暖房
+        xCapacity_h = np.arange(xmin, xmax + 2.5, 2.5)  # 能力比 暖房
+        xInput_h = np.arange(xmin, xmax + 2.5, 2.5)  # 入力比 暖房
+        xLoad_h = np.arange(0, 1 + 0.05, 0.05)  # 部分負荷率 暖房
+        xSupply_h = np.arange(30, 60 + 1, 2.5)  # 送水温度 暖房
 
         ## 能力比
-        yCapacity_H = list()
-        yCapacity_H_limit = list()
-        for T in xCapacity_H:
-            yCapacity_H.append(calcQuarticCurve(db[typename]["暖房時の特性"]["能力比"], T, CW)[0])
-            yCapacity_H_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["能力比"], T, CW)[1])
+        yCapacity_h = list()
+        yCapacity_h_limit = list()
+        for T in xCapacity_h:
+            yCapacity_h.append(calcQuarticCurve(db[typename]["暖房時の特性"]["能力比"], T, cw)[0])
+            yCapacity_h_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["能力比"], T, cw)[1])
 
         ## 入力比
-        yInput_H = list()
-        yInput_H_limit = list()
-        for T in xInput_H:
-            yInput_H.append(calcQuarticCurve(db[typename]["暖房時の特性"]["入力比"], T, CW)[0])
-            yInput_H_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["入力比"], T, CW)[1])
+        yInput_h = list()
+        yInput_h_limit = list()
+        for T in xInput_h:
+            yInput_h.append(calcQuarticCurve(db[typename]["暖房時の特性"]["入力比"], T, cw)[0])
+            yInput_h_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["入力比"], T, cw)[1])
 
         ## 部分負荷特性
-        yLoad_H = list()
-        yLoad_H_limit = list()
-        for T in xLoad_H:
-            yLoad_H.append(calcQuarticCurve(db[typename]["暖房時の特性"]["部分負荷特性"], T, CW)[0])
-            yLoad_H_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["部分負荷特性"], T, CW)[1])
+        yLoad_h = list()
+        yLoad_h_limit = list()
+        for T in xLoad_h:
+            yLoad_h.append(calcQuarticCurve(db[typename]["暖房時の特性"]["部分負荷特性"], T, cw)[0])
+            yLoad_h_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["部分負荷特性"], T, cw)[1])
 
         ## 送水温度特性
-        ySupply_H = list()
-        ySupply_H_limit = list()
-        for T in xSupply_H:
+        ySupply_h = list()
+        ySupply_h_limit = list()
+        for T in xSupply_h:
             if len(db[typename]["暖房時の特性"]["送水温度特性"]) != 0:
-                ySupply_H.append(calcQuarticCurve(db[typename]["暖房時の特性"]["送水温度特性"], T, CW)[0])
-                ySupply_H_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["送水温度特性"], T, CW)[1])
+                ySupply_h.append(calcQuarticCurve(db[typename]["暖房時の特性"]["送水温度特性"], T, cw)[0])
+                ySupply_h_limit.append(calcQuarticCurve(db[typename]["暖房時の特性"]["送水温度特性"], T, cw)[1])
             else:
-                ySupply_H.append(None)
-                ySupply_H_limit.append(None)
+                ySupply_h.append(None)
+                ySupply_h_limit.append(None)
 
         ## グラフ作成
         fig2 = plt.figure(figsize=(10, 6.5))
@@ -292,8 +292,8 @@ for typename in db:
         fig2.subplots_adjust(left=0.07, bottom=0.09, right=0.98, top=0.92, wspace=0.16, hspace=0.27)
 
         ax1 = fig2.add_subplot(2, 2, 1)
-        ax1.plot(xCapacity_H, yCapacity_H, 'ko', markerfacecolor='w', linestyle="dotted")
-        ax1.plot(xCapacity_H, yCapacity_H_limit, 'ko-')
+        ax1.plot(xCapacity_h, yCapacity_h, 'ko', markerfacecolor='w', linestyle="dotted")
+        ax1.plot(xCapacity_h, yCapacity_h_limit, 'ko-')
         ax1.set_xlim([xmin, xmax])
         ax1.set_ylim([ymin, ymax])
         ax1.set_xlabel(xlabel)
@@ -301,8 +301,8 @@ for typename in db:
         ax1.grid()
 
         ax2 = fig2.add_subplot(2, 2, 2)
-        ax2.plot(xInput_H, yInput_H, 'ko', markerfacecolor='w', linestyle="dotted")
-        ax2.plot(xInput_H, yInput_H_limit, 'ko-')
+        ax2.plot(xInput_h, yInput_h, 'ko', markerfacecolor='w', linestyle="dotted")
+        ax2.plot(xInput_h, yInput_h_limit, 'ko-')
         ax2.set_xlim([xmin, xmax])
         ax2.set_ylim([ymin, ymax])
         ax2.set_xlabel(xlabel)
@@ -310,8 +310,8 @@ for typename in db:
         ax2.grid()
 
         ax3 = fig2.add_subplot(2, 2, 3)
-        ax3.plot(xLoad_H, yLoad_H, 'ko', markerfacecolor='w', linestyle="dotted")
-        ax3.plot(xLoad_H, yLoad_H_limit, 'ko-')
+        ax3.plot(xLoad_h, yLoad_h, 'ko', markerfacecolor='w', linestyle="dotted")
+        ax3.plot(xLoad_h, yLoad_h_limit, 'ko-')
         ax3.set_xlim([0, 1.0])
         ax3.set_ylim([0, 1.0])
         ax3.set_xlabel("部分負荷率 [-]")
@@ -319,8 +319,8 @@ for typename in db:
         ax3.grid()
 
         ax4 = fig2.add_subplot(2, 2, 4)
-        ax4.plot(xSupply_H, ySupply_H, 'ko', markerfacecolor='w', linestyle="dotted")
-        ax4.plot(xSupply_H, ySupply_H_limit, 'ko-')
+        ax4.plot(xSupply_h, ySupply_h, 'ko', markerfacecolor='w', linestyle="dotted")
+        ax4.plot(xSupply_h, ySupply_h_limit, 'ko-')
         ax4.set_xlim([30, 60])
         ax4.set_ylim([0.6, 1.8])
         ax4.set_xlabel("送水温度 [℃]")

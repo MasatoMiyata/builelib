@@ -114,7 +114,7 @@
                 ]
             }
         },
-        "HS1": {
+        "hS1": {
             "暖房": {
                 "storage_type": null,
                 "storage_size": null,
@@ -143,7 +143,7 @@
         }
     },
     "secondary_pump_system": {
-        "PUMP1": {
+        "pump1": {
             "冷房": {
                 "TempelatureDifference": 5.0,
                 "is_staging_control": "有",
@@ -196,9 +196,9 @@
             "economizer_max_air_volume": null,
             "is_outdoor_air_cut": "無",
             "pump_cooling": null,
-            "pump_heating": "PUMP1",
+            "pump_heating": "pump1",
             "heat_source_cooling": "PAC1",
-            "heat_source_heating": "HS1",
+            "heat_source_heating": "hS1",
             "air_handling_unit": [
                 {
                     "type": "空調機",
@@ -215,7 +215,7 @@
                     "air_heat_exchanger_effective_air_volume_ratio": null,
                     "air_heat_exchanger_control": "無",
                     "air_heat_exchanger_power_consumption": null,
-                    "info": "HS1"
+                    "info": "hS1"
                 }
             ]
         }

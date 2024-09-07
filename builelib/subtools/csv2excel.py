@@ -7,7 +7,7 @@ import openpyxl as px
 def write_list_2d(sheet, l_2d, start_row, start_col):
     """
     リストをExcelファイルに書き込むための関数
-    https://note.nkmk.me/python-openpyxl-usage/
+    htt_ps://note.nkmk.me/python-openpyxl-usage/
     """
     for y, row in enumerate(l_2d):
         for x, cell in enumerate(row):

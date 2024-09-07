@@ -19,7 +19,7 @@ def calc_energy(input_data, DEBUG=False):
         "Es_elevator": 0,
         "BEI_EV": 0,
         "elevators": {},
-        "for_CGS": {
+        "for_cgs": {
             "Edesign_MWh_day": np.zeros(365)
         }
     }
@@ -173,7 +173,7 @@ def calc_energy(input_data, DEBUG=False):
         result_json["BEI_EV"] = np.nan
 
     # 日積算値
-    result_json["for_CGS"]["Edesign_MWh_day"] = np.sum(Edesign_MWh_hour, 1)
+    result_json["for_cgs"]["Edesign_MWh_day"] = np.sum(Edesign_MWh_hour, 1)
 
     return result_json
 

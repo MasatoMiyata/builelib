@@ -1,6 +1,6 @@
 {
     "温水ボイラ(灯油)": {
-        "ID": "HotwaterBoiler_Kerosene",
+        "ID": "hotwaterBoiler_Kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -79,7 +79,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式熱回収形)": {
-        "ID": "PackagedAirConditioner_WaterSource_HR",
+        "ID": "PackagedAirConditioner_WaterSource_hR",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "水",
@@ -376,7 +376,7 @@
         }
     },
     "FF式ガス暖房機(LPG)": {
-        "ID": "FFtypeHeater_LPG",
+        "ID": "FFtypeheater_LPG",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -970,7 +970,7 @@
         }
     },
     "温水発生機(都市ガス)": {
-        "ID": "HotWaterGenerator_cityGas",
+        "ID": "hotWaterGenerator_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -1049,7 +1049,7 @@
         }
     },
     "FF式石油暖房機": {
-        "ID": "FFtypeHeater_Kerosene",
+        "ID": "FFtypeheater_Kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -1314,7 +1314,7 @@
         }
     },
     "地域熱供給(蒸気)": {
-        "ID": "DHC_Steam",
+        "ID": "DhC_Steam",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "不要",
@@ -1671,7 +1671,7 @@
         }
     },
     "温水発生機(重油)": {
-        "ID": "HotWaterGenerator_Oil",
+        "ID": "hotWaterGenerator_Oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -2135,7 +2135,7 @@
         }
     },
     "温水ボイラ(都市ガス)": {
-        "ID": "HotwaterBoiler_cityGas",
+        "ID": "hotwaterBoiler_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -2214,7 +2214,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(LPG)": {
-        "ID": "GasHeatPumpAirConditioner_LPG",
+        "ID": "GasheatpumpAirConditioner_LPG",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "空気",
@@ -3125,7 +3125,7 @@
         }
     },
     "温風暖房機(灯油)": {
-        "ID": "WarmAirHeater_Kerosene",
+        "ID": "WarmAirheater_Kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3204,7 +3204,7 @@
         }
     },
     "吸収式冷凍機(温水)": {
-        "ID": "AbsorptionChiller_HotWater",
+        "ID": "AbsorptionChiller_hotWater",
         "冷房時の特性": {
             "燃料種類": "温水",
             "熱源種類": "水",
@@ -3578,7 +3578,7 @@
         }
     },
     "温水ボイラ(LPG)": {
-        "ID": "HotwaterBoiler_LPG",
+        "ID": "hotwaterBoiler_LPG",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3796,7 +3796,7 @@
         }
     },
     "温風暖房機(重油)": {
-        "ID": "WarmAirHeater_Oil",
+        "ID": "WarmAirheater_Oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3875,7 +3875,7 @@
         }
     },
     "地域熱供給(冷水)": {
-        "ID": "DHC_coolingWater",
+        "ID": "DhC_coolingWater",
         "冷房時の特性": {
             "燃料種類": "冷水",
             "熱源種類": "不要",
@@ -4202,7 +4202,7 @@
         }
     },
     "FF式ガス暖房機(都市ガス)": {
-        "ID": "FFtypeHeater_cityGas",
+        "ID": "FFtypeheater_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -4687,7 +4687,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(消費電力自給装置付、都市ガス)": {
-        "ID": "GasHeatPumpAirConditioner_GE_cityGas",
+        "ID": "GasheatpumpAirConditioner_GE_cityGas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "空気",
@@ -5339,7 +5339,7 @@
         }
     },
     "電気式ヒーター": {
-        "ID": "ElectricalHeater",
+        "ID": "Electricalheater",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -5699,7 +5699,7 @@
         }
     },
     "温風暖房機(都市ガス)": {
-        "ID": "WarmAirHeater_cityGas",
+        "ID": "WarmAirheater_cityGas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -5996,7 +5996,7 @@
         }
     },
     "温水発生機(LPG)": {
-        "ID": "HotWaterGenerator_LPG",
+        "ID": "hotWaterGenerator_LPG",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -6759,7 +6759,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(都市ガス)": {
-        "ID": "GasHeatPumpAirConditioner_cityGas",
+        "ID": "GasheatpumpAirConditioner_cityGas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "空気",
@@ -7364,7 +7364,7 @@
         }
     },
     "温水発生機(灯油)": {
-        "ID": "HotWaterGenerator_Kerosene",
+        "ID": "hotWaterGenerator_Kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -7582,7 +7582,7 @@
         }
     },
     "地域熱供給(温水)": {
-        "ID": "DHC_heatingWater",
+        "ID": "DhC_heatingWater",
         "冷房時の特性": {
             "燃料種類": "温水",
             "熱源種類": "不要",
@@ -7721,7 +7721,7 @@
         }
     },
     "熱交換器": {
-        "ID": "HEX",
+        "ID": "hEX",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "不要",
@@ -8138,7 +8138,7 @@
         }
     },
     "電気蓄熱暖房器": {
-        "ID": "ElectricalHeater_Storage",
+        "ID": "Electricalheater_Storage",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -8435,7 +8435,7 @@
         }
     },
     "温水ボイラ(重油)": {
-        "ID": "HotwaterBoiler_Oil",
+        "ID": "hotwaterBoiler_Oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -8653,7 +8653,7 @@
         }
     },
     "温風暖房機(LPG)": {
-        "ID": "WarmAirHeater_LPG",
+        "ID": "WarmAirheater_LPG",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -9119,7 +9119,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(消費電力自給装置付、LPG)": {
-        "ID": "GasHeatPumpAirConditioner_GE_LPG",
+        "ID": "GasheatpumpAirConditioner_GE_LPG",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "空気",

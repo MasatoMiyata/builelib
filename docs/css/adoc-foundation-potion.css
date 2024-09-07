@@ -1,6 +1,6 @@
 @import url(//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.0/css/font-awesome.css);
 /* normalize.css v2.1.1 | MIT License | git.io/normalize */
-/* ========================================================================== HTML5 display definitions ========================================================================== */
+/* ========================================================================== hTML5 display definitions ========================================================================== */
 /** Correct `block` display not defined in IE 8/9. */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
 
@@ -121,7 +121,7 @@ table { border-collapse: collapse; border-spacing: 0; }
 
 html, body { font-size: 100%; }
 
-body { background: white; color: #222222; padding: 0; margin: 0; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; line-height: 1; position: relative; cursor: auto; }
+body { background: white; color: #222222; padding: 0; margin: 0; font-family: "helvetica Neue", "helvetica", helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; line-height: 1; position: relative; cursor: auto; }
 
 a:hover { cursor: pointer; }
 
@@ -174,7 +174,7 @@ p { font-family: inherit; font-weight: normal; font-size: 1em; line-height: 1.6;
 p aside { font-size: 0.875em; line-height: 1.35; font-style: italic; }
 
 /* Default header styles */
-h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; color: #333333; text-rendering: optimizeLegibility; margin-top: 1em; margin-bottom: 0.5em; line-height: 1.2125em; }
+h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { font-family: "helvetica Neue", "helvetica", helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; color: #333333; text-rendering: optimizeLegibility; margin-top: 1em; margin-bottom: 0.5em; line-height: 1.2125em; }
 h1 small, h2 small, h3 small, #toctitle small, .sidebarblock > .content > .title small, h4 small, h5 small, h6 small { font-size: 60%; color: gray; line-height: 0; }
 
 h1 { font-size: 2.125em; }
@@ -191,7 +191,7 @@ h6 { font-size: 1em; }
 
 hr { border: dotted #cccccc; border-width: 1px 0 0; clear: both; margin: 1.25em 0 1.1875em; height: 0; }
 
-/* Helpful Typography Defaults */
+/* helpful Typography Defaults */
 em, i { font-style: italic; line-height: inherit; }
 
 strong, b { font-weight: bold; line-height: inherit; }
@@ -246,7 +246,7 @@ blockquote, blockquote p { line-height: 1.6; color: #777777; }
   h2 { font-size: 2.3125em; }
   h3, #toctitle, .sidebarblock > .content > .title { font-size: 1.6875em; }
   h4 { font-size: 1.4375em; } }
-/* Print styles.  Inlined to avoid required HTTP connection: www.phpied.com/delay-loading-your-print-css/ Credit to Paul Irish and HTML5 Boilerplate (html5boilerplate.com)
+/* Print styles.  Inlined to avoid required hTTP connection: www.phpied.com/delay-loading-your-print-css/ Credit to Paul Irish and hTML5 Boilerplate (html5boilerplate.com)
 */
 .print-only { display: none !important; }
 
@@ -327,7 +327,7 @@ kbd kbd:last-child { margin-right: 0; }
 #content #toc > :last-child { margin-bottom: 0; }
 #content #toc a { text-decoration: none; }
 
-#content #toctitle { font-weight: bold; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-size: 1em; padding-left: 0.125em; }
+#content #toctitle { font-weight: bold; font-family: "helvetica Neue", "helvetica", helvetica, Arial, sans-serif; font-size: 1em; padding-left: 0.125em; }
 
 #footer { max-width: 100%; background-color: #272727; padding: 1.25em; }
 

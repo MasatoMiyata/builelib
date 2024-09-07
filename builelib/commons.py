@@ -49,9 +49,9 @@ class MyEncoder(json.JSONEncoder):
             return super(MyEncoder, self).default(obj)
 
 
-def count_Matrix(x, mxL):
+def count_matrix(x, mx_l):
     """
-    負荷率 X がマトリックス mxL の何番目（ix）のセルに入るかをカウント
+    負荷率 X がマトリックス mx_l の何番目（ix）のセルに入るかをカウント
     ＜現在は使用していない＞
     """
 
@@ -63,52 +63,52 @@ def count_Matrix(x, mxL):
     x = math.floor(x * 10) / 10 + 0.05
 
     # 該当するマトリックスを探査
-    while x > mxL[ix]:
+    while x > mx_l[ix]:
         ix += 1
 
-        if ix == len(mxL) - 1:
+        if ix == len(mx_l) - 1:
             break
 
     return ix + 1
 
 
-def air_enthalpy(Tdb, X):
+def air_enthalpy(t_db, X):
     """
     空気のエンタルピーを算出する関数
     """
 
     Ca = 1.006  # 乾き空気の定圧比熱 [kJ/kg･K]
-    Cw = 1.86  # 水蒸気の定圧比熱 [kJ/kg･K]
+    cw = 1.86  # 水蒸気の定圧比熱 [kJ/kg･K]
     Lw = 2501  # 水の蒸発潜熱 [kJ/kg]
 
-    if len(Tdb) != len(X):
+    if len(t_db) != len(X):
         raise Exception('温度と湿度のリストの長さが異なります。')
     else:
 
-        H = np.zeros(len(Tdb))
-        for i in range(0, len(Tdb)):
-            H[i] = (Ca * Tdb[i] + (Cw * Tdb[i] + Lw) * X[i])
+        h = np.zeros(len(t_db))
+        for i in range(0, len(t_db)):
+            h[i] = (Ca * t_db[i] + (cw * t_db[i] + Lw) * X[i])
 
-    return H
+    return h
 
 
-def get_roomOutdoorAirVolume(building_type, room_type, input_room_usage_condition={}):
+def get_room_outdoor_air_volume(building_type, room_type, input_room_usage_condition={}):
     """
     外気導入量を読み込む関数（空調）
     """
 
     # 外気導入量 [m3/h/m2] 標準室使用条件より取得
-    roomOutdoorAirVolume = RoomUsageSchedule[building_type][room_type]["外気導入量"]
+    roomoutdoor_air_volume = RoomUsageSchedule[building_type][room_type]["外気導入量"]
 
     # SP-9シートによる任意入力があれば上書き
     if building_type in input_room_usage_condition:
         if room_type in input_room_usage_condition[building_type]:
-            roomOutdoorAirVolume = float(input_room_usage_condition[building_type][room_type]["外気導入量"])
+            roomoutdoor_air_volume = float(input_room_usage_condition[building_type][room_type]["外気導入量"])
 
-    return roomOutdoorAirVolume
+    return roomoutdoor_air_volume
 
 
-def get_roomHotwaterDemand(building_type, room_type, input_room_usage_condition={}):
+def get_roomhotwaterDemand(building_type, room_type, input_room_usage_condition={}):
     """
     湯使用量（L/m2日）を読み込む関数（給湯）
     """
@@ -162,14 +162,14 @@ def get_roomHotwaterDemand(building_type, room_type, input_room_usage_condition=
     return hotwater_demand, hotwater_demand_wasroom_enthalpy_setting, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other
 
 
-def get_roomHeatGain(building_type, room_type, input_room_usage_condition={}):
+def get_roomheatGain(building_type, room_type, input_room_usage_condition={}):
     """
     発熱量参照値を読み込む関数（空調）
     """
 
-    roomHeatGain_Light = RoomUsageSchedule[building_type][room_type]["照明発熱参照値"]
+    roomheatGain_Light = RoomUsageSchedule[building_type][room_type]["照明発熱参照値"]
     roomNumOfPerson = RoomUsageSchedule[building_type][room_type]["人体発熱参照値"]
-    roomHeatGain_OAapp = RoomUsageSchedule[building_type][room_type]["機器発熱参照値"]
+    roomheatGain_OAapp = RoomUsageSchedule[building_type][room_type]["機器発熱参照値"]
     work_load_index = RoomUsageSchedule[building_type][room_type]["作業強度指数"]
 
     # SP-9シートによる任意入力があれば上書き
@@ -177,32 +177,32 @@ def get_roomHeatGain(building_type, room_type, input_room_usage_condition={}):
         if room_type in input_room_usage_condition[building_type]:
 
             if input_room_usage_condition[building_type][room_type]["照明発熱参照値"] != "":
-                roomHeatGain_Light = float(input_room_usage_condition[building_type][room_type]["照明発熱参照値"])
+                roomheatGain_Light = float(input_room_usage_condition[building_type][room_type]["照明発熱参照値"])
 
             if input_room_usage_condition[building_type][room_type]["人体発熱参照値"] != "":
                 roomNumOfPerson = float(input_room_usage_condition[building_type][room_type]["人体発熱参照値"])
 
             if input_room_usage_condition[building_type][room_type]["機器発熱参照値"] != "":
-                roomHeatGain_OAapp = float(input_room_usage_condition[building_type][room_type]["機器発熱参照値"])
+                roomheatGain_OAapp = float(input_room_usage_condition[building_type][room_type]["機器発熱参照値"])
 
             if input_room_usage_condition[building_type][room_type]["作業強度指数"] != "":
                 work_load_index = float(input_room_usage_condition[building_type][room_type]["作業強度指数"])
 
     # 人体発熱量参照値 [人/m2 * W/人 = W/m2]
     if work_load_index == 1:
-        roomHeatGain_Person = roomNumOfPerson * 92
+        roomheatGain_Person = roomNumOfPerson * 92
     elif work_load_index == 2:
-        roomHeatGain_Person = roomNumOfPerson * 106
+        roomheatGain_Person = roomNumOfPerson * 106
     elif work_load_index == 3:
-        roomHeatGain_Person = roomNumOfPerson * 119
+        roomheatGain_Person = roomNumOfPerson * 119
     elif work_load_index == 4:
-        roomHeatGain_Person = roomNumOfPerson * 131
+        roomheatGain_Person = roomNumOfPerson * 131
     elif work_load_index == 5:
-        roomHeatGain_Person = roomNumOfPerson * 145
+        roomheatGain_Person = roomNumOfPerson * 145
     else:
-        roomHeatGain_Person = np.nan
+        roomheatGain_Person = np.nan
 
-    return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson
+    return roomheatGain_Light, roomheatGain_Person, roomheatGain_OAapp, roomNumOfPerson
 
 
 def get_room_usage_schedule(building_type, room_type, input_calendar={}):

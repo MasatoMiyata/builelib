@@ -179,7 +179,7 @@
         }
     },
     "secondary_pump_system": {
-        "PUMP1": {
+        "pump1": {
             "冷房": {
                 "TempelatureDifference": 5.0,
                 "is_staging_control": "有",
@@ -231,8 +231,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": null,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "PUMP1",
-            "pump_heating": "PUMP1",
+            "pump_cooling": "pump1",
+            "pump_heating": "pump1",
             "heat_source_cooling": "PAC1",
             "heat_source_heating": "Pac2",
             "air_handling_unit": [

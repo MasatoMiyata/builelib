@@ -93,14 +93,14 @@
             }
         },
         "hot_water_room":{
-            "description": "様式HW1",
+            "description": "様式hW1",
             "type": "object",
             "additionalProperties": {
                 "$ref": "#/definitions/hot_water_room"
             }
         },
         "hot_water_supply_systems":{
-            "description": "様式HW2",
+            "description": "様式hW2",
             "type": "object",
             "additionalProperties": {
                 "$ref": "#/definitions/hot_water_supply_systems"
@@ -192,7 +192,7 @@
                 },
                 "coefficient_dhc": {
                     "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
-                    "$ref": "#/definitions/CoefficientDHC"
+                    "$ref": "#/definitions/CoefficientDhC"
                 }
             },
             "required": [
@@ -252,7 +252,7 @@
             ],
             "title": "building_address"
         },
-        "CoefficientDHC": {
+        "CoefficientDhC": {
             "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
             "type": "object",
             "additionalProperties": false,
@@ -278,7 +278,7 @@
                 "cooling",
                 "heating"
             ],
-            "title": "CoefficientDHC"
+            "title": "CoefficientDhC"
         },
         "rooms":{
             "properties": {
@@ -757,7 +757,7 @@
                         }
                     ]
                 },
-                "shading_effect_H": {
+                "shading_effect_h": {
                     "description": "BE4-3:日除け効果係数（暖房）",
                     "anyOf":[
                         {
@@ -1245,11 +1245,11 @@
                         }
                     ]
                 },
-                "HeatSorce_cooling": {
+                "heatSorce_cooling": {
                     "description": "AC4-21:熱源群名称 冷房",
                     "type": "string"
                 },
-                "HeatSorce_heating": {
+                "heatSorce_heating": {
                     "description": "AC4-22:熱源群名称 暖房",
                     "type": "string"
                 },
@@ -1834,7 +1834,7 @@
                         "type": "object",
                         "properties": {
                             "usage_type":{
-                                "description": "HW1-3:給湯用途",
+                                "description": "hW1-3:給湯用途",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1851,11 +1851,11 @@
                                 ]
                             },
                             "system_name":{
-                                "description": "HW1-4:給湯システム名称",
+                                "description": "hW1-4:給湯システム名称",
                                 "type": "string"
                             },
                             "hot_water_saving_system":{
-                                "description": "HW1-5:節湯器具",
+                                "description": "hW1-5:節湯器具",
                                 "type": "string",
                                 "enum":[
                                     "自動給湯栓",
@@ -1864,7 +1864,7 @@
                                 ]
                             },
                             "info": {
-                                "description": "HW1-6:備考",
+                                "description": "hW1-6:備考",
                                 "type": "string"
                             }
                         }
@@ -1880,7 +1880,7 @@
                         "type": "object",
                         "properties": {
                             "usage_type":{
-                                "description": "HW2-2:給湯用途",
+                                "description": "hW2-2:給湯用途",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1897,7 +1897,7 @@
                                 ]
                             },
                             "heat_source_type":{
-                                "description": "HW2-3:熱源機種",
+                                "description": "hW2-3:熱源機種",
                                 "anyOf":[
                                     {
                                         "type": "string",
@@ -1922,38 +1922,38 @@
                                 ]
                             },
                             "number":{
-                                "description": "HW2-4:台数",
+                                "description": "hW2-4:台数",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000
                             },
                             "rated_capacity":{
-                                "description": "HW2-5:定格加熱能力",
+                                "description": "hW2-5:定格加熱能力",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
                             "rated_power_consumption":{
-                                "description": "HW2-6:定格消費電力",
+                                "description": "hW2-6:定格消費電力",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
                             "rated_fuel_consumption":{
-                                "description": "HW2-7:定格燃料消費量(高位)",
+                                "description": "hW2-7:定格燃料消費量(高位)",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1000000
                             },
                             "info": {
-                                "description": "HW2-13:備考",
+                                "description": "hW2-13:備考",
                                 "type": "string"
                             }
                         }
                     }
                 },
                 "insulation_type":{
-                    "description": "HW2-8:配管保温仕様",
+                    "description": "hW2-8:配管保温仕様",
                     "type": "string",
                     "enum":[
                         "保温仕様1",
@@ -1963,13 +1963,13 @@
                     ]
                 },
                 "pipe_size":{
-                    "description": "HW2-9:配管最大口径",
+                    "description": "hW2-9:配管最大口径",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
                 },
                 "solar_system_area":{
-                    "description": "HW2-10:太陽熱利用 有効集熱面積",
+                    "description": "hW2-10:太陽熱利用 有効集熱面積",
                     "anyOf":[
                         {
                             "type": "number",
@@ -1982,7 +1982,7 @@
                     ]
                 },
                 "solar_system_direction":{
-                    "description": "HW2-11:太陽熱利用 集熱面の方位角",
+                    "description": "hW2-11:太陽熱利用 集熱面の方位角",
                     "anyOf":[
                         {
                             "type": "number",
@@ -1995,7 +1995,7 @@
                     ]
                 },
                 "solar_system_angle":{
-                    "description": "HW2-12:太陽熱利用 集熱面の傾斜角",
+                    "description": "hW2-12:太陽熱利用 集熱面の傾斜角",
                     "anyOf":[
                         {
                             "type": "number",

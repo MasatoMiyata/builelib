@@ -19,10 +19,10 @@
 | **air_handling_unit/DailyAirConditioningLoad_heating** | *array* |  | `[null]` |
 | **air_handling_unit/Energy** | *number* |  | `42.0` |
 | **air_handling_unit/EnthalpyDifferenceBetweenOutsideAndInterior** | *array* |  | `[null]` |
-| **air_handling_unit/FanHeat_cooling** | *array* |  | `[null]` |
-| **air_handling_unit/FanHeat_heating** | *array* |  | `[null]` |
-| **air_handling_unit/HeatExchangerOperatingTime** | *array* |  | `[null]` |
-| **air_handling_unit/HeatExchangerRotorpower_consumption** | *number* |  | `42.0` |
+| **air_handling_unit/Fanheat_cooling** | *array* |  | `[null]` |
+| **air_handling_unit/Fanheat_heating** | *array* |  | `[null]` |
+| **air_handling_unit/heatExchangerOperatingTime** | *array* |  | `[null]` |
+| **air_handling_unit/heatExchangerRotorpower_consumption** | *number* |  | `42.0` |
 | **air_handling_unit/LoadRatio_cooling** | *array* |  | `[null]` |
 | **air_handling_unit/LoadRatio_heating** | *array* |  | `[null]` |
 | **air_handling_unit/LoadReductionWithOutsideAirControl** | *array* |  | `[null]` |
@@ -38,8 +38,8 @@
 | **heat_source/cooling_tower_fan_power_consumption** | *array* |  | `[null]` |
 | **heat_source/cooling_tower_pump_power_consumption** | *array* |  | `[null]` |
 | **heat_source/Energy** | *number* |  | `42.0` |
-| **heat_source/HeatLoad** | *array* |  | `[null]` |
-| **heat_source/HeatLossByThermalStorage** | *number* |  | `42.0` |
+| **heat_source/heatLoad** | *array* |  | `[null]` |
+| **heat_source/heatLossByThermalStorage** | *number* |  | `42.0` |
 | **heat_source/heat_sourceUnit/cooling_tower_fan_power_consumption** | *array* |  | `[null]` |
 | **heat_source/heat_sourceUnit/cooling_tower_pump_power_consumption** | *array* |  | `[null]` |
 | **heat_source/heat_sourceUnit/heat_sourceWaterTemperature** | *array* |  | `[null]` |
@@ -70,15 +70,15 @@
 | **secondary_pump/Operatingnumber** | *array* |  | `[null]` |
 | **secondary_pump/OperatingTime** | *array* |  | `[null]` |
 | **secondary_pump/power_consumption** | *array* |  | `[null]` |
-| **secondary_pump/PumpHeat** | *array* |  | `[null]` |
+| **secondary_pump/pumpheat** | *array* |  | `[null]` |
 | **secondary_pump/Virtualrated_capacity** | *number* |  | `42.0` |
 | **StandardEnergy** | *number* |  | `42.0` |
 | **Zone/DailyRoomLoad_cooling** | *array* |  | `[null]` |
 | **Zone/DailyRoomLoad_heating** | *array* |  | `[null]` |
 | **Zone/Floor** | *string* |  | `"example"` |
-| **Zone/HeatGainByInteriorHeat** | *array* |  | `[null]` |
-| **Zone/HeatGainBySolarRadiation** | *array* |  | `[null]` |
-| **Zone/HeatGainBytemperature_difference** | *array* |  | `[null]` |
+| **Zone/heatGainByInteriorheat** | *array* |  | `[null]` |
+| **Zone/heatGainBySolarRadiation** | *array* |  | `[null]` |
+| **Zone/heatGainBytemperature_difference** | *array* |  | `[null]` |
 | **Zone/name** | *string* |  | `"example"` |
 | **Zone/StandardEnergy** | *number* |  | `42.0` |
 
@@ -115,14 +115,14 @@
 | **Input:heatingheat_sourcesLoad** | *array* |  | `[null]` |
 | **Input:heatingheat_sourcesMainEngineEnergyConsumption** | *array* |  | `[null]` |
 | **Input:heatingheat_sourcesWorkingTime** | *array* |  | `[null]` |
-| **Input:HotWaterBoilersEnergyConsumption** | *array* |  | `[null]` |
-| **Input:HotWaterBoilersLoad** | *array* |  | `[null]` |
+| **Input:hotWaterBoilersEnergyConsumption** | *array* |  | `[null]` |
+| **Input:hotWaterBoilersLoad** | *array* |  | `[null]` |
 | **Input:power_consumptionAirConditioning** | *array* |  | `[null]` |
 | **Input:power_consumptionair_handling_units** | *array* |  | `[null]` |
 | **Input:power_consumptionelevator** | *array* |  | `[null]` |
 | **Input:power_consumptionheat_sourcesAuxiliaryEngine** | *array* |  | `[null]` |
 | **Input:power_consumptionheat_sourcesMainEngine** | *array* |  | `[null]` |
-| **Input:power_consumptionHotWater** | *array* |  | `[null]` |
+| **Input:power_consumptionhotWater** | *array* |  | `[null]` |
 | **Input:power_consumptionLighting** | *array* |  | `[null]` |
 | **Input:power_consumptionOther** | *array* |  | `[null]` |
 | **Input:power_consumptionsecondary_pumps** | *array* |  | `[null]` |
@@ -131,12 +131,12 @@
 | **IntermediateResult:AnnualReducedEnergy** | *number* |  | `42.0` |
 | **IntermediateResult:AuxiliaryEquipmentsPowerRatio** | *array* |  | `[null]` |
 | **IntermediateResult:coolingEnergyReduction** | *array* |  | `[null]` |
-| **IntermediateResult:coolingheat_sourceExhaustHeatLoad** | *array* |  | `[null]` |
-| **IntermediateResult:coolingheat_sourceExhaustHeatLoadInOperation** | *array* |  | `[null]` |
+| **IntermediateResult:coolingheat_sourceExhaustheatLoad** | *array* |  | `[null]` |
+| **IntermediateResult:coolingheat_sourceExhaustheatLoadInOperation** | *array* |  | `[null]` |
 | **IntermediateResult:coolingheat_sourceReducibleEnergy** | *array* |  | `[null]` |
-| **IntermediateResult:coolingheat_sourceWasteHeatUsage** | *array* |  | `[null]` |
+| **IntermediateResult:coolingheat_sourceWasteheatUsage** | *array* |  | `[null]` |
 | **IntermediateResult:EffectiveGenerationAmount** | *array* |  | `[null]` |
-| **IntermediateResult:EffectiveHeatRecovery** | *array* |  | `[null]` |
+| **IntermediateResult:EffectiveheatRecovery** | *array* |  | `[null]` |
 | **IntermediateResult:Electricpower_consumption** | *array* |  | `[null]` |
 | **IntermediateResult:ElectricalEnergyReductionByGenerating** | *array* |  | `[null]` |
 | **IntermediateResult:EnergyReduction** | *array* |  | `[null]` |
@@ -145,34 +145,34 @@
 | **IntermediateResult:GenerationAmount** | *array* |  | `[null]` |
 | **IntermediateResult:GenerationEfficiency** | *array* |  | `[null]` |
 | **IntermediateResult:GenerationLoadRatio** | *array* |  | `[null]` |
-| **IntermediateResult:HeatLoad** | *array* |  | `[null]` |
-| **IntermediateResult:HeatRecoveryEfficiency** | *array* |  | `[null]` |
-| **IntermediateResult:HeatRecoveryPossibleProportion** | *array* |  | `[null]` |
+| **IntermediateResult:heatLoad** | *array* |  | `[null]` |
+| **IntermediateResult:heatRecoveryEfficiency** | *array* |  | `[null]` |
+| **IntermediateResult:heatRecoveryPossibleProportion** | *array* |  | `[null]` |
 | **IntermediateResult:heatingEnergyReduction** | *array* |  | `[null]` |
 | **IntermediateResult:heatingheat_sourceLoadInOperation** | *array* |  | `[null]` |
 | **IntermediateResult:heatingheat_sourceMainEngineEnergyConsumptionInOperation** | *array* |  | `[null]` |
-| **IntermediateResult:heatingheat_sourceWasteHeatUsage** | *array* |  | `[null]` |
-| **IntermediateResult:HotWaterEnergyConsumptionInOperation** | *array* |  | `[null]` |
-| **IntermediateResult:HotWaterEnergyReduction** | *array* |  | `[null]` |
-| **IntermediateResult:HotWaterLoadInOperation** | *array* |  | `[null]` |
-| **IntermediateResult:HotWaterWasteHeatUsage** | *array* |  | `[null]` |
+| **IntermediateResult:heatingheat_sourceWasteheatUsage** | *array* |  | `[null]` |
+| **IntermediateResult:hotWaterEnergyConsumptionInOperation** | *array* |  | `[null]` |
+| **IntermediateResult:hotWaterEnergyReduction** | *array* |  | `[null]` |
+| **IntermediateResult:hotWaterLoadInOperation** | *array* |  | `[null]` |
+| **IntermediateResult:hotWaterWasteheatUsage** | *array* |  | `[null]` |
 | **IntermediateResult:MaxnumberOfActiveUnits** | *array* |  | `[null]` |
 | **IntermediateResult:MaxOperatingTime** | *array* |  | `[null]` |
 | **IntermediateResult:numberOfActiveUnits** | *array* |  | `[null]` |
 | **IntermediateResult:OperatingTime** | *array* |  | `[null]` |
-| **IntermediateResult:power_consumptionInOperationHours** | *array* |  | `[null]` |
-| **IntermediateResult:RatioOfpower_consumptionInOperationHours** | *array* |  | `[null]` |
+| **IntermediateResult:power_consumptionInOperationhours** | *array* |  | `[null]` |
+| **IntermediateResult:RatioOfpower_consumptionInOperationhours** | *array* |  | `[null]` |
 | **IntermediateResult:ReducibleEnergyOfcoolingheat_sourceMainEngineInOperation** | *array* |  | `[null]` |
 | **IntermediateResult:TemporaryMaxnumberOfActiveUnits** | *array* |  | `[null]` |
 | **IntermediateResult:TemporarynumberOfActiveUnits** | *array* |  | `[null]` |
-| **IntermediateResult:TotalExhaustHeatLoadInOperation** | *array* |  | `[null]` |
-| **IntermediateResult:WasteHeatDemandForPriority1Purpose** | *array* |  | `[null]` |
-| **IntermediateResult:WasteHeatDemandForPriority2Purpose** | *array* |  | `[null]` |
-| **IntermediateResult:WasteHeatDemandForPriority3Purpose** | *array* |  | `[null]` |
-| **IntermediateResult:WasteHeatRecoveryAmount** | *array* |  | `[null]` |
-| **IntermediateResult:WasteHeatUsageForPriority1Purpose** | *array* |  | `[null]` |
-| **IntermediateResult:WasteHeatUsageForPriority2Purpose** | *array* |  | `[null]` |
-| **IntermediateResult:WasteHeatUsageForPriority3Purpose** | *array* |  | `[null]` |
+| **IntermediateResult:TotalExhaustheatLoadInOperation** | *array* |  | `[null]` |
+| **IntermediateResult:WasteheatDemandForPriority1Purpose** | *array* |  | `[null]` |
+| **IntermediateResult:WasteheatDemandForPriority2Purpose** | *array* |  | `[null]` |
+| **IntermediateResult:WasteheatDemandForPriority3Purpose** | *array* |  | `[null]` |
+| **IntermediateResult:WasteheatRecoveryAmount** | *array* |  | `[null]` |
+| **IntermediateResult:WasteheatUsageForPriority1Purpose** | *array* |  | `[null]` |
+| **IntermediateResult:WasteheatUsageForPriority2Purpose** | *array* |  | `[null]` |
+| **IntermediateResult:WasteheatUsageForPriority3Purpose** | *array* |  | `[null]` |
 
 </details>
 
@@ -204,7 +204,7 @@
 </details>
 
 
-<a name="#resource-HotWater"></a>
+<a name="#resource-hotWater"></a>
 ## 給湯設備計算結果
 
 
@@ -220,18 +220,18 @@
 | name | type | Description | Example |
 | ------- | ------- | ------- | ------- |
 | **Boiler/Energy** | *number* |  | `42.0` |
-| **Boiler/HotWaterSupply** | *array* |  | `[null]` |
+| **Boiler/hotWaterSupply** | *array* |  | `[null]` |
 | **Boiler/Load** | *number* |  | `42.0` |
-| **Boiler/PipeHeatLoss** | *number* |  | `42.0` |
+| **Boiler/PipeheatLoss** | *number* |  | `42.0` |
 | **Boiler/PipeLength** | *number* |  | `42.0` |
-| **Boiler/SolarHeatUse** | *array* |  | `[null]` |
-| **Boiler/StandardHotWaterSupply** | *array* |  | `[null]` |
+| **Boiler/SolarheatUse** | *array* |  | `[null]` |
+| **Boiler/StandardhotWaterSupply** | *array* |  | `[null]` |
 | **Energy** | *number* |  | `42.0` |
 | **Room/Floor** | *string* |  | `"example"` |
-| **Room/HotWaterSupply** | *array* |  | `[null]` |
+| **Room/hotWaterSupply** | *array* |  | `[null]` |
 | **Room/name** | *string* |  | `"example"` |
 | **Room/StandardEnergy** | *number* |  | `42.0` |
-| **Room/StandardHotWaterSupply** | *array* |  | `[null]` |
+| **Room/StandardhotWaterSupply** | *array* |  | `[null]` |
 | **StandardEnergy** | *number* |  | `42.0` |
 
 </details>
@@ -312,7 +312,7 @@
 | **Room/heatingLoad** | *number* |  | `42.0` |
 | **Room/name** | *string* |  | `"example"` |
 | **Room/PALStar** | *number* |  | `42.0` |
-| **Room/PerimeterArea** | *number* |  | `42.0` |
+| **Room/Perimeterarea** | *number* |  | `42.0` |
 | **Room/StandardPALStar** | *number* |  | `42.0` |
 | **Room/TotalLoad** | *number* |  | `42.0` |
 | **StandardPALStar** | *number* |  | `42.0` |

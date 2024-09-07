@@ -13,7 +13,7 @@ import climate
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
-climatedata_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climate_data/"
 
 
 def calc_energy(input_data, DEBUG=False):
@@ -26,13 +26,13 @@ def calc_energy(input_data, DEBUG=False):
         "基準一次エネルギー消費量[GJ/年]": 0,  # 給湯設備の基準一次エネルギー消費量 [GJ/年]
         "設計一次エネルギー消費量[MJ/m2年]": 0,  # 給湯設備の設計一次エネルギー消費量 [MJ/年]
         "基準一次エネルギー消費量[MJ/m2年]": 0,  # 給湯設備の基準一次エネルギー消費量 [MJ/年]
-        "BEI/HW": 0,
+        "BEI/hW": 0,
         "計算対象面積": 0,
 
         "hot_water_supply_systems": {
         },
 
-        "for_CGS": {
+        "for_cgs": {
             "Edesign_MWh_Ele_day": 0,  # 給湯設備（エネルギー源を電力とする給湯機器のみが対象）の電力消費量
             "Edesign_MJ_CGS_day": 0,  # 排熱利用する給湯系統の一次エネルギー消費量
             "Q_eqp_CGS_day": 0  # 排熱が利用できる系統の給湯設備の給湯負荷
@@ -41,13 +41,13 @@ def calc_energy(input_data, DEBUG=False):
 
     # 地域別データの読み込み
     with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
-        Area = json.load(f)
+        area = json.load(f)
 
     ##----------------------------------------------------------------------------------
     ## 気象データの読み込み
     ##----------------------------------------------------------------------------------
-    tout, _, iod, ios, inn = climate.readHaspClimateData(climatedata_directory + "/" +
-                                                         Area[input_data["building"]["region"] + "地域"][
+    tout, _, iod, ios, inn = climate.readhaspclimate_data(climate_data_directory + "/" +
+                                                         area[input_data["building"]["region"] + "地域"][
                                                              "気象データファイル名"])
 
     ##----------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ def calc_energy(input_data, DEBUG=False):
 
         # 日積算湯使用利用 [L/m2/day]
         hotwater_demand, hotwater_demand_wasroom_enthalpy_setting, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
-            bc.get_roomHotwaterDemand(
+            bc.get_roomhotwaterDemand(
                 input_data["rooms"][room_name]["building_type"],
                 input_data["rooms"][room_name]["room_type"],
                 input_room_usage_condition
@@ -270,7 +270,7 @@ def calc_energy(input_data, DEBUG=False):
         ac_operation_mode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
-    ac_mode = ac_operation_mode[Area[input_data["building"]["region"] + "地域"]["空調運転モードタイプ"]]
+    ac_mode = ac_operation_mode[area[input_data["building"]["region"] + "地域"]["空調運転モードタイプ"]]
 
     if input_data["building"]["region"] == '1' or input_data["building"]["region"] == '2':
         TWdata = 0.6639 * toa_ave + 3.466
@@ -438,8 +438,8 @@ def calc_energy(input_data, DEBUG=False):
             Id, _, Is, _ = climate.solar_radiation_by_azimuth( \
                 input_data["hot_water_supply_systems"][unit_name]["solar_system_direction"], \
                 input_data["hot_water_supply_systems"][unit_name]["solar_system_angle"], \
-                Area[input_data["building"]["region"] + "地域"]["緯度"], \
-                Area[input_data["building"]["region"] + "地域"]["経度"], \
+                area[input_data["building"]["region"] + "地域"]["緯度"], \
+                area[input_data["building"]["region"] + "地域"]["経度"], \
                 iod, ios, inn)
 
             # 太陽熱利用量 [KJ/day]
@@ -469,22 +469,22 @@ def calc_energy(input_data, DEBUG=False):
         else:
 
             # 太陽熱利用がある場合
-            tmpQh = 4.2 * input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] * (43 - TWdata)
+            tmp_qh = 4.2 * input_data["hot_water_supply_systems"][unit_name]["Qs_eqp_daily"] * (43 - TWdata)
 
             for dd in range(0, 365):
-                if (toa_ave[dd] > 5) and (tmpQh[dd] > 0):  # 日平均外気温が５度を超えていれば集熱
+                if (toa_ave[dd] > 5) and (tmp_qh[dd] > 0):  # 日平均外気温が５度を超えていれば集熱
 
-                    if tmpQh[dd] * 0.1 > (
-                            tmpQh[dd] - input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"][dd]):
+                    if tmp_qh[dd] * 0.1 > (
+                            tmp_qh[dd] - input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"][dd]):
 
-                        input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"][dd] = tmpQh[dd] * 0.1
+                        input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"][dd] = tmp_qh[dd] * 0.1
 
                     else:
                         input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"][dd] = \
-                            tmpQh[dd] - input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"][dd]
+                            tmp_qh[dd] - input_data["hot_water_supply_systems"][unit_name]["Qs_solargain"][dd]
 
                 else:
-                    input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"][dd] = tmpQh[dd]
+                    input_data["hot_water_supply_systems"][unit_name]["Qh_eqp_daily"][dd] = tmp_qh[dd]
 
         if DEBUG:
             print(f'機器名称 {unit_name}')
@@ -567,9 +567,9 @@ def calc_energy(input_data, DEBUG=False):
             result_json["hot_water_supply_systems"][unit_name]["基準一次エネルギー消費量[MJ/年]"] += \
                 input_data["hot_water_room"][room_name]["基準一次エネルギー消費量[MJ/年]"] * unit_configure["roomPowerRatio"]
 
-    # BEI/HW
-    result_json["BEI/HW"] = result_json["設計一次エネルギー消費量[MJ/年]"] / result_json["基準一次エネルギー消費量[MJ/年]"]
-    result_json["BEI/HW"] = math.ceil(result_json["BEI/HW"] * 100) / 100
+    # BEI/hW
+    result_json["BEI/hW"] = result_json["設計一次エネルギー消費量[MJ/年]"] / result_json["基準一次エネルギー消費量[MJ/年]"]
+    result_json["BEI/hW"] = math.ceil(result_json["BEI/hW"] * 100) / 100
 
     result_json["設計一次エネルギー消費量[GJ/年]"] = result_json["設計一次エネルギー消費量[MJ/年]"] / 1000
     result_json["基準一次エネルギー消費量[GJ/年]"] = result_json["基準一次エネルギー消費量[MJ/年]"] / 1000
@@ -622,9 +622,9 @@ def calc_energy(input_data, DEBUG=False):
                                     Edesign_MWh_Ele_hour[dd] += input_data["hot_water_supply_systems"][unit_name]["E_eqp"][
                                                                     dd] / 24 / 1000 / 9760 * np.ones(24)
 
-        result_json["for_CGS"]["Edesign_MWh_Ele_day"] = np.sum(Edesign_MWh_Ele_hour, 1)
-        result_json["for_CGS"]["Edesign_MJ_CGS_day"] = np.sum(Edesign_MJ_CGS_hour, 1)
-        result_json["for_CGS"]["Q_eqp_CGS_day"] = np.sum(Q_eqp_CGS_hour, 1)
+        result_json["for_cgs"]["Edesign_MWh_Ele_day"] = np.sum(Edesign_MWh_Ele_hour, 1)
+        result_json["for_cgs"]["Edesign_MJ_CGS_day"] = np.sum(Edesign_MJ_CGS_hour, 1)
+        result_json["for_cgs"]["Q_eqp_CGS_day"] = np.sum(Q_eqp_CGS_hour, 1)
 
     ##----------------------------------------------------------------------------------
     # 不要な要素を削除
@@ -655,5 +655,5 @@ if __name__ == '__main__':
 
     result_json = calc_energy(input_data, DEBUG=True)
 
-    with open("result_json_HW.json", 'w', encoding='utf-8') as fw:
+    with open("result_json_hW.json", 'w', encoding='utf-8') as fw:
         json.dump(result_json, fw, indent=4, ensure_ascii=False, cls=bc.MyEncoder)

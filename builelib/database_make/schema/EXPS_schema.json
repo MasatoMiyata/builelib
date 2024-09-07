@@ -7,7 +7,7 @@
     },
     "definitions": {
         "EXPS": {
-            "description": "newHASP用のEXPS",
+            "description": "newhASP用のEXPS",
             "type": "object",
             "additionalProperties": false,
             "properties": {

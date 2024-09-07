@@ -40,7 +40,7 @@
                 "title": "PAL＊基準値 [MJ/m2年]",
                 "type": "number"
               },
-              "PerimeterArea": {
+              "Perimeterarea": {
                 "title": "ペリメータ面積 [m2]",
                 "type": "number"
               },
@@ -62,7 +62,7 @@
               "name",
               "PALStar",
               "StandardPALStar",
-              "PerimeterArea",
+              "Perimeterarea",
               "coolingLoad",
               "heatingLoad",
               "TotalLoad"
@@ -124,7 +124,7 @@
                 "title": "空調ゾーン名称",
                 "type": "string"
               },
-              "HeatGainBytemperature_difference": {
+              "heatGainBytemperature_difference": {
                 "title": "温度差による定常熱取得 [Wh/(m2・day)]",
                 "type": "array",
                 "items": {
@@ -133,7 +133,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "HeatGainBySolarRadiation": {
+              "heatGainBySolarRadiation": {
                 "title": "日射による定常熱取得 [Wh/(m2・day)]",
                 "type": "array",
                 "items": {
@@ -142,7 +142,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "HeatGainByInteriorHeat": {
+              "heatGainByInteriorheat": {
                 "title": "内部発熱による定常熱取得 [Wh/(m2・day)]",
                 "type": "array",
                 "items": {
@@ -177,9 +177,9 @@
             "required": [
               "Floor",
               "name",
-              "HeatGainBytemperature_difference",
-              "HeatGainBySolarRadiation",
-              "HeatGainByInteriorHeat",
+              "heatGainBytemperature_difference",
+              "heatGainBySolarRadiation",
+              "heatGainByInteriorheat",
               "DailyRoomLoad_cooling",
               "DailyRoomLoad_heating",
               "StandardEnergy"
@@ -206,7 +206,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "HeatExchangerOperatingTime": {
+              "heatExchangerOperatingTime": {
                 "title": "全熱交換器の運転時間 [h/day]",
                 "type": "array",
                 "items": {
@@ -308,7 +308,7 @@
                 "title": "送風機の暖房運転時の消費電力 [kW]",
                 "type": "number"
               },
-              "FanHeat_cooling": {
+              "Fanheat_cooling": {
                 "title": "ファン発熱量（冷水運転時） [MJ/day]",
                 "type": "array",
                 "items": {
@@ -317,7 +317,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "FanHeat_heating": {
+              "Fanheat_heating": {
                 "title": "ファン発熱量（温水運転時） [MJ/day]",
                 "type": "array",
                 "items": {
@@ -326,7 +326,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "HeatExchangerRotorpower_consumption": {
+              "heatExchangerRotorpower_consumption": {
                 "title": "全熱交換器ローターの消費電力 [kW]",
                 "type": "number"
               },
@@ -338,7 +338,7 @@
             "required": [
               "name",
               "OperatingTime",
-              "HeatExchangerOperatingTime",
+              "heatExchangerOperatingTime",
               "OperatingTime_cooling",
               "OperatingTime_heating",
               "OutsideAirIntroduction",
@@ -351,9 +351,9 @@
               "LoadRatio_heating",
               "Blowerpower_consumption_cooling",
               "Blowerpower_consumption_heating",
-              "FanHeat_cooling",
-              "FanHeat_heating",
-              "HeatExchangerRotorpower_consumption",
+              "Fanheat_cooling",
+              "Fanheat_heating",
+              "heatExchangerRotorpower_consumption",
               "Energy"
             ],
             "additionalProperties": false
@@ -426,7 +426,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "PumpHeat": {
+              "pumpheat": {
                 "title": "ポンプの発熱量 [MJ/day]",
                 "type": "array",
                 "items": {
@@ -449,7 +449,7 @@
               "LoadRatio",
               "Operatingnumber",
               "power_consumption",
-              "PumpHeat",
+              "pumpheat",
               "Energy"
             ],
             "additionalProperties": false
@@ -469,11 +469,11 @@
                   "heating"
                 ]
               },
-              "HeatLossByThermalStorage": {
+              "heatLossByThermalStorage": {
                 "title": "蓄熱槽からの熱損失量 [MJ/day]",
                 "type": "number"
               },
-              "HeatLoad": {
+              "heatLoad": {
                 "title": "熱負荷 [MJ/day]",
                 "type": "array",
                 "items": {
@@ -715,8 +715,8 @@
             },
             "required": [
               "coolingOrheating",
-              "HeatLossByThermalStorage",
-              "HeatLoad",
+              "heatLossByThermalStorage",
+              "heatLoad",
               "StandardOperatingTime",
               "rated_capacity",
               "Virtualrated_capacity",
@@ -939,7 +939,7 @@
       ],
       "additionalProperties": false
     },
-    "HotWater": {
+    "hotWater": {
       "title": "給湯設備計算結果",
       "type": "object",
       "properties": {
@@ -969,7 +969,7 @@
                 "title": "基準一次エネルギー消費量 [MJ/年]",
                 "type": "number"
               },
-              "HotWaterSupply": {
+              "hotWaterSupply": {
                 "title": "日積算湯供給量 [L/day]",
                 "type": "array",
                 "items": {
@@ -978,7 +978,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "StandardHotWaterSupply": {
+              "StandardhotWaterSupply": {
                 "title": "基準設定日積算湯供給量 [L/day]",
                 "type": "array",
                 "items": {
@@ -992,8 +992,8 @@
               "Floor",
               "name",
               "StandardEnergy",
-              "HotWaterSupply",
-              "StandardHotWaterSupply"
+              "hotWaterSupply",
+              "StandardhotWaterSupply"
             ],
             "additionalProperties": false
           }
@@ -1012,7 +1012,7 @@
                 "title": "年間給湯負荷 [kJ/年]",
                 "type": "number"
               },
-              "SolarHeatUse": {
+              "SolarheatUse": {
                 "title": "太陽熱利用システムの熱利用量 [kJ/day]",
                 "type": "array",
                 "items": {
@@ -1021,7 +1021,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "PipeHeatLoss": {
+              "PipeheatLoss": {
                 "title": "年間配管熱損失量 [kJ/年]",
                 "type": "number"
               },
@@ -1029,7 +1029,7 @@
                 "title": "配管長さ [m]",
                 "type": "number"
               },
-              "HotWaterSupply": {
+              "hotWaterSupply": {
                 "title": "日積算湯供給量 [L/day]",
                 "type": "array",
                 "items": {
@@ -1038,7 +1038,7 @@
                 "minItems": 365,
                 "maxItems": 365
               },
-              "StandardHotWaterSupply": {
+              "StandardhotWaterSupply": {
                 "title": "基準設定日積算湯供給量 [L/day]",
                 "type": "array",
                 "items": {
@@ -1051,11 +1051,11 @@
             "required": [
               "Energy",
               "Load",
-              "SolarHeatUse",
-              "PipeHeatLoss",
+              "SolarheatUse",
+              "PipeheatLoss",
               "PipeLength",
-              "HotWaterSupply",
-              "StandardHotWaterSupply"
+              "hotWaterSupply",
+              "StandardhotWaterSupply"
             ],
             "additionalProperties": false
           }
@@ -1190,7 +1190,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HeatRecoveryPossibleProportion": {
+            "heatRecoveryPossibleProportion": {
               "title": "排熱投入型吸収式冷温水機の排熱利用可能率 [-]",
               "type": "array",
               "items": {
@@ -1199,7 +1199,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "coolingheat_sourceExhaustHeatLoad": {
+            "coolingheat_sourceExhaustheatLoad": {
               "title": "CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての排熱負荷 [MJ/day]",
               "type": "array",
               "items": {
@@ -1217,7 +1217,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HeatLoad": {
+            "heatLoad": {
               "title": "CGS排熱系統の熱負荷 [MJ/day]",
               "type": "array",
               "items": {
@@ -1235,7 +1235,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "RatioOfpower_consumptionInOperationHours": {
+            "RatioOfpower_consumptionInOperationhours": {
               "title": "一日の電力消費量に占める運用時間帯の電力消費量の比率 [-]",
               "type": "array",
               "items": {
@@ -1262,7 +1262,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "power_consumptionInOperationHours": {
+            "power_consumptionInOperationhours": {
               "title": "CGS稼働時間帯の建物の電力消費量 [kWh/day]",
               "type": "array",
               "items": {
@@ -1280,7 +1280,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "coolingheat_sourceExhaustHeatLoadInOperation": {
+            "coolingheat_sourceExhaustheatLoadInOperation": {
               "title": "CGS稼働時の排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての排熱負荷 [MJ/day]",
               "type": "array",
               "items": {
@@ -1307,7 +1307,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HotWaterEnergyConsumptionInOperation": {
+            "hotWaterEnergyConsumptionInOperation": {
               "title": "CGS稼働時の排熱利用が可能な給湯機(系統)の一次エネルギー消費量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1316,7 +1316,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HotWaterLoadInOperation": {
+            "hotWaterLoadInOperation": {
               "title": "CGS稼働時の排熱利用が可能な給湯機(系統)の給湯負荷 [MJ/day]",
               "type": "array",
               "items": {
@@ -1325,7 +1325,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "TotalExhaustHeatLoadInOperation": {
+            "TotalExhaustheatLoadInOperation": {
               "title": "CGS稼働時の排熱負荷合計 [MJ/day]",
               "type": "array",
               "items": {
@@ -1397,7 +1397,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HeatRecoveryEfficiency": {
+            "heatRecoveryEfficiency": {
               "title": "CGSの排熱回収効率(低位発熱量基準) [-]",
               "type": "array",
               "items": {
@@ -1433,7 +1433,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "WasteHeatRecoveryAmount": {
+            "WasteheatRecoveryAmount": {
               "title": "CGSの排熱回収量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1442,7 +1442,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "EffectiveHeatRecovery": {
+            "EffectiveheatRecovery": {
               "title": "CGSの有効排熱回収量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1451,7 +1451,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "coolingheat_sourceWasteHeatUsage": {
+            "coolingheat_sourceWasteheatUsage": {
               "title": "排熱投入型吸収式冷温水機(系統)の冷熱源としての排熱利用量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1460,7 +1460,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "heatingheat_sourceWasteHeatUsage": {
+            "heatingheat_sourceWasteheatUsage": {
               "title": "温熱源群の排熱利用量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1469,7 +1469,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HotWaterWasteHeatUsage": {
+            "hotWaterWasteheatUsage": {
               "title": "給湯機(系統)の排熱利用量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1478,7 +1478,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "WasteHeatUsageForPriority1Purpose": {
+            "WasteheatUsageForPriority1Purpose": {
               "title": "排熱利用優先順位1の用途の排熱利用量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1487,7 +1487,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "WasteHeatUsageForPriority2Purpose": {
+            "WasteheatUsageForPriority2Purpose": {
               "title": "排熱利用優先順位2の用途の排熱利用量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1496,7 +1496,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "WasteHeatUsageForPriority3Purpose": {
+            "WasteheatUsageForPriority3Purpose": {
               "title": "排熱利用優先順位3の用途の排熱利用量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1505,7 +1505,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "WasteHeatDemandForPriority1Purpose": {
+            "WasteheatDemandForPriority1Purpose": {
               "title": "排熱利用優先順位1の用途の排熱需要 [MJ/day]",
               "type": "array",
               "items": {
@@ -1514,7 +1514,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "WasteHeatDemandForPriority2Purpose": {
+            "WasteheatDemandForPriority2Purpose": {
               "title": "排熱利用優先順位2の用途の排熱需要 [MJ/day]",
               "type": "array",
               "items": {
@@ -1523,7 +1523,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "WasteHeatDemandForPriority3Purpose": {
+            "WasteheatDemandForPriority3Purpose": {
               "title": "排熱利用優先順位3の用途の排熱需要 [MJ/day]",
               "type": "array",
               "items": {
@@ -1550,7 +1550,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HotWaterEnergyReduction": {
+            "hotWaterEnergyReduction": {
               "title": "給湯の一次エネルギー削減量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1581,22 +1581,22 @@
           "required": [
             "AnnualReducedEnergy",
             "Electricpower_consumption",
-            "HeatRecoveryPossibleProportion",
-            "coolingheat_sourceExhaustHeatLoad",
+            "heatRecoveryPossibleProportion",
+            "coolingheat_sourceExhaustheatLoad",
             "coolingheat_sourceReducibleEnergy",
-            "HeatLoad",
+            "heatLoad",
             "MaxOperatingTime",
-            "RatioOfpower_consumptionInOperationHours",
+            "RatioOfpower_consumptionInOperationhours",
             "OperatingTime",
             "AuxiliaryEquipmentsPowerRatio",
-            "power_consumptionInOperationHours",
+            "power_consumptionInOperationhours",
             "ReducibleEnergyOfcoolingheat_sourceMainEngineInOperation",
-            "coolingheat_sourceExhaustHeatLoadInOperation",
+            "coolingheat_sourceExhaustheatLoadInOperation",
             "heatingheat_sourceMainEngineEnergyConsumptionInOperation",
             "heatingheat_sourceLoadInOperation",
-            "HotWaterEnergyConsumptionInOperation",
-            "HotWaterLoadInOperation",
-            "TotalExhaustHeatLoadInOperation",
+            "hotWaterEnergyConsumptionInOperation",
+            "hotWaterLoadInOperation",
+            "TotalExhaustheatLoadInOperation",
             "TemporaryMaxnumberOfActiveUnits",
             "MaxnumberOfActiveUnits",
             "Generated_powerLoad",
@@ -1604,24 +1604,24 @@
             "numberOfActiveUnits",
             "GenerationLoadRatio",
             "GenerationEfficiency",
-            "HeatRecoveryEfficiency",
+            "heatRecoveryEfficiency",
             "GenerationAmount",
             "EffectiveGenerationAmount",
             "FuelConsumption",
-            "WasteHeatRecoveryAmount",
-            "EffectiveHeatRecovery",
-            "coolingheat_sourceWasteHeatUsage",
-            "heatingheat_sourceWasteHeatUsage",
-            "HotWaterWasteHeatUsage",
-            "WasteHeatUsageForPriority1Purpose",
-            "WasteHeatUsageForPriority2Purpose",
-            "WasteHeatUsageForPriority3Purpose",
-            "WasteHeatDemandForPriority1Purpose",
-            "WasteHeatDemandForPriority2Purpose",
-            "WasteHeatDemandForPriority3Purpose",
+            "WasteheatRecoveryAmount",
+            "EffectiveheatRecovery",
+            "coolingheat_sourceWasteheatUsage",
+            "heatingheat_sourceWasteheatUsage",
+            "hotWaterWasteheatUsage",
+            "WasteheatUsageForPriority1Purpose",
+            "WasteheatUsageForPriority2Purpose",
+            "WasteheatUsageForPriority3Purpose",
+            "WasteheatDemandForPriority1Purpose",
+            "WasteheatDemandForPriority2Purpose",
+            "WasteheatDemandForPriority3Purpose",
             "coolingEnergyReduction",
             "heatingEnergyReduction",
-            "HotWaterEnergyReduction",
+            "hotWaterEnergyReduction",
             "ElectricalEnergyReductionByGenerating",
             "EnergyReduction"
           ],
@@ -1694,7 +1694,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "power_consumptionHotWater": {
+            "power_consumptionhotWater": {
               "title": "電力消費量（給湯設備） [MWh/day]",
               "type": "array",
               "items": {
@@ -1784,7 +1784,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HotWaterBoilersEnergyConsumption": {
+            "hotWaterBoilersEnergyConsumption": {
               "title": "CGSの排熱利用が可能な給湯機(系統)の一次エネルギー消費量 [MJ/日]",
               "type": "array",
               "items": {
@@ -1793,7 +1793,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "HotWaterBoilersLoad": {
+            "hotWaterBoilersLoad": {
               "title": "CGSの排熱利用が可能な給湯機(系統)の給湯負荷 [MJ/日]",
               "type": "array",
               "items": {
@@ -1820,7 +1820,7 @@
             "power_consumptionair_handling_units",
             "power_consumptionVentilation",
             "power_consumptionLighting",
-            "power_consumptionHotWater",
+            "power_consumptionhotWater",
             "power_consumptionelevator",
             "power_consumptionOther",
             "PowerGenerationPhotovoltaicGeneration",
@@ -1830,8 +1830,8 @@
             "heatingheat_sourcesMainEngineEnergyConsumption",
             "heatingheat_sourcesLoad",
             "heatingheat_sourcesWorkingTime",
-            "HotWaterBoilersEnergyConsumption",
-            "HotWaterBoilersLoad",
+            "hotWaterBoilersEnergyConsumption",
+            "hotWaterBoilersLoad",
             "AveragePowerDifference"
           ],
           "additionalProperties": false

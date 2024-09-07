@@ -1,10 +1,10 @@
-�������ʎq,building_type,room_type,Area,RoomHeight,Width,Depth,room_index,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
+�������ʎq,building_type,room_type,area,Roomheight,Width,Depth,room_index,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
 C1	�w�Z��	�����w�Z�̋���	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	2754.6624	17600
 C2	�w�Z��	�����w�Z�̋���	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	2754.6624	17600
 C3	�w�Z��	�E����	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	6306.912	38200
-C4	�w�Z��	�����w�Z���͍����w�Z�̐H��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1032.9984	6300
+C4	�w�Z��	�����w�Z���͍����w�Z�̐h��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1032.9984	6300
 C5	�w�Z��	��w�̋���	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	2863.584	18300
-C6	�w�Z��	��w�̐H��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5502.2976	33300
+C6	�w�Z��	��w�̐h��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5502.2976	33300
 C7	�w�Z��	������	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	4233.888	38300
 C8	�w�Z��	������	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	6155.8272	55700
 C9	�w�Z��	�d�q�v�Z�@�퉉�K��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	3387.1104	31200
@@ -22,6 +22,6 @@ C20	�w�Z��	�������ԏ�	100	2.7	10	20	2	100	1	��	��
 C21	�w�Z��	�@�B��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	210.816	600
 C22	�w�Z��	�d�C��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	210.816	600
 C23	�w�Z��	��������	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1054.08	3900
-C24	�w�Z��	�H�i�ɓ�	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1054.08	4200
+C24	�w�Z��	�h�i�ɓ�	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1054.08	4200
 C25	�w�Z��	�������	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1054.08	6400
 C26	�w�Z��	�p�����ۊǏꏊ��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1054.08	2100

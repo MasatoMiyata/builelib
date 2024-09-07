@@ -17,11 +17,11 @@ def calc_energy(input_data, DEBUG=False):
     result_json = {
         "E_other": 0,  # 基準一次エネルギー消費量 [MJ]
         "E_other_room": {},
-        "for_CGS": {
+        "for_cgs": {
             "Edesign_MWh_day": np.zeros(365),
-            "ratio_AreaWeightedSchedule_AC": np.zeros((365, 24)),  # 空調
-            "ratio_AreaWeightedSchedule_LT": np.zeros((365, 24)),  # 照明
-            "ratio_AreaWeightedSchedule_OA": np.zeros((365, 24))  # 機器発熱
+            "ratio_areaWeightedSchedule_AC": np.zeros((365, 24)),  # 空調
+            "ratio_areaWeightedSchedule_LT": np.zeros((365, 24)),  # 照明
+            "ratio_areaWeightedSchedule_OA": np.zeros((365, 24))  # 機器発熱
         }
     }
 
@@ -34,7 +34,7 @@ def calc_energy(input_data, DEBUG=False):
     room_schedule_light = {}
     room_schedule_person = {}
     room_schedule_oa_app = {}
-    roomHeatGain_OAapp = {}
+    roomheatGain_OAapp = {}
 
     for room_name in input_data["rooms"]:
 
@@ -42,7 +42,7 @@ def calc_energy(input_data, DEBUG=False):
             "E_other_standard": 0,  # 告示の値 [MJ/m2]
             "E_other": 0,  # その他一次エネルギー消費量 [MJ/年]
             "E_ratio": 1,
-            "roomHeatGain_daily": np.zeros(365)  # 日別の機器発熱量 [MJ/m2/day]
+            "roomheatGain_daily": np.zeros(365)  # 日別の機器発熱量 [MJ/m2/day]
         }
 
         ##----------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ def calc_energy(input_data, DEBUG=False):
             room_schedule_light[room_name] = np.zeros((365, 24))
             room_schedule_person[room_name] = np.zeros((365, 24))
             room_schedule_oa_app[room_name] = np.zeros((365, 24))
-            roomHeatGain_OAapp[room_name] = 0
+            roomheatGain_OAapp[room_name] = 0
 
         else:
 
@@ -78,8 +78,8 @@ def calc_energy(input_data, DEBUG=False):
                                          input_data["rooms"][room_name]["room_type"], input_calendar)
 
             # 機器発熱量参照値 [W/m2]の読み込み。SP-9に入力がある場合、任意の値を使用。
-            (_, _, roomHeatGain_OAapp[room_name], _) = \
-                bc.get_roomHeatGain(input_data["rooms"][room_name]["building_type"],
+            (_, _, roomheatGain_OAapp[room_name], _) = \
+                bc.get_roomheatGain(input_data["rooms"][room_name]["building_type"],
                                     input_data["rooms"][room_name]["room_type"], input_room_usage_condition)
 
             ##----------------------------------------------------------------------------------
@@ -106,23 +106,23 @@ def calc_energy(input_data, DEBUG=False):
                         room_schedule_oa_app[room_name] = np.array(
                             input_data["special_input_data"]["room_schedule"][room_name]["schedule"]["機器発熱密度比率"])
 
-        if roomHeatGain_OAapp[room_name] != None:
+        if roomheatGain_OAapp[room_name] != None:
 
             # 機器からの発熱（日積算）（365日分） [MJ/m2/day]
-            result_json["E_other_room"][room_name]["roomHeatGain_daily"] = \
-                np.sum(room_schedule_oa_app[room_name], 1) * roomHeatGain_OAapp[room_name] / 1000000 * bc.fprime
+            result_json["E_other_room"][room_name]["roomheatGain_daily"] = \
+                np.sum(room_schedule_oa_app[room_name], 1) * roomheatGain_OAapp[room_name] / 1000000 * bc.fprime
 
             # その他一次エネルギー消費量原単位（告示の値） [MJ/m2] の算出（端数処理）
             result_json["E_other_room"][room_name]["E_other_standard"] = \
-                round(np.sum(result_json["E_other_room"][room_name]["roomHeatGain_daily"]))
+                round(np.sum(result_json["E_other_room"][room_name]["roomheatGain_daily"]))
 
             # 年積算値（端数調整前）が告示の値と一致するように補正する係数を求める（コジェネ計算時に日別消費電力を年積算値と一致させるために必要）。
-            if np.sum(result_json["E_other_room"][room_name]["roomHeatGain_daily"]) == 0:
+            if np.sum(result_json["E_other_room"][room_name]["roomheatGain_daily"]) == 0:
                 result_json["E_other_room"][room_name]["E_ratio"] = 1
             else:
                 result_json["E_other_room"][room_name]["E_ratio"] = \
                     result_json["E_other_room"][room_name]["E_other_standard"] / np.sum(
-                        result_json["E_other_room"][room_name]["roomHeatGain_daily"])
+                        result_json["E_other_room"][room_name]["roomheatGain_daily"])
 
         if DEBUG:
             print(f'室名: {room_name}')
@@ -140,22 +140,22 @@ def calc_energy(input_data, DEBUG=False):
         result_json["E_other"] += result_json["E_other_room"][room_name]["E_other"]
 
         # 日別の電力消費量（告示に掲載の年積算値と一致させるために E_ratio で一律補正する）
-        result_json["for_CGS"]["Edesign_MWh_day"] += \
-            result_json["E_other_room"][room_name]["roomHeatGain_daily"] * input_data["rooms"][room_name]["room_area"] * \
+        result_json["for_cgs"]["Edesign_MWh_day"] += \
+            result_json["E_other_room"][room_name]["roomheatGain_daily"] * input_data["rooms"][room_name]["room_area"] * \
             result_json["E_other_room"][room_name]["E_ratio"] / bc.fprime
 
     ##----------------------------------------------------------------------------------
     # コジェネ計算用のスケジュール
     ##----------------------------------------------------------------------------------
-    AreaWeightedSchedule_AC = np.zeros((365, 24))
-    AreaWeightedSchedule_LT = np.zeros((365, 24))
-    AreaWeightedSchedule_OA = np.zeros((365, 24))
+    areaWeightedSchedule_AC = np.zeros((365, 24))
+    areaWeightedSchedule_LT = np.zeros((365, 24))
+    areaWeightedSchedule_OA = np.zeros((365, 24))
 
     # 空調スケジュール
     for room_zone_name in input_data["air_conditioning_zone"]:
         if room_zone_name in input_data["rooms"]:  # ゾーン分けがない場合
 
-            AreaWeightedSchedule_AC += room_schedule_room[room_zone_name] * input_data["rooms"][room_zone_name]["room_area"]
+            areaWeightedSchedule_AC += room_schedule_room[room_zone_name] * input_data["rooms"][room_zone_name]["room_area"]
 
         else:
 
@@ -164,14 +164,14 @@ def calc_energy(input_data, DEBUG=False):
                 if input_data["rooms"][room_name]["zone"] != None:  # ゾーンがあれば
                     for zone_name in input_data["rooms"][room_name]["zone"]:  # ゾーン名を検索
                         if room_zone_name == (room_name + "_" + zone_name):
-                            AreaWeightedSchedule_AC += room_schedule_room[room_name] * \
+                            areaWeightedSchedule_AC += room_schedule_room[room_name] * \
                                                        input_data["rooms"][room_name]["zone"][zone_name]["zone_area"]
 
     # 照明スケジュール
     for room_zone_name in input_data["lighting_systems"]:
         if room_zone_name in input_data["rooms"]:  # ゾーン分けがない場合
 
-            AreaWeightedSchedule_LT += room_schedule_light[room_zone_name] * input_data["rooms"][room_zone_name][
+            areaWeightedSchedule_LT += room_schedule_light[room_zone_name] * input_data["rooms"][room_zone_name][
                 "room_area"]
 
         else:
@@ -181,23 +181,23 @@ def calc_energy(input_data, DEBUG=False):
                 if input_data["rooms"][room_name]["zone"] != None:  # ゾーンがあれば
                     for zone_name in input_data["rooms"][room_name]["zone"]:  # ゾーン名を検索
                         if room_zone_name == (room_name + "_" + zone_name):
-                            AreaWeightedSchedule_LT += room_schedule_light[room_name] * \
+                            areaWeightedSchedule_LT += room_schedule_light[room_name] * \
                                                        input_data["rooms"][room_name]["zone"][zone_name]["zone_area"]
 
                             # 機器発熱スケジュール
     for room_name in input_data["rooms"]:
-        AreaWeightedSchedule_OA += room_schedule_oa_app[room_name] * input_data["rooms"][room_name]["room_area"]
+        areaWeightedSchedule_OA += room_schedule_oa_app[room_name] * input_data["rooms"][room_name]["room_area"]
 
     for dd in range(0, 365):
-        if np.sum(AreaWeightedSchedule_AC[dd]) != 0:
-            result_json["for_CGS"]["ratio_AreaWeightedSchedule_AC"][dd] = \
-                AreaWeightedSchedule_AC[dd] / np.sum(AreaWeightedSchedule_AC[dd])
-        if np.sum(AreaWeightedSchedule_LT[dd]) != 0:
-            result_json["for_CGS"]["ratio_AreaWeightedSchedule_LT"][dd] = \
-                AreaWeightedSchedule_LT[dd] / np.sum(AreaWeightedSchedule_LT[dd])
-        if np.sum(AreaWeightedSchedule_OA[dd]) != 0:
-            result_json["for_CGS"]["ratio_AreaWeightedSchedule_OA"][dd] = \
-                AreaWeightedSchedule_OA[dd] / np.sum(AreaWeightedSchedule_OA[dd])
+        if np.sum(areaWeightedSchedule_AC[dd]) != 0:
+            result_json["for_cgs"]["ratio_areaWeightedSchedule_AC"][dd] = \
+                areaWeightedSchedule_AC[dd] / np.sum(areaWeightedSchedule_AC[dd])
+        if np.sum(areaWeightedSchedule_LT[dd]) != 0:
+            result_json["for_cgs"]["ratio_areaWeightedSchedule_LT"][dd] = \
+                areaWeightedSchedule_LT[dd] / np.sum(areaWeightedSchedule_LT[dd])
+        if np.sum(areaWeightedSchedule_OA[dd]) != 0:
+            result_json["for_cgs"]["ratio_areaWeightedSchedule_OA"][dd] = \
+                areaWeightedSchedule_OA[dd] / np.sum(areaWeightedSchedule_OA[dd])
 
     if DEBUG:
         print(f'その他一次エネルギー消費量 MJ: {result_json["E_other"]}')
@@ -207,7 +207,7 @@ def calc_energy(input_data, DEBUG=False):
     ##----------------------------------------------------------------------------------
 
     for room_id, isys in result_json["E_other_room"].items():
-        del result_json["E_other_room"][room_id]["roomHeatGain_daily"]
+        del result_json["E_other_room"][room_id]["roomheatGain_daily"]
 
     return result_json
 

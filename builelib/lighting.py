@@ -52,7 +52,7 @@ def calc_energy(input_data, DEBUG=False):
         "E_lighting_hourly": None,
         "lighting": {
         },
-        "for_CGS": {
+        "for_cgs": {
             "Edesign_MWh_day": np.zeros(365)
         }
     }
@@ -204,9 +204,9 @@ def calc_energy(input_data, DEBUG=False):
 
         # 床面積あたりの設計一次エネルギー消費量 [MJ/m2]
         if room_area <= 0:
-            PrimaryEnergyPerArea = None
+            PrimaryEnergyPerarea = None
         else:
-            PrimaryEnergyPerArea = E_room / room_area
+            PrimaryEnergyPerarea = E_room / room_area
 
         # 基準一次エネルギー消費量 [MJ]
         Es_room = bc.room_standard_value[building_type][room_type]["照明"] * room_area
@@ -223,7 +223,7 @@ def calc_energy(input_data, DEBUG=False):
             "unitPower": unitPower,
             "primaryEnergy": E_room,
             "standardEnergy": Es_room,
-            "primaryEnergyPerArea": PrimaryEnergyPerArea,
+            "primaryEnergyPerarea": PrimaryEnergyPerarea,
             "energyRatio": E_room / Es_room
         }
 
@@ -250,7 +250,7 @@ def calc_energy(input_data, DEBUG=False):
     # result_json["E_lighting_hourly"] = E_lighting_hourly
 
     # 日積算値
-    result_json["for_CGS"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly / 9760, 1)
+    result_json["for_cgs"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly / 9760, 1)
 
     return result_json
 

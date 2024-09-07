@@ -12,7 +12,7 @@ import commons as bc
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
-climatedata_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climate_data/"
 
 
 ## 中間期平均外気温（附属書B.1）
@@ -57,7 +57,7 @@ def calc_energy(input_data, DEBUG=False):
         "ventilation": {
         },
 
-        "for_CGS": {
+        "for_cgs": {
             "Edesign_MWh_day": np.zeros(365)
         }
     }
@@ -380,7 +380,7 @@ def calc_energy(input_data, DEBUG=False):
 
     # コジェネ用の結果の格納 [MJ → MWh]
     for day in range(0, 365):
-        result_json["for_CGS"]["Edesign_MWh_day"][day] = np.sum(result_json["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (
+        result_json["for_cgs"]["Edesign_MWh_day"][day] = np.sum(result_json["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (
             bc.fprime)
 
         ##----------------------------------------------------------------------------------

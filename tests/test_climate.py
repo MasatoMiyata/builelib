@@ -81,27 +81,27 @@ def caclulation(input_data):
     print(bet)
 
     database_directory = "./builelib/database/"
-    climate_directory = "./builelib/climatedata/"
+    climate_directory = "./builelib/climate_data/"
 
     # 地域別データの読み込み
     with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
-        Area = json.load(f)
+        area = json.load(f)
 
     # 直達日射量、天空日射量 [W/m2]
-    _, _, iod, ios, inn = climate.readHaspClimateData(climate_directory +
-                                                      Area[climate_area + "地域"]["気象データファイル名"])
+    _, _, iod, ios, inn = climate.readhaspclimate_data(climate_directory +
+                                                      area[climate_area + "地域"]["気象データファイル名"])
 
     # np.savetxt("直達日射量.txt", iod)
     # np.savetxt("天空日射量.txt", ios)
-    # print(Area[climate_area+"地域"]["緯度"])
-    # print(Area[climate_area+"地域"]["経度"])
+    # print(area[climate_area+"地域"]["緯度"])
+    # print(area[climate_area+"地域"]["経度"])
 
     # 日積算日射量 [Wh/m2/day]
     Id, _, Is, _ = climate.solar_radiation_by_azimuth( \
         alp, \
         bet, \
-        Area[climate_area + "地域"]["緯度"], \
-        Area[climate_area + "地域"]["経度"], \
+        area[climate_area + "地域"]["緯度"], \
+        area[climate_area + "地域"]["経度"], \
         iod, ios, inn)
 
     # np.savetxt("積算直達日射量.txt", Id)

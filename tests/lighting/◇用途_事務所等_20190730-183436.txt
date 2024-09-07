@@ -1,9 +1,9 @@
-�������ʎq,building_type,room_type,Area,RoomHeight,Width,Depth,room_index,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
+�������ʎq,building_type,room_type,area,Roomheight,Width,Depth,room_index,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
 C1	��������	������	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5504.0544	49800
 C2	��������	�d�q�v�Z�@�펖����	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5504.0544	49800
 C3	��������	��c��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	3810.4992	23100
 C4	��������	�i����	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	3810.4992	25400
-C5	��������	�Ј��H��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1270.1664	14100
+C5	��������	�Ј��h��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1270.1664	14100
 C6	��������	�����Ď���	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	15389.568	117100
 C7	��������	�X�ߎ����͑q��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5504.0544	20200
 C8	��������	�L��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	5504.0544	24500
@@ -15,6 +15,6 @@ C13	��������	�������ԏ�	100	2.7	10	20	2	100	1	�
 C14	��������	�@�B��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	351.36	1000
 C15	��������	�d�C��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	351.36	1000
 C16	��������	��������	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1756.8	6400
-C17	��������	�H�i�ɓ�	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1756.8	7000
+C17	��������	�h�i�ɓ�	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1756.8	7000
 C18	��������	�������	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1756.8	10600
 C19	��������	�p�����ۊǏꏊ��	100	2.7	10	20	2	100	1	��	��	��	��	100	1	��	��	��	��	1756.8	3500
