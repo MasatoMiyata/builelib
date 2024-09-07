@@ -1730,7 +1730,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "AbsorptionChillersMainEngineEnergyConsumption": {
+            "absorption_chillersMainEngineEnergyConsumption": {
               "title": "CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての主機の一次エネルギー消費量 [MJ/day]",
               "type": "array",
               "items": {
@@ -1739,7 +1739,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "AbsorptionChillersLoadRatio": {
+            "absorption_chillersLoadRatio": {
               "title": "CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての負荷率 [-]",
               "type": "array",
               "items": {
@@ -1748,7 +1748,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "AbsorptionChillersWorkingTime": {
+            "absorption_chillersWorkingTime": {
               "title": "CGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の運転時間 [h/day]",
               "type": "array",
               "items": {
@@ -1784,7 +1784,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "hotWaterBoilersEnergyConsumption": {
+            "hot_water_boilersEnergyConsumption": {
               "title": "CGSの排熱利用が可能な給湯機(系統)の一次エネルギー消費量 [MJ/日]",
               "type": "array",
               "items": {
@@ -1793,7 +1793,7 @@
               "minItems": 365,
               "maxItems": 365
             },
-            "hotWaterBoilersLoad": {
+            "hot_water_boilersLoad": {
               "title": "CGSの排熱利用が可能な給湯機(系統)の給湯負荷 [MJ/日]",
               "type": "array",
               "items": {
@@ -1824,14 +1824,14 @@
             "power_consumptionelevator",
             "power_consumptionOther",
             "PowerGenerationPhotovoltaicGeneration",
-            "AbsorptionChillersMainEngineEnergyConsumption",
-            "AbsorptionChillersLoadRatio",
-            "AbsorptionChillersWorkingTime",
+            "absorption_chillersMainEngineEnergyConsumption",
+            "absorption_chillersLoadRatio",
+            "absorption_chillersWorkingTime",
             "heatingheat_sourcesMainEngineEnergyConsumption",
             "heatingheat_sourcesLoad",
             "heatingheat_sourcesWorkingTime",
-            "hotWaterBoilersEnergyConsumption",
-            "hotWaterBoilersLoad",
+            "hot_water_boilersEnergyConsumption",
+            "hot_water_boilersLoad",
             "AveragePowerDifference"
           ],
           "additionalProperties": false

@@ -1,6 +1,6 @@
 {
     "温水ボイラ(灯油)": {
-        "ID": "hotwaterBoiler_Kerosene",
+        "ID": "hot_water_boiler_kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -79,7 +79,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式熱回収形)": {
-        "ID": "PackagedAirConditioner_WaterSource_hR",
+        "ID": "packaged_air_conditioner_water_source_hr",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "水",
@@ -188,7 +188,7 @@
         }
     },
     "貫流ボイラ(灯油)": {
-        "ID": "OnePassBoiler_L_Kerosene",
+        "ID": "one_pass_boiler_l_kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -267,7 +267,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプ4)": {
-        "ID": "PackagedAirConditioner_GroundSource_T4",
+        "ID": "packaged_air_conditioner_ground_source_t4",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤4",
@@ -376,7 +376,7 @@
         }
     },
     "FF式ガス暖房機(LPG)": {
-        "ID": "FFtypeheater_LPG",
+        "ID": "ff_type_heater_lpg",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -455,7 +455,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプB)": {
-        "ID": "WaterChillingUnit_GroundSource_TB",
+        "ID": "water_chilling_unit_ground_source_tb",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤B",
@@ -594,7 +594,7 @@
         }
     },
     "ブラインターボ冷凍機(蓄熱時)": {
-        "ID": "BrineTurboChiller_Storage",
+        "ID": "brine_turbo_chiller_storage",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "水",
@@ -673,7 +673,7 @@
         }
     },
     "小型貫流ボイラ(灯油)": {
-        "ID": "OnePassBoiler_Kerosene",
+        "ID": "one_pass_boiler_kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -752,7 +752,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプ2)": {
-        "ID": "WaterChillingUnit_GroundSource_T2",
+        "ID": "water_chilling_unit_ground_source_t2",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤2",
@@ -891,7 +891,7 @@
         }
     },
     "スクリュー冷凍機(氷蓄熱用)": {
-        "ID": "ScrewChiller_ICE",
+        "ID": "screw_chiller_ice",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "水",
@@ -970,7 +970,7 @@
         }
     },
     "温水発生機(都市ガス)": {
-        "ID": "hotWaterGenerator_cityGas",
+        "ID": "hot_water_generator_city_gas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -1049,7 +1049,7 @@
         }
     },
     "FF式石油暖房機": {
-        "ID": "FFtypeheater_Kerosene",
+        "ID": "ff_type_heater_kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -1235,7 +1235,7 @@
         }
     },
     "蒸気ボイラ(LPG)": {
-        "ID": "SteamBoiler_LPG",
+        "ID": "steam_boiler_lpg",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -1314,7 +1314,7 @@
         }
     },
     "地域熱供給(蒸気)": {
-        "ID": "DhC_Steam",
+        "ID": "dhc_steam",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "不要",
@@ -1453,7 +1453,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプ3)": {
-        "ID": "PackagedAirConditioner_GroundSource_T3",
+        "ID": "packaged_air_conditioner_ground_source_T3",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤3",
@@ -1562,7 +1562,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプF)": {
-        "ID": "PackagedAirConditioner_GroundSource_TF",
+        "ID": "packaged_air_conditioner_ground_source_tf",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤F",
@@ -1671,7 +1671,7 @@
         }
     },
     "温水発生機(重油)": {
-        "ID": "hotWaterGenerator_Oil",
+        "ID": "hot_water_generator_oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -1750,7 +1750,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプD)": {
-        "ID": "PackagedAirConditioner_GroundSource_TD",
+        "ID": "packaged_air_conditioner_ground_source_td",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤D",
@@ -1859,7 +1859,7 @@
         }
     },
     "ウォータチリングユニット(空冷式モジュール形)": {
-        "ID": "WaterChillingUnit_AirSource_Module",
+        "ID": "water_chilling_unit_air_source_module",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "空気",
@@ -2026,7 +2026,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式)": {
-        "ID": "PackagedAirConditioner_WaterSource",
+        "ID": "packaged_air_conditioner_water_source",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "水",
@@ -2135,7 +2135,7 @@
         }
     },
     "温水ボイラ(都市ガス)": {
-        "ID": "hotwaterBoiler_cityGas",
+        "ID": "hot_water_boiler_city_gas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -2214,7 +2214,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(LPG)": {
-        "ID": "GasheatpumpAirConditioner_LPG",
+        "ID": "gas_heat_pump_air_conditioner_LPG",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "空気",
@@ -2323,7 +2323,7 @@
         }
     },
     "ウォータチリングユニット(空冷式氷蓄熱用)": {
-        "ID": "WaterChillingUnit_AirSource_ICE",
+        "ID": "water_chilling_unit_air_source_ICE",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "空気",
@@ -2490,7 +2490,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、冷却水変流量、LPG)": {
-        "ID": "AbsorptionChiller_Combination_LPG_CTVWV",
+        "ID": "absorption_chiller_combination_LPG_CTVWV",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "水",
@@ -2629,7 +2629,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプ1)": {
-        "ID": "PackagedAirConditioner_GroundSource_T1",
+        "ID": "packaged_air_conditioner_ground_source_T1",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤1",
@@ -2738,7 +2738,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプ5)": {
-        "ID": "PackagedAirConditioner_GroundSource_T5",
+        "ID": "packaged_air_conditioner_ground_source_T5",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤5",
@@ -2847,7 +2847,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプ3)": {
-        "ID": "WaterChillingUnit_GroundSource_T3",
+        "ID": "water_chilling_unit_ground_source_T3",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤3",
@@ -2986,7 +2986,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、LPG)": {
-        "ID": "AbsorptionChiller_Combination_LPG",
+        "ID": "absorption_chiller_combination_LPG",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "水",
@@ -3125,7 +3125,7 @@
         }
     },
     "温風暖房機(灯油)": {
-        "ID": "WarmAirheater_Kerosene",
+        "ID": "warm_air_heater_kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3204,7 +3204,7 @@
         }
     },
     "吸収式冷凍機(温水)": {
-        "ID": "AbsorptionChiller_hotWater",
+        "ID": "absorption_chiller_hotWater",
         "冷房時の特性": {
             "燃料種類": "温水",
             "熱源種類": "水",
@@ -3362,7 +3362,7 @@
         }
     },
     "貫流ボイラ(都市ガス)": {
-        "ID": "OnePassBoiler_L_cityGas",
+        "ID": "one_pass_boiler_L_city_gas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3441,7 +3441,7 @@
         }
     },
     "パッケージエアコンディショナ(空冷式)": {
-        "ID": "PackagedAirConditioner_AirSource",
+        "ID": "packaged_air_conditioner_AirSource",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "空気",
@@ -3578,7 +3578,7 @@
         }
     },
     "温水ボイラ(LPG)": {
-        "ID": "hotwaterBoiler_LPG",
+        "ID": "hot_water_boiler_LPG",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3657,7 +3657,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプE)": {
-        "ID": "WaterChillingUnit_GroundSource_TE",
+        "ID": "water_chilling_unit_ground_source_TE",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤E",
@@ -3796,7 +3796,7 @@
         }
     },
     "温風暖房機(重油)": {
-        "ID": "WarmAirheater_Oil",
+        "ID": "warm_air_heater_oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -3875,7 +3875,7 @@
         }
     },
     "地域熱供給(冷水)": {
-        "ID": "DhC_coolingWater",
+        "ID": "dhc_coolingWater",
         "冷房時の特性": {
             "燃料種類": "冷水",
             "熱源種類": "不要",
@@ -4014,7 +4014,7 @@
         }
     },
     "蒸気ボイラ(重油)": {
-        "ID": "SteamBoiler_Oil",
+        "ID": "steam_boiler_oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -4093,7 +4093,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプC)": {
-        "ID": "PackagedAirConditioner_GroundSource_TC",
+        "ID": "packaged_air_conditioner_ground_source_TC",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤C",
@@ -4202,7 +4202,7 @@
         }
     },
     "FF式ガス暖房機(都市ガス)": {
-        "ID": "FFtypeheater_cityGas",
+        "ID": "FFtypeheater_city_gas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -4281,7 +4281,7 @@
         }
     },
     "小型貫流ボイラ(都市ガス)": {
-        "ID": "OnePassBoiler_cityGas",
+        "ID": "one_pass_boiler_city_gas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -4360,7 +4360,7 @@
         }
     },
     "吸収式冷凍機(蒸気)": {
-        "ID": "AbsorptionChiller_Steam",
+        "ID": "absorption_chiller_steam",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "水",
@@ -4439,7 +4439,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプC)": {
-        "ID": "WaterChillingUnit_GroundSource_TC",
+        "ID": "water_chilling_unit_ground_source_TC",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤C",
@@ -4578,7 +4578,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプ2)": {
-        "ID": "PackagedAirConditioner_GroundSource_T2",
+        "ID": "packaged_air_conditioner_ground_source_T2",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤2",
@@ -4687,7 +4687,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(消費電力自給装置付、都市ガス)": {
-        "ID": "GasheatpumpAirConditioner_GE_cityGas",
+        "ID": "gas_heat_pump_air_conditioner_ge_city_gas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "空気",
@@ -4875,7 +4875,7 @@
         }
     },
     "貫流ボイラ(重油)": {
-        "ID": "OnePassBoiler_L_Oil",
+        "ID": "one_pass_boiler_L_oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -4954,7 +4954,7 @@
         }
     },
     "小型貫流ボイラ(LPG)": {
-        "ID": "OnePassBoiler_LPG",
+        "ID": "one_pass_boiler_LPG",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -5033,7 +5033,7 @@
         }
     },
     "ウォータチリングユニット(空冷式)": {
-        "ID": "WaterChillingUnit_AirSource",
+        "ID": "water_chilling_unit_air_source",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "空気",
@@ -5200,7 +5200,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、冷却水変流量、都市ガス)": {
-        "ID": "AbsorptionChiller_Combination_cityGas_CTVWV",
+        "ID": "absorption_chiller_combination_city_gas_CTVWV",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -5339,7 +5339,7 @@
         }
     },
     "電気式ヒーター": {
-        "ID": "Electricalheater",
+        "ID": "electrical_heater",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -5418,7 +5418,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、蒸気)": {
-        "ID": "AbsorptionChiller_Steam_CTVWV",
+        "ID": "absorption_chiller_steam_CTVWV",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "水",
@@ -5497,7 +5497,7 @@
         }
     },
     "小型貫流ボイラ(重油)": {
-        "ID": "OnePassBoiler_Oil",
+        "ID": "one_pass_boiler_oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -5699,7 +5699,7 @@
         }
     },
     "温風暖房機(都市ガス)": {
-        "ID": "WarmAirheater_cityGas",
+        "ID": "warm_air_heater_city_gas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -5778,7 +5778,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプ4)": {
-        "ID": "WaterChillingUnit_GroundSource_T4",
+        "ID": "water_chilling_unit_ground_source_T4",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤4",
@@ -5917,7 +5917,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、冷却水変流量、蒸気)": {
-        "ID": "AbsorptionChiller_Combination_Steam_CTVWV",
+        "ID": "absorption_chiller_combination_steam_CTVWV",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "水",
@@ -5996,7 +5996,7 @@
         }
     },
     "温水発生機(LPG)": {
-        "ID": "hotWaterGenerator_LPG",
+        "ID": "hot_water_generator_lpg",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -6075,7 +6075,7 @@
         }
     },
     "スクロール冷凍機(氷蓄熱用)": {
-        "ID": "ScrollChiller_ICE",
+        "ID": "scroll_chiller_ICE",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "水",
@@ -6154,7 +6154,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプF)": {
-        "ID": "WaterChillingUnit_GroundSource_TF",
+        "ID": "water_chilling_unit_ground_source_TF",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤F",
@@ -6293,7 +6293,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、蒸気)": {
-        "ID": "AbsorptionChiller_Combination_Steam",
+        "ID": "absorption_chiller_combination_steam",
         "冷房時の特性": {
             "燃料種類": "蒸気",
             "熱源種類": "水",
@@ -6372,7 +6372,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプ1)": {
-        "ID": "WaterChillingUnit_GroundSource_T1",
+        "ID": "water_chilling_unit_ground_source_T1",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤1",
@@ -6511,7 +6511,7 @@
         }
     },
     "吸収式冷凍機(重油)": {
-        "ID": "AbsorptionChiller_Oil",
+        "ID": "absorption_chiller_oil",
         "冷房時の特性": {
             "燃料種類": "重油",
             "熱源種類": "水",
@@ -6650,7 +6650,7 @@
         }
     },
     "デシカ": {
-        "ID": "Desica",
+        "ID": "desica",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "空気",
@@ -6759,7 +6759,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(都市ガス)": {
-        "ID": "GasheatpumpAirConditioner_cityGas",
+        "ID": "gas_heat_pump_air_conditioner_city_gas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "空気",
@@ -6868,7 +6868,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、灯油)": {
-        "ID": "AbsorptionChiller_Kerosene_CTVWV",
+        "ID": "absorption_chiller_kerosene_CTVWV",
         "冷房時の特性": {
             "燃料種類": "灯油",
             "熱源種類": "水",
@@ -7007,7 +7007,7 @@
         }
     },
     "スクロール冷凍機": {
-        "ID": "ScrollChiller",
+        "ID": "scroll_chiller",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "水",
@@ -7086,7 +7086,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、都市ガス)": {
-        "ID": "AbsorptionChiller_cityGas_CTVWV",
+        "ID": "absorption_chiller_city_gas_CTVWV",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -7225,7 +7225,7 @@
         }
     },
     "吸収式冷凍機(一重二重併用形、都市ガス)": {
-        "ID": "AbsorptionChiller_Combination_cityGas",
+        "ID": "absorption_chiller_combination_city_gas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -7364,7 +7364,7 @@
         }
     },
     "温水発生機(灯油)": {
-        "ID": "hotWaterGenerator_Kerosene",
+        "ID": "hot_water_generator_kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -7443,7 +7443,7 @@
         }
     },
     "吸収式冷凍機(LPG)": {
-        "ID": "AbsorptionChiller_LPG",
+        "ID": "absorption_chiller_LPG",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "水",
@@ -7582,7 +7582,7 @@
         }
     },
     "地域熱供給(温水)": {
-        "ID": "DhC_heatingWater",
+        "ID": "dhc_heating_water",
         "冷房時の特性": {
             "燃料種類": "温水",
             "熱源種類": "不要",
@@ -7860,7 +7860,7 @@
         }
     },
     "ウォータチリングユニット(水冷式)": {
-        "ID": "WaterChillingUnit_WaterSource",
+        "ID": "water_chilling_unit_water_source",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "水",
@@ -7999,7 +7999,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプ5)": {
-        "ID": "WaterChillingUnit_GroundSource_T5",
+        "ID": "water_chilling_unit_ground_source_T5",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤5",
@@ -8138,7 +8138,7 @@
         }
     },
     "電気蓄熱暖房器": {
-        "ID": "Electricalheater_Storage",
+        "ID": "electrical_heater_storage",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -8217,7 +8217,7 @@
         }
     },
     "吸収式冷凍機(都市ガス)": {
-        "ID": "AbsorptionChiller_cityGas",
+        "ID": "absorption_chiller_city_gas",
         "冷房時の特性": {
             "燃料種類": "ガス",
             "熱源種類": "水",
@@ -8435,7 +8435,7 @@
         }
     },
     "温水ボイラ(重油)": {
-        "ID": "hotwaterBoiler_Oil",
+        "ID": "hot_water_boiler_oil",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -8514,7 +8514,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、LPG)": {
-        "ID": "AbsorptionChiller_LPG_CTVWV",
+        "ID": "absorption_chiller_LPG_CTVWV",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "水",
@@ -8653,7 +8653,7 @@
         }
     },
     "温風暖房機(LPG)": {
-        "ID": "WarmAirheater_LPG",
+        "ID": "warm_air_heater_LPG",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -8732,7 +8732,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプA)": {
-        "ID": "WaterChillingUnit_GroundSource_TA",
+        "ID": "water_chilling_unit_ground_source_TA",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤A",
@@ -8871,7 +8871,7 @@
         }
     },
     "吸収式冷凍機(冷却水変流量、重油)": {
-        "ID": "AbsorptionChiller_Oil_CTVWV",
+        "ID": "absorption_chiller_oil_CTVWV",
         "冷房時の特性": {
             "燃料種類": "重油",
             "熱源種類": "水",
@@ -9010,7 +9010,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプB)": {
-        "ID": "PackagedAirConditioner_GroundSource_TB",
+        "ID": "packaged_air_conditioner_ground_source_TB",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤B",
@@ -9119,7 +9119,7 @@
         }
     },
     "ガスヒートポンプ冷暖房機(消費電力自給装置付、LPG)": {
-        "ID": "GasheatpumpAirConditioner_GE_LPG",
+        "ID": "gas_heat_pump_air_conditioner_GE_LPG",
         "冷房時の特性": {
             "燃料種類": "液化石油ガス",
             "熱源種類": "空気",
@@ -9228,7 +9228,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプE)": {
-        "ID": "PackagedAirConditioner_GroundSource_TE",
+        "ID": "packaged_air_conditioner_ground_source_TE",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤E",
@@ -9337,7 +9337,7 @@
         }
     },
     "蒸気ボイラ(灯油)": {
-        "ID": "SteamBoiler_Kerosene",
+        "ID": "steam_boiler_kerosene",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -9416,7 +9416,7 @@
         }
     },
     "パッケージエアコンディショナ(水冷式地中熱タイプA)": {
-        "ID": "PackagedAirConditioner_GroundSource_TA",
+        "ID": "packaged_air_conditioner_ground_source_TA",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤A",
@@ -9525,7 +9525,7 @@
         }
     },
     "ウォータチリングユニット(水冷式地中熱タイプD)": {
-        "ID": "WaterChillingUnit_GroundSource_TD",
+        "ID": "water_chilling_unit_ground_source_TD",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "地盤D",
@@ -9664,7 +9664,7 @@
         }
     },
     "貫流ボイラ(LPG)": {
-        "ID": "OnePassBoiler_L_LPG",
+        "ID": "one_pass_boiler_L_LPG",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",
@@ -9743,7 +9743,7 @@
         }
     },
     "ウォータチリングユニット(空冷式モジュール形氷蓄熱用)": {
-        "ID": "WaterChillingUnit_AirSource_Module_ICE",
+        "ID": "water_chilling_unit_air_source_module_ICE",
         "冷房時の特性": {
             "燃料種類": "電力",
             "熱源種類": "空気",
@@ -9910,7 +9910,7 @@
         }
     },
     "吸収式冷凍機(灯油)": {
-        "ID": "AbsorptionChiller_Kerosene",
+        "ID": "absorption_chiller_kerosene",
         "冷房時の特性": {
             "燃料種類": "灯油",
             "熱源種類": "水",
@@ -10049,7 +10049,7 @@
         }
     },
     "蒸気ボイラ(都市ガス)": {
-        "ID": "SteamBoiler_cityGas",
+        "ID": "steam_boiler_city_gas",
         "冷房時の特性": {
             "燃料種類": "",
             "熱源種類": "",

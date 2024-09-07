@@ -108,15 +108,15 @@
 | name | type | Description | Example |
 | ------- | ------- | ------- | ------- |
 | **Energy** | *number* |  | `42.0` |
-| **Input:AbsorptionChillersLoadRatio** | *array* |  | `[null]` |
-| **Input:AbsorptionChillersMainEngineEnergyConsumption** | *array* |  | `[null]` |
-| **Input:AbsorptionChillersWorkingTime** | *array* |  | `[null]` |
+| **Input:absorption_chillersLoadRatio** | *array* |  | `[null]` |
+| **Input:absorption_chillersMainEngineEnergyConsumption** | *array* |  | `[null]` |
+| **Input:absorption_chillersWorkingTime** | *array* |  | `[null]` |
 | **Input:AveragePowerDifference** | *array* |  | `[null]` |
 | **Input:heatingheat_sourcesLoad** | *array* |  | `[null]` |
 | **Input:heatingheat_sourcesMainEngineEnergyConsumption** | *array* |  | `[null]` |
 | **Input:heatingheat_sourcesWorkingTime** | *array* |  | `[null]` |
-| **Input:hotWaterBoilersEnergyConsumption** | *array* |  | `[null]` |
-| **Input:hotWaterBoilersLoad** | *array* |  | `[null]` |
+| **Input:hot_water_boilersEnergyConsumption** | *array* |  | `[null]` |
+| **Input:hot_water_boilersLoad** | *array* |  | `[null]` |
 | **Input:power_consumptionAirConditioning** | *array* |  | `[null]` |
 | **Input:power_consumptionair_handling_units** | *array* |  | `[null]` |
 | **Input:power_consumptionelevator** | *array* |  | `[null]` |
