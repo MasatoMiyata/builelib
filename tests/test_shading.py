@@ -35,7 +35,7 @@ def calculation(filename):
         try:
 
             # 計算実行        
-            r_wind_SUM, r_wind_WIN = shading.calc_shadingcoefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm,
+            r_wind_SUM, r_wind_WIN = shading.calc_shading_coefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm,
                                                                      zyp, zym)
 
             # 期待値

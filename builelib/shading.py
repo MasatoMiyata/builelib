@@ -296,7 +296,7 @@ def func_25(x1, x2, x3, y3, y2, zxp, zxm, zym):
     return r_isr_j_ym
 
 
-def calc_shadingcoefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym):
+def calc_shading_coefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym):
     ## 入力チェック
     if x1 < 0 or x2 < 0 or x3 < 0:
         raise Exception('Error!')
@@ -629,7 +629,7 @@ if __name__ == '__main__':
     zyp = 0.2
     zym = 0.35
 
-    r_wind_SUM, r_wind_WIN = calc_shadingcoefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym)
+    r_wind_SUM, r_wind_WIN = calc_shading_coefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym)
 
     print("日よけ効果係数（冷房）：" + str(r_wind_SUM))
     print("日よけ効果係数（暖房）：" + str(r_wind_WIN))

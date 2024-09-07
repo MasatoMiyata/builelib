@@ -645,12 +645,12 @@ def calc_energy(input_data, debug=False):
 
                         else:
 
-                            # 関数 shading.calc_shadingcoefficient で日よけ効果係数を算出。
+                            # 関数 shading.calc_shading_coefficient で日よけ効果係数を算出。
                             (input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"][window_id][
                                  "shading_effect_C"],
                              input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"][window_id][
                                  "shading_effect_h"]) = \
-                                shading.calc_shadingcoefficient(input_data["building"]["region"],
+                                shading.calc_shading_coefficient(input_data["building"]["region"],
                                                                 wall_configure["direction"],
                                                                 input_data["shading_config"][
                                                                     window_configure["eaves_id"]]["x1"],
