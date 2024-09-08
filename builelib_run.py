@@ -74,7 +74,7 @@ def builelib_run(exec_calculation, inputfile_name):
         "AC": {},
         "V": {},
         "L": {},
-        "hW": {},
+        "HW": {},
         "EV": {},
         "PV": {},
         "OT": {},
@@ -274,7 +274,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 result_data_HW = hotwatersupply.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_cgs["hW"] = result_data_HW["for_cgs"]
+                result_json_for_cgs["HW"] = result_data_HW["for_cgs"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += result_data_HW["設計一次エネルギー消費量[MJ/年]"]

@@ -113,18 +113,18 @@
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有",
             "ahu_cooling_inside_load": "ACP1",
-            "ahu_cooling_outdoor_load": "Oahu",
+            "ahu_cooling_outdoor_load": "ahu_outdoor",
             "ahu_heating_inside_load": "ACP1",
-            "ahu_heating_outdoor_load": "Oahu",
+            "ahu_heating_outdoor_load": "ahu_outdoor",
             "info": "ACP1"
         },
         "2F_事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有",
             "ahu_cooling_inside_load": "ACP1",
-            "ahu_cooling_outdoor_load": "Oahu",
+            "ahu_cooling_outdoor_load": "ahu_outdoor",
             "ahu_heating_inside_load": "ACP1",
-            "ahu_heating_outdoor_load": "Oahu",
+            "ahu_heating_outdoor_load": "ahu_outdoor",
             "info": "ACP1"
         }
     },
@@ -305,7 +305,7 @@
                 }
             ]
         },
-        "Oahu": {
+        "ahu_outdoor": {
             "is_economizer": "有",
             "economizer_max_air_volume": 2000.0,
             "is_outdoor_air_cut": "有",

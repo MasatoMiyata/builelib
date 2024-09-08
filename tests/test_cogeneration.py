@@ -87,7 +87,7 @@ def test_calc(input_data, expectedvalue):
         "AC": {},
         "V": {},
         "L": {},
-        "hW": {},
+        "HW": {},
         "EV": {},
         "PV": {},
         "OT": {},
@@ -105,7 +105,7 @@ def test_calc(input_data, expectedvalue):
         result_json_for_cgs["L"] = result_jsonL["for_cgs"]
     if input_data["hot_water_room"]:
         result_jsonhW = hotwatersupply.calc_energy(input_data, DEBUG=False)
-        result_json_for_cgs["hW"] = result_jsonhW["for_cgs"]
+        result_json_for_cgs["HW"] = result_jsonhW["for_cgs"]
     if input_data["elevators"]:
         result_jsonEV = elevetor.calc_energy(input_data, DEBUG=False)
         result_json_for_cgs["EV"] = result_jsonEV["for_cgs"]

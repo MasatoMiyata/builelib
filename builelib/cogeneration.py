@@ -124,20 +124,20 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
         EL_total_d = np.zeros(365)
 
     # 日付dにおける給湯設備の電力消費量	MWh/日
-    if result_json_for_cgs["hW"]:
-        EW_total_d = np.array(result_json_for_cgs["hW"]["edesign_mwh_ele_day"])
+    if result_json_for_cgs["HW"]:
+        EW_total_d = np.array(result_json_for_cgs["HW"]["edesign_mwh_ele_day"])
     else:
         EW_total_d = np.zeros(365)
 
     # 日付dにおけるCGSの排熱利用が可能な給湯機(系統)の一次エネルギー消費量	MJ/日
-    if result_json_for_cgs["hW"]:
-        EW_hr_d = np.array(result_json_for_cgs["hW"]["Edesign_MJ_CGS_day"])
+    if result_json_for_cgs["HW"]:
+        EW_hr_d = np.array(result_json_for_cgs["HW"]["Edesign_MJ_CGS_day"])
     else:
         EW_hr_d = np.zeros(365)
 
     # 日付dにおけるCGSの排熱利用が可能な給湯機(系統)の給湯負荷	MJ/日
-    if result_json_for_cgs["hW"]:
-        qW_hr_d = np.array(result_json_for_cgs["hW"]["Q_eqp_CGS_day"])
+    if result_json_for_cgs["HW"]:
+        qW_hr_d = np.array(result_json_for_cgs["HW"]["Q_eqp_CGS_day"])
     else:
         qW_hr_d = np.zeros(365)
 
@@ -774,7 +774,7 @@ if __name__ == '__main__':  # pragma: no cover
         "AC": {},
         "V": {},
         "L": {},
-        "hW": {},
+        "HW": {},
         "EV": {},
         "PV": {},
         "OT": {},
@@ -799,7 +799,7 @@ if __name__ == '__main__':  # pragma: no cover
         result_json_for_cgs["L"] = result_jsonL["for_cgs"]
     if input_data["hot_water_room"]:
         result_jsonhW = hotwatersupply.calc_energy(input_data, DEBUG=False)
-        result_json_for_cgs["hW"] = result_jsonhW["for_cgs"]
+        result_json_for_cgs["HW"] = result_jsonhW["for_cgs"]
     if input_data["elevators"]:
         result_jsonEV = elevator.calc_energy(input_data, DEBUG=False)
         result_json_for_cgs["EV"] = result_jsonEV["for_cgs"]
