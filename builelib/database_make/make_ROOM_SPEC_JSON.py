@@ -90,7 +90,7 @@ def convert_CSV2DICT(d):
                 "パターン3":[]
             }
         },
-        "newHASP": {
+        "new_hasp": {
                 "WSCパターン": empty2null(d[7]),
                 "パターン1空調開始時刻1": nullfloat(d[13]),
                 "パターン1空調終了時刻1": nullfloat(d[14]),
@@ -192,35 +192,35 @@ for d in conddata:
         elif float(d[3]) == 2:
             if float(d[4]) == 1:
                 DictData[Btype][Rtype]["スケジュール"]["照明発熱密度比率"]["パターン1"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["照明発熱密度比率"]["パターン1"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["照明発熱密度比率"]["パターン1"] = timelist(d[31:54])
             elif float(d[4]) == 2:
                 DictData[Btype][Rtype]["スケジュール"]["照明発熱密度比率"]["パターン2"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["照明発熱密度比率"]["パターン2"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["照明発熱密度比率"]["パターン2"] = timelist(d[31:54])
             elif float(d[4]) == 3:
                 DictData[Btype][Rtype]["スケジュール"]["照明発熱密度比率"]["パターン3"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["照明発熱密度比率"]["パターン3"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["照明発熱密度比率"]["パターン3"] = timelist(d[31:54])
 
         elif float(d[3]) == 3:
             if float(d[4]) == 1:
                 DictData[Btype][Rtype]["スケジュール"]["人体発熱密度比率"]["パターン1"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["人体発熱密度比率"]["パターン1"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["人体発熱密度比率"]["パターン1"] = timelist(d[31:54])
             elif float(d[4]) == 2:
                 DictData[Btype][Rtype]["スケジュール"]["人体発熱密度比率"]["パターン2"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["人体発熱密度比率"]["パターン2"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["人体発熱密度比率"]["パターン2"] = timelist(d[31:54])
             elif float(d[4]) == 3:
                 DictData[Btype][Rtype]["スケジュール"]["人体発熱密度比率"]["パターン3"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["人体発熱密度比率"]["パターン3"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["人体発熱密度比率"]["パターン3"] = timelist(d[31:54])
 
         elif float(d[3]) == 4:
             if float(d[4]) == 1:
                 DictData[Btype][Rtype]["スケジュール"]["機器発熱密度比率"]["パターン1"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["機器発熱密度比率"]["パターン1"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["機器発熱密度比率"]["パターン1"] = timelist(d[31:54])
             elif float(d[4]) == 2:
                 DictData[Btype][Rtype]["スケジュール"]["機器発熱密度比率"]["パターン2"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["機器発熱密度比率"]["パターン2"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["機器発熱密度比率"]["パターン2"] = timelist(d[31:54])
             elif float(d[4]) == 3:
                 DictData[Btype][Rtype]["スケジュール"]["機器発熱密度比率"]["パターン3"] = [float(n) for n in d[7:31]]
-                DictData[Btype][Rtype]["newHASP"]["機器発熱密度比率"]["パターン3"] = timelist(d[31:54])
+                DictData[Btype][Rtype]["new_hasp"]["機器発熱密度比率"]["パターン3"] = timelist(d[31:54])
 
 
 

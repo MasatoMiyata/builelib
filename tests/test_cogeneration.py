@@ -83,7 +83,7 @@ def test_calc(input_data, expectedvalue):
     #     json.dump(input_data, fw, indent=4, ensure_ascii=False)
 
     # 各設備の計算
-    result_json_for_CGS = {
+    result_json_for_cgs = {
         "AC": {},
         "V": {},
         "L": {},
@@ -96,27 +96,27 @@ def test_calc(input_data, expectedvalue):
     # 計算実行
     if input_data["air_conditioning_zone"]:
         result_jsonAC = airconditioning.calc_energy(input_data, DEBUG=False)
-        result_json_for_CGS["AC"] = result_jsonAC["for_CGS"]
+        result_json_for_cgs["AC"] = result_jsonAC["for_cgs"]
     if input_data["ventilation_room"]:
         result_jsonV = ventilation.calc_energy(input_data, DEBUG=False)
-        result_json_for_CGS["V"] = result_jsonV["for_CGS"]
+        result_json_for_cgs["V"] = result_jsonV["for_cgs"]
     if input_data["lighting_systems"]:
         result_jsonL = lighting.calc_energy(input_data, DEBUG=False)
-        result_json_for_CGS["L"] = result_jsonL["for_CGS"]
+        result_json_for_cgs["L"] = result_jsonL["for_cgs"]
     if input_data["hot_water_room"]:
-        result_jsonHW = hotwatersupply.calc_energy(input_data, DEBUG=False)
-        result_json_for_CGS["HW"] = result_jsonHW["for_CGS"]
+        result_jsonhW = hotwatersupply.calc_energy(input_data, DEBUG=False)
+        result_json_for_cgs["HW"] = result_jsonhW["for_cgs"]
     if input_data["elevators"]:
         result_jsonEV = elevetor.calc_energy(input_data, DEBUG=False)
-        result_json_for_CGS["EV"] = result_jsonEV["for_CGS"]
+        result_json_for_cgs["EV"] = result_jsonEV["for_cgs"]
     if input_data["photovoltaic_systems"]:
         result_jsonPV = photovoltaic.calc_energy(input_data, DEBUG=False)
-        result_json_for_CGS["PV"] = result_jsonPV["for_CGS"]
+        result_json_for_cgs["PV"] = result_jsonPV["for_cgs"]
     if input_data["rooms"]:
         result_jsonOT = other_energy.calc_energy(input_data, DEBUG=False)
-        result_json_for_CGS["OT"] = result_jsonOT["for_CGS"]
+        result_json_for_cgs["OT"] = result_jsonOT["for_cgs"]
 
-    result_json = cogeneration.calc_energy(input_data, result_json_for_CGS, DEBUG=False)
+    result_json = cogeneration.calc_energy(input_data, result_json_for_cgs, DEBUG=False)
 
     if abs(expectedvalue) == 0:
         diff_Eac = (abs(result_json["年間一次エネルギー削減量"] - expectedvalue))

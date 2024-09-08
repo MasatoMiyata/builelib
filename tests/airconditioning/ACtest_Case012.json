@@ -113,18 +113,18 @@
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
             "ahu_cooling_inside_load": "ACP1",
-            "ahu_cooling_outdoor_load": "OAHU",
+            "ahu_cooling_outdoor_load": "ahu_outdoor",
             "ahu_heating_inside_load": "ACP1",
-            "ahu_heating_outdoor_load": "OAHU",
+            "ahu_heating_outdoor_load": "ahu_outdoor",
             "info": "ACP1"
         },
         "2F_事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
             "ahu_cooling_inside_load": "ACP1",
-            "ahu_cooling_outdoor_load": "OAHU",
+            "ahu_cooling_outdoor_load": "ahu_outdoor",
             "ahu_heating_inside_load": "ACP1",
-            "ahu_heating_outdoor_load": "OAHU",
+            "ahu_heating_outdoor_load": "ahu_outdoor",
             "info": "ACP1"
         }
     },
@@ -183,7 +183,7 @@
         }
     },
     "secondary_pump_system": {
-        "PUMP1": {
+        "pump1": {
             "冷房": {
                 "TempelatureDifference": 5.0,
                 "is_staging_control": "有",
@@ -235,8 +235,8 @@
             "is_economizer": "無",
             "economizer_max_air_volume": null,
             "is_outdoor_air_cut": "無",
-            "pump_cooling": "PUMP1",
-            "pump_heating": "PUMP1",
+            "pump_cooling": "pump1",
+            "pump_heating": "pump1",
             "heat_source_cooling": "PAC1",
             "heat_source_heating": "PAC1",
             "air_handling_unit": [
@@ -259,12 +259,12 @@
                 }
             ]
         },
-        "OAHU": {
+        "ahu_outdoor": {
             "is_economizer": "有",
             "economizer_max_air_volume": 2000.0,
             "is_outdoor_air_cut": "有",
-            "pump_cooling": "PUMP1",
-            "pump_heating": "PUMP1",
+            "pump_cooling": "pump1",
+            "pump_heating": "pump1",
             "heat_source_cooling": "PAC1",
             "heat_source_heating": "PAC1",
             "air_handling_unit": [

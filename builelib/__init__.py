@@ -5,4 +5,3 @@ __license__      = 'MIT License'
 __author__       = 'Masato Miyata'
 __author_email__ = 'builelib@gmail.com'
 __url__          = 'https://github.com/MasatoMiyata/builelib'
-

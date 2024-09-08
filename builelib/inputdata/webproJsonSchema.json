@@ -192,7 +192,7 @@
                 },
                 "coefficient_dhc": {
                     "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
-                    "$ref": "#/definitions/CoefficientDHC"
+                    "$ref": "#/definitions/coefficient_dhc"
                 }
             },
             "required": [
@@ -252,7 +252,7 @@
             ],
             "title": "building_address"
         },
-        "CoefficientDHC": {
+        "coefficient_dhc": {
             "description": "BL-8,9:「他人から供給された熱」の一次エネルギー換算係数",
             "type": "object",
             "additionalProperties": false,
@@ -278,7 +278,7 @@
                 "cooling",
                 "heating"
             ],
-            "title": "CoefficientDHC"
+            "title": "coefficient_dhc"
         },
         "rooms":{
             "properties": {
@@ -757,7 +757,7 @@
                         }
                     ]
                 },
-                "shading_effect_H": {
+                "shading_effect_h": {
                     "description": "BE4-3:日除け効果係数（暖房）",
                     "anyOf":[
                         {
@@ -1245,11 +1245,11 @@
                         }
                     ]
                 },
-                "HeatSorce_cooling": {
+                "heat_sorce_cooling": {
                     "description": "AC4-21:熱源群名称 冷房",
                     "type": "string"
                 },
-                "HeatSorce_heating": {
+                "heat_sorce_heating": {
                     "description": "AC4-22:熱源群名称 暖房",
                     "type": "string"
                 },

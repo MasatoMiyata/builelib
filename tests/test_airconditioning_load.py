@@ -115,7 +115,7 @@ def make_input_data(data):
         "shading_config": {
             "日よけ1": {
                 "shading_effect_C": convert2number(data[8], None),
-                "shading_effect_H": convert2number(data[9], None),
+                "shading_effect_h": convert2number(data[9], None),
                 "x1": None,
                 "x2": None,
                 "x3": None,
@@ -201,8 +201,8 @@ def make_input_data(data):
                 "is_outdoor_air_cut": "無",
                 "pump_cooling": None,
                 "pump_heating": None,
-                "HeatSorce_cooling": "PAC1",
-                "HeatSorce_heating": "PAC1",
+                "heat_sorce_cooling": "PAC1",
+                "heat_sorce_heating": "PAC1",
                 "air_handling_unit": [
                     {
                         "type": "室内機",
@@ -216,7 +216,7 @@ def make_input_data(data):
                         "fan_min_opening_rate": 80.0,
                         "air_heat_exchange_ratio_cooling": None,
                         "air_heat_exchange_ratio_heating": None,
-                        "AirHeatExchangerEffectiveAirVolume": None,
+                        "Airheat_exchangereffectiveAirVolume": None,
                         "air_heat_exchanger_control": "無",
                         "air_heat_exchanger_power_consumption": None,
                         "info": ""
@@ -276,7 +276,7 @@ def make_input_data(data):
         }
         input_data["shading_config"]["日よけ2"] = {
             "shading_effect_C": convert2number(data[17], None),
-            "shading_effect_H": convert2number(data[18], None),
+            "shading_effect_h": convert2number(data[18], None),
             "x1": None,
             "x2": None,
             "x3": None,

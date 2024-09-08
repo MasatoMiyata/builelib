@@ -14,7 +14,7 @@ import climate
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
-climatedata_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # 定数（deg→radへの変換係数）
 deg2rad = math.pi / 180
@@ -31,8 +31,8 @@ def func_03(I_ALL, sin_hsdt_ALL):
     S = np.append(S, S[0:3])
 
     # 太陽高度
-    H = np.array(sin_hsdt_ALL).reshape((52560, 1))
-    H = np.append(H, H[0:3])
+    h = np.array(sin_hsdt_ALL).reshape((52560, 1))
+    h = np.append(h, h[0:3])
 
     # 変数初期化
     n_all = np.zeros((365, 24))
@@ -44,25 +44,25 @@ def func_03(I_ALL, sin_hsdt_ALL):
             mm = (24 * dd + (hh + 1)) * 6 - 1
             n = 0
 
-            if H[mm - 3] > 0:
+            if h[mm - 3] > 0:
                 n = n + 1 / 2
 
-            if H[mm - 2] > 0:
+            if h[mm - 2] > 0:
                 n = n + 1
 
-            if H[mm - 1] > 0:
+            if h[mm - 1] > 0:
                 n = n + 1
 
-            if H[mm] > 0:
+            if h[mm] > 0:
                 n = n + 1
 
-            if H[mm + 1] > 0:
+            if h[mm + 1] > 0:
                 n = n + 1
 
-            if H[mm + 2] > 0:
+            if h[mm + 2] > 0:
                 n = n + 1
 
-            if H[mm + 3] > 0:
+            if h[mm + 3] > 0:
                 n = n + 1 / 2
 
             n_all[dd][hh] = n
@@ -74,25 +74,25 @@ def func_03(I_ALL, sin_hsdt_ALL):
             mm60 = 24 * dd + hh  # 1時間間隔データの列数
             mm10 = (24 * dd + hh + 1) * 6 - 1  # 10分間隔データの列数
 
-            if H[mm10 - 3] > 0:
+            if h[mm10 - 3] > 0:
                 Smin[mm10 - 3] = Smin[mm10 - 3] + S[mm60] / n_all[dd][hh] / 2
 
-            if H[mm10 - 2] > 0:
+            if h[mm10 - 2] > 0:
                 Smin[mm10 - 2] = Smin[mm10 - 2] + S[mm60] / n_all[dd][hh]
 
-            if H[mm10 - 1] > 0:
+            if h[mm10 - 1] > 0:
                 Smin[mm10 - 1] = Smin[mm10 - 1] + S[mm60] / n_all[dd][hh]
 
-            if H[mm10] > 0:
+            if h[mm10] > 0:
                 Smin[mm10] = Smin[mm10] + S[mm60] / n_all[dd][hh]
 
-            if H[mm10 + 1] > 0:
+            if h[mm10 + 1] > 0:
                 Smin[mm10 + 1] = Smin[mm10 + 1] + S[mm60] / n_all[dd][hh]
 
-            if H[mm10 + 2] > 0:
+            if h[mm10 + 2] > 0:
                 Smin[mm10 + 2] = Smin[mm10 + 2] + S[mm60] / n_all[dd][hh]
 
-            if H[mm10 + 3] > 0:
+            if h[mm10 + 3] > 0:
                 Smin[mm10 + 3] = Smin[mm10 + 3] + S[mm60] / n_all[dd][hh] / 2
 
     # 単位を kcal/(10min)m2 から　kcal/hm2　に変換
@@ -296,7 +296,7 @@ def func_25(x1, x2, x3, y3, y2, zxp, zxm, zym):
     return r_isr_j_ym
 
 
-def calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym):
+def calc_shading_coefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym):
     ## 入力チェック
     if x1 < 0 or x2 < 0 or x3 < 0:
         raise Exception('Error!')
@@ -309,26 +309,26 @@ def calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
 
     with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
         areaDB = json.load(f)
-    climatefilename = climatedata_directory + '/' + areaDB[AREA + "地域"]["気象データファイル名"]  # 気象データ
+    climatefilename = climate_data_directory + '/' + areaDB[area + "地域"]["気象データファイル名"]  # 気象データ
 
     # 気象データ読み込み
     # iod_all : 法線面直達日射量[W/m2]
     # ios_all : 水平面天空日射量[W/m2]
-    [_, _, iod_all, ios_ALL, _] = climate.readHaspClimateData(climatefilename)
+    [_, _, iod_all, ios_ALL, _] = climate.read_hasp_climate_data(climatefilename)
 
-    phi = areaDB[AREA + "地域"]["緯度"]  # 緯度 [deg]
-    L = areaDB[AREA + "地域"]["経度"]  # 経度 [deg]
+    latitude = areaDB[area + "地域"]["緯度"]  # 緯度 [deg]
+    L = areaDB[area + "地域"]["経度"]  # 経度 [deg]
 
     # 暖冷房期間
-    if AREA == "1" or AREA == "2":
+    if area == "1" or area == "2":
         SUM = list(range(121, 304 + 1))  # 冷房期間
         WIN = list(range(1, 120 + 1))
         WIN.extend(list(range(305, 365 + 1)))  # 暖房期間
-    elif AREA == "3" or AREA == "4" or AREA == "5" or AREA == "6" or AREA == "7":
+    elif area == "3" or area == "4" or area == "5" or area == "6" or area == "7":
         SUM = list(range(91, 334 + 1))  # 冷房期間
         WIN = list(range(1, 90 + 1))
         WIN.extend(list(range(335, 365 + 1)))  # 暖房期間
-    elif AREA == "8":
+    elif area == "8":
         SUM = list(range(91, 365 + 1))  # 冷房期間
         WIN = list(range(1, 90 + 1))  # 暖房期間
     else:
@@ -390,7 +390,7 @@ def calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
             Td = (t + ed - 12) * 15 + (L - 135)
 
             # 太陽高度 [deg] 式(8),(9)
-            sin_hsdt = max(0, math.sin(deg2rad * phi) * math.sin(deg2rad * delta) + math.cos(deg2rad * phi) * math.cos(
+            sin_hsdt = max(0, math.sin(deg2rad * latitude) * math.sin(deg2rad * delta) + math.cos(deg2rad * latitude) * math.cos(
                 deg2rad * delta) * math.cos(deg2rad * Td))
             cos_hsdt = math.sqrt(1 - sin_hsdt ** 2)
             tan_hsdt = sin_hsdt / cos_hsdt
@@ -399,8 +399,8 @@ def calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
 
             # 太陽方位角 Azs [deg]　式(10),(11),(12)
             sin_Azs = math.cos(deg2rad * delta) * math.sin(deg2rad * Td) / cos_hsdt
-            cos_Azs = (sin_hsdt * math.sin(deg2rad * phi) - math.sin(deg2rad * delta)) / (
-                        cos_hsdt * math.cos(deg2rad * phi))
+            cos_Azs = (sin_hsdt * math.sin(deg2rad * latitude) - math.sin(deg2rad * delta)) / (
+                        cos_hsdt * math.cos(deg2rad * latitude))
             tan_Azs = sin_Azs / cos_Azs
 
             if (sin_Azs > 0) and (cos_Azs < 0):
@@ -603,7 +603,7 @@ def calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, z
 
 # %%
 if __name__ == '__main__':
-    # AREA = "6"
+    # area = "6"
     # direction = "南"
     # x1=0
     # x2=5
@@ -616,7 +616,7 @@ if __name__ == '__main__':
     # zyp=2
     # zym=0
 
-    AREA = "7"
+    area = "7"
     direction = "北東"
     x1 = 0.2
     x2 = 1
@@ -629,7 +629,7 @@ if __name__ == '__main__':
     zyp = 0.2
     zym = 0.35
 
-    r_wind_SUM, r_wind_WIN = calc_shadingCoefficient(AREA, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym)
+    r_wind_SUM, r_wind_WIN = calc_shading_coefficient(area, direction, x1, x2, x3, y1, y2, y3, zxp, zxm, zyp, zym)
 
     print("日よけ効果係数（冷房）：" + str(r_wind_SUM))
     print("日よけ効果係数（暖房）：" + str(r_wind_WIN))

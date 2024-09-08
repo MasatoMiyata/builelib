@@ -16,7 +16,7 @@ testcase_dict = {
     "room_area": './tests/lighting/◇室面積_20190730-183436.txt',
     "unitEnergy": './tests/lighting/◇消費電力_20190730-183436.txt',
     "unitNum": './tests/lighting/◇台数_20190730-183436.txt',
-    "Hotel": './tests/lighting/◇用途_ホテル等_20190730-183437.txt',
+    "hotel": './tests/lighting/◇用途_ホテル等_20190730-183437.txt',
     "Restraunt": './tests/lighting/◇用途_飲食店等_20190730-183437.txt',
     "school": './tests/lighting/◇用途_学校等_20190730-183437.txt',
     "apartment": './tests/lighting/◇用途_共同住宅_20190730-183437.txt',

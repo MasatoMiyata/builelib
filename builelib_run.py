@@ -70,7 +70,7 @@ def builelib_run(exec_calculation, inputfile_name):
     }
 
     # CGSの計算に必要となる変数
-    result_json_for_CGS = {
+    result_json_for_cgs = {
         "AC": {},
         "V": {},
         "L": {},
@@ -147,7 +147,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 resultdata_AC = airconditioning_webpro.calc_energy(input_data, debug=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_CGS["AC"] = resultdata_AC["for_CGS"]
+                result_json_for_cgs["AC"] = resultdata_AC["for_cgs"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
@@ -189,7 +189,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 resultdata_V = ventilation.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_CGS["V"] = resultdata_V["for_CGS"]
+                result_json_for_cgs["V"] = resultdata_V["for_cgs"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_V["設計一次エネルギー消費量[MJ/年]"]
@@ -231,7 +231,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 resultdata_L = lighting.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_CGS["L"] = resultdata_L["for_CGS"]
+                result_json_for_cgs["L"] = resultdata_L["for_cgs"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_L["E_lighting"]
@@ -264,43 +264,43 @@ def builelib_run(exec_calculation, inputfile_name):
     # ------------------------------------
 
     # 実行
-    resultdata_HW = {}
+    result_data_HW = {}
 
     if exec_calculation:
 
         try:
             if input_data["hot_water_room"]:  # hot_water_room が 空 でなければ
 
-                resultdata_HW = hotwatersupply.calc_energy(input_data, DEBUG=False)
+                result_data_HW = hotwatersupply.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_CGS["HW"] = resultdata_HW["for_CGS"]
+                result_json_for_cgs["HW"] = result_data_HW["for_cgs"]
 
                 # 設計一次エネ・基準一次エネに追加
-                energy_consumption_design += resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
-                energy_consumption_standard += resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
+                energy_consumption_design += result_data_HW["設計一次エネルギー消費量[MJ/年]"]
+                energy_consumption_standard += result_data_HW["基準一次エネルギー消費量[MJ/年]"]
+                calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = result_data_HW["設計一次エネルギー消費量[MJ/年]"]
+                calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = result_data_HW["基準一次エネルギー消費量[MJ/年]"]
+                calc_reuslt["BEI_HW"] = math.ceil(result_data_HW["BEI/hW"] * 100) / 100
 
             else:
-                resultdata_HW = {
+                result_data_HW = {
                     "message": "給湯設備はありません。"
                 }
 
         except:
-            resultdata_HW = {
+            result_data_HW = {
                 "error": "給湯設備の計算時に予期せぬエラーが発生しました。"
             }
 
     else:
-        resultdata_HW = {
+        result_data_HW = {
             "error": "給湯設備の計算は実行されませんでした。"
         }
 
     # 出力
     with open(inputfile_name_split[0] + "_result_HW.json", 'w', encoding='utf-8') as fw:
-        json.dump(resultdata_HW, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
+        json.dump(result_data_HW, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
 
     # ------------------------------------
     # 昇降機の計算の実行
@@ -316,7 +316,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 resultdata_EV = elevator.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_CGS["EV"] = resultdata_EV["for_CGS"]
+                result_json_for_cgs["EV"] = resultdata_EV["for_cgs"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design += resultdata_EV["E_elevator"]
@@ -358,7 +358,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 resultdata_PV = photovoltaic.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_CGS["PV"] = resultdata_PV["for_CGS"]
+                result_json_for_cgs["PV"] = resultdata_PV["for_cgs"]
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design -= resultdata_PV["E_photovoltaic"]
@@ -395,7 +395,7 @@ def builelib_run(exec_calculation, inputfile_name):
                 resultdata_OT = other_energy.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
-                result_json_for_CGS["OT"] = resultdata_OT["for_CGS"]
+                result_json_for_cgs["OT"] = resultdata_OT["for_cgs"]
                 calc_reuslt["その他一次エネルギー消費量[MJ]"] = resultdata_OT["E_other"]
 
             else:
@@ -425,7 +425,7 @@ def builelib_run(exec_calculation, inputfile_name):
 
         try:
             if input_data["cogeneration_systems"]:  # cogeneration_systems が 空 でなければ
-                resultdata_CGS = cogeneration.calc_energy(input_data, result_json_for_CGS, DEBUG=False)
+                resultdata_CGS = cogeneration.calc_energy(input_data, result_json_for_cgs, DEBUG=False)
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design -= resultdata_CGS["年間一次エネルギー削減量"] * 1000

@@ -9029,29 +9029,29 @@
         "1F_健康相談": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-101i02",
+            "ahu_cooling_inside_load": "EhP-101i02",
             "ahu_cooling_outdoor_load": "OHU-103",
-            "ahu_heating_inside_load": "EHP-101i02",
+            "ahu_heating_inside_load": "EhP-101i02",
             "ahu_heating_outdoor_load": "OHU-103",
-            "info": "EHP-101i02"
+            "info": "EhP-101i02"
         },
         "1F_会計": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-101i03",
+            "ahu_cooling_inside_load": "EhP-101i03",
             "ahu_cooling_outdoor_load": "OHU-103",
-            "ahu_heating_inside_load": "EHP-101i03",
+            "ahu_heating_inside_load": "EhP-101i03",
             "ahu_heating_outdoor_load": "OHU-103",
-            "info": "EHP-101i03"
+            "info": "EhP-101i03"
         },
         "1F_受付": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-101i04",
+            "ahu_cooling_inside_load": "EhP-101i04",
             "ahu_cooling_outdoor_load": "OHU-103",
-            "ahu_heating_inside_load": "EHP-101i04",
+            "ahu_heating_inside_load": "EhP-101i04",
             "ahu_heating_outdoor_load": "OHU-103",
-            "info": "EHP-101i04"
+            "info": "EhP-101i04"
         },
         "1F_リネン": {
             "is_natual_ventilation": "無",
@@ -9065,11 +9065,11 @@
         "1F_SPD事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EHP-101i01",
-            "ahu_cooling_outdoor_load": "EHP-101i01",
-            "ahu_heating_inside_load": "EHP-101i01",
-            "ahu_heating_outdoor_load": "EHP-101i01",
-            "info": "EHP-101i01"
+            "ahu_cooling_inside_load": "EhP-101i01",
+            "ahu_cooling_outdoor_load": "EhP-101i01",
+            "ahu_heating_inside_load": "EhP-101i01",
+            "ahu_heating_outdoor_load": "EhP-101i01",
+            "info": "EhP-101i01"
         },
         "1F_救急センター": {
             "is_natual_ventilation": "無",
@@ -9101,11 +9101,11 @@
         "1F_事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EHP-102i01",
-            "ahu_cooling_outdoor_load": "EHP-102i01",
-            "ahu_heating_inside_load": "EHP-102i01",
-            "ahu_heating_outdoor_load": "EHP-102i01",
-            "info": "EHP-102i01"
+            "ahu_cooling_inside_load": "EhP-102i01",
+            "ahu_cooling_outdoor_load": "EhP-102i01",
+            "ahu_heating_inside_load": "EhP-102i01",
+            "ahu_heating_outdoor_load": "EhP-102i01",
+            "info": "EhP-102i01"
         },
         "1F_医学図書室": {
             "is_natual_ventilation": "無",
@@ -9272,29 +9272,29 @@
         "2F_会議室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EHP-201i01",
-            "ahu_cooling_outdoor_load": "EHP-201i01",
-            "ahu_heating_inside_load": "EHP-201i01",
-            "ahu_heating_outdoor_load": "EHP-201i01",
-            "info": "EHP-201i01"
+            "ahu_cooling_inside_load": "EhP-201i01",
+            "ahu_cooling_outdoor_load": "EhP-201i01",
+            "ahu_heating_inside_load": "EhP-201i01",
+            "ahu_heating_outdoor_load": "EhP-201i01",
+            "info": "EhP-201i01"
         },
         "2F_会議室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EHP-201i02",
-            "ahu_cooling_outdoor_load": "EHP-201i02",
-            "ahu_heating_inside_load": "EHP-201i02",
-            "ahu_heating_outdoor_load": "EHP-201i02",
-            "info": "EHP-201i02"
+            "ahu_cooling_inside_load": "EhP-201i02",
+            "ahu_cooling_outdoor_load": "EhP-201i02",
+            "ahu_heating_inside_load": "EhP-201i02",
+            "ahu_heating_outdoor_load": "EhP-201i02",
+            "info": "EhP-201i02"
         },
         "2F_会議室3": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "無",
-            "ahu_cooling_inside_load": "EHP-201i03",
-            "ahu_cooling_outdoor_load": "EHP-201i03",
-            "ahu_heating_inside_load": "EHP-201i03",
-            "ahu_heating_outdoor_load": "EHP-201i03",
-            "info": "EHP-201i03"
+            "ahu_cooling_inside_load": "EhP-201i03",
+            "ahu_cooling_outdoor_load": "EhP-201i03",
+            "ahu_heating_inside_load": "EhP-201i03",
+            "ahu_heating_outdoor_load": "EhP-201i03",
+            "info": "EhP-201i03"
         },
         "2F_CPU室": {
             "is_natual_ventilation": "無",
@@ -9362,11 +9362,11 @@
         "2F_心電図": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-202i01",
+            "ahu_cooling_inside_load": "EhP-202i01",
             "ahu_cooling_outdoor_load": "OHU-202",
-            "ahu_heating_inside_load": "EHP-202i01",
+            "ahu_heating_inside_load": "EhP-202i01",
             "ahu_heating_outdoor_load": "OHU-202",
-            "info": "EHP-202i01"
+            "info": "EhP-202i01"
         },
         "2F_安静室": {
             "is_natual_ventilation": "無",
@@ -9515,20 +9515,20 @@
         "2F_検査センター待合": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-202i02",
+            "ahu_cooling_inside_load": "EhP-202i02",
             "ahu_cooling_outdoor_load": "OHU-202",
-            "ahu_heating_inside_load": "EHP-202i02",
+            "ahu_heating_inside_load": "EhP-202i02",
             "ahu_heating_outdoor_load": "OHU-202",
-            "info": "EHP-202i02"
+            "info": "EhP-202i02"
         },
         "2F_化学療法待合": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-202i03",
+            "ahu_cooling_inside_load": "EhP-202i03",
             "ahu_cooling_outdoor_load": "OHU-203",
-            "ahu_heating_inside_load": "EHP-202i03",
+            "ahu_heating_inside_load": "EhP-202i03",
             "ahu_heating_outdoor_load": "OHU-203",
-            "info": "EHP-202i03"
+            "info": "EhP-202i03"
         },
         "2F_化学療法室": {
             "is_natual_ventilation": "無",
@@ -9551,65 +9551,65 @@
         "3F_分娩室1": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i05",
+            "ahu_cooling_inside_load": "EhP-302i05",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i05",
+            "ahu_heating_inside_load": "EhP-302i05",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i05"
+            "info": "EhP-302i05"
         },
         "3F_分娩室2": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i06",
+            "ahu_cooling_inside_load": "EhP-302i06",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i06",
+            "ahu_heating_inside_load": "EhP-302i06",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i06"
+            "info": "EhP-302i06"
         },
         "3F_沐浴室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i07",
+            "ahu_cooling_inside_load": "EhP-302i07",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i07",
+            "ahu_heating_inside_load": "EhP-302i07",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i07"
+            "info": "EhP-302i07"
         },
         "3F_授乳室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i08",
+            "ahu_cooling_inside_load": "EhP-302i08",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i08",
+            "ahu_heating_inside_load": "EhP-302i08",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i08"
+            "info": "EhP-302i08"
         },
         "3F_新生児室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i09",
+            "ahu_cooling_inside_load": "EhP-302i09",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i09",
+            "ahu_heating_inside_load": "EhP-302i09",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i09"
+            "info": "EhP-302i09"
         },
         "3F_小児科待合": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i10",
+            "ahu_cooling_inside_load": "EhP-302i10",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i10",
+            "ahu_heating_inside_load": "EhP-302i10",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i10"
+            "info": "EhP-302i10"
         },
         "3F_小児科": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i11",
+            "ahu_cooling_inside_load": "EhP-302i11",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i11",
+            "ahu_heating_inside_load": "EhP-302i11",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i11"
+            "info": "EhP-302i11"
         },
         "3F_4床室1": {
             "is_natual_ventilation": "無",
@@ -9632,56 +9632,56 @@
         "3F_エレベータホール": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-301i01",
+            "ahu_cooling_inside_load": "EhP-301i01",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-301i01",
+            "ahu_heating_inside_load": "EhP-301i01",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-301i01"
+            "info": "EhP-301i01"
         },
         "3F_スタッフステーション": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-301i02",
+            "ahu_cooling_inside_load": "EhP-301i02",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-301i02",
+            "ahu_heating_inside_load": "EhP-301i02",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-301i02"
+            "info": "EhP-301i02"
         },
         "3F_スタッフ事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-301i03",
+            "ahu_cooling_inside_load": "EhP-301i03",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-301i03",
+            "ahu_heating_inside_load": "EhP-301i03",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-301i03"
+            "info": "EhP-301i03"
         },
         "3F_処置室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-301i04",
+            "ahu_cooling_inside_load": "EhP-301i04",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-301i04",
+            "ahu_heating_inside_load": "EhP-301i04",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-301i04"
+            "info": "EhP-301i04"
         },
         "3F_産婦人科": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i13",
+            "ahu_cooling_inside_load": "EhP-302i13",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i13",
+            "ahu_heating_inside_load": "EhP-302i13",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i13"
+            "info": "EhP-302i13"
         },
         "3F_産婦人科待合": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i14",
+            "ahu_cooling_inside_load": "EhP-302i14",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i14",
+            "ahu_heating_inside_load": "EhP-302i14",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i14"
+            "info": "EhP-302i14"
         },
         "3F_パントリー": {
             "is_natual_ventilation": "無",
@@ -9758,11 +9758,11 @@
         "3F_新生児廊下": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-302i12",
+            "ahu_cooling_inside_load": "EhP-302i12",
             "ahu_cooling_outdoor_load": "OHU-301",
-            "ahu_heating_inside_load": "EHP-302i12",
+            "ahu_heating_inside_load": "EhP-302i12",
             "ahu_heating_outdoor_load": "OHU-301",
-            "info": "EHP-302i12"
+            "info": "EhP-302i12"
         },
         "4F_4床室1": {
             "is_natual_ventilation": "無",
@@ -9848,38 +9848,38 @@
         "4F_エレベータホール": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-401i01",
+            "ahu_cooling_inside_load": "EhP-401i01",
             "ahu_cooling_outdoor_load": "OHU-401",
-            "ahu_heating_inside_load": "EHP-401i01",
+            "ahu_heating_inside_load": "EhP-401i01",
             "ahu_heating_outdoor_load": "OHU-401",
-            "info": "EHP-401i01"
+            "info": "EhP-401i01"
         },
         "4F_スタッフステーション": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-401i02",
+            "ahu_cooling_inside_load": "EhP-401i02",
             "ahu_cooling_outdoor_load": "OHU-401",
-            "ahu_heating_inside_load": "EHP-401i02",
+            "ahu_heating_inside_load": "EhP-401i02",
             "ahu_heating_outdoor_load": "OHU-401",
-            "info": "EHP-401i02"
+            "info": "EhP-401i02"
         },
         "4F_スタッフ事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-401i03",
+            "ahu_cooling_inside_load": "EhP-401i03",
             "ahu_cooling_outdoor_load": "OHU-401",
-            "ahu_heating_inside_load": "EHP-401i03",
+            "ahu_heating_inside_load": "EhP-401i03",
             "ahu_heating_outdoor_load": "OHU-401",
-            "info": "EHP-401i03"
+            "info": "EhP-401i03"
         },
         "4F_処置室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-401i04",
+            "ahu_cooling_inside_load": "EhP-401i04",
             "ahu_cooling_outdoor_load": "OHU-401",
-            "ahu_heating_inside_load": "EHP-401i04",
+            "ahu_heating_inside_load": "EhP-401i04",
             "ahu_heating_outdoor_load": "OHU-401",
-            "info": "EHP-401i04"
+            "info": "EhP-401i04"
         },
         "4F_1床室1": {
             "is_natual_ventilation": "無",
@@ -10100,38 +10100,38 @@
         "5F_エレベータホール": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-501i01",
+            "ahu_cooling_inside_load": "EhP-501i01",
             "ahu_cooling_outdoor_load": "OHU-501",
-            "ahu_heating_inside_load": "EHP-501i01",
+            "ahu_heating_inside_load": "EhP-501i01",
             "ahu_heating_outdoor_load": "OHU-501",
-            "info": "EHP-501i01"
+            "info": "EhP-501i01"
         },
         "5F_スタッフステーション": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-501i02",
+            "ahu_cooling_inside_load": "EhP-501i02",
             "ahu_cooling_outdoor_load": "OHU-501",
-            "ahu_heating_inside_load": "EHP-501i02",
+            "ahu_heating_inside_load": "EhP-501i02",
             "ahu_heating_outdoor_load": "OHU-501",
-            "info": "EHP-501i02"
+            "info": "EhP-501i02"
         },
         "5F_スタッフ事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-501i03",
+            "ahu_cooling_inside_load": "EhP-501i03",
             "ahu_cooling_outdoor_load": "OHU-501",
-            "ahu_heating_inside_load": "EHP-501i03",
+            "ahu_heating_inside_load": "EhP-501i03",
             "ahu_heating_outdoor_load": "OHU-501",
-            "info": "EHP-501i03"
+            "info": "EhP-501i03"
         },
         "5F_処置室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-501i04",
+            "ahu_cooling_inside_load": "EhP-501i04",
             "ahu_cooling_outdoor_load": "OHU-501",
-            "ahu_heating_inside_load": "EHP-501i04",
+            "ahu_heating_inside_load": "EhP-501i04",
             "ahu_heating_outdoor_load": "OHU-501",
-            "info": "EHP-501i04"
+            "info": "EhP-501i04"
         },
         "5F_1床室1": {
             "is_natual_ventilation": "無",
@@ -10352,38 +10352,38 @@
         "6F_エレベータホール": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-601i01",
+            "ahu_cooling_inside_load": "EhP-601i01",
             "ahu_cooling_outdoor_load": "OHU-601",
-            "ahu_heating_inside_load": "EHP-601i01",
+            "ahu_heating_inside_load": "EhP-601i01",
             "ahu_heating_outdoor_load": "OHU-601",
-            "info": "EHP-601i01"
+            "info": "EhP-601i01"
         },
         "6F_スタッフステーション": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-601i02",
+            "ahu_cooling_inside_load": "EhP-601i02",
             "ahu_cooling_outdoor_load": "OHU-601",
-            "ahu_heating_inside_load": "EHP-601i02",
+            "ahu_heating_inside_load": "EhP-601i02",
             "ahu_heating_outdoor_load": "OHU-601",
-            "info": "EHP-601i02"
+            "info": "EhP-601i02"
         },
         "6F_スタッフ事務室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-601i03",
+            "ahu_cooling_inside_load": "EhP-601i03",
             "ahu_cooling_outdoor_load": "OHU-601",
-            "ahu_heating_inside_load": "EHP-601i03",
+            "ahu_heating_inside_load": "EhP-601i03",
             "ahu_heating_outdoor_load": "OHU-601",
-            "info": "EHP-601i03"
+            "info": "EhP-601i03"
         },
         "6F_処置室": {
             "is_natual_ventilation": "無",
             "is_simultaneous_supply": "有（外気負荷）",
-            "ahu_cooling_inside_load": "EHP-601i04",
+            "ahu_cooling_inside_load": "EhP-601i04",
             "ahu_cooling_outdoor_load": "OHU-601",
-            "ahu_heating_inside_load": "EHP-601i04",
+            "ahu_heating_inside_load": "EhP-601i04",
             "ahu_heating_outdoor_load": "OHU-601",
-            "info": "EHP-601i04"
+            "info": "EhP-601i04"
         },
         "6F_1床室1": {
             "is_natual_ventilation": "無",

@@ -405,7 +405,7 @@ def make_json_from_v4_sheet(inputfilename):
         # BL-7	延べ面積 	[㎡]	(数値)
         data["building"]["building_floor_area"] = float(sheet_bl.cell(16, 4).value)
         # BL-8	「他人から供給された熱」	冷熱	(数値)
-        # todo: DHCの意味
+        # todo: DhCの意味
         data["building"]["coefficient_dhc"]["cooling"] = float(sheet_bl.cell(17, 4).value)
         # BL-9	の一次エネルギー換算係数	温熱	(数値)
         data["building"]["coefficient_dhc"]["heating"] = float(sheet_bl.cell(18, 4).value)
@@ -723,7 +723,7 @@ def make_json_from_v4_sheet(inputfilename):
 
                 data["shading_config"][elt_key] = {
                     "shading_effect_C": set_default(str(data_be4[1]), None, "float"),
-                    "shading_effect_H": set_default(str(data_be4[2]), None, "float"),
+                    "shading_effect_h": set_default(str(data_be4[2]), None, "float"),
                     "x1": set_default(str(data_be4[3]), None, "float"),
                     "x2": set_default(str(data_be4[4]), None, "float"),
                     "x3": set_default(str(data_be4[5]), None, "float"),
@@ -1186,10 +1186,10 @@ def make_json_from_v4_sheet(inputfilename):
                     }
                 )
 
-    if "様式HW2" in wb.sheet_names():
+    if "様式hW2" in wb.sheet_names():
 
         # シートの読み込み
-        sheet_HW2 = wb.sheet_by_name("様式HW2")
+        sheet_HW2 = wb.sheet_by_name("様式hW2")
         # 初期化
         unit_key = None
 
@@ -1197,43 +1197,43 @@ def make_json_from_v4_sheet(inputfilename):
         for i in range(10, sheet_HW2.nrows):
 
             # シートから「行」の読み込み
-            dataHW2 = sheet_HW2.row_values(i)
+            datahW2 = sheet_HW2.row_values(i)
 
             # 給湯システム名称が空欄でない場合
-            if (dataHW2[0] != ""):
+            if (datahW2[0] != ""):
 
                 # 給湯システム名称をkeyとする
-                unit_key = str(dataHW2[0])
+                unit_key = str(datahW2[0])
 
                 data["hot_water_supply_systems"][unit_key] = {
                     "heat_sourceUnit": [
                         {
-                            "usage_type": str(dataHW2[1]),
-                            "heat_source_type": str(dataHW2[2]),
-                            "number": float(dataHW2[3]),
-                            "rated_capacity": float(dataHW2[4]),
-                            "rated_power_consumption": float(dataHW2[5]),
-                            "rated_fuel_consumption": float(dataHW2[6]),
+                            "usage_type": str(datahW2[1]),
+                            "heat_source_type": str(datahW2[2]),
+                            "number": float(datahW2[3]),
+                            "rated_capacity": float(datahW2[4]),
+                            "rated_power_consumption": float(datahW2[5]),
+                            "rated_fuel_consumption": float(datahW2[6]),
                         }
                     ],
-                    "insulation_type": str(dataHW2[7]),
-                    "pipe_size": float(dataHW2[8]),
-                    "solar_system_area": set_default(dataHW2[9], None, "float"),
-                    "solar_system_direction": set_default(dataHW2[10], None, "float"),
-                    "solar_system_angle": set_default(dataHW2[11], None, "float"),
-                    "info": str(dataHW2[12])
+                    "insulation_type": str(datahW2[7]),
+                    "pipe_size": float(datahW2[8]),
+                    "solar_system_area": set_default(datahW2[9], None, "float"),
+                    "solar_system_direction": set_default(datahW2[10], None, "float"),
+                    "solar_system_angle": set_default(datahW2[11], None, "float"),
+                    "info": str(datahW2[12])
                 }
 
-            elif (dataHW2[1] != "") and (dataHW2[2] != ""):
+            elif (datahW2[1] != "") and (datahW2[2] != ""):
 
                 data["hot_water_supply_systems"][unit_key]["heat_sourceUnit"].append(
                     {
-                        "usage_type": str(dataHW2[1]),
-                        "heat_source_type": str(dataHW2[2]),
-                        "number": float(dataHW2[3]),
-                        "rated_capacity": float(dataHW2[4]),
-                        "rated_power_consumption": float(dataHW2[5]),
-                        "rated_fuel_consumption": float(dataHW2[6]),
+                        "usage_type": str(datahW2[1]),
+                        "heat_source_type": str(datahW2[2]),
+                        "number": float(datahW2[3]),
+                        "rated_capacity": float(datahW2[4]),
+                        "rated_power_consumption": float(datahW2[5]),
+                        "rated_fuel_consumption": float(datahW2[6]),
                     }
                 )
 
@@ -2165,7 +2165,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                             "shading_effect_C":
                                 check_value(dataBE1[3], "様式2-4.外皮 " + str(i + 1) + "行目:「③日よけ効果係数（冷房）」",
                                             False, None, "数値", None, 0, 1),
-                            "shading_effect_H":
+                            "shading_effect_h":
                                 check_value(dataBE1[4], "様式2-4.外皮 " + str(i + 1) + "行目:「③日よけ効果係数（暖房）」",
                                             False, None, "数値", None, 0, 1),
                             "x1": None,
@@ -2238,7 +2238,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                             "shading_effect_C":
                                 check_value(dataBE1[3], "様式2-4.外皮 " + str(i + 1) + "行目:「③日よけ効果係数（冷房）」",
                                             False, None, "数値", None, 0, 1),
-                            "shading_effect_H":
+                            "shading_effect_h":
                                 check_value(dataBE1[4], "様式2-4.外皮 " + str(i + 1) + "行目:「③日よけ効果係数（暖房）」",
                                             False, None, "数値", None, 0, 1),
                             "x1": None,
@@ -2299,7 +2299,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                             "shading_effect_C":
                                 check_value(dataBE1[3], "様式2-4.外皮 " + str(i + 1) + "行目:「③日よけ効果係数（冷房）」",
                                             False, None, "数値", None, 0, 1),
-                            "shading_effect_H":
+                            "shading_effect_h":
                                 check_value(dataBE1[4], "様式2-4.外皮 " + str(i + 1) + "行目:「③日よけ効果係数（暖房）」",
                                             False, None, "数値", None, 0, 1),
                             "x1": None,
@@ -2378,7 +2378,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
         # 初期化
         unit_key = None
         mode_key_C = None
-        mode_key_H = None
+        mode_key_h = None
 
         # 行のループ
         for i in range(10, sheet_ac2.nrows):
@@ -2424,7 +2424,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
 
                     if storage_flag:
                         mode_key_C = "冷房(蓄熱)"
-                        mode_key_H = "暖房(蓄熱)"
+                        mode_key_h = "暖房(蓄熱)"
                         storage_type = check_value(data_ac2[3],
                                                    "様式2-5.熱源 " + str(i + 1) + "行目:「④蓄熱システム（運転モード）」", True,
                                                    None, "文字列", input_options["蓄熱の種類"], None, None)
@@ -2433,7 +2433,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                                                    None, "数値", None, 0, None)
                     else:
                         mode_key_C = "冷房"
-                        mode_key_H = "暖房"
+                        mode_key_h = "暖房"
                         storage_type = None
                         storage_size = None
 
@@ -2604,9 +2604,9 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                             }
 
                             if unit_key in data["heat_source_system"]:
-                                data["heat_source_system"][unit_key][mode_key_H] = unit_spec
+                                data["heat_source_system"][unit_key][mode_key_h] = unit_spec
                             else:
-                                data["heat_source_system"][unit_key] = {mode_key_H: unit_spec}
+                                data["heat_source_system"][unit_key] = {mode_key_h: unit_spec}
 
                         elif (heat_source_type in heat_source_performance):
 
@@ -2619,9 +2619,9 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                                 "heat_source": [],
                             }
                             if unit_key in data["heat_source_system"]:
-                                data["heat_source_system"][unit_key][mode_key_H] = unit_spec
+                                data["heat_source_system"][unit_key][mode_key_h] = unit_spec
                             else:
-                                data["heat_source_system"][unit_key] = {mode_key_H: unit_spec}
+                                data["heat_source_system"][unit_key] = {mode_key_h: unit_spec}
 
 
             elif (data_ac2[3] == "") or (
@@ -2721,7 +2721,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                                 check_value(data_ac2[20], "様式2-5.熱源 " + str(i + 1) + "行目:「⑪主機定格消費エネルギー」",
                                             False, 0, "数値", None, None, None)
 
-                        data["heat_source_system"][unit_key][mode_key_H]["heat_source"].append(
+                        data["heat_source_system"][unit_key][mode_key_h]["heat_source"].append(
                             {
                                 "heat_source_type": heat_source_type,
                                 "number":
@@ -2773,14 +2773,14 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
 
                 if storage_flag:
                     mode_key_C = "冷房(蓄熱)"
-                    mode_key_H = "暖房(蓄熱)"
+                    mode_key_h = "暖房(蓄熱)"
                     storage_type = check_value(data_ac2[3], "様式2-5.熱源 " + str(i + 1) + "行目:「④蓄熱システム（運転モード）」",
                                                True, None, "文字列", input_options["蓄熱の種類"], None, None)
                     storage_size = check_value(data_ac2[4], "様式2-5.熱源 " + str(i + 1) + "行目:「⑤蓄熱システム（蓄熱容量）」",
                                                True, None, "数値", None, 0, None)
                 else:
                     mode_key_C = "冷房"
-                    mode_key_H = "暖房"
+                    mode_key_h = "暖房"
                     storage_type = None
 
                 if (data_ac2[5] != ""):  # 熱源機種名称が入力されている。
@@ -2943,9 +2943,9 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                         }
 
                         if unit_key in data["heat_source_system"]:
-                            data["heat_source_system"][unit_key][mode_key_H] = unit_spec
+                            data["heat_source_system"][unit_key][mode_key_h] = unit_spec
                         else:
-                            data["heat_source_system"][unit_key] = {mode_key_H: unit_spec}
+                            data["heat_source_system"][unit_key] = {mode_key_h: unit_spec}
 
                     elif (heat_source_type in heat_source_performance):
 
@@ -2958,9 +2958,9 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                             "heat_source": [],
                         }
                         if unit_key in data["heat_source_system"]:
-                            data["heat_source_system"][unit_key][mode_key_H] = unit_spec
+                            data["heat_source_system"][unit_key][mode_key_h] = unit_spec
                         else:
-                            data["heat_source_system"][unit_key] = {mode_key_H: unit_spec}
+                            data["heat_source_system"][unit_key] = {mode_key_h: unit_spec}
 
     # ----------------------------------
     # 様式2-6 二次ポンプ入力シート の読み込み
@@ -3528,47 +3528,47 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                 ahu_h_outdoor_load in data["air_handling_system"]):
 
             # 熱源機群名称（冷房）
-            iREF_c_i = data["air_handling_system"][ahu_c_inside_load]["heat_source_cooling"]
-            iREF_c_o = data["air_handling_system"][ahu_c_outdoor_load]["heat_source_cooling"]
+            iref_c_i = data["air_handling_system"][ahu_c_inside_load]["heat_source_cooling"]
+            iref_c_o = data["air_handling_system"][ahu_c_outdoor_load]["heat_source_cooling"]
 
             # 熱源機群名称（暖房）
-            iREF_h_i = data["air_handling_system"][ahu_h_inside_load]["heat_source_heating"]
-            iREF_h_o = data["air_handling_system"][ahu_h_outdoor_load]["heat_source_heating"]
+            iref_h_i = data["air_handling_system"][ahu_h_inside_load]["heat_source_heating"]
+            iref_h_o = data["air_handling_system"][ahu_h_outdoor_load]["heat_source_heating"]
 
             # 熱源群が設定されていることを確認。
-            if (iREF_c_i in data["heat_source_system"]) and (iREF_c_o in data["heat_source_system"]) \
-                    and (iREF_h_i in data["heat_source_system"]) and (iREF_h_o in data["heat_source_system"]):
+            if (iref_c_i in data["heat_source_system"]) and (iref_c_o in data["heat_source_system"]) \
+                    and (iref_h_i in data["heat_source_system"]) and (iref_h_o in data["heat_source_system"]):
 
                 # 両方とも冷暖同時供給有無が「有」であったら
-                if data["heat_source_system"][iREF_c_i]["冷房"]["is_simultaneous_for_ver2"] == "有" and \
-                        data["heat_source_system"][iREF_c_o]["冷房"]["is_simultaneous_for_ver2"] == "有" and \
-                        data["heat_source_system"][iREF_h_i]["暖房"]["is_simultaneous_for_ver2"] == "有" and \
-                        data["heat_source_system"][iREF_h_o]["暖房"]["is_simultaneous_for_ver2"] == "有":
+                if data["heat_source_system"][iref_c_i]["冷房"]["is_simultaneous_for_ver2"] == "有" and \
+                        data["heat_source_system"][iref_c_o]["冷房"]["is_simultaneous_for_ver2"] == "有" and \
+                        data["heat_source_system"][iref_h_i]["暖房"]["is_simultaneous_for_ver2"] == "有" and \
+                        data["heat_source_system"][iref_h_o]["暖房"]["is_simultaneous_for_ver2"] == "有":
 
                     data["air_conditioning_zone"][zone_name]["is_simultaneous_supply"] = "有"
 
                 # 外調系統だけ冷暖同時であれば（暫定措置）
-                elif data["heat_source_system"][iREF_c_i]["冷房"]["is_simultaneous_for_ver2"] == "無" and \
-                        data["heat_source_system"][iREF_c_o]["冷房"]["is_simultaneous_for_ver2"] == "有" and \
-                        data["heat_source_system"][iREF_h_i]["暖房"]["is_simultaneous_for_ver2"] == "無" and \
-                        data["heat_source_system"][iREF_h_o]["暖房"]["is_simultaneous_for_ver2"] == "有":
+                elif data["heat_source_system"][iref_c_i]["冷房"]["is_simultaneous_for_ver2"] == "無" and \
+                        data["heat_source_system"][iref_c_o]["冷房"]["is_simultaneous_for_ver2"] == "有" and \
+                        data["heat_source_system"][iref_h_i]["暖房"]["is_simultaneous_for_ver2"] == "無" and \
+                        data["heat_source_system"][iref_h_o]["暖房"]["is_simultaneous_for_ver2"] == "有":
 
                     data["air_conditioning_zone"][zone_name]["is_simultaneous_supply"] = "有（外気負荷）"
 
                 # 室負荷系統だけ冷暖同時であれば（暫定措置）
-                elif data["heat_source_system"][iREF_c_i]["冷房"]["is_simultaneous_for_ver2"] == "有" and \
-                        data["heat_source_system"][iREF_c_o]["冷房"]["is_simultaneous_for_ver2"] == "無" and \
-                        data["heat_source_system"][iREF_h_i]["暖房"]["is_simultaneous_for_ver2"] == "有" and \
-                        data["heat_source_system"][iREF_h_o]["暖房"]["is_simultaneous_for_ver2"] == "無":
+                elif data["heat_source_system"][iref_c_i]["冷房"]["is_simultaneous_for_ver2"] == "有" and \
+                        data["heat_source_system"][iref_c_o]["冷房"]["is_simultaneous_for_ver2"] == "無" and \
+                        data["heat_source_system"][iref_h_i]["暖房"]["is_simultaneous_for_ver2"] == "有" and \
+                        data["heat_source_system"][iref_h_o]["暖房"]["is_simultaneous_for_ver2"] == "無":
 
                     data["air_conditioning_zone"][zone_name]["is_simultaneous_supply"] = "有（室負荷）"
 
     # is_simultaneous_for_ver2 要素　を削除
-    for iREF in data["heat_source_system"]:
-        if "冷房" in data["heat_source_system"][iREF]:
-            del data["heat_source_system"][iREF]["冷房"]["is_simultaneous_for_ver2"]
-        if "暖房" in data["heat_source_system"][iREF]:
-            del data["heat_source_system"][iREF]["暖房"]["is_simultaneous_for_ver2"]
+    for iref in data["heat_source_system"]:
+        if "冷房" in data["heat_source_system"][iref]:
+            del data["heat_source_system"][iref]["冷房"]["is_simultaneous_for_ver2"]
+        if "暖房" in data["heat_source_system"][iref]:
+            del data["heat_source_system"][iref]["暖房"]["is_simultaneous_for_ver2"]
 
     # ----------------------------------
     # 様式3-1 換気対象室入力シート の読み込み
@@ -4017,13 +4017,13 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
         for i in range(10, sheet_HW2.nrows):
 
             # シートから「行」の読み込み
-            dataHW2 = sheet_HW2.row_values(i)
+            datahW2 = sheet_HW2.row_values(i)
 
             # 給湯システム名称が空欄でない場合
-            if (dataHW2[0] != ""):
+            if (datahW2[0] != ""):
 
                 # 給湯システム名称をkeyとする
-                unit_key = str(dataHW2[0])
+                unit_key = str(datahW2[0])
 
                 if unit_key in data["hot_water_supply_systems"]:
 
@@ -4032,30 +4032,30 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
 
                 else:
 
-                    if str(dataHW2[1]) == "電力" or str(dataHW2[1]) == "電気":
+                    if str(datahW2[1]) == "電力" or str(datahW2[1]) == "電気":
                         heat_source_type = "電気瞬間湯沸器"
-                    elif str(dataHW2[1]) == "都市ガス":
+                    elif str(datahW2[1]) == "都市ガス":
                         heat_source_type = "ガス給湯機"
-                    elif str(dataHW2[1]) == "液化石油ガス":
+                    elif str(datahW2[1]) == "液化石油ガス":
                         heat_source_type = "ガス給湯機"
-                    elif str(dataHW2[1]) == "重油":
+                    elif str(datahW2[1]) == "重油":
                         heat_source_type = "ボイラ"
-                    elif str(dataHW2[1]) == "灯油":
+                    elif str(datahW2[1]) == "灯油":
                         heat_source_type = "ボイラ"
-                    elif str(dataHW2[1]) == "他人から供給された熱（温水）":
+                    elif str(datahW2[1]) == "他人から供給された熱（温水）":
                         heat_source_type = "地域熱供給"
-                    elif str(dataHW2[1]) == "他人から供給された熱(温水)":
+                    elif str(datahW2[1]) == "他人から供給された熱(温水)":
                         heat_source_type = "地域熱供給"
-                    elif str(dataHW2[1]) == "他人から供給された熱（蒸気）":
+                    elif str(datahW2[1]) == "他人から供給された熱（蒸気）":
                         heat_source_type = "地域熱供給"
-                    elif str(dataHW2[1]) == "他人から供給された熱(蒸気)":
+                    elif str(datahW2[1]) == "他人から供給された熱(蒸気)":
                         heat_source_type = "地域熱供給"
                     else:
                         validation["error"].append("様式5-2.給湯機器 " + str(i + 1) + "行目:「②燃料種類」の入力に誤りがあります。")
 
-                    rated_capacity = check_value(dataHW2[2], "様式5-2.給湯機器 " + str(i + 1) + "行目:「③定格加熱能力」",
+                    rated_capacity = check_value(datahW2[2], "様式5-2.給湯機器 " + str(i + 1) + "行目:「③定格加熱能力」",
                                                  True, None, "数値", None, 0, None)
-                    efficiency = check_value(dataHW2[3], "様式5-2.給湯機器 " + str(i + 1) + "行目:「④熱源効率」", True,
+                    efficiency = check_value(datahW2[3], "様式5-2.給湯機器 " + str(i + 1) + "行目:「④熱源効率」", True,
                                              None, "数値", None, 0, None)
 
                     if rated_capacity == None or rated_capacity == "":
@@ -4065,7 +4065,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                     else:
                         rated_fuel_consumption = rated_capacity / efficiency
 
-                    insulation_type = str(dataHW2[4]).replace("１", "1")
+                    insulation_type = str(datahW2[4]).replace("１", "1")
 
                     data["hot_water_supply_systems"][unit_key] = {
                         "heat_sourceUnit": [
@@ -4083,19 +4083,19 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                                         True,
                                         None, "文字列", input_options["配管保温仕様"], None, None),
                         "pipe_size":
-                            check_value(dataHW2[5], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑥接続口径」", True, None,
+                            check_value(datahW2[5], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑥接続口径」", True, None,
                                         "数値", None, 0, None),
                         "solar_system_area":
-                            check_value(dataHW2[6], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑦有効集熱面積」", False,
+                            check_value(datahW2[6], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑦有効集熱面積」", False,
                                         None, "数値", None, 0, None),
                         "solar_system_direction":
-                            check_value(dataHW2[7], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑧集熱面の方位角」", False,
+                            check_value(datahW2[7], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑧集熱面の方位角」", False,
                                         None, "数値", None, -360, 360),
                         "solar_system_angle":
-                            check_value(dataHW2[8], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑨集熱面の傾斜角」", False,
+                            check_value(datahW2[8], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑨集熱面の傾斜角」", False,
                                         None, "数値", None, -180, 180),
                         "info":
-                            check_value(dataHW2[9], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑩備考」", False, None,
+                            check_value(datahW2[9], "様式5-2.給湯機器 " + str(i + 1) + "行目:「⑩備考」", False, None,
                                         "文字列", None, 0, None),
                     }
 
@@ -4685,7 +4685,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
 
     if "SP-10) 空調負荷" in wb.sheet_names():
 
-        data["special_input_data"]["Qahu"] = {}
+        data["special_input_data"]["q_ahu"] = {}
 
         # シートの読み込み
         sheet_SP10 = wb.sheet_by_name("SP-10) 空調負荷")
@@ -4696,7 +4696,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
             dataSP10 = sheet_SP10.row_values(i)
 
             if dataSP10[0] != "":
-                data["special_input_data"]["Qahu"][dataSP10[0]] = bc.trans_8760to36524(dataSP10[1:])
+                data["special_input_data"]["q_ahu"][dataSP10[0]] = bc.trans_8760to36524(dataSP10[1:])
 
     if "SP-11) 湯使用量" in wb.sheet_names():
 

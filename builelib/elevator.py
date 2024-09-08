@@ -19,7 +19,7 @@ def calc_energy(input_data, DEBUG=False):
         "Es_elevator": 0,
         "BEI_EV": 0,
         "elevators": {},
-        "for_CGS": {
+        "for_cgs": {
             "Edesign_MWh_day": np.zeros(365)
         }
     }
@@ -39,23 +39,23 @@ def calc_energy(input_data, DEBUG=False):
         for unit_id, unit_configure in enumerate(input_data["elevators"][room_name]["elevator"]):
 
             if unit_configure["control_type"] == "交流帰還制御":
-                input_data["elevators"][room_name]["elevator"][unit_id]["control_typeCoefficient"] = 1 / 20
+                input_data["elevators"][room_name]["elevator"][unit_id]["control_type_coefficient"] = 1 / 20
 
             elif unit_configure["control_type"] == "VVVF(電力回生なし)" or unit_configure[
                 "control_type"] == "VVVF（電力回生なし）":
-                input_data["elevators"][room_name]["elevator"][unit_id]["control_typeCoefficient"] = 1 / 40
+                input_data["elevators"][room_name]["elevator"][unit_id]["control_type_coefficient"] = 1 / 40
 
             elif unit_configure["control_type"] == "VVVF(電力回生あり)" or unit_configure[
                 "control_type"] == "VVVF（電力回生あり）":
-                input_data["elevators"][room_name]["elevator"][unit_id]["control_typeCoefficient"] = 1 / 45
+                input_data["elevators"][room_name]["elevator"][unit_id]["control_type_coefficient"] = 1 / 45
 
             elif unit_configure["control_type"] == "VVVF(電力回生なし、ギアレス)" or unit_configure[
                 "control_type"] == "VVVF（電力回生なし、ギアレス）":
-                input_data["elevators"][room_name]["elevator"][unit_id]["control_typeCoefficient"] = 1 / 45
+                input_data["elevators"][room_name]["elevator"][unit_id]["control_type_coefficient"] = 1 / 45
 
             elif unit_configure["control_type"] == "VVVF(電力回生あり、ギアレス)" or unit_configure[
                 "control_type"] == "VVVF（電力回生あり、ギアレス）":
-                input_data["elevators"][room_name]["elevator"][unit_id]["control_typeCoefficient"] = 1 / 50
+                input_data["elevators"][room_name]["elevator"][unit_id]["control_type_coefficient"] = 1 / 50
 
             else:
                 raise Exception("速度制御方式 が不正です。")
@@ -105,7 +105,7 @@ def calc_energy(input_data, DEBUG=False):
 
             input_data["elevators"][room_name]["elevator"][unit_id]["energy_consumption"] = \
                 unit_configure["number"] * \
-                unit_configure["velocity"] * unit_configure["load_limit"] * unit_configure["control_typeCoefficient"] * \
+                unit_configure["velocity"] * unit_configure["load_limit"] * unit_configure["control_type_coefficient"] * \
                 input_data["elevators"][room_name]["operation_time"] / 860
 
             if DEBUG:
@@ -113,14 +113,14 @@ def calc_energy(input_data, DEBUG=False):
                 print(f'　- 台数  {unit_configure["number"]}')
                 print(f'　- 速度  {unit_configure["velocity"]}')
                 print(f'　- 積載量  {unit_configure["load_limit"]}')
-                print(f'　- 速度制御方式による係数  {unit_configure["control_typeCoefficient"]}')
+                print(f'　- 速度制御方式による係数  {unit_configure["control_type_coefficient"]}')
                 print(
                     f'　- エネルギー消費量 kWh/年 {input_data["elevators"][room_name]["elevator"][unit_id]["energy_consumption"]}')
 
             # 時刻別エネルギー消費量 [MWh]
             Edesign_MWh_hour += \
                 unit_configure["number"] * \
-                unit_configure["velocity"] * unit_configure["load_limit"] * unit_configure["control_typeCoefficient"] * \
+                unit_configure["velocity"] * unit_configure["load_limit"] * unit_configure["control_type_coefficient"] * \
                 input_data["elevators"][room_name]["operation_schedule_hourly"] / 860 / 1000
 
     # ----------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ def calc_energy(input_data, DEBUG=False):
         result_json["BEI_EV"] = np.nan
 
     # 日積算値
-    result_json["for_CGS"]["Edesign_MWh_day"] = np.sum(Edesign_MWh_hour, 1)
+    result_json["for_cgs"]["Edesign_MWh_day"] = np.sum(Edesign_MWh_hour, 1)
 
     return result_json
 

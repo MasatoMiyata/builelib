@@ -26,10 +26,10 @@ with open(filename, 'r', encoding='utf-8') as f:
 # print( f'設計一次エネルギー消費量 空調全熱交換器: {result_json["energy"]["E_ahu_aex"] * bc.fprime}')
 # print( f'設計一次エネルギー消費量 二次ポンプ: {result_json["energy"]["E_pump"] * bc.fprime}')
 # print( f'設計一次エネルギー消費量 熱源主機: {result_json["energy"]["E_ref_main"]}')
-# print( f'設計一次エネルギー消費量 熱源補機: {result_json["energy"]["E_ref_sub"] * bc.fprime}')
+# print( f'設計一次エネルギー消費量 熱源補機: {result_json["energy"]["e_ref_sub"] * bc.fprime}')
 # print( f'設計一次エネルギー消費量 一次ポンプ: {result_json["energy"]["E_ref_pump"] * bc.fprime}')
-# print( f'設計一次エネルギー消費量 冷却塔ファン: {result_json["energy"]["E_ref_ct_fan"] * bc.fprime}')
-# print( f'設計一次エネルギー消費量 冷却水ポンプ: {result_json["energy"]["E_ref_ct_pump"] * bc.fprime}')
+# print( f'設計一次エネルギー消費量 冷却塔ファン: {result_json["energy"]["e_ref_ct_fan"] * bc.fprime}')
+# print( f'設計一次エネルギー消費量 冷却水ポンプ: {result_json["energy"]["e_ref_ct_pumpa"] * bc.fprime}')
 
 # 計算の実行(webproモード)
 result_json_webpro = ac_web.calc_energy(input_data, debug=True)

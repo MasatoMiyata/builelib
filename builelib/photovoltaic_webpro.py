@@ -17,7 +17,7 @@ import commons as bc
 import climate
 
 # 気象データファイルの保存場所
-climatedata_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
+climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 
 def calc_energy(input_data, DEBUG=False):
@@ -25,7 +25,7 @@ def calc_energy(input_data, DEBUG=False):
     result_json = {
         "E_photovoltaic": 0,
         "photovoltaic_systems": {},
-        "for_CGS": {
+        "for_cgs": {
             "Edesign_MWh_day": np.zeros(365)
         }
     }
@@ -119,8 +119,8 @@ def calc_energy(input_data, DEBUG=False):
         if climate_data_file[input_data["building"]["region"] + "地域"][
             input_data["building"]["annual_solar_region"]] != None:
             [tout, iod, ios, sun_altitude, sun_azimuth] = \
-                climate.readCsvClimateData(
-                    climatedata_directory + climate_data_file[input_data["building"]["region"] + "地域"][
+                climate.read_csv_climate_data(
+                    climate_data_directory + climate_data_file[input_data["building"]["region"] + "地域"][
                         input_data["building"]["annual_solar_region"]])
         else:
             raise Exception('日射地域区分の指定が不正です')
@@ -243,7 +243,7 @@ def calc_energy(input_data, DEBUG=False):
         for dd in range(0, 365):
             for hh in range(0, 24):
                 tt = 24 * dd + hh
-                result_json["for_CGS"]["Edesign_MWh_day"][dd] += result_json["photovoltaic_systems"][system_name]["Ep"][
+                result_json["for_cgs"]["Edesign_MWh_day"][dd] += result_json["photovoltaic_systems"][system_name]["Ep"][
                                                                     tt] / 1000
 
     return result_json
