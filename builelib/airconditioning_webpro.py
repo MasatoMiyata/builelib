@@ -417,7 +417,7 @@ def calc_energy(input_data, debug=False):
     ## 外皮面への入射日射量（解説書 2.4.1）
     ##----------------------------------------------------------------------------------
 
-    solor_radiation = {
+    solar_radiation = {
         "直達": {
         },
         "直達_入射角特性込": {
@@ -429,25 +429,25 @@ def calc_energy(input_data, debug=False):
     }
 
     # 方位角別の日射量
-    (solor_radiation["直達"]["南"], solor_radiation["直達_入射角特性込"]["南"], solor_radiation["天空"]["垂直"],
-     solor_radiation["夜間"]["垂直"]) = \
+    (solar_radiation["直達"]["南"], solar_radiation["直達_入射角特性込"]["南"], solar_radiation["天空"]["垂直"],
+     solar_radiation["夜間"]["垂直"]) = \
         climate.solar_radiation_by_azimuth(0, 90, latitude, longitude, iod_all, ios_all, inn_all)
-    (solor_radiation["直達"]["南西"], solor_radiation["直達_入射角特性込"]["南西"], _,
+    (solar_radiation["直達"]["南西"], solar_radiation["直達_入射角特性込"]["南西"], _,
      _) = climate.solar_radiation_by_azimuth(45, 90, latitude, longitude, iod_all, ios_all, inn_all)
-    (solor_radiation["直達"]["西"], solor_radiation["直達_入射角特性込"]["西"], _, _) = climate.solar_radiation_by_azimuth(
+    (solar_radiation["直達"]["西"], solar_radiation["直達_入射角特性込"]["西"], _, _) = climate.solar_radiation_by_azimuth(
         90, 90, latitude, longitude, iod_all, ios_all, inn_all)
-    (solor_radiation["直達"]["北西"], solor_radiation["直達_入射角特性込"]["北西"], _,
+    (solar_radiation["直達"]["北西"], solar_radiation["直達_入射角特性込"]["北西"], _,
      _) = climate.solar_radiation_by_azimuth(135, 90, latitude, longitude, iod_all, ios_all, inn_all)
-    (solor_radiation["直達"]["北"], solor_radiation["直達_入射角特性込"]["北"], _, _) = climate.solar_radiation_by_azimuth(
+    (solar_radiation["直達"]["北"], solar_radiation["直達_入射角特性込"]["北"], _, _) = climate.solar_radiation_by_azimuth(
         180, 90, latitude, longitude, iod_all, ios_all, inn_all)
-    (solor_radiation["直達"]["北東"], solor_radiation["直達_入射角特性込"]["北東"], _,
+    (solar_radiation["直達"]["北東"], solar_radiation["直達_入射角特性込"]["北東"], _,
      _) = climate.solar_radiation_by_azimuth(225, 90, latitude, longitude, iod_all, ios_all, inn_all)
-    (solor_radiation["直達"]["東"], solor_radiation["直達_入射角特性込"]["東"], _, _) = climate.solar_radiation_by_azimuth(
+    (solar_radiation["直達"]["東"], solar_radiation["直達_入射角特性込"]["東"], _, _) = climate.solar_radiation_by_azimuth(
         270, 90, latitude, longitude, iod_all, ios_all, inn_all)
-    (solor_radiation["直達"]["南東"], solor_radiation["直達_入射角特性込"]["南東"], _,
+    (solar_radiation["直達"]["南東"], solar_radiation["直達_入射角特性込"]["南東"], _,
      _) = climate.solar_radiation_by_azimuth(315, 90, latitude, longitude, iod_all, ios_all, inn_all)
-    (solor_radiation["直達"]["水平"], solor_radiation["直達_入射角特性込"]["水平"], solor_radiation["天空"]["水平"],
-     solor_radiation["夜間"]["水平"]) = \
+    (solar_radiation["直達"]["水平"], solar_radiation["直達_入射角特性込"]["水平"], solar_radiation["天空"]["水平"],
+     solar_radiation["夜間"]["水平"]) = \
         climate.solar_radiation_by_azimuth(0, 0, latitude, longitude, iod_all, ios_all, inn_all)
 
     ##----------------------------------------------------------------------------------
@@ -933,19 +933,19 @@ def calc_energy(input_data, debug=False):
                     ## ② 日射による熱取得
                     if wall_configure["direction"] == "水平（上）" or wall_configure["direction"] == "水平（下）":
                         q_wall_sunshadeolar = q_wall_sunshadeolar + wall_configure["UA_wall"] * wall_configure["solar_absorption_ratio"] * 0.04 * \
-                                  (solor_radiation["直達"]["水平"] + solor_radiation["天空"]["水平"])
+                                  (solar_radiation["直達"]["水平"] + solar_radiation["天空"]["水平"])
                     else:
                         q_wall_sunshadeolar = q_wall_sunshadeolar + wall_configure["UA_wall"] * wall_configure["solar_absorption_ratio"] * 0.04 * \
-                                  (solor_radiation["直達"][wall_configure["direction"]] + solor_radiation["天空"][
+                                  (solar_radiation["直達"][wall_configure["direction"]] + solar_radiation["天空"][
                                       "垂直"])
 
                     ## ③ 夜間放射による熱取得（マイナス）
                     if wall_configure["direction"] == "水平（上）" or wall_configure["direction"] == "水平（下）":
                         q_wall_nightight = q_wall_nightight - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                                  (solor_radiation["夜間"]["水平"])
+                                  (solar_radiation["夜間"]["水平"])
                     else:
                         q_wall_nightight = q_wall_nightight - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                                  (solor_radiation["夜間"]["垂直"])
+                                  (solar_radiation["夜間"]["垂直"])
 
                 elif wall_configure["wall_type"] == "日の当たらない外壁":
 
@@ -955,10 +955,10 @@ def calc_energy(input_data, debug=False):
                     ## ③ 夜間放射による熱取得（マイナス）
                     if wall_configure["direction"] == "水平（上）" or wall_configure["direction"] == "水平（下）":
                         q_wall_nightight = q_wall_nightight - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                                  (solor_radiation["夜間"]["水平"])
+                                  (solar_radiation["夜間"]["水平"])
                     else:
                         q_wall_nightight = q_wall_nightight - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                                  (solor_radiation["夜間"]["垂直"])
+                                  (solar_radiation["夜間"]["垂直"])
 
                 elif wall_configure["wall_type"] == "地盤に接する外壁":
 
@@ -966,7 +966,7 @@ def calc_energy(input_data, debug=False):
                     q_wall_temperatureemperature = q_wall_temperatureemperature + wall_configure["UA_wall"] * (np.mean(toa_ave) * np.ones(365) - room_temperature_setting) * 24
 
                     ## ③ 夜間放射による熱取得（マイナス） ：　本当はこれは不要。Webproの実装と合わせるために追加。
-                    q_wall_nightight = q_wall_nightight - wall_configure["UA_wall"] * 0.9 * 0.04 * (solor_radiation["夜間"]["垂直"])
+                    q_wall_nightight = q_wall_nightight - wall_configure["UA_wall"] * 0.9 * 0.04 * (solar_radiation["夜間"]["垂直"])
 
                 elif wall_configure["wall_type"] == "地盤に接する外壁_Ver2":  # Webpro Ver2の互換のための処理
 
@@ -976,19 +976,19 @@ def calc_energy(input_data, debug=False):
                     ## ② 日射による熱取得
                     if wall_configure["direction"] == "水平（上）" or wall_configure["direction"] == "水平（下）":
                         q_wall_sunshadeolar = q_wall_sunshadeolar + wall_configure["UA_wall"] * wall_configure["solar_absorption_ratio"] * 0.04 * \
-                                  (solor_radiation["直達"]["水平"] + solor_radiation["天空"]["水平"])
+                                  (solar_radiation["直達"]["水平"] + solar_radiation["天空"]["水平"])
                     else:
                         q_wall_sunshadeolar = q_wall_sunshadeolar + wall_configure["UA_wall"] * wall_configure["solar_absorption_ratio"] * 0.04 * \
-                                  (solor_radiation["直達"][wall_configure["direction"]] + solor_radiation["天空"][
+                                  (solar_radiation["直達"][wall_configure["direction"]] + solar_radiation["天空"][
                                       "垂直"])
 
                     ## ③ 夜間放射による熱取得（マイナス）
                     if wall_configure["direction"] == "水平（上）" or wall_configure["direction"] == "水平（下）":
                         q_wall_nightight = q_wall_nightight - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                                  (solor_radiation["夜間"]["水平"])
+                                  (solar_radiation["夜間"]["水平"])
                     else:
                         q_wall_nightight = q_wall_nightight - wall_configure["UA_wall"] * 0.9 * 0.04 * \
-                                  (solor_radiation["夜間"]["垂直"])
+                                  (solar_radiation["夜間"]["垂直"])
 
                         # 窓毎にループ
                 for (window_id, window_configure) in enumerate(wall_configure["window_list"]):
@@ -1024,15 +1024,15 @@ def calc_energy(input_data, debug=False):
 
                                     q_window_solar = q_window_solar + shading_daily * \
                                               (window_configure["IA_window"] / 0.88) * \
-                                              (solor_radiation["直達_入射角特性込"]["水平"] * 0.89 +
-                                               solor_radiation["天空"]["水平"] * 0.808)
+                                              (solar_radiation["直達_入射角特性込"]["水平"] * 0.89 +
+                                               solar_radiation["天空"]["水平"] * 0.808)
 
                                 else:
 
                                     q_window_solar = q_window_solar + shading_daily * \
                                               (window_configure["IA_window"] / 0.88) * \
-                                              (solor_radiation["直達_入射角特性込"][
-                                                   wall_configure["direction"]] * 0.89 + solor_radiation["天空"][
+                                              (solar_radiation["直達_入射角特性込"][
+                                                   wall_configure["direction"]] * 0.89 + solar_radiation["天空"][
                                                    "垂直"] * 0.808)
 
                             else:
@@ -1042,27 +1042,27 @@ def calc_energy(input_data, debug=False):
                                     "direction"] == "水平（下）":
                                     q_window_solar = q_window_solar + \
                                               (window_configure["IA_window"]) * (
-                                                      solor_radiation["直達"]["水平"] + solor_radiation["天空"][
+                                                      solar_radiation["直達"]["水平"] + solar_radiation["天空"][
                                                   "水平"])
                                 else:
                                     q_window_solar = q_window_solar + shading_daily * \
                                               (window_configure["IA_window"]) * (
-                                                      solor_radiation["直達"][wall_configure["direction"]] +
-                                                      solor_radiation["天空"]["垂直"])
+                                                      solar_radiation["直達"][wall_configure["direction"]] +
+                                                      solar_radiation["天空"]["垂直"])
 
                             ## ③ 夜間放射による熱取得（マイナス）
                             if wall_configure["direction"] == "水平（上）" or wall_configure["direction"] == "水平（下）":
                                 q_window_night = q_window_night - window_configure["UA_window"] * 0.9 * 0.04 * \
-                                          solor_radiation["夜間"]["水平"]
+                                          solar_radiation["夜間"]["水平"]
                             else:
                                 q_window_night = q_window_night - window_configure["UA_window"] * 0.9 * 0.04 * \
-                                          solor_radiation["夜間"]["垂直"]
+                                          solar_radiation["夜間"]["垂直"]
 
 
                         elif wall_configure["wall_type"] == "日の当たらない外壁":
 
                             ## ③ 夜間放射による熱取得（マイナス）
-                            q_window_night = q_window_night - window_configure["UA_window"] * 0.9 * 0.04 * solor_radiation["夜間"][
+                            q_window_night = q_window_night - window_configure["UA_window"] * 0.9 * 0.04 * solar_radiation["夜間"][
                                 "水平"]
 
         #  室面積あたりの熱量に変換 [Wh/m2/日]

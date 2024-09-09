@@ -477,62 +477,62 @@ def calc_energy(
     ## 外皮面への入射日射量（解説書 2.4.1）
     ##----------------------------------------------------------------------------------
 
-    solor_radiation = {"直達": {}, "直達_入射角特性込": {}, "天空": {}, "夜間": {}}
+    solar_radiation = {"直達": {}, "直達_入射角特性込": {}, "天空": {}, "夜間": {}}
 
     # 方位角別の日射量
     (
-        solor_radiation["直達"]["南"],
-        solor_radiation["直達_入射角特性込"]["南"],
-        solor_radiation["天空"]["垂直"],
-        solor_radiation["夜間"]["垂直"],
+        solar_radiation["直達"]["南"],
+        solar_radiation["直達_入射角特性込"]["南"],
+        solar_radiation["天空"]["垂直"],
+        solar_radiation["夜間"]["垂直"],
     ) = climate.solar_radiation_by_azimuth(0, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
-        solor_radiation["直達"]["南西"],
-        solor_radiation["直達_入射角特性込"]["南西"],
+        solar_radiation["直達"]["南西"],
+        solar_radiation["直達_入射角特性込"]["南西"],
         _,
         _,
     ) = climate.solar_radiation_by_azimuth(45, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
-        solor_radiation["直達"]["西"],
-        solor_radiation["直達_入射角特性込"]["西"],
+        solar_radiation["直達"]["西"],
+        solar_radiation["直達_入射角特性込"]["西"],
         _,
         _,
     ) = climate.solar_radiation_by_azimuth(90, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
-        solor_radiation["直達"]["北西"],
-        solor_radiation["直達_入射角特性込"]["北西"],
+        solar_radiation["直達"]["北西"],
+        solar_radiation["直達_入射角特性込"]["北西"],
         _,
         _,
     ) = climate.solar_radiation_by_azimuth(135, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
-        solor_radiation["直達"]["北"],
-        solor_radiation["直達_入射角特性込"]["北"],
+        solar_radiation["直達"]["北"],
+        solar_radiation["直達_入射角特性込"]["北"],
         _,
         _,
     ) = climate.solar_radiation_by_azimuth(180, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
-        solor_radiation["直達"]["北東"],
-        solor_radiation["直達_入射角特性込"]["北東"],
+        solar_radiation["直達"]["北東"],
+        solar_radiation["直達_入射角特性込"]["北東"],
         _,
         _,
     ) = climate.solar_radiation_by_azimuth(225, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
-        solor_radiation["直達"]["東"],
-        solor_radiation["直達_入射角特性込"]["東"],
+        solar_radiation["直達"]["東"],
+        solar_radiation["直達_入射角特性込"]["東"],
         _,
         _,
     ) = climate.solar_radiation_by_azimuth(270, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
-        solor_radiation["直達"]["南東"],
-        solor_radiation["直達_入射角特性込"]["南東"],
+        solar_radiation["直達"]["南東"],
+        solar_radiation["直達_入射角特性込"]["南東"],
         _,
         _,
     ) = climate.solar_radiation_by_azimuth(315, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
-        solor_radiation["直達"]["水平"],
-        solor_radiation["直達_入射角特性込"]["水平"],
-        solor_radiation["天空"]["水平"],
-        solor_radiation["夜間"]["水平"],
+        solar_radiation["直達"]["水平"],
+        solar_radiation["直達_入射角特性込"]["水平"],
+        solar_radiation["天空"]["水平"],
+        solar_radiation["夜間"]["水平"],
     ) = climate.solar_radiation_by_azimuth(0, 0, latitude, longitude, iod_all, ios_all, inn_all)
 
     ##----------------------------------------------------------------------------------
