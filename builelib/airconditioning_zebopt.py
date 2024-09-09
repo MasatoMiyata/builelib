@@ -92,7 +92,7 @@ def create_bi_x_dict(input_data, heat_thermal_conductivity):
     ]
 
     # Creating a 2D array for bi_x
-    bi_x_dict = { 
+    bi_x_dict = {
         wall_name: np.zeros(len(material_keys))
         for wall_name in input_data["wall_configure"].keys()
     }
@@ -485,55 +485,55 @@ def calc_energy(
         solor_radiation["直達_入射角特性込"]["南"],
         solor_radiation["天空"]["垂直"],
         solor_radiation["夜間"]["垂直"],
-    ) = climate.solarRadiationByAzimuth(0, 90, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(0, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
         solor_radiation["直達"]["南西"],
         solor_radiation["直達_入射角特性込"]["南西"],
         _,
         _,
-    ) = climate.solarRadiationByAzimuth(45, 90, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(45, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
         solor_radiation["直達"]["西"],
         solor_radiation["直達_入射角特性込"]["西"],
         _,
         _,
-    ) = climate.solarRadiationByAzimuth(90, 90, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(90, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
         solor_radiation["直達"]["北西"],
         solor_radiation["直達_入射角特性込"]["北西"],
         _,
         _,
-    ) = climate.solarRadiationByAzimuth(135, 90, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(135, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
         solor_radiation["直達"]["北"],
         solor_radiation["直達_入射角特性込"]["北"],
         _,
         _,
-    ) = climate.solarRadiationByAzimuth(180, 90, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(180, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
         solor_radiation["直達"]["北東"],
         solor_radiation["直達_入射角特性込"]["北東"],
         _,
         _,
-    ) = climate.solarRadiationByAzimuth(225, 90, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(225, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
         solor_radiation["直達"]["東"],
         solor_radiation["直達_入射角特性込"]["東"],
         _,
         _,
-    ) = climate.solarRadiationByAzimuth(270, 90, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(270, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
         solor_radiation["直達"]["南東"],
         solor_radiation["直達_入射角特性込"]["南東"],
         _,
         _,
-    ) = climate.solarRadiationByAzimuth(315, 90, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(315, 90, latitude, longitude, iod_all, ios_all, inn_all)
     (
         solor_radiation["直達"]["水平"],
         solor_radiation["直達_入射角特性込"]["水平"],
         solor_radiation["天空"]["水平"],
         solor_radiation["夜間"]["水平"],
-    ) = climate.solarRadiationByAzimuth(0, 0, latitude, longitude, iod_all, ios_all, inn_all)
+    ) = climate.solar_radiation_by_azimuth(0, 0, latitude, longitude, iod_all, ios_all, inn_all)
 
     ##----------------------------------------------------------------------------------
     ## 外壁等の熱貫流率の算出（解説書 附属書A.1）
@@ -3376,11 +3376,11 @@ def calc_energy(
                             "supply_water_temp_middle": None,
                             "supply_water_temperature_winter": None,
                             "heat_source_rated_capacity": input_data["ref"][ref_name][
-                                                           "storage_efficient_ratio"
-                                                       ]
-                                                       * input_data["ref"][ref_name]["storage_size"]
-                                                       / 8
-                                                       * (1000 / 3600),
+                                                              "storage_efficient_ratio"
+                                                          ]
+                                                          * input_data["ref"][ref_name]["storage_size"]
+                                                          / 8
+                                                          * (1000 / 3600),
                             "heat_source_rated_power_consumption": 0,
                             "heat_source_rated_fuel_consumption": 0,
                             "heat_source_sub_rated_power_consumption": 0,
@@ -3929,11 +3929,11 @@ def calc_energy(
             if result_json["ref"][ref_name]["t_ref"][dd] > 0:
                 # 熱源定格負荷率（定格能力に対する比率
                 result_json["ref"][ref_name]["l_ref"][dd] = (
-                                                                  result_json["ref"][ref_name]["q_ref"][dd]
-                                                                  / result_json["ref"][ref_name]["t_ref"][dd]
-                                                                  * 1000
-                                                                  / 3600
-                                                          ) / input_data["ref"][ref_name]["q_ref_rated"]
+                                                                    result_json["ref"][ref_name]["q_ref"][dd]
+                                                                    / result_json["ref"][ref_name]["t_ref"][dd]
+                                                                    * 1000
+                                                                    / 3600
+                                                            ) / input_data["ref"][ref_name]["q_ref_rated"]
 
             if np.isnan(result_json["ref"][ref_name]["l_ref"][dd]) == True:
                 result_json["ref"][ref_name]["l_ref"][dd] = 0
@@ -4107,11 +4107,11 @@ def calc_energy(
         if q_c_max != 0 and q_h_max != 0:
 
             result_json["ref"][ref_original_name + "_冷房"]["ghsp_rq"] = (
-                                                                                q_c_max - q_h_max
-                                                                        ) / (q_c_max + q_h_max)
+                                                                                 q_c_max - q_h_max
+                                                                         ) / (q_c_max + q_h_max)
             result_json["ref"][ref_original_name + "_暖房"]["ghsp_rq"] = (
-                                                                                q_c_max - q_h_max
-                                                                        ) / (q_c_max + q_h_max)
+                                                                                 q_c_max - q_h_max
+                                                                         ) / (q_c_max + q_h_max)
 
         elif q_c_max == 0 and q_h_max != 0:
             result_json["ref"][ref_original_name + "_暖房"]["ghsp_rq"] = 0
@@ -5353,11 +5353,12 @@ def calc_energy(
                 + result_json["ref"][ref_name]["熱源群冷却水ポンプ[GJ]"]
         )
         result_json["ref"][ref_name]["年間平均負荷率[-]"] = (
-                                                                   result_json["ref"][ref_name]["年積算熱源負荷[GJ]"]
-                                                                   * 1000000
-                                                                   / (result_json["ref"][ref_name][
-                                                                          "年間運転時間[時間]"] * 3600)
-                                                           ) / result_json["ref"][ref_name]["熱源主機_定格消費エネルギー[kW]"]
+                                                                    result_json["ref"][ref_name]["年積算熱源負荷[GJ]"]
+                                                                    * 1000000
+                                                                    / (result_json["ref"][ref_name][
+                                                                           "年間運転時間[時間]"] * 3600)
+                                                            ) / result_json["ref"][ref_name][
+                                                                "熱源主機_定格消費エネルギー[kW]"]
 
         result_json["ref"][ref_name]["年間運転効率[-]"] = (
                 result_json["ref"][ref_name]["年積算熱源負荷[GJ]"]
