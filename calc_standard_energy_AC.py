@@ -646,13 +646,13 @@ for iRESION in [1, 2, 3, 4, 5, 6, 7, 8]:
                         #     json.dump(bldgdata,fw,indent=4,ensure_ascii=False)
 
                         # buielib/ACの実行
-                        resultdata_AC = airconditioning_webpro.calc_energy(bldgdata, debug=False)
+                        result_data_AC = airconditioning_webpro.calc_energy(bldgdata, debug=False)
 
                         # 設計一次エネ・基準一次エネ
-                        print(resultdata_AC["設計一次エネルギー消費量[MJ/年]"] / Sf)
-                        print(resultdata_AC["基準一次エネルギー消費量[MJ/年]"] / Sf)
+                        print(result_data_AC["設計一次エネルギー消費量[MJ/年]"] / Sf)
+                        print(result_data_AC["基準一次エネルギー消費量[MJ/年]"] / Sf)
 
-                        result_room_type.append(resultdata_AC["設計一次エネルギー消費量[MJ/年]"] / Sf)
+                        result_room_type.append(result_data_AC["設計一次エネルギー消費量[MJ/年]"] / Sf)
 
         result.append(result_room_type)
 

@@ -324,16 +324,21 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
     ##----------------------------------------------------------------------------------
     ## 解説書 8.6 冷熱源排熱負荷
     ##----------------------------------------------------------------------------------
-    # qAC_ref_c_hr_d : 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての排熱負荷
+    # QAC_ref_c_hr_d : 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての排熱負荷
     # EAC_ref_c_hr_d : 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての主機の一次エネルギー消費量のうち排熱による削減可能量
 
     if npri_hr_c == None:
-        qAC_ref_c_hr_d = np.zeros(365)
+        QAC_ref_c_hr_d = np.zeros(365)
         EAC_ref_c_hr_d = np.zeros(365)
     else:
         # ゼロ除算が発生した場合、0とする。
-        qAC_ref_c_hr_d = np.nan_to_num(
-            EAC_ref_c_d * (np.sum(qac_link_c_j_rated) / np.sum(eac_link_c_j_rated)) * flink_d / fCOP_link_hr)
+        if eac_link_c_j_rated == 0 or fCOP_link_hr == 0:
+            QAC_ref_c_hr_d = 0
+
+        else:
+            QAC_ref_c_hr_d = np.nan_to_num(
+                EAC_ref_c_d * (np.sum(qac_link_c_j_rated) / np.sum(eac_link_c_j_rated)) * flink_d / fCOP_link_hr)
+        
         EAC_ref_c_hr_d = EAC_ref_c_d * flink_d
 
     ##----------------------------------------------------------------------------------
@@ -347,9 +352,9 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
 
     for dd in range(0, 365):
         if TAC_c_d[dd] > T_ST:
-            qhr_ac_c_d[dd] = qAC_ref_c_hr_d[dd] * T_ST / TAC_c_d[dd]
+            qhr_ac_c_d[dd] = QAC_ref_c_hr_d[dd] * T_ST / TAC_c_d[dd]
         else:
-            qhr_ac_c_d[dd] = qAC_ref_c_hr_d[dd]
+            qhr_ac_c_d[dd] = QAC_ref_c_hr_d[dd]
 
         if TAC_h_d[dd] > T_ST:
             qhr_ac_h_d[dd] = qAC_ref_h_hr_d[dd] * T_ST / TAC_h_d[dd]
@@ -450,10 +455,10 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
 
         if TAC_c_d[dd] <= Tcgs_d[dd]:
             EAC_ref_c_hr_on_d[dd] = EAC_ref_c_hr_d[dd]
-            qAC_ref_c_hr_on_d[dd] = qAC_ref_c_hr_d[dd]
+            qAC_ref_c_hr_on_d[dd] = QAC_ref_c_hr_d[dd]
         else:
             EAC_ref_c_hr_on_d[dd] = EAC_ref_c_hr_d[dd] * Tcgs_d[dd] / TAC_c_d[dd]
-            qAC_ref_c_hr_on_d[dd] = qAC_ref_c_hr_d[dd] * Tcgs_d[dd] / TAC_c_d[dd]
+            qAC_ref_c_hr_on_d[dd] = QAC_ref_c_hr_d[dd] * Tcgs_d[dd] / TAC_c_d[dd]
 
         if TAC_h_d[dd] <= Tcgs_d[dd]:
             EAC_ref_h_hr_on_d[dd] = EAC_ref_h_hr_d[dd]
@@ -730,7 +735,8 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
         result_json["年間排熱回収効率"] = 0
     else:
         result_json["年間発電効率"] = result_json["年間発電量"] * 3.6 / result_json["年間ガス消費量"] * 100  # 年間発電効率 [%]
-        result_json["年間排熱回収効率"] = result_json["年間排熱回収量"] / result_json["年間ガス消費量"] * 100  # 年間排熱回収効率 [%]
+        result_json["年間排熱回収効率"] = result_json["年間排熱回収量"] / result_json[
+            "年間ガス消費量"] * 100  # 年間排熱回収効率 [%]
 
     result_json["年間有効発電量"] = np.sum(Eee_cgs_d) / 1000  # 年間有効発電量 [%]
     result_json["年間有効排熱回収量"] = np.sum(qehr_cgs_d) / 1000  # 年間有効排熱回収量 [GJ]
@@ -739,7 +745,7 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
         result_json["有効総合効率"] = 0
     else:
         result_json["有効総合効率"] = (result_json["年間有効発電量"] * 3.6 + result_json["年間有効排熱回収量"]) / \
-                                     result_json["年間ガス消費量"] * 100  # 有効総合効率 [%]
+                                      result_json["年間ガス消費量"] * 100  # 有効総合効率 [%]
 
     result_json["年間一次エネルギー削減量(電力)"] = np.sum(Ee_red_d) / 1000  # 年間一次エネルギー削減量(電力) [GJ]
     result_json["年間一次エネルギー削減量(冷房)"] = np.sum(EAC_ref_c_red_d) / 1000  # 年間一次エネルギー削減量(冷房) [GJ]

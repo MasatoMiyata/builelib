@@ -16,6 +16,6 @@ if len(sys.argv) <= 2:
     raise Exception("引数が適切に指定されていません")
 else:
     exec_calculation = bool(sys.argv[1])  # 計算の実行 （True: 計算も行う、 False: 計算は行わない）
-    inputfile_name = str(sys.argv[2])  # 入力ファイル指定
+    input_file_name = str(sys.argv[2])  # 入力ファイル指定
     # 実行
-    builelib_run(exec_calculation, inputfile_name)
+    builelib_run(exec_calculation, input_file_name)
