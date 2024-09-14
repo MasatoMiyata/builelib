@@ -1563,7 +1563,6 @@ def make_data_from_v2_sheet(input_file_name):
 
             # 階と室名が空欄でない場合
             if (dataBL[0] != "") and (dataBL[1] != ""):
-                print(xlrd.XL_CELL_NUMBER)
                 # 数値で入力された室名を文字列に変換
                 if sheet_bl.cell_type(i, 1) == xlrd.XL_CELL_NUMBER:
                     dataBL[1] = str(int(sheet_bl.cell_value(i, 1)))
