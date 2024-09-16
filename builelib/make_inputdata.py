@@ -736,9 +736,9 @@ def make_json_from_v4_sheet(input_file_name):
                     "zyminus": set_default(str(data_be4[12]), None, "float"),
                     "info": set_default(data_be4[13], "無", "str"),
                 }
-
     ## 空調設備
     if "様式AC1" in wb.sheet_names():
+
 
         # シートの読み込み
         sheet_ac1 = wb.sheet_by_name("様式AC1")
@@ -770,10 +770,10 @@ def make_json_from_v4_sheet(input_file_name):
                     "info": str(data_ac1[9])
                 }
 
-    if "様式ac2" in wb.sheet_names():
+    if "様式AC2" in wb.sheet_names():
 
         # シートの読み込み
-        sheet_ac2 = wb.sheet_by_name("様式ac2")
+        sheet_ac2 = wb.sheet_by_name("様式AC2")
         # 初期化
         unit_key = None
         mode_key = None
@@ -1569,7 +1569,6 @@ def make_data_from_v2_sheet(input_file_name):
 
                 # 階＋室をkeyとする
                 room_key = str(dataBL[0]) + '_' + str(dataBL[1])
-
 
                 if room_key in data["rooms"]:
 

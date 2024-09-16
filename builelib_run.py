@@ -158,7 +158,6 @@ def builelib_run(exec_calculation, input_file_name):
             if input_data[
                 "air_conditioning_zone"
             ]:  # air_conditioning_zone が 空 でなければ
-
                 result_data_AC = airconditioning_webpro.calc_energy(
                     input_data, debug=False
                 )
