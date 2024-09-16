@@ -51,7 +51,7 @@
             }
         },
         "heat_source_system":{
-            "description": "様式ac2",
+            "description": "様式AC2",
             "type": "object",
             "additionalProperties":{
                 "$ref": "#/definitions/heat_source_system"

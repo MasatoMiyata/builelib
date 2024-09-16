@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import commons as bc
 
 # テンプレートファイルの保存場所
-template_directory = os.path.dirname(os.path.abspath(__file__)) + "/input_data/"
+template_directory = os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
 
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -354,7 +354,7 @@ def set_is_calculated_equipment(input):
     return isEquip
 
 
-def make_json_from_v4_sheet(inputfilename):
+def make_json_from_v4_sheet(input_file_name):
     """
     WEBPRO Ver4 用の入力シートから 入力データ（辞書型）を生成するプログラム
     """
@@ -373,7 +373,7 @@ def make_json_from_v4_sheet(inputfilename):
     #     print(validation)
 
     # 入力シートの読み込み
-    wb = xlrd.open_workbook(inputfilename)
+    wb = xlrd.open_workbook(input_file_name)
 
     # テンプレートjsonの読み込み
     with open(template_directory + 'template.json', 'r', encoding='utf-8') as f:
@@ -736,9 +736,9 @@ def make_json_from_v4_sheet(inputfilename):
                     "zyminus": set_default(str(data_be4[12]), None, "float"),
                     "info": set_default(data_be4[13], "無", "str"),
                 }
-
     ## 空調設備
     if "様式AC1" in wb.sheet_names():
+
 
         # シートの読み込み
         sheet_ac1 = wb.sheet_by_name("様式AC1")
@@ -770,10 +770,10 @@ def make_json_from_v4_sheet(inputfilename):
                     "info": str(data_ac1[9])
                 }
 
-    if "様式ac2" in wb.sheet_names():
+    if "様式AC2" in wb.sheet_names():
 
         # シートの読み込み
-        sheet_ac2 = wb.sheet_by_name("様式ac2")
+        sheet_ac2 = wb.sheet_by_name("様式AC2")
         # 初期化
         unit_key = None
         mode_key = None
@@ -1350,7 +1350,7 @@ def make_json_from_v4_sheet(inputfilename):
     return data, validation
 
 
-def make_jsondata_from_Ver2_sheet(inputfilename):
+def make_data_from_v2_sheet(input_file_name):
     """
     WEBPRO Ver2 用の入力シートから 入力データ（辞書型）を生成するプログラム
     """
@@ -1369,7 +1369,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
     #     print(validation)
 
     # 入力シートの読み込み
-    wb = xlrd.open_workbook(inputfilename)
+    wb = xlrd.open_workbook(input_file_name)
 
     # テンプレートjsonの読み込み
     with open(template_directory + 'template.json', 'r', encoding='utf-8') as f:
@@ -1433,7 +1433,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                 data["special_input_data"]["heat_source_performance"][ref_name][operation_mode]["熱源種類"] = dataSP2[3]
 
             # 「特性の種類」が空白でなければ。
-            if (dataSP2[4] != ""):
+            if dataSP2[4] != "":
 
                 curve_type = dataSP2[4]
 
@@ -1489,7 +1489,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                             None, 0, 100)
 
             # BL-2	都道府県 (選択)
-            data["building"]["building_address"]["Prefecture"] = \
+            data["building"]["building_address"]["prefecture"] = \
                 check_value(str(sheet_bl.cell(9, 3).value), "様式0.基本情報 10行目:「④都道府県」", False, None, "文字列",
                             None, 0, 100)
 
@@ -1540,7 +1540,6 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                             0, None)
 
         except:
-
             validation["error"].append("様式0.基本情報: 読み込み時に予期せぬエラーが発生しました。")
 
     # ----------------------------------
@@ -1548,7 +1547,6 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
     # （ Builelibでは、各設備のシートに記載された建物用途・室用途は使わず、様式1の情報を使う ）
     # ----------------------------------
     if "1) 室仕様" in wb.sheet_names():
-
         # シートの読み込み
         sheet_bl = wb.sheet_by_name("1) 室仕様")
         # 初期化
@@ -1565,9 +1563,8 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
 
             # 階と室名が空欄でない場合
             if (dataBL[0] != "") and (dataBL[1] != ""):
-
                 # 数値で入力された室名を文字列に変換
-                if sheet_bl.cell_type(i, 1) == xlrd.XL_CELL_number:
+                if sheet_bl.cell_type(i, 1) == xlrd.XL_CELL_NUMBER:
                     dataBL[1] = str(int(sheet_bl.cell_value(i, 1)))
 
                 # 階＋室をkeyとする
@@ -1686,7 +1683,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
             data_ac1 = sheet_ac1.row_values(i)
 
             # 数値で入力された室名を文字列に変換
-            if sheet_ac1.cell_type(i, 8) == xlrd.XL_CELL_number:
+            if sheet_ac1.cell_type(i, 8) == xlrd.XL_CELL_NUMBER:
                 data_ac1[8] = str(int(sheet_ac1.cell_value(i, 8)))
 
             # 階と室名が空欄でない場合
@@ -1709,11 +1706,12 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
                 else:
 
                     ahu_inside_load = check_value(data_ac1[9],
-                                                 "様式2-1.空調ゾーン " + str(i + 1) + "行目:「③空調機群名称（室負荷）」", True,
-                                                 None, "文字列", None, None, None)
+                                                  "様式2-1.空調ゾーン " + str(i + 1) + "行目:「③空調機群名称（室負荷）」",
+                                                  True,
+                                                  None, "文字列", None, None, None)
                     ahu_outdoor_load = check_value(data_ac1[10],
-                                                  "様式2-1.空調ゾーン " + str(i + 1) + "行目:「④空調機群名称（外気負荷）」",
-                                                  True, None, "文字列", None, None, None)
+                                                   "様式2-1.空調ゾーン " + str(i + 1) + "行目:「④空調機群名称（外気負荷）」",
+                                                   True, None, "文字列", None, None, None)
 
                     # 冷暖同時供給については、暫定で「無」を入れておく。後に再度判定。
                     data["air_conditioning_zone"][room_key] = {
@@ -2121,7 +2119,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
             dataBE1 = sheet_BE1.row_values(i)
 
             # 数値で入力された室名を文字列に変換
-            if sheet_BE1.cell_type(i, 1) == xlrd.XL_CELL_number:
+            if sheet_BE1.cell_type(i, 1) == xlrd.XL_CELL_NUMBER:
                 dataBE1[1] = str(int(sheet_BE1.cell_value(i, 1)))
 
             # 階と室名が空欄でない場合
@@ -3587,7 +3585,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
             dataV = sheet_V1.row_values(i)
 
             # 数値で入力された室名を文字列に変換
-            if sheet_V1.cell_type(i, 1) == xlrd.XL_CELL_number:
+            if sheet_V1.cell_type(i, 1) == xlrd.XL_CELL_NUMBER:
                 dataV[1] = str(int(sheet_V1.cell_value(i, 1)))
 
             # 階と室名が空欄でない場合
@@ -3836,7 +3834,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
             dataL = sheet_L.row_values(i)
 
             # 数値で入力された室名を文字列に変換
-            if sheet_L.cell_type(i, 1) == xlrd.XL_CELL_number:
+            if sheet_L.cell_type(i, 1) == xlrd.XL_CELL_NUMBER:
                 dataL[1] = str(int(sheet_L.cell_value(i, 1)))
 
             # 階と室名が空欄でない場合
@@ -3947,7 +3945,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
             dataHW1 = sheet_HW1.row_values(i)
 
             # 数値で入力された室名を文字列に変換
-            if sheet_HW1.cell_type(i, 1) == xlrd.XL_CELL_number:
+            if sheet_HW1.cell_type(i, 1) == xlrd.XL_CELL_NUMBER:
                 dataHW1[1] = str(int(sheet_HW1.cell_value(i, 1)))
 
             # 階と室名が空欄でない場合
@@ -4116,7 +4114,7 @@ def make_jsondata_from_Ver2_sheet(inputfilename):
             dataEV = sheet_EV.row_values(i)
 
             # 数値で入力された室名を文字列に変換
-            if sheet_EV.cell_type(i, 1) == xlrd.XL_CELL_number:
+            if sheet_EV.cell_type(i, 1) == xlrd.XL_CELL_NUMBER:
                 dataEV[1] = str(int(sheet_EV.cell_value(i, 1)))
 
             # 全角括弧と半角括弧の置換
@@ -4773,7 +4771,7 @@ if __name__ == '__main__':
     case_name = 'sample01_WEBPRO_inputSheet_for_Ver3.6_v2'
 
     # input_data, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
-    input_data, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
+    input_data, validation = make_data_from_v2_sheet(directory + case_name + ".xlsx")
 
     print(validation)
 
