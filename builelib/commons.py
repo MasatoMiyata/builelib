@@ -210,7 +210,7 @@ def get_room_usage_schedule(building_type, room_type, input_calendar={}):
     時刻別のスケジュールを読み込む関数（空調、その他）
     """
 
-    if RoomUsageSchedule[building_type][room_type]["空調運転パターン"] == None:  # 非空調であれば
+    if RoomUsageSchedule[building_type][room_type]["空調運転パターン"] is None:  # 非空調であれば
 
         room_schedule_room = np.zeros((365, 24))
         room_schedule_light = np.zeros((365, 24))

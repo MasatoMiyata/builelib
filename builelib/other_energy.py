@@ -106,7 +106,7 @@ def calc_energy(input_data, DEBUG=False):
                         room_schedule_oa_app[room_name] = np.array(
                             input_data["special_input_data"]["room_schedule"][room_name]["schedule"]["機器発熱密度比率"])
 
-        if room_heat_gain_oaapp[room_name] != None:
+        if room_heat_gain_oaapp[room_name] is not None:
 
             # 機器からの発熱（日積算）（365日分） [MJ/m2/day]
             result_json["E_other_room"][room_name]["room_heat_gain_daily"] = \
@@ -161,7 +161,7 @@ def calc_energy(input_data, DEBUG=False):
 
             # 各室のゾーンを検索
             for room_name in input_data["rooms"]:
-                if input_data["rooms"][room_name]["zone"] != None:  # ゾーンがあれば
+                if input_data["rooms"][room_name]["zone"] is not None:  # ゾーンがあれば
                     for zone_name in input_data["rooms"][room_name]["zone"]:  # ゾーン名を検索
                         if room_zone_name == (room_name + "_" + zone_name):
                             area_weighted_schedule_AC += room_schedule_room[room_name] * \
@@ -178,7 +178,7 @@ def calc_energy(input_data, DEBUG=False):
 
             # 各室のゾーンを検索
             for room_name in input_data["rooms"]:
-                if input_data["rooms"][room_name]["zone"] != None:  # ゾーンがあれば
+                if input_data["rooms"][room_name]["zone"] is not None:  # ゾーンがあれば
                     for zone_name in input_data["rooms"][room_name]["zone"]:  # ゾーン名を検索
                         if room_zone_name == (room_name + "_" + zone_name):
                             area_weighted_schedule_LT += room_schedule_light[room_name] * \

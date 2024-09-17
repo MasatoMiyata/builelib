@@ -433,7 +433,7 @@ def calc_energy(input_data, DEBUG=False):
         input_data["hot_water_supply_systems"][unit_name]["qs_solar_gain"] = np.zeros(365)
 
         if (input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] != "") and (
-                input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] != None):
+                input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] is not None):
             # 日積算日射量 [Wh/m2/day]
             Id, _, Is, _ = climate.solar_radiation_by_azimuth( \
                 input_data["hot_water_supply_systems"][unit_name]["solar_system_direction"], \
@@ -460,7 +460,7 @@ def calc_energy(input_data, DEBUG=False):
 
         input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"] = np.zeros(365)
 
-        if input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] == None:
+        if input_data["hot_water_supply_systems"][unit_name]["solar_system_area"] is None:
 
             # 太陽熱利用が無い場合
             input_data["hot_water_supply_systems"][unit_name]["qh_eqp_daily"] = \

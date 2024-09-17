@@ -18,7 +18,7 @@ def set_room_indexCoeff(room_index):
     室の形状に応じて定められる係数（仕様書4.4）
     '''
 
-    if (room_index == "") or (room_index == None):
+    if (room_index == "") or (room_index is None):
         room_indexCoeff = 1
     else:
         if room_index < 0:
@@ -103,11 +103,11 @@ def calc_energy(input_data, DEBUG=False):
 
         ## 室の形状に応じて定められる係数（仕様書4.4）
         # 室指数
-        if input_data["lighting_systems"][room_zone_name]["room_index"] != None:
+        if input_data["lighting_systems"][room_zone_name]["room_index"] is not None:
             room_index = input_data["lighting_systems"][room_zone_name]["room_index"]
-        elif input_data["lighting_systems"][room_zone_name]["room_width"] != None and \
-                input_data["lighting_systems"][room_zone_name]["room_depth"] != None and \
-                input_data["lighting_systems"][room_zone_name]["unit_height"] != None:
+        elif input_data["lighting_systems"][room_zone_name]["room_width"] is not None and \
+                input_data["lighting_systems"][room_zone_name]["room_depth"] is not None and \
+                input_data["lighting_systems"][room_zone_name]["unit_height"] is not None:
             if input_data["lighting_systems"][room_zone_name]["room_width"] > 0 and \
                     input_data["lighting_systems"][room_zone_name]["room_depth"] > 0 and \
                     input_data["lighting_systems"][room_zone_name]["unit_height"] > 0:

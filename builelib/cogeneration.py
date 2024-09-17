@@ -327,7 +327,7 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
     # QAC_ref_c_hr_d : 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての排熱負荷
     # EAC_ref_c_hr_d : 日付dにおけるCGSの排熱利用が可能な排熱投入型吸収式冷温水機(系統)の冷熱源としての主機の一次エネルギー消費量のうち排熱による削減可能量
 
-    if npri_hr_c == None:
+    if npri_hr_c is None:
         QAC_ref_c_hr_d = np.zeros(365)
         EAC_ref_c_hr_d = np.zeros(365)
     else:
@@ -393,7 +393,7 @@ def calc_energy(input_data, result_json_for_cgs, DEBUG=False):
         c = Ee_total_d[dd] * feope_R[dd] * (1 + fesub_CGS)
         d = Ecgs_rated * feopeMn
 
-        if npri_hr_c == None and npri_hr_h == None:  # 給湯のみ排熱利用がされる場合（2020/06/13追加）
+        if npri_hr_c is None and npri_hr_h is None:  # 給湯のみ排熱利用がされる場合（2020/06/13追加）
 
             if (a * b >= T_ST) and (c / d >= T_ST):
 

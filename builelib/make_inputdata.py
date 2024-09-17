@@ -222,15 +222,15 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
     """
 
     # 必須項目のチェック
-    if required and (input_data == "") and (default == None):
+    if required and (input_data == "") and (default is None):
 
         validation["error"].append(item_name + "が入力されていません。必須項目です。")
 
-    elif (required == False) and (input_data == "") and (default == None) and (data_type == "数値"):
+    elif (required == False) and (input_data == "") and (default is None) and (data_type == "数値"):
 
         input_data = None
 
-    elif (required == False) and (input_data == "") and (default == None) and (data_type == "文字列"):
+    elif (required == False) and (input_data == "") and (default is None) and (data_type == "文字列"):
 
         input_data = None
 
@@ -249,7 +249,7 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
     else:
 
         # 空欄チェック
-        if (default != None) and (input_data == ""):
+        if (default is not None) and (input_data == ""):
             input_data = default
             if type(default) is str:
                 if input_data != "無":
@@ -258,7 +258,7 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
                 validation["warning"].append(item_name + "が空欄であったため、デフォルト値 " + str(default) + " を使用しました。")
 
         # 型チェック
-        if data_type != None and (input_data != ""):
+        if data_type is not None and (input_data != ""):
             if data_type == "文字列":
                 input_data = str(input_data)
             elif data_type == "数値":
@@ -276,13 +276,13 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
                 raise Exception('データ型の指定が不正です')
 
         # 選択肢チェック
-        if options != None:
+        if options is not None:
             if (input_data != "") and type(input_data) is str:
                 if input_data not in options:
                     validation["error"].append(item_name + "の入力が不正です。選択肢から正しく選択（もしくは転記）してください。")
 
         # 閾値チェック（下限）
-        if lower_limit != None:
+        if lower_limit is not None:
             if (input_data != "") and type(input_data) is str:
                 if len(input_data) < float(lower_limit):
                     validation["error"].append(item_name + "の文字数が下限(" + str(lower_limit) + "文字）を下回っています。")
@@ -291,7 +291,7 @@ def check_value(input_data, item_name, required=False, default=None, data_type=N
                     validation["error"].append(item_name + "の値が下限(" + str(lower_limit) + "）を下回っています。")
 
         # 閾値チェック（上限）
-        if upper_limit != None:
+        if upper_limit is not None:
             if (input_data != "") and type(input_data) is str:
                 if len(input_data) > float(upper_limit):
                     validation["error"].append(item_name + "の文字数が上限(" + str(upper_limit) + "文字）を超えています。")
@@ -4056,9 +4056,9 @@ def make_data_from_v2_sheet(input_file_name):
                     efficiency = check_value(datahW2[3], "様式5-2.給湯機器 " + str(i + 1) + "行目:「④熱源効率」", True,
                                              None, "数値", None, 0, None)
 
-                    if rated_capacity == None or rated_capacity == "":
+                    if rated_capacity is None or rated_capacity == "":
                         rated_fuel_consumption = None
-                    elif efficiency == None or efficiency == "" or efficiency <= 0:
+                    elif efficiency is None or efficiency == "" or efficiency <= 0:
                         rated_fuel_consumption = None
                     else:
                         rated_fuel_consumption = rated_capacity / efficiency
@@ -4369,7 +4369,7 @@ def make_data_from_v2_sheet(input_file_name):
 
             # 重複をチェックする。ただし、空欄の重複は許可する。
             if check_duplicates(list(filter(
-                    lambda x: x != None and x != "", [
+                    lambda x: x is not None and x != "", [
                         data["cogeneration_systems"][csg_system]["heat_recovery_priority_cooling"],
                         data["cogeneration_systems"][csg_system]["heat_recovery_priority_heating"],
                         data["cogeneration_systems"][csg_system]["heat_recovery_priority_hot_water"]
