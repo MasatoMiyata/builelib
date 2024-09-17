@@ -127,10 +127,10 @@ def calc_energy(input_data, debug=False):
     # 他人から供給された熱の一次エネルギー換算係数（デフォルト）
     # ----------------------------------------------------------------------------------
 
-    if input_data["building"]["coefficient_dhc"]["cooling"] == None:
+    if input_data["building"]["coefficient_dhc"]["cooling"] is None:
         input_data["building"]["coefficient_dhc"]["cooling"] = 1.36
 
-    if input_data["building"]["coefficient_dhc"]["heating"] == None:
+    if input_data["building"]["coefficient_dhc"]["heating"] is None:
         input_data["building"]["coefficient_dhc"]["heating"] = 1.36
 
     # ----------------------------------------------------------------------------------
@@ -248,7 +248,7 @@ def calc_energy(input_data, debug=False):
 
             # 各室のゾーンを検索
             for room_name in input_data["rooms"]:
-                if input_data["rooms"][room_name]["zone"] != None:  # ゾーンがあれば
+                if input_data["rooms"][room_name]["zone"] is not None:  # ゾーンがあれば
                     for zone_name in input_data["rooms"][room_name]["zone"]:  # ゾーン名を検索
                         if room_zone_name == (room_name + "_" + zone_name):
                             input_data["air_conditioning_zone"][room_zone_name]["building_type"] = \
@@ -344,7 +344,7 @@ def calc_energy(input_data, debug=False):
                 else:  # 断熱材種類が「無」以外、もしくは、熱伝導率が直接入力されている場合
 
                     # 熱伝導率の指定がない場合は「断熱材種類」から推定
-                    if input_data["wall_configure"][wall_name]["conductivity"] == None:
+                    if input_data["wall_configure"][wall_name]["conductivity"] is None:
                         input_data["wall_configure"][wall_name]["conductivity"] = \
                             float(heat_thermal_conductivity_model[input_data["wall_configure"][wall_name]["material_id"]])
 
@@ -367,7 +367,7 @@ def calc_energy(input_data, debug=False):
                 for layer in enumerate(input_data["wall_configure"][wall_name]["layers"]):
 
                     # 熱伝導率が空欄である場合、建材名称から熱伝導率を見出す。
-                    if layer[1]["conductivity"] == None:
+                    if layer[1]["conductivity"] is None:
 
                         if (layer[1]["material_id"] == "密閉中空層") or (layer[1]["material_id"] == "非密閉中空層"):
 
@@ -377,7 +377,7 @@ def calc_energy(input_data, debug=False):
                         else:
 
                             # 空気層以外の断熱材を指定している場合
-                            if layer[1]["thickness"] != None:
+                            if layer[1]["thickness"] is not None:
                                 material_name = layer[1]["material_id"].replace('\u3000', '')
                                 r_value += (layer[1]["thickness"] / 1000) / heat_thermal_conductivity[material_name][
                                     "熱伝導率"]
@@ -505,8 +505,8 @@ def calc_energy(input_data, debug=False):
                 # ブラインド込みの値を計算
                 dR = 0
 
-                if input_data["window_configure"][window_name]["glassu_value"] == None or \
-                        input_data["window_configure"][window_name]["glassi_value"] == None:
+                if input_data["window_configure"][window_name]["glassu_value"] is None or \
+                        input_data["window_configure"][window_name]["glassi_value"] is None:
 
                     input_data["window_configure"][window_name]["u_value_blind"] = \
                     input_data["window_configure"][window_name]["windowu_value"]
@@ -541,14 +541,14 @@ def calc_energy(input_data, debug=False):
         for wall_id, wall_configure in enumerate(input_data["envelope_set"][room_zone_name]["wall_list"]):
 
             if input_data["envelope_set"][room_zone_name]["wall_list"][wall_id][
-                "envelope_area"] == None:  # 外皮面積が空欄であれば、外皮の寸法から面積を計算。
+                "envelope_area"] is None:  # 外皮面積が空欄であれば、外皮の寸法から面積を計算。
 
                 input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["envelope_area"] = \
                     wall_configure["envelope_width"] * wall_configure["envelope_height"]
 
     # 窓面積の算出
     for window_id in input_data["window_configure"]:
-        if input_data["window_configure"][window_id]["window_area"] == None:  # 窓面積が空欄であれば、窓寸法から面積を計算。
+        if input_data["window_configure"][window_id]["window_area"] is None:  # 窓面積が空欄であれば、窓寸法から面積を計算。
             input_data["window_configure"][window_id]["window_area"] = \
                 input_data["window_configure"][window_id]["window_width"] * input_data["window_configure"][window_id][
                     "window_height"]
@@ -633,8 +633,8 @@ def calc_energy(input_data, debug=False):
 
                     else:
 
-                        if input_data["shading_config"][window_configure["eaves_id"]]["shading_effect_C"] != None and \
-                                input_data["shading_config"][window_configure["eaves_id"]]["shading_effect_h"] != None:
+                        if input_data["shading_config"][window_configure["eaves_id"]]["shading_effect_C"] is not None and \
+                                input_data["shading_config"][window_configure["eaves_id"]]["shading_effect_h"] is not None:
 
                             input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"][window_id][
                                 "shading_effect_C"] = \
@@ -1065,18 +1065,18 @@ def calc_energy(input_data, debug=False):
         input_data["air_handling_system"][ahu_name]["rated_capacity_cooling"] = 0
         input_data["air_handling_system"][ahu_name]["rated_capacity_heating"] = 0
         for unit_id, unit_configure in enumerate(input_data["air_handling_system"][ahu_name]["air_handling_unit"]):
-            if unit_configure["rated_capacity_cooling"] != None:
+            if unit_configure["rated_capacity_cooling"] is not None:
                 input_data["air_handling_system"][ahu_name]["rated_capacity_cooling"] += \
                     unit_configure["rated_capacity_cooling"] * unit_configure["number"]
 
-            if unit_configure["rated_capacity_heating"] != None:
+            if unit_configure["rated_capacity_heating"] is not None:
                 input_data["air_handling_system"][ahu_name]["rated_capacity_heating"] += \
                     unit_configure["rated_capacity_heating"] * unit_configure["number"]
 
         # 送風機単体の定格消費電力（解説書 2.5.8） [kW]
         for unit_id, unit_configure in enumerate(input_data["air_handling_system"][ahu_name]["air_handling_unit"]):
             input_data["air_handling_system"][ahu_name]["air_handling_unit"][unit_id]["fan_power_consumption_total"] = 0
-            if unit_configure["fan_power_consumption"] != None:
+            if unit_configure["fan_power_consumption"] is not None:
                 # 送風機の定格消費電力 kW = 1台あたりの消費電力 kW × 台数
                 input_data["air_handling_system"][ahu_name]["air_handling_unit"][unit_id]["fan_power_consumption_total"] = \
                     unit_configure["fan_power_consumption"] * unit_configure["number"]
@@ -1084,7 +1084,7 @@ def calc_energy(input_data, debug=False):
         # 空調機の風量 [m3/h]
         input_data["air_handling_system"][ahu_name]["fan_air_volume"] = 0
         for unit_id, unit_configure in enumerate(input_data["air_handling_system"][ahu_name]["air_handling_unit"]):
-            if unit_configure["fan_air_volume"] != None:
+            if unit_configure["fan_air_volume"] is not None:
                 input_data["air_handling_system"][ahu_name]["fan_air_volume"] += \
                     unit_configure["fan_air_volume"] * unit_configure["number"]
 
@@ -1094,8 +1094,8 @@ def calc_energy(input_data, debug=False):
         for unit_id, unit_configure in enumerate(input_data["air_handling_system"][ahu_name]["air_handling_unit"]):
 
             # 冷房の効率
-            if unit_configure["air_heat_exchange_ratio_cooling"] != None:
-                if input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_cooling"] == None:
+            if unit_configure["air_heat_exchange_ratio_cooling"] is not None:
+                if input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_cooling"] is None:
                     input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_cooling"] = unit_configure[
                         "air_heat_exchange_ratio_cooling"]
                 elif input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_cooling"] > unit_configure[
@@ -1104,8 +1104,8 @@ def calc_energy(input_data, debug=False):
                         "air_heat_exchange_ratio_cooling"]
 
             # 暖房の効率
-            if unit_configure["air_heat_exchange_ratio_heating"] != None:
-                if input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"] == None:
+            if unit_configure["air_heat_exchange_ratio_heating"] is not None:
+                if input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"] is None:
                     input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"] = unit_configure[
                         "air_heat_exchange_ratio_heating"]
                 elif input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"] > unit_configure[
@@ -1116,23 +1116,23 @@ def calc_energy(input_data, debug=False):
         # 全熱交換器のバイパス制御の有無（1つでもあればバイパス制御「有」とする）
         input_data["air_handling_system"][ahu_name]["air_heat_exchanger_control"] = "無"
         for unit_id, unit_configure in enumerate(input_data["air_handling_system"][ahu_name]["air_handling_unit"]):
-            if (unit_configure["air_heat_exchange_ratio_cooling"] != None) and (
-                    unit_configure["air_heat_exchange_ratio_heating"] != None):
+            if (unit_configure["air_heat_exchange_ratio_cooling"] is not None) and (
+                    unit_configure["air_heat_exchange_ratio_heating"] is not None):
                 if unit_configure["air_heat_exchanger_control"] == "有":
                     input_data["air_handling_system"][ahu_name]["air_heat_exchanger_control"] = "有"
 
         # 全熱交換器の消費電力 [kW]
         input_data["air_handling_system"][ahu_name]["air_heat_exchanger_power_consumption"] = 0
         for unit_id, unit_configure in enumerate(input_data["air_handling_system"][ahu_name]["air_handling_unit"]):
-            if unit_configure["air_heat_exchanger_power_consumption"] != None:
+            if unit_configure["air_heat_exchanger_power_consumption"] is not None:
                 input_data["air_handling_system"][ahu_name]["air_heat_exchanger_power_consumption"] += \
                     unit_configure["air_heat_exchanger_power_consumption"] * unit_configure["number"]
 
         # 全熱交換器の風量 [m3/h]
         input_data["air_handling_system"][ahu_name]["air_heat_exchanger_air_volume"] = 0
         for unit_id, unit_configure in enumerate(input_data["air_handling_system"][ahu_name]["air_handling_unit"]):
-            if (unit_configure["air_heat_exchange_ratio_cooling"] != None) and (
-                    unit_configure["air_heat_exchange_ratio_heating"] != None):
+            if (unit_configure["air_heat_exchange_ratio_cooling"] is not None) and (
+                    unit_configure["air_heat_exchange_ratio_heating"] is not None):
                 input_data["air_handling_system"][ahu_name]["air_heat_exchanger_air_volume"] += \
                     unit_configure["fan_air_volume"] * unit_configure["number"]
 
@@ -1347,7 +1347,7 @@ def calc_energy(input_data, debug=False):
     for ahu_name in input_data["air_handling_system"]:
 
         # 冷房運転時の補正
-        if input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_cooling"] != None:
+        if input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_cooling"] is not None:
             ahu_aex_eff = input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_cooling"] / 100
             aex_ceff = 1 - ((1 / 0.85) - 1) * (1 - ahu_aex_eff) / ahu_aex_eff
             aex_ctol = 0.95
@@ -1356,7 +1356,7 @@ def calc_energy(input_data, debug=False):
                 ahu_aex_eff * aex_ceff * aex_ctol * aex_cbal
 
         # 暖房運転時の補正
-        if input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"] != None:
+        if input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"] is not None:
             ahu_aex_eff = input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"] / 100
             aex_ceff = 1 - ((1 / 0.85) - 1) * (1 - ahu_aex_eff) / ahu_aex_eff
             aex_ctol = 0.95
@@ -1388,7 +1388,7 @@ def calc_energy(input_data, debug=False):
 
                             # 外気負荷の算出
                         if input_data["air_handling_system"][ahu_name][
-                            "air_heat_exchange_ratio_heating"] == None:  # 全熱交換器がない場合
+                            "air_heat_exchange_ratio_heating"] is None:  # 全熱交換器がない場合
 
                             result_json["ahu"][ahu_name]["Qoa_hourly"][dd][hh] = \
                                 (result_json["ahu"][ahu_name]["hoa_hourly"][dd][hh] -
@@ -1432,7 +1432,7 @@ def calc_energy(input_data, debug=False):
 
                         # 外気負荷の算出
                         if input_data["air_handling_system"][ahu_name][
-                            "air_heat_exchange_ratio_cooling"] == None:  # 全熱交換器がない場合
+                            "air_heat_exchange_ratio_cooling"] is None:  # 全熱交換器がない場合
 
                             result_json["ahu"][ahu_name]["Qoa_hourly"][dd][hh] = \
                                 (result_json["ahu"][ahu_name]["hoa_hourly"][dd][hh] -
@@ -1661,7 +1661,7 @@ def calc_energy(input_data, debug=False):
                 a1 = flow_control[unit_configure["fan_control_type"]]["a1"]
                 a0 = flow_control[unit_configure["fan_control_type"]]["a0"]
 
-                if unit_configure["fan_min_opening_rate"] == None:
+                if unit_configure["fan_min_opening_rate"] is None:
                     Vmin = 1
                 else:
                     Vmin = unit_configure["fan_min_opening_rate"] / 100
@@ -1756,10 +1756,10 @@ def calc_energy(input_data, debug=False):
     number = 0
     for ahu_name in input_data["air_handling_system"]:
 
-        if input_data["air_handling_system"][ahu_name]["pump_cooling"] == None:
-            input_data["air_handling_system"][ahu_name]["pump_cooling"] = "dummypump_" + str(number)
+        if input_data["air_handling_system"][ahu_name]["pump_cooling"] is None:
+            input_data["air_handling_system"][ahu_name]["pump_cooling"] = "dummy_pump_" + str(number)
 
-            input_data["secondary_pump_system"]["dummypump_" + str(number)] = {
+            input_data["secondary_pump_system"]["dummy_pump_" + str(number)] = {
                 "冷房": {
                     "temperature_difference": 0,
                     "is_staging_control": "無",
@@ -1777,10 +1777,10 @@ def calc_energy(input_data, debug=False):
 
             number += 1
 
-        if input_data["air_handling_system"][ahu_name]["pump_heating"] == None:
-            input_data["air_handling_system"][ahu_name]["pump_heating"] = "dummypump_" + str(number)
+        if input_data["air_handling_system"][ahu_name]["pump_heating"] is None:
+            input_data["air_handling_system"][ahu_name]["pump_heating"] = "dummy_pump_" + str(number)
 
-            input_data["secondary_pump_system"]["dummypump_" + str(number)] = {
+            input_data["secondary_pump_system"]["dummy_pump_" + str(number)] = {
                 "暖房": {
                     "temperature_difference": 0,
                     "is_staging_control": "無",
@@ -1877,7 +1877,7 @@ def calc_energy(input_data, debug=False):
                 input_data["pump"][pump_name]["secondary_pump"][unit_id]["control_type"])
 
             # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
-            if unit_configure["min_opening_rate"] == None or np.isnan(unit_configure["min_opening_rate"]) == True:
+            if unit_configure["min_opening_rate"] is None or np.isnan(unit_configure["min_opening_rate"]) == True:
                 input_data["pump"][pump_name]["min_opening_rate"] = 100
             elif input_data["pump"][pump_name]["min_opening_rate"] > unit_configure["min_opening_rate"]:
                 input_data["pump"][pump_name]["min_opening_rate"] = unit_configure["min_opening_rate"]
@@ -3577,13 +3577,13 @@ def calc_energy(input_data, debug=False):
         for cgs_name in input_data["cogeneration_systems"]:
 
             # 排熱を冷房に使用するか否か
-            if input_data["cogeneration_systems"][cgs_name]["cooling_system"] == None:
+            if input_data["cogeneration_systems"][cgs_name]["cooling_system"] is None:
                 cgs_cooling = False
             else:
                 cgs_cooling = True
 
             # 排熱を暖房に使用するか否か
-            if input_data["cogeneration_systems"][cgs_name]["heating_system"] == None:
+            if input_data["cogeneration_systems"][cgs_name]["heating_system"] is None:
                 cgs_heating = False
             else:
                 cgs_heating = True

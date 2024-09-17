@@ -198,9 +198,9 @@ def calc_energy(input_data, DEBUG=False):
     for unit_id, iunit in input_data["ventilation_unit"].items():
 
         # 電動機定格出力[kW]から消費電力[kW]を計算（1台あたり、制御なし）
-        if iunit["power_consumption"] != None:
+        if iunit["power_consumption"] is not None:
             Ekw = iunit["power_consumption"]
-        elif iunit["motor_rated_power"] != None:
+        elif iunit["motor_rated_power"] is not None:
             Ekw = iunit["motor_rated_power"] / 0.75
         else:
             raise Exception('Error!')

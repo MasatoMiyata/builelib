@@ -19,7 +19,7 @@ def calcQuarticCurve(dataSetALL, T, cw):
     # 冷却水温度 cw に該当するパラメータリストのみを抽出する。
     dataSet = list()
 
-    if dataSetALL[0]["冷却水温度下限"] != None:
+    if dataSetALL[0]["冷却水温度下限"] is not None:
 
         # 下限値の小さい順に並び替え
         dataSetALL = sorted(dataSetALL, key=lambda x: x['冷却水温度下限'], reverse=False)

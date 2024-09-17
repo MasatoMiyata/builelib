@@ -117,7 +117,7 @@ def calc_energy(input_data, DEBUG=False):
 
         # 気象データの読み込み（日射量は MJ/m2h）
         if climate_data_file[input_data["building"]["region"] + "地域"][
-            input_data["building"]["annual_solar_region"]] != None:
+            input_data["building"]["annual_solar_region"]] is not None:
             [tout, iod, ios, sun_altitude, sun_azimuth] = \
                 climate.read_csv_climate_data(
                     climate_data_directory + climate_data_file[input_data["building"]["region"] + "地域"][
@@ -201,7 +201,7 @@ def calc_energy(input_data, DEBUG=False):
             alpha_p_max = -0.0020  # 太陽電池アレイの最大出力温度係数
 
         # インバータ回路補正係数
-        if input_data["photovoltaic_systems"][system_name]["power_conditioner_efficiency"] == None:
+        if input_data["photovoltaic_systems"][system_name]["power_conditioner_efficiency"] is None:
             K_in = 0.927 * 0.97  # デフォルト値変更
         else:
             K_in = input_data["photovoltaic_systems"][system_name]["power_conditioner_efficiency"] * 0.97

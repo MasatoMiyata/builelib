@@ -68,7 +68,7 @@ def calc_U_value_old(input_data, heat_thermal_conductivity, heat_thermal_conduct
 
             else:
                 # 空気層以外の断熱材を指定している場合
-                if layer[1]["thickness"] != None:
+                if layer[1]["thickness"] is not None:
                     material_name = layer[1]["material_id"].replace("\u3000", "")
                     r_value += (layer[1]["thickness"] / 1000) / heat_thermal_conductivity[
                         material_name
@@ -415,7 +415,7 @@ def calc_energy(
 
             # 各室のゾーンを検索
             for room_name in input_data["rooms"]:
-                if input_data["rooms"][room_name]["zone"] != None:  # ゾーンがあれば
+                if input_data["rooms"][room_name]["zone"] is not None:  # ゾーンがあれば
                     for zone_name in input_data["rooms"][room_name][
                         "zone"
                     ]:  # ゾーン名を検索
@@ -467,10 +467,10 @@ def calc_energy(
             "q_window_temperature": np.zeros(365),  # 窓からの温度差による熱取得 [W/m2]
             "q_window_sunshade": np.zeros(365),  # 窓からの日射による熱取得 [W/m2]
             "q_window_night": np.zeros(365),  # 窓からの夜間放射による熱取得（マイナス）[W/m2]
-            "q_roomDc": np.zeros(365),  # 冷房熱取得（日積算）　[MJ/day]
-            "q_roomDh": np.zeros(365),  # 暖房熱取得（日積算）　[MJ/day]
-            "q_roomhc": np.zeros((365, 24)),  # 冷房熱取得（時刻別）　[MJ/h]
-            "q_roomhh": np.zeros((365, 24)),  # 暖房熱取得（時刻別）　[MJ/h]
+            "q_room_dc": np.zeros(365),  # 冷房熱取得（日積算）　[MJ/day]
+            "q_room_dh": np.zeros(365),  # 暖房熱取得（日積算）　[MJ/day]
+            "q_room_hc": np.zeros((365, 24)),  # 冷房熱取得（時刻別）　[MJ/h]
+            "q_room_hh": np.zeros((365, 24)),  # 暖房熱取得（時刻別）　[MJ/h]
         }
 
     ##----------------------------------------------------------------------------------
@@ -566,19 +566,19 @@ def calc_energy(
         for dd in range(0, 365):
 
             # 日別の運転時間 [h]
-            daily_opetime = sum(room_schedule_room[room_zone_name][dd])
+            daily_ope_time = sum(room_schedule_room[room_zone_name][dd])
 
             for hh in range(0, 24):
                 if room_schedule_room[room_zone_name][dd][hh] > 0:
                     # 冷房熱取得
-                    result_json["q_room"][room_zone_name]["q_roomhc"][dd][hh] = (
-                            result_json["q_room"][room_zone_name]["q_roomDc"][dd]
-                            / daily_opetime
+                    result_json["q_room"][room_zone_name]["q_room_hc"][dd][hh] = (
+                            result_json["q_room"][room_zone_name]["q_room_dc"][dd]
+                            / daily_ope_time
                     )
                     # 暖房熱取得
-                    result_json["q_room"][room_zone_name]["q_roomhh"][dd][hh] = (
-                            result_json["q_room"][room_zone_name]["q_roomDh"][dd]
-                            / daily_opetime
+                    result_json["q_room"][room_zone_name]["q_room_hh"][dd][hh] = (
+                            result_json["q_room"][room_zone_name]["q_room_dh"][dd]
+                            / daily_ope_time
                     )
 
     ##----------------------------------------------------------------------------------
@@ -600,10 +600,10 @@ def calc_energy(
         )
 
         result_json["q_room"][room_zone_name]["年間室負荷（冷房）[MJ]"] = np.sum(
-            result_json["q_room"][room_zone_name]["q_roomDc"]
+            result_json["q_room"][room_zone_name]["q_room_dc"]
         )
         result_json["q_room"][room_zone_name]["年間室負荷（暖房）[MJ]"] = np.sum(
-            result_json["q_room"][room_zone_name]["q_roomDh"]
+            result_json["q_room"][room_zone_name]["q_room_dh"]
         )
         result_json["q_room"][room_zone_name]["平均室負荷（冷房）[W/m2]"] = (
                 result_json["q_room"][room_zone_name]["年間室負荷（冷房）[MJ]"]
@@ -728,24 +728,24 @@ def calc_energy(
         for unit_id, unit_configure in enumerate(
                 input_data["air_handling_system"][ahu_name]["air_handling_unit"]
         ):
-            if unit_configure["rated_capacity_cooling"] != None:
+            if unit_configure["rated_capacity_cooling"] is not None:
                 input_data["air_handling_system"][ahu_name]["rated_capacity_cooling"] += (
                         unit_configure["rated_capacity_cooling"] * unit_configure["number"]
                 )
 
-            if unit_configure["rated_capacity_heating"] != None:
+            if unit_configure["rated_capacity_heating"] is not None:
                 input_data["air_handling_system"][ahu_name]["rated_capacity_heating"] += (
                         unit_configure["rated_capacity_heating"] * unit_configure["number"]
                 )
 
         # 空調機の風量 [m3/h]
-        input_data["air_handling_system"][ahu_name]["FanAirVolume"] = 0
+        input_data["air_handling_system"][ahu_name]["fan_air_volume"] = 0
         for unit_id, unit_configure in enumerate(
                 input_data["air_handling_system"][ahu_name]["air_handling_unit"]
         ):
-            if unit_configure["FanAirVolume"] != None:
-                input_data["air_handling_system"][ahu_name]["FanAirVolume"] += (
-                        unit_configure["FanAirVolume"] * unit_configure["number"]
+            if unit_configure["fan_air_volume"] is not None:
+                input_data["air_handling_system"][ahu_name]["fan_air_volume"] += (
+                        unit_configure["fan_air_volume"] * unit_configure["number"]
                 )
 
         # 全熱交換器の効率（一番低いものを採用）
@@ -756,12 +756,11 @@ def calc_energy(
         ):
 
             # 冷房の効率
-            if unit_configure["air_heat_exchange_ratio_cooling"] != None:
+            if unit_configure["air_heat_exchange_ratio_cooling"] is not None:
                 if (
                         input_data["air_handling_system"][ahu_name][
                             "air_heat_exchange_ratio_cooling"
-                        ]
-                        == None
+                        ] is None
                 ):
                     input_data["air_handling_system"][ahu_name][
                         "air_heat_exchange_ratio_cooling"
@@ -777,12 +776,12 @@ def calc_energy(
                     ] = unit_configure["air_heat_exchange_ratio_cooling"]
 
             # 暖房の効率
-            if unit_configure["air_heat_exchange_ratio_heating"] != None:
+            if unit_configure["air_heat_exchange_ratio_heating"] is not None:
                 if (
                         input_data["air_handling_system"][ahu_name][
                             "air_heat_exchange_ratio_heating"
                         ]
-                        == None
+                        is None
                 ):
                     input_data["air_handling_system"][ahu_name][
                         "air_heat_exchange_ratio_heating"
@@ -802,8 +801,8 @@ def calc_energy(
         for unit_id, unit_configure in enumerate(
                 input_data["air_handling_system"][ahu_name]["air_handling_unit"]
         ):
-            if (unit_configure["air_heat_exchange_ratio_cooling"] != None) and (
-                    unit_configure["air_heat_exchange_ratio_heating"] != None
+            if (unit_configure["air_heat_exchange_ratio_cooling"] is not None) and (
+                    unit_configure["air_heat_exchange_ratio_heating"] is not None
             ):
                 if unit_configure["air_heat_exchanger_control"] == "有":
                     input_data["air_handling_system"][ahu_name][
@@ -815,7 +814,7 @@ def calc_energy(
         for unit_id, unit_configure in enumerate(
                 input_data["air_handling_system"][ahu_name]["air_handling_unit"]
         ):
-            if unit_configure["air_heat_exchanger_power_consumption"] != None:
+            if unit_configure["air_heat_exchanger_power_consumption"] is not None:
                 input_data["air_handling_system"][ahu_name][
                     "air_heat_exchanger_power_consumption"
                 ] += (
@@ -828,12 +827,12 @@ def calc_energy(
         for unit_id, unit_configure in enumerate(
                 input_data["air_handling_system"][ahu_name]["air_handling_unit"]
         ):
-            if (unit_configure["air_heat_exchange_ratio_cooling"] != None) and (
-                    unit_configure["air_heat_exchange_ratio_heating"] != None
+            if (unit_configure["air_heat_exchange_ratio_cooling"] is not None) and (
+                    unit_configure["air_heat_exchange_ratio_heating"] is not None
             ):
                 input_data["air_handling_system"][ahu_name][
                     "air_heat_exchanger_air_volume"
-                ] += (unit_configure["FanAirVolume"] * unit_configure["number"])
+                ] += (unit_configure["fan_air_volume"] * unit_configure["number"])
 
     ##----------------------------------------------------------------------------------
     ## 二次ポンプ群の一次エネルギー消費量（解説書 2.6）
@@ -843,20 +842,20 @@ def calc_energy(
     number = 0
     for ahu_name in input_data["air_handling_system"]:
 
-        if input_data["air_handling_system"][ahu_name]["pump_cooling"] == None:
+        if input_data["air_handling_system"][ahu_name]["pump_cooling"] is None:
             input_data["air_handling_system"][ahu_name]["pump_cooling"] = (
-                    "dummypump_" + str(number)
+                    "dummy_pump_" + str(number)
             )
 
-            input_data["secondary_pump_system"]["dummypump_" + str(number)] = {
+            input_data["secondary_pump_system"]["dummy_pump_" + str(number)] = {
                 "冷房": {
-                    "TemperatureDifference": 0,
+                    "temperature_difference": 0,
                     "is_staging_control": "無",
                     "secondary_pump": [
                         {
                             "number": 0,
-                            "RatedWaterFlowRate": 0,
-                            "RatedPowerConsumption": 0,
+                            "rated_water_flow_rate": 0,
+                            "rated_power_consumption": 0,
                             "control_type": "無",
                             "min_opening_rate": 100,
                         }
@@ -866,20 +865,20 @@ def calc_energy(
 
             number += 1
 
-        if input_data["air_handling_system"][ahu_name]["pump_heating"] == None:
+        if input_data["air_handling_system"][ahu_name]["pump_heating"] is None:
             input_data["air_handling_system"][ahu_name]["pump_heating"] = (
-                    "dummypump_" + str(number)
+                    "dummy_pump_" + str(number)
             )
 
-            input_data["secondary_pump_system"]["dummypump_" + str(number)] = {
+            input_data["secondary_pump_system"]["dummy_pump_" + str(number)] = {
                 "暖房": {
-                    "TemperatureDifference": 0,
+                    "temperature_difference": 0,
                     "is_staging_control": "無",
                     "secondary_pump": [
                         {
                             "number": 0,
-                            "RatedWaterFlowRate": 0,
-                            "RatedPowerConsumption": 0,
+                            "rated_water_flow_rate": 0,
+                            "rated_power_consumption": 0,
                             "control_type": "無",
                             "min_opening_rate": 100,
                         }
@@ -1103,12 +1102,12 @@ def calc_energy(
         # 当該空調機群が熱を供給する室の室負荷（冷房要求）を積算する。
         result_json["ahu"][ahu_name]["q_room"]["cooling_for_room"] += result_json["q_room"][
             room_zone_name
-        ]["q_roomDc"]
+        ]["q_room_dc"]
 
         # 当該空調機群が熱を供給する室の室負荷（暖房要求）を積算する。
         result_json["ahu"][ahu_name]["q_room"]["heating_for_room"] += result_json["q_room"][
             room_zone_name
-        ]["q_roomDh"]
+        ]["q_room_dh"]
 
     ##----------------------------------------------------------------------------------
     ## 空調機群の運転時間（解説書 2.5.2）
@@ -1321,7 +1320,7 @@ def calc_energy(
         # 冷房運転時の補正
         if (
                 input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_cooling"]
-                != None
+                is not None
         ):
             # todo: 変数
             ahu_aex_eff = (
@@ -1338,7 +1337,7 @@ def calc_energy(
         # 暖房運転時の補正
         if (
                 input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"]
-                != None
+                is not None
         ):
             ahu_aex_eff = (
                     input_data["air_handling_system"][ahu_name]["air_heat_exchange_ratio_heating"]
@@ -1383,7 +1382,7 @@ def calc_energy(
                             input_data["air_handling_system"][ahu_name][
                                 "air_heat_exchange_ratio_heating"
                             ]
-                            == None
+                            is None
                     ):  # 全熱交換器がない場合
                         # 変数名わかりやすく
                         result_json["ahu"][ahu_name]["q_oa_ahu"][dd] = (
@@ -1460,7 +1459,7 @@ def calc_energy(
                             input_data["air_handling_system"][ahu_name][
                                 "air_heat_exchange_ratio_cooling"
                             ]
-                            == None
+                            is None
                     ):  # 全熱交換器がない場合
 
                         result_json["ahu"][ahu_name]["q_oa_ahu"][dd] = (
@@ -2065,7 +2064,7 @@ def calc_energy(
                 a1 = flow_control[unit_configure["FanControlType"]]["a1"]
                 a0 = flow_control[unit_configure["FanControlType"]]["a0"]
 
-                if unit_configure["Fanmin_opening_rate"] == None:
+                if unit_configure["Fanmin_opening_rate"] is None:
                     Vmin = 1
                 else:
                     Vmin = unit_configure["Fanmin_opening_rate"] / 100
@@ -2129,7 +2128,7 @@ def calc_energy(
                 "FanPowerConsumption_total"
             ] = 0
 
-            if unit_configure["FanPowerConsumption"] != None:
+            if unit_configure["FanPowerConsumption"] is not None:
                 # 送風機の定格消費電力 kW = 1台あたりの消費電力 kW × 台数
                 input_data["air_handling_system"][ahu_name]["air_handling_unit"][unit_id][
                     "FanPowerConsumption_total"
@@ -2505,24 +2504,24 @@ def calc_energy(
 
             # 流量の合計（台数×流量）
             input_data["pump"][pump_name]["secondary_pump"][unit_id][
-                "RatedWaterFlowRate_total"
+                "rated_water_flow_rate_total"
             ] = (
                     input_data["pump"][pump_name]["secondary_pump"][unit_id][
-                        "RatedWaterFlowRate"
+                        "rated_water_flow_rate"
                     ]
                     * input_data["pump"][pump_name]["secondary_pump"][unit_id]["number"]
             )
 
             input_data["pump"][pump_name]["Vpsr"] += input_data["pump"][pump_name][
                 "secondary_pump"
-            ][unit_id]["RatedWaterFlowRate_total"]
+            ][unit_id]["rated_water_flow_rate_total"]
 
             # 消費電力の合計（消費電力×流量）
             input_data["pump"][pump_name]["secondary_pump"][unit_id][
                 "rated_power_consumption_total"
             ] = (
                     input_data["pump"][pump_name]["secondary_pump"][unit_id][
-                        "RatedPowerConsumption"
+                        "rated_power_consumption"
                     ]
                     * input_data["pump"][pump_name]["secondary_pump"][unit_id]["number"]
             )
@@ -2539,7 +2538,7 @@ def calc_energy(
 
             # 変流量時最小負荷率の最小値（台数制御がない場合のみ有効）
             if (
-                    unit_configure["min_opening_rate"] == None
+                    unit_configure["min_opening_rate"] is None
                     or np.isnan(unit_configure["min_opening_rate"]) == True
             ):
                 input_data["pump"][pump_name]["min_opening_rate"] = 100
@@ -2820,8 +2819,8 @@ def calc_energy(
         ):
             # 二次ポンプの定格処理能力[kW] = [K] * [m3/h] * [kJ/kg・K] * [kg/m3] * [h/s]
             input_data["pump"][pump_name]["secondary_pump"][unit_id]["q_psr"] = (
-                    input_data["pump"][pump_name]["TemperatureDifference"]
-                    * unit_configure["RatedWaterFlowRate_total"]
+                    input_data["pump"][pump_name]["temperature_difference"]
+                    * unit_configure["rated_water_flow_rate_total"]
                     * 4.1860
                     * 1000
                     / 3600
@@ -5426,13 +5425,13 @@ def calc_energy(
         for cgs_name in input_data["cogeneration_system"]:
 
             # 排熱を冷房に使用するか否か
-            if input_data["cogeneration_system"][cgs_name]["coolingSystem"] == None:
+            if input_data["cogeneration_system"][cgs_name]["coolingSystem"] is None:
                 cgs_cooling = False
             else:
                 cgs_cooling = True
 
             # 排熱を暖房に使用するか否か
-            if input_data["cogeneration_system"][cgs_name]["heating_system"] == None:
+            if input_data["cogeneration_system"][cgs_name]["heating_system"] is None:
                 cgs_heating = False
             else:
                 cgs_heating = True
@@ -5592,10 +5591,10 @@ def calc_energy(
         del result_json["q_room"][room_zone_name]["q_window_temperature"]
         del result_json["q_room"][room_zone_name]["q_window_sunshade"]
         del result_json["q_room"][room_zone_name]["q_window_night"]
-        del result_json["q_room"][room_zone_name]["q_roomDc"]
-        del result_json["q_room"][room_zone_name]["q_roomDh"]
-        del result_json["q_room"][room_zone_name]["q_roomhc"]
-        del result_json["q_room"][room_zone_name]["q_roomhh"]
+        del result_json["q_room"][room_zone_name]["q_room_dc"]
+        del result_json["q_room"][room_zone_name]["q_room_dh"]
+        del result_json["q_room"][room_zone_name]["q_room_hc"]
+        del result_json["q_room"][room_zone_name]["q_room_hh"]
 
     for ahu_name in result_json["ahu"]:
         del result_json["ahu"][ahu_name]["schedule"]
