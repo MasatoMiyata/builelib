@@ -1947,7 +1947,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
     #----------------------------------
     # 様式2-4 外皮入力シート の読み込み
-    # （ Builelibでは、窓面積 を　窓の枚数と読み替える。 ）
+    # （ Builelibでは、窓面積 を窓の枚数と読み替える。 ）
     #----------------------------------
     if "2-4) 外皮 " in wb.sheet_names():
 
@@ -2085,19 +2085,21 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     else:
                         EavesID = "無"
                     
-                    data["EnvelopeSet"][roomKey]["WallList"][-1]["WindowList"].append(
-                        {
-                            "WindowID":
-                                check_value(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", False, "無", "文字列", data["WindowConfigure"], None, None),  
-                            "WindowNumber":
-                                check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
-                            "isBlind":
-                                check_value(dataBE1[9], "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["有無"], None, None),
-                            "EavesID": EavesID,
-                            "Info":
-                                check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
-                        }
-                    )
+                    if (dataBE1[7] != ""):
+                        
+                        data["EnvelopeSet"][roomKey]["WallList"][-1]["WindowList"].append(
+                            {
+                                "WindowID":
+                                    check_value(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", False, "無", "文字列", data["WindowConfigure"], None, None),  
+                                "WindowNumber":
+                                    check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
+                                "isBlind":
+                                    check_value(dataBE1[9], "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                "EavesID": EavesID,
+                                "Info":
+                                    check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
+                            }
+                        )
 
                 elif roomKey in data["EnvelopeSet"]: # 方位が空白ではない場合。
 
@@ -4182,7 +4184,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'sample01_WEBPRO_inputSheet_for_Ver3.6_v2'
+    case_name = 'pyHASP_test'
 
     # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
