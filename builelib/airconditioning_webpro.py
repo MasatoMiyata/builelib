@@ -4761,7 +4761,7 @@ def calc_energy(inputdata, debug = False):
 
         resultJson["REF"][ref_name]["年間平均負荷率[-]"] = \
             (resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] *1000000 / (resultJson["REF"][ref_name]["年間運転時間[時間]"]*3600) ) \
-            / resultJson["REF"][ref_name]["熱源主機_定格消費エネルギー[kW]"] 
+            / resultJson["REF"][ref_name]["定格能力[kW]"] 
 
         resultJson["REF"][ref_name]["年間運転効率[-]"] = \
             resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] \
@@ -4953,10 +4953,10 @@ def calc_energy(inputdata, debug = False):
         del resultJson["Qroom"][room_zone_name]["Qwind_T"]
         del resultJson["Qroom"][room_zone_name]["Qwind_S"]
         del resultJson["Qroom"][room_zone_name]["Qwind_N"]
-        del resultJson["Qroom"][room_zone_name]["QroomDc"]
-        del resultJson["Qroom"][room_zone_name]["QroomDh"]
-        del resultJson["Qroom"][room_zone_name]["QroomHc"]
-        del resultJson["Qroom"][room_zone_name]["QroomHh"]
+        # del resultJson["Qroom"][room_zone_name]["QroomDc"]
+        # del resultJson["Qroom"][room_zone_name]["QroomDh"]
+        # del resultJson["Qroom"][room_zone_name]["QroomHc"]
+        # del resultJson["Qroom"][room_zone_name]["QroomHh"]
 
     for ahu_name in resultJson["AHU"]:
         del resultJson["AHU"][ahu_name]["schedule"]
@@ -4973,7 +4973,7 @@ def calc_energy(inputdata, debug = False):
         del resultJson["AHU"][ahu_name]["Qahu_remainH"]
         del resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]
         del resultJson["AHU"][ahu_name]["Qroom"]
-        del resultJson["AHU"][ahu_name]["Qahu"]
+        # del resultJson["AHU"][ahu_name]["Qahu"]
         del resultJson["AHU"][ahu_name]["Tahu"]
         del resultJson["AHU"][ahu_name]["Economizer"]
         del resultJson["AHU"][ahu_name]["LdAHUc"]
