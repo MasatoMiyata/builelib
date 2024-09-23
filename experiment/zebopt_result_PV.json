@@ -1,7 +1,7 @@
 {
     "E_photovoltaic": 121559.23487721886,
     "photovoltaic_systems": {
-        "システムA": {
+        "PV": {
             "Ep_kWh": 12454.83963905931,
             "Ep": [
                 0.0,

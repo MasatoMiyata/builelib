@@ -95,12 +95,10 @@ def calc_energy(input_data, DEBUG=False):
                                                                                                            input_calendar)
 
         else:
-            input_data["ventilation_room"][room_id]["ope_time_hourly"] = bc.get_daily_ope_schedule_ventilation(building_type,
-                                                                                                           room_type)
+            input_data["ventilation_room"][room_id]["ope_time_hourly"] = bc.get_daily_ope_schedule_ventilation(building_type, room_type)
 
         # 年間換気運転時間
-        input_data["ventilation_room"][room_id]["opeTime"] = np.sum(
-            np.sum(input_data["ventilation_room"][room_id]["ope_time_hourly"]))
+        input_data["ventilation_room"][room_id]["opeTime"] = np.sum(np.sum(input_data["ventilation_room"][room_id]["ope_time_hourly"]))
 
         # 接続されている換気機器の種類に応じて集計処理を実行
         input_data["ventilation_room"][room_id]["is_ventilation_using_ac"] = False
@@ -354,12 +352,12 @@ def calc_energy(input_data, DEBUG=False):
     ##----------------------------------------------------------------------------------
 
     for room_id, isys in input_data["ventilation_room"].items():
-        result_json["ventilation"][room_id]["設計値[MJ]"] = np.sum(
-            np.sum(result_json["ventilation"][room_id]["時刻別設計一次エネルギー消費量[MJ/h]"]))
-        result_json["ventilation"][room_id]["設計値[MJ/m2]"] = result_json["ventilation"][room_id]["設計値[MJ]"] / \
-                                                             input_data["rooms"][room_id]["room_area"]
-        result_json["ventilation"][room_id]["設計値/基準値"] = result_json["ventilation"][room_id]["設計値[MJ]"] / \
-                                                             result_json["ventilation"][room_id]["基準値[MJ]"]
+        result_json["ventilation"][room_id]["設計値[MJ]"] = np.sum(np.sum(result_json["ventilation"][room_id]["時刻別設計一次エネルギー消費量[MJ/h]"]))
+        result_json["ventilation"][room_id]["設計値[MJ/m2]"] = result_json["ventilation"][room_id]["設計値[MJ]"] / input_data["rooms"][room_id]["room_area"]
+        if result_json["ventilation"][room_id]["基準値[MJ]"] != 0:
+            result_json["ventilation"][room_id]["設計値/基準値"] = result_json["ventilation"][room_id]["設計値[MJ]"] / result_json["ventilation"][room_id]["基準値[MJ]"]
+        else:
+            result_json["ventilation"][room_id]["設計値/基準値"] = 0
 
         result_json["設計一次エネルギー消費量[MJ/年]"] += result_json["ventilation"][room_id]["設計値[MJ]"]
         result_json["基準一次エネルギー消費量[MJ/年]"] += result_json["ventilation"][room_id]["基準値[MJ]"]
@@ -380,8 +378,7 @@ def calc_energy(input_data, DEBUG=False):
 
     # コジェネ用の結果の格納 [MJ → MWh]
     for day in range(0, 365):
-        result_json["for_cgs"]["Edesign_MWh_day"][day] = np.sum(result_json["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (
-            bc.fprime)
+        result_json["for_cgs"]["Edesign_MWh_day"][day] = np.sum(result_json["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (bc.fprime)
 
         ##----------------------------------------------------------------------------------
     # 不要な要素を削除

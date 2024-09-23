@@ -40,7 +40,7 @@ window_area_south = wall_area_south * window_ratio
 
 main_building_type = "事務所等"
 building_type = "事務所等"
-room_type = "room"
+room_type = "事務室"
 model_building_type = "事務所モデル"
 #熱源のパラメータ
 Qref_rated_cool = 703 * 2 #熱源の定格冷却能力 703[kW/台]で2ユニット想定，これが熱源のパラメータになる
@@ -89,12 +89,14 @@ data_web["building"]["building_address"]["city"] = "明石市"
 data_web["building"]["building_address"]["address"] = "兵庫県明石市魚住町西岡 679-3"
 # BL-5	地域の区分	(自動)
 data_web["building"]["region"] = "6"
+# BL-6	年間日射地域区分 (自動)
+data_web["building"]["annual_solar_region"] = "A3"
 # BL-7	延べ面積  [㎡]	(数値)
 data_web["building"]["building_floor_area"] = floor_area_tot
 # BL-8	「他人から供給された熱」	冷熱	(数値)
 # BL-9	の一次エネルギー換算係数	温熱	(数値)
-data_web["building"]["coefficient_dhc"]["cooling"] = 0 #今は燃料が電力であると仮定しているので他人から〜は不要
-data_web["building"]["coefficient_dhc"]["heating"] = 0
+data_web["building"]["coefficient_dhc"]["cooling"] = None #今は燃料が電力であると仮定しているので他人から〜は不要
+data_web["building"]["coefficient_dhc"]["heating"] = None
 
 # 様式1 室仕様入力シート相当の箇所
 for i in range(room_number):
@@ -476,23 +478,22 @@ for i in range(room_AC_number):
             }
 
 # 様式5-2 給湯機器入力シート の読み込み相当の箇所
-for i in range(room_AC_number):
-    data_web["hot_water_supply_systems"][i] = {
-        "heat_sourceUnit": [{
-            "usage_type": "給湯負荷用",
-            "heat_source_type": "ガス給湯機",
-            "number": 1,
-            "rated_capacity": Hot_water_rated_capacity,
-            "rated_power_consumption": 0,
-            "rated_fuel_consumption": Hot_water_rated_fuel_consumption,
-            }],
-        "insulation_type": "保温仕様2",
-        "pipe_size": 40.0,
-        "solar_system_area": None,
-        "solar_system_direction": None,
-        "solar_system_angle": None,
-        "info":None
-        }
+data_web["hot_water_supply_systems"]["EB"] = {
+    "heat_sourceUnit": [{
+        "usage_type": "給湯負荷用",
+        "heat_source_type": "ガス給湯機",
+        "number": 1,
+        "rated_capacity": Hot_water_rated_capacity,
+        "rated_power_consumption": 0,
+        "rated_fuel_consumption": Hot_water_rated_fuel_consumption,
+        }],
+    "insulation_type": "保温仕様2",
+    "pipe_size": 40.0,
+    "solar_system_area": None,
+    "solar_system_direction": None,
+    "solar_system_angle": None,
+    "info":None
+}
 
 # 様式6 昇降機入力シート の読み込み相当の箇所
 for i in range(room_AC_number):

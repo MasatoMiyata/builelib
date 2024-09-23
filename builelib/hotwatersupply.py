@@ -295,8 +295,7 @@ def calc_energy(input_data, DEBUG=False):
         input_data["hot_water_room"][room_name]["rated_capacity_All"] = 0
 
         for unit_id, unit_configure in enumerate(input_data["hot_water_room"][room_name]["hot_water_system"]):
-            input_data["hot_water_room"][room_name]["hot_water_system"][unit_id]["rated_capacity_total"] = \
-                input_data["hot_water_supply_systems"][unit_configure["system_name"]]["rated_capacity_total"]
+            input_data["hot_water_room"][room_name]["hot_water_system"][unit_id]["rated_capacity_total"] = input_data["hot_water_supply_systems"][unit_configure["system_name"]]["rated_capacity_total"]
 
             input_data["hot_water_room"][room_name]["rated_capacity_All"] += \
                 input_data["hot_water_room"][room_name]["hot_water_system"][unit_id]["rated_capacity_total"]
