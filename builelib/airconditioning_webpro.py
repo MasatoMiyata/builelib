@@ -355,10 +355,7 @@ def calc_energy(input_data, debug=False):
                             break
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
-        room_schedule_room[room_zone_name], room_schedule_light[room_zone_name], room_schedule_person[room_zone_name], \
-            room_schedule_oa_app[room_zone_name], room_day_mode[room_zone_name] = \
-            bc.get_room_usage_schedule(input_data["air_conditioning_zone"][room_zone_name]["building_type"],
-                                       input_data["air_conditioning_zone"][room_zone_name]["room_type"], input_calendar)
+        room_schedule_room[room_zone_name], room_schedule_light[room_zone_name], room_schedule_person[room_zone_name], room_schedule_oa_app[room_zone_name], room_day_mode[room_zone_name] = bc.get_room_usage_schedule(input_data["air_conditioning_zone"][room_zone_name]["building_type"], input_data["air_conditioning_zone"][room_zone_name]["room_type"], input_calendar)
 
         # 空調対象面積の合計
         room_area_total += input_data["air_conditioning_zone"][room_zone_name]["zone_area"]
@@ -2165,6 +2162,7 @@ def calc_energy(input_data, debug=False):
         result_json["ahu"][ahu_name]["q_room"]["heating_for_room"] += result_json["q_room"][room_zone_name][
             "q_room_daily_heating"]
 
+
     ##----------------------------------------------------------------------------------
     ## 空調機群の運転時間（解説書 2.5.2）
     ##----------------------------------------------------------------------------------
@@ -3023,7 +3021,7 @@ def calc_energy(input_data, debug=False):
 
             ##------------------------
             # 空調負荷が正（冷却コイル負荷）のときと負（加熱コイル負荷）のときを合計する。
-            ##------------------------            
+            ##------------------------
             result_json["ahu"][ahu_name]["e_fan_day"][dd] = \
                 result_json["ahu"][ahu_name]["e_fan_c_day"][dd] + result_json["ahu"][ahu_name]["E_fan_h_day"][dd]
 
@@ -3723,8 +3721,10 @@ def calc_energy(input_data, debug=False):
                 result_json["pump"][pump_name]["年間処理熱量[MJ]"] * 1000 \
                 / (result_json["pump"][pump_name]["運転時間[時間]"] * 3600)
 
-            result_json["pump"][pump_name]["平均負荷率[-]"] = result_json["pump"][pump_name]["平均処理熱量[kW]"] / \
-                                                              result_json["pump"][pump_name]["定格能力[kW]"]
+            if result_json["pump"][pump_name]["定格能力[kW]"] != 0:
+                result_json["pump"][pump_name]["平均負荷率[-]"] = result_json["pump"][pump_name]["平均処理熱量[kW]"] / result_json["pump"][pump_name]["定格能力[kW]"]
+            else:
+                result_json["pump"][pump_name]["平均負荷率[-]"] = 0
 
             result_json["pump"][pump_name]["台数制御の有無"] = input_data["pump"][pump_name]["is_staging_control"]
             result_json["pump"][pump_name]["電力消費量[MWh]"] = np.sum(result_json["pump"][pump_name]["e_pump_day"], 0)
@@ -4559,7 +4559,7 @@ def calc_energy(input_data, debug=False):
             # 入力比（各外気温帯における最大入力）
             input_data["ref"][ref_name]["heat_source"][unit_id]["x_pratio"] = np.zeros(365)
 
-            # 外気温度帯マトリックス 
+            # 外気温度帯マトリックス
             for dd in range(0, 365):
 
                 # 外気温度帯
@@ -5167,7 +5167,7 @@ def calc_energy(input_data, debug=False):
 
     ##----------------------------------------------------------------------------------
     ## 基準一次エネルギー消費量 （解説書 10.1）
-    ##----------------------------------------------------------------------------------    
+    ##----------------------------------------------------------------------------------
     for room_zone_name in input_data["air_conditioning_zone"]:
         # 建物用途・室用途、ゾーン面積等の取得
         building_type = input_data["rooms"][room_zone_name]["building_type"]
@@ -5198,7 +5198,7 @@ def calc_energy(input_data, debug=False):
 
     ##----------------------------------------------------------------------------------
     ## CGS計算用変数 （解説書 ８章 附属書 G.10 他の設備の計算結果の読み込み）
-    ##----------------------------------------------------------------------------------    
+    ##----------------------------------------------------------------------------------
 
     if len(input_data["cogeneration_systems"]) == 1:  # コジェネがあれば実行
 

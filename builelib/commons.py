@@ -362,7 +362,6 @@ def get_daily_ope_schedule_ventilation(building_type, room_type, input_room_usag
             # 0か1に変換
             opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
 
-
         elif RoomUsageSchedule[building_type][room_type]["年間換気時間"] == RoomUsageSchedule[building_type][room_type][
             "年間照明点灯時間"]:
 
