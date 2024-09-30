@@ -2,7 +2,7 @@ import json
 import math
 import os
 import time
-import sys
+import traceback
 
 import numpy as np
 
@@ -16,7 +16,7 @@ from builelib import (
     other_energy,
     cogeneration,
 )
-from builelib.make_inputdata import make_data_from_v2_sheet
+from builelib.domain.request import BuilelibRequest, AreaByDirection, Room, Building
 
 
 # json.dump用のクラス
@@ -120,7 +120,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
                 "air_conditioning_zone"
             ]:  # air_conditioning_zone が 空 でなければ
                 result_data_AC = airconditioning_webpro.calc_energy(
-                    input_data, debug=False
+                    input_data, debug=True
                 )
 
                 # CGSの計算に必要となる変数
@@ -167,7 +167,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["ventilation_room"]:  # ventilation_room が 空 でなければ
 
-                result_data_V = ventilation.calc_energy(input_data, DEBUG=False)
+                result_data_V = ventilation.calc_energy(input_data, DEBUG=True)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["V"] = result_data_V["for_cgs"]
@@ -202,7 +202,6 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
     else:
         result_data_V = {"error": "機械換気設備の計算は実行されませんでした。"}
 
-
     # 出力
     with open(output_base_name + "_result_V.json", "w", encoding="utf-8") as fw:
         json.dump(result_data_V, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
@@ -218,7 +217,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["lighting_systems"]:  # lighting_systems が 空 でなければ
 
-                result_data_L = lighting.calc_energy(input_data, DEBUG=False)
+                result_data_L = lighting.calc_energy(input_data, DEBUG=True)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["L"] = result_data_L["for_cgs"]
@@ -259,7 +258,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["hot_water_room"]:  # hot_water_room が 空 でなければ
 
-                result_data_HW = hotwatersupply.calc_energy(input_data, DEBUG=False)
+                result_data_HW = hotwatersupply.calc_energy(input_data, DEBUG=True)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["HW"] = result_data_HW["for_cgs"]
@@ -305,7 +304,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["elevators"]:  # elevators が 空 でなければ
 
-                result_data_EV = elevator.calc_energy(input_data, DEBUG=False)
+                result_data_EV = elevator.calc_energy(input_data, DEBUG=True)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["EV"] = result_data_EV["for_cgs"]
@@ -347,7 +346,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
                 "photovoltaic_systems"
             ]:  # photovoltaic_systems が 空 でなければ
 
-                result_data_PV = photovoltaic.calc_energy(input_data, DEBUG=False)
+                result_data_PV = photovoltaic.calc_energy(input_data, DEBUG=True)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["PV"] = result_data_PV["for_cgs"]
@@ -365,7 +364,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         #         "error": "太陽光発電設備の計算時に予期せぬエラーが発生しました。"
         #     }
         except Exception as e:
-        # エラー詳細とスタックトレースをキャプチャ
+            # エラー詳細とスタックトレースをキャプチャ
             result_data_PV = {
                 "error": "太陽光発電設備の計算時に予期せぬエラーが発生しました。",
                 "details": str(e),
@@ -389,7 +388,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["rooms"]:  # rooms が 空 でなければ
 
-                result_data_OT = other_energy.calc_energy(input_data, DEBUG=False)
+                result_data_OT = other_energy.calc_energy(input_data, DEBUG=True)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["OT"] = result_data_OT["for_cgs"]
@@ -425,7 +424,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
                 "cogeneration_systems"
             ]:  # cogeneration_systems が 空 でなければ
                 result_data_CGS = cogeneration.calc_energy(
-                    input_data, result_json_for_cgs, DEBUG=False
+                    input_data, result_json_for_cgs, DEBUG=True
                 )
 
                 # 設計一次エネ・基準一次エネに追加
@@ -502,17 +501,46 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
 
 
 if __name__ == "__main__":
-        # コマンドライン引数からファイル名を取得
-    if len(sys.argv) > 2:
-        input_filename = sys.argv[1]
-        output_base_name = sys.argv[2]
-    else:
-        # デフォルトのファイル名
-        input_filename = 'input_zebopt.json'
-        output_base_name = 'zebopt'
-
-    # current directory
+    req = BuilelibRequest(
+        height=20,
+        rooms=[Room(is_air_conditioned=True, room_type="事務室"), Room(is_air_conditioned=True, room_type="事務室")],
+        areas=[AreaByDirection(direction="north", area=1000), AreaByDirection(direction="south", area=1000),
+               AreaByDirection(direction="east", area=1000), AreaByDirection(direction="west", area=1000)],
+        floor_number=5,
+        wall_u_value=0.5,
+        glass_u_value=0.5,
+        glass_solar_heat_gain_rate=3,
+        window_ratio=0.4,
+        building_type="事務所等",
+        model_building_type="事務所モデル",
+        lighting_number=2,
+        lighting_power=400,
+        elevator_number=3,
+        is_solar_power=True,
+        building_information=Building(
+            name="test",
+            prefecture="北海道",
+            city="札幌市",
+            address="北1条西1丁目",
+            region_number=1,
+            annual_solar_region="A3"
+        )
+    )
+    print(req.create_default_json_file())
+    # コマンドライン引数からファイル名を取得
+    # if len(sys.argv) > 2:
+    #     input_filename = sys.argv[1]
+    #     output_base_name = sys.argv[2]
+    # else:
+    #     # デフォルトのファイル名
+    input_filename = 'input_zebopt.json'
+    output_base_name = 'zebopt'
+    #
+    # # current directory
     d = os.path.dirname(__file__)
-    exp_directory = os.path.join(d, "experiment")
+    exp_directory = os.path.join(d, "experiment/")
 
-    builelib_run(True, exp_directory + "/" + input_filename, output_base_name)
+    with open(exp_directory + input_filename, 'w', encoding='utf-8') as json_file:
+        json.dump(req.create_default_json_file(), json_file, ensure_ascii=False, indent=4)
+
+    builelib_run(True, exp_directory + input_filename, output_base_name)

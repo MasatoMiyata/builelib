@@ -1,27 +1,27 @@
 {
     "building": {
+        "name": "test",
         "building_address": {
-            "prefecture": "兵庫県",
-            "city": "明石市",
-            "address": "兵庫県明石市魚住町西岡 679-3"
+            "prefecture": "北海道",
+            "city": "札幌市",
+            "address": "北1条西1丁目"
         },
+        "region": "1",
+        "annual_solar_region": "A3",
+        "building_floor_area": 12500.0,
         "coefficient_dhc": {
             "cooling": null,
             "heating": null
-        },
-        "name": "国立明石工業高等専門学校",
-        "region": "6",
-        "annual_solar_region": "A3",
-        "building_floor_area": 3200
+        }
     },
     "rooms": {
         "0": {
             "main_building_type": "事務所等",
-            "building_type": "事務所等",
+            "building_type": "事務所モデル",
             "room_type": "事務室",
-            "floor_height": 10.0,
-            "ceiling_height": 10.0,
-            "room_area": 1600.0,
+            "floor_height": 4.0,
+            "ceiling_height": 4.0,
+            "room_area": 6250.0,
             "zone": null,
             "model_building_type": "事務所モデル",
             "building_group": null,
@@ -29,301 +29,18 @@
         },
         "1": {
             "main_building_type": "事務所等",
-            "building_type": "事務所等",
+            "building_type": "事務所モデル",
             "room_type": "事務室",
-            "floor_height": 10.0,
-            "ceiling_height": 10.0,
-            "room_area": 1600.0,
+            "floor_height": 4.0,
+            "ceiling_height": 4.0,
+            "room_area": 6250.0,
             "zone": null,
             "model_building_type": "事務所モデル",
             "building_group": null,
             "info": null
         }
     },
-    "envelope_set": {
-        "0": {
-            "is_airconditioned": "有",
-            "wall_list": [
-                {
-                    "direction": "北",
-                    "envelope_area": 440.2132536580725,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "W",
-                    "wall_type": "日の当たる外壁",
-                    "window_list": [
-                        {
-                            "window_id": "G",
-                            "window_number": 88.04265073161451,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "北",
-                    "envelope_area": 23.169118613582764,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "FG1",
-                    "wall_type": "地盤に接する外壁",
-                    "window_list": [
-                        {
-                            "window_id": "無",
-                            "window_number": null,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "東",
-                    "envelope_area": 440.2132536580725,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "W",
-                    "wall_type": "日の当たる外壁",
-                    "window_list": [
-                        {
-                            "window_id": "G",
-                            "window_number": 88.04265073161451,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "東",
-                    "envelope_area": 23.169118613582764,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "FG1",
-                    "wall_type": "地盤に接する外壁",
-                    "window_list": [
-                        {
-                            "window_id": "無",
-                            "window_number": null,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "西",
-                    "envelope_area": 440.2132536580725,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "W",
-                    "wall_type": "日の当たる外壁",
-                    "window_list": [
-                        {
-                            "window_id": "G",
-                            "window_number": 88.04265073161451,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "西",
-                    "envelope_area": 23.169118613582764,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "FG1",
-                    "wall_type": "地盤に接する外壁",
-                    "window_list": [
-                        {
-                            "window_id": "無",
-                            "window_number": null,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "南",
-                    "envelope_area": 440.2132536580725,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "W",
-                    "wall_type": "日の当たる外壁",
-                    "window_list": [
-                        {
-                            "window_id": "G",
-                            "window_number": 88.04265073161451,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "南",
-                    "envelope_area": 23.169118613582764,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "FG1",
-                    "wall_type": "地盤に接する外壁",
-                    "window_list": [
-                        {
-                            "window_id": "無",
-                            "window_number": null,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                }
-            ]
-        },
-        "1": {
-            "is_airconditioned": "有",
-            "wall_list": [
-                {
-                    "direction": "北",
-                    "envelope_area": 440.2132536580725,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "W",
-                    "wall_type": "日の当たる外壁",
-                    "window_list": [
-                        {
-                            "window_id": "G",
-                            "window_number": 88.04265073161451,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "北",
-                    "envelope_area": 23.169118613582764,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "FG1",
-                    "wall_type": "地盤に接する外壁",
-                    "window_list": [
-                        {
-                            "window_id": "無",
-                            "window_number": null,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "東",
-                    "envelope_area": 440.2132536580725,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "W",
-                    "wall_type": "日の当たる外壁",
-                    "window_list": [
-                        {
-                            "window_id": "G",
-                            "window_number": 88.04265073161451,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "東",
-                    "envelope_area": 23.169118613582764,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "FG1",
-                    "wall_type": "地盤に接する外壁",
-                    "window_list": [
-                        {
-                            "window_id": "無",
-                            "window_number": null,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "西",
-                    "envelope_area": 440.2132536580725,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "W",
-                    "wall_type": "日の当たる外壁",
-                    "window_list": [
-                        {
-                            "window_id": "G",
-                            "window_number": 88.04265073161451,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "西",
-                    "envelope_area": 23.169118613582764,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "FG1",
-                    "wall_type": "地盤に接する外壁",
-                    "window_list": [
-                        {
-                            "window_id": "無",
-                            "window_number": null,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "南",
-                    "envelope_area": 440.2132536580725,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "W",
-                    "wall_type": "日の当たる外壁",
-                    "window_list": [
-                        {
-                            "window_id": "G",
-                            "window_number": 88.04265073161451,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                },
-                {
-                    "direction": "南",
-                    "envelope_area": 23.169118613582764,
-                    "envelope_width": null,
-                    "envelope_height": null,
-                    "wall_spec": "FG1",
-                    "wall_type": "地盤に接する外壁",
-                    "window_list": [
-                        {
-                            "window_id": "無",
-                            "window_number": null,
-                            "is_blind": "無",
-                            "eaves_id": "無",
-                            "info": null
-                        }
-                    ]
-                }
-            ]
-        }
-    },
+    "envelope_set": {},
     "wall_configure": {
         "W": {
             "wall_type_webpro": "外壁",
@@ -400,126 +117,9 @@
             "info": null
         }
     },
-    "heat_source_system": {
-        "AR": {
-            "冷房": {
-                "storage_type": null,
-                "storage_size": null,
-                "is_staging_control": "有",
-                "is_simultaneous_for_ver2": "無",
-                "heat_source": [
-                    {
-                        "heat_source_type": "吸収式冷凍機(一重二重併用形、都市ガス)",
-                        "number": 1.0,
-                        "supply_water_temp_summer": 7.0,
-                        "supply_water_temp_middle": 7.0,
-                        "supply_water_temp_winter": 7.0,
-                        "heat_source_rated_capacity": 1406,
-                        "heat_source_rated_power_consumption": 0,
-                        "heat_source_rated_fuel_consumption": 1406,
-                        "heat_source_sub_rated_power_consumption": 14.06,
-                        "primary_pump_power_consumption": 15.0,
-                        "primary_pump_control_type": "無",
-                        "cooling_tower_capacity": 2466,
-                        "cooling_tower_fan_power_consumption": 15.0,
-                        "cooling_tower_pump_power_consumption": 30,
-                        "cooling_tower_control_type": "無",
-                        "info": null
-                    }
-                ]
-            },
-            "暖房": {
-                "storage_type": null,
-                "storage_size": null,
-                "is_staging_control": "有",
-                "is_simultaneous_for_ver2": "無",
-                "heat_source": [
-                    {
-                        "heat_source_type": "吸収式冷凍機(一重二重併用形、都市ガス)",
-                        "number": 1.0,
-                        "supply_water_temp_summer": 55.0,
-                        "supply_water_temp_middle": 55.0,
-                        "supply_water_temp_winter": 55.0,
-                        "heat_source_rated_capacity": 1176,
-                        "heat_source_rated_power_consumption": 0,
-                        "heat_source_rated_fuel_consumption": 1764.0,
-                        "heat_source_sub_rated_power_consumption": 17.64,
-                        "primary_pump_power_consumption": 15.0,
-                        "primary_pump_control_type": "無",
-                        "cooling_tower_capacity": 0,
-                        "cooling_tower_fan_power_consumption": 0,
-                        "cooling_tower_pump_power_consumption": 0,
-                        "cooling_tower_control_type": "無",
-                        "info": null
-                    }
-                ]
-            }
-        }
-    },
-    "secondary_pump_system": {
-        "CHP": {
-            "冷房": {
-                "temperature_difference": 5.0,
-                "is_staging_control": "有",
-                "secondary_pump": [
-                    {
-                        "number": 1.0,
-                        "rated_water_flow_rate": 89.0,
-                        "rated_power_consumption": 7.5,
-                        "control_type": "定流量制御",
-                        "min_opening_rate": null,
-                        "info": null
-                    }
-                ]
-            },
-            "暖房": {
-                "temperature_difference": 5.0,
-                "is_staging_control": "有",
-                "secondary_pump": [
-                    {
-                        "number": 1.0,
-                        "rated_water_flow_rate": 89.0,
-                        "rated_power_consumption": 7.5,
-                        "control_type": "定流量制御",
-                        "min_opening_rate": null,
-                        "info": null
-                    }
-                ]
-            }
-        }
-    },
-    "air_handling_system": {
-        "HU": {
-            "is_economizer": "無",
-            "economizer_max_air_volume": null,
-            "is_outdoor_air_cut": "無",
-            "pump_cooling": "CHP",
-            "pump_heating": "CHP",
-            "heat_source_cooling": "AR",
-            "heat_source_heating": "AR",
-            "air_handling_unit": [
-                {
-                    "type": "空調機",
-                    "number": 1.0,
-                    "rated_capacity_cooling": 52,
-                    "rated_capacity_heating": 29,
-                    "fan_type": null,
-                    "fan_air_volume": null,
-                    "fan_power_consumption": 5.2,
-                    "fan_control_type": "定風量制御",
-                    "fan_min_opening_rate": null,
-                    "air_heat_exchange_ratio_cooling": null,
-                    "air_heat_exchange_ratio_heating": null,
-                    "air_heat_exchanger_effective_air_volume_ratio": null,
-                    "air_heat_exchanger_control": "無",
-                    "air_heat_exchanger_power_consumption": null,
-                    "info": null,
-                    "is_air_heat_exchanger": "全熱交換器なし",
-                    "air_heat_exchanger_name": "無"
-                }
-            ]
-        }
-    },
+    "heat_source_system": {},
+    "secondary_pump_system": {},
+    "air_handling_system": {},
     "ventilation_room": {
         "0": {
             "ventilation_type": null,
@@ -580,13 +180,13 @@
     },
     "lighting_systems": {
         "0": {
-            "room_width": 40.0,
-            "room_depth": 40.0,
-            "unit_height": 10.0,
+            "room_width": 111.80339887498948,
+            "room_depth": 111.80339887498948,
+            "unit_height": 4.0,
             "room_index": null,
             "lighting_unit": {
                 "天井埋込下面ルーバー": {
-                    "rated_power": 4840,
+                    "rated_power": 800,
                     "number": 1,
                     "occupant_sensing_ctrl": "無",
                     "illuminance_sensing_ctrl": "無",
@@ -596,13 +196,13 @@
             }
         },
         "1": {
-            "room_width": 40.0,
-            "room_depth": 40.0,
-            "unit_height": 10.0,
+            "room_width": 111.80339887498948,
+            "room_depth": 111.80339887498948,
+            "unit_height": 4.0,
             "room_index": null,
             "lighting_unit": {
                 "天井埋込下面ルーバー": {
-                    "rated_power": 4840,
+                    "rated_power": 800,
                     "number": 1,
                     "occupant_sensing_ctrl": "無",
                     "illuminance_sensing_ctrl": "無",
@@ -669,6 +269,19 @@
             ]
         },
         "1": {
+            "elevator": [
+                {
+                    "elevator_name": "常用",
+                    "number": 1.0,
+                    "load_limit": 800.0,
+                    "velocity": 60.0,
+                    "transport_capacity_factor": 1.0,
+                    "control_type": "VVVF(電力回生なし)",
+                    "info": null
+                }
+            ]
+        },
+        "2": {
             "elevator": [
                 {
                     "elevator_name": "常用",
