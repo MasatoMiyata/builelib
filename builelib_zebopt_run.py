@@ -540,7 +540,7 @@ if __name__ == "__main__":
     d = os.path.dirname(__file__)
     exp_directory = os.path.join(d, "experiment/")
 
-    with open(exp_directory + input_filename, 'w', encoding='utf-8') as json_file:
+    with open(input_filename, 'w', encoding='utf-8') as json_file:
         json.dump(req.create_default_json_file(), json_file, ensure_ascii=False, indent=4)
 
-    builelib_run(True, exp_directory + input_filename, output_base_name)
+    builelib_run(True, input_filename, output_base_name)

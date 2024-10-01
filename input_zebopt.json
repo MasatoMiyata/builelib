@@ -40,7 +40,290 @@
             "info": null
         }
     },
-    "envelope_set": {},
+    "envelope_set": {
+        "0": {
+            "is_airconditioned": true,
+            "wall_list": [
+                {
+                    "direction": "北",
+                    "envelope_area": 550.2665670725908,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "W",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
+                        {
+                            "window_id": "G",
+                            "window_number": 220.10662682903632,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "北",
+                    "envelope_area": 28.96139826697846,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "FG1",
+                    "wall_type": "地盤に接する外壁",
+                    "window_list": [
+                        {
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "東",
+                    "envelope_area": 550.2665670725908,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "W",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
+                        {
+                            "window_id": "G",
+                            "window_number": 220.10662682903632,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "東",
+                    "envelope_area": 28.96139826697846,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "FG1",
+                    "wall_type": "地盤に接する外壁",
+                    "window_list": [
+                        {
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "西",
+                    "envelope_area": 550.2665670725908,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "W",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
+                        {
+                            "window_id": "G",
+                            "window_number": 220.10662682903632,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "西",
+                    "envelope_area": 28.96139826697846,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "FG1",
+                    "wall_type": "地盤に接する外壁",
+                    "window_list": [
+                        {
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "南",
+                    "envelope_area": 550.2665670725908,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "W",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
+                        {
+                            "window_id": "G",
+                            "window_number": 220.10662682903632,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "南",
+                    "envelope_area": 28.96139826697846,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "FG1",
+                    "wall_type": "地盤に接する外壁",
+                    "window_list": [
+                        {
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                }
+            ]
+        },
+        "1": {
+            "is_airconditioned": true,
+            "wall_list": [
+                {
+                    "direction": "北",
+                    "envelope_area": 550.2665670725908,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "W",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
+                        {
+                            "window_id": "G",
+                            "window_number": 220.10662682903632,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "北",
+                    "envelope_area": 28.96139826697846,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "FG1",
+                    "wall_type": "地盤に接する外壁",
+                    "window_list": [
+                        {
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "東",
+                    "envelope_area": 550.2665670725908,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "W",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
+                        {
+                            "window_id": "G",
+                            "window_number": 220.10662682903632,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "東",
+                    "envelope_area": 28.96139826697846,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "FG1",
+                    "wall_type": "地盤に接する外壁",
+                    "window_list": [
+                        {
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "西",
+                    "envelope_area": 550.2665670725908,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "W",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
+                        {
+                            "window_id": "G",
+                            "window_number": 220.10662682903632,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "西",
+                    "envelope_area": 28.96139826697846,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "FG1",
+                    "wall_type": "地盤に接する外壁",
+                    "window_list": [
+                        {
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "南",
+                    "envelope_area": 550.2665670725908,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "W",
+                    "wall_type": "日の当たる外壁",
+                    "window_list": [
+                        {
+                            "window_id": "G",
+                            "window_number": 220.10662682903632,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                },
+                {
+                    "direction": "南",
+                    "envelope_area": 28.96139826697846,
+                    "envelope_width": null,
+                    "envelope_height": null,
+                    "wall_spec": "FG1",
+                    "wall_type": "地盤に接する外壁",
+                    "window_list": [
+                        {
+                            "window_id": "無",
+                            "window_number": null,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": null
+                        }
+                    ]
+                }
+            ]
+        }
+    },
     "wall_configure": {
         "W": {
             "wall_type_webpro": "外壁",

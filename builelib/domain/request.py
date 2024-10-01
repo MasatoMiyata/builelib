@@ -403,6 +403,133 @@ class BuilelibRequest:
 
         for i in range(len(self.rooms)):
             room = self.rooms[i]
+
+            req["envelope_set"][i] = {
+                "is_airconditioned": room.is_air_conditioned,
+                "wall_list": [
+                    {
+                        "direction": "北",
+                        "envelope_area": self.wall_area_north / len(self.rooms),
+                        "envelope_width": None,
+                        "envelope_height": None,
+                        "wall_spec": "W",
+                        "wall_type": "日の当たる外壁",
+                        "window_list": [{
+                            "window_id": "G",
+                            "window_number": self.window_area_north / len(self.rooms),
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": None,
+                        }]
+                    },
+                    {
+                        "direction": "北",
+                        "envelope_area": self.ground_wall_area_north / len(self.rooms),
+                        "envelope_width": None,
+                        "envelope_height": None,
+                        "wall_spec": "FG1",
+                        "wall_type": "地盤に接する外壁",
+                        "window_list": [{
+                            "window_id": "無",
+                            "window_number": None,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": None,
+                        }]
+                    },
+                    {
+                        "direction": "東",
+                        "envelope_area": self.wall_area_east / len(self.rooms),
+                        "envelope_width": None,
+                        "envelope_height": None,
+                        "wall_spec": "W",
+                        "wall_type": "日の当たる外壁",
+                        "window_list": [{
+                            "window_id": "G",
+                            "window_number": self.window_area_east / len(self.rooms),
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": None,
+                        }]
+                    },
+                    {
+                        "direction": "東",
+                        "envelope_area": self.ground_wall_area_east / len(self.rooms),
+                        "envelope_width": None,
+                        "envelope_height": None,
+                        "wall_spec": "FG1",
+                        "wall_type": "地盤に接する外壁",
+                        "window_list": [{
+                            "window_id": "無",
+                            "window_number": None,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": None,
+                        }]
+                    },
+                    {
+                        "direction": "西",
+                        "envelope_area": self.wall_area_west / len(self.rooms),
+                        "envelope_width": None,
+                        "envelope_height": None,
+                        "wall_spec": "W",
+                        "wall_type": "日の当たる外壁",
+                        "window_list": [{
+                            "window_id": "G",
+                            "window_number": self.window_area_west / len(self.rooms),
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": None,
+                        }]
+                    },
+                    {
+                        "direction": "西",
+                        "envelope_area": self.ground_wall_area_west / len(self.rooms),
+                        "envelope_width": None,
+                        "envelope_height": None,
+                        "wall_spec": "FG1",
+                        "wall_type": "地盤に接する外壁",
+                        "window_list": [{
+                            "window_id": "無",
+                            "window_number": None,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": None,
+                        }]
+                    },
+                    {
+                        "direction": "南",
+                        "envelope_area": self.wall_area_south / len(self.rooms),
+                        "envelope_width": None,
+                        "envelope_height": None,
+                        "wall_spec": "W",
+                        "wall_type": "日の当たる外壁",
+                        "window_list": [{
+                            "window_id": "G",
+                            "window_number": self.window_area_south / len(self.rooms),
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": None,
+                        }]
+                    },
+                    {
+                        "direction": "南",
+                        "envelope_area": self.ground_wall_area_south / len(self.rooms),
+                        "envelope_width": None,
+                        "envelope_height": None,
+                        "wall_spec": "FG1",
+                        "wall_type": "地盤に接する外壁",
+                        "window_list": [{
+                            "window_id": "無",
+                            "window_number": None,
+                            "is_blind": "無",
+                            "eaves_id": "無",
+                            "info": None,
+                        }]
+                    },
+                ]
+            }
+
             if room.is_air_conditioned:
                 req["air_conditioning_zone"][i] = {
                     "is_natual_ventilation": "無",
@@ -494,4 +621,33 @@ class BuilelibRequest:
             "hot_water_system": "EB",
             "info": None
         }
+        # req["air_handling_system"]["HU"] = {
+        #     "is_economizer": "無",
+        #     "economizer_max_air_volume": None,
+        #     "is_outdoor_air_cut": "無",
+        #     "pump_cooling": "CHP",
+        #     "pump_heating": "CHP",
+        #     "heat_source_cooling": "AR",
+        #     "heat_source_heating": "AR",
+        #     "air_handling_unit": [{
+        #         "type": "空調機",
+        #         "number": 1.0,
+        #         "rated_capacity_cooling": self.,
+        #         "rated_capacity_heating": AirHeatExchangeRateHeating,
+        #         "fan_type": None,
+        #         "fan_air_volume": None,
+        #         "fan_power_consumption": AirHeatExchangeRateCooling / 10,  # 送風機定格消費電力の和（冷却能力の10%で近似）
+        #         "fan_control_type": "定風量制御",
+        #         "fan_min_opening_rate": None,
+        #         "air_heat_exchange_ratio_cooling": None,
+        #         "air_heat_exchange_ratio_heating": None,
+        #         "air_heat_exchanger_effective_air_volume_ratio": None,
+        #         "air_heat_exchanger_control": "無",
+        #         "air_heat_exchanger_power_consumption": None,
+        #         "info": None,
+        #         "is_air_heat_exchanger": "全熱交換器なし",
+        #         "air_heat_exchanger_name": "無"
+        #     }]
+        # }
+
         return req
