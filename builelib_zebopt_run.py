@@ -16,7 +16,7 @@ from builelib import (
     other_energy,
     cogeneration,
 )
-from builelib.domain.request import BuilelibRequest, AreaByDirection, Room, Building
+from builelib.domain.request import AreaByDirection, Room, Building, BuilelibRequest
 
 
 # json.dump用のクラス
@@ -524,7 +524,9 @@ if __name__ == "__main__":
             address="北1条西1丁目",
             region_number=1,
             annual_solar_region="A3"
-        )
+        ),
+        air_heat_exchange_rate_cooling=52,
+        air_heat_exchange_rate_heating=29,
     )
     print(req.create_default_json_file())
     # コマンドライン引数からファイル名を取得

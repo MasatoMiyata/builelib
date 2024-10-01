@@ -400,9 +400,95 @@
             "info": null
         }
     },
-    "heat_source_system": {},
+    "heat_source_system": {
+        "AR": {
+            "冷房": {
+                "storage_type": null,
+                "storage_size": null,
+                "is_staging_control": "有",
+                "is_simultaneous_for_ver2": "無",
+                "heat_source": [
+                    {
+                        "heat_source_type": "吸収式冷凍機(一重二重併用形、都市ガス)",
+                        "number": 1.0,
+                        "supply_water_temp_summer": 7.0,
+                        "supply_water_temp_middle": 7.0,
+                        "supply_water_temp_winter": 7.0,
+                        "heat_source_rated_capacity": 1406,
+                        "heat_source_rated_power_consumption": 0,
+                        "heat_source_rated_fuel_consumption": 1406,
+                        "heat_source_sub_rated_power_consumption": 14.06,
+                        "primary_pump_power_consumption": 15.0,
+                        "primary_pump_control_type": "無",
+                        "cooling_tower_capacity": 2466,
+                        "cooling_tower_fan_power_consumption": 15.0,
+                        "cooling_tower_pump_power_consumption": 30,
+                        "cooling_tower_control_type": "無",
+                        "info": null
+                    }
+                ]
+            },
+            "暖房": {
+                "storage_type": null,
+                "storage_size": null,
+                "is_staging_control": "有",
+                "is_simultaneous_for_ver2": "無",
+                "heat_source": [
+                    {
+                        "heat_source_type": "吸収式冷凍機(一重二重併用形、都市ガス)",
+                        "number": 1.0,
+                        "supply_water_temp_summer": 55.0,
+                        "supply_water_temp_middle": 55.0,
+                        "supply_water_temp_winter": 55.0,
+                        "heat_source_rated_capacity": 1176,
+                        "heat_source_rated_power_consumption": 0,
+                        "heat_source_rated_fuel_consumption": 1764.0,
+                        "heat_source_sub_rated_power_consumption": 17.64,
+                        "primary_pump_power_consumption": 15.0,
+                        "primary_pump_control_type": "無",
+                        "cooling_tower_capacity": 0,
+                        "cooling_tower_fan_power_consumption": 15.0,
+                        "cooling_tower_pump_power_consumption": 30,
+                        "cooling_tower_control_type": "無",
+                        "info": null
+                    }
+                ]
+            }
+        }
+    },
     "secondary_pump_system": {},
-    "air_handling_system": {},
+    "air_handling_system": {
+        "HU": {
+            "is_economizer": "無",
+            "economizer_max_air_volume": null,
+            "is_outdoor_air_cut": "無",
+            "pump_cooling": "CHP",
+            "pump_heating": "CHP",
+            "heat_source_cooling": "AR",
+            "heat_source_heating": "AR",
+            "air_handling_unit": [
+                {
+                    "type": "空調機",
+                    "number": 1.0,
+                    "rated_capacity_cooling": 52,
+                    "rated_capacity_heating": 29,
+                    "fan_type": null,
+                    "fan_air_volume": null,
+                    "fan_power_consumption": 5.2,
+                    "fan_control_type": "定風量制御",
+                    "fan_min_opening_rate": null,
+                    "air_heat_exchange_ratio_cooling": null,
+                    "air_heat_exchange_ratio_heating": null,
+                    "air_heat_exchanger_effective_air_volume_ratio": null,
+                    "air_heat_exchanger_control": "無",
+                    "air_heat_exchanger_power_consumption": null,
+                    "info": null,
+                    "is_air_heat_exchanger": "全熱交換器なし",
+                    "air_heat_exchanger_name": "無"
+                }
+            ]
+        }
+    },
     "ventilation_room": {
         "0": {
             "ventilation_type": null,

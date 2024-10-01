@@ -111,6 +111,8 @@ class BuilelibRequest:
     hot_water_efficiency: float
     fan_air_volume: float
     motor_rated_power: float
+    air_heat_exchange_rate_cooling: float
+    air_heat_exchange_rate_heating: float
     # 自動で計算される変数
     width: float = field(init=False)
     length: float = field(init=False)
@@ -143,9 +145,10 @@ class BuilelibRequest:
 
     def __init__(self, height, rooms, floor_number, wall_u_value, glass_u_value,
                  glass_solar_heat_gain_rate, areas, window_ratio, building_type, model_building_type, lighting_number,
-                 lighting_power, elevator_number, is_solar_power, building_information, inclination=10,
-                 height_ground_wall=1.0, q_ref_rated_cool=703 * 2,
-                 q_ref_rated_heat=588 * 2, primary_pump_power_consumption_total=7.5 * 2,
+                 lighting_power, elevator_number, is_solar_power, building_information,
+                 air_heat_exchange_rate_cooling=52.0, air_heat_exchange_rate_heating=29.0, inclination=10,
+                 height_ground_wall=1.0, q_ref_rated_cool=703 * 2, q_ref_rated_heat=588 * 2,
+                 primary_pump_power_consumption_total=7.5 * 2,
                  cooling_tower_fan_power_consumption_total=7.5 * 2, cooling_tower_pump_power_consumption_total=15 * 2,
                  cooling_tower_capacity_total=1233 * 2, temperature_difference=5.0, rated_water_flow_rate_total=89.0,
                  rated_power_consumption_total=7.5, hot_water_rated_capacity=20.0, hot_water_efficiency=0.86,
@@ -180,6 +183,8 @@ class BuilelibRequest:
         self.hot_water_efficiency = hot_water_efficiency
         self.fan_air_volume = fan_air_volume
         self.motor_rated_power = motor_rated_power
+        self.air_heat_exchange_rate_cooling = air_heat_exchange_rate_cooling
+        self.air_heat_exchange_rate_heating = air_heat_exchange_rate_heating
 
     def get_all_wall_area(self):
         return self.wall_area_north + self.wall_area_south + self.wall_area_east + self.wall_area_west
@@ -603,6 +608,7 @@ class BuilelibRequest:
                 "angle": self.pv_angle,
                 "info": "0.94"
             }
+
         req["cogeneration_systems"]["CGS"] = {
             "rated_capacity": 370.0,
             "number": 1.0,
@@ -621,33 +627,81 @@ class BuilelibRequest:
             "hot_water_system": "EB",
             "info": None
         }
-        # req["air_handling_system"]["HU"] = {
-        #     "is_economizer": "無",
-        #     "economizer_max_air_volume": None,
-        #     "is_outdoor_air_cut": "無",
-        #     "pump_cooling": "CHP",
-        #     "pump_heating": "CHP",
-        #     "heat_source_cooling": "AR",
-        #     "heat_source_heating": "AR",
-        #     "air_handling_unit": [{
-        #         "type": "空調機",
-        #         "number": 1.0,
-        #         "rated_capacity_cooling": self.,
-        #         "rated_capacity_heating": AirHeatExchangeRateHeating,
-        #         "fan_type": None,
-        #         "fan_air_volume": None,
-        #         "fan_power_consumption": AirHeatExchangeRateCooling / 10,  # 送風機定格消費電力の和（冷却能力の10%で近似）
-        #         "fan_control_type": "定風量制御",
-        #         "fan_min_opening_rate": None,
-        #         "air_heat_exchange_ratio_cooling": None,
-        #         "air_heat_exchange_ratio_heating": None,
-        #         "air_heat_exchanger_effective_air_volume_ratio": None,
-        #         "air_heat_exchanger_control": "無",
-        #         "air_heat_exchanger_power_consumption": None,
-        #         "info": None,
-        #         "is_air_heat_exchanger": "全熱交換器なし",
-        #         "air_heat_exchanger_name": "無"
-        #     }]
-        # }
+        # 様式2-5 熱源入力シート の読み込みに相当する箇所
+        unit_spec_cool = {'storage_type': None,
+                          'storage_size': None,
+                          'is_staging_control': '有',
+                          'is_simultaneous_for_ver2': '無',
+                          'heat_source': [{'heat_source_type': '吸収式冷凍機(一重二重併用形、都市ガス)',
+                                           'number': 1.0,
+                                           'supply_water_temp_summer': 7.0,
+                                           'supply_water_temp_middle': 7.0,
+                                           'supply_water_temp_winter': 7.0,
+                                           'heat_source_rated_capacity': self.q_ref_rated_cool,
+                                           'heat_source_rated_power_consumption': 0,
+                                           'heat_source_rated_fuel_consumption': self.e_ref_cool,
+                                           'heat_source_sub_rated_power_consumption': self.e_ref_sub_cool,
+                                           'primary_pump_power_consumption': self.primary_pump_power_consumption_total,
+                                           'primary_pump_control_type': '無',
+                                           'cooling_tower_capacity': self.cooling_tower_capacity_total,
+                                           'cooling_tower_fan_power_consumption': self.cooling_tower_fan_power_consumption_total,
+                                           'cooling_tower_pump_power_consumption': self.cooling_tower_pump_power_consumption_total,
+                                           'cooling_tower_control_type': '無',
+                                           'info': None}]
+                          }
+
+        unit_spec_heat = {'storage_type': None,
+                          'storage_size': None,
+                          'is_staging_control': '有',
+                          'is_simultaneous_for_ver2': '無',
+                          'heat_source': [{'heat_source_type': '吸収式冷凍機(一重二重併用形、都市ガス)',
+                                           'number': 1.0,
+                                           'supply_water_temp_summer': 55.0,
+                                           'supply_water_temp_middle': 55.0,
+                                           'supply_water_temp_winter': 55.0,
+                                           'heat_source_rated_capacity': self.q_ref_rated_heat,
+                                           'heat_source_rated_power_consumption': 0,
+                                           'heat_source_rated_fuel_consumption': self.e_ref_heat,
+                                           'heat_source_sub_rated_power_consumption': self.e_ref_sub_heat,
+                                           'primary_pump_power_consumption': self.primary_pump_power_consumption_total,
+                                           'primary_pump_control_type': '無',
+                                           'cooling_tower_capacity': 0,
+                                           'cooling_tower_fan_power_consumption': self.cooling_tower_fan_power_consumption_total,
+                                           'cooling_tower_pump_power_consumption': self.cooling_tower_pump_power_consumption_total,
+                                           'cooling_tower_control_type': '無',
+                                           'info': None}]
+                          }
+        req["heat_source_system"]["AR"] = {
+            "冷房": unit_spec_cool,
+            "暖房": unit_spec_heat
+        }
+        req["air_handling_system"]["HU"] = {
+            "is_economizer": "無",
+            "economizer_max_air_volume": None,
+            "is_outdoor_air_cut": "無",
+            "pump_cooling": "CHP",
+            "pump_heating": "CHP",
+            "heat_source_cooling": "AR",
+            "heat_source_heating": "AR",
+            "air_handling_unit": [{
+                "type": "空調機",
+                "number": 1.0,
+                "rated_capacity_cooling": self.air_heat_exchange_rate_cooling,
+                "rated_capacity_heating": self.air_heat_exchange_rate_heating,
+                "fan_type": None,
+                "fan_air_volume": None,
+                "fan_power_consumption": self.air_heat_exchange_rate_cooling / 10,  # 送風機定格消費電力の和（冷却能力の10%で近似）
+                "fan_control_type": "定風量制御",
+                "fan_min_opening_rate": None,
+                "air_heat_exchange_ratio_cooling": None,
+                "air_heat_exchange_ratio_heating": None,
+                "air_heat_exchanger_effective_air_volume_ratio": None,
+                "air_heat_exchanger_control": "無",
+                "air_heat_exchanger_power_consumption": None,
+                "info": None,
+                "is_air_heat_exchanger": "全熱交換器なし",
+                "air_heat_exchanger_name": "無"
+            }]
+        }
 
         return req
