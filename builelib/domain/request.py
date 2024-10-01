@@ -292,7 +292,7 @@ class BuilelibRequest:
         for i in range(len(self.rooms)):
             req["rooms"][i] = {
                 "main_building_type": self.rooms[i].main_building_type,
-                "building_type": self.rooms[i].model_building_type,
+                "building_type": self.rooms[i].main_building_type,
                 "room_type": self.rooms[i].room_type,
                 "floor_height": self.rooms[i].floor_height,
                 "ceiling_height": self.rooms[i].ceiling_height,  # 現状，階高と天井高を同じで計算

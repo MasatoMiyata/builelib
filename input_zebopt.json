@@ -17,7 +17,7 @@
     "rooms": {
         "0": {
             "main_building_type": "事務所等",
-            "building_type": "事務所モデル",
+            "building_type": "事務所等",
             "room_type": "事務室",
             "floor_height": 4.0,
             "ceiling_height": 4.0,
@@ -29,7 +29,7 @@
         },
         "1": {
             "main_building_type": "事務所等",
-            "building_type": "事務所モデル",
+            "building_type": "事務所等",
             "room_type": "事務室",
             "floor_height": 4.0,
             "ceiling_height": 4.0,
@@ -580,8 +580,8 @@
     },
     "lighting_systems": {
         "0": {
-            "room_width": 111.80339887498948,
-            "room_depth": 111.80339887498948,
+            "room_width": 79.05694150420949,
+            "room_depth": 79.05694150420949,
             "unit_height": 4.0,
             "room_index": null,
             "lighting_unit": {
@@ -596,8 +596,8 @@
             }
         },
         "1": {
-            "room_width": 111.80339887498948,
-            "room_depth": 111.80339887498948,
+            "room_width": 79.05694150420949,
+            "room_depth": 79.05694150420949,
             "unit_height": 4.0,
             "room_index": null,
             "lighting_unit": {

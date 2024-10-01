@@ -120,7 +120,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
                 "air_conditioning_zone"
             ]:  # air_conditioning_zone が 空 でなければ
                 result_data_AC = airconditioning_webpro.calc_energy(
-                    input_data, debug=True
+                    input_data, debug=False
                 )
 
                 # CGSの計算に必要となる変数
@@ -167,7 +167,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["ventilation_room"]:  # ventilation_room が 空 でなければ
 
-                result_data_V = ventilation.calc_energy(input_data, DEBUG=True)
+                result_data_V = ventilation.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["V"] = result_data_V["for_cgs"]
@@ -217,7 +217,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["lighting_systems"]:  # lighting_systems が 空 でなければ
 
-                result_data_L = lighting.calc_energy(input_data, DEBUG=True)
+                result_data_L = lighting.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["L"] = result_data_L["for_cgs"]
@@ -258,7 +258,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["hot_water_room"]:  # hot_water_room が 空 でなければ
 
-                result_data_HW = hotwatersupply.calc_energy(input_data, DEBUG=True)
+                result_data_HW = hotwatersupply.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["HW"] = result_data_HW["for_cgs"]
@@ -304,7 +304,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["elevators"]:  # elevators が 空 でなければ
 
-                result_data_EV = elevator.calc_energy(input_data, DEBUG=True)
+                result_data_EV = elevator.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["EV"] = result_data_EV["for_cgs"]
@@ -346,7 +346,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
                 "photovoltaic_systems"
             ]:  # photovoltaic_systems が 空 でなければ
 
-                result_data_PV = photovoltaic.calc_energy(input_data, DEBUG=True)
+                result_data_PV = photovoltaic.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["PV"] = result_data_PV["for_cgs"]
@@ -388,7 +388,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         try:
             if input_data["rooms"]:  # rooms が 空 でなければ
 
-                result_data_OT = other_energy.calc_energy(input_data, DEBUG=True)
+                result_data_OT = other_energy.calc_energy(input_data, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["OT"] = result_data_OT["for_cgs"]
@@ -424,7 +424,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
                 "cogeneration_systems"
             ]:  # cogeneration_systems が 空 でなければ
                 result_data_CGS = cogeneration.calc_energy(
-                    input_data, result_json_for_cgs, DEBUG=True
+                    input_data, result_json_for_cgs, DEBUG=False
                 )
 
                 # 設計一次エネ・基準一次エネに追加
@@ -528,7 +528,6 @@ if __name__ == "__main__":
         air_heat_exchange_rate_cooling=52,
         air_heat_exchange_rate_heating=29,
     )
-    print(req.create_default_json_file())
     # コマンドライン引数からファイル名を取得
     # if len(sys.argv) > 2:
     #     input_filename = sys.argv[1]
