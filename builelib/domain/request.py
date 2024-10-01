@@ -703,5 +703,24 @@ class BuilelibRequest:
                 "air_heat_exchanger_name": "無"
             }]
         }
+        # 様式2-6 二次ポンプ入力シート の読み込み相当の箇所
+        unit_spec_secondary = {
+            "temperature_difference": self.temperature_difference,
+            "is_staging_control": "有",
+            "secondary_pump": [
+                {
+                    "number": 1.0,
+                    "rated_water_flow_rate": self.rated_water_flow_rate_total,
+                    "rated_power_consumption": self.rated_power_consumption_total,
+                    "control_type": "定流量制御",
+                    "min_opening_rate": None,
+                    "info": None,
+                }
+            ]
+        }
+        req["secondary_pump_system"]["CHP"] = {
+            "冷房": unit_spec_secondary,
+            "暖房": unit_spec_secondary
+        }
 
         return req
