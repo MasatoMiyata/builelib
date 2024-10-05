@@ -3,6 +3,8 @@ import math
 import os
 import json
 
+import numpy as np
+
 template_directory = os.getcwd() + "/builelib/inputdata/"
 
 height = 20

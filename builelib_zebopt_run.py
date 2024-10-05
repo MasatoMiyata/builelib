@@ -2,7 +2,6 @@ import json
 import math
 import os
 import time
-import sys
 
 import numpy as np
 
@@ -16,7 +15,7 @@ from builelib import (
     other_energy,
     cogeneration,
 )
-from builelib.make_inputdata import make_data_from_v2_sheet
+from builelib.domain.request import AreaByDirection, Room, Building, BuilelibRequest
 
 
 # json.dump用のクラス
@@ -202,7 +201,6 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
     else:
         result_data_V = {"error": "機械換気設備の計算は実行されませんでした。"}
 
-
     # 出力
     with open(output_base_name + "_result_V.json", "w", encoding="utf-8") as fw:
         json.dump(result_data_V, fw, indent=4, ensure_ascii=False, cls=MyEncoder)
@@ -365,7 +363,7 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
         #         "error": "太陽光発電設備の計算時に予期せぬエラーが発生しました。"
         #     }
         except Exception as e:
-        # エラー詳細とスタックトレースをキャプチャ
+            # エラー詳細とスタックトレースをキャプチャ
             result_data_PV = {
                 "error": "太陽光発電設備の計算時に予期せぬエラーが発生しました。",
                 "details": str(e),
@@ -502,17 +500,47 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
 
 
 if __name__ == "__main__":
-        # コマンドライン引数からファイル名を取得
-    if len(sys.argv) > 2:
-        input_filename = sys.argv[1]
-        output_base_name = sys.argv[2]
-    else:
-        # デフォルトのファイル名
-        input_filename = 'input_zebopt.json'
-        output_base_name = 'zebopt'
-
-    # current directory
+    req = BuilelibRequest(
+        height=20,
+        rooms=[Room(is_air_conditioned=True, room_type="事務室"), Room(is_air_conditioned=True, room_type="事務室")],
+        areas=[AreaByDirection(direction="north", area=1000), AreaByDirection(direction="south", area=1000),
+               AreaByDirection(direction="east", area=1000), AreaByDirection(direction="west", area=1000)],
+        floor_number=5,
+        wall_u_value=0.5,
+        glass_u_value=0.5,
+        glass_solar_heat_gain_rate=3,
+        window_ratio=0.4,
+        building_type="事務所等",
+        model_building_type="事務所モデル",
+        lighting_number=2,
+        lighting_power=400,
+        elevator_number=3,
+        is_solar_power=True,
+        building_information=Building(
+            name="test",
+            prefecture="北海道",
+            city="札幌市",
+            address="北1条西1丁目",
+            region_number=1,
+            annual_solar_region="A3"
+        ),
+        air_heat_exchange_rate_cooling=52,
+        air_heat_exchange_rate_heating=29,
+    )
+    # コマンドライン引数からファイル名を取得
+    # if len(sys.argv) > 2:
+    #     input_filename = sys.argv[1]
+    #     output_base_name = sys.argv[2]
+    # else:
+    #     # デフォルトのファイル名
+    input_filename = 'input_zebopt.json'
+    output_base_name = 'zebopt'
+    #
+    # # current directory
     d = os.path.dirname(__file__)
-    exp_directory = os.path.join(d, "experiment")
+    exp_directory = os.path.join(d, "experiment/")
 
-    builelib_run(True, exp_directory + "/" + input_filename, output_base_name)
+    with open(input_filename, 'w', encoding='utf-8') as json_file:
+        json.dump(req.create_default_json_file(), json_file, ensure_ascii=False, indent=4)
+
+    builelib_run(True, input_filename, output_base_name)
