@@ -2,7 +2,6 @@ import json
 import math
 import os
 import time
-import traceback
 
 import numpy as np
 
