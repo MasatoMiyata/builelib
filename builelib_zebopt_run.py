@@ -49,7 +49,8 @@ def builelib_run(
         x_out_all,
         iod_all,
         ios_all,
-        inn_all
+        inn_all,
+        q_room_coeffi
 ):
     """Builelibを実行するプログラム
     Args:
@@ -152,7 +153,8 @@ def builelib_run(
                     x_out_all,
                     iod_all,
                     ios_all,
-                    inn_all
+                    inn_all,
+                    q_room_coeffi
                 )
 
                 # CGSの計算に必要となる変数
@@ -615,6 +617,11 @@ if __name__ == "__main__":
         climate.read_hasp_climate_data(
             climate_data_directory + "/" + area[str(req.building_information.region_number) + "地域"]["気象データファイル名"])
 
+    ## 室負荷計算のための係数（解説書 A.3）
+    with open(database_directory + 'qroom_coeffi_area' + str(req.building_information.region_number) + '.json', 'r',
+              encoding='utf-8') as f:
+        q_room_coeffi = json.load(f)
+
     builelib_run(
         True,
         input_filename,
@@ -631,5 +638,6 @@ if __name__ == "__main__":
         x_out_all,
         iod_all,
         ios_all,
-        inn_all
+        inn_all,
+        q_room_coeffi
     )

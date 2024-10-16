@@ -82,7 +82,8 @@ def calc_energy(
         x_out_all,
         iod_all,
         ios_all,
-        inn_all
+        inn_all,
+        q_room_coeffi
 ):
     input_data["pump"] = {}
     input_data["ref"] = {}
@@ -1070,12 +1071,6 @@ def calc_energy(
     ##----------------------------------------------------------------------------------
     ## 室負荷の計算（解説書 2.4.3、2.4.4）
     ##----------------------------------------------------------------------------------
-
-    ## 室負荷計算のための係数（解説書 A.3）
-    with open(database_directory + 'qroom_coeffi_area' + input_data["building"]["region"] + '.json', 'r',
-              encoding='utf-8') as f:
-        q_room_coeffi = json.load(f)
-
     heat_light_hourly = {}
     num_of_person_hourly = {}
     heat_oaapp_hourly = {}
