@@ -74,7 +74,15 @@ def calc_energy(
         area,
         ac_operation_mode,
         window_heat_transfer_performance,
-        glass2window
+        glass2window,
+        area_number,
+        heat_thermal_conductivity,
+        heat_thermal_conductivity_model,
+        t_out_all,
+        x_out_all,
+        iod_all,
+        ios_all,
+        inn_all
 ):
     input_data["pump"] = {}
     input_data["ref"] = {}
@@ -177,10 +185,10 @@ def calc_energy(
     ##----------------------------------------------------------------------------------
 
     # 外気温度帯の上限・下限
-    mx_thermal_heating_min = area[input_data["building"]["region"] + "地域"]["暖房時外気温下限"]
-    mx_thermal_heating_max = area[input_data["building"]["region"] + "地域"]["暖房時外気温上限"]
-    mx_thermal_cooling_min = area[input_data["building"]["region"] + "地域"]["冷房時外気温下限"]
-    mx_thermal_cooling_max = area[input_data["building"]["region"] + "地域"]["冷房時外気温上限"]
+    mx_thermal_heating_min = area[str(area_number) + "地域"]["暖房時外気温下限"]
+    mx_thermal_heating_max = area[str(area_number) + "地域"]["暖房時外気温上限"]
+    mx_thermal_cooling_min = area[str(area_number) + "地域"]["冷房時外気温下限"]
+    mx_thermal_cooling_max = area[str(area_number) + "地域"]["冷房時外気温上限"]
 
     del_temperature_cooling = (mx_thermal_cooling_max - mx_thermal_cooling_min) / div_temperature
     del_temperature_heating = (mx_thermal_heating_max - mx_thermal_heating_min) / div_temperature
@@ -206,31 +214,6 @@ def calc_energy(
 
     if input_data["building"]["coefficient_dhc"]["heating"] is None:
         input_data["building"]["coefficient_dhc"]["heating"] = 1.36
-
-    ##----------------------------------------------------------------------------------
-    ## 気象データ（解説書 2.2.1）
-    ## 任意評定 （SP-5: 気象データ)
-    ##----------------------------------------------------------------------------------
-
-    if "climate_data" in input_data["special_input_data"]:  # 任意入力（SP-5）
-
-        # 外気温 [℃]
-        t_out_all = np.array(input_data["special_input_data"]["climate_data"]["tout"])
-        # 外気湿度 [kg/kgDA]
-        x_out_all = np.array(input_data["special_input_data"]["climate_data"]["xout"])
-        # 法線面直達日射量 [W/m2]
-        iod_all = np.array(input_data["special_input_data"]["climate_data"]["iod"])
-        # 水平面天空日射量 [W/m2]
-        ios_all = np.array(input_data["special_input_data"]["climate_data"]["ios"])
-        # 水平面夜間放射量 [W/m2]
-        inn_all = np.array(input_data["special_input_data"]["climate_data"]["inn"])
-
-    else:
-
-        # 気象データ（HASP形式）読み込み ＜365×24の行列＞
-        [t_out_all, x_out_all, iod_all, ios_all, inn_all] = \
-            climate.read_hasp_climate_data(
-                climate_data_directory + "/" + area[input_data["building"]["region"] + "地域"]["気象データファイル名"])
 
     # 緯度
     latitude = area[input_data["building"]["region"] + "地域"]["緯度"]
@@ -451,16 +434,6 @@ def calc_energy(
     ##----------------------------------------------------------------------------------
     ## 外壁等の熱貫流率の算出（解説書 附属書A.1）
     ##----------------------------------------------------------------------------------
-
-    ### ISSUE : 二つのデータベースにわかれてしまっているので統一する。###
-
-    # 標準入力法建材データの読み込み
-    with open(database_directory + 'heat_thermal_conductivity.json', 'r', encoding='utf-8') as f:
-        heat_thermal_conductivity = json.load(f)
-
-    # モデル建物法建材データの読み込み
-    with open(database_directory + 'heat_thermal_conductivity_model.json', 'r', encoding='utf-8') as f:
-        heat_thermal_conductivity_model = json.load(f)
 
     if "wall_configure" in input_data:  # wall_configure があれば以下を実行
 
@@ -1357,16 +1330,6 @@ def calc_energy(
             print(
                 f'年間室負荷（暖房要求） q_room_daily_heating: {result_json["q_room"][room_zone_name]["年間室負荷（暖房）[MJ]"]}')
 
-    # 熱負荷のグラフ化（確認用）
-    # for room_zone_name in input_data["air_conditioning_zone"]:
-
-    #     mf.hourlyplot(result_json["q_room"][room_zone_name]["q_room_hourly_cooling"], "室負荷（冷房）："+room_zone_name, "b", "室負荷（冷房）")
-    #     mf.hourlyplot(result_json["q_room"][room_zone_name]["q_room_hourly_heating"], "室負荷（暖房）："+room_zone_name, "m", "室負荷（暖房）")
-
-    # plt.show()
-
-    print('室負荷計算完了')
-
     ##----------------------------------------------------------------------------------
     ## 空調機群の一次エネルギー消費量（解説書 2.5）
     ##----------------------------------------------------------------------------------
@@ -2145,8 +2108,6 @@ def calc_energy(
                             result_json["ahu"][ahu_name]["q_room"]["heating_for_room"][dd] + \
                             result_json["ahu"][ahu_name]["q_oa_ahu"][dd] * (
                                 result_json["ahu"][ahu_name]["ahu_time"]["heating_for_room"][dd]) * 3600 / 1000
-
-    print('空調負荷計算完了')
 
     if debug:  # pragma: no cover
 

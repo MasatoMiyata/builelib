@@ -13,7 +13,7 @@ from builelib import (
     elevator,
     photovoltaic,
     other_energy,
-    cogeneration,
+    cogeneration, climate,
 )
 from builelib.domain.request import AreaByDirection, Room, Building, BuilelibRequest
 
@@ -42,8 +42,14 @@ def builelib_run(
         area,
         ac_operation_mode,
         window_heat_transfer_performance,
-        glass2window
-
+        glass2window,
+        heat_thermal_conductivity,
+        heat_thermal_conductivity_model,
+        t_out_all,
+        x_out_all,
+        iod_all,
+        ios_all,
+        inn_all
 ):
     """Builelibを実行するプログラム
     Args:
@@ -139,6 +145,14 @@ def builelib_run(
                     ac_operation_mode,
                     window_heat_transfer_performance,
                     glass2window,
+                    str(input_data["building"]["region"]),
+                    heat_thermal_conductivity,
+                    heat_thermal_conductivity_model,
+                    t_out_all,
+                    x_out_all,
+                    iod_all,
+                    ios_all,
+                    inn_all
                 )
 
                 # CGSの計算に必要となる変数
@@ -560,6 +574,7 @@ if __name__ == "__main__":
     exp_directory = os.path.join(d, "experiment/")
 
     database_directory = os.path.dirname(os.path.abspath(__file__)) + "/builelib/database/"
+    climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/builelib/climatedata/"
 
     with open(input_filename, 'w', encoding='utf-8') as json_file:
         json.dump(req.create_default_json_file(), json_file, ensure_ascii=False, indent=4)
@@ -587,6 +602,19 @@ if __name__ == "__main__":
     with open(database_directory + 'glass2window.json', 'r', encoding='utf-8') as f:
         glass2window = json.load(f)
 
+    # 標準入力法建材データの読み込み
+    with open(database_directory + 'heat_thermal_conductivity.json', 'r', encoding='utf-8') as f:
+        heat_thermal_conductivity = json.load(f)
+
+    # モデル建物法建材データの読み込み
+    with open(database_directory + 'heat_thermal_conductivity_model.json', 'r', encoding='utf-8') as f:
+        heat_thermal_conductivity_model = json.load(f)
+
+    # 気象データ（HASP形式）読み込み ＜365×24の行列＞
+    [t_out_all, x_out_all, iod_all, ios_all, inn_all] = \
+        climate.read_hasp_climate_data(
+            climate_data_directory + "/" + area[str(req.building_information.region_number) + "地域"]["気象データファイル名"])
+
     builelib_run(
         True,
         input_filename,
@@ -596,5 +624,12 @@ if __name__ == "__main__":
         area,
         ac_operation_mode,
         window_heat_transfer_performance,
-        glass2window
+        glass2window,
+        heat_thermal_conductivity,
+        heat_thermal_conductivity_model,
+        t_out_all,
+        x_out_all,
+        iod_all,
+        ios_all,
+        inn_all
     )
