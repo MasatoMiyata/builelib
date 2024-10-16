@@ -33,7 +33,18 @@ class MyEncoder(json.JSONEncoder):
             return super(MyEncoder, self).default(obj)
 
 
-def builelib_run(exec_calculation, input_file_name, output_base_name):
+def builelib_run(
+        exec_calculation,
+        input_file_name,
+        output_base_name,
+        flow_control,
+        heat_source_performance,
+        area,
+        ac_operation_mode,
+        window_heat_transfer_performance,
+        glass2window
+
+):
     """Builelibを実行するプログラム
     Args:
         exec_calculation (str): 計算の実行 （True: 計算も行う、 False: 計算は行わない）
@@ -118,8 +129,16 @@ def builelib_run(exec_calculation, input_file_name, output_base_name):
             if input_data[
                 "air_conditioning_zone"
             ]:  # air_conditioning_zone が 空 でなければ
+
                 result_data_AC = airconditioning_webpro.calc_energy(
-                    input_data, debug=False
+                    input_data,
+                    False,
+                    flow_control,
+                    heat_source_performance,
+                    area,
+                    ac_operation_mode,
+                    window_heat_transfer_performance,
+                    glass2window,
                 )
 
                 # CGSの計算に必要となる変数
@@ -540,7 +559,42 @@ if __name__ == "__main__":
     d = os.path.dirname(__file__)
     exp_directory = os.path.join(d, "experiment/")
 
+    database_directory = os.path.dirname(os.path.abspath(__file__)) + "/builelib/database/"
+
     with open(input_filename, 'w', encoding='utf-8') as json_file:
         json.dump(req.create_default_json_file(), json_file, ensure_ascii=False, indent=4)
 
-    builelib_run(True, input_filename, output_base_name)
+    # 流量制御
+    with open(database_directory + 'flow_control.json', 'r', encoding='utf-8') as f:
+        flow_control = json.load(f)
+
+    # 熱源機器特性
+    with open(database_directory + "heat_source_performance.json", 'r', encoding='utf-8') as f:
+        heat_source_performance = json.load(f)
+
+    # 地域別データの読み込み
+    with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
+        area = json.load(f)
+
+    # 空調運転モード
+    with open(database_directory + 'ac_operation_mode.json', 'r', encoding='utf-8') as f:
+        ac_operation_mode = json.load(f)
+
+    # 窓データの読み込み
+    with open(database_directory + 'window_heat_transfer_performance.json', 'r', encoding='utf-8') as f:
+        window_heat_transfer_performance = json.load(f)
+
+    with open(database_directory + 'glass2window.json', 'r', encoding='utf-8') as f:
+        glass2window = json.load(f)
+
+    builelib_run(
+        True,
+        input_filename,
+        output_base_name,
+        flow_control,
+        heat_source_performance,
+        area,
+        ac_operation_mode,
+        window_heat_transfer_performance,
+        glass2window
+    )

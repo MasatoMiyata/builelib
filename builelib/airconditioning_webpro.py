@@ -12,6 +12,8 @@ import commons as bc
 import climate
 import shading
 
+import copy
+
 # from . import make_figure as mf
 
 # データベースファイルの保存場所
@@ -66,7 +68,16 @@ def air_enthalpy(t_db, X):
     return h
 
 
-def calc_energy(input_data, debug=False):
+def calc_energy(
+        input_data,
+        debug: bool,
+        flow_control,
+        heat_source_performance,
+        area,
+        ac_operation_mode,
+        window_heat_transfer_performance,
+        glass2window
+):
     input_data["pump"] = {}
     input_data["ref"] = {}
 
@@ -128,18 +139,6 @@ def calc_energy(input_data, debug=False):
     div_temperature = 6  # 外気温度帯マトリックス分割数
 
     ##----------------------------------------------------------------------------------
-    ## データベースファイルの読み込み
-    ##----------------------------------------------------------------------------------
-
-    # 流量制御
-    with open(database_directory + 'flow_control.json', 'r', encoding='utf-8') as f:
-        flow_control = json.load(f)
-
-    # 熱源機器特性
-    with open(database_directory + "heat_source_performance.json", 'r', encoding='utf-8') as f:
-        heat_source_performance = json.load(f)
-
-    ##----------------------------------------------------------------------------------
     ## 任意評定 （SP-1: 流量制御)
     ##----------------------------------------------------------------------------------
 
@@ -160,10 +159,6 @@ def calc_energy(input_data, debug=False):
     ##----------------------------------------------------------------------------------
     ## マトリックスの設定
     ##----------------------------------------------------------------------------------
-
-    # 地域別データの読み込み
-    with open(database_directory + 'area.json', 'r', encoding='utf-8') as f:
-        area = json.load(f)
 
     # 負荷率帯マトリックス mx_l = array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2])
     mx_l = np.arange(1 / (div_l - 1), 1.01, 1 / (div_l - 1))
@@ -247,10 +242,6 @@ def calc_energy(input_data, debug=False):
     ##----------------------------------------------------------------------------------
     ## 冷暖房期間（解説書 2.2.2）
     ##----------------------------------------------------------------------------------
-
-    # 空調運転モード
-    with open(database_directory + 'ac_operation_mode.json', 'r', encoding='utf-8') as f:
-        ac_operation_mode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
     ac_mode = ac_operation_mode[area[input_data["building"]["region"] + "地域"]["空調運転モードタイプ"]]
@@ -355,7 +346,10 @@ def calc_energy(input_data, debug=False):
                             break
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
-        room_schedule_room[room_zone_name], room_schedule_light[room_zone_name], room_schedule_person[room_zone_name], room_schedule_oa_app[room_zone_name], room_day_mode[room_zone_name] = bc.get_room_usage_schedule(input_data["air_conditioning_zone"][room_zone_name]["building_type"], input_data["air_conditioning_zone"][room_zone_name]["room_type"], input_calendar)
+        room_schedule_room[room_zone_name], room_schedule_light[room_zone_name], room_schedule_person[room_zone_name], \
+            room_schedule_oa_app[room_zone_name], room_day_mode[room_zone_name] = bc.get_room_usage_schedule(
+            input_data["air_conditioning_zone"][room_zone_name]["building_type"],
+            input_data["air_conditioning_zone"][room_zone_name]["room_type"], input_calendar)
 
         # 空調対象面積の合計
         room_area_total += input_data["air_conditioning_zone"][room_zone_name]["zone_area"]
@@ -535,13 +529,6 @@ def calc_energy(input_data, debug=False):
     ## 窓の熱貫流率及び日射熱取得率の算出（解説書 附属書A.2）
     ##----------------------------------------------------------------------------------
 
-    # 窓データの読み込み
-    with open(database_directory + 'window_heat_transfer_performance.json', 'r', encoding='utf-8') as f:
-        window_heat_transfer_performance = json.load(f)
-
-    with open(database_directory + 'glass2window.json', 'r', encoding='utf-8') as f:
-        glass2window = json.load(f)
-
     if "window_configure" in input_data:
 
         for window_name in input_data["window_configure"].keys():
@@ -619,14 +606,6 @@ def calc_energy(input_data, debug=False):
                            input_data["window_configure"][window_name]["layer_type"]]["ku_b2"]
                 kita = glass2window[input_data["window_configure"][window_name]["frame_type"]][
                     input_data["window_configure"][window_name]["layer_type"]]["kita"]
-
-                # print(ku_a)
-                # print(ku_b)
-                # print(glass2window[input_data["window_configure"][window_name]["frame_type"]][input_data["window_configure"][window_name]["layer_type"]]["ku_a1"] )
-                # print(glass2window[input_data["window_configure"][window_name]["frame_type"]][input_data["window_configure"][window_name]["layer_type"]]["ku_a2"] )
-                # print(glass2window[input_data["window_configure"][window_name]["frame_type"]][input_data["window_configure"][window_name]["layer_type"]]["ku_b1"] )
-                # print(glass2window[input_data["window_configure"][window_name]["frame_type"]][input_data["window_configure"][window_name]["layer_type"]]["ku_b2"] )
-                # print(input_data["window_configure"][window_name]["glassu_value"])
 
                 input_data["window_configure"][window_name]["u_value"] = ku_a * \
                                                                          input_data["window_configure"][window_name][
@@ -819,8 +798,10 @@ def calc_energy(input_data, debug=False):
 
                     else:
 
-                        if input_data["shading_config"][window_configure["eaves_id"]]["shading_effect_C"] is not None and \
-                                input_data["shading_config"][window_configure["eaves_id"]]["shading_effect_h"] is not None:
+                        if input_data["shading_config"][window_configure["eaves_id"]][
+                            "shading_effect_C"] is not None and \
+                                input_data["shading_config"][window_configure["eaves_id"]][
+                                    "shading_effect_h"] is not None:
 
                             input_data["envelope_set"][room_zone_name]["wall_list"][wall_id]["window_list"][window_id][
                                 "shading_effect_C"] = \
@@ -1348,11 +1329,6 @@ def calc_energy(input_data, debug=False):
     ## 動的室負荷計算
     ##----------------------------------------------------------------------------------
     if False:
-
-        # 負荷計算モジュールの読み込み
-        from .heat_load_calculation import Main
-        import copy
-
         # ファイルの読み込み
         with open('./builelib/heat_load_calculation/heat_load_calculation_template.json', 'r', encoding='utf-8') as js:
             # with open('input_non_residential.json', 'r', encoding='utf-8') as js:
@@ -2161,7 +2137,6 @@ def calc_energy(input_data, debug=False):
         # 当該空調機群が熱を供給する室の室負荷（暖房要求）を積算する。
         result_json["ahu"][ahu_name]["q_room"]["heating_for_room"] += result_json["q_room"][room_zone_name][
             "q_room_daily_heating"]
-
 
     ##----------------------------------------------------------------------------------
     ## 空調機群の運転時間（解説書 2.5.2）
@@ -3722,7 +3697,8 @@ def calc_energy(input_data, debug=False):
                 / (result_json["pump"][pump_name]["運転時間[時間]"] * 3600)
 
             if result_json["pump"][pump_name]["定格能力[kW]"] != 0:
-                result_json["pump"][pump_name]["平均負荷率[-]"] = result_json["pump"][pump_name]["平均処理熱量[kW]"] / result_json["pump"][pump_name]["定格能力[kW]"]
+                result_json["pump"][pump_name]["平均負荷率[-]"] = result_json["pump"][pump_name]["平均処理熱量[kW]"] / \
+                                                                  result_json["pump"][pump_name]["定格能力[kW]"]
             else:
                 result_json["pump"][pump_name]["平均負荷率[-]"] = 0
 
