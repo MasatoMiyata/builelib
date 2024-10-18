@@ -50,7 +50,9 @@ def builelib_run(
         iod_all,
         ios_all,
         inn_all,
-        q_room_coeffi
+        q_room_coeffi,
+        room_usage_schedule,
+        calender
 ):
     """Builelibを実行するプログラム
     Args:
@@ -154,7 +156,9 @@ def builelib_run(
                     iod_all,
                     ios_all,
                     inn_all,
-                    q_room_coeffi
+                    q_room_coeffi,
+                    room_usage_schedule,
+                    calender
                 )
 
                 # CGSの計算に必要となる変数
@@ -622,6 +626,14 @@ if __name__ == "__main__":
               encoding='utf-8') as f:
         q_room_coeffi = json.load(f)
 
+    # 室使用条件データの読み込み
+    with open(database_directory + 'room_usage_schedule.json', 'r', encoding='utf-8') as f:
+        room_usage_schedule = json.load(f)
+
+    # カレンダーパターンの読み込み
+    with open(database_directory + 'calender.json', 'r', encoding='utf-8') as f:
+        calender = json.load(f)
+
     builelib_run(
         True,
         input_filename,
@@ -639,5 +651,7 @@ if __name__ == "__main__":
         iod_all,
         ios_all,
         inn_all,
-        q_room_coeffi
+        q_room_coeffi,
+        room_usage_schedule,
+        calender
     )

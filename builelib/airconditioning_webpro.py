@@ -83,7 +83,9 @@ def calc_energy(
         iod_all,
         ios_all,
         inn_all,
-        q_room_coeffi
+        q_room_coeffi,
+        room_usage_schedule,
+        calender
 ):
     input_data["pump"] = {}
     input_data["ref"] = {}
@@ -164,10 +166,12 @@ def calc_energy(
     ##----------------------------------------------------------------------------------
 
     # 外気温度帯の上限・下限
-    mx_thermal_heating_min = area[str(area_number) + "地域"]["暖房時外気温下限"]
-    mx_thermal_heating_max = area[str(area_number) + "地域"]["暖房時外気温上限"]
-    mx_thermal_cooling_min = area[str(area_number) + "地域"]["冷房時外気温下限"]
-    mx_thermal_cooling_max = area[str(area_number) + "地域"]["冷房時外気温上限"]
+    area_num = str(area_number) + "地域"
+    area_info = area[area_num]
+    mx_thermal_heating_min = area_info["暖房時外気温下限"]
+    mx_thermal_heating_max = area_info["暖房時外気温上限"]
+    mx_thermal_cooling_min = area_info["冷房時外気温下限"]
+    mx_thermal_cooling_max = area_info["冷房時外気温上限"]
 
     del_temperature_cooling = (mx_thermal_cooling_max - mx_thermal_cooling_min) / div_temperature
     del_temperature_heating = (mx_thermal_heating_max - mx_thermal_heating_min) / div_temperature
@@ -195,16 +199,16 @@ def calc_energy(
         input_data["building"]["coefficient_dhc"]["heating"] = 1.36
 
     # 緯度
-    latitude = area[input_data["building"]["region"] + "地域"]["緯度"]
+    latitude = area_info["緯度"]
     # 経度
-    longitude = area[input_data["building"]["region"] + "地域"]["経度"]
+    longitude = area_info["経度"]
 
     ##----------------------------------------------------------------------------------
     ## 冷暖房期間（解説書 2.2.2）
     ##----------------------------------------------------------------------------------
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
-    ac_mode = ac_operation_mode[area[input_data["building"]["region"] + "地域"]["空調運転モードタイプ"]]
+    ac_mode = ac_operation_mode[area_info["空調運転モードタイプ"]]
 
     ##----------------------------------------------------------------------------------
     ## 平均外気温（解説書 2.2.3）
@@ -255,13 +259,6 @@ def calc_energy(
             room_enthalpy_setting[dd] = 38.81
 
     ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-6: カレンダーパターン)
-    ##----------------------------------------------------------------------------------
-    input_calendar = []
-    if "calender" in input_data["special_input_data"]:
-        input_calendar = input_data["special_input_data"]["calender"]
-
-    ##----------------------------------------------------------------------------------
     ## 空調機の稼働状態、内部発熱量（解説書 2.3.3、2.3.4）
     ##----------------------------------------------------------------------------------
 
@@ -307,9 +304,9 @@ def calc_energy(
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
         room_schedule_room[room_zone_name], room_schedule_light[room_zone_name], room_schedule_person[room_zone_name], \
-            room_schedule_oa_app[room_zone_name], room_day_mode[room_zone_name] = bc.get_room_usage_schedule(
+            room_schedule_oa_app[room_zone_name], room_day_mode[room_zone_name] = bc.get_room_usage_schedule_file(
             input_data["air_conditioning_zone"][room_zone_name]["building_type"],
-            input_data["air_conditioning_zone"][room_zone_name]["room_type"], input_calendar)
+            input_data["air_conditioning_zone"][room_zone_name]["room_type"], room_usage_schedule, calender)
 
         # 空調対象面積の合計
         room_area_total += input_data["air_conditioning_zone"][room_zone_name]["zone_area"]
@@ -3760,10 +3757,10 @@ def calc_energy(
     ## 湿球温度 （解説書 2.7.4.2）
     ##----------------------------------------------------------------------------------
 
-    toa_wb_c = area[input_data["building"]["region"] + "地域"]["湿球温度係数_冷房a1"] * toadb_cooling + \
-               area[input_data["building"]["region"] + "地域"]["湿球温度係数_冷房a0"]
-    toa_wb_h = area[input_data["building"]["region"] + "地域"]["湿球温度係数_暖房a1"] * toadb_heating + \
-               area[input_data["building"]["region"] + "地域"]["湿球温度係数_暖房a0"]
+    toa_wb_c = area_info["湿球温度係数_冷房a1"] * toadb_cooling + \
+               area_info["湿球温度係数_冷房a0"]
+    toa_wb_h = area_info["湿球温度係数_暖房a1"] * toadb_heating + \
+               area_info["湿球温度係数_暖房a0"]
 
     # 保存用
     result_json["matrix"]["toa_wb_c"] = toa_wb_c
