@@ -4557,8 +4557,7 @@ def calc_energy(inputdata, debug = False):
                 # 負荷に比例させる（発電機能なし）
                 refset_SubPower = 0
                 for unit_id in range(0, int(resultJson["REF"][ref_name]["num_of_operation"][dd])):
-                    if inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] > 0:
-                        refset_SubPower += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"]
+                    refset_SubPower += inputdata["REF"][ref_name]["Heatsource"][unit_id]["Heatsource_sub_RatedPowerConsumption_total"]
 
                 if aveLperU <= 0.3:
                     resultJson["REF"][ref_name]["E_ref_sub"][dd] += 0.3 * refset_SubPower
@@ -5044,17 +5043,7 @@ def calc_energy(inputdata, debug = False):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    # filename = './sample/ACtest_Case001.json'
-    # filename = './sample/Builelib_sample_SP1_input.json'
-    # filename = './sample/WEBPRO_inputSheet_sample.json'
-    # filename = './sample/Builelib_sample_SP10.json'
-    # filename = './sample/WEBPRO_KE14_Case01.json'
-    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
-    filename = './sample/InputSheet_AC_全熱交換器なし_熱貫流率1_補機なし.json'
-    # filename = './tests/cogeneration/Case_hospital_00.json'
-    # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
-    # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
-
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
