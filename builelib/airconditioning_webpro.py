@@ -1715,7 +1715,9 @@ def calc_energy(inputdata, debug = False):
         # 全熱交換器の有無
         inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "無"
         for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-            if unit_configure["isAirHeatExchanger"] == "全熱交換器あり・様式2-9記載無し":
+            if unit_configure["isAirHeatExchanger"] == "有":
+                inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "有"
+            elif unit_configure["isAirHeatExchanger"] == "全熱交換器あり・様式2-9記載無し":
                 inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "有"
 
         # 全熱交換器の効率（一番低いものを採用）
@@ -5047,7 +5049,8 @@ if __name__ == '__main__':  # pragma: no cover
     # filename = './sample/WEBPRO_inputSheet_sample.json'
     # filename = './sample/Builelib_sample_SP10.json'
     # filename = './sample/WEBPRO_KE14_Case01.json'
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    filename = './sample/InputSheet_AC_全熱交換器なし_熱貫流率1_補機なし.json'
     # filename = './tests/cogeneration/Case_hospital_00.json'
     # filename = './tests/airconditioning_heatsoucetemp/airconditioning_heatsoucetemp_area_6.json'
     # filename = "./tests/airconditioning_gshp_openloop/AC_gshp_closeloop_Case001.json"
