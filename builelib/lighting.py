@@ -39,11 +39,7 @@ def set_room_indexCoeff(room_index):
     return room_indexCoeff
 
 
-def calc_energy(input_data, DEBUG=False):
-    # データベースjsonの読み込み
-    with open(database_directory + 'lighting_control.json', 'r', encoding='utf-8') as f:
-        lightingCtrl = json.load(f)
-
+def calc_energy(input_data, light_control, calendar, room_usage_schedule, DEBUG=False):
     # 計算結果を格納する変数
     result_json = {
         "E_lighting": None,
@@ -82,7 +78,8 @@ def calc_energy(input_data, DEBUG=False):
         # opeTime = bc.RoomUsageSchedule[building_type][room_type]["年間照明点灯時間"]
 
         # 時刻別スケジュールの読み込み
-        opePattern_hourly_light = bc.get_dailyOpeSchedule_lighting(building_type, room_type, input_calendar)
+        opePattern_hourly_light = bc.get_daily_ope_schedule_lighting(building_type, room_type, calendar,
+                                                                     room_usage_schedule)
         opeTime = np.sum(np.sum(opePattern_hourly_light))
 
         ##----------------------------------------------------------------------------------
@@ -96,7 +93,8 @@ def calc_energy(input_data, DEBUG=False):
 
                 if "照明発熱密度比率" in input_data["special_input_data"]["room_schedule"][room_zone_name]["schedule"]:
                     opePattern_hourly_light = np.array(
-                        input_data["special_input_data"]["room_schedule"][room_zone_name]["schedule"]["照明発熱密度比率"])
+                        input_data["special_input_data"]["room_schedule"][room_zone_name]["schedule"][
+                            "照明発熱密度比率"])
 
                     # SP-7の場合は、発熱比率をそのまま使用することにする。
                     # opePattern_hourly_light = np.where(opePattern_hourly_light > 0, 1, 0)
@@ -112,17 +110,10 @@ def calc_energy(input_data, DEBUG=False):
                     input_data["lighting_systems"][room_zone_name]["room_depth"] > 0 and \
                     input_data["lighting_systems"][room_zone_name]["unit_height"] > 0:
                 room_index = (input_data["lighting_systems"][room_zone_name]["room_width"] *
-                             input_data["lighting_systems"][room_zone_name]["room_depth"]) / ((input_data[
-                                                                                                "lighting_systems"][
-                                                                                                room_zone_name][
-                                                                                                "room_width"] +
-                                                                                            input_data[
-                                                                                                "lighting_systems"][
-                                                                                                room_zone_name][
-                                                                                                "room_depth"]) *
-                                                                                           input_data["lighting_systems"][
-                                                                                               room_zone_name][
-                                                                                               "unit_height"])
+                              input_data["lighting_systems"][room_zone_name]["room_depth"]) / \
+                             ((input_data["lighting_systems"][room_zone_name]["room_width"] +
+                               input_data["lighting_systems"][room_zone_name]["room_depth"]) *
+                              input_data["lighting_systems"][room_zone_name]["unit_height"])
             else:
                 room_index = None
         else:
@@ -138,9 +129,9 @@ def calc_energy(input_data, DEBUG=False):
             # 在室検知制御方式の効果係数
             ctrl_occupant_sensing = 1
             if input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name]["occupant_sensing_ctrl"] in \
-                    lightingCtrl["occupant_sensing_ctrl"]:
+                    light_control["occupant_sensing_ctrl"]:
                 # データベースから検索して効果係数を決定
-                ctrl_occupant_sensing = lightingCtrl["occupant_sensing_ctrl"][
+                ctrl_occupant_sensing = light_control["occupant_sensing_ctrl"][
                     input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name]["occupant_sensing_ctrl"]]
             else:
                 # 直接入力された効果係数を使用
@@ -150,21 +141,23 @@ def calc_energy(input_data, DEBUG=False):
             # 明るさ検知制御方式の効果係数
             ctrl_illuminance_sensing = 1
             if input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name]["illuminance_sensing_ctrl"] in \
-                    lightingCtrl["illuminance_sensing_ctrl"]:
+                    light_control["illuminance_sensing_ctrl"]:
                 # データベースから検索して効果係数を決定
-                ctrl_illuminance_sensing = lightingCtrl["illuminance_sensing_ctrl"][
-                    input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name]["illuminance_sensing_ctrl"]]
+                ctrl_illuminance_sensing = light_control["illuminance_sensing_ctrl"][
+                    input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name][
+                        "illuminance_sensing_ctrl"]]
             else:
                 # 直接入力された効果係数を使用
                 ctrl_illuminance_sensing = float(
-                    input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name]["illuminance_sensing_ctrl"])
+                    input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name][
+                        "illuminance_sensing_ctrl"])
 
             # タイムスケジュール制御方式の効果係数
             ctrl_time_schedule = 1
             if input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name]["time_schedule_ctrl"] in \
-                    lightingCtrl["time_schedule_ctrl"]:
+                    light_control["time_schedule_ctrl"]:
                 # データベースから検索して効果係数を決定
-                ctrl_time_schedule = lightingCtrl["time_schedule_ctrl"][
+                ctrl_time_schedule = light_control["time_schedule_ctrl"][
                     input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name]["time_schedule_ctrl"]]
             else:
                 # 直接入力された効果係数を使用
@@ -174,9 +167,9 @@ def calc_energy(input_data, DEBUG=False):
             # 初期照度補正の効果係数
             initial_illumination_correction = 1
             if input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name][
-                "initial_illumination_correction_ctrl"] in lightingCtrl["initial_illumination_correction_ctrl"]:
+                "initial_illumination_correction_ctrl"] in light_control["initial_illumination_correction_ctrl"]:
                 # データベースから検索して効果係数を決定
-                initial_illumination_correction = lightingCtrl["initial_illumination_correction_ctrl"][
+                initial_illumination_correction = light_control["initial_illumination_correction_ctrl"][
                     input_data["lighting_systems"][room_zone_name]["lighting_unit"][unit_name][
                         "initial_illumination_correction_ctrl"]]
             else:

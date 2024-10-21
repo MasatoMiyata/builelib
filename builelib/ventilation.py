@@ -39,7 +39,7 @@ def set_outdoor_temperature(region):
     return toa_ave_design
 
 
-def calc_energy(input_data, DEBUG=False):
+def calc_energy(input_data, ventilation_ctrl, DEBUG=False):
     # 計算結果を格納する変数
     result_json = {
 
@@ -79,26 +79,12 @@ def calc_energy(input_data, DEBUG=False):
         ## 年間換気運転時間 （解説書 B.2）
         ##----------------------------------------------------------------------------------
 
-        if "special_input_data" in input_data:
-
-            input_calendar = {}
-            if "calender" in input_data["special_input_data"]:
-                input_calendar = input_data["special_input_data"]["calender"]  # SP-6
-
-            input_room_usage_condition = {}
-            if "room_usage_condition" in input_data["special_input_data"]:
-                input_room_usage_condition = input_data["special_input_data"]["room_usage_condition"]  # SP-9
-
-            input_data["ventilation_room"][room_id]["ope_time_hourly"] = bc.get_daily_ope_schedule_ventilation(building_type,
-                                                                                                           room_type,
-                                                                                                           input_room_usage_condition,
-                                                                                                           input_calendar)
-
-        else:
-            input_data["ventilation_room"][room_id]["ope_time_hourly"] = bc.get_daily_ope_schedule_ventilation(building_type, room_type)
+        input_data["ventilation_room"][room_id]["ope_time_hourly"] = bc.get_daily_ope_schedule_ventilation(
+            building_type, room_type)
 
         # 年間換気運転時間
-        input_data["ventilation_room"][room_id]["opeTime"] = np.sum(np.sum(input_data["ventilation_room"][room_id]["ope_time_hourly"]))
+        input_data["ventilation_room"][room_id]["opeTime"] = np.sum(
+            np.sum(input_data["ventilation_room"][room_id]["ope_time_hourly"]))
 
         # 接続されている換気機器の種類に応じて集計処理を実行
         input_data["ventilation_room"][room_id]["is_ventilation_using_ac"] = False
@@ -116,18 +102,20 @@ def calc_energy(input_data, DEBUG=False):
 
                 # もし複数あれば、能力を合計する（外気冷房判定用）
                 input_data["ventilation_room"][room_id]["ac_cooling_capacity_total"] += \
-                input_data["ventilation_unit"][unit_id]["ac_cooling_capacity"]
+                    input_data["ventilation_unit"][unit_id]["ac_cooling_capacity"]
 
             elif iunit["unit_type"] == "給気":
 
                 # 給気風量の合計（外気冷房判定用）
-                input_data["ventilation_room"][room_id]["total_air_volume_supply"] += input_data["ventilation_unit"][unit_id][
+                input_data["ventilation_room"][room_id]["total_air_volume_supply"] += \
+                input_data["ventilation_unit"][unit_id][
                     "fan_air_volume"]
 
             elif iunit["unit_type"] == "排気":
 
                 # 排気風量の合計（外気冷房判定用）
-                input_data["ventilation_room"][room_id]["total_air_volume_exhaust"] += input_data["ventilation_unit"][unit_id][
+                input_data["ventilation_room"][room_id]["total_air_volume_exhaust"] += \
+                input_data["ventilation_unit"][unit_id][
                     "fan_air_volume"]
 
         # 接続されている換気機器のリストに室の情報を追加（複数室に跨がる換気送風機の計算のため）
@@ -146,7 +134,8 @@ def calc_energy(input_data, DEBUG=False):
                 input_data["ventilation_unit"][unit_id]["ope_time_list_hourly"].append(
                     input_data["ventilation_room"][room_id]["ope_time_hourly"])
             else:
-                input_data["ventilation_unit"][unit_id]["ope_time_list"] = [input_data["ventilation_room"][room_id]["opeTime"]]
+                input_data["ventilation_unit"][unit_id]["ope_time_list"] = [
+                    input_data["ventilation_room"][room_id]["opeTime"]]
                 input_data["ventilation_unit"][unit_id]["ope_time_list_hourly"] = [
                     input_data["ventilation_room"][room_id]["ope_time_hourly"]]
 
@@ -185,12 +174,6 @@ def calc_energy(input_data, DEBUG=False):
             print(f'  - 換気代替空調機の有無 {input_data["ventilation_unit"][unit_id]["is_ventilation_using_ac"]}')
 
     ##----------------------------------------------------------------------------------
-    ## 送風機の制御方式に応じて定められる係数（解説書 3.2）
-    ##----------------------------------------------------------------------------------
-    with open(database_directory + '/ventilation_control.json', 'r', encoding='utf-8') as f:
-        ventilationCtrl = json.load(f)
-
-    ##----------------------------------------------------------------------------------
     ## 換気送風機の年間電力消費量（解説書 3.3）
     ##----------------------------------------------------------------------------------
     for unit_id, iunit in input_data["ventilation_unit"].items():
@@ -206,9 +189,9 @@ def calc_energy(input_data, DEBUG=False):
         # 消費電力（制御込み）[kW]
         input_data["ventilation_unit"][unit_id]["energy_kw"] = \
             Ekw * iunit["number"] \
-            * ventilationCtrl["high_efficiency_motor"][iunit["high_efficiency_motor"]] \
-            * ventilationCtrl["inverter"][iunit["inverter"]] \
-            * ventilationCtrl["air_volume_control"][iunit["air_volume_control"]]
+            * ventilation_ctrl["high_efficiency_motor"][iunit["high_efficiency_motor"]] \
+            * ventilation_ctrl["inverter"][iunit["inverter"]] \
+            * ventilation_ctrl["air_volume_control"][iunit["air_volume_control"]]
 
         # 床面積の合計
         input_data["ventilation_unit"][unit_id]["room_area_total"] = sum(iunit["room_areaList"])
@@ -221,7 +204,7 @@ def calc_energy(input_data, DEBUG=False):
             if input_data["ventilation_unit"][unit_id]["max_ope_time"] < opeTime_V:
                 input_data["ventilation_unit"][unit_id]["max_ope_time"] = opeTime_V
                 input_data["ventilation_unit"][unit_id]["max_ope_time_hourly"] = \
-                input_data["ventilation_unit"][unit_id]["ope_time_list_hourly"][opeTime_id]
+                    input_data["ventilation_unit"][unit_id]["ope_time_list_hourly"][opeTime_id]
 
         # 換気代替空調機と換気送風機が混在していないかをチェック  →  混在していたらエラー
         if not all(iunit["is_ventilation_using_ac"]) and any(iunit["is_ventilation_using_ac"]):
@@ -255,7 +238,7 @@ def calc_energy(input_data, DEBUG=False):
 
             # 外気冷房に必要な外気導入量
             required_oa_volume = 1000 * isys["ac_cooling_capacity_total"] / (
-                        0.33 * (40 - set_outdoor_temperature(input_data["building"]["region"])))
+                    0.33 * (40 - set_outdoor_temperature(input_data["building"]["region"])))
 
             # 年間稼働率（表.20）
             if outdoor_volume > required_oa_volume:
@@ -295,16 +278,19 @@ def calc_energy(input_data, DEBUG=False):
                         # 換気代替空調機本体（時刻別）
                         result_json["ventilation"][room_id]["時刻別設計一次エネルギー消費量[MJ/h]"] += \
                             (input_data["ventilation_unit"][unit_id]["ac_cooling_capacity"] * xL / (
-                                        2.71 * input_data["ventilation_unit"][unit_id]["ac_ref_efficiency"]) \
+                                    2.71 * input_data["ventilation_unit"][unit_id]["ac_ref_efficiency"]) \
                              + input_data["ventilation_unit"][unit_id]["ac_pump_power"] / 0.75) \
-                            * input_data["ventilation_room"][room_id]["room_area"] / input_data["ventilation_unit"][unit_id][
+                            * input_data["ventilation_room"][room_id]["room_area"] / \
+                            input_data["ventilation_unit"][unit_id][
                                 "room_area_total"] \
-                            * input_data["ventilation_unit"][unit_id]["max_ope_time_hourly"] * bc.fprime * 10 ** (-3) * Cac
+                            * input_data["ventilation_unit"][unit_id]["max_ope_time_hourly"] * bc.fprime * 10 ** (
+                                -3) * Cac
 
                     # 空調機に付属するファン（時刻別）
                     result_json["ventilation"][room_id]["時刻別設計一次エネルギー消費量[MJ/h]"] += \
                         input_data["ventilation_unit"][unit_id]["energy_kw"] \
-                        * input_data["ventilation_room"][room_id]["room_area"] / input_data["ventilation_unit"][unit_id][
+                        * input_data["ventilation_room"][room_id]["room_area"] / \
+                        input_data["ventilation_unit"][unit_id][
                             "room_area_total"] \
                         * input_data["ventilation_unit"][unit_id]["max_ope_time_hourly"] * bc.fprime * 10 ** (-3) * Cac
 
@@ -313,7 +299,8 @@ def calc_energy(input_data, DEBUG=False):
                     # 換気代替空調機と併設される送風機(時刻別)
                     result_json["ventilation"][room_id]["時刻別設計一次エネルギー消費量[MJ/h]"] += \
                         input_data["ventilation_unit"][unit_id]["energy_kw"] \
-                        * input_data["ventilation_room"][room_id]["room_area"] / input_data["ventilation_unit"][unit_id][
+                        * input_data["ventilation_room"][room_id]["room_area"] / \
+                        input_data["ventilation_unit"][unit_id][
                             "room_area_total"] \
                         * input_data["ventilation_unit"][unit_id]["max_ope_time_hourly"] * bc.fprime * 10 ** (-3) * Cfan
 
@@ -331,10 +318,10 @@ def calc_energy(input_data, DEBUG=False):
             for unit_id, iunit in input_data["ventilation_room"][room_id]["ventilation_unit_ref"].items():
                 # エネルギー消費量 [kW * m2/m2 * kJ/KWh] (時刻別)
                 result_json["ventilation"][room_id]["時刻別設計一次エネルギー消費量[MJ/h]"] += \
-                input_data["ventilation_unit"][unit_id]["energy_kw"] \
-                * input_data["ventilation_room"][room_id]["room_area"] / input_data["ventilation_unit"][unit_id][
-                    "room_area_total"] \
-                * input_data["ventilation_unit"][unit_id]["max_ope_time_hourly"] * bc.fprime * 10 ** (-3)
+                    input_data["ventilation_unit"][unit_id]["energy_kw"] \
+                    * input_data["ventilation_room"][room_id]["room_area"] / input_data["ventilation_unit"][unit_id][
+                        "room_area_total"] \
+                    * input_data["ventilation_unit"][unit_id]["max_ope_time_hourly"] * bc.fprime * 10 ** (-3)
 
     ##----------------------------------------------------------------------------------
     ## 基準一次エネルギー消費量 [MJ] （解説書 10.2）
@@ -352,10 +339,13 @@ def calc_energy(input_data, DEBUG=False):
     ##----------------------------------------------------------------------------------
 
     for room_id, isys in input_data["ventilation_room"].items():
-        result_json["ventilation"][room_id]["設計値[MJ]"] = np.sum(np.sum(result_json["ventilation"][room_id]["時刻別設計一次エネルギー消費量[MJ/h]"]))
-        result_json["ventilation"][room_id]["設計値[MJ/m2]"] = result_json["ventilation"][room_id]["設計値[MJ]"] / input_data["rooms"][room_id]["room_area"]
+        result_json["ventilation"][room_id]["設計値[MJ]"] = np.sum(
+            np.sum(result_json["ventilation"][room_id]["時刻別設計一次エネルギー消費量[MJ/h]"]))
+        result_json["ventilation"][room_id]["設計値[MJ/m2]"] = result_json["ventilation"][room_id]["設計値[MJ]"] / \
+                                                               input_data["rooms"][room_id]["room_area"]
         if result_json["ventilation"][room_id]["基準値[MJ]"] != 0:
-            result_json["ventilation"][room_id]["設計値/基準値"] = result_json["ventilation"][room_id]["設計値[MJ]"] / result_json["ventilation"][room_id]["基準値[MJ]"]
+            result_json["ventilation"][room_id]["設計値/基準値"] = result_json["ventilation"][room_id]["設計値[MJ]"] / \
+                                                                   result_json["ventilation"][room_id]["基準値[MJ]"]
         else:
             result_json["ventilation"][room_id]["設計値/基準値"] = 0
 
@@ -366,8 +356,10 @@ def calc_energy(input_data, DEBUG=False):
 
     result_json["設計一次エネルギー消費量[GJ/年]"] = result_json["設計一次エネルギー消費量[MJ/年]"] / 1000
     result_json["基準一次エネルギー消費量[GJ/年]"] = result_json["基準一次エネルギー消費量[MJ/年]"] / 1000
-    result_json["設計一次エネルギー消費量[MJ/m2年]"] = result_json["設計一次エネルギー消費量[MJ/年]"] / result_json["計算対象面積"]
-    result_json["基準一次エネルギー消費量[MJ/m2年]"] = result_json["基準一次エネルギー消費量[MJ/年]"] / result_json["計算対象面積"]
+    result_json["設計一次エネルギー消費量[MJ/m2年]"] = result_json["設計一次エネルギー消費量[MJ/年]"] / result_json[
+        "計算対象面積"]
+    result_json["基準一次エネルギー消費量[MJ/m2年]"] = result_json["基準一次エネルギー消費量[MJ/年]"] / result_json[
+        "計算対象面積"]
 
     # BEI/V [-]
     if result_json["基準一次エネルギー消費量[MJ/年]"] <= 0:
@@ -378,7 +370,8 @@ def calc_energy(input_data, DEBUG=False):
 
     # コジェネ用の結果の格納 [MJ → MWh]
     for day in range(0, 365):
-        result_json["for_cgs"]["Edesign_MWh_day"][day] = np.sum(result_json["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (bc.fprime)
+        result_json["for_cgs"]["Edesign_MWh_day"][day] = np.sum(result_json["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (
+            bc.fprime)
 
         ##----------------------------------------------------------------------------------
     # 不要な要素を削除

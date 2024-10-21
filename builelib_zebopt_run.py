@@ -35,7 +35,7 @@ class MyEncoder(json.JSONEncoder):
 
 def builelib_run(
         exec_calculation,
-        input_file_name,
+        input_data,
         output_base_name,
         flow_control,
         heat_source_performance,
@@ -52,7 +52,9 @@ def builelib_run(
         inn_all,
         q_room_coeffi,
         room_usage_schedule,
-        calender
+        calender,
+        lighting_ctrl,
+        ventilation_ctrl
 ):
     """Builelibを実行するプログラム
     Args:
@@ -67,8 +69,8 @@ def builelib_run(
     # ------------------------------------
     exec_calculation = bool(
         exec_calculation
-    )  # 計算の実行 （True: 計算も行う、 False: 計算は行わない）
-    input_file_name = str(input_file_name)  # 入力ファイルの名称
+    )
+    # input_file_name = str(input_file_name)
 
     # ------------------------------------
     # 出力ファイルの定義
@@ -116,14 +118,6 @@ def builelib_run(
     energy_consumption_design = 0
     # 基準一次エネルギー消費量[MJ]
     energy_consumption_standard = 0
-
-    # ------------------------------------
-    # 入力ファイルの読み込み
-    # ------------------------------------
-    input_data = {}
-
-    with open(input_file_name, "r", encoding="utf-8") as fr:
-        input_data = json.load(fr)
 
     # ------------------------------------
     # 空気調和設備の計算の実行
@@ -205,7 +199,7 @@ def builelib_run(
         try:
             if input_data["ventilation_room"]:  # ventilation_room が 空 でなければ
 
-                result_data_V = ventilation.calc_energy(input_data, DEBUG=False)
+                result_data_V = ventilation.calc_energy(input_data, ventilation_ctrl, DEBUG=False)
 
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["V"] = result_data_V["for_cgs"]
@@ -255,8 +249,8 @@ def builelib_run(
         try:
             if input_data["lighting_systems"]:  # lighting_systems が 空 でなければ
 
-                result_data_L = lighting.calc_energy(input_data, DEBUG=False)
-
+                result_data_L = lighting.calc_energy(input_data, lighting_ctrl, calender, room_usage_schedule,
+                                                     DEBUG=False)
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["L"] = result_data_L["for_cgs"]
 
@@ -340,10 +334,8 @@ def builelib_run(
     if exec_calculation:
 
         try:
-            if input_data["elevators"]:  # elevators が 空 でなければ
-
-                result_data_EV = elevator.calc_energy(input_data, DEBUG=False)
-
+            if len(input_data["elevators"]) > 0:
+                result_data_EV = elevator.calc_energy(input_data, False, calender, room_usage_schedule)
                 # CGSの計算に必要となる変数
                 result_json_for_cgs["EV"] = result_data_EV["for_cgs"]
 
@@ -360,7 +352,6 @@ def builelib_run(
 
             else:
                 result_data_EV = {"message": "昇降機はありません。"}
-
         except:
             result_data_EV = {"error": "昇降機の計算時に予期せぬエラーが発生しました。"}
 
@@ -553,7 +544,7 @@ if __name__ == "__main__":
         model_building_type="事務所モデル",
         lighting_number=2,
         lighting_power=400,
-        elevator_number=3,
+        elevator_number=2,
         is_solar_power=True,
         building_information=Building(
             name="test",
@@ -566,13 +557,13 @@ if __name__ == "__main__":
         air_heat_exchange_rate_cooling=52,
         air_heat_exchange_rate_heating=29,
     )
+    r = req.create_default_json_file()
     # コマンドライン引数からファイル名を取得
     # if len(sys.argv) > 2:
     #     input_filename = sys.argv[1]
     #     output_base_name = sys.argv[2]
     # else:
     #     # デフォルトのファイル名
-    input_filename = 'input_zebopt.json'
     output_base_name = 'zebopt'
     #
     # # current directory
@@ -582,8 +573,8 @@ if __name__ == "__main__":
     database_directory = os.path.dirname(os.path.abspath(__file__)) + "/builelib/database/"
     climate_data_directory = os.path.dirname(os.path.abspath(__file__)) + "/builelib/climatedata/"
 
-    with open(input_filename, 'w', encoding='utf-8') as json_file:
-        json.dump(req.create_default_json_file(), json_file, ensure_ascii=False, indent=4)
+    # with open(input_filename, 'w', encoding='utf-8') as json_file:
+    #     json.dump(req.create_default_json_file(), json_file, ensure_ascii=False, indent=4)
 
     # 流量制御
     with open(database_directory + 'flow_control.json', 'r', encoding='utf-8') as f:
@@ -630,13 +621,19 @@ if __name__ == "__main__":
     with open(database_directory + 'room_usage_schedule.json', 'r', encoding='utf-8') as f:
         room_usage_schedule = json.load(f)
 
+    with open(database_directory + 'lighting_control.json', 'r', encoding='utf-8') as f:
+        lighting_ctrl = json.load(f)
+
     # カレンダーパターンの読み込み
     with open(database_directory + 'calender.json', 'r', encoding='utf-8') as f:
         calender = json.load(f)
 
+    with open(database_directory + '/ventilation_control.json', 'r', encoding='utf-8') as f:
+        ventilation_ctrl = json.load(f)
+
     builelib_run(
         True,
-        input_filename,
+        r,
         output_base_name,
         flow_control,
         heat_source_performance,
@@ -653,5 +650,7 @@ if __name__ == "__main__":
         inn_all,
         q_room_coeffi,
         room_usage_schedule,
-        calender
+        calender,
+        lighting_ctrl,
+        ventilation_ctrl
     )

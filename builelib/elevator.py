@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import commons as bc
 
 
-def calc_energy(input_data, DEBUG=False):
+def calc_energy(input_data, DEBUG, calender, room_usage_schedule):
     # ----------------------------------------------------------------------------------
     # 計算結果を格納する変数
     # ----------------------------------------------------------------------------------
@@ -24,20 +24,12 @@ def calc_energy(input_data, DEBUG=False):
         }
     }
 
-    ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-6: カレンダーパターン)
-    ##----------------------------------------------------------------------------------
-    input_calendar = []
-    if "calender" in input_data["special_input_data"]:
-        input_calendar = input_data["special_input_data"]["calender"]
-
     # ----------------------------------------------------------------------------------
     # 解説書 6.2 速度制御方式に応じて定められる係数
     # ----------------------------------------------------------------------------------
 
     for room_name in input_data["elevators"]:
         for unit_id, unit_configure in enumerate(input_data["elevators"][room_name]["elevator"]):
-
             if unit_configure["control_type"] == "交流帰還制御":
                 input_data["elevators"][room_name]["elevator"][unit_id]["control_type_coefficient"] = 1 / 20
 
@@ -65,38 +57,19 @@ def calc_energy(input_data, DEBUG=False):
     # ----------------------------------------------------------------------------------
 
     for room_name in input_data["elevators"]:
-
         # 建物用途、室用途、室面積の取得
         building_type = input_data["rooms"][room_name]["building_type"]
         room_type = input_data["rooms"][room_name]["room_type"]
 
-        # 年間照明点灯時間 [時間] 
+        # 年間照明点灯時間 [時間]
         if building_type == "共同住宅":
             input_data["elevators"][room_name]["operation_time"] = 5480
             input_data["elevators"][room_name]["operation_schedule_hourly"] = 5480 / 8760 * np.ones((365, 24))
         else:
-            input_data["elevators"][room_name]["operation_schedule_hourly"] = bc.get_dailyOpeSchedule_lighting(
-                building_type, room_type, input_calendar)
+            input_data["elevators"][room_name]["operation_schedule_hourly"] = bc.get_daily_ope_schedule_lighting(
+                building_type, room_type, calender, room_usage_schedule)
             input_data["elevators"][room_name]["operation_time"] = np.sum(
                 np.sum(input_data["elevators"][room_name]["operation_schedule_hourly"]))
-
-        ##----------------------------------------------------------------------------------
-        ## 任意評定 （SP-7: 室スケジュール)
-        ##----------------------------------------------------------------------------------
-        if "room_schedule" in input_data["special_input_data"]:
-
-            # SP-7に入力されていれば上書き
-            if room_name in input_data["special_input_data"]["room_schedule"]:
-
-                if "照明発熱密度比率" in input_data["special_input_data"]["room_schedule"][room_name]["schedule"]:
-                    input_data["elevators"][room_name]["operation_schedule_hourly"] = np.array(
-                        input_data["special_input_data"]["room_schedule"][room_name]["schedule"]["照明発熱密度比率"])
-                    input_data["elevators"][room_name]["operation_time"] = np.sum(
-                        np.sum(input_data["elevators"][room_name]["operation_schedule_hourly"]))
-
-        if DEBUG:
-            print(f'室 {room_name} に設置された昇降機')
-            print(f'  - 昇降機運転時間 {input_data["elevators"][room_name]["operation_time"]}')
 
     # エネルギー消費量計算 [kWh/年]
     Edesign_MWh_hour = np.zeros((365, 24))
