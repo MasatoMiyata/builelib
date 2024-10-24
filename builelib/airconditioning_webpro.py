@@ -1628,10 +1628,10 @@ def calc_energy(inputdata, debug = False):
             "qoaAHU": np.zeros(365),           # 日平均外気負荷 [kW]
             "Tahu_total": np.zeros(365),       # 空調機群の日積算運転時間（冷暖合計）
 
-            "E_fan_day": np.zeros(365),        # 空調機群のエネルギー消費量
-            "E_fan_c_day": np.zeros(365),      # 空調機群のエネルギー消費量（冷房）
-            "E_fan_h_day": np.zeros(365),      # 空調機群のエネルギー消費量（暖房）
-            "E_AHUaex_day": np.zeros(365),     # 全熱交換器のエネルギー消費量
+            "E_fan_day": np.zeros(365),        # 空調機群のエネルギー消費量 [MWh]
+            "E_fan_c_day": np.zeros(365),      # 空調機群のエネルギー消費量（冷房） [MWh]
+            "E_fan_h_day": np.zeros(365),      # 空調機群のエネルギー消費量（暖房） [MWh]
+            "E_AHUaex_day": np.zeros(365),     # 全熱交換器のエネルギー消費量 [MWh]
             
             "TdAHUc_total": np.zeros(365),     # 空調機群の冷房運転時間の合計
             "TdAHUh_total": np.zeros(365),     # 空調機群の暖房運転時間の合計
@@ -4958,6 +4958,49 @@ def calc_energy(inputdata, debug = False):
 
 
     ##----------------------------------------------------------------------------------
+    # CSV出力
+    ##----------------------------------------------------------------------------------
+    dump_items = {}
+    for room_zone_name in resultJson["Qroom"]:
+        dump_items[ room_zone_name + " 熱取得（冷房）[MJ/day]"] = resultJson["Qroom"][room_zone_name]["QroomDc"]
+        dump_items[ room_zone_name + " 熱取得（暖房）[MJ/day]"] = resultJson["Qroom"][room_zone_name]["QroomDh"]
+
+    df_daily_ahu = pd.DataFrame(dump_items, index=bc.date_1year)
+    df_daily_ahu.to_csv('result_AC_ROOM_daily.csv', index_label="日時", encoding='shift-jis')
+
+    dump_items = {}
+    for ahu_name in resultJson["AHU"]:
+        dump_items[ ahu_name + " 空調負荷（冷房）[MJ/day]"] = resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"]
+        dump_items[ ahu_name + " 空調負荷（暖房）[MJ/day]"] = resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"]
+        dump_items[ ahu_name + " 外気負荷 [kW]"]            = resultJson["AHU"][ahu_name]["qoaAHU"]
+        dump_items[ ahu_name + " 運転時間（冷房）[h]"]  = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"]
+        dump_items[ ahu_name + " 運転時間（暖房）[h]"]  = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"]
+        dump_items[ ahu_name + " 空調機群の電力消費量 [MWh]"]  = resultJson["AHU"][ahu_name]["E_fan_day"]
+        dump_items[ ahu_name + " 空調機ファン（冷房時）の電力消費量 [MWh]"]   = resultJson["AHU"][ahu_name]["E_fan_c_day"]
+        dump_items[ ahu_name + " 空調機ファン（暖房時）の電力消費量 [MWh]"]   = resultJson["AHU"][ahu_name]["E_fan_h_day"]
+        dump_items[ ahu_name + " 全熱熱交換器の電力消費量 [MWh]"]   = resultJson["AHU"][ahu_name]["E_AHUaex_day"]
+
+    df_daily_ahu = pd.DataFrame(dump_items, index=bc.date_1year)
+    df_daily_ahu.to_csv('result_AC_AHU_daily.csv', index_label="日時", encoding='CP932')
+
+
+
+    df_daily_energy = pd.DataFrame({
+        '一次エネルギー消費量（空調機群）[GJ]'    : resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"],
+        '一次エネルギー消費量（二次ポンプ群）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（二次ポンプ群）[GJ]"],
+        '一次エネルギー消費量（熱源群・主機）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・主機）[GJ]"],
+        '一次エネルギー消費量（熱源群・補機）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・補機）[GJ]"],
+        '電力消費量（空調機群）[MWh]'    : resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"],
+        '電力消費量（二次ポンプ群）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"],
+        '電力消費量（熱源群・主機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・主機）[MWh]"],
+        '電力消費量（熱源群・補機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"],
+    }, index=bc.date_1year)
+
+    df_daily_energy.to_csv('result_AC_energy_daily.csv', index_label="日時", encoding='CP932')
+
+
+
+    ##----------------------------------------------------------------------------------
     # 不要な要素を削除
     ##----------------------------------------------------------------------------------
 
@@ -4968,10 +5011,10 @@ def calc_energy(inputdata, debug = False):
         del resultJson["Qroom"][room_zone_name]["Qwind_T"]
         del resultJson["Qroom"][room_zone_name]["Qwind_S"]
         del resultJson["Qroom"][room_zone_name]["Qwind_N"]
-        # del resultJson["Qroom"][room_zone_name]["QroomDc"]
-        # del resultJson["Qroom"][room_zone_name]["QroomDh"]
-        # del resultJson["Qroom"][room_zone_name]["QroomHc"]
-        # del resultJson["Qroom"][room_zone_name]["QroomHh"]
+        del resultJson["Qroom"][room_zone_name]["QroomDc"]
+        del resultJson["Qroom"][room_zone_name]["QroomDh"]
+        del resultJson["Qroom"][room_zone_name]["QroomHc"]
+        del resultJson["Qroom"][room_zone_name]["QroomHh"]
 
     for ahu_name in resultJson["AHU"]:
         del resultJson["AHU"][ahu_name]["schedule"]
@@ -4988,7 +5031,7 @@ def calc_energy(inputdata, debug = False):
         del resultJson["AHU"][ahu_name]["Qahu_remainH"]
         del resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]
         del resultJson["AHU"][ahu_name]["Qroom"]
-        # del resultJson["AHU"][ahu_name]["Qahu"]
+        del resultJson["AHU"][ahu_name]["Qahu"]
         del resultJson["AHU"][ahu_name]["Tahu"]
         del resultJson["AHU"][ahu_name]["Economizer"]
         del resultJson["AHU"][ahu_name]["LdAHUc"]
@@ -5045,23 +5088,7 @@ def calc_energy(inputdata, debug = False):
         del resultJson["REF"][ref_name]["E_ref_ct_pump"]
 
     del resultJson["Matrix"]
-
-
-    # CSV出力
-    df_output = pd.DataFrame({
-        '一次エネルギー消費量（空調機群）[GJ]'    : resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"],
-        '一次エネルギー消費量（二次ポンプ群）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（二次ポンプ群）[GJ]"],
-        '一次エネルギー消費量（熱源群・主機）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・主機）[GJ]"],
-        '一次エネルギー消費量（熱源群・補機）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・補機）[GJ]"],
-        '電力消費量（空調機群）[MWh]'    : resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"],
-        '電力消費量（二次ポンプ群）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"],
-        '電力消費量（熱源群・主機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・主機）[MWh]"],
-        '電力消費量（熱源群・補機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"],
-    }, index=bc.date_1year)
-    df_output.to_csv('result_ac_energy_daily.csv', index_label="日時", encoding='shift-jis')
-
-
-    # del resultJson["日別エネルギー消費量"]
+    del resultJson["日別エネルギー消費量"]
 
     return resultJson
 
