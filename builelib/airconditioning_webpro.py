@@ -3,7 +3,7 @@ import numpy as np
 import math
 import os
 import copy
-# import matplotlib.pyplot as plt
+import pandas as pd
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -106,10 +106,14 @@ def calc_energy(inputdata, debug = False):
             "熱源群冷却水ポンプ[GJ]": 0,   # 熱源群冷却水ポンプの一次エネルギー消費量 [GJ]
         },
         "日別エネルギー消費量":{
-            "E_fan_MWh_day": np.zeros(365),
-            "E_pump_MWh_day": np.zeros(365),
-            "E_ref_main_MWh_day": np.zeros(365),
-            "E_ref_sub_MWh_day": np.zeros(365),
+            "一次エネルギー消費量（空調機群）[GJ]": np.zeros(365),
+            "一次エネルギー消費量（二次ポンプ群）[GJ]": np.zeros(365),
+            "一次エネルギー消費量（熱源群・主機）[GJ]": np.zeros(365),
+            "一次エネルギー消費量（熱源群・補機）[GJ]": np.zeros(365),
+            "電力消費量（空調機群）[MWh]": np.zeros(365),
+            "電力消費量（二次ポンプ群）[MWh]": np.zeros(365),
+            "電力消費量（熱源群・主機）[MWh]": np.zeros(365),
+            "電力消費量（熱源群・補機）[MWh]": np.zeros(365),
         },
         "Matrix":{            
         },
@@ -2728,24 +2732,26 @@ def calc_energy(inputdata, debug = False):
     # 合計
     for ahu_name in inputdata["AirHandlingSystem"]:
 
-        # 空調機群（送風機）のエネルギー消費量 MWh
+        # 空調機群（送風機）の電力消費量 MWh
         resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"] += np.sum(resultJson["AHU"][ahu_name]["E_fan_day"],0)
 
-        # 空調機群（全熱交換器）のエネルギー消費量 MWh
+        # 空調機群（全熱交換器）の電力消費量 MWh
         resultJson["年間エネルギー消費量"]["空調機群全熱交換器[MWh]"] += np.sum(resultJson["AHU"][ahu_name]["E_AHUaex_day"],0)
 
-        # 空調機群（送風機+全熱交換器）のエネルギー消費量 MWh/day
-        resultJson["日別エネルギー消費量"]["E_fan_MWh_day"] += \
+        # 空調機群（送風機+全熱交換器）の電力消費量 MWh/day
+        resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"] += \
             resultJson["AHU"][ahu_name]["E_fan_day"] + resultJson["AHU"][ahu_name]["E_AHUaex_day"]
-
+        
         # ファン発熱量計算用
         resultJson["AHU"][ahu_name]["TcAHU"] = np.sum(resultJson["AHU"][ahu_name]["TdAHUc_total"],0)
         resultJson["AHU"][ahu_name]["ThAHU"] = np.sum(resultJson["AHU"][ahu_name]["TdAHUh_total"],0)
         resultJson["AHU"][ahu_name]["MxAHUcE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_c_day"],0)
         resultJson["AHU"][ahu_name]["MxAHUhE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_h_day"],0)
 
-    resultJson["年間エネルギー消費量"]["空調機群ファン[GJ]"]  = resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"]  * bc.fprime /1000
+    # 空調機群の一次エネルギー消費量
+    resultJson["年間エネルギー消費量"]["空調機群ファン[GJ]"]      = resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"]  * bc.fprime /1000
     resultJson["年間エネルギー消費量"]["空調機群全熱交換器[GJ]"]  = resultJson["年間エネルギー消費量"]["空調機群全熱交換器[MWh]"]  * bc.fprime /1000
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"] * bc.fprime /1000
 
     print('空調機群のエネルギー消費量計算完了')
 
@@ -3343,13 +3349,14 @@ def calc_energy(inputdata, debug = False):
 
         resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"] += np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
-        resultJson["日別エネルギー消費量"]["E_pump_MWh_day"] += resultJson["PUMP"][pump_name]["E_pump_day"]
+        resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"] += resultJson["PUMP"][pump_name]["E_pump_day"]
     
         resultJson["PUMP"][pump_name]["TcPUMP"]  = np.sum(resultJson["PUMP"][pump_name]["TdPUMP"], 0)
         resultJson["PUMP"][pump_name]["MxPUMPE"]  = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
-    resultJson["年間エネルギー消費量"]["二次ポンプ群[GJ]"]  = resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"]  * bc.fprime /1000
-
+    # 一次エネルギー消費量
+    resultJson["年間エネルギー消費量"]["二次ポンプ群[GJ]"]  = resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"] * bc.fprime /1000
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（二次ポンプ群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"] * bc.fprime /1000
 
     print('二次ポンプ群のエネルギー消費量計算完了')
 
@@ -4684,10 +4691,14 @@ def calc_energy(inputdata, debug = False):
         resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] = 0
         resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] = 0
 
+        # 熱源主機の一次エネルギー消費量 [GJ/day]
+        resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・主機）[GJ]"] += resultJson["REF"][ref_name]["E_ref_day"] / 1000
+
         # 熱源主機の電力消費量 [MWh/day]
-        resultJson["日別エネルギー消費量"]["E_ref_main_MWh_day"]  += resultJson["REF"][ref_name]["E_ref_day_MWh"]
+        resultJson["日別エネルギー消費量"]["電力消費量（熱源群・主機）[MWh]"]  += resultJson["REF"][ref_name]["E_ref_day_MWh"]
+        
         # 熱源主機以外の電力消費量 [MWh/day]
-        resultJson["日別エネルギー消費量"]["E_ref_sub_MWh_day"]  += resultJson["REF"][ref_name]["E_ref_ACc_day"] \
+        resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"]  += resultJson["REF"][ref_name]["E_ref_ACc_day"] \
                 + resultJson["REF"][ref_name]["E_PPc_day"] + resultJson["REF"][ref_name]["E_CTfan_day"] \
                 + resultJson["REF"][ref_name]["E_CTpump_day"]
 
@@ -4723,6 +4734,9 @@ def calc_energy(inputdata, debug = False):
         resultJson["年間エネルギー消費量"]["熱源群冷却塔ファン[GJ]"] += resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"]
         resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[GJ]"] += resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"]
 
+
+    # 一次エネルギ換算
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・補機）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"] * bc.fprime / 1000
 
     print('熱源エネルギー計算完了')
 
@@ -4849,16 +4863,16 @@ def calc_energy(inputdata, debug = False):
                 resultJson["for_CGS"]["CGS_refName_H"] = None
 
         # 熱源主機の電力消費量 [MWh/day]
-        resultJson["for_CGS"]["E_ref_main_MWh_day"] =  resultJson["日別エネルギー消費量"]["E_ref_main_MWh_day"]  # 後半でCGSから排熱供給を受ける熱源群の電力消費量を差し引く。
+        resultJson["for_CGS"]["E_ref_main_MWh_day"] =  resultJson["日別エネルギー消費量"]["電力消費量（熱源群・主機）[MWh]"]  # 後半でCGSから排熱供給を受ける熱源群の電力消費量を差し引く。
 
         # 熱源補機の電力消費量 [MWh/day]
-        resultJson["for_CGS"]["E_ref_sub_MWh_day"] = resultJson["日別エネルギー消費量"]["E_ref_sub_MWh_day"]
+        resultJson["for_CGS"]["E_ref_sub_MWh_day"] = resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"]
 
         # 二次ポンプ群の電力消費量 [MWh/day]
-        resultJson["for_CGS"]["E_pump_MWh_day"] = resultJson["日別エネルギー消費量"]["E_pump_MWh_day"]
+        resultJson["for_CGS"]["E_pump_MWh_day"] = resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"]
 
         # 空調機群の電力消費量 [MWh/day]
-        resultJson["for_CGS"]["E_fan_MWh_day"] = resultJson["日別エネルギー消費量"]["E_fan_MWh_day"]
+        resultJson["for_CGS"]["E_fan_MWh_day"] = resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"]
 
         ## 排熱利用熱源系統
         resultJson["for_CGS"]["E_ref_cgsC_ABS_day"] = np.zeros(365)
@@ -5030,12 +5044,24 @@ def calc_energy(inputdata, debug = False):
         del resultJson["REF"][ref_name]["E_ref_ct_fan"]
         del resultJson["REF"][ref_name]["E_ref_ct_pump"]
 
-
-
-
     del resultJson["Matrix"]
-    del resultJson["日別エネルギー消費量"]
 
+
+    # CSV出力
+    df_output = pd.DataFrame({
+        '一次エネルギー消費量（空調機群）[GJ]'    : resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"],
+        '一次エネルギー消費量（二次ポンプ群）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（二次ポンプ群）[GJ]"],
+        '一次エネルギー消費量（熱源群・主機）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・主機）[GJ]"],
+        '一次エネルギー消費量（熱源群・補機）[GJ]': resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・補機）[GJ]"],
+        '電力消費量（空調機群）[MWh]'    : resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"],
+        '電力消費量（二次ポンプ群）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"],
+        '電力消費量（熱源群・主機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・主機）[MWh]"],
+        '電力消費量（熱源群・補機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"],
+    }, index=bc.date_1year)
+    df_output.to_csv('result_ac_energy_daily.csv', index_label="日時", encoding='shift-jis')
+
+
+    # del resultJson["日別エネルギー消費量"]
 
     return resultJson
 
