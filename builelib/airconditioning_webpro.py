@@ -4958,20 +4958,32 @@ def calc_energy(inputdata, debug = False):
 
 
     ##----------------------------------------------------------------------------------
+    # ダミーポンプ削除
+    ##----------------------------------------------------------------------------------
+
+    dummypumplist = []
+    for pump_name in resultJson["PUMP"]:
+        if pump_name.startswith("dummyPump"):
+            dummypumplist.append(pump_name)
+
+    for pump_name in dummypumplist:
+        del resultJson["PUMP"][pump_name]
+
+    ##----------------------------------------------------------------------------------
     # CSV出力
     ##----------------------------------------------------------------------------------
     dump_items = {}
     for room_zone_name in resultJson["Qroom"]:
-        dump_items[ room_zone_name + " 熱取得（冷房）[MJ/day]"] = resultJson["Qroom"][room_zone_name]["QroomDc"]
-        dump_items[ room_zone_name + " 熱取得（暖房）[MJ/day]"] = resultJson["Qroom"][room_zone_name]["QroomDh"]
+        dump_items[ room_zone_name + " 熱取得（冷房）[MJ]"] = resultJson["Qroom"][room_zone_name]["QroomDc"]
+        dump_items[ room_zone_name + " 熱取得（暖房）[MJ]"] = resultJson["Qroom"][room_zone_name]["QroomDh"]
 
     df_daily_ahu = pd.DataFrame(dump_items, index=bc.date_1year)
     df_daily_ahu.to_csv('result_AC_ROOM_daily.csv', index_label="日時", encoding='shift-jis')
 
     dump_items = {}
     for ahu_name in resultJson["AHU"]:
-        dump_items[ ahu_name + " 空調負荷（冷房）[MJ/day]"] = resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"]
-        dump_items[ ahu_name + " 空調負荷（暖房）[MJ/day]"] = resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"]
+        dump_items[ ahu_name + " 空調負荷（冷房）[MJ]"] = resultJson["AHU"][ahu_name]["Qahu"]["cooling_for_room"]
+        dump_items[ ahu_name + " 空調負荷（暖房）[MJ]"] = resultJson["AHU"][ahu_name]["Qahu"]["heating_for_room"]
         dump_items[ ahu_name + " 外気負荷 [kW]"]            = resultJson["AHU"][ahu_name]["qoaAHU"]
         dump_items[ ahu_name + " 運転時間（冷房）[h]"]  = resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"]
         dump_items[ ahu_name + " 運転時間（暖房）[h]"]  = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"]
@@ -4983,7 +4995,31 @@ def calc_energy(inputdata, debug = False):
     df_daily_ahu = pd.DataFrame(dump_items, index=bc.date_1year)
     df_daily_ahu.to_csv('result_AC_AHU_daily.csv', index_label="日時", encoding='CP932')
 
+    dump_items = {}
+    for pump_name in resultJson["PUMP"]:
+        dump_items[ pump_name + " 二次ポンプ負荷 [MJ]"] = resultJson["PUMP"][pump_name]["Qps"]
+        dump_items[ pump_name + " 運転時間 [h]"] = resultJson["PUMP"][pump_name]["Tps"]
+        dump_items[ pump_name + " 運転台数 [台]"] = resultJson["PUMP"][pump_name]["MxPUMPNum"]
+        dump_items[ pump_name + " 電力消費量 [MWh]"] = resultJson["PUMP"][pump_name]["E_pump_day"]
 
+    if any(dump_items):
+        df_daily_pump = pd.DataFrame(dump_items, index=bc.date_1year)
+        df_daily_pump.to_csv('result_AC_PUMP_daily.csv', index_label="日時", encoding='CP932')
+
+    dump_items = {}
+    for ref_name in resultJson["REF"]:
+        dump_items[ ref_name + " 熱源負荷 [MJ]"] = resultJson["REF"][ref_name]["Qref"]
+        dump_items[ ref_name + " 過負荷 [MJ]"] = resultJson["REF"][ref_name]["Qref_OVER"]
+        dump_items[ ref_name + " 運転時間 [h]"] = resultJson["REF"][ref_name]["Tref"]
+        dump_items[ ref_name + " 負荷率 [-]"] = resultJson["REF"][ref_name]["Lref"]
+        dump_items[ ref_name + " 主機・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_ref_day"]
+        dump_items[ ref_name + " 補機・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_ref_ACc_day"]
+        dump_items[ ref_name + " 一次ポンプ・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_PPc_day"]
+        dump_items[ ref_name + " 冷却塔ファン・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_CTfan_day"]
+        dump_items[ ref_name + " 冷却水ポンプ・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_CTpump_day"]
+
+    df_daily_ref = pd.DataFrame(dump_items, index=bc.date_1year)
+    df_daily_ref.to_csv('result_AC_REF_daily.csv', index_label="日時", encoding='CP932')
 
     df_daily_energy = pd.DataFrame({
         '一次エネルギー消費量（空調機群）[GJ]'    : resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"],
@@ -4996,7 +5032,7 @@ def calc_energy(inputdata, debug = False):
         '電力消費量（熱源群・補機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"],
     }, index=bc.date_1year)
 
-    df_daily_energy.to_csv('result_AC_energy_daily.csv', index_label="日時", encoding='CP932')
+    df_daily_energy.to_csv('result_AC_Energy_daily.csv', index_label="日時", encoding='CP932')
 
 
 
@@ -5039,13 +5075,6 @@ def calc_energy(inputdata, debug = False):
         del resultJson["AHU"][ahu_name]["LdAHUh"]
         del resultJson["AHU"][ahu_name]["TdAHUh"]
 
-    dummypumplist = []
-    for pump_name in resultJson["PUMP"]:
-        if pump_name.startswith("dummyPump"):
-            dummypumplist.append(pump_name)
-
-    for pump_name in dummypumplist:
-        del resultJson["PUMP"][pump_name]
 
     for pump_name in resultJson["PUMP"]:
         del resultJson["PUMP"][pump_name]["Qpsahu_fan"]
