@@ -5002,7 +5002,6 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     for pump_name in resultJson["PUMP"]:
         dump_items[ pump_name + " 二次ポンプ負荷 [MJ]"] = resultJson["PUMP"][pump_name]["Qps"]
         dump_items[ pump_name + " 運転時間 [h]"] = resultJson["PUMP"][pump_name]["Tps"]
-        dump_items[ pump_name + " 運転台数 [台]"] = resultJson["PUMP"][pump_name]["MxPUMPNum"]
         dump_items[ pump_name + " 電力消費量 [MWh]"] = resultJson["PUMP"][pump_name]["E_pump_day"]
 
     df_daily_pump = pd.DataFrame(dump_items, index=bc.date_1year)
