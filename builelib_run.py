@@ -145,7 +145,7 @@ def builelib_run(exec_calculation, inputfile_name):
         try:
             if inputdata["AirConditioningZone"]:   # AirConditioningZone が 空 でなければ
 
-                resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug = False)
+                resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug = False, output_dir=inputfile_name_split[0])
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
@@ -512,6 +512,11 @@ def builelib_run(exec_calculation, inputfile_name):
         new_zip.write( inputfile_name_split[0] + "_result_PV.json", arcname='builelib_result_PV.json')
         new_zip.write( inputfile_name_split[0] + "_result_CGS.json", arcname='builelib_result_CGS.json')
         new_zip.write( inputfile_name_split[0] + "_result_Other.json", arcname='builelib_result_Other.json')
+        new_zip.write( inputfile_name_split[0] + "_result_AC_Energy_daily.csv", arcname='result_AC_Energy_daily.csv')
+        new_zip.write( inputfile_name_split[0] + "_result_AC_ROOM_daily.csv", arcname='result_AC_ROOM_daily.csv')
+        new_zip.write( inputfile_name_split[0] + "_result_AC_AHU_daily.csv", arcname='result_AC_AHU_daily.csv')
+        new_zip.write( inputfile_name_split[0] + "_result_AC_PUMP_daily.csv", arcname='result_AC_PUMP_daily.csv')
+        new_zip.write( inputfile_name_split[0] + "_result_AC_REF_daily.csv", arcname='result_AC_REF_daily.csv')
 
     # ファイル削除
     # これを有効にするとブラウザで結果が表示されなくなるので注意
@@ -530,7 +535,7 @@ if __name__ == '__main__':
     
     # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
     # file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
-    file_name = "./sample/sample01_WEBPRO_inputSheet_for_Ver3.6.xlsx"
+    file_name = "./sample/e4a8e4f0-ec94-46df.xlsm"
 
     builelib_run(True, file_name)
 

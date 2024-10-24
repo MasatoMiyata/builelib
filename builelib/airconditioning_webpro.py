@@ -63,7 +63,7 @@ def air_enthalpy(Tdb, X):
 
     return H   
 
-def calc_energy(inputdata, debug = False):
+def calc_energy(inputdata, debug = False, output_dir = ""):
 
     inputdata["PUMP"] = {}
     inputdata["REF"] = {}
@@ -4972,13 +4972,16 @@ def calc_energy(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
     # CSV出力
     ##----------------------------------------------------------------------------------
+    if output_dir != "":
+        output_dir = output_dir + "_"
+
     dump_items = {}
     for room_zone_name in resultJson["Qroom"]:
         dump_items[ room_zone_name + " 熱取得（冷房）[MJ]"] = resultJson["Qroom"][room_zone_name]["QroomDc"]
         dump_items[ room_zone_name + " 熱取得（暖房）[MJ]"] = resultJson["Qroom"][room_zone_name]["QroomDh"]
 
     df_daily_ahu = pd.DataFrame(dump_items, index=bc.date_1year)
-    df_daily_ahu.to_csv('result_AC_ROOM_daily.csv', index_label="日時", encoding='shift-jis')
+    df_daily_ahu.to_csv(output_dir + 'result_AC_ROOM_daily.csv', index_label="日時", encoding='shift-jis')
 
     dump_items = {}
     for ahu_name in resultJson["AHU"]:
@@ -4993,7 +4996,7 @@ def calc_energy(inputdata, debug = False):
         dump_items[ ahu_name + " 全熱熱交換器の電力消費量 [MWh]"]   = resultJson["AHU"][ahu_name]["E_AHUaex_day"]
 
     df_daily_ahu = pd.DataFrame(dump_items, index=bc.date_1year)
-    df_daily_ahu.to_csv('result_AC_AHU_daily.csv', index_label="日時", encoding='CP932')
+    df_daily_ahu.to_csv(output_dir + 'result_AC_AHU_daily.csv', index_label="日時", encoding='CP932')
 
     dump_items = {}
     for pump_name in resultJson["PUMP"]:
@@ -5002,9 +5005,8 @@ def calc_energy(inputdata, debug = False):
         dump_items[ pump_name + " 運転台数 [台]"] = resultJson["PUMP"][pump_name]["MxPUMPNum"]
         dump_items[ pump_name + " 電力消費量 [MWh]"] = resultJson["PUMP"][pump_name]["E_pump_day"]
 
-    if any(dump_items):
-        df_daily_pump = pd.DataFrame(dump_items, index=bc.date_1year)
-        df_daily_pump.to_csv('result_AC_PUMP_daily.csv', index_label="日時", encoding='CP932')
+    df_daily_pump = pd.DataFrame(dump_items, index=bc.date_1year)
+    df_daily_pump.to_csv(output_dir + 'result_AC_PUMP_daily.csv', index_label="日時", encoding='CP932')
 
     dump_items = {}
     for ref_name in resultJson["REF"]:
@@ -5019,7 +5021,7 @@ def calc_energy(inputdata, debug = False):
         dump_items[ ref_name + " 冷却水ポンプ・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_CTpump_day"]
 
     df_daily_ref = pd.DataFrame(dump_items, index=bc.date_1year)
-    df_daily_ref.to_csv('result_AC_REF_daily.csv', index_label="日時", encoding='CP932')
+    df_daily_ref.to_csv(output_dir + 'result_AC_REF_daily.csv', index_label="日時", encoding='CP932')
 
     df_daily_energy = pd.DataFrame({
         '一次エネルギー消費量（空調機群）[GJ]'    : resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"],
@@ -5032,9 +5034,7 @@ def calc_energy(inputdata, debug = False):
         '電力消費量（熱源群・補機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"],
     }, index=bc.date_1year)
 
-    df_daily_energy.to_csv('result_AC_Energy_daily.csv', index_label="日時", encoding='CP932')
-
-
+    df_daily_energy.to_csv(output_dir + 'result_AC_Energy_daily.csv', index_label="日時", encoding='CP932')
 
     ##----------------------------------------------------------------------------------
     # 不要な要素を削除
