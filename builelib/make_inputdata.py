@@ -1499,7 +1499,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     # 主たる建物用途
                     mainbuildingType = dataBL[2]
 
-                    if sheet_BL_name == "様式 1. (共通)室仕様 Rev.2":  # 2024年4月以降のシート（室用途が2列に分離）
+                    if sheet_BL_name[-5:] == "Rev.2":  # 2024年4月以降のシート（室用途が2列に分離）
 
                         buildingType = str(dataBL[3])
                         roomType = str(dataBL[4])
@@ -1531,7 +1531,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目:「②室用途」の整合性チェックができませんでした。")
 
 
-                    if sheet_BL_name == "様式 1. (共通)室仕様 Rev.2":  # 2024年4月以降のシート（室用途が2列に分離）
+                    if sheet_BL_name[-5:] == "Rev.2":  # 2024年4月以降のシート（室用途が2列に分離）
 
                         # ゾーンはないと想定。
                         data["Rooms"][roomKey] = {
@@ -1663,7 +1663,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     walltype_webpro = check_value(dataBE2[1], "様式2-2.外壁構成 "+ str(i+1) +"行目:「②壁の種類」", True, None, "文字列", input_options["外壁の種類(WEBPRO)"], None, None)
 
                     # 日射吸収率(2024年4月 日射吸収率が入力可能に)
-                    if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":
+                    if sheet_BE2_name[-5:] == "Rev.2":
                         solarAbsorptionRatio = check_value(dataBE2[7], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑧日射吸収率」", False, None, "数値", None, 0, None)
                     else:
                         solarAbsorptionRatio = None
@@ -1676,7 +1676,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     
                     if inputMethod == "熱貫流率を入力":
 
-                        if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":
+                        if sheet_BE2_name[-5:] == "Rev.2": 
 
                             data["WallConfigure"][eltKey] = {
                                     "wall_type_webpro": walltype_webpro,
@@ -1707,7 +1707,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         # 次の行を読み込み
                         dataBE2 = sheet_BE2.row_values(i+1)
 
-                        if sheet_BE2_name == "様式 2-2. (空調)外壁構成 Rev.2":
+                        if sheet_BE2_name[-5:] == "Rev.2": 
 
                             if (dataBE2[4] != "") or (dataBE2[5] != ""):
 
@@ -2841,7 +2841,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, 0, None)
                     E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, 0, None)
 
-                    if sheet_AC4_name == "様式 2-7. (空調)空調機 Rev.2":     # 2024年4月 全熱交換器の列が追加
+                    if sheet_AC4_name[-5:] == "Rev.2":      # 2024年4月 全熱交換器の列が追加
 
                         if dataAC4[14] == "全熱交換器あり・様式2-9記載あり":
                             validation["error"].append( "様式2-7.空調機:「⑮全熱交換器の有無」の選択肢が「全熱交換器あり・様式2-9記載あり」である場合は計算ができません。")
@@ -2955,7 +2955,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, 0, None)
                 E_fan4 = check_value(dataAC4[9], "様式2-7.空調機 "+ str(i+1) +"行目:「⑩送風機定格消費電力（排気）」", False, 0, "数値", None, 0, None)
 
-                if sheet_AC4_name == "様式 2-7. (空調)空調機 Rev.2":     # 2024年4月 全熱交換器の列が追加
+                if sheet_AC4_name[-5:] == "Rev.2":      # 2024年4月 全熱交換器の列が追加
 
                     if dataAC4[14] == "全熱交換器あり・様式2-9記載あり":
                         validation["error"].append( "様式2-7.空調機:「⑮全熱交換器の有無」の選択肢が「全熱交換器あり・様式2-9記載あり」である場合は計算ができません。")
@@ -4184,7 +4184,7 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'pyHASP_test'
+    case_name = 'WEBPRO_inputSheet_English_sample'
 
     # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
