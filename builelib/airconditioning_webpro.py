@@ -5034,14 +5034,24 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     dump_items = {}
     for ref_name in resultJson["REF"]:
         dump_items[ ref_name + " 熱源負荷 [MJ]"] = resultJson["REF"][ref_name]["Qref"]
+        dump_items[ ref_name + " 熱源負荷 [kW]"] = resultJson["REF"][ref_name]["Qref_kW"]
+        dump_items[ ref_name + " 蓄熱槽の熱損失 [MJ]"] = resultJson["REF"][ref_name]["Qref_thermal_loss"]
         dump_items[ ref_name + " 過負荷 [MJ]"] = resultJson["REF"][ref_name]["Qref_OVER"]
         dump_items[ ref_name + " 運転時間 [h]"] = resultJson["REF"][ref_name]["Tref"]
         dump_items[ ref_name + " 負荷率 [-]"] = resultJson["REF"][ref_name]["Lref"]
+        dump_items[ ref_name + " マトリックス番号（負荷）[-]"] = resultJson["REF"][ref_name]["matrix_iL"]
+        dump_items[ ref_name + " マトリックス番号（温度）[-]"] = resultJson["REF"][ref_name]["matrix_iT"]
+        dump_items[ ref_name + " 代表負荷率 [-]"] = resultJson["REF"][ref_name]["load_ratio"]
+        dump_items[ ref_name + " 熱源運転台数 [台]"] = resultJson["REF"][ref_name]["num_of_operation"]
         dump_items[ ref_name + " 主機・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_ref_day"]
         dump_items[ ref_name + " 補機・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_ref_ACc_day"]
         dump_items[ ref_name + " 一次ポンプ・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_PPc_day"]
         dump_items[ ref_name + " 冷却塔ファン・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_CTfan_day"]
         dump_items[ ref_name + " 冷却水ポンプ・一次エネルギー消費量 [MJ]"] = resultJson["REF"][ref_name]["E_CTpump_day"]
+        dump_items[ ref_name + " 補機・消費電力 [kW]"] = resultJson["REF"][ref_name]["E_ref_sub"]
+        dump_items[ ref_name + " 一次ポンプ・消費電力 [kW]"] = resultJson["REF"][ref_name]["E_ref_pri_pump"]
+        dump_items[ ref_name + " 冷却塔ファン・消費電力 [kW]"] = resultJson["REF"][ref_name]["E_ref_ct_fan"]
+        dump_items[ ref_name + " 冷却水ポンプ・消費電力 [kW]"] = resultJson["REF"][ref_name]["E_ref_ct_pump"]
 
     df_daily_ref = pd.DataFrame(dump_items, index=bc.date_1year)
     df_daily_ref.to_csv(output_dir + 'result_AC_REF_daily.csv', index_label="日時", encoding='CP932')
