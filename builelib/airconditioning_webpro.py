@@ -4887,7 +4887,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
         for ref_name in inputdata["REF"]:
             
-            # CGS系統の「排熱利用する冷熱源」　。　蓄熱がある場合は「追い掛け運転」を採用（2020/7/6変更）
+            # CGS系統の「排熱利用する冷熱源」。蓄熱がある場合は「追い掛け運転」を採用（2020/7/6変更）
             if ref_name == resultJson["for_CGS"]["CGS_refName_C"]:
                 
                 for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
@@ -4932,7 +4932,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             
             # CGS系統の「排熱利用する温熱源」
             if ref_name == resultJson["for_CGS"]["CGS_refName_H"]:
-                
+
                 # 当該温熱源群の主機の消費電力を差し引く。
                 for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
                     resultJson["for_CGS"]["E_ref_main_MWh_day"] -= resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"]
@@ -4945,6 +4945,30 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
                 # CGSの排熱利用が可能な温熱源群の運転時間 [h/日]
                 resultJson["for_CGS"]["T_ref_cgsH_day"] = resultJson["REF"][ref_name]["Tref"]
+
+
+                # 蓄熱システムがある場合、蓄熱のためのエネルギー消費量も加算する。
+                ref_name_storage = ref_name + "_蓄熱"
+                if ref_name_storage in inputdata["REF"]:
+
+                    # 蓄熱用温熱源群の主機の消費電力を差し引く。
+                    for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name_storage]["Heatsource"]):
+                        resultJson["for_CGS"]["E_ref_main_MWh_day"] -= resultJson["REF"][ref_name_storage]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"]
+                    
+                    # 蓄熱用の温熱源群の主機の一次エネルギー消費量を加算 [MJ/日]
+                    resultJson["for_CGS"]["E_ref_cgsH_day"] += resultJson["REF"][ref_name_storage]["E_ref_day"]
+
+                    # 温熱源群の熱源負荷はどちらか大きい方にする [MJ/日]
+                    # 蓄熱の方が大きい場合は蓄熱のみで賄える場合、放熱の方が大きい場合は蓄熱槽のみでは足りずに追い掛け運転がなされる場合
+                    resultJson["for_CGS"]["Q_ref_cgsH_day"] = np.maximum(resultJson["for_CGS"]["Q_ref_cgsH_day"], resultJson["REF"][ref_name_storage]["Qref"])
+                    # （Webプログラムでは、以下の処理のように両者を単純加算してしまっている）
+                    # resultJson["for_CGS"]["Q_ref_cgsH_day"] += resultJson["REF"][ref_name_storage]["Qref"]
+
+                    # CGSの排熱利用が可能な温熱源群の運転時間 [h/日]  ただし、24時間を上限とする。
+                    # （Webプログラムでは、以下の処理が実行されておらず蓄熱運転時間は加味されていない）
+                    resultJson["for_CGS"]["T_ref_cgsH_day"] += resultJson["REF"][ref_name_storage]["Tref"]
+                    resultJson["for_CGS"]["T_ref_cgsH_day"] = np.clip(resultJson["for_CGS"]["T_ref_cgsH_day"], None, 24)
+
 
         # 空気調和設備の電力消費量 [MWh/day]
         resultJson["for_CGS"]["electric_power_consumption"] = \
