@@ -1519,10 +1519,15 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             buildingType = roomType.split("-")[0]
                             roomType = roomType.split("-")[1]
 
-                        # 室用途の読み替え
-                        if roomType == "ゴミ置場等":
-                            roomType = "廃棄物保管場所等"
-                            validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目: 室用途「ゴミ置場等」を「廃棄物保管場所等」に置き換えました。")
+                    # 建物用途の読み替え
+                    if buildingType == "百貨店等":
+                        buildingType = "物販店舗等"
+                        validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目: 建物用途「百貨店等」を「物販店舗等」に置き換えました。")
+
+                    # 室用途の読み替え
+                    if roomType == "ゴミ置場等":
+                        roomType = "廃棄物保管場所等"
+                        validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目: 室用途「ゴミ置場等」を「廃棄物保管場所等」に置き換えました。")
 
 
                     # 建物用途のチェック
