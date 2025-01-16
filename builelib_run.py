@@ -188,7 +188,7 @@ def builelib_run(exec_calculation, inputfile_name):
         try:
             if inputdata["VentilationRoom"]:   # VentilationRoom が 空 でなければ
 
-                resultdata_V = ventilation.calc_energy(inputdata, DEBUG = False)
+                resultdata_V = ventilation.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["V"] = resultdata_V["for_CGS"]
@@ -231,7 +231,7 @@ def builelib_run(exec_calculation, inputfile_name):
         try:
             if inputdata["LightingSystems"]:   # LightingSystems が 空 でなければ
 
-                resultdata_L = lighting.calc_energy(inputdata, DEBUG = False)
+                resultdata_L = lighting.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["L"] = resultdata_L["for_CGS"]
@@ -275,7 +275,7 @@ def builelib_run(exec_calculation, inputfile_name):
         try:
             if inputdata["HotwaterRoom"]:   # HotwaterRoom が 空 でなければ
             
-                resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG = False)
+                resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
         
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["HW"] = resultdata_HW["for_CGS"]
@@ -318,7 +318,7 @@ def builelib_run(exec_calculation, inputfile_name):
         try:
             if inputdata["Elevators"]:   # Elevators が 空 でなければ
 
-                resultdata_EV = elevator.calc_energy(inputdata, DEBUG = False)
+                resultdata_EV = elevator.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["EV"] = resultdata_EV["for_CGS"]
@@ -361,7 +361,7 @@ def builelib_run(exec_calculation, inputfile_name):
         try:
             if inputdata["PhotovoltaicSystems"]:   # PhotovoltaicSystems が 空 でなければ
 
-                resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG = False)
+                resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["PV"] = resultdata_PV["for_CGS"]
@@ -399,7 +399,7 @@ def builelib_run(exec_calculation, inputfile_name):
         try:
             if inputdata["Rooms"]:   # Rooms が 空 でなければ
 
-                resultdata_OT = other_energy.calc_energy(inputdata, DEBUG = False)
+                resultdata_OT = other_energy.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["OT"] = resultdata_OT["for_CGS"]
@@ -433,7 +433,7 @@ def builelib_run(exec_calculation, inputfile_name):
 
         try:
             if inputdata["CogenerationSystems"]:   # CogenerationSystems が 空 でなければ
-                resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG = False)
+                resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir=inputfile_name_split[0])
 
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design -= resultdata_CGS["年間一次エネルギー削減量"] * 1000
@@ -518,6 +518,7 @@ def builelib_run(exec_calculation, inputfile_name):
         new_zip.write( inputfile_name_split[0] + "_result_AC_PUMP_daily.csv", arcname='result_AC_PUMP_daily.csv')
         new_zip.write( inputfile_name_split[0] + "_result_AC_REF_daily.csv", arcname='result_AC_REF_daily.csv')
 
+
     # ファイル削除
     # これを有効にするとブラウザで結果が表示されなくなるので注意
     # os.remove( inputfile_name_split[0] + "_input.json" )
@@ -535,7 +536,18 @@ if __name__ == '__main__':
     
     # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
     # file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
-    file_name = "./sample/e4a8e4f0-ec94-46df.xlsm"
+    file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_010_窓ガラス更新.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_020_照明器具更新.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_031_空調室外機更新.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_032_空調室外機更新_小型化.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_041_ロスナイ導入_自動換気切り替え無し.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_042_ロスナイ導入.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_043_ロスナイ_CO2濃度制御導入.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_051_外気冷房制御.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_052_照明器具更新_外気冷房.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_053_空調室外機更新_小型化_外気冷房.xlsx"
+    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_060_太陽光発電導入.xlsx"
 
     builelib_run(True, file_name)
 
