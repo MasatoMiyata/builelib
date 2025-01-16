@@ -4,6 +4,7 @@ import json
 import numpy as np
 import os
 import math
+import pandas as pd
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -16,7 +17,8 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
-def calc_energy(inputdata, DEBUG = False):
+
+def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
     # 計算結果を格納する変数
     resultJson = {
@@ -572,7 +574,7 @@ def calc_energy(inputdata, DEBUG = False):
     # CGS計算用変数 （解説書 ８章 附属書 G.10 他の設備の計算結果の読み込み）
     #----------------------------------------------------------------------------------
 
-    Edesign_MWh_Ele_hour = np.zeros((365,24))
+    Edesign_MWh_CGS_Ele_hour = np.zeros((365,24))
     Edesign_MJ_CGS_hour  = np.zeros((365,24))
     Q_eqp_CGS_hour       = np.zeros((365,24))
 
@@ -601,12 +603,46 @@ def calc_energy(inputdata, DEBUG = False):
                                 unit_configure["HeatSourceType"] == "業務用ヒートポンプ給湯機" or unit_configure["HeatSourceType"] == "家庭用ヒートポンプ給湯機":
 
                                 for dd in range(0,365):
-                                    Edesign_MWh_Ele_hour[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/24/1000/9760 * np.ones(24)
+                                    Edesign_MWh_CGS_Ele_hour[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/24/1000/9760 * np.ones(24)
 
 
-        resultJson["for_CGS"]["Edesign_MWh_Ele_day"] = np.sum(Edesign_MWh_Ele_hour,1)
+        resultJson["for_CGS"]["Edesign_MWh_Ele_day"] = np.sum(Edesign_MWh_CGS_Ele_hour,1)
         resultJson["for_CGS"]["Edesign_MJ_CGS_day"]  = np.sum(Edesign_MJ_CGS_hour,1)
         resultJson["for_CGS"]["Q_eqp_CGS_day"]       = np.sum(Q_eqp_CGS_hour,1)
+
+
+    #----------------------------------------------------------------------------------
+    # 日別のエネルギー消費量
+    #----------------------------------------------------------------------------------
+    Edesign_MJ_day      = np.zeros(365)
+    Edesign_MWh_Ele_day = np.zeros(365)
+
+    for unit_name in inputdata["HotwaterSupplySystems"]:
+    
+        for dd in range(0,365):
+            Edesign_MJ_day[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/1000
+
+        for unit_id, unit_configure in enumerate(inputdata["HotwaterSupplySystems"][unit_name]["HeatSourceUnit"]):
+            if unit_configure["UsageType"] == "給湯負荷用":
+                if unit_configure["HeatSourceType"] == "電気瞬間湯沸器" or unit_configure["HeatSourceType"] == "貯湯式電気温水器" or \
+                    unit_configure["HeatSourceType"] == "業務用ヒートポンプ給湯機" or unit_configure["HeatSourceType"] == "家庭用ヒートポンプ給湯機":
+
+                    for dd in range(0,365):
+                        Edesign_MWh_Ele_day[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/1000/bc.fprime
+
+
+    ##----------------------------------------------------------------------------------
+    # CSV出力
+    ##----------------------------------------------------------------------------------
+    if output_dir != "":
+        output_dir = output_dir + "_"
+
+    df_daily_energy = pd.DataFrame({
+        '一次エネルギー消費量（給湯設備）[GJ]'  : Edesign_MJ_day/1000,
+        '電力消費量（給湯設備）[MWh]'  : Edesign_MWh_Ele_day,
+    }, index=bc.date_1year)
+
+    df_daily_energy.to_csv(output_dir + 'result_HW_Energy_daily.csv', index_label="日時", encoding='CP932')
 
 
     ##----------------------------------------------------------------------------------
@@ -630,9 +666,13 @@ def calc_energy(inputdata, DEBUG = False):
 #%%
 if __name__ == '__main__':
 
+    # 現在のスクリプトファイルのディレクトリを取得
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 1つ上の階層のディレクトリパスを取得
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+
     print('----- hotwatersupply.py -----')
-    # filename = './sample/CGS_case_office_00.json'
-    filename = './sample/Builelib_sample_SP11.json'
+    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r', encoding='utf-8') as f:
