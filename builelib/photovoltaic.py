@@ -8,6 +8,7 @@ import json
 import numpy as np
 import os
 import math
+import pandas as pd
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -18,7 +19,7 @@ import climate
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
-def calc_energy(inputdata, DEBUG = False):
+def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
 
     # 計算結果を格納する変数
@@ -248,7 +249,22 @@ def calc_energy(inputdata, DEBUG = False):
                 tt = 24*dd+hh
                 resultJson["for_CGS"]["Edesign_MWh_day"][dd] += resultJson["PhotovoltaicSystems"][system_name]["Ep"][tt] / 1000
 
-        resultJson["E_photovoltaic_GJ"] = resultJson["E_photovoltaic"] /1000
+
+    resultJson["E_photovoltaic_GJ"] = resultJson["E_photovoltaic"] /1000
+
+
+    ##----------------------------------------------------------------------------------
+    # CSV出力
+    ##----------------------------------------------------------------------------------
+    if output_dir != "":
+        output_dir = output_dir + "_"
+
+    df_daily_energy = pd.DataFrame({
+        '創エネルギー量（太陽光発電設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (bc.fprime) /1000,
+        '創エネルギー量（太陽光発電設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
+    }, index=bc.date_1year)
+
+    df_daily_energy.to_csv(output_dir + 'result_PV_Energy_daily.csv', index_label="日時", encoding='CP932')
 
 
     return resultJson
@@ -256,9 +272,13 @@ def calc_energy(inputdata, DEBUG = False):
 
 if __name__ == '__main__':
 
+    # 現在のスクリプトファイルのディレクトリを取得
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 1つ上の階層のディレクトリパスを取得
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+
     print('----- photovoltaic.py -----')
-    # filename = './tests/cogeneration/Case_hospital_05.json'
-    filename = './sample/Builelib_sample_SP1_input.json'
+    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
