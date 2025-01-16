@@ -1,11 +1,12 @@
 import json
 import numpy as np
 import os
+import pandas as pd
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from . import commons as bc
+import commons as bc
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
@@ -41,7 +42,7 @@ def perfCURVE(fcgs_e_rated,fcgs_e_75,fcgs_e_50,fcgs_hr_rated,fcgs_hr_75,fcgs_hr_
     return fe2,fe1,fe0,fhr2,fhr1,fhr0
 
 
-def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
+def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir = ""):
 
     resultJson = {}
 
@@ -772,16 +773,32 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False):
         print( f'年間一次エネルギー削減量 全体 : {resultJson["年間一次エネルギー削減量"]} GJ/年')
         resultJson["EAC_ref_c_red_d"] = EAC_ref_c_red_d
 
+
+    ##----------------------------------------------------------------------------------
+    # CSV出力
+    ##----------------------------------------------------------------------------------
+    if output_dir != "":
+        output_dir = output_dir + "_"
+
+    df_daily_energy = pd.DataFrame({
+        '創エネルギー量（コジェネ）[GJ]'  : Etotal_cgs_red_d / 1000,
+    }, index=bc.date_1year)
+
+    df_daily_energy.to_csv(output_dir + 'result_CGS_Energy_daily.csv', index_label="日時", encoding='CP932')
+
+
     return resultJson
 
 
 if __name__ == '__main__':  # pragma: no cover
 
+    # 現在のスクリプトファイルのディレクトリを取得
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 1つ上の階層のディレクトリパスを取得
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+
     print('----- cogeneration.py -----')
-    # filename = './tests/cogeneration/Case_hospital_05.json'
-    # filename = './tests/cogeneration/Case_hotel_test.json'
-    filename = './tests/cogeneration/Case_office_09.json'
-    # filename = './sample/cgs.json'
+    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
@@ -798,7 +815,7 @@ if __name__ == '__main__':  # pragma: no cover
         "OT":{},
     }
 
-    import airconditioning
+    import airconditioning_webpro
     import ventilation
     import lighting
     import hotwatersupply
@@ -807,7 +824,7 @@ if __name__ == '__main__':  # pragma: no cover
     import other_energy
 
     if inputdata["AirConditioningZone"]:
-        resultJsonAC = airconditioning.calc_energy(inputdata, DEBUG = False)
+        resultJsonAC = airconditioning_webpro.calc_energy(inputdata, debug = False)
         resultJson_for_CGS["AC"] = resultJsonAC["for_CGS"]
     if inputdata["VentilationRoom"]:
         resultJsonV = ventilation.calc_energy(inputdata, DEBUG = False)
