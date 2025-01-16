@@ -2,6 +2,7 @@ import json
 import numpy as np
 import os
 import math
+import pandas as pd
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -38,7 +39,7 @@ def set_roomIndexCoeff(roomIndex):
     return roomIndexCoeff
 
 
-def calc_energy(inputdata, DEBUG = False):
+def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
     # データベースjsonの読み込み
     with open( database_directory + 'lightingControl.json', 'r', encoding='utf-8') as f:
@@ -58,9 +59,9 @@ def calc_energy(inputdata, DEBUG = False):
     }
 
     # 変数初期化
-    E_lighting = 0    # 設計一次エネルギー消費量 [GJ]
-    E_lighting_hourly = np.zeros((365,24))  # 設計一次エネルギー消費量（時刻別） [GJ]
-    Es_lighting = 0   # 基準一次エネルギー消費量 [GJ]
+    E_lighting = 0    # 設計一次エネルギー消費量 [MJ]
+    E_lighting_hourly = np.zeros((365,24))  # 設計一次エネルギー消費量（時刻別） [MJ]
+    Es_lighting = 0   # 基準一次エネルギー消費量 [MJ]
     total_area = 0    # 建物全体の床面積
 
     ##----------------------------------------------------------------------------------
@@ -233,14 +234,33 @@ def calc_energy(inputdata, DEBUG = False):
     # 日積算値
     resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly/9760,1)
 
+
+    ##----------------------------------------------------------------------------------
+    # CSV出力
+    ##----------------------------------------------------------------------------------
+    if output_dir != "":
+        output_dir = output_dir + "_"
+
+    df_daily_energy = pd.DataFrame({
+        '一次エネルギー消費量（照明設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (bc.fprime) /1000,
+        '電力消費量（照明設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
+    }, index=bc.date_1year)
+
+    df_daily_energy.to_csv(output_dir + 'result_L_Energy_daily.csv', index_label="日時", encoding='CP932')
+
+
     return resultJson
 
 
 if __name__ == '__main__':
 
+    # 現在のスクリプトファイルのディレクトリを取得
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 1つ上の階層のディレクトリパスを取得
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+
     print('----- lighting.py -----')
-    filename = './sample/WEBPRO_inputSheet_sample.json'
-    # filename = './tests/cogeneration/Case_hotel_00.json'
+    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
@@ -248,8 +268,8 @@ if __name__ == '__main__':
 
     resultJson = calc_energy(inputdata, DEBUG = False)
 
-    print(f'設計値: {resultJson["E_lighting"]}')
-    print(f'基準値: {resultJson["Es_lighting"]}')
-
     with open("resultJson_L.json",'w', encoding='utf-8') as fw:
         json.dump(resultJson, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
+
+    print(f'設計一次エネルギー消費量[MJ]: {resultJson["E_lighting"]}')
+    print(f'基準一次エネルギー消費量[MJ]: {resultJson["Es_lighting"]}')
