@@ -1,14 +1,24 @@
 docs/css/*
 Makefile
 memo.md
-sample/backup/*
 .vscode
 .pypirc
-inputdata.json
-resultJson.json
-sample/入力シートV3/*
-sample/基整促E14/*
-sample/国総研/*
+
+# Builelib
+*.json
+*.csv
+
+inputfile/
+reference/
+test_PAL/
+standard_spec/
+sample/*.json
+
+builelib/heat_load_calculation
+builelib/pyHASP
+builelib/database_pyhasp
+builelib/climatedata_pyhasp/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -94,27 +104,15 @@ celerybeat-schedule
 .venv/
 venv/
 ENV/
+venv310/
+venv311/
+venv312/
 
 # Spyder project settings
 .spyderproject
 
 # Rope project settings
 .ropeproject
-sample/inputdata.json
 
 .idea
 
-venv/
-venv310/
-venv311/
-venv312/
-
-reference/
-builelib/heat_load_calculation
-builelib/pyHASP
-builelib/database_pyhasp
-
-test_PAL/
-standard_spec/
-
-builelib/climatedata_pyhasp/
