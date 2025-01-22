@@ -4774,13 +4774,19 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             + resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] \
             + resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] \
 
-        resultJson["REF"][ref_name]["年間平均負荷率[-]"] = \
-            (resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] *1000000 / (resultJson["REF"][ref_name]["年間運転時間[時間]"]*3600) ) \
-            / resultJson["REF"][ref_name]["定格能力[kW]"] 
+        if resultJson["REF"][ref_name]["年間運転時間[時間]"]  != 0:
+            resultJson["REF"][ref_name]["年間平均負荷率[-]"] = \
+                (resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] *1000000 / (resultJson["REF"][ref_name]["年間運転時間[時間]"]*3600) ) \
+                / resultJson["REF"][ref_name]["定格能力[kW]"] 
+        else:
+            resultJson["REF"][ref_name]["年間平均負荷率[-]"] = 0
 
-        resultJson["REF"][ref_name]["年間運転効率[-]"] = \
-            resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] \
-            / resultJson["REF"][ref_name]["年積算エネルギー消費量[GJ]"]
+        if resultJson["REF"][ref_name]["年積算エネルギー消費量[GJ]"] != 0:
+            resultJson["REF"][ref_name]["年間運転効率[-]"] = \
+                resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] \
+                / resultJson["REF"][ref_name]["年積算エネルギー消費量[GJ]"]
+        else:
+            resultJson["REF"][ref_name]["年間運転効率[-]"] = 0
 
 
     ##----------------------------------------------------------------------------------
