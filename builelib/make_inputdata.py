@@ -3933,31 +3933,66 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 raise Exception("室負荷の種類が不正です。")
 
 
-    if "SP-5) 気象データ" in wb.sheet_names():
+    # if "SP-5) 気象データ" in wb.sheet_names():
 
-        # シートの読み込み
-        sheet_SP5 = wb.sheet_by_name("SP-5) 気象データ")
+    #     # シートの読み込み
+    #     sheet_SP5 = wb.sheet_by_name("SP-5) 気象データ")
 
-        # 行のループ
-        Tout_8760 = []
-        Xout_8760 = []
-        Iod_8760  = []
-        Ios_8760  = []
-        Inn_8760  = []
+    #     # 行のループ
+    #     Tout_8760 = []
+    #     Xout_8760 = []
+    #     Iod_8760  = []
+    #     Ios_8760  = []
+    #     Inn_8760  = []
 
-        for i in range(10,sheet_SP5.nrows):
+    #     for i in range(10,sheet_SP5.nrows):
 
-            # シートから「行」の読み込み
-            dataSP5 = sheet_SP5.row_values(i)
+    #         # シートから「行」の読み込み
+    #         dataSP5 = sheet_SP5.row_values(i)
 
-            Tout_8760.append(float(dataSP5[4]))
-            Xout_8760.append(float(dataSP5[5]))
-            Iod_8760.append(float(dataSP5[6]))
-            Ios_8760.append(float(dataSP5[7]))
-            Inn_8760.append(float(dataSP5[8]))
+    #         Tout_8760.append(float(dataSP5[4]))
+    #         Xout_8760.append(float(dataSP5[5]))
+    #         Iod_8760.append(float(dataSP5[6]))
+    #         Ios_8760.append(float(dataSP5[7]))
+    #         Inn_8760.append(float(dataSP5[8]))
 
-        # データの処理がなされていたら、365×24の行列に変更して保存
-        if Tout_8760 != []:
+    #     # データの処理がなされていたら、365×24の行列に変更して保存
+    #     if Tout_8760 != []:
+    #         data["SpecialInputData"]["climate_data"] = {
+    #             "Tout": bc.trans_8760to36524(Tout_8760),
+    #             "Xout": bc.trans_8760to36524(Xout_8760),
+    #             "Iod": bc.trans_8760to36524(Iod_8760),
+    #             "Ios": bc.trans_8760to36524(Ios_8760),
+    #             "Inn": bc.trans_8760to36524(Inn_8760)
+    #         }
+
+    # 様式SP-CD：気象データ入力シート
+    if "SP-CD) 気象" in wb.sheet_names():
+
+        try:
+
+            # シートの読み込み
+            sheet_SP_CD = wb.sheet_by_name("SP-CD) 気象")
+
+            # 行のループ
+            Tout_8760 = []
+            Xout_8760 = []
+            Iod_8760  = []
+            Ios_8760  = []
+            Inn_8760  = []
+
+            for i in range(10,sheet_SP_CD.nrows):
+
+                # シートから「行」の読み込み
+                dataSPCD = sheet_SP_CD.row_values(i)
+
+                Tout_8760.append(float(dataSPCD[1]))
+                Xout_8760.append(float(dataSPCD[2]))
+                Iod_8760.append(float(dataSPCD[3]))
+                Ios_8760.append(float(dataSPCD[4]))
+                Inn_8760.append(float(dataSPCD[5]))
+
+            # 365×24の行列に変更して保存
             data["SpecialInputData"]["climate_data"] = {
                 "Tout": bc.trans_8760to36524(Tout_8760),
                 "Xout": bc.trans_8760to36524(Xout_8760),
@@ -3965,8 +4000,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 "Ios": bc.trans_8760to36524(Ios_8760),
                 "Inn": bc.trans_8760to36524(Inn_8760)
             }
+            
+        except:
 
-    if "SP-6) カレンダー" in wb.sheet_names():
+            # 例外処理
+            validation["error"].append( "様式SP-CD.気象データ: データが不正です。")
+
+
 
         data["SpecialInputData"]["calender"] = {}
 
