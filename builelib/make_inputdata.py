@@ -4007,32 +4007,58 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             validation["error"].append( "様式SP-CD.気象データ: データが不正です。")
 
 
+    # if "SP-6) カレンダー" in wb.sheet_names():
+
+    #     data["SpecialInputData"]["calender"] = {}
+
+    #     # シートの読み込み
+    #     sheet_SP6 = wb.sheet_by_name("SP-6) カレンダー")
+
+    #     for i in range(10,sheet_SP6.nrows):
+
+    #         # シートから「行」の読み込み
+    #         dataSP6 = sheet_SP6.row_values(i)
+
+    #         building_type = dataSP6[0]
+    #         room_type = dataSP6[1]
+    #         calender_num = [int(x) for x in dataSP6[2:]]  # 整数型に変換
+
+
+    #         # 建物用途が既に登録されているかを判定
+    #         if building_type not in data["SpecialInputData"]["calender"]:
+
+    #             data["SpecialInputData"]["calender"][building_type] = {}
+    #             data["SpecialInputData"]["calender"][building_type] = {
+    #                 room_type : calender_num
+    #             }
+
+    #         else:
+    #             data["SpecialInputData"]["calender"][building_type][room_type] = calender_num
+
+    if "SP-RT-CP) カレンダー" in wb.sheet_names():
 
         data["SpecialInputData"]["calender"] = {}
 
         # シートの読み込み
-        sheet_SP6 = wb.sheet_by_name("SP-6) カレンダー")
+        sheet_SP_RT_CP = wb.sheet_by_name("SP-RT-CP) カレンダー")
 
-        for i in range(10,sheet_SP6.nrows):
+        # 入力されたカレンダーパターン名称を検索
+        calender_p_list = sheet_SP_RT_CP.row_values(4)
 
-            # シートから「行」の読み込み
-            dataSP6 = sheet_SP6.row_values(i)
+        # 入力されている列について、名称と列数の対応関係を保存
+        calender_column_num = {}
+        for column_num in range(len(calender_p_list)):
+            name = calender_p_list[column_num]
+            if name != "":
+                calender_column_num[name] = column_num
 
-            building_type = dataSP6[0]
-            room_type = dataSP6[1]
-            calender_num = [int(x) for x in dataSP6[2:]]  # 整数型に変換
+        # データの読み込み
+        for pattern_name in calender_column_num:
+            dataSP_RT_CP_tmp = []
+            for i in range(10,365+10):
+                dataSP_RT_CP_tmp.append( int(sheet_SP_RT_CP.cell_value(i, calender_column_num[pattern_name])) ) 
+            data["SpecialInputData"]["calender"][pattern_name] = dataSP_RT_CP_tmp
 
-
-            # 建物用途が既に登録されているかを判定
-            if building_type not in data["SpecialInputData"]["calender"]:
-
-                data["SpecialInputData"]["calender"][building_type] = {}
-                data["SpecialInputData"]["calender"][building_type] = {
-                    room_type : calender_num
-                }
-
-            else:
-                data["SpecialInputData"]["calender"][building_type][room_type] = calender_num
 
 
     if "SP-7) 室スケジュール" in wb.sheet_names():
