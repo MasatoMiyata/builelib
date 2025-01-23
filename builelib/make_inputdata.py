@@ -3,6 +3,7 @@ import xlrd
 import json
 import jsonschema
 import os
+import copy
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -4084,7 +4085,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 data_SP_RT_SD = sheet_SP_RT_SD.row_values(i)
 
                 if data_SP_RT_SD[0] != "":
-                    data["SpecialInputData"]["room_schedule"][data_SP_RT_SD[0]] = [float(x) for x in data_SP_RT_SD[1:24]]
+                    data["SpecialInputData"]["room_schedule"][data_SP_RT_SD[0]] = [float(x) for x in data_SP_RT_SD[1:25]]
             
         except Exception as e:
 
@@ -4182,7 +4183,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 # ベースとする室用途の条件をコピー
                 if base_room_type != "":
-                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name] = RoomUsageSchedule[building_type][base_room_type]
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name] = copy.deepcopy(RoomUsageSchedule[building_type][base_room_type])
                     del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["id"]
                     del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間空調時間"]
                     del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["標準換気風量"]
@@ -4489,6 +4490,7 @@ if __name__ == '__main__':
     directory = "./sample/"
 
     case_name = 'Builelib_sample_one_room_v2'
+    case_name = 'Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル'
 
     # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
