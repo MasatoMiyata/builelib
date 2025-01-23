@@ -127,17 +127,23 @@ def air_absolute_humidity(Tdb, H):
     return X
 
 
+def get_roomOutdoorAirVolume(buildingType, roomType, special_sheet={}):
     """
     外気導入量を読み込む関数（空調）
     """
 
+    ##----------------------------------------------------------------------------------
+    ## 任意入力 様式 SP-RT-UC. 室使用条件入力シート
+    ##----------------------------------------------------------------------------------
+    if special_sheet:
+        if "room_usage_condition" in special_sheet:
+            for buildling_type in special_sheet["room_usage_condition"]:
+                for room_type in special_sheet["room_usage_condition"][buildling_type]:
+                    RoomUsageSchedule[buildling_type][room_type] = special_sheet["room_usage_condition"][buildling_type][room_type]
+
     # 外気導入量 [m3/h/m2] 標準室使用条件より取得
     roomOutdoorAirVolume  = RoomUsageSchedule[buildingType][roomType]["外気導入量"]
     
-    # SP-9シートによる任意入力があれば上書き
-    if buildingType in input_room_usage_condition:
-        if roomType in input_room_usage_condition[buildingType]:
-            roomOutdoorAirVolume = float( input_room_usage_condition[buildingType][roomType]["外気導入量"] )
 
     return roomOutdoorAirVolume
 

@@ -2056,14 +2056,12 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     for room_zone_name in inputdata["AirConditioningZone"]:
 
         # 各室の外気導入量 [m3/h]
-        if "room_usage_condition" in inputdata["SpecialInputData"]:    # SPシートで任意の入力がされている場合
-
-            inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
-                bc.get_roomOutdoorAirVolume( 
-                    inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
-                    inputdata["AirConditioningZone"][room_zone_name]["roomType"], 
-                    inputdata["SpecialInputData"]["room_usage_condition"]
-                ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
+        inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
+            bc.get_roomOutdoorAirVolume( 
+                inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
+                inputdata["AirConditioningZone"][room_zone_name]["roomType"], 
+                inputdata["SpecialInputData"]
+            ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
         else:
 
