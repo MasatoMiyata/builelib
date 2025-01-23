@@ -4092,7 +4092,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             validation["error"].append( f"様式SP-RT-SD.スケジュール: 入力データが不正です。{e}" )
 
 
-
     # if "SP-7) 室スケジュール" in wb.sheet_names():
 
     #     data["SpecialInputData"]["room_schedule"] = {}
@@ -4319,6 +4318,35 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
             # 例外処理
             validation["error"].append( f"様式SP-RT-UC 室使用条件: 入力データが不正です。{e}" )
+
+
+    # 様式SP-AC-MD：空調運転モード入力シート
+    if "SP-AC-MD) 空調モード" in wb.sheet_names():
+
+        try:
+
+            data["SpecialInputData"]["AC_operation_mode"] = {
+                "operation_mode": [],
+                "setpoint_temperature": [],
+                "setpoint_humidity": [],
+            }
+
+            # シートの読み込み
+            sheet_SP_AC_MD = wb.sheet_by_name("SP-AC-MD) 空調モード")
+
+            for i in range(10,365+10):
+
+                data_SP_AC_MD = sheet_SP_AC_MD.row_values(i)
+
+                data["SpecialInputData"]["AC_operation_mode"]["operation_mode"].append( data_SP_AC_MD[1] )
+                data["SpecialInputData"]["AC_operation_mode"]["setpoint_temperature"].append( data_SP_AC_MD[2] )
+                data["SpecialInputData"]["AC_operation_mode"]["setpoint_humidity"].append( data_SP_AC_MD[3] )
+
+        except Exception as e:
+
+            # 例外処理
+            validation["error"].append( f"様式SP-AC-MD. 空調モード: 入力データが不正です。{e}")
+
 
 
     if "SP-8) 日射熱取得率" in wb.sheet_names():
