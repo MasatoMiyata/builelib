@@ -4001,10 +4001,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 "Inn": bc.trans_8760to36524(Inn_8760)
             }
             
-        except:
+        except Exception as e:
 
             # 例外処理
-            validation["error"].append( "様式SP-CD.気象データ: 入力データが不正です。")
+            validation["error"].append( f"様式SP-CD.気象データ: 入力データが不正です。{e}")
 
 
     # if "SP-6) カレンダー" in wb.sheet_names():
@@ -4062,10 +4062,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 data["SpecialInputData"]["calender"][pattern_name] = dataSP_RT_CP_tmp
 
 
-        except:
+        except Exception as e:
 
             # 例外処理
-            validation["error"].append( "様式SP-RT-CP カレンダーパターン: 入力データが不正です。")
+            validation["error"].append( f"様式SP-RT-CP カレンダーパターン: 入力データが不正です。{e}")
 
 
     # 様式SP-RT-SD 室スケジュール入力シート
@@ -4073,7 +4073,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
         try:
 
-            data["SpecialInputData"]["schedule"] = {}
+            data["SpecialInputData"]["room_schedule"] = {}
 
             # シートの読み込み
             sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) スケジュール")
@@ -4084,73 +4084,242 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 data_SP_RT_SD = sheet_SP_RT_SD.row_values(i)
 
                 if data_SP_RT_SD[0] != "":
-                    data["SpecialInputData"]["schedule"][data_SP_RT_SD[0]] = [float(x) for x in data_SP_RT_SD[1:24]]
+                    data["SpecialInputData"]["room_schedule"][data_SP_RT_SD[0]] = [float(x) for x in data_SP_RT_SD[1:24]]
             
         except Exception as e:
 
             # 例外処理
-            validation["error"].append( f"様式SP-CD.気象データ: 入力データが不正です。{e}" )
+            validation["error"].append( f"様式SP-RT-SD.スケジュール: 入力データが不正です。{e}" )
 
 
 
-    if "SP-7) 室スケジュール" in wb.sheet_names():
+    # if "SP-7) 室スケジュール" in wb.sheet_names():
 
-        data["SpecialInputData"]["room_schedule"] = {}
+    #     data["SpecialInputData"]["room_schedule"] = {}
 
-        # シートの読み込み
-        sheet_SP7 = wb.sheet_by_name("SP-7) 室スケジュール")
-        # 初期化
-        roomKey = None
+    #     # シートの読み込み
+    #     sheet_SP7 = wb.sheet_by_name("SP-7) 室スケジュール")
+    #     # 初期化
+    #     roomKey = None
 
-        for i in range(10,sheet_SP7.nrows):
+    #     for i in range(10,sheet_SP7.nrows):
 
-            # シートから「行」の読み込み
-            dataSP7 = sheet_SP7.row_values(i)
+    #         # シートから「行」の読み込み
+    #         dataSP7 = sheet_SP7.row_values(i)
 
-            # 階と室名が空欄でない場合
-            if (dataSP7[0] != "") and (dataSP7[1] != ""):
+    #         # 階と室名が空欄でない場合
+    #         if (dataSP7[0] != "") and (dataSP7[1] != ""):
 
-                roomKey = str(dataSP7[0]) + '_' + str(dataSP7[1])
+    #             roomKey = str(dataSP7[0]) + '_' + str(dataSP7[1])
 
-                data["SpecialInputData"]["room_schedule"][roomKey] = {
-                    "roomDayMode": "",
-                    "schedule": {}
-                }
+    #             data["SpecialInputData"]["room_schedule"][roomKey] = {
+    #                 "roomDayMode": "",
+    #                 "schedule": {}
+    #             }
 
-                # 使用時間帯
-                if dataSP7[2] == "終日":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "終日"
-                elif dataSP7[2] == "昼":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "昼"
-                elif dataSP7[2] == "夜":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "夜"
+    #             # 使用時間帯
+    #             if dataSP7[2] == "終日":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "終日"
+    #             elif dataSP7[2] == "昼":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "昼"
+    #             elif dataSP7[2] == "夜":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["roomDayMode"] = "夜"
+    #             else:
+    #                 raise Exception("使用時間帯の入力が不正です")
+
+    #             if dataSP7[3] == "室の同時使用率":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  bc.trans_8760to36524(dataSP7[4:])
+    #             elif dataSP7[3] == "照明発熱密度比率":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
+    #             elif dataSP7[3] == "人体発熱密度比率":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
+    #             elif dataSP7[3] == "機器発熱密度比率":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
+    #             else:
+    #                 raise Exception("スケジュールの種類が不正です")
+
+    #         # 階と室名が空欄であり、かつ、スケジュールの種類の入力がある場合
+    #         elif (dataSP7[0] == "") and (dataSP7[1] == "") and (dataSP7[3] != ""):
+
+    #             if dataSP7[3] == "室の同時使用率":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  bc.trans_8760to36524(dataSP7[4:])
+    #             elif dataSP7[3] == "照明発熱密度比率":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
+    #             elif dataSP7[3] == "人体発熱密度比率":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
+    #             elif dataSP7[3] == "機器発熱密度比率":
+    #                 data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
+    #             else:
+    #                 raise Exception("スケジュールの種類が不正です")
+
+
+    if "SP-RT-UC) 室使用条件" in wb.sheet_names():
+
+        try:
+
+            data["SpecialInputData"]["room_usage_condition"] = {}
+
+            # デフォルトデータベースの読み込み
+            with open(database_directory + "RoomUsageSchedule.json", 'r', encoding='utf-8') as f:
+                RoomUsageSchedule = json.load(f)
+
+            # シートの読み込み
+            sheet_SP_RT_UC = wb.sheet_by_name("SP-RT-UC) 室使用条件")
+
+            for i in range(10,sheet_SP_RT_UC.nrows):
+
+                # シートから「行」の読み込み
+                data_SP_RT_UC = sheet_SP_RT_UC.row_values(i)
+
+                building_type  = data_SP_RT_UC[0]  # 建物用途
+                room_type_name = data_SP_RT_UC[1]  # 新しい室用途名称
+                base_room_type = data_SP_RT_UC[2]  # ベースとする室用途名称
+
+                # 建物用途
+                if building_type not in RoomUsageSchedule:
+                    raise Exception ("建物用途が不正です")
+                elif building_type not in data["SpecialInputData"]["room_usage_condition"]:
+                    data["SpecialInputData"]["room_usage_condition"][building_type] = {}
+
+                # ベースとする室用途の条件をコピー
+                if base_room_type != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name] = RoomUsageSchedule[building_type][base_room_type]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["id"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間空調時間"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["標準換気風量"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["基準設定換気方式"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["基準設定全圧損失"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間照明点灯時間"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["設定照度"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["基準設定照明消費電力"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間給湯日数"]
+                    del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["newHASP"]
                 else:
-                    raise Exception("使用時間帯の入力が不正です")
+                    raise Exception ("ベースとする室用途が入力されていません")
+                
+                # 入力
 
-                if dataSP7[3] == "室の同時使用率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  bc.trans_8760to36524(dataSP7[4:])
-                elif dataSP7[3] == "照明発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
-                elif dataSP7[3] == "人体発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
-                elif dataSP7[3] == "機器発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
-                else:
-                    raise Exception("スケジュールの種類が不正です")
+                if data_SP_RT_UC[3] != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["空調運転パターン"] = data_SP_RT_UC[3]
 
-            # 階と室名が空欄であり、かつ、スケジュールの種類の入力がある場合
-            elif (dataSP7[0] == "") and (dataSP7[1] == "") and (dataSP7[3] != ""):
+                if data_SP_RT_UC[4] != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["カレンダーパターン"] = data_SP_RT_UC[4]
 
-                if dataSP7[3] == "室の同時使用率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["室の同時使用率"] =  bc.trans_8760to36524(dataSP7[4:])
-                elif dataSP7[3] == "照明発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["照明発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
-                elif dataSP7[3] == "人体発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["人体発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
-                elif dataSP7[3] == "機器発熱密度比率":
-                    data["SpecialInputData"]["room_schedule"][roomKey]["schedule"]["機器発熱密度比率"] =  bc.trans_8760to36524(dataSP7[4:])
-                else:
-                    raise Exception("スケジュールの種類が不正です")
+                # パターン1
+                if data_SP_RT_UC[5] != "":
+                    if data_SP_RT_UC[5] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["室同時使用率"]["パターン1"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[5]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[6] != "":
+                    if data_SP_RT_UC[6] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["照明発熱密度比率"]["パターン1"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[6]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[7] != "":
+                    if data_SP_RT_UC[7] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["人体発熱密度比率"]["パターン1"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[7]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[8] != "":
+                    if data_SP_RT_UC[8] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["機器発熱密度比率"]["パターン1"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[8]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                # パターン2
+                if data_SP_RT_UC[9] != "":
+                    if data_SP_RT_UC[9] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["室同時使用率"]["パターン2"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[9]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[10] != "":
+                    if data_SP_RT_UC[10] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["照明発熱密度比率"]["パターン2"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[10]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[11] != "":
+                    if data_SP_RT_UC[11] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["人体発熱密度比率"]["パターン2"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[11]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[12] != "":
+                    if data_SP_RT_UC[12] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["機器発熱密度比率"]["パターン2"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[12]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                # パターン3
+                if data_SP_RT_UC[13] != "":
+                    if data_SP_RT_UC[13] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["室同時使用率"]["パターン3"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[13]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[14] != "":
+                    if data_SP_RT_UC[14] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["照明発熱密度比率"]["パターン3"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[14]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[15] != "":
+                    if data_SP_RT_UC[15] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["人体発熱密度比率"]["パターン3"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[15]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[16] != "":
+                    if data_SP_RT_UC[16] in data["SpecialInputData"]["room_schedule"]:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["スケジュール"]["機器発熱密度比率"]["パターン3"] = data["SpecialInputData"]["room_schedule"][data_SP_RT_UC[16]]
+                    else:
+                        raise Exception ("スケジュールが規定されていません")
+
+                if data_SP_RT_UC[17] != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["照明発熱参照値"] = float(data_SP_RT_UC[17])
+                if data_SP_RT_UC[18] != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["人体発熱参照値"] = float(data_SP_RT_UC[18])
+                if data_SP_RT_UC[19] != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["機器発熱参照値"] = float(data_SP_RT_UC[19])
+                if data_SP_RT_UC[20] != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["作業強度指数"] = int(data_SP_RT_UC[20])
+                if data_SP_RT_UC[21] != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["外気導入量"] = float(data_SP_RT_UC[21])
+                if data_SP_RT_UC[22] != "":
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間換気時間"] = float(data_SP_RT_UC[22])
+
+                if not (data_SP_RT_UC[23] == "" and data_SP_RT_UC[24] == "" and data_SP_RT_UC[25] == "" and data_SP_RT_UC[26] == ""):
+                    
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量の単位"] = "[L/m2日]"
+
+                    if data_SP_RT_UC[23] != "":
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（洗面）"] = float(data_SP_RT_UC[23])
+                    else:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（洗面）"] = 0
+                    if data_SP_RT_UC[24] != "":
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（シャワー）"] = float(data_SP_RT_UC[24])
+                    else:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（シャワー）"] = 0
+                    if data_SP_RT_UC[25] != "":
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（厨房）"] = float(data_SP_RT_UC[25])
+                    else:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（厨房）"] = 0
+                    if data_SP_RT_UC[26] != "":
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（その他）"] = float(data_SP_RT_UC[26])
+                    else:
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（その他）"] = 0
+
+        except Exception as e:
+
+            # 例外処理
+            validation["error"].append( f"様式SP-RT-UC 室使用条件: 入力データが不正です。{e}" )
+
 
     if "SP-8) 日射熱取得率" in wb.sheet_names():
 
@@ -4291,10 +4460,10 @@ if __name__ == '__main__':
     #-----------------------
     directory = "./sample/"
 
-    case_name = 'InputSheet①_室内機_ コジェネ変更'
+    case_name = 'Builelib_sample_one_room_v2'
 
-    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
-    # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
+    # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
 
     print(validation)
 
@@ -4302,52 +4471,3 @@ if __name__ == '__main__':
     with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
-
-    #-----------------------
-    # WEBPRO Ver2シートの例
-    #-----------------------
-    # directory = "./tests/photovoltaic/"
-
-    # case_name = 'PV_case01'
-
-    # inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
-
-    # # json出力
-    # with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
-    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
-
-
-    #-----------------------
-    # WEBPRO Ver2シートの例（連続）
-    #-----------------------
-    # directory = "./tests/airconditioning/"
-
-    # for id in range(1,51):
-    #     if id < 10:
-    #         case_name = 'ACtest_Case00' + str(int(id))
-    #     else:
-    #         case_name = 'ACtest_Case0' + str(int(id))
-
-    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
-
-    #     # json出力
-    #     with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
-    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
-
-
-    # #-----------------------
-    # # WEBPRO Ver2シートの例（連続）
-    # #-----------------------
-    # directory = "./tests/cogeneration/"
-
-    # for id in range(9,10):
-    #     if id < 10:
-    #         case_name = 'Case_office_0' + str(int(id))
-    #     else:
-    #         case_name = 'Case_office_' + str(int(id))
-
-    #     inputdata = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
-
-    #     # json出力
-    #     with open(directory + case_name + ".json",'w', encoding='utf-8') as fw:
-    #         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
