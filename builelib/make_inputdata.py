@@ -4004,7 +4004,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         except:
 
             # 例外処理
-            validation["error"].append( "様式SP-CD.気象データ: データが不正です。")
+            validation["error"].append( "様式SP-CD.気象データ: 入力データが不正です。")
 
 
     # if "SP-6) カレンダー" in wb.sheet_names():
@@ -4037,27 +4037,59 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
     if "SP-RT-CP) カレンダー" in wb.sheet_names():
 
-        data["SpecialInputData"]["calender"] = {}
+        try:
 
-        # シートの読み込み
-        sheet_SP_RT_CP = wb.sheet_by_name("SP-RT-CP) カレンダー")
+            data["SpecialInputData"]["calender"] = {}
 
-        # 入力されたカレンダーパターン名称を検索
-        calender_p_list = sheet_SP_RT_CP.row_values(4)
+            # シートの読み込み
+            sheet_SP_RT_CP = wb.sheet_by_name("SP-RT-CP) カレンダー")
 
-        # 入力されている列について、名称と列数の対応関係を保存
-        calender_column_num = {}
-        for column_num in range(len(calender_p_list)):
-            name = calender_p_list[column_num]
-            if name != "":
-                calender_column_num[name] = column_num
+            # 入力されたカレンダーパターン名称を検索
+            calender_p_list = sheet_SP_RT_CP.row_values(4)
 
-        # データの読み込み
-        for pattern_name in calender_column_num:
-            dataSP_RT_CP_tmp = []
-            for i in range(10,365+10):
-                dataSP_RT_CP_tmp.append( int(sheet_SP_RT_CP.cell_value(i, calender_column_num[pattern_name])) ) 
-            data["SpecialInputData"]["calender"][pattern_name] = dataSP_RT_CP_tmp
+            # 入力されている列について、名称と列数の対応関係を保存
+            calender_column_num = {}
+            for column_num in range(len(calender_p_list)):
+                name = calender_p_list[column_num]
+                if name != "":
+                    calender_column_num[name] = column_num
+
+            # データの読み込み
+            for pattern_name in calender_column_num:
+                dataSP_RT_CP_tmp = []
+                for i in range(10,365+10):
+                    dataSP_RT_CP_tmp.append( int(sheet_SP_RT_CP.cell_value(i, calender_column_num[pattern_name])) ) 
+                data["SpecialInputData"]["calender"][pattern_name] = dataSP_RT_CP_tmp
+
+
+        except:
+
+            # 例外処理
+            validation["error"].append( "様式SP-RT-CP カレンダーパターン: 入力データが不正です。")
+
+
+    # 様式SP-RT-SD 室スケジュール入力シート
+    if "SP-RT-SD) スケジュール" in wb.sheet_names():
+
+        try:
+
+            data["SpecialInputData"]["schedule"] = {}
+
+            # シートの読み込み
+            sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) スケジュール")
+
+            for i in range(10,sheet_SP_RT_SD.nrows):
+
+                # シートから「行」の読み込み
+                data_SP_RT_SD = sheet_SP_RT_SD.row_values(i)
+
+                if data_SP_RT_SD[0] != "":
+                    data["SpecialInputData"]["schedule"][data_SP_RT_SD[0]] = [float(x) for x in data_SP_RT_SD[1:24]]
+            
+        except Exception as e:
+
+            # 例外処理
+            validation["error"].append( f"様式SP-CD.気象データ: 入力データが不正です。{e}" )
 
 
 
