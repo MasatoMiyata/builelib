@@ -81,7 +81,7 @@ def air_enthalpy(Tdb, X):
     Lw = 2501   # 水の蒸発潜熱 [kJ/kg]
 
     if len(Tdb) != len(X):
-        raise Exception('温度と湿度のリストの長さが異なります。')
+        raise Exception('温度と絶対湿度のリストの長さが異なります。')
     else:
         
         H = np.zeros(len(Tdb))
@@ -202,32 +202,24 @@ def get_roomHotwaterDemand(buildingType, roomType, input_room_usage_condition={}
     return hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other
 
 
-def get_roomHeatGain(buildingType, roomType, input_room_usage_condition={}):
+def get_roomHeatGain(buildingType, roomType, special_sheet={}):
     """
     発熱量参照値を読み込む関数（空調）
     """
+
+    ##----------------------------------------------------------------------------------
+    ## 任意入力 様式 SP-RT-UC. 室使用条件入力シート
+    ##----------------------------------------------------------------------------------
+    if special_sheet:
+        if "room_usage_condition" in special_sheet:
+            for buildling_type in special_sheet["room_usage_condition"]:
+                for room_type in special_sheet["room_usage_condition"][buildling_type]:
+                    RoomUsageSchedule[buildling_type][room_type] = special_sheet["room_usage_condition"][buildling_type][room_type]
 
     roomHeatGain_Light  = RoomUsageSchedule[buildingType][roomType]["照明発熱参照値"]
     roomNumOfPerson     = RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
     roomHeatGain_OAapp  = RoomUsageSchedule[buildingType][roomType]["機器発熱参照値"]
     work_load_index     = RoomUsageSchedule[buildingType][roomType]["作業強度指数"]
-
-    # SP-9シートによる任意入力があれば上書き
-    if buildingType in input_room_usage_condition:
-        if roomType in input_room_usage_condition[buildingType]:
-
-            if input_room_usage_condition[buildingType][roomType]["照明発熱参照値"] != "":
-                roomHeatGain_Light = float(input_room_usage_condition[buildingType][roomType]["照明発熱参照値"])
-
-            if input_room_usage_condition[buildingType][roomType]["人体発熱参照値"] != "":
-                roomNumOfPerson = float(input_room_usage_condition[buildingType][roomType]["人体発熱参照値"])
-            
-            if input_room_usage_condition[buildingType][roomType]["機器発熱参照値"] != "":
-                roomHeatGain_OAapp = float(input_room_usage_condition[buildingType][roomType]["機器発熱参照値"])
-
-            if input_room_usage_condition[buildingType][roomType]["作業強度指数"] != "":
-                work_load_index = float(input_room_usage_condition[buildingType][roomType]["作業強度指数"])
-
 
     # 人体発熱量参照値 [人/m2 * W/人 = W/m2]
     if work_load_index == 1:

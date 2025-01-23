@@ -1042,13 +1042,9 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
         rtype = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
 
         # 発熱量参照値 [W/m2] を読み込む関数（空調）
-        if "room_usage_condition" in inputdata["SpecialInputData"]:
-            (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
-                bc.get_roomHeatGain(btype, rtype, inputdata["SpecialInputData"]["room_usage_condition"])
-        else:
-            (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
-                bc.get_roomHeatGain(btype, rtype)
-
+        (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
+                bc.get_roomHeatGain(btype, rtype, inputdata["SpecialInputData"])
+        
         # 様式4から照明発熱量を読み込む
         if BUILELIB_MODE:
             if room_zone_name in inputdata["LightingSystems"]:
