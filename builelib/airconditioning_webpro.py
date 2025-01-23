@@ -219,10 +219,10 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
     ##----------------------------------------------------------------------------------
     ## 気象データ（解説書 2.2.1）
-    ## 任意評定 （SP-5: 気象データ)
+    ## 任意入力 様式 SP-CD: 気象データ入力シート
     ##----------------------------------------------------------------------------------
 
-    if "climate_data" in inputdata["SpecialInputData"]:  # 任意入力（SP-5）
+    if "climate_data" in inputdata["SpecialInputData"]:  # 任意入力（様式 SP-CD: 気象データ入力シート）
 
         # 外気温 [℃]
         ToutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
@@ -308,7 +308,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             Hroom[dd] = 38.81
 
     ##----------------------------------------------------------------------------------
-    ## 様式 SP-AC-MD: 空調運転モード入力シート
+    ## 任意入力 様式SP-AC-MD: 空調運転モード入力シート
     ##----------------------------------------------------------------------------------
     if "AC_operation_mode" in inputdata["SpecialInputData"]:
         ac_mode = inputdata["SpecialInputData"]["AC_operation_mode"]["operation_mode"]
@@ -316,13 +316,6 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
         RroomSP = inputdata["SpecialInputData"]["AC_operation_mode"]["setpoint_humidity"]
         Xroom = bc.air_absolute_humidity(TroomSP,RroomSP)
         Hroom = bc.air_enthalpy(TroomSP,Xroom)
-
-    ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-6: カレンダーパターン)
-    ##----------------------------------------------------------------------------------
-    input_calendar = []
-    if "calender" in inputdata["SpecialInputData"]:
-        input_calendar = inputdata["SpecialInputData"]["calender"]
 
 
     ##----------------------------------------------------------------------------------
@@ -364,38 +357,10 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
         roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name], roomDayMode[room_zone_name] = \
-            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], input_calendar)
-
+            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], inputdata["SpecialInputData"])
 
         # 空調対象面積の合計
         roomAreaTotal += inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-
-
-    ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-7: 室スケジュール)
-    ##----------------------------------------------------------------------------------
-
-    if "room_schedule" in inputdata["SpecialInputData"]:
-
-        # 空調ゾーン毎にループ
-        for room_zone_name in inputdata["AirConditioningZone"]:
-
-            # SP-7に入力されていれば
-            if room_zone_name in inputdata["SpecialInputData"]["room_schedule"]:
-
-                # 使用時間帯
-                roomDayMode[room_zone_name] = inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["roomDayMode"]
-
-                if "室の同時使用率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
-                    roomScheduleRoom_tmp = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["室の同時使用率"]).astype("float")
-                    roomScheduleRoom_tmp = np.where(roomScheduleRoom_tmp < 1, 0, roomScheduleRoom_tmp)  # 同時使用率は考えない
-                    roomScheduleRoom[room_zone_name] = roomScheduleRoom_tmp
-                if "照明発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
-                    roomScheduleLight[room_zone_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["照明発熱密度比率"])
-                if "人体発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
-                    roomSchedulePerson[room_zone_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["人体発熱密度比率"])
-                if "機器発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
-                    roomScheduleOAapp[room_zone_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["機器発熱密度比率"])
 
 
     #%%
@@ -2058,15 +2023,6 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                 inputdata["AirConditioningZone"][room_zone_name]["roomType"], 
                 inputdata["SpecialInputData"]
             ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-
-        else:
-
-            inputdata["AirConditioningZone"][room_zone_name]["outdoorAirVolume"] = \
-                bc.get_roomOutdoorAirVolume( 
-                    inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
-                    inputdata["AirConditioningZone"][room_zone_name]["roomType"]
-                ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
-
 
         # 冷房期間における外気風量 [m3/h]
         inputdata["AirHandlingSystem"][ inputdata["AirConditioningZone"][room_zone_name]["AHU_cooling_outdoorLoad"] ]["outdoorAirVolume_cooling"] += \
@@ -5167,7 +5123,8 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    filename = './sample/Builelib_sample_one_room_v2.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r', encoding='utf-8') as f:

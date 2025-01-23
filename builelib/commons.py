@@ -238,10 +238,30 @@ def get_roomHeatGain(buildingType, roomType, special_sheet={}):
     return roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson
 
 
-def get_roomUsageSchedule(buildingType, roomType, input_calendar={}):
+def get_roomUsageSchedule(buildingType, roomType, special_sheet={}):
     """
     時刻別のスケジュールを読み込む関数（空調、その他）
     """
+
+    ##----------------------------------------------------------------------------------
+    ## 任意入力 様式 SP-RT-CP: カレンダーパターン
+    ##----------------------------------------------------------------------------------
+    if special_sheet:
+        if "calender" in special_sheet:
+            for pattern_name in special_sheet["calender"]:
+                # データベースに追加
+                Calendar[pattern_name] = special_sheet["calender"][pattern_name]
+
+
+    ##----------------------------------------------------------------------------------
+    ## 任意入力 様式 SP-RT-UC. 室使用条件入力シート
+    ##----------------------------------------------------------------------------------
+    if special_sheet:
+        if "room_usage_condition" in special_sheet:
+            for buildling_type in special_sheet["room_usage_condition"]:
+                for room_type in special_sheet["room_usage_condition"][buildling_type]:
+                    RoomUsageSchedule[buildling_type][room_type] = special_sheet["room_usage_condition"][buildling_type][room_type]
+
 
     if RoomUsageSchedule[buildingType][roomType]["空調運転パターン"] == None:  # 非空調であれば
 
@@ -253,14 +273,8 @@ def get_roomUsageSchedule(buildingType, roomType, input_calendar={}):
 
     else:
 
-        # 各日の運転パターン（365日分）：　各室のカレンダーパターンから決定
+        # 各日の運転パターン（365日分）： 各室のカレンダーパターンから決定
         opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
-
-        # 入力されたカレンダーパターンを使う場合（上書きする）
-        if input_calendar != []:
-            if buildingType in input_calendar:
-                if roomType in input_calendar[buildingType]:
-                    opePattern_Daily = input_calendar[buildingType][roomType]
 
 
         # 各日時における運転状態（365×24の行列）
