@@ -91,7 +91,42 @@ def air_enthalpy(Tdb, X):
     return H   
 
 
-def get_roomOutdoorAirVolume(buildingType, roomType, input_room_usage_condition={}):
+def air_absolute_humidity(Tdb, H):
+    """絶対湿度を計算する関数
+    """
+
+    if len(Tdb) != len(H):
+        raise Exception('温度と相対湿度のリストの長さが異なります。')
+    else:
+
+        X = np.zeros(len(Tdb))
+
+        for i in range(0, len(Tdb)):
+
+            # 絶対温度[K]
+            T = Tdb[i] +  273.15
+
+            # 飽和水蒸気分圧 Ps
+            term1 = -0.58002206 * 10**4 / T
+            term2 = 0.13914993 * 10
+            term3 = -0.48640239 * 10**-1 * T
+            term4 = 0.41764768 * 10**-4 * T**2
+            term5 = -0.14452093 * 10**-7 * T**3
+            term6 = 0.65459673 * 10 * math.log(T)
+            Pw = math.exp(term1 + term2 + term3 + term4 + term5 + term6) /1000
+
+            # Pw：水蒸気分圧(kPa)
+            Pw  = Pw*(H[i]/100)      
+
+            Mw = 18.0153  # 水の分子量 [g/mol]
+            Ma = 28.9645  # 空気の分子量 [g/mol]
+            P  = 101.325  # 空気の全圧 [kPa]            
+
+            X[i]  = Mw / Ma * Pw / (P-Pw)
+
+    return X
+
+
     """
     外気導入量を読み込む関数（空調）
     """
