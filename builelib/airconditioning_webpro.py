@@ -275,7 +275,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
     ##----------------------------------------------------------------------------------
     ## 外気エンタルピー（解説書 2.2.4）
-    ##----------------------------------------------------------------------------------
+    ##--------------- -------------------------------------------------------------------
 
     Hoa_ave = air_enthalpy(Toa_ave, Xoa_ave)
     Hoa_day = air_enthalpy(Toa_day, Xoa_day)
@@ -307,6 +307,15 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             RroomSP[dd] = 40
             Hroom[dd] = 38.81
 
+    ##----------------------------------------------------------------------------------
+    ## 様式 SP-AC-MD: 空調運転モード入力シート
+    ##----------------------------------------------------------------------------------
+    if "AC_operation_mode" in inputdata["SpecialInputData"]:
+        ac_mode = inputdata["SpecialInputData"]["AC_operation_mode"]["operation_mode"]
+        TroomSP = inputdata["SpecialInputData"]["AC_operation_mode"]["setpoint_temperature"]
+        RroomSP = inputdata["SpecialInputData"]["AC_operation_mode"]["setpoint_humidity"]
+        Xroom = bc.air_absolute_humidity(TroomSP,RroomSP)
+        Hroom = bc.air_enthalpy(TroomSP,Xroom)
 
     ##----------------------------------------------------------------------------------
     ## 任意評定 （SP-6: カレンダーパターン)
