@@ -80,7 +80,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         roomArea     = inputdata["Rooms"][room_zone_name]["roomArea"]
 
         # 時刻別スケジュールの読み込み
-        if "calender" in inputdata["SpecialInputData"]:
+        if "SpecialInputData" in inputdata:
             opePattern_hourly_light = bc.get_operation_schedule_lighting(buildingType, roomType, inputdata["SpecialInputData"])
         else:
             opePattern_hourly_light = bc.get_operation_schedule_lighting(buildingType, roomType)
