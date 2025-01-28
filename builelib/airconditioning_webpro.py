@@ -990,7 +990,11 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     if "room_usage_condition" in inputdata["SpecialInputData"]:
         for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
             for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
-                QROOM_COEFFI[buildling_type][room_type] = QROOM_COEFFI[buildling_type][ inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]["ベースとする室用途"] ]
+                base_room_type = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]["ベースとする室用途"]
+
+                # 空調室である場合（＝係数がある場合）のみ、新しい室用途名称で係数を追加
+                if base_room_type in QROOM_COEFFI[buildling_type]:
+                    QROOM_COEFFI[buildling_type][room_type] =  QROOM_COEFFI[buildling_type][ base_room_type ]
 
     
     Heat_light_hourly = {}
@@ -4772,7 +4776,11 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
     ## 基準一次エネルギー消費量 （解説書 10.1）
     ##----------------------------------------------------------------------------------
-    RoomStandardValue = bc.get_standard_value(inputdata["SpecialInputData"])
+    if "SpecialInputData" in inputdata:
+        RoomStandardValue = bc.get_standard_value(inputdata["SpecialInputData"])
+    else:
+        RoomStandardValue = bc.get_standard_value({})
+
     for room_zone_name in inputdata["AirConditioningZone"]:
     
         # 建物用途・室用途、ゾーン面積等の取得
