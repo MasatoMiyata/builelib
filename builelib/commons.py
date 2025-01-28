@@ -378,10 +378,30 @@ def get_roomUsageSchedule(buildingType, roomType, special_sheet={}):
     return roomScheduleRoom, roomScheduleLight, roomSchedulePerson, roomScheduleOAapp, roomDayMode
 
 
-def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_condition={}, input_calendar={}):
+def get_operation_schedule_ventilation(buildingType, roomType, special_sheet={}):
     """
     時刻別のスケジュールを読み込む関数（換気）
     """
+
+    ##----------------------------------------------------------------------------------
+    ## 任意入力 様式 SP-RT-CP: カレンダーパターン
+    ##----------------------------------------------------------------------------------
+    if special_sheet:
+        if "calender" in special_sheet:
+            for pattern_name in special_sheet["calender"]:
+                # データベースに追加
+                Calendar[pattern_name] = special_sheet["calender"][pattern_name]
+
+
+    ##----------------------------------------------------------------------------------
+    ## 任意入力 様式 SP-RT-UC. 室使用条件入力シート
+    ##----------------------------------------------------------------------------------
+    if special_sheet:
+        if "room_usage_condition" in special_sheet:
+            for buildling_type in special_sheet["room_usage_condition"]:
+                for room_type in special_sheet["room_usage_condition"][buildling_type]:
+                    RoomUsageSchedule[buildling_type][room_type] = special_sheet["room_usage_condition"][buildling_type][room_type]
+
 
     # 各日時における運転状態（365×24の行列）
     opePattern_hourly_ventilation = []
@@ -391,11 +411,6 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
         # 非空調室は、年間一律で運転することにする。
         ratio_hourly = RoomUsageSchedule[buildingType][roomType]["年間換気時間"] / 8760
 
-        # SP-9シートに入力があれば上書きする。
-        if buildingType in input_room_usage_condition:
-            if roomType in input_room_usage_condition[buildingType]:
-                ratio_hourly = float(input_room_usage_condition[buildingType][roomType]["年間換気時間"]) / 8760
-
         # 365×24の行列に変換
         opePattern_hourly_ventilation = np.array( [[ratio_hourly]*24]*365 )
 
@@ -404,21 +419,9 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
         # 各日の運転パターン（365日分）： 各室のカレンダーパターンから決定
         opePattern_Daily = Calendar[ RoomUsageSchedule[buildingType][roomType]["カレンダーパターン"] ]
 
-        # 入力されたカレンダーパターンを使う場合（上書きする）
-        if input_calendar != []:
-            if buildingType in input_calendar:
-                if roomType in input_calendar[buildingType]:
-                    opePattern_Daily = input_calendar[buildingType][roomType]
-
-
-        # SP-9シートに入力があれば、年間換気運転時間を上書きする。
-        if buildingType in input_room_usage_condition:
-            if roomType in input_room_usage_condition[buildingType]:
-                RoomUsageSchedule[buildingType][roomType]["年間換気時間"] = float(input_room_usage_condition[buildingType][roomType]["年間換気時間"])
-
-
         # 時刻別スケジュールの設定
-        if RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間空調時間"]:
+        if ("年間空調時間" in RoomUsageSchedule[buildingType][roomType]) and  \
+            RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間空調時間"]:
 
             for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
                 opePattern_hourly_ventilation.append(
@@ -430,7 +433,8 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
             opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
 
 
-        elif RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]:
+        elif ("年間照明点灯時間" in RoomUsageSchedule[buildingType][roomType]) and \
+            RoomUsageSchedule[buildingType][roomType]["年間換気時間"] == RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]:
         
             for dd in range(0,len(opePattern_Daily)):  # 日ごとのループ
                 opePattern_hourly_ventilation.append(
@@ -455,7 +459,7 @@ def get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_co
             # 0か1に変換
             opePattern_hourly_ventilation = np.where(opePattern_hourly_ventilation > 0, 1, 0)
 
-        else:  # SPシートで入力された場合
+        else:  # SPシートで入力された場合など
 
             # 非空調室の場合と同じ処理を行う
             ratio_hourly = RoomUsageSchedule[buildingType][roomType]["年間換気時間"] / 8760
