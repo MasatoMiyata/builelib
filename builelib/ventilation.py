@@ -316,6 +316,11 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
     ## 基準一次エネルギー消費量 [MJ] （解説書 10.2）
     ##----------------------------------------------------------------------------------
+    if "SpecialInputData" in inputdata:
+        RoomStandardValue = bc.get_standard_value(inputdata["SpecialInputData"])
+    else:
+        RoomStandardValue = bc.get_standard_value({})
+
     for roomID, isys in inputdata["VentilationRoom"].items():
 
         # 建物用途、室用途（可読性重視で一旦変数に代入する）
@@ -323,7 +328,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         roomType     = inputdata["Rooms"][roomID]["roomType"]
     
         resultJson["ventilation"][roomID]["基準値[MJ]"] = \
-            bc.RoomStandardValue[buildingType][roomType]["換気"] * inputdata["Rooms"][roomID]["roomArea"]
+            RoomStandardValue[buildingType][roomType]["換気"] * inputdata["Rooms"][roomID]["roomArea"]
 
 
     ##----------------------------------------------------------------------------------
