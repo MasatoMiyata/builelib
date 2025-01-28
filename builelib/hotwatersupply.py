@@ -351,6 +351,11 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         elif ac_mode[dd] == "暖房":
             Troom[dd] = 22
 
+    # 任意入力 様式SP-AC-MD: 空調運転モード入力シート
+    if "AC_operation_mode" in inputdata["SpecialInputData"]:
+        Troom = inputdata["SpecialInputData"]["AC_operation_mode"]["setpoint_temperature"]
+
+
     # 配管熱損失 [kJ/day]
     for unit_name in inputdata["HotwaterSupplySystems"]:
 
