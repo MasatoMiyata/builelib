@@ -986,6 +986,12 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     with open(database_directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
         QROOM_COEFFI = json.load(f)
 
+    # 任意入力 様式 SP-RT-UC. 室使用条件入力シート
+    if "room_usage_condition" in inputdata["SpecialInputData"]:
+        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
+            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
+                QROOM_COEFFI[buildling_type][room_type] = QROOM_COEFFI[buildling_type][ inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]["ベースとする室用途"] ]
+
     
     Heat_light_hourly = {}
     Num_of_Person_hourly = {}
