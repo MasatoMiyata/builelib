@@ -64,14 +64,13 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     Es_lighting = 0   # 基準一次エネルギー消費量 [MJ]
     total_area = 0    # 建物全体の床面積
 
-    ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-6: カレンダーパターン)
-    ##----------------------------------------------------------------------------------
-    input_calendar = []
-    if "calender" in inputdata["SpecialInputData"]:
-        input_calendar = inputdata["SpecialInputData"]["calender"]
+    # 基準値
+    if "SpecialInputData" in inputdata:
+        RoomStandardValue = bc.get_standard_value(inputdata["SpecialInputData"])
+    else:
+        RoomStandardValue = bc.get_standard_value({})
 
-        
+
     # 室毎（照明系統毎）のループ
     for room_zone_name in inputdata["LightingSystems"]:
 
@@ -80,28 +79,13 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         roomType     = inputdata["Rooms"][room_zone_name]["roomType"]
         roomArea     = inputdata["Rooms"][room_zone_name]["roomArea"]
 
-        # 年間照明点灯時間 [時間] ← 計算には使用しない。
-        # opeTime = bc.RoomUsageSchedule[buildingType][roomType]["年間照明点灯時間"]
-
         # 時刻別スケジュールの読み込み
-        opePattern_hourly_light = bc.get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar)
+        if "calender" in inputdata["SpecialInputData"]:
+            opePattern_hourly_light = bc.get_operation_schedule_lighting(buildingType, roomType, inputdata["SpecialInputData"])
+        else:
+            opePattern_hourly_light = bc.get_operation_schedule_lighting(buildingType, roomType)
+        
         opeTime = np.sum( np.sum(opePattern_hourly_light))
-
-
-        ##----------------------------------------------------------------------------------
-        ## 任意評定 （SP-7: 室スケジュール)
-        ##----------------------------------------------------------------------------------
-
-        if "room_schedule" in inputdata["SpecialInputData"]:
-
-            # SP-7に入力されていれば
-            if room_zone_name in inputdata["SpecialInputData"]["room_schedule"]:
-
-                if "照明発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]:
-                    opePattern_hourly_light = np.array(inputdata["SpecialInputData"]["room_schedule"][room_zone_name]["schedule"]["照明発熱密度比率"])
-                    
-                    # SP-7の場合は、発熱比率をそのまま使用することにする。
-                    # opePattern_hourly_light = np.where(opePattern_hourly_light > 0, 1, 0)
 
 
         ## 室の形状に応じて定められる係数（仕様書4.4）
@@ -192,7 +176,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
 
         # 基準一次エネルギー消費量 [MJ]
-        Es_room = bc.RoomStandardValue[buildingType][roomType]["照明"] * roomArea
+        Es_room = RoomStandardValue[buildingType][roomType]["照明"] * roomArea
         Es_lighting += Es_room  # 出力用に積算
 
 
@@ -290,7 +274,7 @@ if __name__ == '__main__':
     parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 
     print('----- lighting.py -----')
-    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    filename = parent_dir + '/sample/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
