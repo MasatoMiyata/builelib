@@ -25,13 +25,6 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         }
     }
 
-    ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-6: カレンダーパターン)
-    ##----------------------------------------------------------------------------------
-    input_calendar = []
-    if "calender" in inputdata["SpecialInputData"]:
-        input_calendar = inputdata["SpecialInputData"]["calender"]
-    
     #----------------------------------------------------------------------------------
     # 解説書 6.2 速度制御方式に応じて定められる係数
     #----------------------------------------------------------------------------------
@@ -67,25 +60,21 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         buildingType = inputdata["Rooms"][room_name]["buildingType"]
         roomType     = inputdata["Rooms"][room_name]["roomType"]
 
+        print(buildingType)
+        print(roomType)
+
         # 年間照明点灯時間 [時間] 
         if buildingType == "共同住宅":
             inputdata["Elevators"][room_name]["operation_time"] = 5480
             inputdata["Elevators"][room_name]["operation_schedule_hourly"] = 5480/8760 * np.ones((365,24))
         else:
-            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = bc.get_dailyOpeSchedule_lighting(buildingType, roomType, input_calendar)
+
+            if "SpecialInputData" in inputdata:
+                inputdata["Elevators"][room_name]["operation_schedule_hourly"] = bc.get_operation_schedule_lighting(buildingType, roomType, inputdata["SpecialInputData"])
+            else:
+                inputdata["Elevators"][room_name]["operation_schedule_hourly"] = bc.get_operation_schedule_lighting(buildingType, roomType)
+
             inputdata["Elevators"][room_name]["operation_time"] = np.sum( np.sum(inputdata["Elevators"][room_name]["operation_schedule_hourly"]))
-
-        ##----------------------------------------------------------------------------------
-        ## 任意評定 （SP-7: 室スケジュール)
-        ##----------------------------------------------------------------------------------
-        if "room_schedule" in inputdata["SpecialInputData"]:
-
-            # SP-7に入力されていれば上書き
-            if room_name in inputdata["SpecialInputData"]["room_schedule"]:
-
-                if "照明発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]:
-                    inputdata["Elevators"][room_name]["operation_schedule_hourly"] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]["照明発熱密度比率"])
-                    inputdata["Elevators"][room_name]["operation_time"] = np.sum( np.sum(inputdata["Elevators"][room_name]["operation_schedule_hourly"]))
 
 
         if DEBUG:
@@ -200,7 +189,7 @@ if __name__ == '__main__':
 
 
     print('----- elevator.py -----')
-    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    filename = parent_dir + '/sample/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
