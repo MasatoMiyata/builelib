@@ -170,17 +170,25 @@ def get_roomOutdoorAirVolume(buildingType, roomType, special_sheet={}):
     return roomOutdoorAirVolume
 
 
-def get_roomHotwaterDemand(buildingType, roomType, input_room_usage_condition={}):
+def get_roomHotwaterDemand(buildingType, roomType, special_sheet={}):
     """
     湯使用量（L/m2日）を読み込む関数（給湯）
     """
+
+    ##----------------------------------------------------------------------------------
+    ## 任意入力 様式 SP-RT-UC. 室使用条件入力シート
+    ##----------------------------------------------------------------------------------
+    if special_sheet:
+        if "room_usage_condition" in special_sheet:
+            for buildling_type in special_sheet["room_usage_condition"]:
+                for room_type in special_sheet["room_usage_condition"][buildling_type]:
+                    RoomUsageSchedule[buildling_type][room_type] = special_sheet["room_usage_condition"][buildling_type][room_type]
+
 
     # 年間湯使用量
     if RoomUsageSchedule[buildingType][roomType]["年間湯使用量の単位"] == "[L/人日]" or \
         RoomUsageSchedule[buildingType][roomType]["年間湯使用量の単位"] == "[L/床日]":
 
-        hotwater_demand  = RoomUsageSchedule[buildingType][roomType]["年間湯使用量"] \
-            * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
         hotwater_demand_washroom = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（洗面）"]\
             * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
         hotwater_demand_shower = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（シャワー）"]\
@@ -190,36 +198,31 @@ def get_roomHotwaterDemand(buildingType, roomType, input_room_usage_condition={}
         hotwater_demand_other = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（その他）"]\
             * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
     
+        if "年間湯使用量" in RoomUsageSchedule[buildingType][roomType]:
+            hotwater_demand  = RoomUsageSchedule[buildingType][roomType]["年間湯使用量"] \
+                * RoomUsageSchedule[buildingType][roomType]["人体発熱参照値"]
+        else:
+            # 湯使用量の合計
+            hotwater_demand  = hotwater_demand_washroom + hotwater_demand_shower + hotwater_demand_kitchen + hotwater_demand_other
+
+
     elif RoomUsageSchedule[buildingType][roomType]["年間湯使用量の単位"] == "[L/m2日]":
 
-        hotwater_demand  = RoomUsageSchedule[buildingType][roomType]["年間湯使用量"]
         hotwater_demand_washroom = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（洗面）"]
         hotwater_demand_shower = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（シャワー）"]
         hotwater_demand_kitchen = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（厨房）"]
         hotwater_demand_other = RoomUsageSchedule[buildingType][roomType]["年間湯使用量（その他）"]
 
+        if "年間湯使用量" in RoomUsageSchedule[buildingType][roomType]:
+            hotwater_demand  = RoomUsageSchedule[buildingType][roomType]["年間湯使用量"]
+        else:
+            # 湯使用量の合計
+            hotwater_demand  = hotwater_demand_washroom + hotwater_demand_shower + hotwater_demand_kitchen + hotwater_demand_other
+
     else:
 
         raise Exception('給湯負荷が設定されていません')
 
-
-    # SP-9シートによる任意入力があれば上書き（単位は L/m2日 に限定）
-    if buildingType in input_room_usage_condition:
-        if roomType in input_room_usage_condition[buildingType]:
-
-            # 全て入力されていれば上書き
-            if input_room_usage_condition[buildingType][roomType]["年間湯使用量（洗面）"] != "" and \
-                input_room_usage_condition[buildingType][roomType]["年間湯使用量（シャワー）"] != "" and \
-                input_room_usage_condition[buildingType][roomType]["年間湯使用量（厨房）"] != "" and \
-                input_room_usage_condition[buildingType][roomType]["年間湯使用量（その他）"] != "":
-
-                hotwater_demand_washroom = float( input_room_usage_condition[buildingType][roomType]["年間湯使用量（洗面）"])
-                hotwater_demand_shower   = float( input_room_usage_condition[buildingType][roomType]["年間湯使用量（シャワー）"])
-                hotwater_demand_kitchen  = float( input_room_usage_condition[buildingType][roomType]["年間湯使用量（厨房）"])
-                hotwater_demand_other    = float( input_room_usage_condition[buildingType][roomType]["年間湯使用量（その他）"])
-
-                # 湯使用量の合計[L/m2日]
-                hotwater_demand  = hotwater_demand_washroom + hotwater_demand_shower + hotwater_demand_kitchen + hotwater_demand_other
 
     return hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other
 
@@ -262,7 +265,7 @@ def get_roomHeatGain(buildingType, roomType, special_sheet={}):
 
 def get_roomUsageSchedule(buildingType, roomType, special_sheet={}):
     """
-    時刻別のスケジュールを読み込む関数（空調、その他）
+    時刻別のスケジュールを読み込む関数（空調、給湯、その他）
     """
 
     ##----------------------------------------------------------------------------------

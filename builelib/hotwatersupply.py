@@ -126,13 +126,15 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     for room_name in inputdata["HotwaterRoom"]:
 
         # 日積算湯使用利用 [L/m2/day]
-        hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
-            bc.get_roomHotwaterDemand(
-                inputdata["Rooms"][room_name]["buildingType"], 
-                inputdata["Rooms"][room_name]["roomType"],
-                input_room_usage_condition
-                
-            )
+        if "SpecialInputData" in inputdata:
+            hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
+                bc.get_roomHotwaterDemand(
+                    inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], inputdata["SpecialInputData"])
+        else:
+            hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
+                bc.get_roomHotwaterDemand(
+                    inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+
 
         # 日積算給湯量参照値 [L/day]
         inputdata["HotwaterRoom"][room_name]["hotwater_demand"] = hotwater_demand * inputdata["Rooms"][room_name]["roomArea"]
@@ -142,8 +144,13 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         inputdata["HotwaterRoom"][room_name]["hotwater_demand_other"]    = hotwater_demand_other * inputdata["Rooms"][room_name]["roomArea"]
 
         # 各室の室使用スケジュール （＝室の同時使用率。 給湯需要がある室は、必ず空調されている前提とする）
-        roomScheduleRoom, _, _, _, _ = \
-            bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], input_calendar)
+        if "SpecialInputData" in inputdata:
+            roomScheduleRoom, _, _, _, _ = \
+                bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], inputdata["SpecialInputData"])
+        else:
+            roomScheduleRoom, _, _, _, _ = \
+                bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+
 
         inputdata["HotwaterRoom"][room_name]["hotwaterSchedule"] = np.zeros(365)
         inputdata["HotwaterRoom"][room_name]["hotwaterSchedule"][ np.sum(roomScheduleRoom,1) > 0 ] = 1
@@ -164,34 +171,6 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"] = \
             inputdata["HotwaterRoom"][room_name]["hotwater_demand_other"] * inputdata["HotwaterRoom"][room_name]["hotwaterSchedule"]
 
-
-        # 日別の給湯量 [L/day] (365×1) の任意入力 （SP-11: 日積算湯使用量)
-        if "hotwater_demand_daily" in inputdata["SpecialInputData"]:
-            if room_name in inputdata["SpecialInputData"]["hotwater_demand_daily"]:
-
-                if "洗面" in inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]:
-                    inputdata["HotwaterRoom"][room_name]["hotwater_demand_washroom_daily"] = \
-                        np.array(inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]["洗面"])
-
-                if "シャワー" in inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]:
-                    inputdata["HotwaterRoom"][room_name]["hotwater_demand_shower_daily"] = \
-                        np.array(inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]["シャワー"])
-
-                if "厨房" in inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]:
-                    inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"] = \
-                        np.array(inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]["厨房"])
-
-                if "その他" in inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]:
-                    inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"] = \
-                        np.array(inputdata["SpecialInputData"]["hotwater_demand_daily"][room_name]["その他"])
-
-                # 合計を更新
-                inputdata["HotwaterRoom"][room_name]["hotwater_demand_daily"]  = \
-                    np.array(inputdata["HotwaterRoom"][room_name]["hotwater_demand_washroom_daily"]) + \
-                    np.array(inputdata["HotwaterRoom"][room_name]["hotwater_demand_shower_daily"]) + \
-                    np.array(inputdata["HotwaterRoom"][room_name]["hotwater_demand_kitchen_daily"]) + \
-                    np.array(inputdata["HotwaterRoom"][room_name]["hotwater_demand_other_daily"])
-                
 
         if DEBUG:
             print(f'室名称 {room_name}')
@@ -526,6 +505,10 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     #----------------------------------------------------------------------------------
     # 解説書 10.4 給湯設備の基準一次エネルギー消費量
     #----------------------------------------------------------------------------------
+    if "SpecialInputData" in inputdata:
+        RoomStandardValue = bc.get_standard_value(inputdata["SpecialInputData"])
+    else:
+        RoomStandardValue = bc.get_standard_value({})
 
     resultJson["基準一次エネルギー消費量[MJ/年]"] = 0
     for room_name in inputdata["HotwaterRoom"]:
@@ -534,12 +517,11 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         buildingType = inputdata["Rooms"][room_name]["buildingType"]
         roomType     = inputdata["Rooms"][room_name]["roomType"]
     
-        #　計算対象面積[m2]
+        # 計算対象面積[m2]
         resultJson["計算対象面積"] += inputdata["Rooms"][room_name]["roomArea"]
 
         inputdata["HotwaterRoom"][room_name]["基準一次エネルギー消費量[MJ/年]"] = \
-            bc.RoomStandardValue[buildingType][roomType]["給湯"][inputdata["Building"]["Region"]+"地域"] * \
-            inputdata["Rooms"][room_name]["roomArea"]
+            RoomStandardValue[buildingType][roomType]["給湯"][inputdata["Building"]["Region"]+"地域"] * inputdata["Rooms"][room_name]["roomArea"]
 
         # 積算する
         resultJson["基準一次エネルギー消費量[MJ/年]"] += inputdata["HotwaterRoom"][room_name]["基準一次エネルギー消費量[MJ/年]"] 
@@ -672,7 +654,7 @@ if __name__ == '__main__':
     parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 
     print('----- hotwatersupply.py -----')
-    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    filename = parent_dir + '/sample/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r', encoding='utf-8') as f:
