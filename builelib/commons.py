@@ -288,7 +288,7 @@ def get_roomUsageSchedule(buildingType, roomType, special_sheet={}):
                     RoomUsageSchedule[buildling_type][room_type] = special_sheet["room_usage_condition"][buildling_type][room_type]
 
 
-    if RoomUsageSchedule[buildingType][roomType]["空調運転パターン"] == None:  # 非空調であれば
+    if RoomUsageSchedule[buildingType][roomType]["空調運転パターン"] == None or RoomUsageSchedule[buildingType][roomType]["空調運転パターン"] == "非空調":  # 非空調であれば
 
         roomScheduleRoom = np.zeros((365,24))
         roomScheduleLight = np.zeros((365,24))
