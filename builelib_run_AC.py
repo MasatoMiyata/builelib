@@ -4,10 +4,7 @@ from builelib import airconditioning as ac
 from builelib import airconditioning_webpro as ac_web
 # import matplotlib.pyplot as plt
 
-# filename = './sample/ACtest_Case001.json'
-# filename = './sample/Case_office_00.json'
-# filename = './sample/ACtest_Case033.json'
-filename = './sample/WEBPRO_inputSheet_sample.json'
+filename = './sample/Case_office_00.json'
 
 # 入力ファイルの読み込み
 with open(filename, 'r', encoding='utf-8') as f:
