@@ -81,19 +81,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         ##----------------------------------------------------------------------------------
 
         if "SpecialInputData" in inputdata:
-
-            input_calendar = {}
-            if "calender" in inputdata["SpecialInputData"]:
-                input_calendar = inputdata["SpecialInputData"]["calender"]   # SP-6
-
-            input_room_usage_condition = {}
-            if "room_usage_condition" in inputdata["SpecialInputData"]:
-                input_room_usage_condition = inputdata["SpecialInputData"]["room_usage_condition"]   # SP-9
-
-            inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_dailyOpeSchedule_ventilation(buildingType, roomType, input_room_usage_condition, input_calendar)
-
+            inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_operation_schedule_ventilation(buildingType, roomType, inputdata["SpecialInputData"])
         else:
-            inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_dailyOpeSchedule_ventilation(buildingType, roomType)
+            inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_operation_schedule_ventilation(buildingType, roomType)
 
 
         # 年間換気運転時間
@@ -405,7 +395,7 @@ if __name__ == '__main__':
     parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 
     print('----- ventilation.py -----')
-    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    filename = parent_dir + './sample/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
