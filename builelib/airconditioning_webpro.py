@@ -4771,7 +4771,8 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
     ##----------------------------------------------------------------------------------
     ## 基準一次エネルギー消費量 （解説書 10.1）
-    ##----------------------------------------------------------------------------------    
+    ##----------------------------------------------------------------------------------
+    RoomStandardValue = bc.get_standard_value(inputdata["SpecialInputData"])
     for room_zone_name in inputdata["AirConditioningZone"]:
     
         # 建物用途・室用途、ゾーン面積等の取得
@@ -4781,7 +4782,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
         resultJson["計算対象面積"] += zoneArea
         resultJson["基準一次エネルギー消費量[MJ/年]"] += \
-            bc.RoomStandardValue[buildingType][roomType]["空調"][inputdata["Building"]["Region"]+"地域"] * zoneArea
+            RoomStandardValue[buildingType][roomType]["空調"][inputdata["Building"]["Region"]+"地域"] * zoneArea
 
 
     # BEI/ACの算出
@@ -5130,7 +5131,8 @@ if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
-    filename = './sample/Builelib_sample_one_room_v2.json'
+    # filename = './sample/Builelib_sample_one_room_v2.json'
+    filename = './sample/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r', encoding='utf-8') as f:

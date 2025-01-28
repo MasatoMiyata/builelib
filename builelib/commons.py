@@ -6,6 +6,7 @@ import json
 import jsonschema
 import numpy as np
 import os
+import copy
 # import pandas as pd
 import itertools
 import math
@@ -46,6 +47,27 @@ class MyEncoder(json.JSONEncoder):
             return list(obj)
         else:
             return super(MyEncoder, self).default(obj)
+
+
+def get_standard_value(special_sheet):
+    """基準値を読み込む
+    """
+
+    # 基準値データベースの読み込み
+    with open(database_directory + 'ROOM_STANDARDVALUE.json', 'r', encoding='utf-8') as f:
+        standard_value = json.load(f)
+    
+    ##----------------------------------------------------------------------------------
+    ## 任意入力 様式 SP-RT-UC. 室使用条件入力シート
+    ##----------------------------------------------------------------------------------
+    if special_sheet:
+        if "room_usage_condition" in special_sheet:
+            for buildling_type in special_sheet["room_usage_condition"]:
+                for room_type in special_sheet["room_usage_condition"][buildling_type]:
+                    # 新たに作成した室用途については、ベースとする室用途の基準値を呼び出す
+                    standard_value[buildling_type][room_type] = copy.deepcopy( standard_value[buildling_type][ special_sheet["room_usage_condition"][buildling_type][room_type]["ベースとする室用途"] ] )
+                    
+    return standard_value                    
 
 
 def count_Matrix(x, mxL):
