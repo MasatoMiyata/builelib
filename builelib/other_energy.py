@@ -46,20 +46,6 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
             "roomHeatGain_daily" : np.zeros(365)   # 日別の機器発熱量 [MJ/m2/day]
         }
 
-        ##----------------------------------------------------------------------------------
-        ## 任意評定 （SP-6: カレンダーパターン)
-        ##----------------------------------------------------------------------------------
-        input_calendar = []
-        if "calender" in inputdata["SpecialInputData"]:
-            input_calendar = inputdata["SpecialInputData"]["calender"]
-
-        ##----------------------------------------------------------------------------------
-        ## 任意評定 （SP-9: 室使用条件)
-        ##----------------------------------------------------------------------------------
-        input_room_usage_condition = {}
-        if "room_usage_condition" in inputdata["SpecialInputData"]:
-            input_room_usage_condition = inputdata["SpecialInputData"]["room_usage_condition"]
-        
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
         if inputdata["Rooms"][room_name]["buildingType"] == "共同住宅":
@@ -73,32 +59,21 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
         else:
 
-            # 標準室使用条件から時刻別の発熱密度比率（0～1。365×24の行列）を作成。SP-6に入力がある場合、任意のカレンダーを反映。
-            roomScheduleRoom[room_name], roomScheduleLight[room_name], roomSchedulePerson[room_name], roomScheduleOAapp[room_name], _ = \
-                bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], input_calendar)
+            # 標準室使用条件から時刻別の発熱密度比率（0～1。365×24の行列）を作成。
+            if "SpecialInputData" in inputdata:
+                roomScheduleRoom[room_name], roomScheduleLight[room_name], roomSchedulePerson[room_name], roomScheduleOAapp[room_name], _ = \
+                    bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], inputdata["SpecialInputData"])
+            else:
+                roomScheduleRoom[room_name], roomScheduleLight[room_name], roomSchedulePerson[room_name], roomScheduleOAapp[room_name], _ = \
+                    bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
 
             # 機器発熱量参照値 [W/m2]の読み込み。SP-9に入力がある場合、任意の値を使用。
-            (_, _, roomHeatGain_OAapp[room_name],_) = \
-                bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], input_room_usage_condition)
-
-            ##----------------------------------------------------------------------------------
-            ## 任意評定 （SP-7: 室スケジュール)
-            ##----------------------------------------------------------------------------------
-            if "room_schedule" in inputdata["SpecialInputData"]:
-
-                # SP-7に入力されていれば、時刻別の発熱密度比率を上書きする。
-                if room_name in inputdata["SpecialInputData"]["room_schedule"]:
-
-                    if "室の同時使用率" in inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]:
-                        roomScheduleRoom_tmp = np.array(inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]["室の同時使用率"]).astype("float")
-                        roomScheduleRoom_tmp = np.where(roomScheduleRoom_tmp < 1, 0, roomScheduleRoom_tmp)  # 同時使用率は考えない
-                        roomScheduleRoom[room_name] = roomScheduleRoom_tmp
-                    if "照明発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]:
-                        roomScheduleLight[room_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]["照明発熱密度比率"])
-                    if "人体発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]:
-                        roomSchedulePerson[room_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]["人体発熱密度比率"])
-                    if "機器発熱密度比率" in inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]:
-                        roomScheduleOAapp[room_name] = np.array(inputdata["SpecialInputData"]["room_schedule"][room_name]["schedule"]["機器発熱密度比率"])
+            if "SpecialInputData" in inputdata:
+                (_, _, roomHeatGain_OAapp[room_name],_) = \
+                    bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], inputdata["SpecialInputData"])
+            else:
+                (_, _, roomHeatGain_OAapp[room_name],_) = \
+                    bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
 
 
         if roomHeatGain_OAapp[room_name] != None:
@@ -231,7 +206,7 @@ if __name__ == '__main__':
     parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 
     print('----- other_energy.py -----')
-    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    filename = parent_dir + '/sample/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
