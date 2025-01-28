@@ -60,9 +60,6 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         buildingType = inputdata["Rooms"][room_name]["buildingType"]
         roomType     = inputdata["Rooms"][room_name]["roomType"]
 
-        print(buildingType)
-        print(roomType)
-
         # 年間照明点灯時間 [時間] 
         if buildingType == "共同住宅":
             inputdata["Elevators"][room_name]["operation_time"] = 5480
