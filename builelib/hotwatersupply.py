@@ -53,19 +53,6 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     Tout, _, Iod, Ios, Inn = climate.readHaspClimateData(climatedata_directory + "/" +
                                     Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"])
     
-    ##----------------------------------------------------------------------------------
-    ## 任意入力 （SP-6: カレンダーパターン)
-    ##----------------------------------------------------------------------------------
-    input_calendar = []
-    if "calender" in inputdata["SpecialInputData"]:
-        input_calendar = inputdata["SpecialInputData"]["calender"]
-
-    ##----------------------------------------------------------------------------------
-    ## 任意入力 （SP-9: 室使用条件)
-    ##----------------------------------------------------------------------------------
-    input_room_usage_condition = {}
-    if "room_usage_condition" in inputdata["SpecialInputData"]:
-        input_room_usage_condition = inputdata["SpecialInputData"]["room_usage_condition"] 
 
     #----------------------------------------------------------------------------------
     # 入力データの整理（計算準備）
