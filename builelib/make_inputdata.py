@@ -1420,7 +1420,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 # シートから「行」の読み込み
                 data_SP_RT_UC = sheet_SP_RT_UC.row_values(i)
-                data_SP_RT_UC.extend( [""]*(28-len(data_SP_RT_UC)) )   # 空白文字を入れる（最大28列）
+                data_SP_RT_UC.extend( [""]*(29-len(data_SP_RT_UC)) )   # 空白文字を入れる（最大28列）
 
                 building_type  = data_SP_RT_UC[0]  # 建物用途
                 room_type_name = data_SP_RT_UC[1]  # 新しい室用途名称
@@ -1447,7 +1447,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["標準換気風量"]
                         del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["基準設定換気方式"]
                         del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["基準設定全圧損失"]
-                        del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間照明点灯時間"]
                         del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["設定照度"]
                         del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["基準設定照明消費電力"]
                         del data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量"]
@@ -1456,8 +1455,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     else:
                         raise Exception ("ベースとする室用途が入力されていません")
                     
-                    # ベースとする室用途の保存（負荷計算の係数の呼び出しについてはこの室用途を使用する）
-                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["負荷計算時に想定する室用途"] = base_room_type
+                    # ベースとする室用途の保存（負荷計算の係数、基準値の呼び出しについてはこの室用途を使用する）
+                    data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["ベースとする室用途"] = base_room_type
 
                     if data_SP_RT_UC[3] != "":
                         data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["空調運転パターン"] = data_SP_RT_UC[3]
@@ -1552,25 +1551,28 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["外気導入量"] = float(data_SP_RT_UC[21])
                     if data_SP_RT_UC[22] != "":
                         data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間換気時間"] = float(data_SP_RT_UC[22])
+                    if data_SP_RT_UC[23] != "":
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間照明点灯時間"] = float(data_SP_RT_UC[23])
 
-                    if not (data_SP_RT_UC[23] == "" and data_SP_RT_UC[24] == "" and data_SP_RT_UC[25] == "" and data_SP_RT_UC[26] == ""):
+
+                    if not (data_SP_RT_UC[24] == "" and data_SP_RT_UC[25] == "" and data_SP_RT_UC[26] == "" and data_SP_RT_UC[27] == ""):
                         
                         data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量の単位"] = "[L/m2日]"
 
-                        if data_SP_RT_UC[23] != "":
-                            data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（洗面）"] = float(data_SP_RT_UC[23])
+                        if data_SP_RT_UC[24] != "":
+                            data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（洗面）"] = float(data_SP_RT_UC[24])
                         else:
                             data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（洗面）"] = 0
-                        if data_SP_RT_UC[24] != "":
-                            data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（シャワー）"] = float(data_SP_RT_UC[24])
+                        if data_SP_RT_UC[25] != "":
+                            data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（シャワー）"] = float(data_SP_RT_UC[25])
                         else:
                             data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（シャワー）"] = 0
-                        if data_SP_RT_UC[25] != "":
-                            data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（厨房）"] = float(data_SP_RT_UC[25])
+                        if data_SP_RT_UC[26] != "":
+                            data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（厨房）"] = float(data_SP_RT_UC[26])
                         else:
                             data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（厨房）"] = 0
-                        if data_SP_RT_UC[26] != "":
-                            data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（その他）"] = float(data_SP_RT_UC[26])
+                        if data_SP_RT_UC[27] != "":
+                            data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（その他）"] = float(data_SP_RT_UC[27])
                         else:
                             data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["年間湯使用量（その他）"] = 0
 
