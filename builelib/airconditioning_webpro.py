@@ -19,7 +19,7 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
 # builelibモードかどうか（照明との連成、動的負荷計算）
-BUILELIB_MODE = False
+BUILELIB_MODE = True
 
 def count_Matrix(x, mxL):
     """
@@ -4723,6 +4723,57 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
 
     ##----------------------------------------------------------------------------------
+    ## 熱源群の空調対象面積の算出
+    ##----------------------------------------------------------------------------------
+    for ref_name in inputdata["REF"]:
+        
+        resultJson["REF"][ref_name]["空調対象面積"] = 0
+
+        if inputdata["REF"][ref_name]["mode"] == "cooling":  # 冷房の場合
+
+            for ahu_name in inputdata["AirHandlingSystem"]:
+                if inputdata["AirHandlingSystem"][ahu_name]["HeatSource_cooling"] + "_冷房" == ref_name:
+
+                    for ac_zone in inputdata["AirConditioningZone"]:
+
+                        # 室内負荷処理用空調機と外気処理用空調機が同じである場合
+                        if inputdata["AirConditioningZone"][ac_zone]["AHU_cooling_insideLoad"] == ahu_name and \
+                            inputdata["AirConditioningZone"][ac_zone]["AHU_cooling_outdoorLoad"] == ahu_name:
+            
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                        
+                        elif inputdata["AirConditioningZone"][ac_zone]["AHU_cooling_insideLoad"] == ahu_name:
+            
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+
+                        elif inputdata["AirConditioningZone"][ac_zone]["AHU_cooling_outdoorLoad"] == ahu_name:
+            
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                        
+
+        elif inputdata["REF"][ref_name]["mode"] == "cooling":  # 暖房の場合
+
+            for ahu_name in inputdata["AirHandlingSystem"]:
+                if inputdata["AirHandlingSystem"][ahu_name]["HeatSource_heating"] + "_暖房" == ref_name:
+
+                    for ac_zone in inputdata["AirConditioningZone"]:
+
+                        # 室内負荷処理用空調機と外気処理用空調機が同じである場合
+                        if inputdata["AirConditioningZone"][ac_zone]["AHU_heating_insideLoad"] == ahu_name and \
+                            inputdata["AirConditioningZone"][ac_zone]["AHU_heating_outdoorLoad"] == ahu_name:
+            
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                        
+                        elif inputdata["AirConditioningZone"][ac_zone]["AHU_heating_insideLoad"] == ahu_name:
+            
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+
+                        elif inputdata["AirConditioningZone"][ac_zone]["AHU_heating_outdoorLoad"] == ahu_name:
+            
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                        
+
+    ##----------------------------------------------------------------------------------
     ## 熱源群計算結果の集約
     ##----------------------------------------------------------------------------------
 
@@ -4736,10 +4787,17 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             raise Exception("運転モードが不正です")
 
         resultJson["REF"][ref_name]["定格能力[kW]"] = inputdata["REF"][ref_name]["Qref_rated"]
+
+        if resultJson["REF"][ref_name]["空調対象面積"] == 0:
+            resultJson["REF"][ref_name]["定格能力[W/m2]"] = 0
+        else:
+            resultJson["REF"][ref_name]["定格能力[W/m2]"] = inputdata["REF"][ref_name]["Qref_rated"] * 1000 / resultJson["REF"][ref_name]["空調対象面積"]
+
         resultJson["REF"][ref_name]["熱源主機_定格消費エネルギー[kW]"] = inputdata["REF"][ref_name]["Eref_rated_primary"]
         resultJson["REF"][ref_name]["年間運転時間[時間]"] = np.sum( resultJson["REF"][ref_name]["Tref"] ) 
         resultJson["REF"][ref_name]["年積算熱源負荷[GJ]"] = np.sum( resultJson["REF"][ref_name]["Qref"] ) /1000
         resultJson["REF"][ref_name]["年積算過負荷[GJ]"] = np.sum( resultJson["REF"][ref_name]["Qref_OVER"] ) /1000
+        
         resultJson["REF"][ref_name]["年積算エネルギー消費量[GJ]"] = \
             resultJson["REF"][ref_name]["熱源群熱源主機[GJ]"] \
             + resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"] \
@@ -5053,6 +5111,8 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
     df_daily_energy.to_csv(output_dir + 'result_AC_Energy_daily.csv', index_label="日時", encoding='CP932')
 
+
+
     ##----------------------------------------------------------------------------------
     # 不要な要素を削除
     ##----------------------------------------------------------------------------------
@@ -5136,6 +5196,25 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     del resultJson["Matrix"]
     del resultJson["日別エネルギー消費量"]
 
+    
+    # 室毎の計算結果
+    df_room_result = pd.DataFrame.from_dict(resultJson["Qroom"], orient='index')
+    df_room_result.to_csv(output_dir + 'result_AC_Qroom.csv', index_label="室名称", encoding='CP932')
+
+    # 空調機群毎の計算結果
+    df_ahu_result = pd.DataFrame.from_dict(resultJson["AHU"], orient='index')
+    df_ahu_result.to_csv(output_dir + 'result_AC_AHU.csv', index_label="空調機群名称", encoding='CP932')
+
+    # 二次ポンプ群毎の計算結果
+    df_pump_result = pd.DataFrame.from_dict(resultJson["PUMP"], orient='index')
+    df_pump_result.to_csv(output_dir + 'result_AC_PUMP.csv', index_label="二次ポンプ群名称", encoding='CP932')
+
+    # 熱源群毎の計算結果
+    df_ref_result = pd.DataFrame.from_dict(resultJson["REF"], orient='index')
+    df_ref_result.to_csv(output_dir + 'result_AC_REF.csv', index_label="熱源群名称", encoding='CP932')
+
+
+
     return resultJson
 
 
@@ -5144,7 +5223,7 @@ if __name__ == '__main__':  # pragma: no cover
     print('----- airconditioning.py -----')
     # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
     # filename = './sample/Builelib_sample_one_room_v2.json'
-    filename = './sample/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.json'
+    filename = './inputfile/Baguio_Ayala_Land_Technohub_BPO-B_160_スケジュール改定_太陽光発電導入_input.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
