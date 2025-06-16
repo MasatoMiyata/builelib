@@ -501,22 +501,40 @@ def builelib_run(exec_calculation, inputfile_name):
     #------------------------------------
 
     with zipfile.ZipFile(inputfile_name_split[0]+".zip", 'w', compression=zipfile.ZIP_DEFLATED) as new_zip:
-        new_zip.write( inputfile_name_split[0] + "_input.json",     arcname='builelib_input.json')
-        new_zip.write( inputfile_name_split[0] + "_validation.json", arcname='builelib_validation.json')
-        new_zip.write( inputfile_name_split[0] + "_result.json",    arcname='builelib_result.json')
-        new_zip.write( inputfile_name_split[0] + "_result_AC.json", arcname='builelib_result_AC.json')
-        new_zip.write( inputfile_name_split[0] + "_result_V.json",  arcname='builelib_result_V.json')
-        new_zip.write( inputfile_name_split[0] + "_result_L.json",  arcname='builelib_result_L.json')
-        new_zip.write( inputfile_name_split[0] + "_result_HW.json", arcname='builelib_result_HW.json')
-        new_zip.write( inputfile_name_split[0] + "_result_EV.json", arcname='builelib_result_EV.json')
-        new_zip.write( inputfile_name_split[0] + "_result_PV.json", arcname='builelib_result_PV.json')
-        new_zip.write( inputfile_name_split[0] + "_result_CGS.json", arcname='builelib_result_CGS.json')
-        new_zip.write( inputfile_name_split[0] + "_result_Other.json", arcname='builelib_result_Other.json')
-        new_zip.write( inputfile_name_split[0] + "_result_AC_Energy_daily.csv", arcname='result_AC_Energy_daily.csv')
-        new_zip.write( inputfile_name_split[0] + "_result_AC_ROOM_daily.csv", arcname='result_AC_ROOM_daily.csv')
-        new_zip.write( inputfile_name_split[0] + "_result_AC_AHU_daily.csv", arcname='result_AC_AHU_daily.csv')
-        new_zip.write( inputfile_name_split[0] + "_result_AC_PUMP_daily.csv", arcname='result_AC_PUMP_daily.csv')
-        new_zip.write( inputfile_name_split[0] + "_result_AC_REF_daily.csv", arcname='result_AC_REF_daily.csv')
+
+        files_to_add = [
+            (inputfile_name_split[0] + "_input.json", 'builelib_input.json'),
+            (inputfile_name_split[0] + "_validation.json", 'builelib_validation.json'),
+            (inputfile_name_split[0] + "_result.json", 'builelib_result.json'),
+            (inputfile_name_split[0] + "_result_AC.json", 'builelib_result_AC.json'),
+            (inputfile_name_split[0] + "_result_V.json", 'builelib_result_V.json'),
+            (inputfile_name_split[0] + "_result_L.json", 'builelib_result_L.json'),
+            (inputfile_name_split[0] + "_result_HW.json", 'builelib_result_HW.json'),
+            (inputfile_name_split[0] + "_result_EV.json", 'builelib_result_EV.json'),
+            (inputfile_name_split[0] + "_result_PV.json", 'builelib_result_PV.json'),
+            (inputfile_name_split[0] + "_result_CGS.json", 'builelib_result_CGS.json'),
+            (inputfile_name_split[0] + "_result_Other.json", 'builelib_result_Other.json'),
+            (inputfile_name_split[0] + "_result_AC_ROOM_daily.csv", 'builelib_result_AC_ROOM_daily.csv'),
+            (inputfile_name_split[0] + "_result_AC_Qroom.csv", 'builelib_result_AC_Qroom.csv'),
+            (inputfile_name_split[0] + "_result_AC_AHU_daily.csv", 'builelib_result_AC_AHU_daily.csv'),
+            (inputfile_name_split[0] + "_result_AC_AHU.csv", 'builelib_result_AC_AHU.csv'),
+            (inputfile_name_split[0] + "_result_AC_PUMP_daily.csv", 'builelib_result_AC_PUMP_daily.csv'),
+            (inputfile_name_split[0] + "_result_AC_PUMP.csv", 'builelib_result_AC_PUMP.csv'),
+            (inputfile_name_split[0] + "_result_AC_REF_daily.csv", 'builelib_result_AC_REF_daily.csv'),
+            (inputfile_name_split[0] + "_result_AC_REF.csv", 'builelib_result_AC_REF.csv'),
+            (inputfile_name_split[0] + "_result_AC_Energy_daily.csv", 'builelib_result_AC_Energy_daily.csv'),
+            (inputfile_name_split[0] + "_result_V_Energy_daily.csv", 'builelib_result_V_Energy_daily.csv'),
+            (inputfile_name_split[0] + "_result_L_Energy_daily.csv", 'builelib_result_L_Energy_daily.csv'),
+            (inputfile_name_split[0] + "_result_L_room.csv", 'builelib_result_L_room.csv'),
+            (inputfile_name_split[0] + "_result_HW_Energy_daily.csv", 'builelib_result_HW_Energy_daily.csv'),
+            (inputfile_name_split[0] + "_result_PV_Energy_daily.csv", 'builelib_result_PV_Energy_daily.csv'),
+            (inputfile_name_split[0] + "_result_EV_Energy_daily.csv", 'builelib_result_EV_Energy_daily.csv'),
+            (inputfile_name_split[0] + "_result_OT_Energy_daily.csv", 'builelib_result_OT_Energy_daily.csv')
+        ]
+
+        for file_path, arcname in files_to_add:
+            if os.path.exists(file_path):
+                new_zip.write(file_path, arcname=arcname)
 
 
     # ファイル削除
@@ -534,20 +552,5 @@ def builelib_run(exec_calculation, inputfile_name):
 
 if __name__ == '__main__':
     
-    # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
-    # file_name = "./sample/WEBPRO_inputSheet_sample.xlsm"
-    file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_010_窓ガラス更新.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_020_照明器具更新.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_031_空調室外機更新.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_032_空調室外機更新_小型化.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_041_ロスナイ導入_自動換気切り替え無し.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_042_ロスナイ導入.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_043_ロスナイ_CO2濃度制御導入.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_051_外気冷房制御.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_052_照明器具更新_外気冷房.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_053_空調室外機更新_小型化_外気冷房.xlsx"
-    # file_name = "./Baguio/Baguio_Ayala_Land_Technohub_BPO-B_060_太陽光発電導入.xlsx"
-
+    file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
     builelib_run(True, file_name)
-
