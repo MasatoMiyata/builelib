@@ -4377,6 +4377,27 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     # バリデーションの実行
     # bc.inputdata_validation(data)
 
+    # 外皮面積と窓面積の関係のチェック
+    if "EnvelopeSet" in data:
+        for room_zone_name in data["EnvelopeSet"]:
+            for (wall_id, wall_configure) in enumerate( data["EnvelopeSet"][room_zone_name]["WallList"] ):
+
+                window_total = 0  # 窓面積の集計用
+
+                if "WindowList" in wall_configure:   # 窓がある場合
+
+                    # 窓面積の合計を求める（Σ{窓面積×枚数}）
+                    for (window_id, window_configure) in enumerate(wall_configure["WindowList"]):
+
+                        if window_configure["WindowID"] != "無":
+
+                            window_total += \
+                                data["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * window_configure["WindowNumber"]
+
+                if wall_configure["EnvelopeArea"] < window_total:
+                    validation["error"].append( "様式2-4.外皮仕様: 空調ゾーン"+ room_zone_name +"」の窓面積が外皮面積よりも大きくなっています。")
+
+
     return data, validation
 
 
