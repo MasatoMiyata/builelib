@@ -506,52 +506,13 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
         for window_name in inputdata["WindowConfigure"].keys():
 
-            if inputdata["WindowConfigure"][window_name]["inputMethod"] == "ガラスの種類を入力":
-
-                # 建具の種類の読み替え
-                if inputdata["WindowConfigure"][window_name]["frameType"] == "木製" or \
-                    inputdata["WindowConfigure"][window_name]["frameType"] == "樹脂製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "木製・樹脂製建具"
-
-                elif inputdata["WindowConfigure"][window_name]["frameType"] == "金属木複合製" or \
-                    inputdata["WindowConfigure"][window_name]["frameType"] == "金属樹脂複合製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "金属木複合製・金属樹脂複合製建具"
-                
-                elif inputdata["WindowConfigure"][window_name]["frameType"] == "金属製":
-
-                    inputdata["WindowConfigure"][window_name]["frameType"] = "金属製建具"
-
-
-                # ガラスIDと建具の種類から、熱貫流率・日射熱取得率を抜き出す。
-                inputdata["WindowConfigure"][window_name]["Uvalue"] = \
-                WindowHeatTransferPerformance\
-                    [ inputdata["WindowConfigure"][window_name]["glassID"] ]\
-                    [ inputdata["WindowConfigure"][window_name]["frameType"] ]["熱貫流率"]
-
-                inputdata["WindowConfigure"][window_name]["Uvalue_blind"] = \
-                WindowHeatTransferPerformance\
-                    [ inputdata["WindowConfigure"][window_name]["glassID"] ]\
-                    [ inputdata["WindowConfigure"][window_name]["frameType"] ]["熱貫流率・ブラインド込"]
-
-                inputdata["WindowConfigure"][window_name]["Ivalue"] = \
-                WindowHeatTransferPerformance\
-                    [ inputdata["WindowConfigure"][window_name]["glassID"] ]\
-                    [ inputdata["WindowConfigure"][window_name]["frameType"] ]["日射熱取得率"]
-
-                inputdata["WindowConfigure"][window_name]["Ivalue_blind"] = \
-                WindowHeatTransferPerformance\
-                    [ inputdata["WindowConfigure"][window_name]["glassID"] ]\
-                    [ inputdata["WindowConfigure"][window_name]["frameType"] ]["日射熱取得率・ブラインド込"]
-
-
-            elif inputdata["WindowConfigure"][window_name]["inputMethod"] == "ガラスの性能を入力":
+            if inputdata["WindowConfigure"][window_name]["inputMethod"] == "ガラスの種類を入力" or \
+                    inputdata["WindowConfigure"][window_name]["inputMethod"] == "ガラスの性能を入力":
 
                 ku_a = 0
                 ku_b = 0
-                kita  = 0
-                dR = 0
+                kita = 0
+                dR   = 0
 
                 # 建具の種類の読み替え
                 if inputdata["WindowConfigure"][window_name]["frameType"] == "木製" or \
@@ -568,18 +529,22 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
                     inputdata["WindowConfigure"][window_name]["frameType"] = "金属製建具"
 
+
+                # ガラスIDと建具の種類から、ガラス単体の熱貫流率・日射熱取得率を抜き出す。
+                if inputdata["WindowConfigure"][window_name]["inputMethod"] == "ガラスの種類を入力":
+
+                    inputdata["WindowConfigure"][window_name]["glassUvalue"] = \
+                        WindowHeatTransferPerformance[ inputdata["WindowConfigure"][window_name]["glassID"] ]["ガラス単体"]["熱貫流率"]
+
+                    inputdata["WindowConfigure"][window_name]["glassIvalue"] = \
+                        WindowHeatTransferPerformance[ inputdata["WindowConfigure"][window_name]["glassID"] ]["ガラス単体"]["日射熱取得率"]
 
                 # 変換係数
                 ku_a = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a"]
                 ku_b = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b"]
-                kita  = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["kita"]            
+                kita = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["kita"]            
 
-                # print(ku_a)
-                # print(ku_b)
-                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a"] )
-                # print(glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b"] )
-                # print(inputdata["WindowConfigure"][window_name]["glassUvalue"])
-
+                # 窓のの熱貫流率・日射熱取得率
                 inputdata["WindowConfigure"][window_name]["Uvalue"] = ku_a * inputdata["WindowConfigure"][window_name]["glassUvalue"] + ku_b
                 inputdata["WindowConfigure"][window_name]["Ivalue"] = kita * inputdata["WindowConfigure"][window_name]["glassIvalue"]
 
@@ -5217,9 +5182,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 if __name__ == '__main__':  # pragma: no cover
 
     print('----- airconditioning.py -----')
-    # filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
-    # filename = './sample/Builelib_sample_one_room_v2.json'
-    filename = './inputfile/Baguio_Ayala_Land_Technohub_BPO-B_160_スケジュール改定_太陽光発電導入_input.json'
+    filename = './sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
 
     # 入力ファイルの読み込み
     with open(filename, 'r', encoding='utf-8') as f:

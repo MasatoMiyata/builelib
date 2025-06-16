@@ -2273,6 +2273,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "windowHeight": None,
                                 "inputMethod": inputMethod,
                                 "frameType": frame_type,
+                                "layerType": layer_type,
                                 "glassID":
                                     check_value(dataBE3[4], "様式2-3.窓仕様 "+ str(i+1) +"行目:「⑤ガラスの種類」", True, None, "文字列", input_options["ガラスの種類"], None, None),
                                 "Info":
@@ -3369,14 +3370,15 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     )
 
                 # 外気冷房制御のチェック（継続行に書いていれば有効にする）
-                isEconomizer = check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None)
-                EconomizerMaxAirVolume = check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None)
+                isEconomizer           = check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None)
+                EconomizerMaxAirVolume = check_value(dataAC4[5],  "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None)
+
                 if isEconomizer == "有" and EconomizerMaxAirVolume != "":
                     data["AirHandlingSystem"][unitKey]["isEconomizer"] = isEconomizer
                     data["AirHandlingSystem"][unitKey]["EconomizerMaxAirVolume"] = EconomizerMaxAirVolume
 
                 # 予熱時外気取り入れ停止の有無
-                isOutdoorAirCut = check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                isOutdoorAirCut = check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None)
                 if isOutdoorAirCut == "有":
                     data["AirHandlingSystem"][unitKey]["isOutdoorAirCut"] = isOutdoorAirCut
 
@@ -4425,10 +4427,10 @@ if __name__ == '__main__':
     # WEBPRO Ver2シートの例
     #-----------------------
     directory = "./upfiles/"
-    case_name = '5x2kse63lqf7bvuw_空調エラー'
+    case_name = 'vd0lthbpkf81aq2z_建具の種類'
 
-    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
-    # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
+    # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
 
     print(validation)
 
