@@ -3677,6 +3677,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         # 初期化
         roomKey = None
 
+        light_num = 0
+
         # 行のループ
         for i in range(10,sheet_L.nrows):
 
@@ -3690,6 +3692,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 階と室名が空欄でない場合
             if (dataL[0] != "") and (dataL[1] != ""):
 
+                light_num = 0
                 roomKey = str(dataL[0]) + '_' + str(dataL[1])
 
                 if roomKey not in data["Rooms"]:
@@ -3734,7 +3737,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 階と室名が空欄であり、かつ、消費電力の入力がある場合
             elif (dataL[0] == "") and (dataL[1] == "") and (dataL[11] != "") and (roomKey in data["LightingSystems"]):
 
-                unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A", "文字列", None, None, None)
+                light_num += 1
+                unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A"+str(light_num), "文字列", None, None, None)
 
                 if unit_name in data["LightingSystems"][roomKey]["lightingUnit"]:
 
@@ -4420,11 +4424,11 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./sample/"
-    case_name = 'Builelib_sample_one_room_v2'
+    directory = "./upfiles/"
+    case_name = '5x2kse63lqf7bvuw_空調エラー'
 
-    # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
-    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
+    inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
+    # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
 
     print(validation)
 
