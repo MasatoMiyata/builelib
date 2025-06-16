@@ -577,7 +577,10 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir = ""):
     # Es_cgs_d  : 日付dにおけるCGSの燃料消費量（高位発熱量基準） [MJ/day]
     # qhr_cgs_d : 日付dにおけるCGSの排熱回収量 [MJ/day]
 
-    Es_cgs_d  = Ee_cgs_d * 3.6 /(mxRe_cgs_d * fcgs_e_cor *flh)
+    if Ee_cgs_d == 0:
+        Es_cgs_d = 0
+    else:
+        Es_cgs_d  = Ee_cgs_d * 3.6 /(mxRe_cgs_d * fcgs_e_cor *flh)
     qhr_cgs_d = Es_cgs_d * fcgs_e_cor * mxRhr_cgs_d * flh
 
     ##----------------------------------------------------------------------------------
