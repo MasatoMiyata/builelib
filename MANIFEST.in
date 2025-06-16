@@ -1,5 +1,0 @@
-include LICENSE
-recursive-include ./builelib/database *.json 
-recursive-include ./builelib/climatedata *.has *.dat *.csv
-recursive-include ./builelib/inputdata *.json
-

@@ -10,7 +10,7 @@ memo.md
 
 inputfile/
 reference/
-test_PAL/
+tests/PAL/
 standard_spec/
 sample/*.json
 
