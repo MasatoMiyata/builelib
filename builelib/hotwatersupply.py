@@ -212,7 +212,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
             inputdata["HotwaterSupplySystems"][unit_name]["heatloss_coefficient"] = \
                 thermal_conductivity_dict["旧選択肢"][inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"]][inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"]]
 
-        elif inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"] in ["保温仕様A","保温仕様B","保温仕様C","裸管"]:  # 新選択肢
+        elif inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"] in ["保温仕様A","保温仕様B","保温仕様C","保温仕様D","裸管"]:  # 新選択肢
 
             # 接続口径の種類
             if inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 15:
@@ -681,7 +681,7 @@ if __name__ == '__main__':
     parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 
     print('----- hotwatersupply.py -----')
-    filename = parent_dir + '/sample/Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル.json'
+    filename = parent_dir + '/upfiles/jg89mk6sur1v2ph3_建具の種類.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r', encoding='utf-8') as f:
