@@ -95,7 +95,7 @@ input_options = {
     "節湯器具": ["自動給湯栓","節湯B1","無"],
     "給湯熱源の用途": ["給湯負荷用","配管保温用","貯湯槽保温用","その他"],
     "給湯熱源機種": ["ガス給湯機","ガス給湯暖房機","ボイラ","石油給湯機(給湯単機能)","石油給湯機(給湯機付ふろがま)","家庭用ヒートポンプ給湯機","業務用ヒートポンプ給湯機","貯湯式電気温水器","電気瞬間湯沸器","真空式温水発生機","無圧式温水発生機","地域熱供給"],
-    "配管保温仕様": ["保温仕様1","保温仕様2","保温仕様3","裸管"],
+    "配管保温仕様": ["保温仕様A","保温仕様B","保温仕様C","保温仕様D","保温仕様1","保温仕様2","保温仕様3","裸管"],
     "速度制御方式": ["VVVF(電力回生なし)","VVVF(電力回生あり)","VVVF(電力回生なし、ギアレス)","VVVF(電力回生あり、ギアレス)","交流帰還制御"],
     "太陽電池の種類": ["結晶系","結晶系以外"],
     "アレイ設置方式": ["架台設置形","屋根置き形","その他"],
@@ -4399,10 +4399,8 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./upfiles/"
-
-    # case_name = 'Builelib_sample_one_room_v2'
-    case_name = '9nq1brsxd647hmtj_建具エラー'
+    directory = "./sample/"
+    case_name = 'Builelib_sample_one_room_v2'
 
     # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
