@@ -3732,7 +3732,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     }
 
             # 階と室名が空欄であり、かつ、消費電力の入力がある場合
-            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[10] != "") and (roomKey in data["LightingSystems"]):
+            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[11] != "") and (roomKey in data["LightingSystems"]):
 
                 unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A", "文字列", None, None, None)
 
