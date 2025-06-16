@@ -434,7 +434,6 @@ def builelib_run(exec_calculation, inputfile_name):
         try:
             if inputdata["CogenerationSystems"]:   # CogenerationSystems が 空 でなければ
                 resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir=inputfile_name_split[0])
-
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design -= resultdata_CGS["年間一次エネルギー削減量"] * 1000
                 calc_reuslt["創エネルギー量（コジェネ）[MJ]"] = resultdata_CGS["年間一次エネルギー削減量"] * 1000
@@ -552,6 +551,6 @@ def builelib_run(exec_calculation, inputfile_name):
 
 if __name__ == '__main__':
     
-    file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
-    file_name = "./sample/Baguio_Ayala_Land_Technohub_BPO-B_a400_ZEBパッケージ_太陽光発電.xlsx"
+    # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
+    file_name = "./sample/sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
     builelib_run(True, file_name)
