@@ -48,8 +48,13 @@ input_options = {
         "101","102","103","104","105","106","107","121","122","123","124","125","126","127","128","129","130","131","132","133","134","141","142","143","144","145","146","161","162","163",
         "181","182","183","184","185","186","187","188","189","190","201","202","203","204","221","222","301","302"],
     "窓性能の入力方法": ["性能値を入力","ガラスの性能を入力","ガラスの種類を入力"],
-    "建具の種類": ["樹脂製","木製","金属樹脂複合製","金属木複合製","金属製","樹脂製(単板ガラス)","樹脂製(複層ガラス)","木製(単板ガラス)","木製(複層ガラス)","金属樹脂複合製(単板ガラス)","金属樹脂複合製(複層ガラス)","金属木複合製(単板ガラス)","金属木複合製(複層ガラス)","金属製(単板ガラス)","金属製(複層ガラス)"],
-    "ガラスの層数": ["複層","単層"],
+    "建具の種類": [
+        "樹脂製","樹脂製(単板ガラス)","樹脂製(複層ガラス)","樹脂製(二層複層ガラス)","樹脂製(三層以上の複層ガラス)",
+        "木製","木製(単板ガラス)","木製(複層ガラス)","木製(二層複層ガラス)","木製(三層以上の複層ガラス)",
+        "金属樹脂複合製","金属樹脂複合製(単板ガラス)","金属樹脂複合製(複層ガラス)","金属樹脂複合製(二層複層ガラス)","金属樹脂複合製(三層以上の複層ガラス)",
+        "金属木複合製","金属木複合製(単板ガラス)","金属木複合製(複層ガラス)","金属木複合製(二層複層ガラス)","金属木複合製(三層以上の複層ガラス)",
+        "金属製","金属製(単板ガラス)","金属製(複層ガラス)","金属製(二層以上の複層ガラス)"],
+    "ガラスの層数": ["三層以上の複層","複層","単層"],
     "ガラスの種類": ["3WgG06","3WgG07","3WgG08","3WgG09","3WgG10","3WgG11","3WgG12","3WgG13","3WgG14","3WgG15","3WgG16","3WsG06","3WsG07","3WsG08","3WsG09","3WsG10","3WsG11","3WsG12","3WsG13","3WsG14","3WsG15","3WsG16",
         "3WgA06","3WgA07","3WgA08","3WgA09","3WgA10","3WgA11","3WgA12","3WgA13","3WgA14","3WgA15","3WgA16","3WsA06","3WsA07","3WsA08","3WsA09","3WsA10","3WsA11","3WsA12","3WsA13","3WsA14","3WsA15","3WsA16",
         "3LgG06","3LgG07","3LgG08","3LgG09","3LgG10","3LgG11","3LgG12","3LgG13","3LgG14","3LgG15","3LgG16","3LsG06","3LsG07","3LsG08","3LsG09","3LsG10","3LsG11","3LsG12","3LsG13","3LsG14","3LsG15","3LsG16",
@@ -106,33 +111,50 @@ def convert_window_frame_type(frame_type_webpro):
     if frame_type_webpro == "木製(単板ガラス)":
         frame_type = "木製"
         layer_type = "単層"
-    elif frame_type_webpro == "木製(複層ガラス)":
+    elif frame_type_webpro == "木製(複層ガラス)" or frame_type_webpro == "木製(二層複層ガラス)":
         frame_type = "木製"
         layer_type = "複層"
+    elif frame_type_webpro == "木製(三層以上の複層ガラス)":
+        frame_type = "木製"
+        layer_type = "三層以上の複層"
+
     elif frame_type_webpro == "樹脂製(単板ガラス)":
         frame_type = "樹脂製"
         layer_type = "単層"
-    elif frame_type_webpro == "樹脂製(複層ガラス)" or frame_type_webpro == "樹脂":
+    elif frame_type_webpro == "樹脂製(複層ガラス)" or frame_type_webpro == "樹脂" or frame_type_webpro == "樹脂製(二層複層ガラス)":
         frame_type = "樹脂製"
         layer_type = "複層"
+    elif frame_type_webpro == "樹脂製(三層以上の複層ガラス)":
+        frame_type = "樹脂製"
+        layer_type = "三層以上の複層"
+
     elif frame_type_webpro == "金属木複合製(単板ガラス)":
         frame_type = "金属木複合製"
         layer_type = "単層"
-    elif frame_type_webpro == "金属木複合製(複層ガラス)":
+    elif frame_type_webpro == "金属木複合製(複層ガラス)" or frame_type_webpro == "金属木複合製(二層複層ガラス)":
         frame_type = "金属木複合製"
         layer_type = "複層"
+    elif frame_type_webpro == "金属木複合製(三層以上の複層ガラス)":
+        frame_type = "金属木複合製"
+        layer_type = "三層以上の複層"
+
     elif frame_type_webpro == "金属樹脂複合製(単板ガラス)":
         frame_type = "金属樹脂複合製"
         layer_type = "単層"
-    elif frame_type_webpro == "金属樹脂複合製(複層ガラス)" or frame_type_webpro == "アルミ樹脂複合":
+    elif frame_type_webpro == "金属樹脂複合製(複層ガラス)" or frame_type_webpro == "アルミ樹脂複合" or frame_type_webpro == "金属樹脂複合製(二層複層ガラス)" :
         frame_type = "金属樹脂複合製"
         layer_type = "複層"
+    elif frame_type_webpro == "金属樹脂複合製(三層以上の複層ガラス)" :
+        frame_type = "金属樹脂複合製"
+        layer_type = "三層以上の複層"
+
     elif frame_type_webpro == "金属製(単板ガラス)":
         frame_type = "金属製"
         layer_type = "単層"
-    elif frame_type_webpro == "金属製(複層ガラス)" or frame_type_webpro == "アルミ":
+    elif frame_type_webpro == "金属製(複層ガラス)" or frame_type_webpro == "アルミ" or frame_type_webpro == "金属製(二層以上の複層ガラス)":
         frame_type = "金属製"
         layer_type = "複層"
+
     else:
         frame_type = None
         layer_type = None
@@ -4377,10 +4399,10 @@ if __name__ == '__main__':
     #-----------------------
     # WEBPRO Ver2シートの例
     #-----------------------
-    directory = "./sample/"
+    directory = "./upfiles/"
 
     # case_name = 'Builelib_sample_one_room_v2'
-    case_name = 'Baguio_Ayala_Land_Technohub_BPO-B_001_ベースモデル'
+    case_name = '9nq1brsxd647hmtj_建具エラー'
 
     # inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
     inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsx")
