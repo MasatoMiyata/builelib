@@ -180,35 +180,70 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
     for unit_name in inputdata["HotwaterSupplySystems"]:
 
-        # 接続口径の種類
-        if inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 13:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "13A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 20:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "20A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 25:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "25A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 30:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "30A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 40:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "40A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 50:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "50A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 60:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "60A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 75:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "75A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 80:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "80A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 100:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "100A以下"
-        elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 125:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "125A以下"
-        else:
-            inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "125Aより大きい"
+        if inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"] in ["保温仕様1","保温仕様2","保温仕様3"]:  # 旧選択肢
 
-        # 線熱損失係数
-        inputdata["HotwaterSupplySystems"][unit_name]["heatloss_coefficient"] = \
-            thermal_conductivity_dict[inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"]][inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"]]
+            # 接続口径の種類
+            if inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 13:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "13A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 20:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "20A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 25:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "25A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 30:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "30A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 40:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "40A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 50:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "50A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 60:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "60A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 75:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "75A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 80:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "80A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 100:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "100A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 125:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "125A以下"
+            else:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "125Aより大きい"
+
+            # 線熱損失係数
+            inputdata["HotwaterSupplySystems"][unit_name]["heatloss_coefficient"] = \
+                thermal_conductivity_dict["旧選択肢"][inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"]][inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"]]
+
+        elif inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"] in ["保温仕様A","保温仕様B","保温仕様C","裸管"]:  # 新選択肢
+
+            # 接続口径の種類
+            if inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 15:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "15A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 20:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "20A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 25:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "25A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 32:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "32A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 40:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "40A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 50:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "50A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 65:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "65A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 80:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "80A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 100:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "100A以下"
+            elif inputdata["HotwaterSupplySystems"][unit_name]["PipeSize"] <= 125:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "125A以下"
+            else:
+                inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"] = "125Aより大きい"
+
+            # 線熱損失係数
+            inputdata["HotwaterSupplySystems"][unit_name]["heatloss_coefficient"] = \
+                thermal_conductivity_dict[inputdata["HotwaterSupplySystems"][unit_name]["PipeSizeType"]][inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"]]
+
+        else:
+            raise ValueError(f'不正な保温仕様: {inputdata["HotwaterSupplySystems"][unit_name]["InsulationType"]}')
 
         if DEBUG:
             print(f'機器名称 {unit_name}')
