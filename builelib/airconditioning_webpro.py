@@ -18,8 +18,8 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
-# builelibモードかどうか（照明との連成、動的負荷計算）
-BUILELIB_MODE = True
+# builelibモードかどうか（照明との連成）
+BUILELIB_MODE = False
 
 def count_Matrix(x, mxL):
     """

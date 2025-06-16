@@ -3,7 +3,7 @@ from posixpath import normcase
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-from . import commons as bc
+import commons as bc
 
 # グラフ文字化け対策
 mpl.rcParams['font.family'] = 'Noto Sans CJK JP'

@@ -553,4 +553,5 @@ def builelib_run(exec_calculation, inputfile_name):
 if __name__ == '__main__':
     
     file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
+    file_name = "./sample/Baguio_Ayala_Land_Technohub_BPO-B_a400_ZEBパッケージ_太陽光発電.xlsx"
     builelib_run(True, file_name)

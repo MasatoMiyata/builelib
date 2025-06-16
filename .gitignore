@@ -18,7 +18,9 @@ builelib/heat_load_calculation
 builelib/pyHASP
 builelib/database_pyhasp
 builelib/climatedata_pyhasp/
-
+builelib-docs/
+make_inputdata_pyhasp.py
+palstar.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
