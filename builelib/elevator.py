@@ -12,6 +12,12 @@ import commons as bc
 
 def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
+    # 一次エネルギー換算係数
+    fprime = 9760
+    if "CalculationMode" in inputdata:
+        if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
+            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+
     #----------------------------------------------------------------------------------
     # 計算結果を格納する変数
     #----------------------------------------------------------------------------------
@@ -112,7 +118,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     for room_name in inputdata["Elevators"]:
         for unit_id, unit_configure in enumerate(inputdata["Elevators"][room_name]["Elevator"]):
 
-            resultJson["E_elevator"] += unit_configure["energy_consumption"] * 9760 / 1000
+            resultJson["E_elevator"] += unit_configure["energy_consumption"] * fprime / 1000
 
     if DEBUG:
         print(f'昇降機の設計一次エネルギー消費量  {resultJson["E_elevator"]}  MJ/年')
@@ -136,7 +142,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["energy_consumption"] / inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"]
 
             # 基準一次エネルギー消費量計算 [MJ/年]
-            resultJson["Es_elevator"] += inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] * 9760 / 1000
+            resultJson["Es_elevator"] += inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] * fprime / 1000
 
     if DEBUG:
         print(f'昇降機の基準一次エネルギー消費量  {resultJson["Es_elevator"]}  MJ/年')
@@ -149,7 +155,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     # 入力データも出力
     resultJson["Elevators"] = inputdata["Elevators"]
 
-    # BEI/Vの計算
+    # BEI/EVの計算
     if resultJson["Es_elevator"] != 0:
         resultJson["BEI_EV"] = resultJson["E_elevator"] / resultJson["Es_elevator"]
         resultJson["BEI_EV"] = math.ceil(resultJson["BEI_EV"] * 100)/100
@@ -167,7 +173,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         output_dir = output_dir + "_"
 
     df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（昇降機）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (bc.fprime) /1000,
+        '一次エネルギー消費量（昇降機）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (fprime) /1000,
         '電力消費量（昇降機）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
     }, index=bc.date_1year)
 

@@ -20,6 +20,12 @@ climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climated
 
 def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
+    # 一次エネルギー換算係数
+    fprime = 9760
+    if "CalculationMode" in inputdata:
+        if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
+            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+
     # 計算結果を格納する変数
     resultJson = {
 
@@ -69,7 +75,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
             # 消費エネルギー kW/台 × 台
             inputdata["HotwaterSupplySystems"][unit_name]["HeatSourceUnit"][unit_id]["RatedEnergyConsumption_total"] = \
-                unit_configure["RatedPowerConsumption"] * unit_configure["Number"] * 9760/3600 + \
+                unit_configure["RatedPowerConsumption"] * unit_configure["Number"] * fprime/3600 + \
                 unit_configure["RatedFuelConsumption"] * unit_configure["Number"]
 
             # 機器効率
@@ -612,7 +618,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
                                 unit_configure["HeatSourceType"] == "業務用ヒートポンプ給湯機" or unit_configure["HeatSourceType"] == "家庭用ヒートポンプ給湯機":
 
                                 for dd in range(0,365):
-                                    Edesign_MWh_CGS_Ele_hour[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/24/1000/9760 * np.ones(24)
+                                    Edesign_MWh_CGS_Ele_hour[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/24/1000/fprime * np.ones(24)
 
 
         resultJson["for_CGS"]["Edesign_MWh_Ele_day"] = np.sum(Edesign_MWh_CGS_Ele_hour,1)
@@ -637,7 +643,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
                     unit_configure["HeatSourceType"] == "業務用ヒートポンプ給湯機" or unit_configure["HeatSourceType"] == "家庭用ヒートポンプ給湯機":
 
                     for dd in range(0,365):
-                        Edesign_MWh_Ele_day[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/1000/bc.fprime
+                        Edesign_MWh_Ele_day[dd] += inputdata["HotwaterSupplySystems"][unit_name]["E_eqp"][dd]/1000/fprime
 
 
     ##----------------------------------------------------------------------------------

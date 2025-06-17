@@ -13,6 +13,12 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
 
 def calc_energy(inputdata, DEBUG = False, output_dir = ""):
+    
+    # 一次エネルギー換算係数
+    fprime = 9760
+    if "CalculationMode" in inputdata:
+        if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
+            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
 
     # 計算結果を格納する変数
     resultJson = {
@@ -80,7 +86,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
             # 機器からの発熱（日積算）（365日分） [MJ/m2/day]
             resultJson["E_other_room"][room_name]["roomHeatGain_daily"]  = \
-                np.sum(roomScheduleOAapp[room_name],1) * roomHeatGain_OAapp[room_name] / 1000000 * bc.fprime
+                np.sum(roomScheduleOAapp[room_name],1) * roomHeatGain_OAapp[room_name] / 1000000 * fprime
 
             # その他一次エネルギー消費量原単位（告示の値） [MJ/m2] の算出（端数処理）
             resultJson["E_other_room"][room_name]["E_other_standard"] = \
@@ -113,7 +119,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
         # 日別の電力消費量（告示に掲載の年積算値と一致させるために E_ratio で一律補正する）
         resultJson["for_CGS"]["Edesign_MWh_day"]  += \
-            resultJson["E_other_room"][room_name]["roomHeatGain_daily"] * inputdata["Rooms"][room_name]["roomArea"] * resultJson["E_other_room"][room_name]["E_ratio"] / bc.fprime
+            resultJson["E_other_room"][room_name]["roomHeatGain_daily"] * inputdata["Rooms"][room_name]["roomArea"] * resultJson["E_other_room"][room_name]["E_ratio"] / fprime
 
 
     ##----------------------------------------------------------------------------------
@@ -181,7 +187,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         output_dir = output_dir + "_"
 
     df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（その他）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (bc.fprime) /1000,
+        '一次エネルギー消費量（その他）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (fprime) /1000,
         '電力消費量（その他）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
     }, index=bc.date_1year)
 

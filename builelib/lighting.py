@@ -41,6 +41,12 @@ def set_roomIndexCoeff(roomIndex):
 
 def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
+    # 一次エネルギー換算係数
+    fprime = 9760
+    if "CalculationMode" in inputdata:
+        if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
+            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+
     # データベースjsonの読み込み
     with open( database_directory + 'lightingControl.json', 'r', encoding='utf-8') as f:
         lightingCtrl = json.load(f)
@@ -155,7 +161,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
 
         # 時刻別の設計一次エネルギー消費量 [MJ]
-        E_room_hourly = opePattern_hourly_light * unitPower * roomIndexCoeff * bc.fprime * 10**(-6)
+        E_room_hourly = opePattern_hourly_light * unitPower * roomIndexCoeff * fprime * 10**(-6)
 
         # 各室の年間エネルギー消費量 [MJ]
         E_room = E_room_hourly.sum()
@@ -219,7 +225,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     # resultJson["E_lighting_hourly"] = E_lighting_hourly
 
     # 日積算値
-    resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly/9760,1)
+    resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly/fprime,1)
 
     # エネルギー消費量の比率
     for room_zone_name in  resultJson["lighting"]:
@@ -235,7 +241,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
     # 日別一次エネルギー消費量
     df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（照明設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (bc.fprime) /1000,
+        '一次エネルギー消費量（照明設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (fprime) /1000,
         '電力消費量（照明設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
     }, index=bc.date_1year)
 

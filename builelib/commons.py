@@ -1,18 +1,12 @@
 #-----------------------------
 # builelie 共通関数
 #-----------------------------
-import sys
 import json
 import jsonschema
 import numpy as np
 import os
 import copy
-# import pandas as pd
-import itertools
 import math
-
-# 電気の量 1kWh を熱量 kJ に換算する係数
-fprime = 9760
 
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"

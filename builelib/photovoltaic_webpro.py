@@ -20,6 +20,11 @@ climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climated
 
 def calc_energy(inputdata, DEBUG = False):
 
+    # 一次エネルギー換算係数
+    fprime = 9760
+    if "CalculationMode" in inputdata:
+        if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
+            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
 
     # 計算結果を格納する変数
     resultJson = {
@@ -238,7 +243,7 @@ def calc_energy(inputdata, DEBUG = False):
         resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] = np.sum(resultJson["PhotovoltaicSystems"][system_name]["Ep"],0)
 
         # 発電量（一次エネ換算） [kWh] * [kJ/kWh] / 1000 = [MJ]
-        resultJson["E_photovoltaic"] += resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] * bc.fprime / 1000
+        resultJson["E_photovoltaic"] += resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] * fprime / 1000
 
         # 発電量（日積算） [MWh/day]
         for dd in range(0,365):

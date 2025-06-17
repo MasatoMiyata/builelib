@@ -65,6 +65,12 @@ def air_enthalpy(Tdb, X):
 
 def calc_energy(inputdata, debug = False, output_dir = ""):
 
+    # 一次エネルギー換算係数
+    fprime = 9760
+    if "CalculationMode" in inputdata:
+        if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
+            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+
     inputdata["PUMP"] = {}
     inputdata["REF"] = {}
 
@@ -2683,9 +2689,9 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
         resultJson["AHU"][ahu_name]["MxAHUhE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_h_day"],0)
 
     # 空調機群の一次エネルギー消費量
-    resultJson["年間エネルギー消費量"]["空調機群ファン[GJ]"]      = resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"]  * bc.fprime /1000
-    resultJson["年間エネルギー消費量"]["空調機群全熱交換器[GJ]"]  = resultJson["年間エネルギー消費量"]["空調機群全熱交換器[MWh]"]  * bc.fprime /1000
-    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"] * bc.fprime /1000
+    resultJson["年間エネルギー消費量"]["空調機群ファン[GJ]"]      = resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"]  * fprime /1000
+    resultJson["年間エネルギー消費量"]["空調機群全熱交換器[GJ]"]  = resultJson["年間エネルギー消費量"]["空調機群全熱交換器[MWh]"]  * fprime /1000
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"] * fprime /1000
 
     print('空調機群のエネルギー消費量計算完了')
 
@@ -3289,8 +3295,8 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
         resultJson["PUMP"][pump_name]["MxPUMPE"]  = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
     # 一次エネルギー消費量
-    resultJson["年間エネルギー消費量"]["二次ポンプ群[GJ]"]  = resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"] * bc.fprime /1000
-    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（二次ポンプ群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"] * bc.fprime /1000
+    resultJson["年間エネルギー消費量"]["二次ポンプ群[GJ]"]  = resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"] * fprime /1000
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（二次ポンプ群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"] * fprime /1000
 
     print('二次ポンプ群のエネルギー消費量計算完了')
 
@@ -3729,7 +3735,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             # 燃料種類＋一次エネルギー換算 [kW]
             if fuel_type == "電力":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 1
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = (bc.fprime/3600) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = (fprime/3600) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
             elif fuel_type == "ガス":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 2
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] 
@@ -4575,10 +4581,10 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                     if inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] == 1:  # 燃料種類が「電力」であれば、CGS計算用に集計を行う。
 
                         resultJson["REF"][ref_name]["E_ref_day_MWh"][dd]  += \
-                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / bc.fprime
+                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / fprime
 
                         resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"][dd] = \
-                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / bc.fprime
+                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / fprime
 
                 # 補機電力 [MWh]
                 resultJson["REF"][ref_name]["E_ref_ACc_day"][dd] += \
@@ -4650,10 +4656,10 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] += resultJson["REF"][ref_name]["E_CTpump_day"][dd]
 
         resultJson["REF"][ref_name]["熱源群熱源主機[GJ]"] = resultJson["REF"][ref_name]["熱源群熱源主機[MJ]"] / 1000
-        resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"] = resultJson["REF"][ref_name]["熱源群熱源補機[MWh]"] * bc.fprime / 1000
-        resultJson["REF"][ref_name]["熱源群一次ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群一次ポンプ[MWh]"] * bc.fprime / 1000
-        resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却塔ファン[MWh]"] * bc.fprime / 1000
-        resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] * bc.fprime / 1000
+        resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"] = resultJson["REF"][ref_name]["熱源群熱源補機[MWh]"] * fprime / 1000
+        resultJson["REF"][ref_name]["熱源群一次ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群一次ポンプ[MWh]"] * fprime / 1000
+        resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却塔ファン[MWh]"] * fprime / 1000
+        resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] * fprime / 1000
 
         # 建物全体
         resultJson["年間エネルギー消費量"]["熱源群熱源主機[MJ]"] += resultJson["REF"][ref_name]["熱源群熱源主機[MJ]"]
@@ -4670,7 +4676,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
 
     # 一次エネルギ換算
-    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・補機）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"] * bc.fprime / 1000
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・補機）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"] * fprime / 1000
 
     print('熱源エネルギー計算完了')
 
@@ -5205,7 +5211,7 @@ if __name__ == '__main__':  # pragma: no cover
     print( f'設計一次エネルギー消費量 冷却水ポンプ: {resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[GJ]"]} GJ')
 
     # デバッグ用
-    # print( f'{resultJson["設計一次エネルギー消費量[MJ/年]"]}, {resultJson["ENERGY"]["E_fan"] * bc.fprime}, {resultJson["ENERGY"]["E_aex"] * bc.fprime}, {resultJson["ENERGY"]["E_pump"] * bc.fprime}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * bc.fprime}, {resultJson["ENERGY"]["E_pumpP"] * bc.fprime}, {resultJson["ENERGY"]["E_ctfan"] * bc.fprime}, {resultJson["ENERGY"]["E_ctpump"] * bc.fprime}')
+    # print( f'{resultJson["設計一次エネルギー消費量[MJ/年]"]}, {resultJson["ENERGY"]["E_fan"] * fprime}, {resultJson["ENERGY"]["E_aex"] * fprime}, {resultJson["ENERGY"]["E_pump"] * fprime}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * fprime}, {resultJson["ENERGY"]["E_pumpP"] * fprime}, {resultJson["ENERGY"]["E_ctfan"] * fprime}, {resultJson["ENERGY"]["E_ctpump"] * fprime}')
 
     # for ref_name in inputdata["REF"]:
     #     print( f'--- 熱源群名 {ref_name} ---')
