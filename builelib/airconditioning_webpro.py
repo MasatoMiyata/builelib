@@ -18,9 +18,6 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
-# builelibモードかどうか（照明との連成）
-BUILELIB_MODE = False
-
 def count_Matrix(x, mxL):
     """
     負荷率 X がマトリックス mxL の何番目（ix）のセルに入るかをカウント
@@ -70,6 +67,11 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     if "CalculationMode" in inputdata:
         if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
             fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+
+    # 照明との連成計算
+    COUPLING_LIGHTING = False
+    if "CalculationMode" in inputdata:
+        COUPLING_LIGHTING = bool(inputdata["CalculationMode"]["空調と照明の連成計算"])
 
     inputdata["PUMP"] = {}
     inputdata["REF"] = {}
@@ -992,7 +994,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                 bc.get_roomHeatGain(btype, rtype, inputdata["SpecialInputData"])
         
         # 様式4から照明発熱量を読み込む
-        if BUILELIB_MODE:
+        if COUPLING_LIGHTING:
             if room_zone_name in inputdata["LightingSystems"]:
                 lighting_power = 0
                 for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
