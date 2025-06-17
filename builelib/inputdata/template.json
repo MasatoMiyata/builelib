@@ -1,5 +1,7 @@
 {
-    "Building":{
+    "CalculationMode":{
+	}, 
+	"Building":{
         "BuildingAddress": {
         },
         "Coefficient_DHC": {
