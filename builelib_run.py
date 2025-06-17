@@ -4,9 +4,8 @@ import os
 import zipfile
 import math
 
-from builelib.make_inputdata import make_jsondata_from_Ver2_sheet, make_jsondata_from_Ver4_sheet
+from builelib.make_inputdata import make_jsondata_from_Ver2_sheet
 from builelib import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
-
 
 # json.dump用のクラス
 class MyEncoder(json.JSONEncoder):
@@ -92,23 +91,12 @@ def builelib_run(exec_calculation, inputfile_name):
     # 渡されたファイルの拡張子を確認
     inputfile_name_split = os.path.splitext(inputfile_name)
 
-    if inputfile_name_split[-1] == ".xlsm":  # WEBPRO Ver2の入力シートであれば
+    if inputfile_name_split[-1] == ".xlsm" or inputfile_name_split[-1] == ".xlsx":
 
         # jsonファイルの生成
         try:
             inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
 
-        except:
-            validation = {
-                "error": "入力シートの読み込み時に予期せぬエラーが発生しました。"
-            }
-            exec_calculation = False  # 計算は行わない。
-
-    elif inputfile_name_split[-1] == ".xlsx":  # Builelibの入力シートであれば
-
-        # jsonファイルの生成
-        try:
-            inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
         except:
             validation = {
                 "error": "入力シートの読み込み時に予期せぬエラーが発生しました。"
@@ -549,8 +537,44 @@ def builelib_run(exec_calculation, inputfile_name):
     # os.remove( inputfile_name_split[0] + "_result_Other.json" )
 
 
+def builelib_run_AC(inputfile_name):
+    """空調のみ実行するプログラム（計算過程を全て出力）
+    Args:
+        inputfile_name (str): 入力ファイルの名称
+    """
+
+    inputfile_name   = str(inputfile_name)     # 入力ファイルの名称
+    inputfile_name_split = os.path.splitext(inputfile_name)  
+    
+    # jsonファイルの生成
+    inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
+
+    print(validation)
+
+    # 計算の実行（デバッグモードON）
+    resultJson_webpro = airconditioning_webpro.calc_energy(inputdata, debug=True)
+
+    print( f'BEI/AC: {resultJson_webpro["BEI/AC"]}')        
+    print( f'設計一次エネルギー消費量 全体: {resultJson_webpro["設計一次エネルギー消費量[MJ/年]"]}')
+    print( f'設計一次エネルギー消費量 空調ファン: {resultJson_webpro["年間エネルギー消費量"]["空調機群ファン[GJ]"]}')
+    print( f'設計一次エネルギー消費量 空調全熱交換器: {resultJson_webpro["年間エネルギー消費量"]["空調機群全熱交換器[GJ]"]}')
+    print( f'設計一次エネルギー消費量 二次ポンプ: {resultJson_webpro["年間エネルギー消費量"]["二次ポンプ群[GJ]"]}')
+    print( f'設計一次エネルギー消費量 熱源主機: {resultJson_webpro["年間エネルギー消費量"]["熱源群熱源主機[GJ]"]}')
+    print( f'設計一次エネルギー消費量 熱源補機: {resultJson_webpro["年間エネルギー消費量"]["熱源群熱源補機[GJ]"]}')
+    print( f'設計一次エネルギー消費量 一次ポンプ: {resultJson_webpro["年間エネルギー消費量"]["熱源群一次ポンプ[GJ]"]}')
+    print( f'設計一次エネルギー消費量 冷却塔ファン: {resultJson_webpro["年間エネルギー消費量"]["熱源群冷却塔ファン[GJ]"]}')
+    print( f'設計一次エネルギー消費量 冷却水ポンプ: {resultJson_webpro["年間エネルギー消費量"]["熱源群冷却水ポンプ[GJ]"]}')
+
+    # 結果の出力
+    with open(inputfile_name_split[0] + "_input.json",'w', encoding='utf-8') as fw:
+        json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+    with open(inputfile_name_split[0] + "_resultJson_AC.json",'w', encoding='utf-8') as fw:
+        json.dump(resultJson_webpro, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
+
 if __name__ == '__main__':
     
     # file_name = "/usr/src/data/WEBPRO_inputSheet_sample.xlsm"
-    file_name = "./sample/sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
+    file_name = "./sample/Builelib_inputSheet_sample_001.xlsx"
+
     builelib_run(True, file_name)
+    # builelib_run_AC(file_name)
