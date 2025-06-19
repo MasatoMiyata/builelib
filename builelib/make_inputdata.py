@@ -969,7 +969,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
             validation["error"].append("様式0.基本情報: 読み込み時に予期せぬエラーが発生しました。")
 
-
     #----------------------------------
     # 様式1 室仕様入力シート の読み込み
     # （ Builelibでは、各設備のシートに記載された建物用途・室用途は使わず、様式1の情報を使う ）
@@ -1088,7 +1087,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     check_value(dataBL[12], "様式1.室仕様 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                         }
 
-
     #----------------------------------
     # 様式2-1 空調ゾーン入力シート の読み込み
     #----------------------------------
@@ -1140,7 +1138,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "Info":
                             check_value(dataAC1[11], "様式2-1.空調ゾーン "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, None, None),
                     }
-
 
     #----------------------------------
     # 様式2-2 外壁構成入力シート の読み込み
@@ -1359,7 +1356,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                         }
                                     )
 
-
     #----------------------------------
     # 様式2-3 窓仕様入力シート の読み込み
     #----------------------------------
@@ -1459,7 +1455,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     else:
                         validation["error"].append( "様式2-3.窓仕様 "+ str(i+1) +"行目: 入力が不正です。")
-
 
     #----------------------------------
     # 様式2-4 外皮入力シート の読み込み
@@ -1683,7 +1678,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         }
                     )
 
-
     ## 接地壁の扱い（様式2-2 → 様式2-4）
     for eltKey in data["WallConfigure"]:
         if data["WallConfigure"][eltKey]["wall_type_webpro"] == "接地壁":
@@ -1691,7 +1685,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 for wall_id, wall_conf in enumerate(data["EnvelopeSet"][room_name]["WallList"]):
                     if wall_conf["WallSpec"] == eltKey:
                         data["EnvelopeSet"][room_name]["WallList"][wall_id]["WallType"] = "地盤に接する外壁"
-
 
     #----------------------------------
     # 様式2-5 熱源入力シート の読み込み
@@ -2566,7 +2559,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         if unit_name not in data["AirHandlingSystem"]:
             validation["error"].append( "様式2-1.空調ゾーン:「④空調機群名称（外気負荷処理）」が 様式2-7.空調機群入力シートで定義されてません（ ゾーン "+ zone_name +"「"+ unit_name +"」）。") 
 
-
     #----------------------------------
     # 冷暖同時供給の有無の判定（冷房暖房ともに「有」であれば「有」とする）
     #----------------------------------
@@ -2618,14 +2610,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有（室負荷）"
 
-
     # isSimultaneous_for_ver2 要素を削除
     for iREF in data["HeatsourceSystem"]:
         if "冷房" in data["HeatsourceSystem"][iREF]:
             del data["HeatsourceSystem"][iREF]["冷房"]["isSimultaneous_for_ver2"]
         if "暖房" in data["HeatsourceSystem"][iREF]:
             del data["HeatsourceSystem"][iREF]["暖房"]["isSimultaneous_for_ver2"]
-
 
     #----------------------------------
     # 様式3-1 換気対象室入力シート の読み込み
@@ -2832,13 +2822,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "Info": ""
                         }
 
-
     ## Varidation（換気）
     for room_name in data["VentilationRoom"]:
         for unit_name in data["VentilationRoom"][room_name]["VentilationUnitRef"]:
             if (unit_name != "") and (unit_name not in data["VentilationUnit"]):
                 validation["error"].append( "様式3-1.換気対象室 ：換気対象室 "+ room_name +" の「③換気機器名称」で入力された機器 "+ unit_name +" は様式3-2、様式3-3で定義されていません。")
-
 
     #----------------------------------
     # 様式4 照明入力シート の読み込み
@@ -3552,21 +3540,53 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             validation["error"].append( "様式SP-AC-ST) 日射熱取得率（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
+    #----------------------------------
+    # 様式SP-HW-WU 湯使用量（日別）入力シート の読み込み
+    #----------------------------------
+    if data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] and "SP-HW-WU) 湯使用量" in wb.sheet_names():
 
-            # 階と室名が空欄であり、かつ、使用用途ｓの入力がある場合
-            elif (dataSP11[0] == "") and (dataSP11[1] == "") and (dataSP11[2] != ""):
+        try:
 
-                if dataSP11[2] == "洗面":
-                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["洗面"] = dataSP11[3:]
-                elif dataSP11[2] == "シャワー":
-                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["シャワー"] =  dataSP11[3:]
-                elif dataSP11[2] == "厨房":
-                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["厨房"] =  dataSP11[3:]
-                elif dataSP11[2] == "その他":
-                    data["SpecialInputData"]["hotwater_demand_daily"][roomKey]["その他"] =  dataSP11[3:]
-                else:
-                    raise Exception("使用用途が不正です")
+            data["SpecialInputData"]["hotwater_demand"] = {}
 
+            # シートの読み込み
+            sheet_SP_HW_WU = wb.sheet_by_name("SP-HW-WU) 湯使用量")
+
+            # 入力されたカレンダーパターン名称を検索
+            floor_list = sheet_SP_HW_WU.row_values(7)
+            room_list  = sheet_SP_HW_WU.row_values(8)
+            type_list  = sheet_SP_HW_WU.row_values(9)
+            
+            # 入力されている列について、室名称と列数の対応関係を保存
+            room_column_num = {}
+            for column_num in range(len(room_list)):
+
+                if room_list[column_num] != "室名" and floor_list[column_num] != "" and room_list[column_num] != "" and type_list[column_num] != "":
+                    
+                    # 階と室名をkeyとする
+                    roomKey = str(floor_list[column_num]) + '_' + str(room_list[column_num])
+
+                    if roomKey not in room_column_num:
+                        room_column_num[roomKey] = {}
+                        room_column_num[roomKey][type_list[column_num]] = column_num
+                    else:
+                        room_column_num[roomKey][type_list[column_num]] = column_num
+
+            for roomKey in room_column_num:
+                for load_type in room_column_num[roomKey]:
+
+                    dataSP_HW_WU = []
+                    for i in range(10,365+10):
+                        dataSP_HW_WU.append( sheet_SP_HW_WU.cell_value(i, room_column_num[roomKey][load_type])) 
+
+                    if roomKey in data["SpecialInputData"]["hotwater_demand"]:
+                        data["SpecialInputData"]["hotwater_demand"][roomKey][load_type] = dataSP_HW_WU
+                    else:
+                        data["SpecialInputData"]["hotwater_demand"][roomKey] = {}
+                        data["SpecialInputData"]["hotwater_demand"][roomKey][load_type] = dataSP_HW_WU
+
+        except Exception as e:
+            validation["error"].append( "様式SP-HW-WU) 湯使用量（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
     # バリデーションの実行
     # bc.inputdata_validation(data)
@@ -3600,7 +3620,7 @@ if __name__ == '__main__':
     print('----- make_inputdata.py -----')
 
     directory = "./sample/"
-    case_name = 'Builelib_inputSheet_sample_002'
+    case_name = 'Builelib_inputSheet'
 
     if os.path.exists(directory + case_name + ".xlsm"):
         inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
