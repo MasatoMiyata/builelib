@@ -3437,39 +3437,39 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             validation["error"].append( "様式SP-AC-WT) 熱源送水温度（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
+    #----------------------------------
+    # 様式SP-AC-CW 熱源冷却水温度（日別）入力シート の読み込み
+    #----------------------------------
+    if data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] and "SP-AC-ST) 熱源送水温度" in wb.sheet_names():
 
-        data["SpecialInputData"]["room_usage_condition"] = {}
+        try:
 
-        # シートの読み込み
-        sheet_SP9 = wb.sheet_by_name("SP-9) 室使用条件")
+            data["SpecialInputData"]["heatsource_chilled_water_temp"] = {}
 
-        for i in range(10,sheet_SP9.nrows):
+            # シートの読み込み
+            sheet_SP_AC_CW = wb.sheet_by_name("SP-AC-ST) 熱源送水温度")
 
-            # シートから「行」の読み込み
-            dataSP9 = sheet_SP9.row_values(i)
-    
-            if dataSP9[0] != "" and dataSP9[1] != "":
+            # 入力されたカレンダーパターン名称を検索
+            ref_name_list = sheet_SP_AC_CW.row_values(7)
 
-                # 建物用途
-                if dataSP9[0] not in data["SpecialInputData"]["room_usage_condition"]:
-                    data["SpecialInputData"]["room_usage_condition"][dataSP9[0]] = {}
+            # 入力されている列について、名称と列数の対応関係を保存
+            ref_column_num = {}
+            for column_num in range(len(ref_name_list)):
+                ref_name = ref_name_list[column_num]
+                if ref_name != "" and ref_name != "熱源群名称":
+                    ref_column_num[ref_name] = column_num
+            
+            # データの読み込み
+            for ref_name in ref_column_num:
+                dataSP_AC_CW = []
+                for i in range(10,365+10):
+                    dataSP_AC_CW.append( sheet_SP_AC_CW.cell_value(i, ref_column_num[ref_name]) ) 
+                data["SpecialInputData"]["heatsource_chilled_water_temp"][ref_name] = dataSP_AC_CW
 
-                # 室用途
-                data["SpecialInputData"]["room_usage_condition"][dataSP9[0]][dataSP9[1]] = {
-                    "照明発熱参照値" : dataSP9[2],
-                    "人体発熱参照値" : dataSP9[3],
-                    "機器発熱参照値" : dataSP9[4],
-                    "作業強度指数" : dataSP9[5],
-                    "外気導入量" : dataSP9[6],
-                    "年間換気時間" : dataSP9[7],
-                    "年間湯使用量（洗面）" : dataSP9[8],
-                    "年間湯使用量（シャワー）" : dataSP9[9],
-                    "年間湯使用量（厨房）" : dataSP9[10],
-                    "年間湯使用量（その他）" : dataSP9[11]
-                }
+        except Exception as e:
+            validation["error"].append( "様式SP-AC-CW) 熱源冷却水温度: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
-    if "SP-10) 空調負荷" in wb.sheet_names():
 
         data["SpecialInputData"]["Qahu"] = {}
 
