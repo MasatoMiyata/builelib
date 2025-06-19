@@ -556,7 +556,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             calender_column_num = {}
             for column_num in range(len(calender_p_list)):
                 name = calender_p_list[column_num]
-                if name != "":
+                if name != "" and name != "カレンダー\nパターン名称":
                     calender_column_num[name] = column_num
 
             # データの読み込み
