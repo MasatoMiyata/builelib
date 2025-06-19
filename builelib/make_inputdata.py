@@ -3470,23 +3470,55 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             validation["error"].append( "様式SP-AC-CW) 熱源冷却水温度: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
+    #----------------------------------
+    # 様式SP-AC-RL 室負荷（日別）入力シート の読み込み
+    #----------------------------------
+    if data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] and "SP-AC-RL) 室負荷" in wb.sheet_names():
 
-        data["SpecialInputData"]["Qahu"] = {}
+        try:
 
-        # シートの読み込み
-        sheet_SP10 = wb.sheet_by_name("SP-10) 空調負荷")
+            data["SpecialInputData"]["Qroom"] = {}
 
-        for i in range(10,sheet_SP10.nrows):
+            # シートの読み込み
+            sheet_SP_AC_RL = wb.sheet_by_name("SP-AC-RL) 室負荷")
 
-            # シートから「行」の読み込み
-            dataSP10 = sheet_SP10.row_values(i)
-            
-            if dataSP10[0] != "":
-            
-                data["SpecialInputData"]["Qahu"][dataSP10[0]] = bc.trans_8760to36524(dataSP10[1:])
+            # 入力されたカレンダーパターン名称を検索
+            floor_list = sheet_SP_AC_RL.row_values(7)
+            room_list  = sheet_SP_AC_RL.row_values(8)
+            type_list  = sheet_SP_AC_RL.row_values(9)
+
+            # 入力されている列について、室名称と列数の対応関係を保存
+            room_column_num = {}
+            for column_num in range(len(room_list)):
+
+                if room_list[column_num] != "空調ゾーン名称" and floor_list[column_num] != "" and room_list[column_num] != "" and type_list[column_num] != "":
+                    
+                    # 階と室名をkeyとする
+                    roomKey = str(floor_list[column_num]) + '_' + str(room_list[column_num])
+
+                    if roomKey not in room_column_num:
+                        room_column_num[roomKey] = {}
+                        room_column_num[roomKey][type_list[column_num]] = column_num
+                    else:
+                        room_column_num[roomKey][type_list[column_num]] = column_num
+
+            for roomKey in room_column_num:
+                for load_type in room_column_num[roomKey]:
+
+                    dataSP_AC_RL = []
+                    for i in range(10,365+10):
+                        dataSP_AC_RL.append( sheet_SP_AC_RL.cell_value(i, room_column_num[roomKey][load_type])) 
+
+                    if roomKey in data["SpecialInputData"]["Qroom"]:
+                        data["SpecialInputData"]["Qroom"][roomKey][load_type] = dataSP_AC_RL
+                    else:
+                        data["SpecialInputData"]["Qroom"][roomKey] = {}
+                        data["SpecialInputData"]["Qroom"][roomKey][load_type] = dataSP_AC_RL
+
+        except Exception as e:
+            validation["error"].append( "様式SP-AC-RL) 室負荷（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
-    if "SP-11) 湯使用量" in wb.sheet_names():
 
         data["SpecialInputData"]["hotwater_demand_daily"] = {}
 
