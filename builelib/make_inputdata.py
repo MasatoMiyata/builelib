@@ -810,12 +810,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-2 熱源特性入力シート の読み込み
     #----------------------------------
-    if "SP-2) 熱源特性" in wb.sheet_names():
+    if data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] and "SP-AC-HS) 熱源特性" in wb.sheet_names():
 
         data["SpecialInputData"]["heatsource_performance"] = {}
 
         # シートの読み込み
-        sheet_SP2 = wb.sheet_by_name("SP-2) 熱源特性")
+        sheet_SP2 = wb.sheet_by_name("SP-AC-HS) 熱源特性")
 
         ref_name = ""
         operation_mode = ""
