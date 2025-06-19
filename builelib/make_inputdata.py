@@ -3404,64 +3404,39 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             validation["error"].append( "様式SP-AC-CW) 熱源冷却水温度: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
-                }
+    #----------------------------------
+    # 様式 SP-AC-WT 熱源送水温度入力シート の読み込み
+    #----------------------------------
+    if data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] and "SP-AC-WT) 熱源送水温度" in wb.sheet_names():
+
+        try:
+
+            data["SpecialInputData"]["heatsource_supply_water_temp"] = {}
+
+            # シートの読み込み
+            sheet_SP_AC_WT = wb.sheet_by_name("SP-AC-WT) 熱源送水温度")
+
+            # 入力されたカレンダーパターン名称を検索
+            ref_name_list = sheet_SP_AC_WT.row_values(7)
+
+            # 入力されている列について、名称と列数の対応関係を保存
+            ref_column_num = {}
+            for column_num in range(len(ref_name_list)):
+                ref_name = ref_name_list[column_num]
+                if ref_name != "" and ref_name != "熱源群名称":
+                    ref_column_num[ref_name] = column_num
+            
+            # データの読み込み
+            for ref_name in ref_column_num:
+                dataSP_AC_WT = []
+                for i in range(10,365+10):
+                    dataSP_AC_WT.append( sheet_SP_AC_WT.cell_value(i, ref_column_num[ref_name]) ) 
+                data["SpecialInputData"]["heatsource_supply_water_temp"][ref_name] = dataSP_AC_WT
+
+        except Exception as e:
+            validation["error"].append( "様式SP-AC-WT) 熱源送水温度（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
-    if "SP-4) 室負荷" in wb.sheet_names():
-
-        data["SpecialInputData"]["Qroom"] = {}
-
-        # シートの読み込み
-        sheet_SP4 = wb.sheet_by_name("SP-4) 室負荷")
-        # 初期化
-        roomKey = None
-
-        # 行のループ
-        for i in range(10,sheet_SP4.nrows):
-
-            # シートから「行」の読み込み
-            dataSP4 = sheet_SP4.row_values(i)
-
-            # 階と室名が空欄でない場合
-            if (dataSP4[0] != "") and (dataSP4[1] != ""):
-
-                # 階＋室＋ゾーン名をkeyとする（上書き）
-                if (dataSP4[2] != ""):
-                    roomKey = str(dataSP4[0]) + '_' + str(dataSP4[1]) + '_' + str(dataSP4[2])
-                else:
-                    roomKey = str(dataSP4[0]) + '_' + str(dataSP4[1])
-
-            if roomKey not in data["SpecialInputData"]["Qroom"]:
-                data["SpecialInputData"]["Qroom"][roomKey] = {}
-
-            Qroom_input = list()
-            for dd in range(0,365):
-                Qroom_input.append(float(dataSP4[4+dd]))
-
-            if dataSP4[3] == "冷房":
-                data["SpecialInputData"]["Qroom"][roomKey]["QroomDc"] = Qroom_input
-            elif dataSP4[3] == "暖房":
-                data["SpecialInputData"]["Qroom"][roomKey]["QroomDh"] = Qroom_input
-            else:
-                raise Exception("室負荷の種類が不正です。")
-
-
-    if "SP-8) 日射熱取得率" in wb.sheet_names():
-
-        data["SpecialInputData"]["window_Ivalue"] = {}
-
-        # シートの読み込み
-        sheet_SP8 = wb.sheet_by_name("SP-8) 日射熱取得率")
-
-        for i in range(10,sheet_SP8.nrows):
-
-            # シートから「行」の読み込み
-            dataSP8 = sheet_SP8.row_values(i)
-
-            data["SpecialInputData"]["window_Ivalue"][dataSP8[0]] = dataSP8[1:]
-
-
-    if "SP-9) 室使用条件" in wb.sheet_names():
 
         data["SpecialInputData"]["room_usage_condition"] = {}
 
