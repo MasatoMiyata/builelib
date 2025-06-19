@@ -336,111 +336,136 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         # シートの読み込み
         sheet_SP_CM = wb.sheet_by_name("SP-CM) 計算モード")
 
-        # 11行目3列目が数値であれば一次エネルギー換算係数を設定
-        if sheet_SP_CM.cell_value(10, 2) != "" and isinstance(sheet_SP_CM.cell_value(10, 2), (int, float)):
-            data["CalculationMode"]["一次エネルギー換算係数"] = sheet_SP_CM.cell_value(10, 2)
-        else:
-            data["CalculationMode"]["一次エネルギー換算係数"] = 9760
+        for i in range(10,sheet_SP_CM.nrows):
 
-        if sheet_SP_CM.cell_value(11, 2) != "" and sheet_SP_CM.cell_value(11, 3) == "":
-            data["CalculationMode"]["空調と照明の連成計算"] = True
-        else:
-            data["CalculationMode"]["空調と照明の連成計算"] = False
-            
-        if sheet_SP_CM.cell_value(12, 2) != "" and sheet_SP_CM.cell_value(12, 3) == "":
-            data["CalculationMode"]["SP-CD 気象データ入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-CD 気象データ入力シート"] = False
+            if sheet_SP_CM.cell_value(i, 0) == "SP-CM-1":
+                if sheet_SP_CM.cell_value(i, 2) != "" and isinstance(sheet_SP_CM.cell_value(i, 2), (int, float)):
+                    data["CalculationMode"]["一次エネルギー換算係数"] = sheet_SP_CM.cell_value(i, 2)
+                else:
+                    data["CalculationMode"]["一次エネルギー換算係数"] = 9760
 
-        if sheet_SP_CM.cell_value(13, 2) != "" and sheet_SP_CM.cell_value(13, 3) == "":
-            data["CalculationMode"]["SP-RT-UC 室使用条件入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-RT-UC 室使用条件入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-CM-2":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["空調と照明の連成計算"] = True
+                else:
+                    data["CalculationMode"]["空調と照明の連成計算"] = False
+                
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-CD":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-CD 気象データ入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-CD 気象データ入力シート"] = False
 
-        if sheet_SP_CM.cell_value(14, 2) != "" and sheet_SP_CM.cell_value(14, 3) == "":
-            data["CalculationMode"]["SP-RT-CP カレンダーパターン入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-RT-CP カレンダーパターン入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-RT-UC":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-RT-UC 室使用条件入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-RT-UC 室使用条件入力シート"] = False
 
-        if sheet_SP_CM.cell_value(15, 2) != "" and sheet_SP_CM.cell_value(15, 3) == "":
-            data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-RT-CP":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-RT-CP カレンダーパターン入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-RT-CP カレンダーパターン入力シート"] = False
 
-        if sheet_SP_CM.cell_value(16, 2) != "" and sheet_SP_CM.cell_value(16, 3) == "":
-            data["CalculationMode"]["SP-AC-MD 空調モード入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-AC-MD 空調モード入力シート"] = False
-            
-        if sheet_SP_CM.cell_value(17, 2) != "" and sheet_SP_CM.cell_value(17, 3) == "":
-            data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-RT-SD":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] = False
 
-        if sheet_SP_CM.cell_value(18, 2) != "" and sheet_SP_CM.cell_value(18, 3) == "":
-            data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-AC-MD":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-AC-MD 空調モード入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-AC-MD 空調モード入力シート"] = False
+                
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-AC-ST":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] = False
 
-        if sheet_SP_CM.cell_value(19, 2) != "" and sheet_SP_CM.cell_value(19, 3) == "":
-            data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-AC-RL":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] = False
 
-        if sheet_SP_CM.cell_value(20, 2) != "" and sheet_SP_CM.cell_value(20, 3) == "":
-            data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-AC-AL":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] = False
 
-        if sheet_SP_CM.cell_value(21, 2) != "" and sheet_SP_CM.cell_value(21, 3) == "":
-            data["CalculationMode"]["SP-AC-ST 熱源送水温度（日別）入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-AC-ST 熱源送水温度（日別）入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-AC-HS":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] = False
 
-        if sheet_SP_CM.cell_value(22, 2) != "" and sheet_SP_CM.cell_value(22, 3) == "":
-            data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-AC-WT":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] = False
 
-        if sheet_SP_CM.cell_value(23, 2) != "" and sheet_SP_CM.cell_value(23, 3) == "":
-            data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-AC-CW":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] = False
 
-        if sheet_SP_CM.cell_value(24, 2) != "" and sheet_SP_CM.cell_value(24, 3) == "":
-            data["CalculationMode"]["SP-V-CL 換気制御効果率入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-V-CL 換気制御効果率入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-AC-FC":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] = False
 
-        if sheet_SP_CM.cell_value(25, 2) != "" and sheet_SP_CM.cell_value(25, 3) == "":
-            data["CalculationMode"]["SP-V-PR 換気代替空調機年間平均負荷率"] = True
-        else:
-            data["CalculationMode"]["SP-V-PR 換気代替空調機年間平均負荷率"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-V-CL":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-V-CL 換気制御効果率入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-V-CL 換気制御効果率入力シート"] = False
 
-        if sheet_SP_CM.cell_value(26, 2) != "" and sheet_SP_CM.cell_value(26, 3) == "":
-            data["CalculationMode"]["SP-L-CL 照明制御効果率（時刻別）入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-L-CL 照明制御効果率（時刻別）入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-V-PR":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-V-PR 換気代替空調機年間平均負荷率"] = True
+                else:
+                    data["CalculationMode"]["SP-V-PR 換気代替空調機年間平均負荷率"] = False
 
-        if sheet_SP_CM.cell_value(27, 2) != "" and sheet_SP_CM.cell_value(27, 3) == "":
-            data["CalculationMode"]["SP-HW-WS 節湯器具入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-HW-WS 節湯器具入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-L-CL":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-L-CL 照明制御効果率（時刻別）入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-L-CL 照明制御効果率（時刻別）入力シート"] = False
 
-        if sheet_SP_CM.cell_value(28, 2) != "" and sheet_SP_CM.cell_value(28, 3) == "":
-            data["CalculationMode"]["SP-HW-IM 配管保温仕様入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-HW-IM 配管保温仕様入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-HW-WS":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-HW-WS 節湯器具入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-HW-WS 節湯器具入力シート"] = False
 
-        if sheet_SP_CM.cell_value(29, 2) != "" and sheet_SP_CM.cell_value(29, 3) == "":
-            data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-HW-IM":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-HW-IM 配管保温仕様入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-HW-IM 配管保温仕様入力シート"] = False
 
-        if sheet_SP_CM.cell_value(30, 2) != "" and sheet_SP_CM.cell_value(30, 3) == "":
-            data["CalculationMode"]["SP-EV-CL 速度制御方式入力シート"] = True
-        else:
-            data["CalculationMode"]["SP-EV-CL 速度制御方式入力シート"] = False
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-HW-WU":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] = False
+
+            elif sheet_SP_CM.cell_value(i, 0) == "SP-EV-CL":
+                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
+                    data["CalculationMode"]["SP-EV-CL 速度制御方式入力シート"] = True
+                else:
+                    data["CalculationMode"]["SP-EV-CL 速度制御方式入力シート"] = False
+
+            else:
+                validation["error"].append( "様式SP-CM.計算モード: 不正な行が存在します。")
 
 
     else:
