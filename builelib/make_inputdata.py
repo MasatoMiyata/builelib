@@ -575,14 +575,14 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-RT-SD：室スケジュール入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] and "SP-RT-SD) スケジュール" in wb.sheet_names():
+    if data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] and "SP-RT-SD) 室スケジュール" in wb.sheet_names():
 
         try:
 
             data["SpecialInputData"]["room_schedule"] = {}
 
             # シートの読み込み
-            sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) スケジュール")
+            sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) 室スケジュール")
 
             for i in range(10,sheet_SP_RT_SD.nrows):
 
@@ -595,7 +595,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         except Exception as e:
 
             # 例外処理
-            validation["error"].append( f"様式SP-RT-SD.スケジュール: 入力データが不正です。{e}" )
+            validation["error"].append( f"様式SP-RT-SD 室スケジュール: 入力データが不正です。{e}" )
 
     #----------------------------------
     # 様式SP-RT-UC：室使用条件入力シート の読み込み
