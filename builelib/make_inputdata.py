@@ -3371,34 +3371,39 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     "a0": float(dataSP1[5])
                 }
 
-    if "SP-3) 熱源水温度" in wb.sheet_names():
+    #----------------------------------
+    # 様式SP-AC-CW 熱源冷却水温度（日別）入力シート の読み込み
+    #----------------------------------
+    if data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] and "SP-AC-CW) 熱源冷却水温度" in wb.sheet_names():
 
-        data["SpecialInputData"]["heatsource_temperature_monthly"] = {}
+        try:
 
-        # シートの読み込み
-        sheet_SP3 = wb.sheet_by_name("SP-3) 熱源水温度")
+            data["SpecialInputData"]["heatsource_chilled_water_temp"] = {}
 
-        # 行のループ（nrowsが10より小さいと空行列になる）
-        for i in range(10,sheet_SP3.nrows):
+            # シートの読み込み
+            sheet_SP_AC_CW = wb.sheet_by_name("SP-AC-CW) 熱源冷却水温度")
 
-            # シートから「行」の読み込み
-            dataSP3 = sheet_SP3.row_values(i)
+            # 入力されたカレンダーパターン名称を検索
+            ref_name_list = sheet_SP_AC_CW.row_values(7)
 
-            if dataSP3[0] != "":
+            # 入力されている列について、名称と列数の対応関係を保存
+            ref_column_num = {}
+            for column_num in range(len(ref_name_list)):
+                ref_name = ref_name_list[column_num]
+                if ref_name != "" and ref_name != "熱源群名称":
+                    ref_column_num[ref_name] = column_num
+            
+            # データの読み込み
+            for ref_name in ref_column_num:
+                dataSP_AC_CW = []
+                for i in range(10,365+10):
+                    dataSP_AC_CW.append( sheet_SP_AC_CW.cell_value(i, ref_column_num[ref_name]) ) 
+                data["SpecialInputData"]["heatsource_chilled_water_temp"][ref_name] = dataSP_AC_CW
 
-                data["SpecialInputData"]["heatsource_temperature_monthly"][dataSP3[0]] = {
-                    "1月":  float(dataSP3[1]), 
-                    "2月":  float(dataSP3[2]), 
-                    "3月":  float(dataSP3[3]), 
-                    "4月":  float(dataSP3[4]), 
-                    "5月":  float(dataSP3[5]), 
-                    "6月":  float(dataSP3[6]), 
-                    "7月":  float(dataSP3[7]), 
-                    "8月":  float(dataSP3[8]),  
-                    "9月":  float(dataSP3[9]), 
-                    "10月": float(dataSP3[10]), 
-                    "11月": float(dataSP3[11]), 
-                    "12月": float(dataSP3[12])
+        except Exception as e:
+            validation["error"].append( "様式SP-AC-CW) 熱源冷却水温度: シートの読み込みに失敗しました。"+ str(e) +"。")
+
+
                 }
 
 
