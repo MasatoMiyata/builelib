@@ -13,6 +13,7 @@ reference/
 tests/PAL/
 standard_spec/
 sample/*.json
+sample/Builelib_inputSheet_開発用.xlsx
 
 builelib/heat_load_calculation
 builelib/pyHASP
