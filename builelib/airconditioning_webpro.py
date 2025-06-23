@@ -4044,7 +4044,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             
 
     ##----------------------------------------------------------------------------------
-    ## 任意評定用 熱源水温度（ SP-AC-CW 熱源冷却水温度（日別）入力シート ）
+    ## SPシート 熱源冷却水温度（ SP-AC-CW 熱源冷却水温度（日別）入力シート ）
     ##----------------------------------------------------------------------------------
 
     if "SpecialInputData" in inputdata:
@@ -4353,6 +4353,23 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                     inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][dd] = \
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["coeff_x"][dd] * 1.2
 
+    ##----------------------------------------------------------------------------------
+    ## SPシート 熱源送水温度（ SP-AC-WT 熱源送水温度（日別）入力シート ）
+    ##----------------------------------------------------------------------------------
+
+    if "SpecialInputData" in inputdata:
+        if "heatsource_supply_water_temp" in inputdata["SpecialInputData"]:
+
+            for ref_original_name in inputdata["SpecialInputData"]["heatsource_supply_water_temp"]:
+                
+                # 入力された熱源群名称から、計算上使用する熱源群名称（冷暖、蓄熱分離）に変換
+                for ref_name in [ref_original_name + "_冷房", ref_original_name + "_暖房", ref_original_name + "_冷房_蓄熱", ref_original_name + "_暖房_蓄熱"]:
+
+                    if  ref_name in inputdata["REF"]:
+                        for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"] = \
+                                inputdata["SpecialInputData"]["heatsource_supply_water_temp"][ref_original_name]
+
 
     ##----------------------------------------------------------------------------------
     ## 送水温度特性 （解説書 2.7.14）
@@ -4376,19 +4393,25 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
                     # 送水温度 TCtmp
                     TCtmp = 0
-                    if inputdata["REF"][ref_name]["mode"] == "cooling":
+                    if len(inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"]) == 365:
 
-                        if inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"] is None:
-                            TCtmp = 5
-                        else:
-                            TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"]
+                        TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"][dd]
 
-                    elif inputdata["REF"][ref_name]["mode"] == "heating":
+                    else:
+                        
+                        if inputdata["REF"][ref_name]["mode"] == "cooling":
 
-                        if inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"] is None:
-                            TCtmp = 50
-                        else:
-                            TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"]
+                            if inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"] is None:
+                                TCtmp = 5
+                            else:
+                                TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"]
+
+                        elif inputdata["REF"][ref_name]["mode"] == "heating":
+
+                            if inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"] is None:
+                                TCtmp = 50
+                            else:
+                                TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempWinter"]
                             
                     # 送水温度の上下限
                     if TCtmp < inputdata["REF"][ref_name]["Heatsource"][unit_id]["parameter"]["送水温度特性"][0]["下限"]:
