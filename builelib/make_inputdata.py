@@ -568,14 +568,17 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-RT-SD：室スケジュール入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] and "SP-RT-SD) 室スケジュール" in wb.sheet_names():
+    if data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] and ("SP-RT-SD) 室スケジュール" in wb.sheet_names() or "SP-RT-SD) スケジュール" in wb.sheet_names()):
 
         try:
 
             data["SpecialInputData"]["room_schedule"] = {}
 
             # シートの読み込み
-            sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) 室スケジュール")
+            if "SP-RT-SD) 室スケジュール" in wb.sheet_names():
+                sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) 室スケジュール")
+            elif "SP-RT-SD) スケジュール" in wb.sheet_names():
+                sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) スケジュール")
 
             for i in range(10,sheet_SP_RT_SD.nrows):
 
