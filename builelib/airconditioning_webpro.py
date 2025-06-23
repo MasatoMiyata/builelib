@@ -4393,7 +4393,8 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
                     # 送水温度 TCtmp
                     TCtmp = 0
-                    if len(inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"]) == 365:
+                    if isinstance(inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"], (list, np.ndarray)) and \
+                        len(inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"]) == 365:
 
                         TCtmp = inputdata["REF"][ref_name]["Heatsource"][unit_id]["SupplyWaterTempSummer"][dd]
 
