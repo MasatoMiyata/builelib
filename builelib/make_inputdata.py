@@ -474,7 +474,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] = True
         data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] = True
         data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] = True
-        data["CalculationMode"]["SP-AC-ST 熱源送水温度（日別）入力シート"] = True
+        data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] = True
         data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] = True
         data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] = True
         data["CalculationMode"]["SP-V-CL 換気制御効果率入力シート"] = True
@@ -3567,7 +3567,7 @@ if __name__ == '__main__':
     print('----- make_inputdata.py -----')
 
     directory = "./sample/"
-    case_name = 'Builelib_inputSheet'
+    case_name = 'Builelib_inputSheet_sample_001'
 
     if os.path.exists(directory + case_name + ".xlsm"):
         inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
