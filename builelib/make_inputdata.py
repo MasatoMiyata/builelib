@@ -904,6 +904,35 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
 
     #----------------------------------
+    # 様式SP-AC-FC 変風量・変流量制御特性入力シート の読み込み
+    #----------------------------------
+    if data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] and "SP-AC-FC) 変流量・変風量制御" in wb.sheet_names():
+
+        data["SpecialInputData"]["flow_control"] = {}
+
+        # シートの読み込み
+        sheet_SP1 = wb.sheet_by_name("SP-AC-FC) 変流量・変風量制御")
+
+        # 行のループ（nrowsが10より小さいと空行列になる）
+        for i in range(10,sheet_SP1.nrows):
+
+            # シートから「行」の読み込み
+            dataSP1 = sheet_SP1.row_values(i)
+
+            if dataSP1[0] != "":
+
+                data["SpecialInputData"]["flow_control"][dataSP1[0]] = {
+                    "Type": "任意評定",
+                    "a4": float(dataSP1[1]),
+                    "a3": float(dataSP1[2]),
+                    "a2": float(dataSP1[3]),
+                    "a1": float(dataSP1[4]),
+                    "a0": float(dataSP1[5])
+                }
+                input_options["風量制御方式"].append(dataSP1[0])  # 様式のバリデーション用にデータベースを更新
+                input_options["流量制御方式"].append(dataSP1[0])  # 様式のバリデーション用にデータベースを更新
+
+    #----------------------------------
     # 様式0 基本情報入力シート の読み込み
     #----------------------------------
     if "0) 基本情報" in wb.sheet_names():
@@ -3324,33 +3353,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             if (data["CogenerationSystems"][csg_system]["HeatRecoveryPriorityHotWater"] == "" and data["CogenerationSystems"][csg_system]["HowWaterSystem"] != ""):
                 validation["error"].append( "様式7-3.コジェネ: コージェネレーション設備名称「"+ csg_system +"」の排熱利用優先順位（給湯）が入力されていません。")
 
-
-    #----------------------------------
-    # 様式SP-AC-FC 変風量・変流量制御特性入力シート の読み込み
-    #----------------------------------
-    if data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] and "SP-AC-FC) 変流量・変風量制御" in wb.sheet_names():
-
-        data["SpecialInputData"]["flow_control"] = {}
-
-        # シートの読み込み
-        sheet_SP1 = wb.sheet_by_name("SP-AC-FC) 変流量・変風量制御")
-
-        # 行のループ（nrowsが10より小さいと空行列になる）
-        for i in range(10,sheet_SP1.nrows):
-
-            # シートから「行」の読み込み
-            dataSP1 = sheet_SP1.row_values(i)
-
-            if dataSP1[0] != "":
-
-                data["SpecialInputData"]["flow_control"][dataSP1[0]] = {
-                    "Type": "任意評定",
-                    "a4": float(dataSP1[1]),
-                    "a3": float(dataSP1[2]),
-                    "a2": float(dataSP1[3]),
-                    "a1": float(dataSP1[4]),
-                    "a0": float(dataSP1[5])
-                }
 
     #----------------------------------
     # 様式SP-AC-CW 熱源冷却水温度（日別）入力シート の読み込み
