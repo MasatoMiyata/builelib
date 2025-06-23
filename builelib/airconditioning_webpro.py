@@ -4044,22 +4044,21 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             
 
     ##----------------------------------------------------------------------------------
-    ## 任意評定用　熱源水温度（ SP-3 ）
+    ## 任意評定用 熱源水温度（ SP-AC-CW 熱源冷却水温度（日別）入力シート ）
     ##----------------------------------------------------------------------------------
 
     if "SpecialInputData" in inputdata:
-        if "heatsource_temperature_monthly" in inputdata["SpecialInputData"]:
+        if "heatsource_chilled_water_temp" in inputdata["SpecialInputData"]:
 
-            for ref_original_name in inputdata["SpecialInputData"]["heatsource_temperature_monthly"]:
+            for ref_original_name in inputdata["SpecialInputData"]["heatsource_chilled_water_temp"]:
                 
                 # 入力された熱源群名称から、計算上使用する熱源群名称（冷暖、蓄熱分離）に変換
                 for ref_name in [ref_original_name + "_冷房", ref_original_name + "_暖房", ref_original_name + "_冷房_蓄熱", ref_original_name + "_暖房_蓄熱"]:
 
                     if  ref_name in inputdata["REF"]:
                         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
-                            for dd in range(0,365):
-                                inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
-                                    inputdata["SpecialInputData"]["heatsource_temperature_monthly"][ref_original_name][ bc.day2month(dd) ]
+                            inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"] = \
+                                inputdata["SpecialInputData"]["heatsource_chilled_water_temp"][ref_original_name]
 
     if debug: # pragma: no cover
         for ref_name in inputdata["REF"]:
