@@ -2,30 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://masatomiyata.github.io/builelib/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-23</lastmod>
     </url>
     <url>
          <loc>https://masatomiyata.github.io/builelib/InputSheet/</loc>
-         <lastmod>2025-06-17</lastmod>
-    </url>
-    <url>
-         <loc>https://masatomiyata.github.io/builelib/examples/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-23</lastmod>
     </url>
     <url>
          <loc>https://masatomiyata.github.io/builelib/installation/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-23</lastmod>
     </url>
     <url>
          <loc>https://masatomiyata.github.io/builelib/license/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-23</lastmod>
     </url>
     <url>
          <loc>https://masatomiyata.github.io/builelib/logic/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-23</lastmod>
     </url>
     <url>
          <loc>https://masatomiyata.github.io/builelib/en/</loc>
-         <lastmod>2025-06-17</lastmod>
+         <lastmod>2025-06-23</lastmod>
+    </url>
+    <url>
+         <loc>https://masatomiyata.github.io/builelib/en/InputSheet/</loc>
+         <lastmod>2025-06-23</lastmod>
+    </url>
+    <url>
+         <loc>https://masatomiyata.github.io/builelib/en/installation/</loc>
+         <lastmod>2025-06-23</lastmod>
+    </url>
+    <url>
+         <loc>https://masatomiyata.github.io/builelib/en/license/</loc>
+         <lastmod>2025-06-23</lastmod>
+    </url>
+    <url>
+         <loc>https://masatomiyata.github.io/builelib/en/logic/</loc>
+         <lastmod>2025-06-23</lastmod>
     </url>
 </urlset>

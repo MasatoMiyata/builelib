@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#how-to-install" class="md-skip">
           コンテンツにスキップ
         </a>
       
@@ -409,44 +409,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#how-to-install" class="md-nav__link">
     <span class="md-ellipsis">
-      入力シート
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="入力シート">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      入力シートのダウンロード
+      How to install?
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#how-to-run" class="md-nav__link">
     <span class="md-ellipsis">
-      入力シートの作成方法
+      How to run?
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#how-to-uninstall" class="md-nav__link">
     <span class="md-ellipsis">
-      入力シートのサンプル
+      How to uninstall?
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -471,27 +456,6 @@
   
   <span class="md-ellipsis">
     InputSheet
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Examples
   </span>
   
 
@@ -610,27 +574,21 @@
 
   <h1>Installation</h1>
 
-<h2 id="_1">入力シート<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p>Builelibでは、入力シート（Excel形式）に室の形状、外皮・設備の仕様等を入力し、これをアップロードすることで計算を実行します。</p>
-<ul>
-<li>入力シートは、建築物省エネ基準に基づくエネルギー消費性能計算プログラム（WEBPRO） の入力シート（xlsmファイル）と同一のものが利用可能です。</li>
-<li>WEBPROの入力シートにBuilelib専用の特殊シート（様式SP）を追加することにより、計算条件を詳細に指定して計算を実行することができます。</li>
-</ul>
-<h3 id="_2">入力シートのダウンロード<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
-<ul>
-<li>WEBPROの入力シート： WEBPRO_inputSheet.xlsm</li>
-</ul>
-<h3 id="_3">入力シートの作成方法<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
-<ul>
-<li>WEBPRO入力シートの作成方法については、 建築研究所ホームページの「5.2 標準入力法」にある「エネルギー消費性能計算プログラム（非住宅版）の入力マニュアル（PDF）」をご覧下さい。</li>
-<li>Builelib専用の特殊シートを使用して計算を実行するためには、Builelib専用の特殊シートを「移動またはコピー」して、WEBPRO入力シートのファイル（Excelファイル）内にシートを生成する必要があります。</li>
-<li>Builelib専用の特殊シートの作成方法については、 こちらの解説ページ をご覧下さい。</li>
-</ul>
-<h3 id="_4">入力シートのサンプル<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
-<ul>
-<li>WEBPRO入力シートのサンプル：WEBPRO_inputSheet_sample.xlsm</li>
-<li>特殊シートSP-1（変風量・変流量制御）のサンプル：Builelib_sample_SP1.xlsm</li>
-</ul>
+<p>Builelibはpythonでコーディングされています。コマンドラインで実行することも可能です。</p>
+<h3 id="how-to-install">How to install?<a class="headerlink" href="#how-to-install" title="Permanent link">&para;</a></h3>
+<p>次のコマンドでインストールすることができます。python 3.12 以上が推奨です。</p>
+<pre><code>python3 -m pip install builelib
+</code></pre>
+<p>最新のコードをgithubからインストールする場合は以下のコマンドをご利用ください。</p>
+<pre><code>python3 -m pip install &quot;git+https://github.com/MasatoMiyata/builelib.git#egg=builelib&quot;
+</code></pre>
+<h3 id="how-to-run">How to run?<a class="headerlink" href="#how-to-run" title="Permanent link">&para;</a></h3>
+<p>builelib_run.py をご覧下さい。</p>
+<p>コマンドラインから実行する場合は、builelib_cmd.py をご利用ください。</p>
+<h3 id="how-to-uninstall">How to uninstall?<a class="headerlink" href="#how-to-uninstall" title="Permanent link">&para;</a></h3>
+<p>次のコマンドでアンインストールできます。</p>
+<pre><code>python3 -m pip uninstall builelib
+</code></pre>
 
 
 

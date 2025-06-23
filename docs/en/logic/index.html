@@ -10,28 +10,24 @@
       
       
       
-        <link rel="canonical" href="https://masatomiyata.github.io/builelib/logic/">
+        <link rel="canonical" href="https://masatomiyata.github.io/builelib/en/logic/">
       
       
-        <link rel="prev" href="../InputSheet/">
       
       
-        <link rel="next" href="../license/">
-      
-      
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.41">
     
     
       
-        <title>Calculation Logic - Builelib Manual</title>
+        <title>Logic - Builelib Manual</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -50,13 +46,13 @@
       
     
     
-      <link rel="stylesheet" href="../assets/custom.css">
+      <link rel="stylesheet" href="../../assets/custom.css">
     
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
     
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700&display=swap">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#1" class="md-skip">
+        <a href="#chapter-1-method-for-calculating-the-design-primary-energy-consumption" class="md-skip">
           コンテンツにスキップ
         </a>
       
@@ -98,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="ヘッダー">
-    <a href=".." title="Builelib Manual" class="md-header__button md-logo" aria-label="Builelib Manual" data-md-component="logo">
+    <a href="../.." title="Builelib Manual" class="md-header__button md-logo" aria-label="Builelib Manual" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -118,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Calculation Logic
+              Logic
             
           </span>
         </div>
@@ -165,13 +161,13 @@
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../en/index.html" hreflang="en" class="md-select__link">
+            <a href="../index.html" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="../index.html" hreflang="jp" class="md-select__link">
+            <a href="../../index.html" hreflang="jp" class="md-select__link">
               日本語
             </a>
           </li>
@@ -247,7 +243,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--integrated" aria-label="ナビゲーション" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Builelib Manual" class="md-nav__button md-logo" aria-label="Builelib Manual" data-md-component="logo">
+    <a href="../.." title="Builelib Manual" class="md-nav__button md-logo" aria-label="Builelib Manual" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -302,7 +298,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -367,7 +363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../../installation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -388,7 +384,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../InputSheet/" class="md-nav__link">
+      <a href="../../InputSheet/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -413,19 +409,19 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -439,7 +435,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Reference
@@ -450,28 +446,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Calculation Logic
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../logic/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -480,132 +458,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="目次">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目次
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      第1章 設計一次エネルギー消費量の算定方法
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    <span class="md-ellipsis">
-      第2章 空気調和設備の評価
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
-    <span class="md-ellipsis">
-      第3章 機械換気設備の評価
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4" class="md-nav__link">
-    <span class="md-ellipsis">
-      第4章 照明設備の評価
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5" class="md-nav__link">
-    <span class="md-ellipsis">
-      第5章 給湯設備の評価
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6" class="md-nav__link">
-    <span class="md-ellipsis">
-      第6章 昇降機の評価
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7" class="md-nav__link">
-    <span class="md-ellipsis">
-      第7章 太陽光発電設備の評価方法
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#8" class="md-nav__link">
-    <span class="md-ellipsis">
-      第8章 コージェネレーション設備の評価方法
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#9" class="md-nav__link">
-    <span class="md-ellipsis">
-      第9章 その他一次エネルギー消費量の算定方法
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#10" class="md-nav__link">
-    <span class="md-ellipsis">
-      第10章 基準一次エネルギー消費量の算定方法
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      計算に使用するデータベース
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      参考資料
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -625,7 +477,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../license/" class="md-nav__link">
+      <a href="../../license/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -653,12 +505,13 @@
                   
 
 
-  <h1>Calculation Logic</h1>
+  <h1>Logic</h1>
 
-<p>Builelib における一次エネルギー消費量の計算方法を解説する。Builelibの計算ロジックは日本の省エネルギー基準（非住宅建築物）をベースとしているが、様々な独自の計算を追加している。
-よって、省エネルギー基準のプログラムと同じ結果にならないことに注意が必要である。</p>
-<p>全設備の計算において共通で使用する定数を次に示す。</p>
-<div style="text-align: center; margin-bottom: 0.01em;">表1. 共通の定数</div>
+<p>This section explains the calculation method of primary energy consumption in Builelib.<br />
+While the calculation logic of Builelib is based on the Japanese Energy Efficiency Standards for non-residential buildings, it includes various original calculations.<br />
+Therefore, please note that the results may differ from those obtained using the official energy efficiency standards program.</p>
+<p>The following constants are commonly used across the calculations for all building systems.</p>
+<div style="text-align: center; margin-bottom: 0.01em;">Table 1. Common Constants</div>
 <table border="1" style="margin-top: 0.01;">
   <colgroup>
     <col style="width: 20%;">
@@ -667,109 +520,109 @@
     <col style="width: 15%;">
   </colgroup>
   <tr>
-    <th>定数名</th> <th>説明</th> <th>値</th> <th>単位</th>
+    <th>Constant</th> <th>Description</th> <th>Value</th> <th>Unit</th>
   </tr>
   <tr>
-    <td>$f_{prim,e}$</td ><td>電気の量1キロワット時を熱量に換算する係数</td> <td>9760</td> <td>kJ/kWh</td>
+    <td>$f_{prim,e}$</td ><td>Conversion factor from 1 kWh of electricity to heat energy</td> <td>9760</td> <td>kJ/kWh</td>
   </tr>
   <tr>
-    <td>$C_{a}$</td> <td>乾き空気の定圧比熱</td> <td>1.006</td> <td>kJ⁄(kg・K)</td>
+    <td>$C_{a}$</td> <td>Specific heat capacity of dry air at constant pressure</td> <td>1.006</td> <td>kJ⁄(kg·K)</td>
   </tr>
   <tr>
-    <td>$C_{wv}$</td> <td>水蒸気の定圧比熱</td> <td>1.805</td> <td>kJ⁄(kg・K)</td>
+    <td>$C_{wv}$</td> <td>Specific heat capacity of water vapor at constant pressure</td> <td>1.805</td> <td>kJ⁄(kg·K)</td>
   </tr>
   <tr>
-    <td>$C_{w}$</td> <td>水の定圧比熱</td> <td>4.186</td> <td>kJ⁄(kg・K)</td>
+    <td>$C_{w}$</td> <td>Specific heat capacity of water at constant pressure</td> <td>4.186</td> <td>kJ⁄(kg·K)</td>
   </tr>
   <tr>
-    <td>$L_{w}$</td> <td>水の蒸発潜熱</td> <td>2502</td> <td>kJ⁄(kg・K)</td>
+    <td>$L_{w}$</td> <td>Latent heat of vaporization of water</td> <td>2502</td> <td>kJ⁄(kg·K)</td>
   </tr>
   <tr>
-    <td>$\rho_{w}$</td> <td>水の密度（大気圧、7度）</td> <td>1000</td> <td>kg⁄$m^{3}$</td>
+    <td>$\rho_{w}$</td> <td>Density of water (at atmospheric pressure, 7°C)</td> <td>1000</td> <td>kg⁄$m^{3}$</td>
   </tr>
   <tr>
-    <td>$\alpha_{o}$</td> <td>室外側総合熱伝達率</td> <td>1/0.04</td> <td>W/($m^{2}$・K)</td>
+    <td>$\alpha_{o}$</td> <td>Total heat transfer coefficient on the exterior side</td> <td>1/0.04</td> <td>W/($m^{2}$·K)</td>
   </tr>
   <tr>
-    <td>$\alpha_{i}$</td> <td>室内側総合熱伝達率</td> <td>1/0.11</td> <td>W/($m^{2}$・K)</td>
+    <td>$\alpha_{i}$</td> <td>Total heat transfer coefficient on the interior side</td> <td>1/0.11</td> <td>W/($m^{2}$·K)</td>
   </tr>
   <tr>
-    <td>$f_{fan,heat}$</td> <td>ファンの発熱比率</td> <td>0.84</td> <td>-</td>
+    <td>$f_{fan,heat}$</td> <td>Heat generation ratio of fans</td> <td>0.84</td> <td>-</td>
   </tr>
   <tr>
-    <td>$f_{pump,heat}$</td> <td>ポンプの発熱比率</td> <td>0.84</td> <td>-</td>
+    <td>$f_{pump,heat}$</td> <td>Heat generation ratio of pumps</td> <td>0.84</td> <td>-</td>
   </tr>
   <tr>
-    <td>$f_{ref,ts,loss}$</td> <td>蓄熱槽の熱損失係数</td> <td>0.03</td> <td>-</td>
+    <td>$f_{ref,ts,loss}$</td> <td>Heat loss factor of thermal storage tanks</td> <td>0.03</td> <td>-</td>
   </tr>
 </table>
 
-<h2 id="1">第1章 設計一次エネルギー消費量の算定方法<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
-<p>設計一次エネルギー消費量の算定方法を示す。
-設計一次エネルギー消費量 $E_{T}$ [GJ/年] は次式で算出するものとし、小数点第二位を切り上げた数値であるとする。</p>
+<h2 id="chapter-1-method-for-calculating-the-design-primary-energy-consumption">Chapter 1: Method for Calculating the Design Primary Energy Consumption<a class="headerlink" href="#chapter-1-method-for-calculating-the-design-primary-energy-consumption" title="Permanent link">&para;</a></h2>
+<p>This chapter describes the method for calculating the design primary energy consumption.<br />
+The design primary energy consumption $E_{T}$ [GJ/year] is calculated using the following equation, and the result is rounded up to the second decimal place.</p>
 <hr />
 <p>$$
 E_{T} = (E_{AC} + E_{V} + E_{L} + E_{HW} + E_{EV} - E_{PV} - E_{CGS} + E_{M}) \times 10^{-3}
 $$</p>
 <hr />
 <ul>
-<li>$E_{AC}$ は空気調和設備の設計一次エネルギー消費量 [MJ/年] であり、その算出方法は第2章で示す。</li>
-<li>$E_{V}$ は機械換気設備の設計一次エネルギー消費量 [MJ/年] であり、その算出方法は第3章で示す。</li>
-<li>$E_{L}$ は照明設備の設計一次エネルギー消費量 [MJ/年] であり、その算出方法は第4章で示す。</li>
-<li>$E_{HW}$ は給湯設備の設計一次エネルギー消費量 [MJ/年] であり、その算出方法は第5章で示す。</li>
-<li>$E_{EV}$ は昇降機の設計一次エネルギー消費量 [MJ/年] であり、その算出方法は第6章で示す。</li>
-<li>$E_{PV}$ は太陽光発電設備による一次エネルギー消費量の削減量 [MJ/年] であり、その算出方法は第7章で示す。</li>
-<li>$E_{CGS}$ はコージェネレーション設備による一次エネルギー消費量の削減量 [MJ/年] であり、その算出方法は第8章で示す。</li>
-<li>$E_{M}$ はその他一次エネルギー消費量 [MJ/年] であり、その算出方法は第9章で示す。</li>
+<li>$E_{AC}$ is the design primary energy consumption of the air-conditioning system [MJ/year], described in Chapter 2.  </li>
+<li>$E_{V}$ is the design primary energy consumption of the mechanical ventilation system [MJ/year], described in Chapter 3.  </li>
+<li>$E_{L}$ is the design primary energy consumption of the lighting system [MJ/year], described in Chapter 4.  </li>
+<li>$E_{HW}$ is the design primary energy consumption of the hot water supply system [MJ/year], described in Chapter 5.  </li>
+<li>$E_{EV}$ is the design primary energy consumption of elevators [MJ/year], described in Chapter 6.  </li>
+<li>$E_{PV}$ is the reduction in primary energy consumption due to photovoltaic (PV) systems [MJ/year], described in Chapter 7.  </li>
+<li>$E_{CGS}$ is the reduction in primary energy consumption due to cogeneration systems [MJ/year], described in Chapter 8.  </li>
+<li>$E_{M}$ is the primary energy consumption from other sources [MJ/year], described in Chapter 9.</li>
 </ul>
-<h2 id="2">第2章 空気調和設備の評価<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
-<p><a href="../Reference/EngineeringReference_chapter02-en.html">第2章へのリンク</a>.</p>
-<h2 id="3">第3章 機械換気設備の評価<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
-<p><a href="../Reference/EngineeringReference_chapter03-en.html">第3章へのリンク</a>.</p>
-<h2 id="4">第4章 照明設備の評価<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
-<p><a href="../Reference/EngineeringReference_chapter04-en.html">第4章へのリンク</a>.</p>
-<h2 id="5">第5章 給湯設備の評価<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
-<p><a href="../Reference/EngineeringReference_chapter05-en.html">第5章へのリンク</a>.</p>
-<h2 id="6">第6章 昇降機の評価<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
-<p><a href="../Reference/EngineeringReference_chapter06-en.html">第6章へのリンク</a>.</p>
-<h2 id="7">第7章 太陽光発電設備の評価方法<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
-<p>太陽光発電設備の評価方法は、エネルギー消費性能計算プログラム（住宅版）の評価方法と同じである <a href="https://www.kenken.go.jp/becc/documents/house/9-1_191119_v08_PVer0207.pdf">(仕様書)</a>。
-ただし、発電した電力を少しでも売電する場合は、当該太陽光発電設備は評価の対象とはしない。
-一方、いわゆる「売電」をしない場合は、その発電量を 100%自己消費するものとして、評価の対象とする。
-また、当該建築物以外の建築物に設置された太陽光発電設備による発電量についても評価の対象とはしない。</p>
-<h2 id="8">第8章 コージェネレーション設備の評価方法<a class="headerlink" href="#8" title="Permanent link">&para;</a></h2>
-<p><a href="../Reference/EngineeringReference_chapter08-en.html">第8章へのリンク</a>.</p>
-<h2 id="9">第9章 その他一次エネルギー消費量の算定方法<a class="headerlink" href="#9" title="Permanent link">&para;</a></h2>
-<p><a href="../Reference/EngineeringReference_chapter09-en.html">第9章へのリンク</a>.</p>
-<h2 id="10">第10章 基準一次エネルギー消費量の算定方法<a class="headerlink" href="#10" title="Permanent link">&para;</a></h2>
-<p><a href="../Reference/EngineeringReference_chapter10-en.html">第10章へのリンク</a>.</p>
-<h2 id="_1">計算に使用するデータベース<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="chapter-2-evaluation-of-air-conditioning-systems">Chapter 2: Evaluation of Air-Conditioning Systems<a class="headerlink" href="#chapter-2-evaluation-of-air-conditioning-systems" title="Permanent link">&para;</a></h2>
+<p><a href="./Reference/EngineeringReference_chapter02-en.html">Link to Chapter 2</a></p>
+<h2 id="chapter-3-evaluation-of-mechanical-ventilation-systems">Chapter 3: Evaluation of Mechanical Ventilation Systems<a class="headerlink" href="#chapter-3-evaluation-of-mechanical-ventilation-systems" title="Permanent link">&para;</a></h2>
+<p><a href="./Reference/EngineeringReference_chapter03-en.html">Link to Chapter 3</a></p>
+<h2 id="chapter-4-evaluation-of-lighting-systems">Chapter 4: Evaluation of Lighting Systems<a class="headerlink" href="#chapter-4-evaluation-of-lighting-systems" title="Permanent link">&para;</a></h2>
+<p><a href="./Reference/EngineeringReference_chapter04-en.html">Link to Chapter 4</a></p>
+<h2 id="chapter-5-evaluation-of-hot-water-supply-systems">Chapter 5: Evaluation of Hot Water Supply Systems<a class="headerlink" href="#chapter-5-evaluation-of-hot-water-supply-systems" title="Permanent link">&para;</a></h2>
+<p><a href="./Reference/EngineeringReference_chapter05-en.html">Link to Chapter 5</a></p>
+<h2 id="chapter-6-evaluation-of-elevators">Chapter 6: Evaluation of Elevators<a class="headerlink" href="#chapter-6-evaluation-of-elevators" title="Permanent link">&para;</a></h2>
+<p><a href="./Reference/EngineeringReference_chapter06-en.html">Link to Chapter 6</a></p>
+<h2 id="chapter-7-evaluation-method-for-photovoltaic-systems">Chapter 7: Evaluation Method for Photovoltaic Systems<a class="headerlink" href="#chapter-7-evaluation-method-for-photovoltaic-systems" title="Permanent link">&para;</a></h2>
+<p>The evaluation method for photovoltaic systems is the same as that used in the residential version of the Energy Performance Calculation Program <a href="https://www.kenken.go.jp/becc/documents/house/9-1_191119_v08_PVer0207.pdf">(Specification)</a>.<br />
+However, if any amount of electricity generated is sold, the PV system is excluded from the evaluation.<br />
+If the generated electricity is used entirely for self-consumption (i.e., not sold), the system is included in the evaluation.<br />
+Additionally, electricity generated by PV systems installed on buildings other than the subject building is not included in the evaluation.</p>
+<h2 id="chapter-8-evaluation-method-for-cogeneration-systems">Chapter 8: Evaluation Method for Cogeneration Systems<a class="headerlink" href="#chapter-8-evaluation-method-for-cogeneration-systems" title="Permanent link">&para;</a></h2>
+<p><a href="./Reference/EngineeringReference_chapter08-en.html">Link to Chapter 8</a></p>
+<h2 id="chapter-9-calculation-method-for-other-primary-energy-consumption">Chapter 9: Calculation Method for Other Primary Energy Consumption<a class="headerlink" href="#chapter-9-calculation-method-for-other-primary-energy-consumption" title="Permanent link">&para;</a></h2>
+<p><a href="./Reference/EngineeringReference_chapter09-en.html">Link to Chapter 9</a></p>
+<h2 id="chapter-10-method-for-calculating-the-reference-primary-energy-consumption">Chapter 10: Method for Calculating the Reference Primary Energy Consumption<a class="headerlink" href="#chapter-10-method-for-calculating-the-reference-primary-energy-consumption" title="Permanent link">&para;</a></h2>
+<p><a href="./Reference/EngineeringReference_chapter10-en.html">Link to Chapter 10</a></p>
+<h2 id="databases-used-for-calculation">Databases Used for Calculation<a class="headerlink" href="#databases-used-for-calculation" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/ROOM_SPEC_H28.zip">標準室使用条件</a></li>
-<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/RoomUsageCondition_20140303.pdf">標準室使用条件の詳細</a></li>
-<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/CalenderPattern_20140303.pdf">カレンダーパターン</a></li>
-<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/HeatThermalConductivity.zip">建材物性値の一覧</a></li>
-<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/WindowHeatTransferPerformance_H30_181005.zip">窓性能の一覧</a></li>
-<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/QROOM_COEFFI.zip">負荷計算用係数</a></li>
-<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/REFLIST_H28_REFCURVE_H28.zip">熱源機器特性係数</a></li>
+<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/ROOM_SPEC_H28.zip">Standard Room Usage Conditions</a>  </li>
+<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/RoomUsageCondition_20140303.pdf">Details of Standard Room Usage Conditions</a>  </li>
+<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/CalenderPattern_20140303.pdf">Calendar Patterns</a>  </li>
+<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/HeatThermalConductivity.zip">List of Thermal Properties of Building Materials</a>  </li>
+<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/WindowHeatTransferPerformance_H30_181005.zip">List of Window Thermal Performance</a>  </li>
+<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/QROOM_COEFFI.zip">Load Calculation Coefficients</a>  </li>
+<li><a href="https://www.kenken.go.jp/becc/documents/building/Definitions/REFLIST_H28_REFCURVE_H28.zip">Performance Coefficients of Heat Source Equipment</a>  </li>
 </ul>
-<h2 id="_2">参考資料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li>建築研究資料第201号: 新設地域熱供給プラントの一次エネルギー換算係数に関する研究、R02.09</li>
-<li>国総研資料第1107号: 非住宅建築物の外皮・設備設計仕様とエネルギー消費性能の実態調査 - 省エネ基準適合性判定プログラムの入出力データの分析 -、R02.03</li>
-<li>建築研究資料第191号: 業務用コージェネレーション設備の性能評価手法の高度化に関する研究、H31.04</li>
-<li>建築研究資料第190号: 各種空調設備システムの潜熱負荷処理メカニズムを踏まえたエネルギー消費量評価法に関する検討、H31.04</li>
-<li>建築研究資料第188号: 太陽光発電設備の年間発電量の推計方法に関する調査、H30.01</li>
-<li>建築研究資料第187号: 建築物の設備・機器のエネルギー効率に関する既存試験方法の調査、H29.09</li>
-<li>国総研資料第974号、建築研究資料第183号: 平成28年省エネルギー基準（平成28年1月公布）関係技術資料 モデル建物法入力支援ツール解説、H29.06</li>
-<li>国総研資料第973号    建築研究資料第182号: 平成28年省エネルギー基準（平成28年1月公布）関係技術資料　エネルギー消費計算プログラム（非住宅版）解説、H29.06</li>
-<li>建築研究資料第177号: 業務用空調・給湯システムの制御による省エネルギー効果の実証的評価、H28.11</li>
-<li>建築研究資料第176号: 業務用建築物のエネルギー消費量評価手法に関する基礎的調査、H28.11</li>
-<li>国総研資料第765号    建築研究資料第152号: 平成25年省エネルギー基準(平成25年9月公布)等関係技術資料 モデル建物法による非住宅建築物の外皮性能及び一次エネルギー消費量評価プログラム解説、H25.11</li>
-<li>国総研資料第764号    建築研究資料第151号: 平成25年省エネルギー基準(平成25年9月公布)等関係技術資料 主要室入力法による非住宅建築物の一次エネルギー消費量算定プログラム解説、H25.11</li>
-<li>国総研資料第763号    建築研究資料第150号: 平成25年省エネルギー基準(平成25年9月公布)等関係技術資料 非住宅建築物の外皮性能評価プログラム解説、H25.11</li>
-<li>国総研資料第762号    建築研究資料第149号: 平成25年省エネルギー基準(平成25年9月公布)等関係技術資料 一次エネルギー消費量算定プログラム解説(非住宅建築物編)、H25.11</li>
-<li>国総研資料第702号    建築研究資料第140号: 低炭素建築物認定基準(平成24年12月公布)等関係技術資料 一次エネルギー消費量算定プログラム解説(建築物編)、H24.12</li>
+<li>Building Research Report No. 201: Study on Primary Energy Conversion Factors for New District Heating and Cooling Plants, Sep. 2020  </li>
+<li>NILIM Report No. 1107: Survey on Building Envelope and Equipment Design Specifications and Actual Energy Performance of Non-Residential Buildings – Analysis of Input/Output Data from the Energy Efficiency Compliance Program –, Mar. 2020  </li>
+<li>Building Research Report No. 191: Study on the Advancement of Performance Evaluation Methods for Commercial Cogeneration Systems, Apr. 2019  </li>
+<li>Building Research Report No. 190: Study on Energy Consumption Evaluation Methods Considering Latent Heat Load Processing Mechanisms of Various HVAC Systems, Apr. 2019  </li>
+<li>Building Research Report No. 188: Study on the Estimation Method of Annual Power Generation from Photovoltaic Systems, Jan. 2018  </li>
+<li>Building Research Report No. 187: Survey on Existing Test Methods for the Energy Efficiency of Building Equipment and Systems, Sep. 2017  </li>
+<li>NILIM Report No. 974 / Building Research Report No. 183: Technical Documentation on the 2016 Energy Efficiency Standards – Guide to the Model Building Method Input Support Tool –, Jun. 2017  </li>
+<li>NILIM Report No. 973 / Building Research Report No. 182: Technical Documentation on the 2016 Energy Efficiency Standards – Guide to the Energy Consumption Calculation Program (Non-residential version) –, Jun. 2017  </li>
+<li>Building Research Report No. 177: Empirical Evaluation of Energy-Saving Effects from Control of Commercial HVAC and Hot Water Systems, Nov. 2016  </li>
+<li>Building Research Report No. 176: Basic Survey on Energy Consumption Evaluation Methods for Commercial Buildings, Nov. 2016  </li>
+<li>NILIM Report No. 765 / Building Research Report No. 152: Technical Documentation on the 2013 Energy Efficiency Standards – Guide to the Envelope Performance and Primary Energy Consumption Evaluation Program using the Model Building Method –, Nov. 2013  </li>
+<li>NILIM Report No. 764 / Building Research Report No. 151: Technical Documentation on the 2013 Energy Efficiency Standards – Guide to the Primary Energy Consumption Calculation Program using the Key Room Input Method –, Nov. 2013  </li>
+<li>NILIM Report No. 763 / Building Research Report No. 150: Technical Documentation on the 2013 Energy Efficiency Standards – Guide to the Building Envelope Performance Evaluation Program for Non-Residential Buildings –, Nov. 2013  </li>
+<li>NILIM Report No. 762 / Building Research Report No. 149: Technical Documentation on the 2013 Energy Efficiency Standards – Guide to the Primary Energy Consumption Calculation Program (Non-Residential Buildings Edition) –, Nov. 2013  </li>
+<li>NILIM Report No. 702 / Building Research Report No. 140: Technical Documentation on the Low-Carbon Building Certification Standards (Announced Dec. 2012) – Guide to the Primary Energy Consumption Calculation Program (Buildings Edition) –, Dec. 2012  </li>
 </ul>
 
 
@@ -837,16 +690,16 @@ $$</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["toc.integrate", "navigation.expand", "navigation.instant", "navigation.top"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate", "navigation.expand", "navigation.instant", "navigation.top"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
-        <script src="../js/mathjax.js"></script>
+        <script src="../../js/mathjax.js"></script>
       
-        <script src="../js/mathjax-reload.js"></script>
+        <script src="../../js/mathjax-reload.js"></script>
       
-        <script src="../js/lang-switch.js"></script>
+        <script src="../../js/lang-switch.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       

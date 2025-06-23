@@ -410,27 +410,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Examples
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -539,48 +518,30 @@
 
 
 <h1 id="builelib-building-energy-modeling-library">Builelib: Building Energy-modeling Library<a class="headerlink" href="#builelib-building-energy-modeling-library" title="Permanent link">&para;</a></h1>
+<p>Builelib (Builelib: Building Energy-modeling Library) は 非住宅建築物のエネルギー消費量を計算するためのプログラムです。</p>
 <ul>
-<li>
-<p>Builelib は 非住宅建築物の年間一次エネルギー消費量を計算するためのプログラムです。</p>
-</li>
-<li>
-<p>建築物省エネ基準に基づくエネルギー消費性能計算プログラム（WEBPRO） の 計算ロジックをベースにしていますが、空調と照明の連成計算など、本プログラムではより高度な計算を実装しており、多少計算結果は異なります。</p>
-</li>
-<li>
-<p>WEBPROの入力シート（xlsmファイル）をアップロードすれば、ZIPファイル（入力ファイルと計算結果）をダウンロードできます。</p>
-</li>
+<li>Builelib: <a href="https://builelib.net/">https://builelib.net/</a></li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>これはノートです。</p>
+<p>計算ロジックは建築物省エネ基準に基づくエネルギー消費性能計算プログラム（WEBPRO）と同じですが、一部、WEBPROにはない機能を追加で実装しています。</p>
+<ul>
+<li>建築物省エネ基準に基づく「建築物のエネルギー消費量計算プログラム（非住宅版）」（WEBPRO）<br />
+<a href="https://building.app.lowenergy.jp/">https://building.app.lowenergy.jp/</a></li>
+</ul>
+<p>WEBPROの入力シート（xlsxファイル）をアップロードすれば、ZIPファイル（入力ファイルと計算結果）をダウンロードできます。</p>
+<p>Builelib用の特殊シート（SPシート）を追加することで、一次エネルギー換算係数の変更や空調と照明の連成計算など、より高度な計算を実施することが出来ます。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul>
+<li>本マニュアルの内容の一部または全部を無断で転載することは禁止とします。</li>
+<li>本プログラムの評価結果を建築物省エネ基準の申請等に使用することはできません（申請のためのPDF等は出力されません）。</li>
+<li>本プログラムを使用したことに伴っていかなる損害、損失等が生じたとしても、これらについて一切の保証責任及び賠償責任を負いません。</li>
+</ul>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>ヒントです。</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>これは警告です</p>
-</div>
-<div class="admonition danger">
-<p class="admonition-title">Danger</p>
-<p>これは危険です。</p>
-</div>
-<div class="admonition success">
-<p class="admonition-title">Success</p>
-<p>これは成功です。</p>
-</div>
-<div class="admonition failure">
-<p class="admonition-title">Failure</p>
-<p>これは失敗です。</p>
-</div>
-<div class="admonition bug">
-<p class="admonition-title">Bug</p>
-<p>これはバグです。</p>
-</div>
-<div class="admonition summary">
-<p class="admonition-title">Summary</p>
-<p>これは概要です。</p>
+<ul>
+<li>Builelibはpythonでコーディングされています。コマンドラインで実行することも可能です。詳細は <a href="https://github.com/MasatoMiyata/builelib">github</a>をご覧下さい。</li>
+</ul>
 </div>
 
 

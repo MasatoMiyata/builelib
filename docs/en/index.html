@@ -20,7 +20,7 @@
     
     
       
-        <title>Welcome to MkDocs - Builelib Manual</title>
+        <title>Builelib: Building Energy-modeling Library - Builelib Manual</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#builelib-building-energy-modeling-library" class="md-skip">
           コンテンツにスキップ
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Welcome to MkDocs
+              Builelib: Building Energy-modeling Library
             
           </span>
         </div>
@@ -398,27 +398,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Examples
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -526,21 +505,32 @@
                   
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs<a class="headerlink" href="#welcome-to-mkdocs" title="Permanent link">&para;</a></h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
+<h1 id="builelib-building-energy-modeling-library">Builelib: Building Energy-modeling Library<a class="headerlink" href="#builelib-building-energy-modeling-library" title="Permanent link">&para;</a></h1>
+<p><strong>Builelib</strong> (Builelib: Building Energy-modeling Library) is a program for calculating the energy consumption of non-residential buildings.</p>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li>Builelib: <a href="https://builelib.net/">https://builelib.net/</a></li>
 </ul>
-<h2 id="project-layout">Project layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
-<pre class="codehilite"><code class="linenums">mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre>
+<p>The calculation logic is based on the energy performance calculation program defined by the Japanese Building Energy Efficiency Standards (WEBPRO), but Builelib also includes several additional features not found in WEBPRO.</p>
+<ul>
+<li>"Building Energy Consumption Calculation Program (Non-residential version)" based on the Japanese Building Energy Efficiency Standards (WEBPRO)<br />
+<a href="https://building.app.lowenergy.jp/">https://building.app.lowenergy.jp/</a></li>
+</ul>
+<p>By uploading the WEBPRO input sheet (xlsx file), you can download a ZIP file containing the input files and calculation results.</p>
+<p>By adding a special sheet for Builelib (SP sheet), more advanced calculations can be performed, such as changing the primary energy conversion factor or conducting coupled calculations between HVAC and lighting systems.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul>
+<li>Unauthorized reproduction of any part or all of this manual is strictly prohibited.</li>
+<li>The evaluation results of this program cannot be used for official applications under the Japanese Building Energy Efficiency Standards (PDFs for application are not generated).</li>
+<li>The authors assume no liability or responsibility for any damages or losses arising from the use of this program.</li>
+</ul>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ul>
+<li>Builelib is coded in Python. It can also be executed from the command line. For details, please refer to the <a href="https://github.com/MasatoMiyata/builelib">GitHub repository</a>.</li>
+</ul>
+</div>
 
 
 
