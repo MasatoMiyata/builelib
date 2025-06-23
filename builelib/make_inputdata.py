@@ -452,12 +452,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 else:
                     data["CalculationMode"]["SP-HW-IM 配管保温仕様入力シート"] = False
 
-            elif sheet_SP_CM.cell_value(i, 0) == "SP-HW-WU":
-                if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
-                    data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] = True
-                else:
-                    data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] = False
-
             elif sheet_SP_CM.cell_value(i, 0) == "SP-EV-CL":
                 if sheet_SP_CM.cell_value(i, 2) != "" and sheet_SP_CM.cell_value(i, 3) == "":
                     data["CalculationMode"]["SP-EV-CL 速度制御方式入力シート"] = True
@@ -488,7 +482,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         data["CalculationMode"]["SP-L-CL 照明制御効果率（時刻別）入力シート"] = True
         data["CalculationMode"]["SP-HW-WS 節湯器具入力シート"] = True
         data["CalculationMode"]["SP-HW-IM 配管保温仕様入力シート"] = True
-        data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] = True
         data["CalculationMode"]["SP-EV-CL 速度制御方式入力シート"] = True
 
         data["CalculationMode"]["空調と照明の連成計算"] = False
@@ -3539,54 +3532,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         except Exception as e:
             validation["error"].append( "様式SP-AC-ST) 日射熱取得率（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
-
-    #----------------------------------
-    # 様式SP-HW-WU 湯使用量（日別）入力シート の読み込み
-    #----------------------------------
-    if data["CalculationMode"]["SP-HW-WU 湯使用量（日別）入力シート"] and "SP-HW-WU) 湯使用量" in wb.sheet_names():
-
-        try:
-
-            data["SpecialInputData"]["hotwater_demand"] = {}
-
-            # シートの読み込み
-            sheet_SP_HW_WU = wb.sheet_by_name("SP-HW-WU) 湯使用量")
-
-            # 入力されたカレンダーパターン名称を検索
-            floor_list = sheet_SP_HW_WU.row_values(7)
-            room_list  = sheet_SP_HW_WU.row_values(8)
-            type_list  = sheet_SP_HW_WU.row_values(9)
-            
-            # 入力されている列について、室名称と列数の対応関係を保存
-            room_column_num = {}
-            for column_num in range(len(room_list)):
-
-                if room_list[column_num] != "室名" and floor_list[column_num] != "" and room_list[column_num] != "" and type_list[column_num] != "":
-                    
-                    # 階と室名をkeyとする
-                    roomKey = str(floor_list[column_num]) + '_' + str(room_list[column_num])
-
-                    if roomKey not in room_column_num:
-                        room_column_num[roomKey] = {}
-                        room_column_num[roomKey][type_list[column_num]] = column_num
-                    else:
-                        room_column_num[roomKey][type_list[column_num]] = column_num
-
-            for roomKey in room_column_num:
-                for load_type in room_column_num[roomKey]:
-
-                    dataSP_HW_WU = []
-                    for i in range(10,365+10):
-                        dataSP_HW_WU.append( sheet_SP_HW_WU.cell_value(i, room_column_num[roomKey][load_type])) 
-
-                    if roomKey in data["SpecialInputData"]["hotwater_demand"]:
-                        data["SpecialInputData"]["hotwater_demand"][roomKey][load_type] = dataSP_HW_WU
-                    else:
-                        data["SpecialInputData"]["hotwater_demand"][roomKey] = {}
-                        data["SpecialInputData"]["hotwater_demand"][roomKey][load_type] = dataSP_HW_WU
-
-        except Exception as e:
-            validation["error"].append( "様式SP-HW-WU) 湯使用量（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
     # バリデーションの実行
     # bc.inputdata_validation(data)
