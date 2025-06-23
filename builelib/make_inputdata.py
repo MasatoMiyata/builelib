@@ -3426,36 +3426,36 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
 
     #----------------------------------
-    # 様式SP-AC-CW 熱源冷却水温度（日別）入力シート の読み込み
+    # 様式 SP-AC-AL 空調負荷（時刻別）入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] and "SP-AC-ST) 熱源送水温度" in wb.sheet_names():
+    if data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] and "SP-AC-AL) 空調負荷" in wb.sheet_names():
 
         try:
 
-            data["SpecialInputData"]["heatsource_chilled_water_temp"] = {}
+            data["SpecialInputData"]["Qahu"] = {}
 
             # シートの読み込み
-            sheet_SP_AC_CW = wb.sheet_by_name("SP-AC-ST) 熱源送水温度")
+            sheet_SP_AC_AL = wb.sheet_by_name("SP-AC-AL) 空調負荷")
 
-            # 入力されたカレンダーパターン名称を検索
-            ref_name_list = sheet_SP_AC_CW.row_values(7)
+            # 入力された空調機群名称を検索
+            ahu_name_list = sheet_SP_AC_AL.row_values(4)
 
             # 入力されている列について、名称と列数の対応関係を保存
-            ref_column_num = {}
-            for column_num in range(len(ref_name_list)):
-                ref_name = ref_name_list[column_num]
-                if ref_name != "" and ref_name != "熱源群名称":
-                    ref_column_num[ref_name] = column_num
+            ahu_column_num = {}
+            for column_num in range(len(ahu_name_list)):
+                ahu_name = ahu_name_list[column_num]
+                if ahu_name != "" and ahu_name != "空調機群名称":
+                    ahu_column_num[ahu_name] = column_num
             
             # データの読み込み
-            for ref_name in ref_column_num:
-                dataSP_AC_CW = []
-                for i in range(10,365+10):
-                    dataSP_AC_CW.append( sheet_SP_AC_CW.cell_value(i, ref_column_num[ref_name]) ) 
-                data["SpecialInputData"]["heatsource_chilled_water_temp"][ref_name] = dataSP_AC_CW
+            for ahu_name in ahu_column_num:
+                dataSP_AC_AL = []
+                for i in range(10,8760+10):
+                    dataSP_AC_AL.append( sheet_SP_AC_AL.cell_value(i, ahu_column_num[ahu_name]) ) 
+                data["SpecialInputData"]["Qahu"][ahu_name] = bc.trans_8760to36524(dataSP_AC_AL)
 
         except Exception as e:
-            validation["error"].append( "様式SP-AC-CW) 熱源冷却水温度: シートの読み込みに失敗しました。"+ str(e) +"。")
+            validation["error"].append( "様式SP-AC-AL) 空調負荷（時刻別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
     #----------------------------------
