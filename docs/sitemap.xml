@@ -1,43 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-         <loc>https://masatomiyata.github.io/builelib/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/InputSheet/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/InputSheet/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/InputSheet/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/InputSheet/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/installation/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/installation/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/installation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/installation/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/license/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/license/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/license/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/license/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/logic/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/logic/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/logic/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/logic/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/en/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/en/InputSheet/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/InputSheet/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/InputSheet/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/en/InputSheet/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/en/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/en/installation/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/en/installation/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/installation/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/installation/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/en/license/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/en/license/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/license/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/license/"/>
     </url>
     <url>
-         <loc>https://masatomiyata.github.io/builelib/en/logic/</loc>
-         <lastmod>2025-06-25</lastmod>
+        <loc>https://masatomiyata.github.io/builelib/en/logic/</loc>
+        <lastmod>2025-06-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://masatomiyata.github.io/builelib/en/logic/"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://masatomiyata.github.io/builelib/logic/"/>
     </url>
 </urlset>

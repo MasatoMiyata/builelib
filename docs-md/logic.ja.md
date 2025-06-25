@@ -73,23 +73,23 @@ $$
 
 ## 第2章 空気調和設備の評価
 
-[第2章へのリンク](./Reference/EngineeringReference_chapter02-en.html).
+[第2章へのリンク](./Reference/EngineeringReference_chapter02.html).
 
 ## 第3章 機械換気設備の評価 
 
-[第3章へのリンク](./Reference/EngineeringReference_chapter03-en.html).
+[第3章へのリンク](./Reference/EngineeringReference_chapter03.html).
 
 ## 第4章 照明設備の評価
 
-[第4章へのリンク](./Reference/EngineeringReference_chapter04-en.html).
+[第4章へのリンク](./Reference/EngineeringReference_chapter04.html).
 
 ## 第5章 給湯設備の評価 
 
-[第5章へのリンク](./Reference/EngineeringReference_chapter05-en.html).
+[第5章へのリンク](./Reference/EngineeringReference_chapter05.html).
 
 ## 第6章 昇降機の評価 
 
-[第6章へのリンク](./Reference/EngineeringReference_chapter06-en.html).
+[第6章へのリンク](./Reference/EngineeringReference_chapter06.html).
 
 ## 第7章 太陽光発電設備の評価方法
 

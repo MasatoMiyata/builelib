@@ -5,38 +5,25 @@ site_dir: docs
 docs_dir: docs-md
 
 nav:
-  - Builelib:
-      - Overview: index.md
+  - Welcome:
+      index.md
   - How to use:
-      - How to run: installation.md
-      - InputSheet: InputSheet.md
+      installation.md
+  - InputSheet: 
+      InputSheet.md
   - Reference:
-      - Calculation Logic: logic.md
+      logic.md
   - License: license.md
 
 theme:
   name: material
   language: ja
   icon:
-    logo: material/library 
+    logo: material/library
     repo: fontawesome/brands/git-alt
-  palette:
-    - schema: default
-      primary: indigo
-      accent: red
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: indigo
-      accent: red
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
   features:
-    - toc.integrate     # 目次を右側ではなく、ページ内に表示
+    - toc.integrate       # 目次を右側ではなく、ページ内に表示
     - navigation.expand   # サイドバーのナビゲーションを展開
-    - navigation.instant  # ページ遷移を高速化
     - navigation.top
   font:
     text: Roboto       # 本文用フォント
@@ -47,13 +34,6 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/MasatoMiyata/builelib
   generator: false
-  alternate:
-    - name: English
-      link: ./en/index.html
-      lang: en
-    - name: 日本語
-      link: ./index.html
-      lang: jp
 
 extra_css:
   - assets/custom.css
@@ -66,11 +46,22 @@ extra_javascript:
   - js/lang-switch.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
+plugins:
+  - i18n:
+      languages:
+        - locale: ja
+          name: Japanese
+          build: true
+          default: true
+        - locale: en
+          name: English
+          build: true
+
 # マークダウンの拡張機能
 markdown_extensions:
   - toc:
       permalink: true
-      toc_depth: 3
+      toc_depth: 4
   - admonition:
   - codehilite:
       linenums: true
@@ -80,6 +71,6 @@ markdown_extensions:
   - tables:
   - attr_list:
   - md_in_html:
-      
+
 # Copyright
 copyright: 'Copyright© 2019-2025 : Masato Miyata'
