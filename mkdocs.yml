@@ -8,7 +8,7 @@ nav:
   - Builelib:
       - Overview: index.md
   - How to use:
-      - Installation: installation.md
+      - How to run: installation.md
       - InputSheet: InputSheet.md
   - Reference:
       - Calculation Logic: logic.md

@@ -24,7 +24,7 @@
     
     
       
-        <title>Installation - Builelib Manual</title>
+        <title>How to run - Builelib Manual</title>
       
     
     
@@ -81,11 +81,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#how-to-install" class="md-skip">
-          コンテンツにスキップ
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -118,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              How to run
             
           </span>
         </div>
@@ -374,70 +369,15 @@
       
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Installation
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    Installation
+    How to run
   </span>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="目次">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目次
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-install" class="md-nav__link">
-    <span class="md-ellipsis">
-      How to install?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-run" class="md-nav__link">
-    <span class="md-ellipsis">
-      How to run?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-uninstall" class="md-nav__link">
-    <span class="md-ellipsis">
-      How to uninstall?
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -572,22 +512,24 @@
                   
 
 
-  <h1>Installation</h1>
+  <h1>How to run</h1>
 
 <p>Builelibはpythonでコーディングされています。コマンドラインで実行することも可能です。</p>
-<h3 id="how-to-install">How to install?<a class="headerlink" href="#how-to-install" title="Permanent link">&para;</a></h3>
-<p>次のコマンドでインストールすることができます。python 3.12 以上が推奨です。</p>
-<pre><code>python3 -m pip install builelib
-</code></pre>
-<p>最新のコードをgithubからインストールする場合は以下のコマンドをご利用ください。</p>
+<p><BR>
+次のコマンドでインストールすることができます。python 3.12 以上が推奨です。</p>
 <pre><code>python3 -m pip install &quot;git+https://github.com/MasatoMiyata/builelib.git#egg=builelib&quot;
 </code></pre>
-<h3 id="how-to-run">How to run?<a class="headerlink" href="#how-to-run" title="Permanent link">&para;</a></h3>
-<p>builelib_run.py をご覧下さい。</p>
-<p>コマンドラインから実行する場合は、builelib_cmd.py をご利用ください。</p>
-<h3 id="how-to-uninstall">How to uninstall?<a class="headerlink" href="#how-to-uninstall" title="Permanent link">&para;</a></h3>
-<p>次のコマンドでアンインストールできます。</p>
-<pre><code>python3 -m pip uninstall builelib
+<p><BR>
+pythonスクリプト上で次のように記せば、計算を実行できます。</p>
+<pre><code># ファイル名の指定
+file_name = &quot;./sample/Builelib_inputSheet_sample_001.xlsx&quot;
+
+# 計算の実行
+builelib_run(True, file_name)
+</code></pre>
+<p><BR>
+コマンドラインから実行する場合は、builelib_cmd.py をご利用ください。</p>
+<pre><code>python -m builelib_cmd True ./sample/Builelib_inputSheet_sample_001.xlsm
 </code></pre>
 
 
