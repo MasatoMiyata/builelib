@@ -40,26 +40,6 @@ def count_Matrix(x, mxL):
     return ix+1
 
 
-def air_enthalpy(Tdb, X):
-    """
-    空気のエンタルピーを算出する関数
-    (WEBPROに合わせる)
-    """
-    
-    Ca = 1.006  # 乾き空気の定圧比熱 [kJ/kg･K]
-    Cw = 1.805  # 水蒸気の定圧比熱 [kJ/kg･K]
-    Lw = 2502   # 水の蒸発潜熱 [kJ/kg]
-
-    if len(Tdb) != len(X):
-        raise Exception('温度と湿度のリストの長さが異なります。')
-    else:
-        
-        H = np.zeros(len(Tdb))
-        for i in range(0, len(Tdb)):
-            H[i] = (Ca*Tdb[i] + (Cw*Tdb[i]+Lw)*X[i])
-
-    return H   
-
 def calc_energy(inputdata, debug = False, output_dir = ""):
 
     # 一次エネルギー換算係数
@@ -285,9 +265,9 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ## 外気エンタルピー（解説書 2.2.4）
     ##--------------- -------------------------------------------------------------------
 
-    Hoa_ave = air_enthalpy(Toa_ave, Xoa_ave)
-    Hoa_day = air_enthalpy(Toa_day, Xoa_day)
-    Hoa_ngt = air_enthalpy(Toa_ngt, Xoa_ngt)
+    Hoa_ave = bc.air_enthalpy(Toa_ave, Xoa_ave)
+    Hoa_day = bc.air_enthalpy(Toa_day, Xoa_day)
+    Hoa_ngt = bc.air_enthalpy(Toa_ngt, Xoa_ngt)
 
 
     ##----------------------------------------------------------------------------------
