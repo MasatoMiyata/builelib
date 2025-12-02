@@ -5,6 +5,7 @@ import numpy as np
 import os
 import math
 import pandas as pd
+import copy
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -17,8 +18,30 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
+# 室使用条件データの読み込み
+with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
+    _RoomUsageSchedule = json.load(f)
+
+# カレンダーパターンの読み込み
+with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
+    _Calendar = json.load(f)
+
 
 def calc_energy(inputdata, DEBUG = False, output_dir = ""):
+
+    ## 標準室使用条件の読み込み＋更新
+    RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
+    if "room_usage_condition" in inputdata["SpecialInputData"]:
+        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
+            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
+                RoomUsageSchedule[buildling_type][room_type] = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]
+
+    ## カレンダーパターンの読み込み＋更新
+    Calendar = copy.deepcopy(_Calendar)
+    if "calender" in inputdata["SpecialInputData"]:
+        for pattern_name in inputdata["SpecialInputData"]["calender"]:
+            # データベースに追加
+            Calendar[pattern_name] = inputdata["SpecialInputData"]["calender"][pattern_name]
 
     # 一次エネルギー換算係数
     fprime = 9760
@@ -119,15 +142,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     for room_name in inputdata["HotwaterRoom"]:
 
         # 日積算湯使用利用 [L/m2/day]
-        if "SpecialInputData" in inputdata:
-            hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
-                bc.get_roomHotwaterDemand(
-                    inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], inputdata["SpecialInputData"])
-        else:
-            hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
-                bc.get_roomHotwaterDemand(
-                    inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
-
+        hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
+            bc.get_roomHotwaterDemand(
+                inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], RoomUsageSchedule)
 
         # 日積算給湯量参照値 [L/day]
         inputdata["HotwaterRoom"][room_name]["hotwater_demand"] = hotwater_demand * inputdata["Rooms"][room_name]["roomArea"]
@@ -137,12 +154,8 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         inputdata["HotwaterRoom"][room_name]["hotwater_demand_other"]    = hotwater_demand_other * inputdata["Rooms"][room_name]["roomArea"]
 
         # 各室の室使用スケジュール （＝室の同時使用率。 給湯需要がある室は、必ず空調されている前提とする）
-        if "SpecialInputData" in inputdata:
-            roomScheduleRoom, _, _, _, _ = \
-                bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], inputdata["SpecialInputData"])
-        else:
-            roomScheduleRoom, _, _, _, _ = \
-                bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+        roomScheduleRoom, _, _, _, _ = \
+            bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], Calendar, RoomUsageSchedule)
 
 
         inputdata["HotwaterRoom"][room_name]["hotwaterSchedule"] = np.zeros(365)

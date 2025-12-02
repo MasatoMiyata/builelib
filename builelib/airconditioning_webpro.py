@@ -18,6 +18,15 @@ database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
 
+# 室使用条件データの読み込み
+with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
+    _RoomUsageSchedule = json.load(f)
+
+# カレンダーパターンの読み込み
+with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
+    _Calendar = json.load(f)
+
+
 def count_Matrix(x, mxL):
     """
     負荷率 X がマトリックス mxL の何番目（ix）のセルに入るかをカウント
@@ -41,6 +50,21 @@ def count_Matrix(x, mxL):
 
 
 def calc_energy(inputdata, debug = False, output_dir = ""):
+
+    ## 標準室使用条件の読み込み＋更新
+    RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
+    if "room_usage_condition" in inputdata["SpecialInputData"]:
+        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
+            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
+                RoomUsageSchedule[buildling_type][room_type] = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]
+
+    ## カレンダーパターンの読み込み＋更新
+    Calendar = copy.deepcopy(_Calendar)
+    if "calender" in inputdata["SpecialInputData"]:
+        for pattern_name in inputdata["SpecialInputData"]["calender"]:
+            # データベースに追加
+            Calendar[pattern_name] = inputdata["SpecialInputData"]["calender"][pattern_name]
+
 
     # 一次エネルギー換算係数
     fprime = 9760
@@ -344,12 +368,9 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                             break
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
-        if "SpecialInputData" in inputdata:
-            roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name], roomDayMode[room_zone_name] = \
-                bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], inputdata["SpecialInputData"])
-        else:
-            roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name], roomDayMode[room_zone_name] = \
-                bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"])            
+        roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name], roomDayMode[room_zone_name] = \
+            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], Calendar, RoomUsageSchedule)
+        
 
         # 空調対象面積の合計
         roomAreaTotal += inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
@@ -971,7 +992,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
         # 発熱量参照値 [W/m2] を読み込む関数（空調）
         (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
-                bc.get_roomHeatGain(btype, rtype, inputdata["SpecialInputData"])
+                bc.get_roomHeatGain(btype, rtype, RoomUsageSchedule)
         
         # 様式4から照明発熱量を読み込む
         if COUPLING_LIGHTING:
@@ -1149,7 +1170,6 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
         # 負荷計算モジュールの読み込み
         from .heat_load_calculation import Main
-        import copy
 
         # ファイルの読み込み
         with open('./builelib/heat_load_calculation/heatload_calculation_template.json', 'r', encoding='utf-8') as js:
@@ -1984,7 +2004,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             bc.get_roomOutdoorAirVolume( 
                 inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
                 inputdata["AirConditioningZone"][room_zone_name]["roomType"], 
-                inputdata["SpecialInputData"]
+                RoomUsageSchedule
             ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
         # 冷房期間における外気風量 [m3/h]

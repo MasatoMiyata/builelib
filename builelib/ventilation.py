@@ -3,6 +3,7 @@ import numpy as np
 import os
 import math
 import pandas as pd
+import copy
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -13,6 +14,14 @@ import commons as bc
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # 気象データファイルの保存場所
 climatedata_directory =  os.path.dirname(os.path.abspath(__file__)) + "/climatedata/"
+
+# 室使用条件データの読み込み
+with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
+    _RoomUsageSchedule = json.load(f)
+
+# カレンダーパターンの読み込み
+with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
+    _Calendar = json.load(f)
 
 
 ## 中間期平均外気温（附属書B.1）
@@ -40,6 +49,21 @@ def set_OutdoorTemperature(region):
 
 
 def calc_energy(inputdata, DEBUG = False, output_dir = ""):
+
+    ## 標準室使用条件の読み込み＋更新
+    RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
+    if "room_usage_condition" in inputdata["SpecialInputData"]:
+        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
+            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
+                RoomUsageSchedule[buildling_type][room_type] = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]
+
+    ## カレンダーパターンの読み込み＋更新
+    Calendar = copy.deepcopy(_Calendar)
+    if "calender" in inputdata["SpecialInputData"]:
+        for pattern_name in inputdata["SpecialInputData"]["calender"]:
+            # データベースに追加
+            Calendar[pattern_name] = inputdata["SpecialInputData"]["calender"][pattern_name]
+
 
     # 一次エネルギー換算係数
     fprime = 9760
@@ -85,12 +109,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         ##----------------------------------------------------------------------------------
         ## 年間換気運転時間 （解説書 B.2）
         ##----------------------------------------------------------------------------------
-
-        if "SpecialInputData" in inputdata:
-            inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_operation_schedule_ventilation(buildingType, roomType, inputdata["SpecialInputData"])
-        else:
-            inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_operation_schedule_ventilation(buildingType, roomType)
-
+        inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_operation_schedule_ventilation(buildingType, roomType, Calendar, RoomUsageSchedule)
 
         # 年間換気運転時間
         inputdata["VentilationRoom"][roomID]["opeTime"] = np.sum(np.sum(inputdata["VentilationRoom"][roomID]["opeTime_hourly"]))

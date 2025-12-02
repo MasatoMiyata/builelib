@@ -2,6 +2,7 @@ import json
 import numpy as np
 import os
 import pandas as pd
+import copy
 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -11,9 +12,32 @@ import commons as bc
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 
+# 室使用条件データの読み込み
+with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
+    _RoomUsageSchedule = json.load(f)
+
+# カレンダーパターンの読み込み
+with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
+    _Calendar = json.load(f)
+
 
 def calc_energy(inputdata, DEBUG = False, output_dir = ""):
-    
+
+    ## 標準室使用条件の読み込み＋更新
+    RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
+    if "room_usage_condition" in inputdata["SpecialInputData"]:
+        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
+            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
+                RoomUsageSchedule[buildling_type][room_type] = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]
+
+    ## カレンダーパターンの読み込み＋更新
+    Calendar = copy.deepcopy(_Calendar)
+    if "calender" in inputdata["SpecialInputData"]:
+        for pattern_name in inputdata["SpecialInputData"]["calender"]:
+            # データベースに追加
+            Calendar[pattern_name] = inputdata["SpecialInputData"]["calender"][pattern_name]
+
+
     # 一次エネルギー換算係数
     fprime = 9760
     if "CalculationMode" in inputdata:
@@ -66,20 +90,12 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         else:
 
             # 標準室使用条件から時刻別の発熱密度比率（0～1。365×24の行列）を作成。
-            if "SpecialInputData" in inputdata:
-                roomScheduleRoom[room_name], roomScheduleLight[room_name], roomSchedulePerson[room_name], roomScheduleOAapp[room_name], _ = \
-                    bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], inputdata["SpecialInputData"])
-            else:
-                roomScheduleRoom[room_name], roomScheduleLight[room_name], roomSchedulePerson[room_name], roomScheduleOAapp[room_name], _ = \
-                    bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+            roomScheduleRoom[room_name], roomScheduleLight[room_name], roomSchedulePerson[room_name], roomScheduleOAapp[room_name], _ = \
+                bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], Calendar, RoomUsageSchedule)
 
             # 機器発熱量参照値 [W/m2]の読み込み。SP-9に入力がある場合、任意の値を使用。
-            if "SpecialInputData" in inputdata:
-                (_, _, roomHeatGain_OAapp[room_name],_) = \
-                    bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], inputdata["SpecialInputData"])
-            else:
-                (_, _, roomHeatGain_OAapp[room_name],_) = \
-                    bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"])
+            (_, _, roomHeatGain_OAapp[room_name],_) = \
+                bc.get_roomHeatGain(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], RoomUsageSchedule)
 
 
         if roomHeatGain_OAapp[room_name] != None:
