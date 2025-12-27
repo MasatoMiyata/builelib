@@ -2079,26 +2079,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                                     resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd] = iL                  
                                     # 室負荷が負（暖房要求）であるときの空調運転時間(冷却コイル負荷発生時も 負荷率=0として送風機は動く想定)
                                     resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd] = resultJson["AHU"][ahu_name]["Tahu"]["heating_for_room"][dd]      
-        
-    if debug: # pragma: no cover
 
-        for ahu_name in inputdata["AirHandlingSystem"]:
-
-            # マトリックスの再現
-            matlix_AHUc_L = np.zeros(11)
-            matlix_AHUh_L = np.zeros(11)
-            for dd in range(0,365):
-                matlix_AHUc_L[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
-                matlix_AHUc_L[ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
-                matlix_AHUh_L[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
-                matlix_AHUh_L[ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
-
-            print("matlix_AHUc_L")
-            print(matlix_AHUc_L)
-            print(np.sum(matlix_AHUc_L))
-            print("LAHUh")
-            print(matlix_AHUh_L)
-            print(np.sum(matlix_AHUh_L))
 
     ##----------------------------------------------------------------------------------
     ## 風量制御方式によって定まる係数（解説書 2.5.7）
@@ -2161,14 +2142,6 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                         a1 * (aveL[iL])**1 + \
                         a0    
 
-    if debug: # pragma: no cover
-
-        for ahu_name in inputdata["AirHandlingSystem"]:
-            print( f'--- 空調機群名 {ahu_name} ---')
-            for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-                print( f'--- {unit_id+1} 台目の送風機 ---')
-                print(f'負荷率帯毎のエネルギー消費量 energy_consumption_ratio {inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"]}')
-
 
     ##----------------------------------------------------------------------------------
     ## 送風機単体の定格消費電力（解説書 2.5.8）
@@ -2213,9 +2186,6 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                 resultJson["AHU"][ahu_name]["energy_consumption_each_LF"][iL] += \
                     unit_configure["energy_consumption_ratio"][iL] * unit_configure["FanPowerConsumption_total"]
 
-            if debug: # pragma: no cover
-                print( f'--- 空調機群名 {ahu_name} ---')
-                print( f'負荷率帯別の送風機消費電力: \n {resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]}')
 
     ##----------------------------------------------------------------------------------
     ## 全熱交換器の消費電力 （解説書 2.5.11）
@@ -2241,6 +2211,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
 
     for ahu_name in inputdata["AirHandlingSystem"]:
+
         for dd in range(0,365):
 
             ##-----------------------------------
@@ -2401,6 +2372,31 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             resultJson["AHU"][ahu_name]["電力消費量（送風機、冷房）[MWh]"] \
             + resultJson["AHU"][ahu_name]["電力消費量（送風機、暖房）[MWh]"]  \
             + resultJson["AHU"][ahu_name]["電力消費量（全熱交換器）[MWh]"]
+
+    
+    ## マトリックス作成（空調機群、結果表示用）
+
+    for ahu_name in inputdata["AirHandlingSystem"]:
+
+        # 負荷率帯ごとの出現時間
+        resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"] = np.zeros(len(aveL))
+        resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"] = np.zeros(len(aveL))
+
+        for dd in range(0,365):
+            resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"][ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
+            resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"][ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
+            resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"][ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
+            resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"][ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
+
+        # 負荷率帯ごとの消費電力
+        resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"] = resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]
+
+        # 負荷率帯ごとの電力消費量
+        resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（冷房）"] = np.zeros(len(aveL))
+        resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（暖房）"] = np.zeros(len(aveL))
+        for iL in range(len(aveL)):
+            resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（冷房）"][ iL ] = resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"][iL] * resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"][iL]/1000
+            resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（暖房）"][ iL ] = resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"][iL] * resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"][iL]/1000
 
 
     if debug: # pragma: no cover
