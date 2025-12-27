@@ -2395,8 +2395,8 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
         resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（冷房）"] = np.zeros(len(aveL))
         resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（暖房）"] = np.zeros(len(aveL))
         for iL in range(len(aveL)):
-            resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（冷房）"][ iL ] = resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"][iL] * resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"][iL]/1000
-            resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（暖房）"][ iL ] = resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"][iL] * resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"][iL]/1000
+            resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（冷房）"][iL] = resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"][iL] * resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"][iL]/1000
+            resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（暖房）"][iL] = resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"][iL] * resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"][iL]/1000
 
 
     if debug: # pragma: no cover
@@ -3010,6 +3010,27 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
             resultJson["PUMP"][pump_name]["台数制御の有無"] = inputdata["PUMP"][pump_name]["isStagingControl"]
             resultJson["PUMP"][pump_name]["電力消費量[MWh]"] = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
+
+
+    ## マトリックス作成（二次ポンプ群、結果表示用）
+
+    for pump_name in inputdata["PUMP"]:
+
+        # 負荷率帯ごとの出現時間
+        resultJson["PUMP"][pump_name]["負荷帯ごとの出現時間"] = np.zeros(len(aveL))
+        for dd in range(0,365):
+            resultJson["PUMP"][pump_name]["負荷帯ごとの出現時間"][ int(resultJson["PUMP"][pump_name]["LdPUMP"][dd]-1) ] += resultJson["PUMP"][pump_name]["TdPUMP"][dd]
+
+        # 負荷率帯ごとの出現時間
+        resultJson["PUMP"][pump_name]["負荷帯ごとの運転台数"] = resultJson["PUMP"][pump_name]["MxPUMPNum"]
+        resultJson["PUMP"][pump_name]["負荷帯ごとの消費電力"] = resultJson["PUMP"][pump_name]["MxPUMPPower"]
+
+
+        # 負荷率帯ごとの電力消費量
+        resultJson["PUMP"][pump_name]["負荷帯ごとの電力消費量"] = np.zeros(len(aveL))
+        for iL in range(len(aveL)):
+            resultJson["PUMP"][pump_name]["負荷帯ごとの電力消費量"][iL] = \
+                resultJson["PUMP"][pump_name]["負荷帯ごとの出現時間"][iL] * resultJson["PUMP"][pump_name]["負荷帯ごとの消費電力"][iL]/1000
 
 
     ##----------------------------------------------------------------------------------
