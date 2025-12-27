@@ -138,7 +138,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
     k_heatup = 0.84       # ファン・ポンプの発熱比率
     Cw = 4.186            # 水の比熱 [kJ/kg・K]
-    divL = 11             # 負荷帯マトリックス分割数 （10区分＋過負荷1区分）
+    divL = 11             # 負荷率帯マトリックス分割数 （10区分＋過負荷1区分）
     divT =  6             # 外気温度帯マトリックス分割数
 
 
@@ -2379,24 +2379,24 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     for ahu_name in inputdata["AirHandlingSystem"]:
 
         # 負荷率帯ごとの出現時間
-        resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"] = np.zeros(len(aveL))
-        resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"] = np.zeros(len(aveL))
+        resultJson["AHU"][ahu_name]["負荷率帯ごとの出現時間（冷房）"] = np.zeros(len(aveL))
+        resultJson["AHU"][ahu_name]["負荷率帯ごとの出現時間（暖房）"] = np.zeros(len(aveL))
 
         for dd in range(0,365):
-            resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"][ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
-            resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"][ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
-            resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"][ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
-            resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"][ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
+            resultJson["AHU"][ahu_name]["負荷率帯ごとの出現時間（冷房）"][ int(resultJson["AHU"][ahu_name]["LdAHUc"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["cooling_for_room"][dd]
+            resultJson["AHU"][ahu_name]["負荷率帯ごとの出現時間（冷房）"][ int(resultJson["AHU"][ahu_name]["LdAHUc"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUc"]["heating_for_room"][dd]
+            resultJson["AHU"][ahu_name]["負荷率帯ごとの出現時間（暖房）"][ int(resultJson["AHU"][ahu_name]["LdAHUh"]["cooling_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["cooling_for_room"][dd]
+            resultJson["AHU"][ahu_name]["負荷率帯ごとの出現時間（暖房）"][ int(resultJson["AHU"][ahu_name]["LdAHUh"]["heating_for_room"][dd]-1) ] += resultJson["AHU"][ahu_name]["TdAHUh"]["heating_for_room"][dd]
 
         # 負荷率帯ごとの消費電力
-        resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"] = resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]
+        resultJson["AHU"][ahu_name]["負荷率帯ごとの消費電力"] = resultJson["AHU"][ahu_name]["energy_consumption_each_LF"]
 
         # 負荷率帯ごとの電力消費量
-        resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（冷房）"] = np.zeros(len(aveL))
-        resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（暖房）"] = np.zeros(len(aveL))
+        resultJson["AHU"][ahu_name]["負荷率帯ごとの電力消費量（冷房）"] = np.zeros(len(aveL))
+        resultJson["AHU"][ahu_name]["負荷率帯ごとの電力消費量（暖房）"] = np.zeros(len(aveL))
         for iL in range(len(aveL)):
-            resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（冷房）"][iL] = resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（冷房）"][iL] * resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"][iL]/1000
-            resultJson["AHU"][ahu_name]["負荷帯ごとの電力消費量（暖房）"][iL] = resultJson["AHU"][ahu_name]["負荷帯ごとの出現時間（暖房）"][iL] * resultJson["AHU"][ahu_name]["負荷帯ごとの消費電力"][iL]/1000
+            resultJson["AHU"][ahu_name]["負荷率帯ごとの電力消費量（冷房）"][iL] = resultJson["AHU"][ahu_name]["負荷率帯ごとの出現時間（冷房）"][iL] * resultJson["AHU"][ahu_name]["負荷率帯ごとの消費電力"][iL]/1000
+            resultJson["AHU"][ahu_name]["負荷率帯ごとの電力消費量（暖房）"][iL] = resultJson["AHU"][ahu_name]["負荷率帯ごとの出現時間（暖房）"][iL] * resultJson["AHU"][ahu_name]["負荷率帯ごとの消費電力"][iL]/1000
 
 
     if debug: # pragma: no cover
@@ -3017,20 +3017,20 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     for pump_name in inputdata["PUMP"]:
 
         # 負荷率帯ごとの出現時間
-        resultJson["PUMP"][pump_name]["負荷帯ごとの出現時間"] = np.zeros(len(aveL))
+        resultJson["PUMP"][pump_name]["負荷率帯ごとの出現時間"] = np.zeros(len(aveL))
         for dd in range(0,365):
-            resultJson["PUMP"][pump_name]["負荷帯ごとの出現時間"][ int(resultJson["PUMP"][pump_name]["LdPUMP"][dd]-1) ] += resultJson["PUMP"][pump_name]["TdPUMP"][dd]
+            resultJson["PUMP"][pump_name]["負荷率帯ごとの出現時間"][ int(resultJson["PUMP"][pump_name]["LdPUMP"][dd]-1) ] += resultJson["PUMP"][pump_name]["TdPUMP"][dd]
 
         # 負荷率帯ごとの出現時間
-        resultJson["PUMP"][pump_name]["負荷帯ごとの運転台数"] = resultJson["PUMP"][pump_name]["MxPUMPNum"]
-        resultJson["PUMP"][pump_name]["負荷帯ごとの消費電力"] = resultJson["PUMP"][pump_name]["MxPUMPPower"]
+        resultJson["PUMP"][pump_name]["負荷率帯ごとの運転台数"] = resultJson["PUMP"][pump_name]["MxPUMPNum"]
+        resultJson["PUMP"][pump_name]["負荷率帯ごとの消費電力"] = resultJson["PUMP"][pump_name]["MxPUMPPower"]
 
 
         # 負荷率帯ごとの電力消費量
-        resultJson["PUMP"][pump_name]["負荷帯ごとの電力消費量"] = np.zeros(len(aveL))
+        resultJson["PUMP"][pump_name]["負荷率帯ごとの電力消費量"] = np.zeros(len(aveL))
         for iL in range(len(aveL)):
-            resultJson["PUMP"][pump_name]["負荷帯ごとの電力消費量"][iL] = \
-                resultJson["PUMP"][pump_name]["負荷帯ごとの出現時間"][iL] * resultJson["PUMP"][pump_name]["負荷帯ごとの消費電力"][iL]/1000
+            resultJson["PUMP"][pump_name]["負荷率帯ごとの電力消費量"][iL] = \
+                resultJson["PUMP"][pump_name]["負荷率帯ごとの出現時間"][iL] * resultJson["PUMP"][pump_name]["負荷率帯ごとの消費電力"][iL]/1000
 
 
     ##----------------------------------------------------------------------------------
@@ -3472,7 +3472,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             # 負荷率の算出 [-]
             if resultJson["REF"][ref_name]["Tref"][dd] > 0:
 
-                # 熱源定格負荷率（定格能力に対する比率
+                # 熱源定格負荷率（定格能力に対する比率）
                 resultJson["REF"][ref_name]["Lref"][dd] = \
                     (resultJson["REF"][ref_name]["Qref"][dd] / resultJson["REF"][ref_name]["Tref"][dd] *1000/3600) / \
                     inputdata["REF"][ref_name]["Qref_rated"]
@@ -3518,7 +3518,6 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                     resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd] - 1   # 外気温帯を1つ下げる。
                 elif resultJson["REF"][ref_name]["matrix_iT"][dd] == 1:
                     resultJson["REF"][ref_name]["matrix_iT"][dd] = resultJson["REF"][ref_name]["matrix_iT"][dd]
-
 
 
     ##----------------------------------------------------------------------------------
@@ -3888,7 +3887,6 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ## 熱源機器の運転台数（解説書 2.7.9）
     ##----------------------------------------------------------------------------------
 
-    # 運転台数マトリックス
     for ref_name in inputdata["REF"]:
 
         resultJson["REF"][ref_name]["num_of_operation"] = np.zeros(365) 
@@ -4465,6 +4463,81 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
                 / resultJson["REF"][ref_name]["年積算エネルギー消費量[GJ]"]
         else:
             resultJson["REF"][ref_name]["年間運転効率[-]"] = 0
+
+
+    ## マトリックス作成（熱源群、結果表示用）
+
+    for ref_name in inputdata["REF"]:
+
+        # 出現時間マトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの出現時間"] = np.zeros([len(ToadbC), len(aveL)])
+        for dd in range(0,365):
+            resultJson["REF"][ref_name]["負荷率帯ごとの出現時間"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]-1) ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                += resultJson["REF"][ref_name]["Tref"][dd]
+        
+        # 熱源台数マトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの運転台数"] = np.zeros([len(ToadbC), len(aveL)])
+        tmp = np.zeros([len(ToadbC), len(aveL)])
+        for dd in range(0,365):
+            if resultJson["REF"][ref_name]["num_of_operation"][dd] > 0:
+                tmp[ int(resultJson["REF"][ref_name]["matrix_iT"][dd]-1) ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] += 1
+                resultJson["REF"][ref_name]["負荷率帯ごとの運転台数"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]-1) ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                    += resultJson["REF"][ref_name]["num_of_operation"][dd]
+        resultJson["REF"][ref_name]["負荷率帯ごとの運転台数"] = np.divide( resultJson["REF"][ref_name]["負荷率帯ごとの運転台数"], tmp, out=np.zeros_like( resultJson["REF"][ref_name]["負荷率帯ごとの運転台数"] ), where=tmp!=0 )
+
+        # 負荷率マトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの負荷率"] = np.zeros([len(ToadbC), len(aveL)])
+        tmp = np.zeros([len(ToadbC), len(aveL)])
+        for dd in range(0,365):
+            if resultJson["REF"][ref_name]["load_ratio"][dd] > 0:
+                tmp[ int(resultJson["REF"][ref_name]["matrix_iT"][dd]-1) ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] += 1
+                resultJson["REF"][ref_name]["負荷率帯ごとの負荷率"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]-1) ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                    += resultJson["REF"][ref_name]["load_ratio"][dd]
+        resultJson["REF"][ref_name]["負荷率帯ごとの負荷率"] = np.divide( resultJson["REF"][ref_name]["負荷率帯ごとの負荷率"], tmp, out=np.zeros_like( resultJson["REF"][ref_name]["負荷率帯ごとの負荷率"] ), where=tmp!=0 )
+
+        # 熱源一次エネルギーマトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの消費エネルギー"] = np.zeros([len(ToadbC), len(aveL)])
+        tmp = np.zeros([len(ToadbC), len(aveL)])
+        for dd in range(0,365):
+            if resultJson["REF"][ref_name]["load_ratio"][dd] > 0:
+                tmp[ int(resultJson["REF"][ref_name]["matrix_iT"][dd]-1) ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] += 1
+
+                for unit_id in range(0,len(inputdata["REF"][ref_name]["Heatsource"])):
+                    resultJson["REF"][ref_name]["負荷率帯ごとの消費エネルギー"][ int(resultJson["REF"][ref_name]["matrix_iT"][dd]-1) ][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                        += resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd]
+        resultJson["REF"][ref_name]["負荷率帯ごとの消費エネルギー"] = \
+            np.divide( resultJson["REF"][ref_name]["負荷率帯ごとの消費エネルギー"], tmp, out=np.zeros_like( resultJson["REF"][ref_name]["負荷率帯ごとの消費エネルギー"] ), where=tmp!=0 )
+
+        # 熱源主機エネルギー消費量マトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの熱源主機一次エネルギー消費量"] = np.zeros(len(aveL))
+        for dd in range(0,365):
+            resultJson["REF"][ref_name]["負荷率帯ごとの熱源主機一次エネルギー消費量"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                += resultJson["REF"][ref_name]["E_ref_day"][dd]
+
+        # 熱源補機エネルギー消費量マトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの熱源補機一次エネルギー消費量"] = np.zeros(len(aveL))
+        for dd in range(0,365):
+            resultJson["REF"][ref_name]["負荷率帯ごとの熱源補機一次エネルギー消費量"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                += resultJson["REF"][ref_name]["E_ref_ACc_day"][dd]
+
+        # 一次ポンプエネルギー消費量マトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの一次ポンプ一次エネルギー消費量"] = np.zeros(len(aveL))
+        for dd in range(0,365):
+            resultJson["REF"][ref_name]["負荷率帯ごとの一次ポンプ一次エネルギー消費量"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                += resultJson["REF"][ref_name]["E_PPc_day"][dd]
+
+        # 冷却塔ファンエネルギー消費量マトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの冷却塔ファン一次エネルギー消費量"] = np.zeros(len(aveL))
+        for dd in range(0,365):
+            resultJson["REF"][ref_name]["負荷率帯ごとの冷却塔ファン一次エネルギー消費量"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                += resultJson["REF"][ref_name]["E_CTfan_day"][dd]
+
+        # 冷却水ポンプエネルギー消費量マトリックス
+        resultJson["REF"][ref_name]["負荷率帯ごとの冷却水ポンプ一次エネルギー消費量"] = np.zeros(len(aveL))
+        for dd in range(0,365):
+            resultJson["REF"][ref_name]["負荷率帯ごとの冷却水ポンプ一次エネルギー消費量"][ int(resultJson["REF"][ref_name]["matrix_iL"][dd]-1) ] \
+                += resultJson["REF"][ref_name]["E_CTpump_day"][dd]
+
 
 
     ##----------------------------------------------------------------------------------
