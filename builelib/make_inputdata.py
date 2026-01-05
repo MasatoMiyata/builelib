@@ -498,33 +498,43 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # シートの読み込み
             sheet_SP_CD = wb.sheet_by_name("SP-CD) 気象")
 
-            # 行のループ
-            Tout_8760 = []
-            Xout_8760 = []
-            Iod_8760  = []
-            Ios_8760  = []
-            Inn_8760  = []
+            # 緯度・経度の入力がある場合
+            if sheet_SP_CD.ncols > 8 and sheet_SP_CD.row_values(2)[8] == "CD-9":
 
-            for i in range(10,sheet_SP_CD.nrows):
+                rows = [sheet_SP_CD.row_values(i) for i in range(10, sheet_SP_CD.nrows)]
 
-                # シートから「行」の読み込み
-                dataSPCD = sheet_SP_CD.row_values(i)
+                # 列ごとに抽出してfloat化
+                cols = list(zip(*rows))
 
-                Tout_8760.append(float(dataSPCD[1]))
-                Xout_8760.append(float(dataSPCD[2]))
-                Iod_8760.append(float(dataSPCD[3]))
-                Ios_8760.append(float(dataSPCD[4]))
-                Inn_8760.append(float(dataSPCD[5]))
+                # 365×24の行列に変更して保存
+                data["SpecialInputData"]["climate_data"] = {
+                    "Tout": bc.trans_8760to36524( [float(v) for v in cols[1]] ),
+                    "Xout": bc.trans_8760to36524( [float(v) for v in cols[2]] ),
+                    "Iod": bc.trans_8760to36524( [float(v) for v in cols[3]] ),
+                    "Ios": bc.trans_8760to36524( [float(v) for v in cols[4]] ),
+                    "Inn": bc.trans_8760to36524( [float(v) for v in cols[5]] ),
+                    "latitude": bc.trans_8760to36524( [float(v) for v in cols[6]] ),
+                    "longitude": bc.trans_8760to36524( [float(v) for v in cols[7]] )
+                }
+                
+            else:
 
-            # 365×24の行列に変更して保存
-            data["SpecialInputData"]["climate_data"] = {
-                "Tout": bc.trans_8760to36524(Tout_8760),
-                "Xout": bc.trans_8760to36524(Xout_8760),
-                "Iod": bc.trans_8760to36524(Iod_8760),
-                "Ios": bc.trans_8760to36524(Ios_8760),
-                "Inn": bc.trans_8760to36524(Inn_8760)
-            }
-            
+                rows = [sheet_SP_CD.row_values(i) for i in range(10, sheet_SP_CD.nrows)]
+
+                # 列ごとに抽出してfloat化
+                cols = list(zip(*rows))
+
+                # 365×24の行列に変更して保存
+                data["SpecialInputData"]["climate_data"] = {
+                    "Tout": bc.trans_8760to36524([float(v) for v in cols[1]]),
+                    "Xout": bc.trans_8760to36524([float(v) for v in cols[2]]),
+                    "Iod": bc.trans_8760to36524([float(v) for v in cols[3]]),
+                    "Ios": bc.trans_8760to36524([float(v) for v in cols[4]]),
+                    "Inn": bc.trans_8760to36524([float(v) for v in cols[5]])
+                }
+
+                validation["warning"].append("様式SP-CD.気象データ: 緯度・経度の列が存在しません。")
+                        
         except Exception as e:
 
             # 例外処理
