@@ -79,9 +79,35 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
     ## 気象データの読み込み
     ##----------------------------------------------------------------------------------
-    Tout, _, Iod, Ios, Inn = climate.readHaspClimateData(climatedata_directory + "/" +
+    if "climate_data" in inputdata["SpecialInputData"]:  # 任意入力（様式 SP-CD: 気象データ入力シート）
+
+        # 外気温 [℃]
+        Tout = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
+        # 法線面直達日射量 [W/m2]
+        Iod  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"])
+        # 水平面天空日射量 [W/m2]
+        Ios  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"])
+        # 水平面夜間放射量 [W/m2]
+        Inn  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
+
+        # 緯度
+        phi    = float(inputdata["SpecialInputData"]["climate_data"]["latitude"])
+        # 経度
+        longi  = float(inputdata["SpecialInputData"]["climate_data"]["longitude"])
+        # 標準時の経度
+        longi_std = float(inputdata["SpecialInputData"]["climate_data"]["longitude_std"])
+
+    else:
+
+        Tout, _, Iod, Ios, Inn = climate.readHaspClimateData(climatedata_directory + "/" +
                                     Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"])
-    
+        
+        # 緯度
+        phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
+        # 経度
+        longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
+        # 標準時の経度
+        longi_std = 135
 
     #----------------------------------------------------------------------------------
     # 入力データの整理（計算準備）
@@ -450,8 +476,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
             Id, _, Is, _ = climate.solarRadiationByAzimuth( \
                 inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemDirection"], \
                 inputdata["HotwaterSupplySystems"][unit_name]["SolarSystemAngle"], \
-                Area[inputdata["Building"]["Region"]+"地域"]["緯度"], \
-                Area[inputdata["Building"]["Region"]+"地域"]["経度"], \
+                phi,longi,longi_std,  \
                 Iod, Ios, Inn)
 
             # 太陽熱利用量 [KJ/day]

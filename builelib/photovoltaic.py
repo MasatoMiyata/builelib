@@ -132,16 +132,18 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
             Iod  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"]) /1000000*3600
             # 水平面天空日射量 [W/m2] ⇒ [MJ/m2h]
             Ios  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"]) /1000000*3600
-            # 太陽高度 [°]
-            sun_altitude  = np.array(inputdata["SpecialInputData"]["climate_data"]["latitude"])
-            # 太陽方位角 [°]
-            sun_azimuth  = np.array(inputdata["SpecialInputData"]["climate_data"]["longitude"])
 
             Tout = np.array(bc.trans_36524to8760(Tout))
             Iod  = np.array(bc.trans_36524to8760(Iod))
             Ios  = np.array(bc.trans_36524to8760(Ios))
-            sun_altitude = np.array(bc.trans_36524to8760(sun_altitude))
-            sun_azimuth  = np.array(bc.trans_36524to8760(sun_azimuth))
+
+            # 太陽高度 [°], 太陽方位角 [°]
+            (sun_altitude, sun_azimuth) = \
+                climate.calc_solar_position(
+                inputdata["SpecialInputData"]["climate_data"]["latitude"],
+                inputdata["SpecialInputData"]["climate_data"]["longitude"],
+                inputdata["SpecialInputData"]["climate_data"]["longitude_std"]
+                )
 
         elif climate_data_file[ inputdata["Building"]["Region"]+"地域" ][ inputdata["Building"]["AnnualSolarRegion"] ] != None:
 
@@ -308,7 +310,8 @@ if __name__ == '__main__':
     parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 
     print('----- photovoltaic.py -----')
-    filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    # filename = parent_dir + '/sample/sample01_WEBPRO_inputSheet_for_Ver3.6.json'
+    filename = './Brunei/Brunei_Office_Building_v3_20251201_input.json'
 
     # テンプレートjsonの読み込み
     with open(filename, 'r', encoding='utf-8') as f:
