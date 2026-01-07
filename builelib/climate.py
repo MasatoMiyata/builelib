@@ -2,6 +2,7 @@
 import csv
 import math
 import numpy as np
+import pandas as pd
 
 def readCsvClimateData(filename):
     """
@@ -145,7 +146,7 @@ def deg2rad(degree):
     return radian
 
 
-def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
+def solarRadiationByAzimuth(alp, bet, phi, longi, longi_std, IodALL, IosALL, InnALL):
     """
     方位角・傾斜角別の日射量を算出する関数
     入力 alp : 方位角（0が南、45が南西、180が北）
@@ -195,7 +196,7 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
                 # 均時差を求める
                 equal_time_difference = eqt04(month,day)
                 # 時角を求める
-                Tim = (15.0 * t + 15.0 * equal_time_difference + longi - 315.0) * rad
+                Tim = (15.0 * t + 15.0 * equal_time_difference + longi - longi_std - 180.0) * rad
                 
                 sinPhi = math.sin(deg2rad(phi)) # 緯度の正弦
                 cosPhi = math.cos(deg2rad(phi)) # 緯度の余弦
@@ -255,6 +256,83 @@ def solarRadiationByAzimuth(alp, bet, phi, longi, IodALL, IosALL, InnALL):
         Insr = None
 
     return np.sum(Id,1), np.sum(Id_ita,1), np.sum(Is,1), Insr
+
+
+def calc_solar_position(lat, lon, std_lon):
+    """
+    指定された地点の1年分（1時間刻み）の太陽高度と方位角を計算する。
+    
+    Args:
+        lat (float): 緯度 (北緯は正)
+        lon (float): 経度 (東経は正)
+        std_lon (float): 標準時の基準経度 (日本なら135.0)
+    
+    returns:
+        altitude: 太陽高度 
+        azimuth:  太陽方位角
+    """
+
+    results = []
+
+    for day_n in range(1, 366):
+
+        # 1. 太陽赤緯 (delta)
+        delta = 23.45 * math.sin(math.radians(360 * (day_n + 284) / 365))
+        
+        # 2. 均時差 (e)
+        b = math.radians(360 * (day_n - 81) / 365)
+        e = 9.87 * math.sin(2 * b) - 7.53 * math.cos(b) - 1.5 * math.sin(b)
+
+        for hour in range(0, 24):
+            # 3. 真太陽時 (AST) と 時角 (t)
+            ast = hour + (4 * (lon - std_lon) + e) / 60
+            t = (ast - 12) * 15
+            
+            phi_rad = math.radians(lat)
+            delta_rad = math.radians(delta)
+            t_rad = math.radians(t)
+            
+            # 4. 太陽高度 (h) の算出
+            sin_h = (math.sin(phi_rad) * math.sin(delta_rad) + 
+                     math.cos(phi_rad) * math.cos(delta_rad) * math.cos(t_rad))
+            
+            sin_h = max(-1.0, min(1.0, sin_h))
+            h_rad = math.asin(sin_h)
+            h_deg = math.degrees(h_rad)
+            
+            # --- 夜間判定の追加 ---
+            if h_deg <= 0:
+                # 高度が0以下の場合は、高度・方位角ともに0にする
+                final_h = 0.0
+                final_a = 0.0
+                is_daylight = False
+            else:
+                final_h = h_deg
+                is_daylight = True
+                
+                # 5. 太陽方位角 (A) の算出 - 南を0、西を正、東を負
+                cos_h = math.cos(h_rad)
+                if abs(cos_h) < 1e-10: 
+                    final_a = 0.0
+                else:
+                    sin_A = math.cos(delta_rad) * math.sin(t_rad) / cos_h
+                    cos_A = (math.sin(h_rad) * math.sin(phi_rad) - math.sin(delta_rad)) / (cos_h * math.cos(phi_rad))
+                    # atan2で方位を特定し、丸める
+                    final_a = math.degrees(math.atan2(sin_A, cos_A))
+
+            results.append({
+                "day_of_year": day_n,
+                "hour": hour,
+                "altitude": round(final_h, 4),
+                "azimuth": round(final_a, 4),
+                "is_daylight": is_daylight
+            })
+
+    # CSV出力（検証用）
+    df = pd.DataFrame(results)
+    # df.to_csv(filename, index=False, encoding='utf-8')
+
+    return df["altitude"],  df["azimuth"]
 
 
 if __name__ == '__main__':
