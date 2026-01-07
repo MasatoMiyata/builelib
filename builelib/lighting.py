@@ -227,6 +227,18 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
             print( f'　- 設計一次エネルギー消費量  {E_room} MJ')
             print( f'　- 基準一次エネルギー消費量  {Es_room} MJ')
     
+
+    # 基準値の任意入力
+    if "SpecialInputData" in inputdata:
+        if "reference_energy" in inputdata["SpecialInputData"]:
+            if "照明[MJ/年]" in inputdata["SpecialInputData"]["reference_energy"]:
+                if inputdata["SpecialInputData"]["reference_energy"]["照明[MJ/年]"] != "":
+                    reference_value = float(inputdata["SpecialInputData"]["reference_energy"]["照明[MJ/年]"])
+                    if reference_value <= 0:
+                        raise Exception('入力された基準一次エネルギー消費量が不正です。')
+                    else:
+                        Es_lighting = reference_value
+
     # BEI/L [-]
     if Es_lighting <= 0:
         BEI_L = None

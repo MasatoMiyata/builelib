@@ -606,6 +606,16 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
                 inputdata["HotwaterRoom"][room_name]["基準一次エネルギー消費量[MJ/年]"] * unit_configure["roomPowerRatio"]
 
 
+    if "SpecialInputData" in inputdata:
+        if "reference_energy" in inputdata["SpecialInputData"]:
+            if "給湯[MJ/年]" in inputdata["SpecialInputData"]["reference_energy"]:
+                if inputdata["SpecialInputData"]["reference_energy"]["給湯[MJ/年]"] != "":
+                    reference_value = float(inputdata["SpecialInputData"]["reference_energy"]["給湯[MJ/年]"])
+                    if reference_value <= 0:
+                        raise Exception('入力された基準一次エネルギー消費量が不正です。')
+                    else:
+                        resultJson["基準一次エネルギー消費量[MJ/年]"] = reference_value
+
 
     # BEI/HW
     resultJson["BEI/HW"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["基準一次エネルギー消費量[MJ/年]"]
@@ -725,7 +735,7 @@ if __name__ == '__main__':
     parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 
     print('----- hotwatersupply.py -----')
-    filename = parent_dir + '/upfiles/jg89mk6sur1v2ph3_建具の種類.json'
+    filename = parent_dir + 'sample.json'
 
     # 入力データ（json）の読み込み
     with open(filename, 'r', encoding='utf-8') as f:

@@ -138,6 +138,17 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
             resultJson["E_other_room"][room_name]["roomHeatGain_daily"] * inputdata["Rooms"][room_name]["roomArea"] * resultJson["E_other_room"][room_name]["E_ratio"] / fprime
 
 
+    if "SpecialInputData" in inputdata:
+        if "reference_energy" in inputdata["SpecialInputData"]:
+            if "その他[MJ/年]" in inputdata["SpecialInputData"]["reference_energy"]:
+                if inputdata["SpecialInputData"]["reference_energy"]["その他[MJ/年]"] != "":
+                    reference_value = float(inputdata["SpecialInputData"]["reference_energy"]["その他[MJ/年]"])
+                    if reference_value <= 0:
+                        raise Exception('入力された基準一次エネルギー消費量が不正です。')
+                    else:
+                        resultJson["E_other"] = reference_value
+
+
     ##----------------------------------------------------------------------------------
     # コジェネ計算用のスケジュール
     ##----------------------------------------------------------------------------------

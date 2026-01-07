@@ -4594,6 +4594,15 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
         resultJson["基準一次エネルギー消費量[MJ/年]"] += \
             RoomStandardValue[buildingType][roomType]["空調"][inputdata["Building"]["Region"]+"地域"] * zoneArea
 
+    if "SpecialInputData" in inputdata:
+        if "reference_energy" in inputdata["SpecialInputData"]:
+            if "空調[MJ/年]" in inputdata["SpecialInputData"]["reference_energy"]:
+                if inputdata["SpecialInputData"]["reference_energy"]["空調[MJ/年]"] != "":
+                    reference_value = float(inputdata["SpecialInputData"]["reference_energy"]["空調[MJ/年]"])
+                    if reference_value <= 0:
+                        raise Exception('入力された基準一次エネルギー消費量が不正です。')
+                    else:
+                        resultJson["基準一次エネルギー消費量[MJ/年]"] = reference_value
 
     # BEI/ACの算出
     resultJson["BEI/AC"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["基準一次エネルギー消費量[MJ/年]"]

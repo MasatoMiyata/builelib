@@ -371,6 +371,17 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         resultJson["時刻別設計一次エネルギー消費量[MJ/h]"]  += resultJson["ventilation"][roomID]["時刻別設計一次エネルギー消費量[MJ/h]"]
 
 
+    if "SpecialInputData" in inputdata:
+        if "reference_energy" in inputdata["SpecialInputData"]:
+            if "換気[MJ/年]" in inputdata["SpecialInputData"]["reference_energy"]:
+                if inputdata["SpecialInputData"]["reference_energy"]["換気[MJ/年]"] != "":
+                    reference_value = float(inputdata["SpecialInputData"]["reference_energy"]["換気[MJ/年]"])
+                    if reference_value <= 0:
+                        raise Exception('入力された基準一次エネルギー消費量が不正です。')
+                    else:
+                        resultJson["基準一次エネルギー消費量[MJ/年]"] = reference_value
+
+
     resultJson["設計一次エネルギー消費量[GJ/年]"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / 1000
     resultJson["基準一次エネルギー消費量[GJ/年]"] = resultJson["基準一次エネルギー消費量[MJ/年]"] / 1000
     resultJson["設計一次エネルギー消費量[MJ/m2年]"] = resultJson["設計一次エネルギー消費量[MJ/年]"] / resultJson["計算対象面積"]

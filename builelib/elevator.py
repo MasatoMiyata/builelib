@@ -168,6 +168,17 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
             # 基準一次エネルギー消費量計算 [MJ/年]
             resultJson["Es_elevator"] += inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] * fprime / 1000
 
+
+    if "SpecialInputData" in inputdata:
+        if "reference_energy" in inputdata["SpecialInputData"]:
+            if "昇降機[MJ/年]" in inputdata["SpecialInputData"]["reference_energy"]:
+                if inputdata["SpecialInputData"]["reference_energy"]["昇降機[MJ/年]"] != "":
+                    reference_value = float(inputdata["SpecialInputData"]["reference_energy"]["昇降機[MJ/年]"])
+                    if reference_value <= 0:
+                        raise Exception('入力された基準一次エネルギー消費量が不正です。')
+                    else:
+                        resultJson["Es_elevator"] = reference_value
+
     if DEBUG:
         print(f'昇降機の基準一次エネルギー消費量  {resultJson["Es_elevator"]}  MJ/年')
 
