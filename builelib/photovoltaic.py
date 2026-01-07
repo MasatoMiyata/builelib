@@ -121,10 +121,34 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         ## 付録 A 傾斜面における単位面積当たりの平均日射量
         ##----------------------------------------------------------------------------------
 
-        # 気象データの読み込み（日射量は MJ/m2h）
-        if climate_data_file[ inputdata["Building"]["Region"]+"地域" ][ inputdata["Building"]["AnnualSolarRegion"] ] != None:
+        # 任意入力（様式 SP-CD: 気象データ入力シート）
+        #  ただし、緯度・経度の入力がある場合のみ読み込む
+        if "climate_data" in inputdata["SpecialInputData"] and \
+            "latitude" in inputdata["SpecialInputData"]["climate_data"] and "longitude" in inputdata["SpecialInputData"]["climate_data"]:
+
+            # 外気温 [℃]
+            Tout = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
+            # 法線面直達日射量 [W/m2] ⇒ [MJ/m2h]
+            Iod  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"]) /1000000*3600
+            # 水平面天空日射量 [W/m2] ⇒ [MJ/m2h]
+            Ios  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"]) /1000000*3600
+            # 太陽高度 [°]
+            sun_altitude  = np.array(inputdata["SpecialInputData"]["climate_data"]["latitude"])
+            # 太陽方位角 [°]
+            sun_azimuth  = np.array(inputdata["SpecialInputData"]["climate_data"]["longitude"])
+
+            Tout = np.array(bc.trans_36524to8760(Tout))
+            Iod  = np.array(bc.trans_36524to8760(Iod))
+            Ios  = np.array(bc.trans_36524to8760(Ios))
+            sun_altitude = np.array(bc.trans_36524to8760(sun_altitude))
+            sun_azimuth  = np.array(bc.trans_36524to8760(sun_azimuth))
+
+        elif climate_data_file[ inputdata["Building"]["Region"]+"地域" ][ inputdata["Building"]["AnnualSolarRegion"] ] != None:
+
+            # 気象データの読み込み（日射量は MJ/m2h）
             [Tout, Iod, Ios, sun_altitude, sun_azimuth] = \
             climate.readCsvClimateData( climatedata_directory + climate_data_file[ inputdata["Building"]["Region"]+"地域" ][ inputdata["Building"]["AnnualSolarRegion"] ] )
+        
         else:
             raise Exception('日射地域区分の指定が不正です')
 
@@ -170,9 +194,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         resultJson["PhotovoltaicSystems"][system_name]["slope_angle_rad"] = math.radians(slope_angle)
         resultJson["PhotovoltaicSystems"][system_name]["sun_altitude_rad"] = sun_altitude_rad
         resultJson["PhotovoltaicSystems"][system_name]["sun_azimuth_rad"] = sun_azimuth_rad
-        resultJson["PhotovoltaicSystems"][system_name]["Is_slope_W/m2"] = Is_slope
         resultJson["PhotovoltaicSystems"][system_name]["Iod_slope_W/m2"] = Iod_slope
         resultJson["PhotovoltaicSystems"][system_name]["Ios_slope_W/m2"] = Ios_slope
+        resultJson["PhotovoltaicSystems"][system_name]["Is_slope_W/m2"] = Is_slope
 
 
         ##----------------------------------------------------------------------------------
@@ -236,8 +260,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
         # 結果を保存
         resultJson["PhotovoltaicSystems"][system_name]["Ep"] = Ep
-        resultJson["PhotovoltaicSystems"][system_name]["T_cr"] = T_cr
-        resultJson["PhotovoltaicSystems"][system_name]["K_pi"] = K_pi
+        resultJson["PhotovoltaicSystems"][system_name]["T_cr"] = T_cr   # 太陽電池モジュール温度
+        resultJson["PhotovoltaicSystems"][system_name]["K_pt"] = K_pt   # 太陽電池アレイの温度補正係数
+        resultJson["PhotovoltaicSystems"][system_name]["K_pi"] = K_pi   # 太陽電池アレイの総合設計係数
         
         # 発電量 [kWh]
         resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] = np.sum(resultJson["PhotovoltaicSystems"][system_name]["Ep"],0)
@@ -265,7 +290,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
         output_dir = output_dir + "_"
 
     df_daily_energy = pd.DataFrame({
-        '創エネルギー量（太陽光発電設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (fprime) /1000,
+        '創エネルギー量（太陽光発電設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] * (fprime) /1000,
         '創エネルギー量（太陽光発電設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
     }, index=bc.date_1year)
 
