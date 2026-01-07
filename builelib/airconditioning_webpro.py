@@ -247,17 +247,26 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
         # 水平面夜間放射量 [W/m2]
         InnALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
 
+        # 緯度
+        phi    = float(inputdata["SpecialInputData"]["climate_data"]["latitude"])
+        # 経度
+        longi  = float(inputdata["SpecialInputData"]["climate_data"]["longitude"])
+        # 標準時の経度
+        longi_std = float(inputdata["SpecialInputData"]["climate_data"]["longitude_std"])
+
     else:
 
         # 気象データ（HASP形式）読み込み ＜365×24の行列＞
         [ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
             climate.readHaspClimateData( climatedata_directory + "/" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
 
-    # 緯度
-    phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
-    # 経度
-    longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
-
+        # 緯度
+        phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
+        # 経度
+        longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
+        # 標準時の経度
+        longi_std = 135
+    
     ##----------------------------------------------------------------------------------
     ## 冷暖房期間（解説書 2.2.2）
     ##----------------------------------------------------------------------------------
@@ -390,10 +399,10 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
             "Qwind_T": np.zeros(365),  # 窓からの温度差による熱取得 [W/m2]
             "Qwind_S": np.zeros(365),  # 窓からの日射による熱取得 [W/m2]
             "Qwind_N": np.zeros(365),  # 窓からの夜間放射による熱取得（マイナス）[W/m2]
-            "QroomDc": np.zeros(365),  # 冷房熱取得（日積算）　[MJ/day]
-            "QroomDh": np.zeros(365),   # 暖房熱取得（日積算）　[MJ/day]
-            "QroomHc": np.zeros((365,24)),  # 冷房熱取得（時刻別）　[MJ/h]
-            "QroomHh": np.zeros((365,24))   # 暖房熱取得（時刻別）　[MJ/h]
+            "QroomDc": np.zeros(365),  # 冷房熱取得（日積算）[MJ/day]
+            "QroomDh": np.zeros(365),   # 暖房熱取得（日積算）[MJ/day]
+            "QroomHc": np.zeros((365,24)),  # 冷房熱取得（時刻別）[MJ/h]
+            "QroomHh": np.zeros((365,24))   # 暖房熱取得（時刻別）[MJ/h]
         }
 
     ##----------------------------------------------------------------------------------
@@ -413,16 +422,16 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
 
     # 方位角別の日射量
     (solor_radiation["直達"]["南"],  solor_radiation["直達_入射角特性込"]["南"], solor_radiation["天空"]["垂直"], solor_radiation["夜間"]["垂直"])  = \
-        climate.solarRadiationByAzimuth(  0, 90, phi, longi, IodALL, IosALL, InnALL)
-    (solor_radiation["直達"]["南西"], solor_radiation["直達_入射角特性込"]["南西"], _, _) = climate.solarRadiationByAzimuth( 45, 90, phi, longi, IodALL, IosALL, InnALL)
-    (solor_radiation["直達"]["西"],  solor_radiation["直達_入射角特性込"]["西"], _, _)  = climate.solarRadiationByAzimuth( 90, 90, phi, longi, IodALL, IosALL, InnALL)
-    (solor_radiation["直達"]["北西"], solor_radiation["直達_入射角特性込"]["北西"], _, _) = climate.solarRadiationByAzimuth(135, 90, phi, longi, IodALL, IosALL, InnALL)
-    (solor_radiation["直達"]["北"],  solor_radiation["直達_入射角特性込"]["北"], _, _)  = climate.solarRadiationByAzimuth(180, 90, phi, longi, IodALL, IosALL, InnALL)
-    (solor_radiation["直達"]["北東"], solor_radiation["直達_入射角特性込"]["北東"], _, _) = climate.solarRadiationByAzimuth(225, 90, phi, longi, IodALL, IosALL, InnALL)
-    (solor_radiation["直達"]["東"],  solor_radiation["直達_入射角特性込"]["東"], _, _)  = climate.solarRadiationByAzimuth(270, 90, phi, longi, IodALL, IosALL, InnALL)
-    (solor_radiation["直達"]["南東"], solor_radiation["直達_入射角特性込"]["南東"], _, _) = climate.solarRadiationByAzimuth(315, 90, phi, longi, IodALL, IosALL, InnALL)
+        climate.solarRadiationByAzimuth(  0, 90, phi, longi, longi_std, IodALL, IosALL, InnALL)
+    (solor_radiation["直達"]["南西"], solor_radiation["直達_入射角特性込"]["南西"], _, _) = climate.solarRadiationByAzimuth( 45, 90, phi, longi, longi_std, IodALL, IosALL, InnALL)
+    (solor_radiation["直達"]["西"],  solor_radiation["直達_入射角特性込"]["西"], _, _)  = climate.solarRadiationByAzimuth( 90, 90, phi, longi, longi_std, IodALL, IosALL, InnALL)
+    (solor_radiation["直達"]["北西"], solor_radiation["直達_入射角特性込"]["北西"], _, _) = climate.solarRadiationByAzimuth(135, 90, phi, longi, longi_std, IodALL, IosALL, InnALL)
+    (solor_radiation["直達"]["北"],  solor_radiation["直達_入射角特性込"]["北"], _, _)  = climate.solarRadiationByAzimuth(180, 90, phi, longi, longi_std, IodALL, IosALL, InnALL)
+    (solor_radiation["直達"]["北東"], solor_radiation["直達_入射角特性込"]["北東"], _, _) = climate.solarRadiationByAzimuth(225, 90, phi, longi, longi_std, IodALL, IosALL, InnALL)
+    (solor_radiation["直達"]["東"],  solor_radiation["直達_入射角特性込"]["東"], _, _)  = climate.solarRadiationByAzimuth(270, 90, phi, longi, longi_std, IodALL, IosALL, InnALL)
+    (solor_radiation["直達"]["南東"], solor_radiation["直達_入射角特性込"]["南東"], _, _) = climate.solarRadiationByAzimuth(315, 90, phi, longi, longi_std, IodALL, IosALL, InnALL)
     (solor_radiation["直達"]["水平"], solor_radiation["直達_入射角特性込"]["水平"], solor_radiation["天空"]["水平"], solor_radiation["夜間"]["水平"])  = \
-        climate.solarRadiationByAzimuth(  0,  0, phi, longi, IodALL, IosALL, InnALL)
+        climate.solarRadiationByAzimuth(  0,  0, phi, longi, longi_std, IodALL, IosALL, InnALL)
 
 
 
