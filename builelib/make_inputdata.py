@@ -498,41 +498,26 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # シートの読み込み
             sheet_SP_CD = wb.sheet_by_name("SP-CD) 気象")
 
+            rows = [sheet_SP_CD.row_values(i) for i in range(10, sheet_SP_CD.nrows)]
+
+            # 列ごとに抽出してfloat化
+            cols = list(zip(*rows))
+
+            # 365×24の行列に変更して保存
+            data["SpecialInputData"]["climate_data"] = {
+                "Tout": bc.trans_8760to36524([float(v) for v in cols[1]]),
+                "Xout": bc.trans_8760to36524([float(v) for v in cols[2]]),
+                "Iod": bc.trans_8760to36524([float(v) for v in cols[3]]),
+                "Ios": bc.trans_8760to36524([float(v) for v in cols[4]]),
+                "Inn": bc.trans_8760to36524([float(v) for v in cols[5]])
+            }
+
             # 緯度・経度の入力がある場合
-            if sheet_SP_CD.ncols > 8 and sheet_SP_CD.row_values(2)[8] == "CD-9":
-
-                rows = [sheet_SP_CD.row_values(i) for i in range(10, sheet_SP_CD.nrows)]
-
-                # 列ごとに抽出してfloat化
-                cols = list(zip(*rows))
-
-                # 365×24の行列に変更して保存
-                data["SpecialInputData"]["climate_data"] = {
-                    "Tout": bc.trans_8760to36524( [float(v) for v in cols[1]] ),
-                    "Xout": bc.trans_8760to36524( [float(v) for v in cols[2]] ),
-                    "Iod": bc.trans_8760to36524( [float(v) for v in cols[3]] ),
-                    "Ios": bc.trans_8760to36524( [float(v) for v in cols[4]] ),
-                    "Inn": bc.trans_8760to36524( [float(v) for v in cols[5]] ),
-                    "latitude": bc.trans_8760to36524( [float(v) for v in cols[6]] ),
-                    "longitude": bc.trans_8760to36524( [float(v) for v in cols[7]] )
-                }
-                
+            if sheet_SP_CD.ncols > 8 and sheet_SP_CD.row_values(2)[9] == "CD-10":
+                data["SpecialInputData"]["climate_data"]["latitude"] = sheet_SP_CD.row_values(10)[6]
+                data["SpecialInputData"]["climate_data"]["longitude"] = sheet_SP_CD.row_values(10)[7]
+                data["SpecialInputData"]["climate_data"]["longitude_std"] = sheet_SP_CD.row_values(10)[8]
             else:
-
-                rows = [sheet_SP_CD.row_values(i) for i in range(10, sheet_SP_CD.nrows)]
-
-                # 列ごとに抽出してfloat化
-                cols = list(zip(*rows))
-
-                # 365×24の行列に変更して保存
-                data["SpecialInputData"]["climate_data"] = {
-                    "Tout": bc.trans_8760to36524([float(v) for v in cols[1]]),
-                    "Xout": bc.trans_8760to36524([float(v) for v in cols[2]]),
-                    "Iod": bc.trans_8760to36524([float(v) for v in cols[3]]),
-                    "Ios": bc.trans_8760to36524([float(v) for v in cols[4]]),
-                    "Inn": bc.trans_8760to36524([float(v) for v in cols[5]])
-                }
-
                 validation["warning"].append("様式SP-CD.気象データ: 緯度・経度の列が存在しません。")
                         
         except Exception as e:
@@ -3579,8 +3564,8 @@ if __name__ == '__main__':
 
     print('----- make_inputdata.py -----')
 
-    directory = "./sample/"
-    case_name = 'Builelib_inputSheet_sample_001'
+    directory = "./Brunei/"
+    case_name = 'Brunei_Office_Building_v3_20251201'
 
     if os.path.exists(directory + case_name + ".xlsm"):
         inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
