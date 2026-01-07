@@ -248,11 +248,22 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
         InnALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
 
         # 緯度
-        phi    = float(inputdata["SpecialInputData"]["climate_data"]["latitude"])
+        if "latitude" in inputdata["SpecialInputData"]["climate_data"]:
+            phi    = float(inputdata["SpecialInputData"]["climate_data"]["latitude"])
+        else:
+            phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
+
         # 経度
-        longi  = float(inputdata["SpecialInputData"]["climate_data"]["longitude"])
+        if "longitude" in inputdata["SpecialInputData"]["climate_data"]:
+            longi  = float(inputdata["SpecialInputData"]["climate_data"]["longitude"])
+        else:
+            longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
+
         # 標準時の経度
-        longi_std = float(inputdata["SpecialInputData"]["climate_data"]["longitude_std"])
+        if "longitude_std" in inputdata["SpecialInputData"]["climate_data"]:
+            longi_std = float(inputdata["SpecialInputData"]["climate_data"]["longitude_std"])
+        else:
+            longi_std = 135
 
     else:
 
