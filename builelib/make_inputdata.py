@@ -331,32 +331,32 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-CM：計算モード入力シート の読み込み
     #----------------------------------
+
+    #  様式SP-CM 計算モード入力シート が存在しない場合は、全ての計算モードをTrueに設定
+    data["CalculationMode"]["SP-CD 気象データ入力シート"] = True
+    data["CalculationMode"]["SP-RT-UC 室使用条件入力シート"] = True
+    data["CalculationMode"]["SP-RT-CP カレンダーパターン入力シート"] = True
+    data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] = True
+    data["CalculationMode"]["SP-AC-MD 空調モード入力シート"] = True
+    data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] = True
+    data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] = True
+    data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] = True
+    data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] = True
+    data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] = True
+    data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] = True
+    data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] = True
+    data["CalculationMode"]["SP-V-CL 換気制御効果率入力シート"] = True
+    data["CalculationMode"]["SP-V-PR 換気代替空調機年間平均負荷率"] = True
+    data["CalculationMode"]["SP-L-CL 照明制御効果率（時刻別）入力シート"] = True
+    data["CalculationMode"]["SP-HW-WS 節湯器具入力シート"] = True
+    data["CalculationMode"]["SP-HW-IM 配管保温仕様入力シート"] = True
+    data["CalculationMode"]["SP-EV-CL 速度制御方式入力シート"] = True
+    data["CalculationMode"]["SP-REF 基準値入力シート"] = True
+
+    data["CalculationMode"]["空調と照明の連成計算"] = False
+    data["CalculationMode"]["一次エネルギー換算係数"] = 9760
+    
     if "SP-CM) 計算モード" in wb.sheet_names():
-
-        # 初期値：
-        #  様式SP-CM 計算モード入力シート が存在しない場合は、全ての計算モードをTrueに設定
-        data["CalculationMode"]["SP-CD 気象データ入力シート"] = True
-        data["CalculationMode"]["SP-RT-UC 室使用条件入力シート"] = True
-        data["CalculationMode"]["SP-RT-CP カレンダーパターン入力シート"] = True
-        data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] = True
-        data["CalculationMode"]["SP-AC-MD 空調モード入力シート"] = True
-        data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] = True
-        data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] = True
-        data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] = True
-        data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] = True
-        data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] = True
-        data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] = True
-        data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] = True
-        data["CalculationMode"]["SP-V-CL 換気制御効果率入力シート"] = True
-        data["CalculationMode"]["SP-V-PR 換気代替空調機年間平均負荷率"] = True
-        data["CalculationMode"]["SP-L-CL 照明制御効果率（時刻別）入力シート"] = True
-        data["CalculationMode"]["SP-HW-WS 節湯器具入力シート"] = True
-        data["CalculationMode"]["SP-HW-IM 配管保温仕様入力シート"] = True
-        data["CalculationMode"]["SP-EV-CL 速度制御方式入力シート"] = True
-        data["CalculationMode"]["SP-REF 基準値入力シート"] = True
-
-        data["CalculationMode"]["空調と照明の連成計算"] = False
-        data["CalculationMode"]["一次エネルギー換算係数"] = 9760
 
         # シートの読み込み
         sheet_SP_CM = wb.sheet_by_name("SP-CM) 計算モード")
@@ -3595,7 +3595,7 @@ if __name__ == '__main__':
     print('----- make_inputdata.py -----')
 
     directory = "./sample/"
-    case_name = 'Builelib_inputSheet_sample_002'
+    case_name = 'sample'
 
     if os.path.exists(directory + case_name + ".xlsm"):
         inputdata, validation = make_jsondata_from_Ver2_sheet(directory + case_name + ".xlsm")
