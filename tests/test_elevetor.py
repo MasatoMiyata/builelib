@@ -3,7 +3,7 @@ import csv
 import pprint as pp
 import pytest
 
-from builelib import elevetor
+from builelib.systems import elevator as elevetor
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名

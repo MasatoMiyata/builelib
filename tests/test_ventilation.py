@@ -3,7 +3,7 @@ import csv
 import pprint as pp
 import pytest
 
-from builelib import ventilation
+from builelib.systems import ventilation
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名

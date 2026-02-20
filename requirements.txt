@@ -1,7 +1,0 @@
-numpy
-jsonschema
-pandas
-pytest
-xlrd == 1.2.0
-openpyxl
-matplotlib

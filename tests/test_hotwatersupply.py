@@ -3,7 +3,7 @@ import csv
 import pprint as pp
 import pytest
 
-from builelib import hotwatersupply
+from builelib.systems import hotwatersupply
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名

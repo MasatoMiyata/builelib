@@ -1,120 +1,54 @@
-docs/css/*
-Makefile
-memo.md
+# ===========================
+# 個人・ローカル設定
+# ===========================
 .vscode
-.pypirc
+.claude
+.idea
+.python-version
+.env
+.ipynb_checkpoints
 
-# Builelib
-*.json
-*.csv
+# ===========================
+# 仮想環境
+# ===========================
+.venv/
 
-/inputfile/
-/reference/
-/tests/PAL/
-/standard_spec/
-/sample/*.json
-/sample/Builelib_inputSheet_開発用.xlsx
-
-/builelib/heat_load_calculation
-/builelib/pyHASP
-/builelib/database_pyhasp
-/builelib/climatedata_pyhasp/
-make_inputdata_pyhasp.py
-palstar.py
-
-# Byte-compiled / optimized / DLL files
+# ===========================
+# Python
+# ===========================
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
 
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+# ===========================
+# builelib プロジェクト固有
+# ===========================
+# 気象データ
+/src/builelib/climate/climatedata/
+/src/builelib/climate/pyhasp/
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# 標準室使用条件
+/src/builelib/database/pyhasp/
+/src/builelib/database/csv/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# テストデータ（大容量のため除外）
+/tests/
+/tests/PAL/
+/tests/airconditioning_gshp_openloop/
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
+# メモ
+memo.md
+
+# 開発中・開発用
+/src/builelib/input/make_inputdata_pyhasp.py
+/src/builelib/envelope/palstar.py
+
+# ===========================
+# テスト・カバレッジ
+# ===========================
+.pytest_cache/
 .coverage
 .coverage.*
-.cache
-nosetests.xml
+htmlcov/
 coverage.xml
-*,cover
-.hypothesis/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# IPython Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# dotenv
-.env
-
-# virtualenv
-.venv/
-venv/
-ENV/
-venv310/
-venv311/
-venv312/
-
-# Spyder project settings
-.spyderproject
-
-# Rope project settings
-.ropeproject
-
-.idea
-
