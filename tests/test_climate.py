@@ -5,7 +5,7 @@ import pytest
 import json
 import numpy as np
 
-from builelib import climate
+from builelib.climate import climate
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名
@@ -83,8 +83,8 @@ def caclulation(inputdata):
     print(alp)
     print(bet)
 
-    database_directory = "./builelib/database/"
-    climate_directory = "./builelib/climatedata/"
+    database_directory = "./src/builelib/database/"
+    climate_directory = "./src/builelib/climate/climatedata/"
 
     # 地域別データの読み込み
     with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:

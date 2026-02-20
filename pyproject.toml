@@ -3,21 +3,33 @@ name = "builelib"
 version = "2.0.0"
 description = "A simulation program for calculating the annual energy consumption of non-residential buildings."
 authors = [
-    {name = "Masato Miyata",email = "miyata-m92ta@mlit.go.jp"}
+    {name = "Masato Miyata", email = "miyata-m92ta@mlit.go.jp"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "numpy (>=2.3.0,<3.0.0)",
-    "jsonschema (>=4.24.0,<5.0.0)",
-    "pandas (>=2.3.0,<3.0.0)",
-    "pytest (>=8.4.0,<9.0.0)",
-    "xlrd (==1.2.0)",
-    "openpyxl (>=3.1.5,<4.0.0)",
-    "matplotlib (>=3.10.3,<4.0.0)"
+    "numpy>=2.3.0,<3.0.0",
+    "jsonschema>=4.24.0,<5.0.0",
+    "pandas>=2.3.0,<3.0.0",
+    "xlrd==1.2.0",
+    "openpyxl>=3.1.5,<4.0.0",
+    "matplotlib>=3.10.3,<4.0.0",
+    "fastapi>=0.115.0,<1.0.0",
+    "uvicorn>=0.32.0,<1.0.0",
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=8.4.0,<9.0.0",
+]
+
+[project.scripts]
+builelib = "builelib.runner:cli_main"
+
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/builelib"]

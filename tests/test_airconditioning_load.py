@@ -3,7 +3,7 @@ import csv
 import pytest
 import json
 
-from builelib import airconditioning
+from builelib.systems import airconditioning
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名

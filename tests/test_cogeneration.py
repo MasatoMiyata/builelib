@@ -4,14 +4,14 @@ import pytest
 import json
 import xlrd
 
-import airconditioning
-import ventilation
-import lighting
-import hotwatersupply
-import elevetor
-import photovoltaic
-import other_energy
-import cogeneration
+from builelib.systems import airconditioning
+from builelib.systems import ventilation
+from builelib.systems import lighting
+from builelib.systems import hotwatersupply
+from builelib.systems import elevator as elevetor
+from builelib.systems import photovoltaic
+from builelib.systems import other_energy
+from builelib.systems import cogeneration
 
 ### テストファイル名 ###
 # 辞書型 テスト名とファイル名

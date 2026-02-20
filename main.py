@@ -3,14 +3,17 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 import subprocess
 
-from builelib_run import builelib_run
+from builelib.runner import calculate, calculate_ac
 
 app = FastAPI()
 
 @app.get("/webpro_mode")
 def read_root(file_name: str):
-    builelib_run(True, file_name)
+    calculate(file_name)
 
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: Union[str, None] = None):
-#     return {"item_id": item_id, "q": q}
+if __name__ == '__main__':
+    
+    file_name = "./tests/building/Builelib_inputSheet_sample_001.xlsx"
+    
+    calculate(file_name)
+    # calculate_ac(file_name)
