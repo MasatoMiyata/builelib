@@ -24,8 +24,7 @@ __pycache__/
 # ===========================
 # builelib プロジェクト固有
 # ===========================
-# 気象データ
-/src/builelib/climate/climatedata/
+# 気象データ（climatedata は git 管理対象）
 /src/builelib/climate/pyhasp/
 
 # 標準室使用条件
@@ -43,6 +42,12 @@ memo.md
 # 開発中・開発用
 /src/builelib/input/make_inputdata_pyhasp.py
 /src/builelib/envelope/palstar.py
+
+# ===========================
+# docker
+# ===========================
+.dockerignore
+test_docker.sh
 
 # ===========================
 # テスト・カバレッジ
