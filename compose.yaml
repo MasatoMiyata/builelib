@@ -1,0 +1,25 @@
+services:
+
+  builelib:
+    build: .
+    tty: true
+    environment:
+      - PYTHONHASHSEED=0
+      - OMP_NUM_THREADS=1
+      - MKL_NUM_THREADS=1
+      - OPENBLAS_NUM_THREADS=1
+    volumes:
+      - builelib_data:/usr/src/data   # 名前付きボリューム（Apache と共有）
+    ports:
+      - 8081:8080
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+volumes:
+  builelib_data:
+    external: true   # VPS 初回セットアップ時に: docker volume create builelib_data
+
+networks:
+  mynetwork:
+    external: true   # VPS 初回セットアップ時に: docker network create mynetwork
