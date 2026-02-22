@@ -1,0 +1,76 @@
+site_name: Builelib Manual
+site_description: Builelib Manual
+site_url: https://masatomiyata.github.io/builelib/
+site_dir: docs
+docs_dir: docs-md
+
+nav:
+  - Welcome:
+      index.md
+  - How to use:
+      installation.md
+  - InputSheet: 
+      InputSheet.md
+  - Reference:
+      logic.md
+  - License: license.md
+
+theme:
+  name: material
+  language: ja
+  icon:
+    logo: material/library
+    repo: fontawesome/brands/git-alt
+  features:
+    - toc.integrate       # 目次を右側ではなく、ページ内に表示
+    - navigation.expand   # サイドバーのナビゲーションを展開
+    - navigation.top
+  font:
+    text: Roboto       # 本文用フォント
+    code: Roboto Mono  # コードブロック用フォント
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/MasatoMiyata/builelib
+  generator: false
+
+extra_css:
+  - assets/custom.css
+  - https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap
+  - https://fonts.googleapis.com/css?family=Roboto+Mono:400,700&display=swap
+
+extra_javascript:
+  - js/mathjax.js
+  - js/mathjax-reload.js
+  - js/lang-switch.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+plugins:
+  - i18n:
+      languages:
+        - locale: ja
+          name: Japanese
+          build: true
+          default: true
+        - locale: en
+          name: English
+          build: true
+
+# マークダウンの拡張機能
+markdown_extensions:
+  - toc:
+      permalink: true
+      toc_depth: 4
+  - admonition:
+  - codehilite:
+      linenums: true
+      guess_lang: false
+      use_pygments: false
+      noclasses: true
+  - tables:
+  - attr_list:
+  - md_in_html:
+
+# Copyright
+copyright: 'Copyright© 2019-2025 : Masato Miyata'

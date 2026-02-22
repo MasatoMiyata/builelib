@@ -1,2 +1,8 @@
 # Shell scripts must use LF line endings (Docker containers require LF)
 *.sh text eol=lf
+
+# MkDocs ドキュメント（HTML/Markdown は LF で統一）
+docs-md/**/*.html text eol=lf
+docs-md/**/*.md   text eol=lf
+docs-md/**/*.css  text eol=lf
+docs-md/**/*.js   text eol=lf
