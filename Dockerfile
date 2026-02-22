@@ -37,4 +37,8 @@ COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
+# Apache と同じ www-data (UID/GID 33) で実行することで、
+# 書き出したファイルを Apache 側から mv できるようにする
+USER www-data
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
