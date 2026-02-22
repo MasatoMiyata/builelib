@@ -32,4 +32,9 @@ COPY main.py ./
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8080
 
+# エントリポイント（起動時に共有ボリュームの権限を修正）
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
