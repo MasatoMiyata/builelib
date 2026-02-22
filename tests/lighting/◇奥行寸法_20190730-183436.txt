@@ -1,6 +1,0 @@
-ì‡ïîéØï éq,BuildingType,RoomType,Area,RoomHeight,Width,Depth,RoomIndex,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
-C1	éññ±èäìô	éññ±é∫	100	2.7	20		2	1	1	ñ≥	ñ≥	ñ≥	ñ≥	1	1	ñ≥	ñ≥	ñ≥	ñ≥	55.040544	49800
-C2	éññ±èäìô	éññ±é∫	100	2.7	20	0	2	1	1	ñ≥	ñ≥	ñ≥	ñ≥	1	1	ñ≥	ñ≥	ñ≥	ñ≥	55.040544	49800
-C3	éññ±èäìô	éññ±é∫	100	2.7	20	0.01	2	1	1	ñ≥	ñ≥	ñ≥	ñ≥	1	1	ñ≥	ñ≥	ñ≥	ñ≥	55.040544	49800
-C4	éññ±èäìô	éññ±é∫	100	2.7	20	10	2	1	1	ñ≥	ñ≥	ñ≥	ñ≥	1	1	ñ≥	ñ≥	ñ≥	ñ≥	55.040544	49800
-C5	éññ±èäìô	éññ±é∫	100	2.7	20	1000000000	2	1	1	ñ≥	ñ≥	ñ≥	ñ≥	1	1	ñ≥	ñ≥	ñ≥	ñ≥	55.040544	49800
