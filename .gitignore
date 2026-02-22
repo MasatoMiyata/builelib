@@ -41,10 +41,8 @@ __pycache__/
 /examples/*.csv
 /examples/*.zip
 
-# メモ
-memo.md
-
 # 開発中・開発用
+memo.md
 /src/builelib/input/make_inputdata_pyhasp.py
 /src/builelib/envelope/palstar.py
 
