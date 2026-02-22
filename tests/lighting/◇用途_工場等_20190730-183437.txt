@@ -1,3 +1,0 @@
-“à•”¯•Êq,BuildingType,RoomType,Area,RoomHeight,Width,Depth,RoomIndex,UnitPower1,UnitCount1,OccupantSensing1,IlluminanceSensing1,TimeSchedule1,InitialIlluminationCorrection1,UnitPower2,UnitCount2,OccupantSensing2,IlluminanceSensing2,TimeSchedule2,InitialIlluminationCorrection2,Energy,StandardEnergy
-C1	Hê“™	‘qŒÉ	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	5270.4	21100
-C2	Hê“™	‰®ŠO’“Ôê–”‚Í’“—Öê	100	2.7	10	20	2	100	1	–³	–³	–³	–³	100	1	–³	–³	–³	–³	5270.4	10500
