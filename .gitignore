@@ -36,6 +36,11 @@ __pycache__/
 /tests/PAL/
 /tests/airconditioning_gshp_openloop/
 
+# 例
+/examples/*.json
+/examples/*.csv
+/examples/*.zip
+
 # メモ
 memo.md
 
