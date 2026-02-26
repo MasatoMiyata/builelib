@@ -99,6 +99,18 @@ input_options = {
 
 }
 
+def get_input_options() -> dict:
+    """入力値の選択肢一覧を返す関数（APIエンドポイント用）
+
+    make_inputdata.py の input_options グローバル変数を返す。
+    フロントエンドのドロップダウン生成に使用する。
+
+    Returns:
+        dict: 入力値の選択肢一覧（建物用途・室用途・熱源機種 等）
+    """
+    return input_options
+
+
 def convert_window_frame_type(frame_type_webpro):
     """
     WEBPROの「建具の種類」からBuilelibの「建具の種類」に変換する関数

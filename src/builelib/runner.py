@@ -537,6 +537,219 @@ def calculate(inputfile_name, exec_calculation=True):
     # os.remove( inputfile_name_split[0] + "_result_Other.json" )
 
 
+def calculate_from_json(inputdata: dict) -> dict:
+    """JSON辞書を直接受け取って計算し、結果辞書を返す関数（APIエンドポイント用）
+
+    Excelファイルを経由せず、webproJsonSchema準拠の辞書を直接受け取る。
+    ファイル出力は行わず、計算結果を戻り値として返す。
+
+    Args:
+        inputdata (dict): webproJsonSchema準拠の入力データ辞書
+
+    Returns:
+        dict: {
+            "result": calc_reuslt辞書（BEI等の計算結果）,
+            "errors": エラーメッセージのリスト（空リストなら正常終了）
+        }
+    """
+
+    #------------------------------------
+    # 出力辞書の初期化（calculate()と同一構造）
+    #------------------------------------
+    calc_reuslt = {
+        "設計一次エネルギー消費量[MJ]" : 0,
+        "基準一次エネルギー消費量[MJ]" : 0,
+        "設計一次エネルギー消費量（その他除き）[MJ]" : 0,
+        "基準一次エネルギー消費量（その他除き）[MJ]" : 0,
+        "BEI": "",
+        "設計一次エネルギー消費量（再エネ、その他除き）[MJ]" : 0,
+        "BEI（再エネ除き）": "",
+        "設計一次エネルギー消費量（空調）[MJ]": 0,
+        "基準一次エネルギー消費量（空調）[MJ]": 0,
+        "BEI_AC": "-",
+        "設計一次エネルギー消費量（換気）[MJ]": 0,
+        "基準一次エネルギー消費量（換気）[MJ]": 0,
+        "BEI_V": "-",
+        "設計一次エネルギー消費量（照明）[MJ]": 0,
+        "基準一次エネルギー消費量（照明）[MJ]": 0,
+        "BEI_L": "-",
+        "設計一次エネルギー消費量（給湯）[MJ]": 0,
+        "基準一次エネルギー消費量（給湯）[MJ]": 0,
+        "BEI_HW": "-",
+        "設計一次エネルギー消費量（昇降機）[MJ]": 0,
+        "基準一次エネルギー消費量（昇降機）[MJ]": 0,
+        "BEI_EV": "-",
+        "その他一次エネルギー消費量[MJ]" : 0,
+        "創エネルギー量（太陽光）[MJ]": 0,
+        "創エネルギー量（コジェネ）[MJ]": 0,
+    }
+
+    # CGSの計算に必要となる変数
+    resultJson_for_CGS = {
+        "AC":{},
+        "V":{},
+        "L":{},
+        "HW":{},
+        "EV":{},
+        "PV":{},
+        "OT":{},
+    }
+
+    # 設計一次エネルギー消費量[MJ]
+    energy_consumption_design = 0
+    # 基準一次エネルギー消費量[MJ]
+    energy_consumption_standard = 0
+
+    # エラーメッセージの収集リスト
+    errors = []
+
+    # SpecialInputData が存在しない場合は空辞書をセット
+    # （other_energy.py 等が inputdata["SpecialInputData"] を直接参照するため）
+    if "SpecialInputData" not in inputdata:
+        inputdata["SpecialInputData"] = {}
+
+    #------------------------------------
+    # 空気調和設備の計算
+    #------------------------------------
+    resultdata_AC = {}
+    try:
+        if inputdata.get("AirConditioningZone"):
+            resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug=False, output_dir="")
+            resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
+            energy_consumption_design   += resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
+            energy_consumption_standard += resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["設計一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["基準一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["BEI_AC"] = math.ceil(resultdata_AC["BEI/AC"] * 100) / 100
+    except Exception as e:
+        errors.append(f"空気調和設備の計算エラー: {str(e)}")
+
+    #------------------------------------
+    # 機械換気設備の計算
+    #------------------------------------
+    resultdata_V = {}
+    try:
+        if inputdata.get("VentilationRoom"):
+            resultdata_V = ventilation.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultJson_for_CGS["V"] = resultdata_V["for_CGS"]
+            energy_consumption_design   += resultdata_V["設計一次エネルギー消費量[MJ/年]"]
+            energy_consumption_standard += resultdata_V["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["設計一次エネルギー消費量（換気）[MJ]"] = resultdata_V["設計一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["基準一次エネルギー消費量（換気）[MJ]"] = resultdata_V["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["BEI_V"] = math.ceil(resultdata_V["BEI/V"] * 100) / 100
+    except Exception as e:
+        errors.append(f"機械換気設備の計算エラー: {str(e)}")
+
+    #------------------------------------
+    # 照明設備の計算
+    #------------------------------------
+    resultdata_L = {}
+    try:
+        if inputdata.get("LightingSystems"):
+            resultdata_L = lighting.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultJson_for_CGS["L"] = resultdata_L["for_CGS"]
+            energy_consumption_design   += resultdata_L["E_lighting"]
+            energy_consumption_standard += resultdata_L["Es_lighting"]
+            calc_reuslt["設計一次エネルギー消費量（照明）[MJ]"] = resultdata_L["E_lighting"]
+            calc_reuslt["基準一次エネルギー消費量（照明）[MJ]"] = resultdata_L["Es_lighting"]
+            calc_reuslt["BEI_L"] = math.ceil(resultdata_L["BEI_L"] * 100) / 100
+    except Exception as e:
+        errors.append(f"照明設備の計算エラー: {str(e)}")
+
+    #------------------------------------
+    # 給湯設備の計算
+    #------------------------------------
+    resultdata_HW = {}
+    try:
+        if inputdata.get("HotwaterRoom"):
+            resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultJson_for_CGS["HW"] = resultdata_HW["for_CGS"]
+            energy_consumption_design   += resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
+            energy_consumption_standard += resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
+            calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
+    except Exception as e:
+        errors.append(f"給湯設備の計算エラー: {str(e)}")
+
+    #------------------------------------
+    # 昇降機の計算
+    #------------------------------------
+    resultdata_EV = {}
+    try:
+        if inputdata.get("Elevators"):
+            resultdata_EV = elevator.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultJson_for_CGS["EV"] = resultdata_EV["for_CGS"]
+            energy_consumption_design   += resultdata_EV["E_elevator"]
+            energy_consumption_standard += resultdata_EV["Es_elevator"]
+            calc_reuslt["設計一次エネルギー消費量（昇降機）[MJ]"] = resultdata_EV["E_elevator"]
+            calc_reuslt["基準一次エネルギー消費量（昇降機）[MJ]"] = resultdata_EV["Es_elevator"]
+            calc_reuslt["BEI_EV"] = math.ceil(resultdata_EV["BEI_EV"] * 100) / 100
+    except Exception as e:
+        errors.append(f"昇降機の計算エラー: {str(e)}")
+
+    #------------------------------------
+    # 太陽光発電の計算
+    #------------------------------------
+    resultdata_PV = {}
+    try:
+        if inputdata.get("PhotovoltaicSystems"):
+            resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultJson_for_CGS["PV"] = resultdata_PV["for_CGS"]
+            energy_consumption_design -= resultdata_PV["E_photovoltaic"]
+            calc_reuslt["創エネルギー量（太陽光）[MJ]"] = resultdata_PV["E_photovoltaic"]
+    except Exception as e:
+        errors.append(f"太陽光発電設備の計算エラー: {str(e)}")
+
+    #------------------------------------
+    # その他の計算
+    #------------------------------------
+    resultdata_OT = {}
+    try:
+        if inputdata.get("Rooms"):
+            resultdata_OT = other_energy.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultJson_for_CGS["OT"] = resultdata_OT["for_CGS"]
+            calc_reuslt["その他一次エネルギー消費量[MJ]"] = resultdata_OT["E_other"]
+    except Exception as e:
+        errors.append(f"その他一次エネルギー消費量の計算エラー: {str(e)}")
+
+    #------------------------------------
+    # コジェネの計算
+    #------------------------------------
+    try:
+        if inputdata.get("CogenerationSystems"):
+            resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG=False, output_dir="")
+            energy_consumption_design -= resultdata_CGS["年間一次エネルギー削減量"] * 1000
+            calc_reuslt["創エネルギー量（コジェネ）[MJ]"] = resultdata_CGS["年間一次エネルギー削減量"] * 1000
+    except Exception as e:
+        errors.append(f"コージェネレーション設備の計算エラー: {str(e)}")
+
+    #------------------------------------
+    # BEIの計算（calculate()と同一ロジック）
+    #------------------------------------
+    if energy_consumption_standard != 0:
+
+        calc_reuslt["設計一次エネルギー消費量（その他除き）[MJ]"] = energy_consumption_design
+        calc_reuslt["基準一次エネルギー消費量（その他除き）[MJ]"] = energy_consumption_standard
+
+        calc_reuslt["BEI"] = energy_consumption_design / energy_consumption_standard
+        calc_reuslt["BEI"] = math.ceil(calc_reuslt["BEI"] * 100) / 100
+
+        calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] = energy_consumption_design + calc_reuslt["創エネルギー量（太陽光）[MJ]"]
+
+        calc_reuslt["BEI（再エネ除き）"] = calc_reuslt["設計一次エネルギー消費量（再エネ、その他除き）[MJ]"] / calc_reuslt["基準一次エネルギー消費量（その他除き）[MJ]"]
+        calc_reuslt["BEI（再エネ除き）"] = math.ceil(calc_reuslt["BEI（再エネ除き）"] * 100) / 100
+
+        if "E_other" in resultdata_OT:
+            calc_reuslt["設計一次エネルギー消費量[MJ]"] = energy_consumption_design + resultdata_OT["E_other"]
+            calc_reuslt["基準一次エネルギー消費量[MJ]"] = energy_consumption_standard + resultdata_OT["E_other"]
+
+    return {
+        "result": calc_reuslt,
+        "errors": errors,
+    }
+
+
 def calculate_ac(inputfile_name):
     """空調のみ実行するプログラム（計算過程を全て出力）
     Args:
@@ -587,6 +800,7 @@ def cli_main():
 
 if __name__ == '__main__':
 
+    # Excelファイルからの実行
     file_name = "./tests/building/Builelib_inputSheet_sample_001.xlsx"
     # file_name = "./tests/building/Builelib_inputSheet_sample_002.xlsx"
     # file_name = "./tests/building/sample01_WEBPRO_inputSheet_English.xlsx"
@@ -594,3 +808,10 @@ if __name__ == '__main__':
 
     calculate(file_name)
 
+    # jsonファイルからの実行
+    json_file_name = "./tests/building/Builelib_inputSheet_sample_001.json"
+
+    with open(json_file_name, encoding="utf-8") as f:
+        inputdata = json.load(f)
+
+    # calculate_from_json(inputdata)

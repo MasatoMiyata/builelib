@@ -45,6 +45,7 @@ __pycache__/
 memo.md
 /src/builelib/input/make_inputdata_pyhasp.py
 /src/builelib/envelope/palstar.py
+projects/
 
 # ===========================
 # docker
