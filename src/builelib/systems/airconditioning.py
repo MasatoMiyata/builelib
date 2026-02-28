@@ -1,4 +1,5 @@
 import json
+import copy
 import numpy as np
 import math
 import os
@@ -14,6 +15,14 @@ from builelib import make_figure as mf
 database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
 # 気象データファイルの保存場所
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
+
+# 室使用条件データの読み込み
+with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
+    _RoomUsageSchedule = json.load(f)
+
+# カレンダーパターンの読み込み
+with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
+    _Calendar = json.load(f)
 
 # builelibモードかどうか（照明との連成）
 BUILELIB_MODE = True
@@ -213,9 +222,15 @@ def calc_energy(inputdata, debug=False):
     # 任意評定 （SP-6: カレンダーパターン)
     #----------------------------------------------------------------------------------
 
-    input_calendar = []
-    if "calender" in inputdata["SpecialInputData"]:
-        input_calendar = inputdata["SpecialInputData"]["calender"]
+    _special = inputdata.get("SpecialInputData", {})
+    RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
+    if "room_usage_condition" in _special:
+        for buildling_type in _special["room_usage_condition"]:
+            for room_type in _special["room_usage_condition"][buildling_type]:
+                RoomUsageSchedule[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
+    Calendar = copy.deepcopy(_Calendar)
+    for pattern_name, pattern_data in _special.get("calender", {}).items():
+        Calendar[pattern_name] = pattern_data
 
     #----------------------------------------------------------------------------------
     # 空調機の稼働状態、内部発熱量（解説書 2.3.3、2.3.4）
@@ -254,7 +269,7 @@ def calc_energy(inputdata, debug=False):
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
         roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name], roomDayMode[room_zone_name] = \
-            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], input_calendar)
+            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], Calendar, RoomUsageSchedule)
 
         # 空調対象面積の合計
         resultJson["total_area"] += inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
