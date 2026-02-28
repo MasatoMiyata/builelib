@@ -44,6 +44,7 @@ memo.md
 /src/builelib/input/make_inputdata_pyhasp.py
 /src/builelib/envelope/palstar.py
 projects/
+/src/builelib/i18n/
 
 # ===========================
 # docker
@@ -52,7 +53,7 @@ projects/
 test_docker.sh
 
 # ===========================
-# MkDocs ビルド生成物
+# 作業ログ
 # ===========================
 /docs/
 
