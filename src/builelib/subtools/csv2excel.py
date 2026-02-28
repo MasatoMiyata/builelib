@@ -26,7 +26,12 @@ def csv2excel(csv_directory, output_filename):
         raise Exception("CSVファイルが見つかりません。")
 
     # テンプレートファイル（Excelファイル）を読み込む
-    excel_workbook = px.load_workbook('./builelib/subtools/inputSheet_template.xlsm',read_only=False, keep_vba=True)
+    excel_workbook = px.load_workbook('./src/builelib/subtools/inputSheet_template.xlsm',read_only=False, keep_vba=True)
+
+    # デフォルト値
+    excel_workbook['0) 基本情報'].cell(row=9,  column=3, value="test") # 建物名称
+    excel_workbook['0) 基本情報'].cell(row=12, column=3, value="6")    # 地域区分
+    excel_workbook['0) 基本情報'].cell(row=17, column=3, value="100")  # 延べ面積
 
     for csvfile_name in csvfile_list:
         
@@ -56,30 +61,29 @@ def csv2excel(csv_directory, output_filename):
             excel_workbook['0) 基本情報'].cell(row=18, column=3, value=csvdata[17][2])  # 年間日射地域区分
             excel_workbook['0) 基本情報'].cell(row=19, column=3, value=csvdata[18][2])  # 一次エネ換算係数（冷熱）
             excel_workbook['0) 基本情報'].cell(row=20, column=3, value=csvdata[19][2])  # 一次エネ換算係数（温熱）
-
-
+        
         elif "様式1" in csvfile_name:
             write_list_2d(excel_workbook['1) 室仕様'], csvdata[10:], 11, 1)
 
-        elif "様式2-1" in csvfile_name:
+        elif "様式2-1" in csvfile_name or "AirConditioningRoom" in csvfile_name:
             write_list_2d(excel_workbook['2-1) 空調ゾーン'], csvdata[10:], 11, 1)
 
-        elif "様式2-2" in csvfile_name:
+        elif "様式2-2" in csvfile_name or "WallConfiguration" in csvfile_name:
             write_list_2d(excel_workbook['2-2) 外壁構成 '], csvdata[10:], 11, 1)
 
-        elif "様式2-3" in csvfile_name:
+        elif "様式2-3" in csvfile_name or "WindowConfiguration" in csvfile_name:
             write_list_2d(excel_workbook['2-3) 窓仕様'], csvdata[10:], 11, 1)
 
-        elif "様式2-4" in csvfile_name:
+        elif "様式2-4" in csvfile_name or "Envelope" in csvfile_name:
             write_list_2d(excel_workbook['2-4) 外皮 '], csvdata[10:], 11, 1)
 
-        elif "様式2-5" in csvfile_name:
+        elif "様式2-5" in csvfile_name or "HeatSource" in csvfile_name:
             write_list_2d(excel_workbook['2-5) 熱源'], csvdata[10:], 11, 1)
 
-        elif "様式2-6" in csvfile_name:
+        elif "様式2-6" in csvfile_name or "SecondaryPump" in csvfile_name:
             write_list_2d(excel_workbook['2-6) 2次ﾎﾟﾝﾌﾟ'], csvdata[10:], 11, 1)
 
-        elif "様式2-7" in csvfile_name:
+        elif "様式2-7" in csvfile_name or "AirHandlingUnit" in csvfile_name:
             write_list_2d(excel_workbook['2-7) 空調機'], csvdata[10:], 11, 1)
 
         elif "様式3-1" in csvfile_name:
@@ -121,16 +125,11 @@ def csv2excel(csv_directory, output_filename):
 
 if __name__ == '__main__':
 
-    # # コジェネテスト用（病院）
-    # for i in range(0,5):
-    #     csv2excel("./tests/cogeneration/Case_hospital_0"+str(i), "Case_hospital_0"+str(i))
-
-    # # コジェネテスト用（ホテル）
-    # for i in range(0,5):
-    #     csv2excel("./tests/cogeneration/Case_hotel_0"+str(i), "Case_hotel_0"+str(i))
-
-    # コジェネテスト用（事務所）
-    for i in range(3,5):
-        csv2excel("./tests/cogeneration/Case_office_0"+str(i), "Case_office_0"+str(i))
-
-
+    # テスト変換（延べ面積の入力も必要）
+    csv_directory = "./tests_old/ventilation_comprehensive"
+    excel_filename = "Case_vt_comprehensive_"
+    for i in range(0,1):
+        if i < 10:
+            csv2excel(csv_directory + "/Case0"+str(i), excel_filename + "0"+str(i))
+        else:
+            csv2excel(csv_directory + "/Case"+str(i), excel_filename + str(i))
