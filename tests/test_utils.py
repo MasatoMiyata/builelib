@@ -18,7 +18,7 @@ def convert2number(x, default):
     if x == "" or pd.isna(x):
         return default
     try:
-        return float(x)
+        return float(str(x).replace(',', ''))
     except (ValueError, TypeError):
         return default
 
