@@ -6,6 +6,7 @@ import math
 
 from builelib.input.make_inputdata import make_jsondata_from_Ver2_sheet
 from builelib.systems import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
+from builelib import database_loader
 
 # json.dump用のクラス
 class MyEncoder(json.JSONEncoder):
@@ -120,6 +121,16 @@ def calculate(inputfile_name, exec_calculation=True):
     with open(inputfile_name_split[0] + "_input.json",'w', encoding='utf-8') as fw:
         json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = MyEncoder)
 
+    # SpecialInputData が存在しない場合は空辞書をセット
+    if "SpecialInputData" not in inputdata:
+        inputdata["SpecialInputData"] = {}
+        
+    # データベースの一括読み込み
+    # SPシートの追加データ（flow_control, room_usage_condition 等）も含めてマージ済みの
+    # db 辞書を生成し、各設備の calc_energy() に渡す。
+    # これにより各モジュールでの個別 DB 読み込みと SP 追加処理が不要になる。
+    db = database_loader.load_all_databases(inputdata["SpecialInputData"])
+
 
     #------------------------------------
     # 空気調和設備の計算の実行
@@ -133,7 +144,7 @@ def calculate(inputfile_name, exec_calculation=True):
         try:
             if inputdata["AirConditioningZone"]:   # AirConditioningZone が 空 でなければ
 
-                resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug = False, output_dir=inputfile_name_split[0])
+                resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug = False, output_dir=inputfile_name_split[0], db=db)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
@@ -176,7 +187,7 @@ def calculate(inputfile_name, exec_calculation=True):
         try:
             if inputdata["VentilationRoom"]:   # VentilationRoom が 空 でなければ
 
-                resultdata_V = ventilation.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
+                resultdata_V = ventilation.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["V"] = resultdata_V["for_CGS"]
@@ -219,7 +230,7 @@ def calculate(inputfile_name, exec_calculation=True):
         try:
             if inputdata["LightingSystems"]:   # LightingSystems が 空 でなければ
 
-                resultdata_L = lighting.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
+                resultdata_L = lighting.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["L"] = resultdata_L["for_CGS"]
@@ -263,7 +274,7 @@ def calculate(inputfile_name, exec_calculation=True):
         try:
             if inputdata["HotwaterRoom"]:   # HotwaterRoom が 空 でなければ
             
-                resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
+                resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
         
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["HW"] = resultdata_HW["for_CGS"]
@@ -306,7 +317,7 @@ def calculate(inputfile_name, exec_calculation=True):
         try:
             if inputdata["Elevators"]:   # Elevators が 空 でなければ
 
-                resultdata_EV = elevator.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
+                resultdata_EV = elevator.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["EV"] = resultdata_EV["for_CGS"]
@@ -349,7 +360,7 @@ def calculate(inputfile_name, exec_calculation=True):
         try:
             if inputdata["PhotovoltaicSystems"]:   # PhotovoltaicSystems が 空 でなければ
 
-                resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
+                resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["PV"] = resultdata_PV["for_CGS"]
@@ -387,7 +398,7 @@ def calculate(inputfile_name, exec_calculation=True):
         try:
             if inputdata["Rooms"]:   # Rooms が 空 でなければ
 
-                resultdata_OT = other_energy.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0])
+                resultdata_OT = other_energy.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["OT"] = resultdata_OT["for_CGS"]
@@ -421,7 +432,7 @@ def calculate(inputfile_name, exec_calculation=True):
 
         try:
             if inputdata["CogenerationSystems"]:   # CogenerationSystems が 空 でなければ
-                resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir=inputfile_name_split[0])
+                resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
                 # 設計一次エネ・基準一次エネに追加
                 energy_consumption_design -= resultdata_CGS["年間一次エネルギー削減量"] * 1000
                 calc_reuslt["創エネルギー量（コジェネ）[MJ]"] = resultdata_CGS["年間一次エネルギー削減量"] * 1000
@@ -609,12 +620,20 @@ def calculate_from_json(inputdata: dict) -> dict:
         inputdata["SpecialInputData"] = {}
 
     #------------------------------------
+    # データベースの一括読み込み
+    # SPシートの追加データ（flow_control, room_usage_condition 等）も含めてマージ済みの
+    # db 辞書を生成し、各設備の calc_energy() に渡す。
+    # これにより各モジュールでの個別 DB 読み込みと SP 追加処理が不要になる。
+    #------------------------------------
+    db = database_loader.load_all_databases(inputdata["SpecialInputData"])
+
+    #------------------------------------
     # 空気調和設備の計算
     #------------------------------------
     resultdata_AC = {}
     try:
         if inputdata.get("AirConditioningZone"):
-            resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug=False, output_dir="")
+            resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug=False, output_dir="", db=db)
             resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
             energy_consumption_design   += resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
             energy_consumption_standard += resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
@@ -630,7 +649,7 @@ def calculate_from_json(inputdata: dict) -> dict:
     resultdata_V = {}
     try:
         if inputdata.get("VentilationRoom"):
-            resultdata_V = ventilation.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultdata_V = ventilation.calc_energy(inputdata, DEBUG=False, output_dir="", db=db)
             resultJson_for_CGS["V"] = resultdata_V["for_CGS"]
             energy_consumption_design   += resultdata_V["設計一次エネルギー消費量[MJ/年]"]
             energy_consumption_standard += resultdata_V["基準一次エネルギー消費量[MJ/年]"]
@@ -646,7 +665,7 @@ def calculate_from_json(inputdata: dict) -> dict:
     resultdata_L = {}
     try:
         if inputdata.get("LightingSystems"):
-            resultdata_L = lighting.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultdata_L = lighting.calc_energy(inputdata, DEBUG=False, output_dir="", db=db)
             resultJson_for_CGS["L"] = resultdata_L["for_CGS"]
             energy_consumption_design   += resultdata_L["E_lighting"]
             energy_consumption_standard += resultdata_L["Es_lighting"]
@@ -662,7 +681,7 @@ def calculate_from_json(inputdata: dict) -> dict:
     resultdata_HW = {}
     try:
         if inputdata.get("HotwaterRoom"):
-            resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultdata_HW = hotwatersupply.calc_energy(inputdata, DEBUG=False, output_dir="", db=db)
             resultJson_for_CGS["HW"] = resultdata_HW["for_CGS"]
             energy_consumption_design   += resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
             energy_consumption_standard += resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
@@ -678,7 +697,7 @@ def calculate_from_json(inputdata: dict) -> dict:
     resultdata_EV = {}
     try:
         if inputdata.get("Elevators"):
-            resultdata_EV = elevator.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultdata_EV = elevator.calc_energy(inputdata, DEBUG=False, output_dir="", db=db)
             resultJson_for_CGS["EV"] = resultdata_EV["for_CGS"]
             energy_consumption_design   += resultdata_EV["E_elevator"]
             energy_consumption_standard += resultdata_EV["Es_elevator"]
@@ -694,7 +713,7 @@ def calculate_from_json(inputdata: dict) -> dict:
     resultdata_PV = {}
     try:
         if inputdata.get("PhotovoltaicSystems"):
-            resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultdata_PV = photovoltaic.calc_energy(inputdata, DEBUG=False, output_dir="", db=db)
             resultJson_for_CGS["PV"] = resultdata_PV["for_CGS"]
             energy_consumption_design -= resultdata_PV["E_photovoltaic"]
             calc_reuslt["創エネルギー量（太陽光）[MJ]"] = resultdata_PV["E_photovoltaic"]
@@ -707,7 +726,7 @@ def calculate_from_json(inputdata: dict) -> dict:
     resultdata_OT = {}
     try:
         if inputdata.get("Rooms"):
-            resultdata_OT = other_energy.calc_energy(inputdata, DEBUG=False, output_dir="")
+            resultdata_OT = other_energy.calc_energy(inputdata, DEBUG=False, output_dir="", db=db)
             resultJson_for_CGS["OT"] = resultdata_OT["for_CGS"]
             calc_reuslt["その他一次エネルギー消費量[MJ]"] = resultdata_OT["E_other"]
     except Exception as e:
@@ -718,7 +737,7 @@ def calculate_from_json(inputdata: dict) -> dict:
     #------------------------------------
     try:
         if inputdata.get("CogenerationSystems"):
-            resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG=False, output_dir="")
+            resultdata_CGS = cogeneration.calc_energy(inputdata, resultJson_for_CGS, DEBUG=False, output_dir="", db=db)
             energy_consumption_design -= resultdata_CGS["年間一次エネルギー削減量"] * 1000
             calc_reuslt["創エネルギー量（コジェネ）[MJ]"] = resultdata_CGS["年間一次エネルギー削減量"] * 1000
     except Exception as e:

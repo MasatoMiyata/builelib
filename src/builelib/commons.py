@@ -5,6 +5,8 @@ import os
 import copy
 import math
 
+from builelib import database_loader
+
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
 # テンプレートファイルの保存場所
@@ -29,23 +31,11 @@ class MyEncoder(json.JSONEncoder):
 
 def get_standard_value(special_sheet):
     """基準値を読み込む
-    """
 
-    # 基準値データベースの読み込み
-    with open(database_directory + 'ROOM_STANDARDVALUE.json', 'r', encoding='utf-8') as f:
-        standard_value = json.load(f)
-    
-    ##----------------------------------------------------------------------------------
-    ## 任意入力 様式 SP-RT-UC. 室使用条件入力シート
-    ##----------------------------------------------------------------------------------
-    if special_sheet:
-        if "room_usage_condition" in special_sheet:
-            for buildling_type in special_sheet["room_usage_condition"]:
-                for room_type in special_sheet["room_usage_condition"][buildling_type]:
-                    # 新たに作成した室用途については、ベースとする室用途の基準値を呼び出す
-                    standard_value[buildling_type][room_type] = copy.deepcopy( standard_value[buildling_type][ special_sheet["room_usage_condition"][buildling_type][room_type]["ベースとする室用途"] ] )
-                    
-    return standard_value                    
+    database_loader.get_standard_value() に処理を委譲する。
+    既存コードとの後方互換性を維持するためにこの関数を残す。
+    """
+    return database_loader.get_standard_value(special_sheet if special_sheet else {})
 
 
 def count_Matrix(x, mxL):
@@ -420,36 +410,58 @@ def get_operation_schedule_lighting(buildingType, roomType, Calendar, RoomUsageS
 
 # 入力データのバリデーション
 def inputdata_validation(inputdata):
+    """
+    JSON Schemaによる入力データのバリデーション。
+    全エラーを収集してリストで返す（例外は発生させない）。
 
-    # スキーマの読み込み
-    with open( template_directory + '/webproJsonSchema.json', encoding='utf-8') as f:
-        schema_data = json.load(f)    
+    SP-AC-FC シートで追加されたカスタム制御方式（flow_control）は、
+    database_loader 経由で取得した有効選択肢をスキーマに動的注入することで対応する。
+    注入対象: FanControlType（風量制御）、ContolType（流量制御）
 
-    # 任意評定用（SP-1）
+    Returns:
+        list: エラーメッセージのリスト（空リストの場合はバリデーション成功）
+    """
+    # スキーマの読み込み（input/inputdata/ に格納）
+    schema_path = os.path.dirname(os.path.abspath(__file__)) + "/input/inputdata/webproJsonSchema.json"
+    with open( schema_path, encoding='utf-8') as f:
+        schema_data = json.load(f)
+
+    # 任意評定用（SP-AC-FC）: SPシートで追加された制御方式をスキーマに動的注入
+    # 正規の制御方式は FLOWCONTROL.json が正（Single Source of Truth）
+    # ここでは SpecialInputData["flow_control"] のキーのみ追加する
+    # （標準選択肢はスキーマの enum に既に定義済み）
     if "SpecialInputData" in inputdata:
-        if "flow_control" in inputdata["SpecialInputData"]:
-            for control_type_name in inputdata["SpecialInputData"]["flow_control"]:
+        for control_type_name in inputdata["SpecialInputData"].get("flow_control", {}):
+            _inject_flow_control_to_schema(schema_data, control_type_name)
 
-                # スキーマに追加
-                schema_data["definitions"]["AirHandlingSystem"]["properties"]["AirHandlingUnit"]["items"]["properties"]["FanControlType"]["anyOf"].append(
-                    {
-                        "type": "string",
-                        "enum":[
-                            control_type_name
-                        ]
-                    }
-                )
-                schema_data["definitions"]["SecondaryPump"]["properties"]["SecondaryPump"]["items"]["properties"]["ContolType"]["anyOf"].append(
-                    {
-                        "type": "string",
-                        "enum":[
-                            control_type_name
-                        ]
-                    }
-                )
+    # バリデーションの実行（全エラーを収集）
+    validator = jsonschema.Draft7Validator(schema_data)
+    errors = []
+    for error in validator.iter_errors(inputdata):
+        # エラーパス（例: "Rooms -> 室名 -> roomArea"）を生成
+        path = " -> ".join(str(p) for p in error.absolute_path) if error.absolute_path else "(ルート)"
+        errors.append(f"スキーマエラー [{path}]: {error.message}")
+    return errors
 
-    # バリデーションの実行
-    jsonschema.validate(inputdata, schema_data)
+
+def _inject_flow_control_to_schema(schema_data: dict, control_type_name: str) -> None:
+    """
+    スキーマの FanControlType / ContolType の anyOf にカスタム制御方式を追加する（内部関数）。
+
+    Parameters
+    ----------
+    schema_data : dict
+        webproJsonSchema.json から読み込んだスキーマ辞書（in-placeで変更される）。
+    control_type_name : str
+        追加するカスタム制御方式名（SPシートで定義したもの）。
+    """
+    new_enum_entry = {"type": "string", "enum": [control_type_name]}
+
+    schema_data["definitions"]["AirHandlingSystem"]["properties"]["AirHandlingUnit"][
+        "items"]["properties"]["FanControlType"]["anyOf"].append(new_enum_entry)
+
+    schema_data["definitions"]["SecondaryPump"]["properties"]["SecondaryPump"][
+        "items"]["properties"]["ContolType"]["anyOf"].append(new_enum_entry)
 
 
 def day2month(dd: np.array) -> str:
