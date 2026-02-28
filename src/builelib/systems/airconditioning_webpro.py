@@ -3,6 +3,7 @@ import numpy as np
 import math
 import os
 import copy
+import unicodedata
 import pandas as pd
 
 import sys
@@ -524,7 +525,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
                             # 空気層以外の断熱材を指定している場合
                             if layer[1]["thickness"] != None:
-                                material_name = layer[1]["materialID"].replace('\u3000', '')
+                                material_name = unicodedata.normalize('NFKC', layer[1]["materialID"]).replace(' ', '').replace('\u3000', '')
                                 Rvalue += (layer[1]["thickness"]/1000) / HeatThermalConductivity[material_name]["熱伝導率"]
 
                     else:
@@ -1346,9 +1347,9 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         # 全熱交換器の有無
         inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "無"
         for unit_id, unit_configure in enumerate(inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"]):
-            if unit_configure["isAirHeatExchanger"] == "有":
+            if unit_configure.get("isAirHeatExchanger") == "有":
                 inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "有"
-            elif unit_configure["isAirHeatExchanger"] == "全熱交換器あり・様式2-9記載無し":
+            elif unit_configure.get("isAirHeatExchanger") == "全熱交換器あり・様式2-9記載無し":
                 inputdata["AirHandlingSystem"][ahu_name]["isAirHeatExchanger"] = "有"
 
         # 全熱交換器の効率（一番低いものを採用）
