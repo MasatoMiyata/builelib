@@ -4144,10 +4144,11 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
                     # 追い掛け時運転時間の補正率
                     # （ Q_ref_max * hosei * xL + Qrefr_mod_except_HEX = (Q_ref_max + Qrefr_mod_except_HEX) * xL ）
-                    resultJson["REF"][ref_name]["hoseiStorage"][dd] = \
+                    # 補正率が負になる場合（蓄熱槽だけで全負荷を賄える場合）は0にクランプする
+                    resultJson["REF"][ref_name]["hoseiStorage"][dd] = max(0,
                         1 - ( inputdata["REF"][ref_name]["Heatsource"][0]["Q_ref_max"][dd] * \
                                 (1 - resultJson["REF"][ref_name]["load_ratio"][dd]) / \
-                                    (resultJson["REF"][ref_name]["load_ratio"][dd] * Qrefr_mod_except_HEX) )
+                                    (resultJson["REF"][ref_name]["load_ratio"][dd] * Qrefr_mod_except_HEX) ))
 
             # 運転時間を補正
             for dd in range(0,365):
