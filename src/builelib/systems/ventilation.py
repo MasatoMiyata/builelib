@@ -15,11 +15,11 @@ database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
 # 室使用条件データの読み込み
-with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
     _RoomUsageSchedule = json.load(f)
 
 # カレンダーパターンの読み込み
-with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
     _Calendar = json.load(f)
 
 
@@ -47,7 +47,7 @@ def set_OutdoorTemperature(region):
     return Toa_ave_design
 
 
-def calc_energy(inputdata, DEBUG = False, output_dir = ""):
+def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
     ## 標準室使用条件の読み込み＋更新
     RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
@@ -191,7 +191,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
     ## 送風機の制御方式に応じて定められる係数（解説書 3.2）
     ##----------------------------------------------------------------------------------
-    with open( database_directory + '/ventilationControl.json', 'r', encoding='utf-8') as f:
+    with open( database_directory + '/vt_ventilation_control.json', 'r', encoding='utf-8') as f:
         ventilationCtrl = json.load(f)
 
     
@@ -363,7 +363,10 @@ def calc_energy(inputdata, DEBUG = False, output_dir = ""):
 
         resultJson["ventilation"][roomID]["設計値[MJ]"] = np.sum( np.sum( resultJson["ventilation"][roomID]["時刻別設計一次エネルギー消費量[MJ/h]"] ))
         resultJson["ventilation"][roomID]["設計値[MJ/m2]"] = resultJson["ventilation"][roomID]["設計値[MJ]"] / inputdata["Rooms"][roomID]["roomArea"]
-        resultJson["ventilation"][roomID]["設計値/基準値"] = resultJson["ventilation"][roomID]["設計値[MJ]"] / resultJson["ventilation"][roomID]["基準値[MJ]"]
+        if resultJson["ventilation"][roomID]["基準値[MJ]"] > 0:
+            resultJson["ventilation"][roomID]["設計値/基準値"] = resultJson["ventilation"][roomID]["設計値[MJ]"] / resultJson["ventilation"][roomID]["基準値[MJ]"]
+        else:
+            resultJson["ventilation"][roomID]["設計値/基準値"] = 0
 
         resultJson["設計一次エネルギー消費量[MJ/年]"] += resultJson["ventilation"][roomID]["設計値[MJ]"]
         resultJson["基準一次エネルギー消費量[MJ/年]"] += resultJson["ventilation"][roomID]["基準値[MJ]"]

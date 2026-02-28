@@ -54,7 +54,7 @@ def calc_palstar(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     # 地域別データの読み込み
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'common_area.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
 
@@ -92,7 +92,7 @@ def calc_palstar(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     # 空調運転モード
-    with open(database_directory + 'ACoperationMode.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_operation_mode.json', 'r', encoding='utf-8') as f:
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
@@ -254,11 +254,11 @@ def calc_palstar(inputdata, debug = False):
     ### ISSUE : 二つのデータベースにわかれてしまっているので統一する。###
 
     # 標準入力法建材データの読み込み
-    with open(database_directory + 'HeatThermalConductivity.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_heat_thermal_conductivity.json', 'r', encoding='utf-8') as f:
         HeatThermalConductivity = json.load(f)
 
     # モデル建物法建材データの読み込み
-    with open(database_directory + 'HeatThermalConductivity_model.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_heat_thermal_conductivity_model.json', 'r', encoding='utf-8') as f:
         HeatThermalConductivity_model = json.load(f)
 
 
@@ -325,10 +325,10 @@ def calc_palstar(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     # 窓データの読み込み
-    with open(database_directory + 'WindowHeatTransferPerformance.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_window_heat_transfer.json', 'r', encoding='utf-8') as f:
         WindowHeatTransferPerformance = json.load(f)
 
-    with open(database_directory + 'glass2window.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_glass_to_window.json', 'r', encoding='utf-8') as f:
         glass2window = json.load(f)
 
 
@@ -801,7 +801,7 @@ def calc_palstar(inputdata, debug = False):
     ##----------------------------------------------------------------------------------
 
     ## 室負荷計算のための係数（解説書 A.3）
-    with open(database_directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_room_heat_gain_area'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
         QROOM_COEFFI = json.load(f)
 
 

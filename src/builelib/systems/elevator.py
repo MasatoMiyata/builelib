@@ -15,29 +15,41 @@ database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
 # 室使用条件データの読み込み
-with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
     _RoomUsageSchedule = json.load(f)
 
 # カレンダーパターンの読み込み
-with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
     _Calendar = json.load(f)
 
 
-def calc_energy(inputdata, DEBUG = False, output_dir = ""):
-
-    ## 標準室使用条件の読み込み＋更新
-    RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
-    if "room_usage_condition" in inputdata["SpecialInputData"]:
-        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
-            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
-                RoomUsageSchedule[buildling_type][room_type] = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]
-
-    ## カレンダーパターンの読み込み＋更新
-    Calendar = copy.deepcopy(_Calendar)
-    if "calender" in inputdata["SpecialInputData"]:
-        for pattern_name in inputdata["SpecialInputData"]["calender"]:
-            # データベースに追加
-            Calendar[pattern_name] = inputdata["SpecialInputData"]["calender"][pattern_name]
+def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
+    """
+    Parameters
+    ----------
+    inputdata : dict
+        入力データ辞書（webproJsonSchema準拠）。
+    DEBUG : bool, optional
+        デバッグ出力の有無。
+    output_dir : str, optional
+        出力ディレクトリのパス。
+    db : dict, optional
+        database_loader.load_all_databases() の戻り値。
+        None の場合は後方互換のため内部で個別に読み込む。
+    """
+    if db is not None:
+        RoomUsageSchedule = db["RoomUsageSchedule"]
+        Calendar = db["CALENDAR"]
+    else:
+        _special = inputdata.get("SpecialInputData", {})
+        RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
+        if "room_usage_condition" in _special:
+            for buildling_type in _special["room_usage_condition"]:
+                for room_type in _special["room_usage_condition"][buildling_type]:
+                    RoomUsageSchedule[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
+        Calendar = copy.deepcopy(_Calendar)
+        for pattern_name, pattern_data in _special.get("calender", {}).items():
+            Calendar[pattern_name] = pattern_data
 
     # 一次エネルギー換算係数
     fprime = 9760

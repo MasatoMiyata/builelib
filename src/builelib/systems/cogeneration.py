@@ -41,7 +41,21 @@ def perfCURVE(fcgs_e_rated,fcgs_e_75,fcgs_e_50,fcgs_hr_rated,fcgs_hr_75,fcgs_hr_
     return fe2,fe1,fe0,fhr2,fhr1,fhr0
 
 
-def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir = ""):
+def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir = "", db = None):
+    """
+    Parameters
+    ----------
+    inputdata : dict
+        入力データ辞書（webproJsonSchema準拠）。
+    resultJson_for_CGS : dict
+        他設備の計算結果（コジェネ計算に必要な各設備のエネルギー消費量）。
+    DEBUG : bool, optional
+        デバッグ出力の有無。
+    output_dir : str, optional
+        出力ディレクトリのパス。
+    db : dict, optional
+        database_loader.load_all_databases() の戻り値（コジェネでは未使用）。
+    """
 
     resultJson = {}
 

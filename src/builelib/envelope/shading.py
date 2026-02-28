@@ -10,7 +10,7 @@ import sys
 from builelib.climate import climate
 
 # データベースファイルの保存場所
-database_directory =  os.path.dirname(os.path.abspath(__file__)) + "/database/"
+database_directory =  os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
 # 気象データファイルの保存場所
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
@@ -71,38 +71,40 @@ def func_03(I_ALL, sin_hsdt_ALL):
     Smin = np.zeros((365*24*6,1))
     for dd in range(0,365):
         for hh in range(0,24):
-            
+
             mm60 = 24*dd + hh             # 1時間間隔データの列数
             mm10 = (24*dd + hh+1) * 6 - 1 # 10分間隔データの列数
-            
-            if H[mm10-3] > 0:
-                Smin[mm10-3] = Smin[mm10-3] + S[mm60] / n_all[dd][hh] / 2
 
-            if H[mm10-2] > 0:
-                Smin[mm10-2] = Smin[mm10-2] + S[mm60] / n_all[dd][hh]
+            if n_all[dd][hh] > 0:
+                if H[mm10-3] > 0:
+                    Smin[mm10-3] = Smin[mm10-3] + S[mm60] / n_all[dd][hh] / 2
 
-            if H[mm10-1] > 0:
-                Smin[mm10-1] = Smin[mm10-1] + S[mm60] / n_all[dd][hh]
+                if H[mm10-2] > 0:
+                    Smin[mm10-2] = Smin[mm10-2] + S[mm60] / n_all[dd][hh]
 
-            if H[mm10] > 0:
-                Smin[mm10]   = Smin[mm10]   + S[mm60] / n_all[dd][hh]
+                if H[mm10-1] > 0:
+                    Smin[mm10-1] = Smin[mm10-1] + S[mm60] / n_all[dd][hh]
 
-            if H[mm10+1] > 0:
-                Smin[mm10+1] = Smin[mm10+1] + S[mm60] / n_all[dd][hh]
+                if H[mm10] > 0:
+                    Smin[mm10]   = Smin[mm10]   + S[mm60] / n_all[dd][hh]
 
-            if H[mm10+2] > 0:
-                Smin[mm10+2] = Smin[mm10+2] + S[mm60] / n_all[dd][hh]
+                if H[mm10+1] > 0:
+                    Smin[mm10+1] = Smin[mm10+1] + S[mm60] / n_all[dd][hh]
 
-            if H[mm10+3] > 0:
-                Smin[mm10+3] = Smin[mm10+3] + S[mm60] / n_all[dd][hh] / 2
+                if H[mm10+2] > 0:
+                    Smin[mm10+2] = Smin[mm10+2] + S[mm60] / n_all[dd][hh]
 
+                if H[mm10+3] > 0:
+                    Smin[mm10+3] = Smin[mm10+3] + S[mm60] / n_all[dd][hh] / 2
+    
+    Smin = Smin.flatten()
 
     # 単位を kcal/(10min)m2 から　kcal/hm2　に変換
     I_ALL_10min = np.zeros((365,24*6))
     for dd in range(0,365):
         for hh in range(0,24*6):
             I_ALL_10min[dd][hh] = Smin[ (24*6*dd + hh) ] * 6
-
+            
     return I_ALL_10min
 
 def func_15(x, y, zyPlus, x3, x2, y1, y2, tanh_Sdt, cosA_ZWjdt, tanA_ZWjdt):
@@ -311,7 +313,7 @@ def calc_shadingCoefficient(AREA, Direction, x1,x2,x3,y1,y2,y3,zxp,zxm,zyp,zym):
 
     ## 地域別データ読み込み
 
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'common_area.json', 'r', encoding='utf-8') as f:
         areaDB = json.load(f)
     climatefilename = climatedata_directory + '/' + areaDB[AREA+"地域"]["気象データファイル名"] # 気象データ
 

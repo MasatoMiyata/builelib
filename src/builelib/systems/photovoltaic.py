@@ -18,7 +18,19 @@ from builelib.climate import climate
 # 気象データファイルの保存場所
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
-def calc_energy(inputdata, DEBUG = False, output_dir = ""):
+def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
+    """
+    Parameters
+    ----------
+    inputdata : dict
+        入力データ辞書（webproJsonSchema準拠）。
+    DEBUG : bool, optional
+        デバッグ出力の有無。
+    output_dir : str, optional
+        出力ディレクトリのパス。
+    db : dict, optional
+        database_loader.load_all_databases() の戻り値（太陽光発電では未使用）。
+    """
 
     # 一次エネルギー換算係数
     fprime = 9760

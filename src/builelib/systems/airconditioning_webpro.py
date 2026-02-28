@@ -18,11 +18,11 @@ database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
 # 室使用条件データの読み込み
-with open(database_directory + 'RoomUsageSchedule.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
     _RoomUsageSchedule = json.load(f)
 
 # カレンダーパターンの読み込み
-with open(database_directory + 'CALENDAR.json', 'r', encoding='utf-8') as f:
+with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
     _Calendar = json.load(f)
 
 
@@ -48,21 +48,38 @@ def count_Matrix(x, mxL):
     return ix+1
 
 
-def calc_energy(inputdata, debug = False, output_dir = ""):
+def calc_energy(inputdata, debug = False, output_dir = "", db = None):
+    """
+    Parameters
+    ----------
+    inputdata : dict
+        入力データ辞書（webproJsonSchema準拠）。
+    debug : bool, optional
+        デバッグ出力の有無。
+    output_dir : str, optional
+        出力ディレクトリのパス。
+    db : dict, optional
+        database_loader.load_all_databases() の戻り値。
+        None の場合は後方互換のため内部で個別に読み込む。
+    """
+    # db が渡された場合はそちらを使用（SP追加済み）
+    # db が None の場合は後方互換として内部で読み込む
+    if db is not None:
+        RoomUsageSchedule = db["RoomUsageSchedule"]
+        Calendar = db["CALENDAR"]
+    else:
+        ## 標準室使用条件の読み込み＋更新（後方互換）
+        _special = inputdata.get("SpecialInputData", {})
+        RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
+        if "room_usage_condition" in _special:
+            for buildling_type in _special["room_usage_condition"]:
+                for room_type in _special["room_usage_condition"][buildling_type]:
+                    RoomUsageSchedule[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
 
-    ## 標準室使用条件の読み込み＋更新
-    RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
-    if "room_usage_condition" in inputdata["SpecialInputData"]:
-        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
-            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
-                RoomUsageSchedule[buildling_type][room_type] = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]
-
-    ## カレンダーパターンの読み込み＋更新
-    Calendar = copy.deepcopy(_Calendar)
-    if "calender" in inputdata["SpecialInputData"]:
-        for pattern_name in inputdata["SpecialInputData"]["calender"]:
-            # データベースに追加
-            Calendar[pattern_name] = inputdata["SpecialInputData"]["calender"][pattern_name]
+        ## カレンダーパターンの読み込み＋更新（後方互換）
+        Calendar = copy.deepcopy(_Calendar)
+        for pattern_name, pattern_data in _special.get("calender", {}).items():
+            Calendar[pattern_name] = pattern_data
 
 
     # 一次エネルギー換算係数
@@ -146,11 +163,11 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
 
     # 流量制御
-    with open(database_directory + 'FLOWCONTROL.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_flow_control.json', 'r', encoding='utf-8') as f:
         FLOWCONTROL = json.load(f)
 
     # 熱源機器特性
-    with open(database_directory + "HeatSourcePerformance.json", 'r', encoding='utf-8') as f:
+    with open(database_directory + "ac_heat_source_performance.json", 'r', encoding='utf-8') as f:
         HeatSourcePerformance = json.load(f)
 
     ##----------------------------------------------------------------------------------
@@ -177,7 +194,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
 
     # 地域別データの読み込み
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'common_area.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
     # 負荷率帯マトリックス mxL = array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2])
@@ -282,7 +299,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
 
     # 空調運転モード
-    with open(database_directory + 'ACoperationMode.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_operation_mode.json', 'r', encoding='utf-8') as f:
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
@@ -452,11 +469,11 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ### ISSUE : 二つのデータベースにわかれてしまっているので統一する。###
 
     # 標準入力法建材データの読み込み
-    with open(database_directory + 'HeatThermalConductivity.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_heat_thermal_conductivity.json', 'r', encoding='utf-8') as f:
         HeatThermalConductivity = json.load(f)
 
     # モデル建物法建材データの読み込み
-    with open(database_directory + 'HeatThermalConductivity_model.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_heat_thermal_conductivity_model.json', 'r', encoding='utf-8') as f:
         HeatThermalConductivity_model = json.load(f)
 
 
@@ -523,10 +540,10 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
 
     # 窓データの読み込み
-    with open(database_directory + 'WindowHeatTransferPerformance.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_window_heat_transfer.json', 'r', encoding='utf-8') as f:
         WindowHeatTransferPerformance = json.load(f)
 
-    with open(database_directory + 'glass2window.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_glass_to_window.json', 'r', encoding='utf-8') as f:
         glass2window = json.load(f)
 
 
@@ -976,7 +993,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
 
     ## 室負荷計算のための係数（解説書 A.3）
-    with open(database_directory + 'QROOM_COEFFI_AREA'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_room_heat_gain_area'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
         QROOM_COEFFI = json.load(f)
 
     # 任意入力 様式 SP-RT-UC. 室使用条件入力シート
@@ -3612,7 +3629,7 @@ def calc_energy(inputdata, debug = False, output_dir = ""):
     ##----------------------------------------------------------------------------------
 
     # 地中熱オープンループの地盤特性の読み込み
-    with open(database_directory + 'AC_gshp_openloop.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'ac_gshp_openloop.json', 'r', encoding='utf-8') as f:
         AC_gshp_openloop = json.load(f)
 
     for ref_name in inputdata["REF"]:
