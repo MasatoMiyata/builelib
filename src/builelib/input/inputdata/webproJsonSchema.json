@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "WebプログラムVer3用JsonSchema",
+    "title": "Builelib Input Data JSON Schema",
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -130,6 +130,16 @@
         "SpecialInputData":{
             "description": "様式SP",
             "type": "object"
+        },
+        "CalculationMode":{
+            "description": "計算モード制御フラグ（計算エンジン内部使用）",
+            "type": "object",
+            "additionalProperties": {
+                "anyOf": [
+                    { "type": "boolean" },
+                    { "type": "number" }
+                ]
+            }
         }
     },
     "dependencies": {
@@ -346,6 +356,14 @@
                 "buildingGroup":{
                     "description": "RM-11:建物群名称",
                     "type": [ "string", "null" ]
+                },
+                "mainbuildingType":{
+                    "description": "RM-12:主たる建物用途",
+                    "type": [ "string", "null" ]
+                },
+                "Info":{
+                    "description": "RM-13:備考",
+                    "type": [ "string", "null" ]
                 }
             }
         },
@@ -469,7 +487,7 @@
                                         },
                                         "Info": {
                                             "description": "BE1-15:備考",
-                                            "type": "string"
+                                            "type": [ "string", "null" ]
                                         }
                                     }
                                 }
@@ -552,13 +570,20 @@
                 },
                 "Uvalue":{
                     "description": "BE2-10:熱貫流率",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 10
+                    "anyOf":[
+                        {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "Info": {
                     "description": "BE2-11:備考",
-                    "type": "string"
+                    "type": [ "string", "null" ]
                 },
                 "layers":{
                     "type": "array",
@@ -604,7 +629,7 @@
                             },
                             "Info": {
                                 "description": "BE2-11:備考",
-                                "type": "string"
+                                "type": [ "string", "null" ]
                             }
                         }
                     }
@@ -738,7 +763,7 @@
                 }, 
                 "Info": {
                     "description": "BE3-12:備考",
-                    "type": "string"
+                    "type": [ "string", "null" ]
                 }
             }
         },
@@ -858,13 +883,13 @@
                     "description": "AC1-8:空調機群名称 暖房 室負荷処理",
                     "type": "string"
                 },
-                "AHU_heeating_outdoorLoad": {
+                "AHU_heating_outdoorLoad": {
                     "description": "AC1-9:空調機群名称 暖房 外気負荷処理",
                     "type": "string"
                 },
                 "Info": {
                     "description": "AC1-10:備考",
-                    "type": "string"
+                    "type": [ "string", "null" ]
                 }
             }
         },
@@ -1096,7 +1121,7 @@
                             },
                             "Info": {
                                 "description": "AC2-21:備考",
-                                "type": "string"
+                                "type": [ "string", "null" ]
                             }
                         }
                     }
@@ -1117,7 +1142,7 @@
         },
         "SecondaryPump":{
             "properties": {
-                "TempelatureDifference": {
+                "TemperatureDifference": {
                     "description": "AC3-3:設計温度差",
                     "type": "number",
                     "minimum": 0,
@@ -1185,7 +1210,7 @@
                             },
                             "Info": {
                                 "description": "AC3-10:備考",
-                                "type": "string"
+                                "type": [ "string", "null" ]
                             }
                         }
                     }
@@ -1245,11 +1270,11 @@
                         }
                     ]
                 },
-                "HeatSorce_cooling": {
+                "HeatSource_cooling": {
                     "description": "AC4-21:熱源群名称 冷房",
                     "type": "string"
                 },
-                "HeatSorce_heating": {
+                "HeatSource_heating": {
                     "description": "AC4-22:熱源群名称 暖房",
                     "type": "string"
                 },
@@ -1376,6 +1401,21 @@
                                     }
                                 ]
                             },
+                            "isAirHeatExchanger":{
+                                "description": "AC4-10b:全熱交換器の有無",
+                                "type": "string",
+                                "enum":[
+                                    "有",
+                                    "無",
+                                    "全熱交換器無し",
+                                    "全熱交換器あり・様式2-9記載無し",
+                                    "全熱交換器あり・様式2-9記載有り"
+                                ]
+                            },
+                            "AirHeatExchanger_name":{
+                                "description": "AC4-10c:全熱交換器名称",
+                                "type": [ "string", "null" ]
+                            },
                             "AirHeatExchangeRatioCooling":{
                                 "description": "AC4-11:全熱交換効率 冷房時",
                                 "anyOf":[
@@ -1445,7 +1485,7 @@
                             },
                             "Info": {
                                 "description": "AC4-23:備考",
-                                "type": "string"
+                                "type": [ "string", "null" ]
                             }
                         }
                     }
@@ -1486,7 +1526,7 @@
                             },
                             "Info": {
                                 "description": "V1-6:備考",
-                                "type": "string"
+                                "type": [ "string", "null" ]
                             }
                         }
                     }
@@ -1635,7 +1675,7 @@
                 },
                 "Info": {
                     "description": "V1-6:備考",
-                    "type": "string"
+                    "type": [ "string", "null" ]
                 }
             },
             "required": [
@@ -1865,7 +1905,7 @@
                             },
                             "Info": {
                                 "description": "HW1-6:備考",
-                                "type": "string"
+                                "type": [ "string", "null" ]
                             }
                         }
                     }
@@ -1947,7 +1987,7 @@
                             },
                             "Info": {
                                 "description": "HW2-13:備考",
-                                "type": "string"
+                                "type": [ "string", "null" ]
                             }
                         }
                     }
@@ -2006,6 +2046,10 @@
                             "type": "null"
                         }
                     ]
+                },
+                "Info":{
+                    "description": "HW2-14:備考",
+                    "type": [ "string", "null" ]
                 }
             }
         },
@@ -2064,7 +2108,7 @@
                             },
                             "Info": {
                                 "description": "EV-7:備考",
-                                "type": "string"
+                                "type": [ "string", "null" ]
                             }
                         }
                     }
@@ -2123,7 +2167,7 @@
                 },
                 "Info": {
                     "description": "PV-8:備考",
-                    "type": "string"
+                    "type": [ "string", "null" ]
                 }
             }
         },
@@ -2268,7 +2312,7 @@
                 },
                 "Info": {
                     "description": "PV-8:備考",
-                    "type": "string"
+                    "type": [ "string", "null" ]
                 }
             }
         }
