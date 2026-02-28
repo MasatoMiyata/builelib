@@ -58,7 +58,7 @@ def caclulation(inputdata):
     climate_directory = "./src/builelib/climate/climatedata/"
 
     # 地域区分データの読み込み
-    with open(database_directory + 'AREA.json', 'r', encoding='utf-8') as f:
+    with open(database_directory + 'common_area.json', 'r', encoding='utf-8') as f:
         Area = json.load(f)
 
     # HASP気象データの読み込み
