@@ -1023,11 +1023,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
             # BL-8	「他人から供給された熱」	冷熱	(数値)
             data["Building"]["Coefficient_DHC"]["Cooling"] = \
-                check_value(str(sheet_BL.cell(18, 2).value), "様式0.基本情報 19行目:「⑫他人から供給された熱（冷熱）の一次エネ換算係数」", None, None, "数値", None, 0, None)
+                check_value(str(sheet_BL.cell(18, 2).value), "様式0.基本情報 19行目:「⑫他人から供給された熱（冷熱）の一次エネ換算係数」", None, 1.36, "数値", None, 0, None)
                         
             # BL-9	の一次エネルギー換算係数	温熱	(数値)
             data["Building"]["Coefficient_DHC"]["Heating"] = \
-                check_value(str(sheet_BL.cell(19, 2).value), "様式0.基本情報 20行目:「⑬他人から供給された熱（温熱）の一次エネ換算係数」", None, None, "数値", None, 0, None)
+                check_value(str(sheet_BL.cell(19, 2).value), "様式0.基本情報 20行目:「⑬他人から供給された熱（温熱）の一次エネ換算係数」", None, 1.36, "数値", None, 0, None)
 
         except:
 
