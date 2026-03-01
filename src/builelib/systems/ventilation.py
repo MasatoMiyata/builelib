@@ -122,7 +122,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         # 換気代替空調機があるかどうかを判定
         for unitID, iunit in inputdata["VentilationRoom"][roomID]["VentilationUnitRef"].items():
             
-            if iunit["UnitType"] == "空調":
+            if iunit["UnitType"] == "空調" and inputdata["VentilationUnit"][unitID]["AC_CoolingCapacity"] is not None:
 
                 # 換気代替空調機であるかどうかを判定（UnitTypeが「空調」である機器があれば、換気代替空調機であると判断する）
                 inputdata["VentilationRoom"][roomID]["isVentilationUsingAC"]  = True
@@ -199,6 +199,10 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     ## 換気送風機の年間電力消費量（解説書 3.3）
     ##----------------------------------------------------------------------------------
     for unitID, iunit in inputdata["VentilationUnit"].items():
+
+        # 換気系統に接続されていない機器はスキップ
+        if "roomAreaList" not in iunit:
+            continue
 
         # 電動機定格出力[kW]から消費電力[kW]を計算（1台あたり、制御なし）
         if iunit["PowerConsumption"] != None:
