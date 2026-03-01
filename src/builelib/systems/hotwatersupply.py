@@ -375,7 +375,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
             for unit_id, unit_configure in enumerate(inputdata["HotwaterRoom"][room_name]["HotwaterSystem"]):
                 if unit_name == unit_configure["SystemName"]:
 
-                    # 標準日積算給湯量 [L/day] →　配管長さ算出に必要
+                    # 標準日積算給湯量 [L/day] → 配管長さ算出に必要
                     inputdata["HotwaterSupplySystems"][unit_name]["Qsr_eqp_daily"] += \
                         inputdata["HotwaterRoom"][room_name]["hotwater_demand_daily"] * unit_configure["roomPowerRatio"]
 
