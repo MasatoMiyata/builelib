@@ -18,6 +18,14 @@ from builelib.climate import climate
 # 気象データファイルの保存場所
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
+# データベースファイルの保存場所
+database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
+
+# 日射地域区分と気象ファイル名の関係
+with open(database_directory + "common_annual_solar_level.json", encoding="utf-8") as f:
+    _AnnualSolarLevel = json.load(f)
+
+
 def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     """
     Parameters
@@ -48,64 +56,10 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     }
 
     # 地域区分と気象ファイル名の関係
-    climate_data_file = {
-        "1地域":{
-            "A1": "7.csv",
-            "A2": "117.csv",
-            "A3": "124.csv",
-            "A4": None,
-            "A5": None
-        },
-        "2地域":{
-            "A1": "49.csv",
-            "A2": "63.csv",
-            "A3": "59.csv",
-            "A4": "59-A4.csv",
-            "A5": "59-A5.csv"
-        },
-        "3地域":{
-            "A1": "190.csv",
-            "A2": "230.csv",
-            "A3": "426.csv",
-            "A4": "403.csv",
-            "A5": "412.csv"
-        },
-        "4地域":{
-            "A1": "286.csv",
-            "A2": "186.csv",
-            "A3": "292.csv",
-            "A4": "423.csv",
-            "A5": "401.csv"
-        },
-        "5地域":{
-            "A1": "593.csv",
-            "A2": "542.csv",
-            "A3": "495.csv",
-            "A4": "473.csv",
-            "A5": "420.csv"
-        },
-        "6地域":{
-            "A1": None,
-            "A2": "569.csv",
-            "A3": "551.csv",
-            "A4": "480.csv",
-            "A5": "438.csv"
-        },
-        "7地域":{
-            "A1": "819-A1.csv",
-            "A2": "819-A2.csv",
-            "A3": "819.csv",
-            "A4": "798.csv",
-            "A5": "797.csv"
-        },
-        "8地域":{
-            "A1": None,
-            "A2": None,
-            "A3": "826.csv",
-            "A4": "836.csv",
-            "A5": "842.csv"
-        }
-    }
+    if db is not None:
+        climate_data_file = db["AnnualSolarLevel"]
+    else:
+        climate_data_file = _AnnualSolarLevel
 
     for system_name in inputdata["PhotovoltaicSystems"]:
 
@@ -156,11 +110,11 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
                 inputdata["SpecialInputData"]["climate_data"]["longitude_std"]
                 )
 
-        elif climate_data_file[ inputdata["Building"]["Region"]+"地域" ][ inputdata["Building"]["AnnualSolarRegion"] ] != None:
+        elif climate_data_file[ inputdata["Building"]["AnnualSolarRegion"] ][ inputdata["Building"]["Region"]+"地域" ]:
 
             # 気象データの読み込み（日射量は MJ/m2h）
             [Tout, Iod, Ios, sun_altitude, sun_azimuth] = \
-            climate.readCsvClimateData( climatedata_directory + climate_data_file[ inputdata["Building"]["Region"]+"地域" ][ inputdata["Building"]["AnnualSolarRegion"] ] )
+            climate.readCsvClimateData( climatedata_directory + climate_data_file[ inputdata["Building"]["AnnualSolarRegion"] ][ inputdata["Building"]["Region"]+"地域" ] )
         
         else:
             raise Exception('日射地域区分の指定が不正です')
