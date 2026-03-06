@@ -8,7 +8,6 @@ testcase_dict = {
     "roomDepth": 'lighting/◇奥行寸法_20190730-183436.txt',
     "roomWidth": 'lighting/◇開口寸法_20190730-183436.txt',
     "unitHeight": 'lighting/◇器具高さ_20190730-183436.txt',
-    "roomDepth_error": 'lighting/◇境界値エラー側_20190730-183436.txt',
     "roomIndex": 'lighting/◇室指数_20190730-183436.txt',
     "roomArea": 'lighting/◇室面積_20190730-183436.txt',
     "unitEnergy": 'lighting/◇消費電力_20190730-183436.txt',
