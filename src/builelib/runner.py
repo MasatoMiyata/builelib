@@ -225,10 +225,6 @@ def calculate(inputfile_name, exec_calculation=True):
 
     # 実行
     resultdata_L = {}
-
-    resultdata_L = lighting.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
-    print(resultdata_L)
-
     if exec_calculation:
 
         try:
