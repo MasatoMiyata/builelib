@@ -830,7 +830,7 @@ if __name__ == '__main__':  # pragma: no cover
         "OT":{},
     }
 
-    import airconditioning_webpro
+    import airconditioning
     import ventilation
     import lighting
     import hotwatersupply
@@ -839,7 +839,7 @@ if __name__ == '__main__':  # pragma: no cover
     import other_energy
 
     if inputdata["AirConditioningZone"]:
-        resultJsonAC = airconditioning_webpro.calc_energy(inputdata, debug = False)
+        resultJsonAC = airconditioning.calc_energy(inputdata, debug = False)
         resultJson_for_CGS["AC"] = resultJsonAC["for_CGS"]
     if inputdata["VentilationRoom"]:
         resultJsonV = ventilation.calc_energy(inputdata, DEBUG = False)

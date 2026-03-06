@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from builelib.systems import airconditioning_webpro
+from builelib.systems import airconditioning
 from tests.test_utils import convert2number, read_csv
 
 # テストケースファイルのディレクトリ
@@ -307,14 +307,14 @@ test_data, test_ids = get_test_data()
 @pytest.mark.parametrize('inputdata, expectedvalue', test_data, ids=test_ids)
 def test_calc(inputdata, expectedvalue):
     if expectedvalue[0] != "err":
-        resultJson = airconditioning_webpro.calc_energy(inputdata)
+        resultJson = airconditioning.calc_energy(inputdata)
         actual_Dc = resultJson["Qroom"]["1F_room1"]["年間室負荷（冷房）[MJ]"]
         actual_Dh = resultJson["Qroom"]["1F_room1"]["年間室負荷（暖房）[MJ]"]
         assert actual_Dc == pytest.approx(convert2number(expectedvalue[0], 0), rel=0.0001, abs=0.0001)
         assert actual_Dh == pytest.approx(convert2number(expectedvalue[1], 0), rel=0.0001, abs=0.0001)
     else:
         with pytest.raises(Exception):
-            airconditioning_webpro.calc_energy(inputdata)
+            airconditioning.calc_energy(inputdata)
 
 
 if __name__ == '__main__':

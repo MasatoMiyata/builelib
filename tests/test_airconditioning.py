@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from builelib.systems import airconditioning_webpro
+from builelib.systems import airconditioning
 from tests.test_utils import read_excel, read_json
 
 # テストケースファイルのディレクトリ
@@ -46,7 +46,7 @@ test_data, test_ids = get_test_data()
 
 @pytest.mark.parametrize("inputdata, expectedvalue", test_data, ids=test_ids)
 def test_calc_airconditioning(inputdata, expectedvalue):
-    resultJson = airconditioning_webpro.calc_energy(inputdata)
+    resultJson = airconditioning.calc_energy(inputdata)
     assert resultJson["設計一次エネルギー消費量[MJ/年]"] == pytest.approx(expectedvalue, rel=0.0001, abs=0.0001)
 
 

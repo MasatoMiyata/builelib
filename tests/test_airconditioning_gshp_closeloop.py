@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 from builelib.input.make_inputdata import make_jsondata_from_Ver2_sheet
-from builelib.systems import airconditioning_webpro
+from builelib.systems import airconditioning
 from tests.test_utils import convert2number, read_csv
 
 # テストケースファイルのディレクトリ
@@ -50,7 +50,7 @@ def test_calc(xlsm_path, region, expected_design, expected_standard):
     inputdata.setdefault("SpecialInputData", {})
     inputdata["Building"]["Region"] = region
 
-    resultJson = airconditioning_webpro.calc_energy(inputdata)
+    resultJson = airconditioning.calc_energy(inputdata)
 
     actual_design = resultJson["設計一次エネルギー消費量[MJ/m2年]"]
     actual_standard = resultJson["基準一次エネルギー消費量[MJ/m2年]"]

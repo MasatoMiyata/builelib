@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import json
 
-from builelib import airconditioning_webpro
+from builelib import airconditioning
 
 # json.dump用のクラス
 class MyEncoder(json.JSONEncoder):
@@ -621,7 +621,7 @@ for iRESION in [1,2,3,4,5,6,7,8]:
                         #     json.dump(bldgdata,fw,indent=4,ensure_ascii=False)
                         
                         # buielib/ACの実行
-                        resultdata_AC = airconditioning_webpro.calc_energy(bldgdata, debug = False)
+                        resultdata_AC = airconditioning.calc_energy(bldgdata, debug = False)
                         
                         # 設計一次エネ・基準一次エネ
                         print(resultdata_AC["設計一次エネルギー消費量[MJ/年]"]/Sf)

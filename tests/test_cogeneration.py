@@ -3,7 +3,7 @@ import pytest
 import xlrd
 from pathlib import Path
 
-from builelib.systems import airconditioning_webpro
+from builelib.systems import airconditioning
 from builelib.systems import ventilation
 from builelib.systems import lighting
 from builelib.systems import hotwatersupply
@@ -81,7 +81,7 @@ def test_calc(inputdata, expectedvalue):
 
     # 各設備の計算実行
     if inputdata.get("AirConditioningZone"):
-        resultJsonAC = airconditioning_webpro.calc_energy(inputdata)
+        resultJsonAC = airconditioning.calc_energy(inputdata)
         resultJson_for_CGS["AC"] = resultJsonAC["for_CGS"]
     if inputdata.get("VentilationRoom"):
         resultJsonV = ventilation.calc_energy(inputdata)

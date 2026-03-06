@@ -1,4 +1,4 @@
-from . import airconditioning_webpro
+from . import airconditioning
 from . import ventilation
 from . import lighting
 from . import hotwatersupply

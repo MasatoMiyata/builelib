@@ -5,7 +5,7 @@ import zipfile
 import math
 
 from builelib.input.make_inputdata import make_jsondata_from_Ver2_sheet
-from builelib.systems import airconditioning_webpro, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
+from builelib.systems import airconditioning, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
 from builelib import database_loader
 
 # json.dump用のクラス
@@ -144,7 +144,7 @@ def calculate(inputfile_name, exec_calculation=True):
         try:
             if inputdata["AirConditioningZone"]:   # AirConditioningZone が 空 でなければ
 
-                resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug = False, output_dir=inputfile_name_split[0], db=db)
+                resultdata_AC = airconditioning.calc_energy(inputdata, debug = False, output_dir=inputfile_name_split[0], db=db)
 
                 # CGSの計算に必要となる変数
                 resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
@@ -633,7 +633,7 @@ def calculate_from_json(inputdata: dict) -> dict:
     resultdata_AC = {}
     try:
         if inputdata.get("AirConditioningZone"):
-            resultdata_AC = airconditioning_webpro.calc_energy(inputdata, debug=False, output_dir="", db=db)
+            resultdata_AC = airconditioning.calc_energy(inputdata, debug=False, output_dir="", db=db)
             resultJson_for_CGS["AC"] = resultdata_AC["for_CGS"]
             energy_consumption_design   += resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
             energy_consumption_standard += resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
@@ -784,7 +784,7 @@ def calculate_ac(inputfile_name):
     print(validation)
 
     # 計算の実行（デバッグモードON）
-    resultJson_webpro = airconditioning_webpro.calc_energy(inputdata, debug=True)
+    resultJson_webpro = airconditioning.calc_energy(inputdata, debug=True)
 
     print( f'BEI/AC: {resultJson_webpro["BEI/AC"]}')        
     print( f'設計一次エネルギー消費量 全体: {resultJson_webpro["設計一次エネルギー消費量[MJ/年]"]}')
