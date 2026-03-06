@@ -1,7 +1,14 @@
 {
     "定風量制御": {
-        "label_en": "Constant Air Volume",
         "Type": "風量",
+        "a4": 0,
+        "a3": 0,
+        "a2": 0,
+        "a1": 0,
+        "a0": 1
+    },
+    "定流量制御": {
+        "Type": "流量",
         "a4": 0,
         "a3": 0,
         "a2": 0,
@@ -9,8 +16,7 @@
         "a0": 1
     },
     "回転数制御": {
-        "label_en": "Variable Speed Drive",
-        "Type": "風量",
+        "Type": "風量・流量",
         "a4": 0,
         "a3": 0,
         "a2": 0,
@@ -18,8 +24,7 @@
         "a0": 0
     },
     "回転数制御_2乗": {
-        "label_en": "Variable Speed Drive (2nd power)",
-        "Type": "風量",
+        "Type": "風量・流量",
         "a4": 0,
         "a3": 0,
         "a2": 1,
@@ -27,21 +32,11 @@
         "a0": 0
     },
     "回転数制御_3乗": {
-        "label_en": "Variable Speed Drive (3rd power)",
-        "Type": "風量",
+        "Type": "風量・流量",
         "a4": 0,
         "a3": 1,
         "a2": 0,
         "a1": 0,
         "a0": 0
-    },
-    "定流量制御": {
-        "label_en": "Constant Flow Rate",
-        "Type": "流量",
-        "a4": 0,
-        "a3": 0,
-        "a2": 0,
-        "a1": 0,
-        "a0": 1
     }
 }
