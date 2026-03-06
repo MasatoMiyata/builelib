@@ -14,14 +14,6 @@ database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # 気象データファイルの保存場所
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
-# 室使用条件データの読み込み
-with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
-    _RoomUsageSchedule = json.load(f)
-
-# カレンダーパターンの読み込み
-with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
-    _Calendar = json.load(f)
-
 
 def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     """
@@ -29,7 +21,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     ----------
     inputdata : dict
         入力データ辞書（webproJsonSchema準拠）。
-    DEBUG : bool, optional
+    debug : bool, optional
         デバッグ出力の有無。
     output_dir : str, optional
         出力ディレクトリのパス。
@@ -37,25 +29,47 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         database_loader.load_all_databases() の戻り値。
         None の場合は後方互換のため内部で個別に読み込む。
     """
+
+    ##----------------------------------------------------------------------------------
+    ## データベースの読み込み
+    ##----------------------------------------------------------------------------------
     if db is not None:
-        RoomUsageSchedule = db["RoomUsageSchedule"]
-        Calendar = db["CALENDAR"]
+
+        _ROOM_USAGE_SCHEDULE = db["標準室使用スケジュール"]
+        _CALENDAR = db["カレンダー"]
+        
     else:
-        _special = inputdata.get("SpecialInputData", {})
-        RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
-        if "room_usage_condition" in _special:
-            for buildling_type in _special["room_usage_condition"]:
-                for room_type in _special["room_usage_condition"][buildling_type]:
-                    RoomUsageSchedule[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
-        Calendar = copy.deepcopy(_Calendar)
-        for pattern_name, pattern_data in _special.get("calender", {}).items():
-            Calendar[pattern_name] = pattern_data
+
+        # 室使用条件データの読み込み
+        with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
+            _ROOM_USAGE_SCHEDULE = json.load(f)
+
+        # カレンダーパターンの読み込み
+        with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
+            _CALENDAR = json.load(f)
+
+    ##----------------------------------------------------------------------------------
+    ## SPシート
+    ##----------------------------------------------------------------------------------
+    _special = inputdata.get("SpecialInputData", {})
+
+    ## 任意入力 標準室使用条件
+    ROOM_USAGE_SCHEDULE = copy.deepcopy(_ROOM_USAGE_SCHEDULE)
+    if "room_usage_condition" in _special:
+        for buildling_type in _special["room_usage_condition"]:
+            for room_type in _special["room_usage_condition"][buildling_type]:
+                ROOM_USAGE_SCHEDULE[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
+    
+    ## 任意入力 カレンダーパターン  
+    CALENDAR = copy.deepcopy(_CALENDAR)
+    for pattern_name, pattern_data in _special.get("calender", {}).items():
+        CALENDAR[pattern_name] = pattern_data
 
     # 一次エネルギー換算係数
-    fprime = 9760
+    F_PRIME = 9760
     if "CalculationMode" in inputdata:
         if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
-            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+            F_PRIME = inputdata["CalculationMode"]["一次エネルギー換算係数"]
 
     #----------------------------------------------------------------------------------
     # 計算結果を格納する変数
@@ -111,7 +125,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
             inputdata["Elevators"][room_name]["operation_schedule_hourly"] = 5480/8760 * np.ones((365,24))
         else:
 
-            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = bc.get_operation_schedule_lighting(buildingType, roomType, Calendar, RoomUsageSchedule)
+            inputdata["Elevators"][room_name]["operation_schedule_hourly"] = bc.get_operation_schedule_lighting(buildingType, roomType, CALENDAR, ROOM_USAGE_SCHEDULE)
             inputdata["Elevators"][room_name]["operation_time"] = np.sum( np.sum(inputdata["Elevators"][room_name]["operation_schedule_hourly"]))
 
 
@@ -153,7 +167,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     for room_name in inputdata["Elevators"]:
         for unit_id, unit_configure in enumerate(inputdata["Elevators"][room_name]["Elevator"]):
 
-            resultJson["E_elevator"] += unit_configure["energy_consumption"] * fprime / 1000
+            resultJson["E_elevator"] += unit_configure["energy_consumption"] * F_PRIME / 1000
 
     if DEBUG:
         print(f'昇降機の設計一次エネルギー消費量  {resultJson["E_elevator"]}  MJ/年')
@@ -177,7 +191,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
                 inputdata["Elevators"][room_name]["Elevator"][unit_id]["energy_consumption"] / inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"]
 
             # 基準一次エネルギー消費量計算 [MJ/年]
-            resultJson["Es_elevator"] += inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] * fprime / 1000
+            resultJson["Es_elevator"] += inputdata["Elevators"][room_name]["Elevator"][unit_id]["Es"] * F_PRIME / 1000
 
 
     if "SpecialInputData" in inputdata:
@@ -219,7 +233,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         output_dir = output_dir + "_"
 
     df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（昇降機）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (fprime) /1000,
+        '一次エネルギー消費量（昇降機）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (F_PRIME) /1000,
         '電力消費量（昇降機）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
     }, index=bc.date_1year)
 

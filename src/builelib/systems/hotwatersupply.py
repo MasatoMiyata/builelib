@@ -17,14 +17,6 @@ database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # 気象データファイルの保存場所
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
-# 室使用条件データの読み込み
-with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
-    _RoomUsageSchedule = json.load(f)
-
-# カレンダーパターンの読み込み
-with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
-    _Calendar = json.load(f)
-
 
 def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     """
@@ -32,7 +24,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     ----------
     inputdata : dict
         入力データ辞書（webproJsonSchema準拠）。
-    DEBUG : bool, optional
+    debug : bool, optional
         デバッグ出力の有無。
     output_dir : str, optional
         出力ディレクトリのパス。
@@ -40,19 +32,44 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         database_loader.load_all_databases() の戻り値。
         None の場合は後方互換のため内部で個別に読み込む。
     """
+
+    ##----------------------------------------------------------------------------------
+    ## データベースの読み込み
+    ##----------------------------------------------------------------------------------
     if db is not None:
-        RoomUsageSchedule = db["RoomUsageSchedule"]
-        Calendar = db["CALENDAR"]
+
+        _ROOM_USAGE_SCHEDULE = db["標準室使用スケジュール"]
+        _CALENDAR = db["カレンダー"]
+        AREA = db["地域区分"]
+
     else:
-        _special = inputdata.get("SpecialInputData", {})
-        RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
-        if "room_usage_condition" in _special:
-            for buildling_type in _special["room_usage_condition"]:
-                for room_type in _special["room_usage_condition"][buildling_type]:
-                    RoomUsageSchedule[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
-        Calendar = copy.deepcopy(_Calendar)
-        for pattern_name, pattern_data in _special.get("calender", {}).items():
-            Calendar[pattern_name] = pattern_data
+
+        # 室使用条件データの読み込み
+        with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
+            _ROOM_USAGE_SCHEDULE = json.load(f)
+
+        # カレンダーパターンの読み込み
+        with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
+            _CALENDAR = json.load(f)
+
+        # 地域別データの読み込み
+        with open(database_directory + 'common_area.json', 'r', encoding='utf-8') as f:
+            AREA = json.load(f)
+
+    ##----------------------------------------------------------------------------------
+    ## SPシート
+    ##----------------------------------------------------------------------------------
+    _special = inputdata.get("SpecialInputData", {})
+
+    ROOM_USAGE_SCHEDULE = copy.deepcopy(_ROOM_USAGE_SCHEDULE)
+    if "room_usage_condition" in _special:
+        for buildling_type in _special["room_usage_condition"]:
+            for room_type in _special["room_usage_condition"][buildling_type]:
+                ROOM_USAGE_SCHEDULE[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
+    
+    CALENDAR = copy.deepcopy(_CALENDAR)
+    for pattern_name, pattern_data in _special.get("calender", {}).items():
+        CALENDAR[pattern_name] = pattern_data
 
     # 一次エネルギー換算係数
     fprime = 9760
@@ -60,7 +77,56 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
             fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
 
+
+    ##----------------------------------------------------------------------------------
+    ## 気象データの読み込み
+    ## 任意入力 様式 SP-CD: 気象データ入力シート
+    ##----------------------------------------------------------------------------------
+    if "climate_data" in inputdata["SpecialInputData"]:  # 任意入力（様式 SP-CD: 気象データ入力シート）
+
+        # 外気温 [℃]
+        Tout = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
+        # 法線面直達日射量 [W/m2]
+        Iod  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"])
+        # 水平面天空日射量 [W/m2]
+        Ios  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"])
+        # 水平面夜間放射量 [W/m2]
+        Inn  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
+
+        # 緯度
+        if "latitude" in inputdata["SpecialInputData"]["climate_data"]:
+            phi    = float(inputdata["SpecialInputData"]["climate_data"]["latitude"])
+        else:
+            phi  = AREA[inputdata["Building"]["Region"]+"地域"]["緯度"]
+
+        # 経度
+        if "longitude" in inputdata["SpecialInputData"]["climate_data"]:
+            longi  = float(inputdata["SpecialInputData"]["climate_data"]["longitude"])
+        else:
+            longi  = AREA[inputdata["Building"]["Region"]+"地域"]["経度"]
+
+        # 標準時の経度
+        if "longitude_std" in inputdata["SpecialInputData"]["climate_data"]:
+            longi_std = float(inputdata["SpecialInputData"]["climate_data"]["longitude_std"])
+        else:
+            longi_std = 135
+
+    else:
+
+        Tout, _, Iod, Ios, Inn = climate.readHaspClimateData(climatedata_directory + "/" +
+                                    AREA[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"])
+        
+        # 緯度
+        phi  = AREA[inputdata["Building"]["Region"]+"地域"]["緯度"]
+        # 経度
+        longi  = AREA[inputdata["Building"]["Region"]+"地域"]["経度"]
+        # 標準時の経度
+        longi_std = 135
+
+
+    ##----------------------------------------------------------------------------------
     # 計算結果を格納する変数
+    ##----------------------------------------------------------------------------------
     resultJson = {
 
         "設計一次エネルギー消費量[MJ/年]": 0,   # 給湯設備の設計一次エネルギー消費量 [MJ/年]
@@ -82,43 +148,6 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         }
     }
     
-    # 地域別データの読み込み
-    with open(database_directory + 'common_area.json', 'r', encoding='utf-8') as f:
-        Area = json.load(f)
-
-
-    ##----------------------------------------------------------------------------------
-    ## 気象データの読み込み
-    ##----------------------------------------------------------------------------------
-    if "climate_data" in inputdata["SpecialInputData"]:  # 任意入力（様式 SP-CD: 気象データ入力シート）
-
-        # 外気温 [℃]
-        Tout = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
-        # 法線面直達日射量 [W/m2]
-        Iod  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"])
-        # 水平面天空日射量 [W/m2]
-        Ios  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"])
-        # 水平面夜間放射量 [W/m2]
-        Inn  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
-
-        # 緯度
-        phi    = float(inputdata["SpecialInputData"]["climate_data"]["latitude"])
-        # 経度
-        longi  = float(inputdata["SpecialInputData"]["climate_data"]["longitude"])
-        # 標準時の経度
-        longi_std = float(inputdata["SpecialInputData"]["climate_data"]["longitude_std"])
-
-    else:
-
-        Tout, _, Iod, Ios, Inn = climate.readHaspClimateData(climatedata_directory + "/" +
-                                    Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"])
-        
-        # 緯度
-        phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
-        # 経度
-        longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
-        # 標準時の経度
-        longi_std = 135
 
     #----------------------------------------------------------------------------------
     # 入力データの整理（計算準備）
@@ -181,7 +210,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         # 日積算湯使用利用 [L/m2/day]
         hotwater_demand, hotwater_demand_washroom, hotwater_demand_shower, hotwater_demand_kitchen, hotwater_demand_other = \
             bc.get_roomHotwaterDemand(
-                inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], RoomUsageSchedule)
+                inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], ROOM_USAGE_SCHEDULE)
 
         # 日積算給湯量参照値 [L/day]
         inputdata["HotwaterRoom"][room_name]["hotwater_demand"] = hotwater_demand * inputdata["Rooms"][room_name]["roomArea"]
@@ -192,7 +221,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
         # 各室の室使用スケジュール （＝室の同時使用率。 給湯需要がある室は、必ず空調されている前提とする）
         roomScheduleRoom, _, _, _, _ = \
-            bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], Calendar, RoomUsageSchedule)
+            bc.get_roomUsageSchedule(inputdata["Rooms"][room_name]["buildingType"], inputdata["Rooms"][room_name]["roomType"], CALENDAR, ROOM_USAGE_SCHEDULE)
 
 
         inputdata["HotwaterRoom"][room_name]["hotwaterSchedule"] = np.zeros(365)
@@ -319,7 +348,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         ACoperationMode = json.load(f)
 
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
-    ac_mode = ACoperationMode[Area[inputdata["Building"]["Region"]+"地域"]["空調運転モードタイプ"]]
+    ac_mode = ACoperationMode[AREA[inputdata["Building"]["Region"]+"地域"]["空調運転モードタイプ"]]
 
     if inputdata["Building"]["Region"] == '1' or inputdata["Building"]["Region"] == '2':
         TWdata = 0.6639*Toa_ave + 3.466

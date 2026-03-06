@@ -14,14 +14,6 @@ database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # 気象データファイルの保存場所
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
-# 室使用条件データの読み込み
-with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
-    _RoomUsageSchedule = json.load(f)
-
-# カレンダーパターンの読み込み
-with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
-    _Calendar = json.load(f)
-
 
 ## 中間期平均外気温（附属書B.1）
 def set_OutdoorTemperature(region):
@@ -48,29 +40,80 @@ def set_OutdoorTemperature(region):
 
 
 def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
+    """
+    Parameters
+    ----------
+    inputdata : dict
+        入力データ辞書（webproJsonSchema準拠）。
+    debug : bool, optional
+        デバッグ出力の有無。
+    output_dir : str, optional
+        出力ディレクトリのパス。
+    db : dict, optional
+        database_loader.load_all_databases() の戻り値。
+        None の場合は後方互換のため内部で個別に読み込む。
+    """
 
-    ## 標準室使用条件の読み込み＋更新
-    RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
-    if "room_usage_condition" in inputdata["SpecialInputData"]:
-        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
-            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
-                RoomUsageSchedule[buildling_type][room_type] = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]
+    ##----------------------------------------------------------------------------------
+    ## データベースの読み込み
+    ##----------------------------------------------------------------------------------
+    if db is not None:
 
-    ## カレンダーパターンの読み込み＋更新
-    Calendar = copy.deepcopy(_Calendar)
-    if "calender" in inputdata["SpecialInputData"]:
-        for pattern_name in inputdata["SpecialInputData"]["calender"]:
-            # データベースに追加
-            Calendar[pattern_name] = inputdata["SpecialInputData"]["calender"][pattern_name]
+        _ROOM_USAGE_SCHEDULE = db["標準室使用スケジュール"]
+        _CALENDAR = db["カレンダー"]
+        HIGH_EFFICIENCY_MOTOR = db["高効率電動機"]
+        INVERTER = db["インバーター制御"]
+        AIR_VOLUME_CONTROL = db["換気送風量制御"]
+
+    else:
+
+        # 室使用条件データの読み込み
+        with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
+            _ROOM_USAGE_SCHEDULE = json.load(f)
+
+        # カレンダーパターンの読み込み
+        with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
+            _CALENDAR = json.load(f)
+
+        # 送風機の制御方式に応じて定められる係数
+        with open( database_directory + '/vt_control_high_efficiency_motor.json', 'r', encoding='utf-8') as f:
+            HIGH_EFFICIENCY_MOTOR = json.load(f)
+
+        with open( database_directory + '/vt_control_inverter.json', 'r', encoding='utf-8') as f:
+            INVERTER = json.load(f)
+
+        with open( database_directory + '/vt_control_air_volume.json', 'r', encoding='utf-8') as f:
+            AIR_VOLUME_CONTROL = json.load(f)
 
 
-    # 一次エネルギー換算係数
-    fprime = 9760
+    ##----------------------------------------------------------------------------------
+    ## SPシート
+    ##----------------------------------------------------------------------------------
+    _special = inputdata.get("SpecialInputData", {})
+
+    ## 任意入力 標準室使用条件
+    ROOM_USAGE_SCHEDULE = copy.deepcopy(_ROOM_USAGE_SCHEDULE)
+    if "room_usage_condition" in _special:
+        for buildling_type in _special["room_usage_condition"]:
+            for room_type in _special["room_usage_condition"][buildling_type]:
+                ROOM_USAGE_SCHEDULE[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
+
+    ## 任意入力 カレンダーパターン
+    CALENDAR = copy.deepcopy(_CALENDAR)
+    if "calender" in _special:
+        for pattern_name in _special["calender"]:
+            CALENDAR[pattern_name] = _special["calender"][pattern_name]
+
+    # 任意入力 一次エネルギー換算係数
+    F_PRIME = 9760
     if "CalculationMode" in inputdata:
         if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
-            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+            F_PRIME = inputdata["CalculationMode"]["一次エネルギー換算係数"]
 
-    # 計算結果を格納する変数
+
+    ##----------------------------------------------------------------------------------
+    ## 計算結果を格納する変数
+    ##----------------------------------------------------------------------------------
     resultJson = {
 
         "設計一次エネルギー消費量[MJ/年]": 0,    # 換気設備の設計一次エネルギー消費量 [MJ/年]
@@ -108,7 +151,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         ##----------------------------------------------------------------------------------
         ## 年間換気運転時間 （解説書 B.2）
         ##----------------------------------------------------------------------------------
-        inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_operation_schedule_ventilation(buildingType, roomType, Calendar, RoomUsageSchedule)
+        inputdata["VentilationRoom"][roomID]["opeTime_hourly"] = bc.get_operation_schedule_ventilation(buildingType, roomType, CALENDAR, ROOM_USAGE_SCHEDULE)
 
         # 年間換気運転時間
         inputdata["VentilationRoom"][roomID]["opeTime"] = np.sum(np.sum(inputdata["VentilationRoom"][roomID]["opeTime_hourly"]))
@@ -187,13 +230,6 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
             print( f'  - 運転時間リスト {inputdata["VentilationUnit"][unitID]["opeTimeList"]}')
             print( f'  - 換気代替空調機の有無 {inputdata["VentilationUnit"][unitID]["isVentilationUsingAC"]}')
 
-
-    ##----------------------------------------------------------------------------------
-    ## 送風機の制御方式に応じて定められる係数（解説書 3.2）
-    ##----------------------------------------------------------------------------------
-    with open( database_directory + '/vt_ventilation_control.json', 'r', encoding='utf-8') as f:
-        ventilationCtrl = json.load(f)
-
     
     ##----------------------------------------------------------------------------------
     ## 換気送風機の年間電力消費量（解説書 3.3）
@@ -215,9 +251,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         # 消費電力（制御込み）[kW]
         inputdata["VentilationUnit"][unitID]["Energy_kW"] = \
             Ekw * iunit["Number"] \
-            * ventilationCtrl["HighEfficiencyMotor"][ iunit["HighEfficiencyMotor"] ] \
-            * ventilationCtrl["Inverter"][ iunit["Inverter"] ] \
-            * ventilationCtrl["AirVolumeControl"][ iunit["AirVolumeControl"] ]
+            * HIGH_EFFICIENCY_MOTOR[ iunit["HighEfficiencyMotor"] ] \
+            * INVERTER[ iunit["Inverter"] ] \
+            * AIR_VOLUME_CONTROL[ iunit["AirVolumeControl"] ]
 
         # 床面積の合計
         inputdata["VentilationUnit"][unitID]["roomAreaTotal"] = sum( iunit["roomAreaList"] )
@@ -306,13 +342,13 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
                             ( inputdata["VentilationUnit"][unitID]["AC_CoolingCapacity"] * xL / (2.71 * inputdata["VentilationUnit"][unitID]["AC_RefEfficiency"] )  \
                             + inputdata["VentilationUnit"][unitID]["AC_PumpPower"] /0.75 ) \
                             * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                            * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * fprime * 10**(-3) * Cac
+                            * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * F_PRIME * 10**(-3) * Cac
 
                     # 空調機に付属するファン（時刻別）
                     resultJson["ventilation"][roomID]["時刻別設計一次エネルギー消費量[MJ/h]"] += \
                         inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
                         * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                        * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * fprime * 10**(-3) * Cac
+                        * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * F_PRIME * 10**(-3) * Cac
 
                 else:
 
@@ -320,7 +356,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
                     resultJson["ventilation"][roomID]["時刻別設計一次エネルギー消費量[MJ/h]"] += \
                         inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
                         * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                        * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * fprime * 10**(-3) * Cfan
+                        * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * F_PRIME * 10**(-3) * Cfan
 
 
                 if DEBUG:
@@ -338,7 +374,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
                 # エネルギー消費量 [kW * m2/m2 * kJ/KWh] (時刻別)
                 resultJson["ventilation"][roomID]["時刻別設計一次エネルギー消費量[MJ/h]"] += inputdata["VentilationUnit"][unitID]["Energy_kW"]  \
                     * inputdata["VentilationRoom"][roomID]["roomArea"] / inputdata["VentilationUnit"][unitID]["roomAreaTotal"] \
-                    * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * fprime * 10**(-3)
+                    * inputdata["VentilationUnit"][unitID]["maxopeTime_hourly"] * F_PRIME * 10**(-3)
 
 
     ##----------------------------------------------------------------------------------
@@ -403,7 +439,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
     # コジェネ用の結果の格納 [MJ → MWh]
     for day in range(0,365):
-        resultJson["for_CGS"]["Edesign_MWh_day"][day] = np.sum(resultJson["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (fprime) 
+        resultJson["for_CGS"]["Edesign_MWh_day"][day] = np.sum(resultJson["時刻別設計一次エネルギー消費量[MJ/h]"][day]) / (F_PRIME) 
 
 
     ##----------------------------------------------------------------------------------
@@ -413,7 +449,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         output_dir = output_dir + "_"
 
     df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（換気設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (fprime) /1000,
+        '一次エネルギー消費量（換気設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (F_PRIME) /1000,
         '電力消費量（換気設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
     }, index=bc.date_1year)
 

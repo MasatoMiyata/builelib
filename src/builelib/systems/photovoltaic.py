@@ -21,9 +21,6 @@ from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
 
-# 日射地域区分と気象ファイル名の関係
-with open(database_directory + "common_annual_solar_level.json", encoding="utf-8") as f:
-    _AnnualSolarLevel = json.load(f)
 
 
 def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
@@ -32,34 +29,51 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     ----------
     inputdata : dict
         入力データ辞書（webproJsonSchema準拠）。
-    DEBUG : bool, optional
+    debug : bool, optional
         デバッグ出力の有無。
     output_dir : str, optional
         出力ディレクトリのパス。
     db : dict, optional
-        database_loader.load_all_databases() の戻り値（太陽光発電では未使用）。
+        database_loader.load_all_databases() の戻り値。
+        None の場合は後方互換のため内部で個別に読み込む。
     """
 
-    # 一次エネルギー換算係数
-    fprime = 9760
+    ##----------------------------------------------------------------------------------
+    ## データベースの読み込み
+    ##----------------------------------------------------------------------------------
+    if db is not None:
+
+        CLIMATE_DATA_FILE = db["年間日射地域区分"]
+
+    else:
+
+        # 日射地域区分と気象ファイル名の関係
+        with open(database_directory + "common_annual_solar_level.json", encoding="utf-8") as f:
+            CLIMATE_DATA_FILE = json.load(f)
+
+    ##----------------------------------------------------------------------------------
+    ## SPシート
+    ##----------------------------------------------------------------------------------
+
+    # 任意入力 一次エネルギー換算係数
+    F_PRIME = 9760
     if "CalculationMode" in inputdata:
         if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
-            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+            F_PRIME = inputdata["CalculationMode"]["一次エネルギー換算係数"]
 
+
+    ##----------------------------------------------------------------------------------
     # 計算結果を格納する変数
+    ##----------------------------------------------------------------------------------
     resultJson = {
+
         "E_photovoltaic": 0,
         "PhotovoltaicSystems": {},
         "for_CGS": {
             "Edesign_MWh_day": np.zeros(365)
         }
-    }
 
-    # 地域区分と気象ファイル名の関係
-    if db is not None:
-        climate_data_file = db["AnnualSolarLevel"]
-    else:
-        climate_data_file = _AnnualSolarLevel
+    }
 
     for system_name in inputdata["PhotovoltaicSystems"]:
 
@@ -110,11 +124,11 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
                 inputdata["SpecialInputData"]["climate_data"]["longitude_std"]
                 )
 
-        elif climate_data_file[ inputdata["Building"]["AnnualSolarRegion"] ][ inputdata["Building"]["Region"]+"地域" ]:
+        elif CLIMATE_DATA_FILE[ inputdata["Building"]["AnnualSolarRegion"] ][ inputdata["Building"]["Region"]+"地域" ]:
 
             # 気象データの読み込み（日射量は MJ/m2h）
             [Tout, Iod, Ios, sun_altitude, sun_azimuth] = \
-            climate.readCsvClimateData( climatedata_directory + climate_data_file[ inputdata["Building"]["AnnualSolarRegion"] ][ inputdata["Building"]["Region"]+"地域" ] )
+            climate.readCsvClimateData( climatedata_directory + CLIMATE_DATA_FILE[ inputdata["Building"]["AnnualSolarRegion"] ][ inputdata["Building"]["Region"]+"地域" ] )
         
         else:
             raise Exception('日射地域区分の指定が不正です')
@@ -235,7 +249,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] = np.sum(resultJson["PhotovoltaicSystems"][system_name]["Ep"],0)
 
         # 発電量（一次エネ換算） [kWh] * [kJ/kWh] / 1000 = [MJ]
-        resultJson["PhotovoltaicSystems"][system_name]["Ep_MJ"] = resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] * fprime / 1000
+        resultJson["PhotovoltaicSystems"][system_name]["Ep_MJ"] = resultJson["PhotovoltaicSystems"][system_name]["Ep_kWh"] * F_PRIME / 1000
 
         # 発電量を積算
         resultJson["E_photovoltaic"] += resultJson["PhotovoltaicSystems"][system_name]["Ep_MJ"]
@@ -257,7 +271,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         output_dir = output_dir + "_"
 
     df_daily_energy = pd.DataFrame({
-        '創エネルギー量（太陽光発電設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] * (fprime) /1000,
+        '創エネルギー量（太陽光発電設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] * (F_PRIME) /1000,
         '創エネルギー量（太陽光発電設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
     }, index=bc.date_1year)
 

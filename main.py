@@ -26,7 +26,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from builelib.runner import calculate, calculate_from_json
-from builelib.input.make_inputdata import get_input_options
+from builelib.input.make_inputdata import get_input_options, normalize_input
+from builelib import database_loader
 
 
 # ----------------------------------------------------------------
@@ -190,6 +191,9 @@ def calculate_from_json_endpoint(inputdata: BuildingInputData):
     # → 計算エンジンの inputdata.get("AirConditioningZone") が正しく動作する
     input_dict = inputdata.model_dump(exclude_none=True)
 
+    # 英語表示値を日本語DBキーに変換（日本語入力はそのまま通過）
+    normalize_input(input_dict)
+
     try:
         calc_output = calculate_from_json(input_dict)
     except Exception as e:
@@ -250,19 +254,25 @@ def get_json_schema():
 
 
 @app.get("/options", summary="入力値の選択肢一覧を返す", tags=["メタデータ"])
-def get_options():
+def get_options(lang: str = "ja"):
     """
     入力値の選択肢一覧を返す。
     フロントエンドのドロップダウン生成に使用する。
 
+    - `lang=ja`（デフォルト）: 日本語の選択肢リスト（従来動作）
+    - `lang=en`: 英語の選択肢リスト
+
     含まれる選択肢例:
     - 地域区分: ["1", "2", ..., "8"]
-    - 建物用途: ["事務所等", "ホテル等", ...]
-    - 室用途: {"事務所等": ["事務室", "会議室", ...], ...}
+    - 建物用途: ["事務所等", "ホテル等", ...]  / lang=en: ["Office, etc.", "Hotel, etc.", ...]
+    - 室用途: {"事務所等": ["事務室", ...], ...} / lang=en: {"Office, etc.": ["Office room", ...], ...}
     - 熱源機種: ["ウォータチリングユニット(空冷式)", ...]
     """
     try:
-        return get_input_options()
+        options = get_input_options()
+        if lang != "ja":
+            options = database_loader.translate_input_options(options, lang)
+        return options
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"オプション取得エラー: {str(e)}")
 

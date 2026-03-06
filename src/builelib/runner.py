@@ -129,8 +129,8 @@ def calculate(inputfile_name, exec_calculation=True):
     # SPシートの追加データ（flow_control, room_usage_condition 等）も含めてマージ済みの
     # db 辞書を生成し、各設備の calc_energy() に渡す。
     # これにより各モジュールでの個別 DB 読み込みと SP 追加処理が不要になる。
-    db = database_loader.load_all_databases(inputdata["SpecialInputData"])
-
+    # db = database_loader.load_all_databases()
+    db = None
 
     #------------------------------------
     # 空気調和設備の計算の実行
@@ -225,6 +225,10 @@ def calculate(inputfile_name, exec_calculation=True):
 
     # 実行
     resultdata_L = {}
+
+    resultdata_L = lighting.calc_energy(inputdata, DEBUG = False, output_dir=inputfile_name_split[0], db=db)
+    print(resultdata_L)
+
     if exec_calculation:
 
         try:
@@ -820,17 +824,20 @@ def cli_main():
 if __name__ == '__main__':
 
     # Excelファイルからの実行
-    file_name = "./tests/building/Builelib_inputSheet_sample_001.xlsx"
+    # file_name = "./examples/sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
+    file_name = "./examples/sample01_WEBPRO_inputSheet_for_Ver3.8_English.xlsx"
+    # file_name = "./tests/building/Builelib_inputSheet_sample_001.xlsx"
     # file_name = "./tests/building/Builelib_inputSheet_sample_002.xlsx"
     # file_name = "./tests/building/sample01_WEBPRO_inputSheet_English.xlsx"
     # file_name = "./tests/building/sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
 
     calculate(file_name)
+    # calculate_ac(file_name)
 
     # jsonファイルからの実行
-    json_file_name = "./tests/building/Builelib_inputSheet_sample_001.json"
+    # json_file_name = "./tests/building/Builelib_inputSheet_sample_001.json"
 
-    with open(json_file_name, encoding="utf-8") as f:
-        inputdata = json.load(f)
+    # with open(json_file_name, encoding="utf-8") as f:
+        # inputdata = json.load(f)
 
     # calculate_from_json(inputdata)

@@ -31,9 +31,6 @@ __pycache__/
 /src/builelib/database/pyhasp/
 /src/builelib/database/csv/
 
-# テストデータ（大容量のため除外）
-/tests_old/
-
 # 例
 /examples/*.json
 /examples/*.csv
@@ -44,7 +41,7 @@ memo.md
 /src/builelib/input/make_inputdata_pyhasp.py
 /src/builelib/envelope/palstar.py
 projects/
-/src/builelib/i18n/
+/src/builelib/archive/*.py
 
 # ===========================
 # docker

@@ -18,14 +18,6 @@ database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # 気象データファイルの保存場所
 from builelib.climate import CLIMATEDATA_DIR as climatedata_directory
 
-# 室使用条件データの読み込み
-with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
-    _RoomUsageSchedule = json.load(f)
-
-# カレンダーパターンの読み込み
-with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
-    _Calendar = json.load(f)
-
 
 def count_Matrix(x, mxL):
     """
@@ -63,31 +55,169 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         database_loader.load_all_databases() の戻り値。
         None の場合は後方互換のため内部で個別に読み込む。
     """
-    # db が渡された場合はそちらを使用（SP追加済み）
-    # db が None の場合は後方互換として内部で読み込む
+
+    ##----------------------------------------------------------------------------------
+    ## データベースの読み込み
+    ##----------------------------------------------------------------------------------
     if db is not None:
-        RoomUsageSchedule = db["RoomUsageSchedule"]
-        Calendar = db["CALENDAR"]
+        
+        _ROOM_USAGE_SCHEDULE = db["標準室使用スケジュール"]
+        _CALENDAR = db["カレンダー"]
+        _FLOW_CONTROL = db["流量制御方式"]
+        _HEAT_SOURCE_PERFORMANCE = db["熱源機種"]
+        AREA = db["地域区分"]
+        AC_OPERATION_MODE = db["運転モード"]
+        HEAT_THERMAL_CONDUCTIVITY = db["建材の種類"]
+        HEAT_THERMAL_CONDUCTIVITY_MODEL = db["建材の種類(モデル)"]
+        WINDOW_HEAT_TRANSFER_PERFORMANCE = db["ガラスの種類"] 
+        GLASS_TO_WINDOW = db["ガラス窓性能変換（建具種類）"]
+        QROOM_COEFF = db["負荷計算係数(" + inputdata["Building"]["Region"] + "地域)"]
+        AC_GSHP_OPENLOOP = db["地盤種類"]
+
     else:
-        ## 標準室使用条件の読み込み＋更新（後方互換）
-        _special = inputdata.get("SpecialInputData", {})
-        RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
-        if "room_usage_condition" in _special:
-            for buildling_type in _special["room_usage_condition"]:
-                for room_type in _special["room_usage_condition"][buildling_type]:
-                    RoomUsageSchedule[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
 
-        ## カレンダーパターンの読み込み＋更新（後方互換）
-        Calendar = copy.deepcopy(_Calendar)
-        for pattern_name, pattern_data in _special.get("calender", {}).items():
-            Calendar[pattern_name] = pattern_data
+        # 室使用条件データの読み込み
+        with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
+            _ROOM_USAGE_SCHEDULE = json.load(f)
 
+        # カレンダーパターンの読み込み
+        with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
+            _CALENDAR = json.load(f)
 
-    # 一次エネルギー換算係数
-    fprime = 9760
+        # 流量制御
+        with open(database_directory + 'ac_flow_control.json', 'r', encoding='utf-8') as f:
+            _FLOW_CONTROL = json.load(f)
+
+        # 熱源機器特性
+        with open(database_directory + "ac_heat_source_performance.json", 'r', encoding='utf-8') as f:
+            _HEAT_SOURCE_PERFORMANCE = json.load(f)
+
+        # 地域別データの読み込み
+        with open(database_directory + 'common_area.json', 'r', encoding='utf-8') as f:
+            AREA = json.load(f)
+
+        # 空調運転モード
+        with open(database_directory + 'ac_operation_mode.json', 'r', encoding='utf-8') as f:
+            AC_OPERATION_MODE = json.load(f)
+
+        # 標準入力法建材データの読み込み
+        with open(database_directory + 'ac_heat_thermal_conductivity.json', 'r', encoding='utf-8') as f:
+            HEAT_THERMAL_CONDUCTIVITY = json.load(f)
+
+        # モデル建物法建材データの読み込み
+        with open(database_directory + 'ac_heat_thermal_conductivity_model.json', 'r', encoding='utf-8') as f:
+            HEAT_THERMAL_CONDUCTIVITY_MODEL = json.load(f)
+
+        # 窓データの読み込み
+        with open(database_directory + 'ac_window_heat_transfer.json', 'r', encoding='utf-8') as f:
+            WINDOW_HEAT_TRANSFER_PERFORMANCE = json.load(f)
+
+        with open(database_directory + 'ac_glass_to_window.json', 'r', encoding='utf-8') as f:
+            GLASS_TO_WINDOW = json.load(f)
+
+        ## 室負荷計算のための係数（解説書 A.3）
+        with open(database_directory + 'ac_room_heat_gain_area'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
+            QROOM_COEFF = json.load(f)
+
+        # 地中熱オープンループの地盤特性の読み込み
+        with open(database_directory + 'ac_gshp_openloop.json', 'r', encoding='utf-8') as f:
+            AC_GSHP_OPENLOOP = json.load(f)
+
+    ##----------------------------------------------------------------------------------
+    ## SPシート
+    ##----------------------------------------------------------------------------------
+    _special = inputdata.get("SpecialInputData", {})
+
+    ## 任意入力 標準室使用条件
+    ROOM_USAGE_SCHEDULE = copy.deepcopy(_ROOM_USAGE_SCHEDULE)
+    if "room_usage_condition" in _special:
+        for buildling_type in _special["room_usage_condition"]:
+            for room_type in _special["room_usage_condition"][buildling_type]:
+                ROOM_USAGE_SCHEDULE[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
+
+    ## 任意入力 カレンダーパターン
+    CALENDAR = copy.deepcopy(_CALENDAR)
+    for pattern_name, pattern_data in _special.get("calender", {}).items():
+        CALENDAR[pattern_name] = pattern_data
+
+    # 任意入力 流量制御方式
+    FLOW_CONTROL = copy.deepcopy(_FLOW_CONTROL)
+    if "SpecialInputData" in inputdata:
+        if "flow_control" in inputdata["SpecialInputData"]:
+            FLOW_CONTROL.update(inputdata["SpecialInputData"]["flow_control"])
+
+    # 任意入力 熱源機器特性
+    HEAT_SOURCE_PERFORMANCE = copy.deepcopy(_HEAT_SOURCE_PERFORMANCE)
+    if "SpecialInputData" in inputdata:
+        if "heatsource_performance" in inputdata["SpecialInputData"]:
+            HEAT_SOURCE_PERFORMANCE.update(inputdata["SpecialInputData"]["heatsource_performance"])
+
+    # 任意入力 室使用条件入力シート
+    if "room_usage_condition" in inputdata["SpecialInputData"]:
+        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
+            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
+                base_room_type = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]["ベースとする室用途"]
+
+                # 空調室である場合（＝係数がある場合）のみ、新しい室用途名称で係数を追加
+                if base_room_type in QROOM_COEFF[buildling_type]:
+                    QROOM_COEFF[buildling_type][room_type] =  QROOM_COEFF[buildling_type][ base_room_type ]
+
+    # 任意入力 一次エネルギー換算係数
+    F_PRIME = 9760
     if "CalculationMode" in inputdata:
         if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
-            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+            F_PRIME = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+
+
+    ##----------------------------------------------------------------------------------
+    ## 気象データ（解説書 2.2.1）
+    ## 任意入力 様式 SP-CD: 気象データ入力シート
+    ##----------------------------------------------------------------------------------
+
+    if "climate_data" in inputdata["SpecialInputData"]:  # 任意入力（様式 SP-CD: 気象データ入力シート）
+
+        # 外気温 [℃]
+        ToutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
+        # 外気湿度 [kg/kgDA]
+        XoutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Xout"])
+        # 法線面直達日射量 [W/m2]
+        IodALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"])
+        # 水平面天空日射量 [W/m2]
+        IosALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"])
+        # 水平面夜間放射量 [W/m2]
+        InnALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
+
+        # 緯度
+        if "latitude" in inputdata["SpecialInputData"]["climate_data"]:
+            phi    = float(inputdata["SpecialInputData"]["climate_data"]["latitude"])
+        else:
+            phi  = AREA[inputdata["Building"]["Region"]+"地域"]["緯度"]
+
+        # 経度
+        if "longitude" in inputdata["SpecialInputData"]["climate_data"]:
+            longi  = float(inputdata["SpecialInputData"]["climate_data"]["longitude"])
+        else:
+            longi  = AREA[inputdata["Building"]["Region"]+"地域"]["経度"]
+
+        # 標準時の経度
+        if "longitude_std" in inputdata["SpecialInputData"]["climate_data"]:
+            longi_std = float(inputdata["SpecialInputData"]["climate_data"]["longitude_std"])
+        else:
+            longi_std = 135
+
+    else:
+
+        # 気象データ（HASP形式）読み込み ＜365×24の行列＞
+        [ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
+            climate.readHaspClimateData( climatedata_directory + "/" + AREA[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
+
+        # 緯度
+        phi  = AREA[inputdata["Building"]["Region"]+"地域"]["緯度"]
+        # 経度
+        longi  = AREA[inputdata["Building"]["Region"]+"地域"]["経度"]
+        # 標準時の経度
+        longi_std = 135
+    
 
     # 照明との連成計算
     COUPLING_LIGHTING = False
@@ -97,7 +227,10 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     inputdata["PUMP"] = {}
     inputdata["REF"] = {}
 
+
+    ##----------------------------------------------------------------------------------
     # 計算結果を格納する変数
+    ##----------------------------------------------------------------------------------
     resultJson = {
 
         "設計一次エネルギー消費量[MJ/年]": 0,    # 空調設備の設計一次エネルギー消費量 [MJ/年]
@@ -158,45 +291,9 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     divL = 11             # 負荷率帯マトリックス分割数 （10区分＋過負荷1区分）
     divT =  6             # 外気温度帯マトリックス分割数
 
-
-    ##----------------------------------------------------------------------------------
-    ## データベースファイルの読み込み
-    ##----------------------------------------------------------------------------------
-
-    # 流量制御
-    with open(database_directory + 'ac_flow_control.json', 'r', encoding='utf-8') as f:
-        FLOWCONTROL = json.load(f)
-
-    # 熱源機器特性
-    with open(database_directory + "ac_heat_source_performance.json", 'r', encoding='utf-8') as f:
-        HeatSourcePerformance = json.load(f)
-
-    ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-1: 流量制御)
-    ##----------------------------------------------------------------------------------
-
-    # 任意評定用の入力があれば追加
-    if "SpecialInputData" in inputdata:
-        if "flow_control" in inputdata["SpecialInputData"]:
-            FLOWCONTROL.update(inputdata["SpecialInputData"]["flow_control"])
-
-    ##----------------------------------------------------------------------------------
-    ## 任意評定 （SP-2：　熱源機器特性)
-    ##----------------------------------------------------------------------------------
-
-    # 任意評定用の入力があれば追加
-    if "SpecialInputData" in inputdata:
-        if "heatsource_performance" in inputdata["SpecialInputData"]:
-            HeatSourcePerformance.update(inputdata["SpecialInputData"]["heatsource_performance"])
-
-
     ##----------------------------------------------------------------------------------
     ## マトリックスの設定
     ##----------------------------------------------------------------------------------
-
-    # 地域別データの読み込み
-    with open(database_directory + 'common_area.json', 'r', encoding='utf-8') as f:
-        Area = json.load(f)
 
     # 負荷率帯マトリックス mxL = array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2])
     mxL = np.arange(1/(divL-1), 1.01, 1/(divL-1))
@@ -217,10 +314,10 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ##----------------------------------------------------------------------------------
 
     # 外気温度帯の上限・下限
-    mxTH_min = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温下限"]
-    mxTH_max = Area[inputdata["Building"]["Region"]+"地域"]["暖房時外気温上限"]
-    mxTC_min = Area[inputdata["Building"]["Region"]+"地域"]["冷房時外気温下限"]
-    mxTC_max = Area[inputdata["Building"]["Region"]+"地域"]["冷房時外気温上限"]
+    mxTH_min = AREA[inputdata["Building"]["Region"]+"地域"]["暖房時外気温下限"]
+    mxTH_max = AREA[inputdata["Building"]["Region"]+"地域"]["暖房時外気温上限"]
+    mxTC_min = AREA[inputdata["Building"]["Region"]+"地域"]["冷房時外気温下限"]
+    mxTC_max = AREA[inputdata["Building"]["Region"]+"地域"]["冷房時外気温上限"]
 
     delTC = (mxTC_max - mxTC_min)/divT
     delTH = (mxTH_max - mxTH_min)/divT
@@ -247,64 +344,11 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
 
     ##----------------------------------------------------------------------------------
-    ## 気象データ（解説書 2.2.1）
-    ## 任意入力 様式 SP-CD: 気象データ入力シート
-    ##----------------------------------------------------------------------------------
-
-    if "climate_data" in inputdata["SpecialInputData"]:  # 任意入力（様式 SP-CD: 気象データ入力シート）
-
-        # 外気温 [℃]
-        ToutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Tout"])
-        # 外気湿度 [kg/kgDA]
-        XoutALL = np.array(inputdata["SpecialInputData"]["climate_data"]["Xout"])
-        # 法線面直達日射量 [W/m2]
-        IodALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Iod"])
-        # 水平面天空日射量 [W/m2]
-        IosALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Ios"])
-        # 水平面夜間放射量 [W/m2]
-        InnALL  = np.array(inputdata["SpecialInputData"]["climate_data"]["Inn"])
-
-        # 緯度
-        if "latitude" in inputdata["SpecialInputData"]["climate_data"]:
-            phi    = float(inputdata["SpecialInputData"]["climate_data"]["latitude"])
-        else:
-            phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
-
-        # 経度
-        if "longitude" in inputdata["SpecialInputData"]["climate_data"]:
-            longi  = float(inputdata["SpecialInputData"]["climate_data"]["longitude"])
-        else:
-            longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
-
-        # 標準時の経度
-        if "longitude_std" in inputdata["SpecialInputData"]["climate_data"]:
-            longi_std = float(inputdata["SpecialInputData"]["climate_data"]["longitude_std"])
-        else:
-            longi_std = 135
-
-    else:
-
-        # 気象データ（HASP形式）読み込み ＜365×24の行列＞
-        [ToutALL, XoutALL, IodALL, IosALL, InnALL] = \
-            climate.readHaspClimateData( climatedata_directory + "/" + Area[inputdata["Building"]["Region"]+"地域"]["気象データファイル名"] )
-
-        # 緯度
-        phi  = Area[inputdata["Building"]["Region"]+"地域"]["緯度"]
-        # 経度
-        longi  = Area[inputdata["Building"]["Region"]+"地域"]["経度"]
-        # 標準時の経度
-        longi_std = 135
-    
-    ##----------------------------------------------------------------------------------
     ## 冷暖房期間（解説書 2.2.2）
     ##----------------------------------------------------------------------------------
 
-    # 空調運転モード
-    with open(database_directory + 'ac_operation_mode.json', 'r', encoding='utf-8') as f:
-        ACoperationMode = json.load(f)
-
     # 各日の冷暖房期間の種類（冷房期、暖房期、中間期）（365×1の行列）
-    ac_mode = ACoperationMode[ Area[inputdata["Building"]["Region"]+"地域"]["空調運転モードタイプ"] ]
+    ac_mode = AC_OPERATION_MODE[ AREA[inputdata["Building"]["Region"]+"地域"]["空調運転モードタイプ"] ]
 
 
     ##----------------------------------------------------------------------------------
@@ -406,7 +450,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
         # 365日×24時間分のスケジュール （365×24の行列を格納した dict型）
         roomScheduleRoom[room_zone_name], roomScheduleLight[room_zone_name], roomSchedulePerson[room_zone_name], roomScheduleOAapp[room_zone_name], roomDayMode[room_zone_name] = \
-            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], Calendar, RoomUsageSchedule)
+            bc.get_roomUsageSchedule(inputdata["AirConditioningZone"][room_zone_name]["buildingType"], inputdata["AirConditioningZone"][room_zone_name]["roomType"], CALENDAR, ROOM_USAGE_SCHEDULE)
         
 
         # 空調対象面積の合計
@@ -467,17 +511,6 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ## 外壁等の熱貫流率の算出（解説書 附属書A.1）
     ##----------------------------------------------------------------------------------
 
-    ### ISSUE : 二つのデータベースにわかれてしまっているので統一する。###
-
-    # 標準入力法建材データの読み込み
-    with open(database_directory + 'ac_heat_thermal_conductivity.json', 'r', encoding='utf-8') as f:
-        HeatThermalConductivity = json.load(f)
-
-    # モデル建物法建材データの読み込み
-    with open(database_directory + 'ac_heat_thermal_conductivity_model.json', 'r', encoding='utf-8') as f:
-        HeatThermalConductivity_model = json.load(f)
-
-
     if "WallConfigure" in inputdata:  # WallConfigure があれば以下を実行
 
         for wall_name in inputdata["WallConfigure"].keys():
@@ -496,7 +529,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                     if (inputdata["WallConfigure"][wall_name]["conductivity"] == None):
                         
                         inputdata["WallConfigure"][wall_name]["conductivity"] = \
-                            float( HeatThermalConductivity_model[ inputdata["WallConfigure"][wall_name]["materialID"] ] )
+                            float( HEAT_THERMAL_CONDUCTIVITY_MODEL[ inputdata["WallConfigure"][wall_name]["materialID"] ] )
 
                     # 熱伝導率と厚みとから、熱貫流率を計算（３種類）
                     inputdata["WallConfigure"][wall_name]["Uvalue_wall"] = \
@@ -519,14 +552,14 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                         if (layer[1]["materialID"] == "密閉中空層") or (layer[1]["materialID"] == "非密閉中空層"):
 
                             # 空気層の場合
-                            Rvalue += HeatThermalConductivity[layer[1]["materialID"]]["熱抵抗値"]
+                            Rvalue += HEAT_THERMAL_CONDUCTIVITY[layer[1]["materialID"]]["熱抵抗値"]
                 
                         else:
 
                             # 空気層以外の断熱材を指定している場合
                             if layer[1]["thickness"] != None:
                                 material_name = unicodedata.normalize('NFKC', layer[1]["materialID"]).replace(' ', '').replace('\u3000', '')
-                                Rvalue += (layer[1]["thickness"]/1000) / HeatThermalConductivity[material_name]["熱伝導率"]
+                                Rvalue += (layer[1]["thickness"]/1000) / HEAT_THERMAL_CONDUCTIVITY[material_name]["熱伝導率"]
 
                     else:
 
@@ -539,14 +572,6 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ##----------------------------------------------------------------------------------
     ## 窓の熱貫流率及び日射熱取得率の算出（解説書 附属書A.2）
     ##----------------------------------------------------------------------------------
-
-    # 窓データの読み込み
-    with open(database_directory + 'ac_window_heat_transfer.json', 'r', encoding='utf-8') as f:
-        WindowHeatTransferPerformance = json.load(f)
-
-    with open(database_directory + 'ac_glass_to_window.json', 'r', encoding='utf-8') as f:
-        glass2window = json.load(f)
-
 
     if "WindowConfigure" in inputdata:
 
@@ -580,15 +605,15 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                 if inputdata["WindowConfigure"][window_name]["inputMethod"] == "ガラスの種類を入力":
 
                     inputdata["WindowConfigure"][window_name]["glassUvalue"] = \
-                        WindowHeatTransferPerformance[ inputdata["WindowConfigure"][window_name]["glassID"] ]["ガラス単体"]["熱貫流率"]
+                        WINDOW_HEAT_TRANSFER_PERFORMANCE[ inputdata["WindowConfigure"][window_name]["glassID"] ]["ガラス単体"]["熱貫流率"]
 
                     inputdata["WindowConfigure"][window_name]["glassIvalue"] = \
-                        WindowHeatTransferPerformance[ inputdata["WindowConfigure"][window_name]["glassID"] ]["ガラス単体"]["日射熱取得率"]
+                        WINDOW_HEAT_TRANSFER_PERFORMANCE[ inputdata["WindowConfigure"][window_name]["glassID"] ]["ガラス単体"]["日射熱取得率"]
 
                 # 変換係数
-                ku_a = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a"]
-                ku_b = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b"]
-                kita = glass2window[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["kita"]            
+                ku_a = GLASS_TO_WINDOW[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_a"]
+                ku_b = GLASS_TO_WINDOW[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["ku_b"]
+                kita = GLASS_TO_WINDOW[inputdata["WindowConfigure"][window_name]["frameType"]][inputdata["WindowConfigure"][window_name]["layerType"]]["kita"]            
 
                 # 窓のの熱貫流率・日射熱取得率
                 inputdata["WindowConfigure"][window_name]["Uvalue"] = ku_a * inputdata["WindowConfigure"][window_name]["glassUvalue"] + ku_b
@@ -992,21 +1017,6 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ##----------------------------------------------------------------------------------
     ## 室負荷の計算（解説書 2.4.3、2.4.4）
     ##----------------------------------------------------------------------------------
-
-    ## 室負荷計算のための係数（解説書 A.3）
-    with open(database_directory + 'ac_room_heat_gain_area'+ inputdata["Building"]["Region"] +'.json', 'r', encoding='utf-8') as f:
-        QROOM_COEFFI = json.load(f)
-
-    # 任意入力 様式 SP-RT-UC. 室使用条件入力シート
-    if "room_usage_condition" in inputdata["SpecialInputData"]:
-        for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
-            for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
-                base_room_type = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]["ベースとする室用途"]
-
-                # 空調室である場合（＝係数がある場合）のみ、新しい室用途名称で係数を追加
-                if base_room_type in QROOM_COEFFI[buildling_type]:
-                    QROOM_COEFFI[buildling_type][room_type] =  QROOM_COEFFI[buildling_type][ base_room_type ]
-
     
     Heat_light_hourly = {}
     Num_of_Person_hourly = {}
@@ -1029,7 +1039,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
         # 発熱量参照値 [W/m2] を読み込む関数（空調）
         (roomHeatGain_Light, roomHeatGain_Person, roomHeatGain_OAapp, roomNumOfPerson) = \
-                bc.get_roomHeatGain(btype, rtype, RoomUsageSchedule)
+                bc.get_roomHeatGain(btype, rtype, ROOM_USAGE_SCHEDULE)
         
         # 様式4から照明発熱量を読み込む
         if COUPLING_LIGHTING:
@@ -1056,7 +1066,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             if room_usage[dd] > 0:
 
                 # 前日の空調の有無
-                if "終日空調" in QROOM_COEFFI[ btype ][ rtype ]:
+                if "終日空調" in QROOM_COEFF[ btype ][ rtype ]:
                     onoff = "終日空調"
                 elif (dd > 0) and (room_usage[dd-1] > 0):
                     onoff = "前日空調"
@@ -1065,51 +1075,51 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
                 if ac_mode[dd] == "冷房":
 
-                    Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    Qroom_CTC[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
                         resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["補正切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["冷房負荷"]["補正切片"]
 
-                    Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    Qroom_CTH[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
                         resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["補正切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["冷房期"]["外気温変動"]["暖房負荷"]["補正切片"]
 
-                    Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    Qroom_CSR[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["冷房期"]["日射量変動"]["冷房負荷"]["切片"]
 
                 elif ac_mode[dd] == "暖房":
 
-                    Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    Qroom_CTC[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
                         resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["冷房負荷"]["切片"]
 
-                    Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    Qroom_CTH[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
                         resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["暖房期"]["外気温変動"]["暖房負荷"]["切片"]
 
-                    Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    Qroom_CSR[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["暖房期"]["日射量変動"]["冷房負荷"]["切片"]
                         
                 elif ac_mode[dd] == "中間":
 
-                    Qroom_CTC[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["冷房負荷"]["係数"] * \
+                    Qroom_CTC[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["冷房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
                         resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["冷房負荷"]["補正切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["冷房負荷"]["補正切片"]
 
-                    Qroom_CTH[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["暖房負荷"]["係数"] * \
+                    Qroom_CTH[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["暖房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwall_N"][dd] + \
                         resultJson["Qroom"][room_zone_name]["Qwind_T"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_N"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["暖房負荷"]["補正切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["中間期"]["外気温変動"]["暖房負荷"]["補正切片"]
 
-                    Qroom_CSR[dd] = QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["日射量変動"]["冷房負荷"]["係数"] * \
+                    Qroom_CSR[dd] = QROOM_COEFF[ btype ][ rtype ][onoff]["中間期"]["日射量変動"]["冷房負荷"]["係数"] * \
                         ( resultJson["Qroom"][room_zone_name]["Qwall_S"][dd] + resultJson["Qroom"][room_zone_name]["Qwind_S"][dd] ) + \
-                        QROOM_COEFFI[ btype ][ rtype ][onoff]["中間期"]["日射量変動"]["冷房負荷"]["切片"]
+                        QROOM_COEFF[ btype ][ rtype ][onoff]["中間期"]["日射量変動"]["冷房負荷"]["切片"]
 
                 if Qroom_CTC[dd] < 0:
                     Qroom_CTC[dd] = 0
@@ -1679,7 +1689,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             bc.get_roomOutdoorAirVolume( 
                 inputdata["AirConditioningZone"][room_zone_name]["buildingType"], 
                 inputdata["AirConditioningZone"][room_zone_name]["roomType"], 
-                RoomUsageSchedule
+                ROOM_USAGE_SCHEDULE
             ) * inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
         # 冷房期間における外気風量 [m3/h]
@@ -2132,13 +2142,13 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             inputdata["AirHandlingSystem"][ahu_name]["AirHandlingUnit"][unit_id]["energy_consumption_ratio"] = np.ones(len(aveL))
                 
             # 係数の取得
-            if unit_configure["FanControlType"] in FLOWCONTROL.keys():
+            if unit_configure["FanControlType"] in FLOW_CONTROL.keys():
                 
-                a4 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a4"]
-                a3 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a3"]
-                a2 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a2"]
-                a1 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a1"]
-                a0 = FLOWCONTROL[ unit_configure["FanControlType"] ]["a0"]
+                a4 = FLOW_CONTROL[ unit_configure["FanControlType"] ]["a4"]
+                a3 = FLOW_CONTROL[ unit_configure["FanControlType"] ]["a3"]
+                a2 = FLOW_CONTROL[ unit_configure["FanControlType"] ]["a2"]
+                a1 = FLOW_CONTROL[ unit_configure["FanControlType"] ]["a1"]
+                a0 = FLOW_CONTROL[ unit_configure["FanControlType"] ]["a0"]
 
                 if unit_configure["FanMinOpeningRate"] == None:
                     Vmin = 1
@@ -2337,9 +2347,9 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         resultJson["AHU"][ahu_name]["MxAHUhE"] = np.sum(resultJson["AHU"][ahu_name]["E_fan_h_day"],0)
 
     # 空調機群の一次エネルギー消費量
-    resultJson["年間エネルギー消費量"]["空調機群ファン[GJ]"]      = resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"]  * fprime /1000
-    resultJson["年間エネルギー消費量"]["空調機群全熱交換器[GJ]"]  = resultJson["年間エネルギー消費量"]["空調機群全熱交換器[MWh]"]  * fprime /1000
-    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"] * fprime /1000
+    resultJson["年間エネルギー消費量"]["空調機群ファン[GJ]"]      = resultJson["年間エネルギー消費量"]["空調機群ファン[MWh]"]  * F_PRIME /1000
+    resultJson["年間エネルギー消費量"]["空調機群全熱交換器[GJ]"]  = resultJson["年間エネルギー消費量"]["空調機群全熱交換器[MWh]"]  * F_PRIME /1000
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（空調機群）[MWh]"] * F_PRIME /1000
 
     print('空調機群のエネルギー消費量計算完了')
 
@@ -2790,13 +2800,13 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
         for unit_id, unit_configure in enumerate(inputdata["PUMP"][pump_name]["SecondaryPump"]):
 
-            if unit_configure["ContolType"] in FLOWCONTROL.keys():
+            if unit_configure["ContolType"] in FLOW_CONTROL.keys():
 
-                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a4"]
-                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a3"]
-                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a2"]
-                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a1"]
-                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = FLOWCONTROL[ unit_configure["ContolType"] ]["a0"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a4"] = FLOW_CONTROL[ unit_configure["ContolType"] ]["a4"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a3"] = FLOW_CONTROL[ unit_configure["ContolType"] ]["a3"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a2"] = FLOW_CONTROL[ unit_configure["ContolType"] ]["a2"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a1"] = FLOW_CONTROL[ unit_configure["ContolType"] ]["a1"]
+                inputdata["PUMP"][pump_name]["SecondaryPump"][unit_id]["a0"] = FLOW_CONTROL[ unit_configure["ContolType"] ]["a0"]
 
                 resultJson["PUMP"][pump_name]["変流量制御の有無"] = "有"
 
@@ -2968,8 +2978,8 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         resultJson["PUMP"][pump_name]["MxPUMPE"]  = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
 
     # 一次エネルギー消費量
-    resultJson["年間エネルギー消費量"]["二次ポンプ群[GJ]"]  = resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"] * fprime /1000
-    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（二次ポンプ群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"] * fprime /1000
+    resultJson["年間エネルギー消費量"]["二次ポンプ群[GJ]"]  = resultJson["年間エネルギー消費量"]["二次ポンプ群[MWh]"] * F_PRIME /1000
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（二次ポンプ群）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（二次ポンプ群）[MWh]"] * F_PRIME /1000
 
     print('二次ポンプ群のエネルギー消費量計算完了')
 
@@ -3414,7 +3424,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                 inputdata["REF"][ref_name]["checkGEGHP"] = 1
 
             # 特性を全て抜き出す。
-            refParaSetALL = HeatSourcePerformance[ unit_configure["HeatsourceType"] ]
+            refParaSetALL = HEAT_SOURCE_PERFORMANCE[ unit_configure["HeatsourceType"] ]
 
             # 燃料種類に応じて、一次エネルギー換算を行う。
             fuel_type = str()
@@ -3429,7 +3439,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             # 燃料種類＋一次エネルギー換算 [kW]
             if fuel_type == "電力":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 1
-                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = (fprime/3600) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
+                inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = (F_PRIME/3600) * inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedPowerConsumption_total"] 
             elif fuel_type == "ガス":
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] = 2
                 inputdata["REF"][ref_name]["Heatsource"][unit_id]["Eref_rated_primary"] = inputdata["REF"][ref_name]["Heatsource"][unit_id]["HeatsourceRatedFuelConsumption_total"] 
@@ -3561,8 +3571,8 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ## 湿球温度 （解説書 2.7.4.2）
     ##----------------------------------------------------------------------------------
 
-    ToawbC = Area[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_冷房a1"] * ToadbC + Area[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_冷房a0"]
-    ToawbH = Area[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_暖房a1"] * ToadbH + Area[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_暖房a0"]
+    ToawbC = AREA[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_冷房a1"] * ToadbC + AREA[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_冷房a0"]
+    ToawbH = AREA[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_暖房a1"] * ToadbH + AREA[inputdata["Building"]["Region"]+"地域"]["湿球温度係数_暖房a0"]
 
     # 保存用
     resultJson["Matrix"]["ToawbC"] = ToawbC
@@ -3629,10 +3639,6 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ## 熱源水等の温度 matrix_T （解説書 2.7.4）
     ##----------------------------------------------------------------------------------
 
-    # 地中熱オープンループの地盤特性の読み込み
-    with open(database_directory + 'ac_gshp_openloop.json', 'r', encoding='utf-8') as f:
-        AC_gshp_openloop = json.load(f)
-
     for ref_name in inputdata["REF"]:
 
         for unit_id, unit_configure in enumerate(inputdata["REF"][ref_name]["Heatsource"]):
@@ -3647,16 +3653,16 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                 for dd in range(365):
 
                     # 月別の揚水温度
-                    theta_wo_m = AC_gshp_openloop["theta_ac_wo_ave"][ inputdata["Building"]["Region"]+"地域" ] + \
-                        AC_gshp_openloop["theta_ac_wo_m"][ inputdata["Building"]["Region"]+"地域" ][ bc.day2month(dd) ]
+                    theta_wo_m = AC_GSHP_OPENLOOP["theta_ac_wo_ave"][ inputdata["Building"]["Region"]+"地域" ] + \
+                        AC_GSHP_OPENLOOP["theta_ac_wo_m"][ inputdata["Building"]["Region"]+"地域" ][ bc.day2month(dd) ]
 
                     # 月別の地盤からの熱源水還り温度
                     if inputdata["REF"][ref_name]["mode"] == "cooling":
 
                         # 日別の熱源水還り温度（冷房期）
                         heatsource_temperature = \
-                            theta_wo_m + AC_gshp_openloop["theta_wo_c"][ unit_configure["parameter"]["熱源種類"] ] + \
-                                AC_gshp_openloop["theta_hex_c"][ unit_configure["parameter"]["熱源種類"] ]
+                            theta_wo_m + AC_GSHP_OPENLOOP["theta_wo_c"][ unit_configure["parameter"]["熱源種類"] ] + \
+                                AC_GSHP_OPENLOOP["theta_hex_c"][ unit_configure["parameter"]["熱源種類"] ]
 
                         # マトリックス化して日別のデータに変換
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
@@ -3669,8 +3675,8 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
                         # 日別の熱源水還り温度（暖房期）
                         heatsource_temperature = \
-                            theta_wo_m + AC_gshp_openloop["theta_wo_h"][ unit_configure["parameter"]["熱源種類"] ] + \
-                                AC_gshp_openloop["theta_hex_h"][ unit_configure["parameter"]["熱源種類"] ]
+                            theta_wo_m + AC_GSHP_OPENLOOP["theta_wo_h"][ unit_configure["parameter"]["熱源種類"] ] + \
+                                AC_GSHP_OPENLOOP["theta_hex_h"][ unit_configure["parameter"]["熱源種類"] ]
 
                         # マトリックス化して日別のデータに変換
                         inputdata["REF"][ref_name]["Heatsource"][unit_id]["heatsource_temperature"][dd] = \
@@ -4297,10 +4303,10 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                     if inputdata["REF"][ref_name]["Heatsource"][unit_id]["refInputType"] == 1:  # 燃料種類が「電力」であれば、CGS計算用に集計を行う。
 
                         resultJson["REF"][ref_name]["E_ref_day_MWh"][dd]  += \
-                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / fprime
+                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / F_PRIME
 
                         resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_day_per_unit_MWh"][dd] = \
-                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / fprime
+                            resultJson["REF"][ref_name]["Heatsource"][unit_id]["E_ref_main"][dd] *3600/1000 * resultJson["REF"][ref_name]["Tref"][dd] / F_PRIME
 
                 # 補機電力 [MWh]
                 resultJson["REF"][ref_name]["E_ref_ACc_day"][dd] += \
@@ -4372,10 +4378,10 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] += resultJson["REF"][ref_name]["E_CTpump_day"][dd]
 
         resultJson["REF"][ref_name]["熱源群熱源主機[GJ]"] = resultJson["REF"][ref_name]["熱源群熱源主機[MJ]"] / 1000
-        resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"] = resultJson["REF"][ref_name]["熱源群熱源補機[MWh]"] * fprime / 1000
-        resultJson["REF"][ref_name]["熱源群一次ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群一次ポンプ[MWh]"] * fprime / 1000
-        resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却塔ファン[MWh]"] * fprime / 1000
-        resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] * fprime / 1000
+        resultJson["REF"][ref_name]["熱源群熱源補機[GJ]"] = resultJson["REF"][ref_name]["熱源群熱源補機[MWh]"] * F_PRIME / 1000
+        resultJson["REF"][ref_name]["熱源群一次ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群一次ポンプ[MWh]"] * F_PRIME / 1000
+        resultJson["REF"][ref_name]["熱源群冷却塔ファン[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却塔ファン[MWh]"] * F_PRIME / 1000
+        resultJson["REF"][ref_name]["熱源群冷却水ポンプ[GJ]"] = resultJson["REF"][ref_name]["熱源群冷却水ポンプ[MWh]"] * F_PRIME / 1000
 
         # 建物全体
         resultJson["年間エネルギー消費量"]["熱源群熱源主機[MJ]"] += resultJson["REF"][ref_name]["熱源群熱源主機[MJ]"]
@@ -4392,7 +4398,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
 
     # 一次エネルギ換算
-    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・補機）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"] * fprime / 1000
+    resultJson["日別エネルギー消費量"]["一次エネルギー消費量（熱源群・補機）[GJ]"] = resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"] * F_PRIME / 1000
 
     print('熱源エネルギー計算完了')
 
@@ -4786,9 +4792,6 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             + resultJson["for_CGS"]["E_pump_MWh_day"] \
             + resultJson["for_CGS"]["E_fan_MWh_day"]
 
-    # with open("inputdataJson_AC.json",'w', encoding='utf-8') as fw:
-    #     json.dump(inputdata, fw, indent=4, ensure_ascii=False, cls = bc.MyEncoder)
-
 
     ##----------------------------------------------------------------------------------
     # ダミーポンプ削除
@@ -5011,7 +5014,7 @@ if __name__ == '__main__':  # pragma: no cover
     print( f'設計一次エネルギー消費量 冷却水ポンプ: {resultJson["年間エネルギー消費量"]["熱源群冷却水ポンプ[GJ]"]} GJ')
 
     # デバッグ用
-    # print( f'{resultJson["設計一次エネルギー消費量[MJ/年]"]}, {resultJson["ENERGY"]["E_fan"] * fprime}, {resultJson["ENERGY"]["E_aex"] * fprime}, {resultJson["ENERGY"]["E_pump"] * fprime}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * fprime}, {resultJson["ENERGY"]["E_pumpP"] * fprime}, {resultJson["ENERGY"]["E_ctfan"] * fprime}, {resultJson["ENERGY"]["E_ctpump"] * fprime}')
+    # print( f'{resultJson["設計一次エネルギー消費量[MJ/年]"]}, {resultJson["ENERGY"]["E_fan"] * F_PRIME}, {resultJson["ENERGY"]["E_aex"] * F_PRIME}, {resultJson["ENERGY"]["E_pump"] * F_PRIME}, {resultJson["ENERGY"]["E_refsysr"]}, {resultJson["ENERGY"]["E_refac"] * F_PRIME}, {resultJson["ENERGY"]["E_pumpP"] * F_PRIME}, {resultJson["ENERGY"]["E_ctfan"] * F_PRIME}, {resultJson["ENERGY"]["E_ctpump"] * F_PRIME}')
 
     # for ref_name in inputdata["REF"]:
     #     print( f'--- 熱源群名 {ref_name} ---')

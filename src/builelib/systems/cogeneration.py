@@ -47,14 +47,13 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir = "", d
     ----------
     inputdata : dict
         入力データ辞書（webproJsonSchema準拠）。
-    resultJson_for_CGS : dict
-        他設備の計算結果（コジェネ計算に必要な各設備のエネルギー消費量）。
-    DEBUG : bool, optional
+    debug : bool, optional
         デバッグ出力の有無。
     output_dir : str, optional
         出力ディレクトリのパス。
     db : dict, optional
-        database_loader.load_all_databases() の戻り値（コジェネでは未使用）。
+        database_loader.load_all_databases() の戻り値。
+        None の場合は後方互換のため内部で個別に読み込む。
     """
 
     resultJson = {}

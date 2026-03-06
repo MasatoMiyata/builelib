@@ -1,3 +1,4 @@
+import unicodedata
 import xlrd
 import json
 import os
@@ -13,91 +14,15 @@ template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
 # データベースファイルの保存場所
 database_directory =  os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
 
+# 検証結果メッセージ （global変数）
+validation = {}
+
 # -----------------------------------------------------------------------
-# モジュールロード時に一度だけ DB を読み込み、input_options を自動生成する。
-# database/*.json が「正」（Single Source of Truth）。
-# SPシートで追加された選択肢は make_jsondata_from_Ver2_sheet() 内で動的に追記される。
+# モジュールロード時に一度だけ DB を読み込み、input_options を生成する。
+# 選択肢は database/*.json を「正」とする。
 # -----------------------------------------------------------------------
-_db_for_options = database_loader.load_all_databases()
-
-# 風量・流量制御方式：FLOWCONTROL.json のキーから自動生成
-_flowcontrol_options = database_loader.get_valid_options(_db_for_options, "FLOWCONTROL")
-
-# 建物用途・室用途：RoomUsageSchedule.json の階層から自動生成
-_building_types    = list(_db_for_options["RoomUsageSchedule"].keys())
-_room_types_by_bt  = {
-    bt: list(rooms.keys())
-    for bt, rooms in _db_for_options["RoomUsageSchedule"].items()
-}
-
-# 熱源機種：HeatSourcePerformance.json のキーから自動生成
-_heatsource_types = list(_db_for_options["HeatSourcePerformance"].keys())
-
-# 照明制御方式：lightingControl.json の各制御種別の値キー（効果率マップのキー）から自動生成
-_lighting_ctrl = _db_for_options["lightingControl"]
-_occupant_sensing_options    = list(_lighting_ctrl["OccupantSensingCTRL"].keys())
-_illuminance_sensing_options = list(_lighting_ctrl["IlluminanceSensingCTRL"].keys())
-_time_schedule_options       = list(_lighting_ctrl["TimeScheduleCTRL"].keys())
-_initial_illum_options       = list(_lighting_ctrl["InitialIlluminationCorrectionCTRL"].keys())
-
-# 換気送風量制御：ventilationControl.json["AirVolumeControl"] の値キーから自動生成
-_air_volume_ctrl_options = list(_db_for_options["ventilationControl"]["AirVolumeControl"].keys())
-
-# 入力値の選択肢一覧
-input_options = {
-    "有無": ["有","無"],
-    "地域区分": ["1","2","3","4","5","6","7","8"],
-    "年間日射地域区分": ["A1","A2","A3","A4","A5"],
-    "建物用途": _building_types,         # RoomUsageSchedule.json から自動生成
-    "室用途":   _room_types_by_bt,       # RoomUsageSchedule.json から自動生成
-    "方位": ["北","北東","東","南東","南","南西","西","北西","水平（上）","水平（下）"],
-    "外壁の種類": ["日の当たる外壁","日の当たらない外壁","地盤に接する外壁","内壁"],
-    "外壁の種類(WEBPRO)": ["外壁","接地壁"],
-    "構造種別": ["木造","鉄筋コンクリート造等","鉄骨造","その他"],
-    "断熱性能の入力方法": ["熱貫流率を入力","建材構成を入力","断熱材種類を入力"],
-    "断熱材番号":["1","2","3","4","21","22","41","42","43","44","45","46","47","48","61","62","63","64","65","66","67","68","69","70","71","72","73","81","82","83","84","85","86","87","88","89","90",
-        "101","102","103","104","105","106","107","121","122","123","124","125","126","127","128","129","130","131","132","133","134","141","142","143","144","145","146","161","162","163",
-        "181","182","183","184","185","186","187","188","189","190","201","202","203","204","221","222","301","302"],
-    "窓性能の入力方法": ["性能値を入力","ガラスの性能を入力","ガラスの種類を入力"],
-    "建具の種類": [
-        "樹脂製","樹脂製(単板ガラス)","樹脂製(複層ガラス)","樹脂製(二層複層ガラス)","樹脂製(三層以上の複層ガラス)",
-        "木製","木製(単板ガラス)","木製(複層ガラス)","木製(二層複層ガラス)","木製(三層以上の複層ガラス)",
-        "金属樹脂複合製","金属樹脂複合製(単板ガラス)","金属樹脂複合製(複層ガラス)","金属樹脂複合製(二層複層ガラス)","金属樹脂複合製(三層以上の複層ガラス)",
-        "金属木複合製","金属木複合製(単板ガラス)","金属木複合製(複層ガラス)","金属木複合製(二層複層ガラス)","金属木複合製(三層以上の複層ガラス)",
-        "金属製","金属製(単板ガラス)","金属製(複層ガラス)","金属製(二層以上の複層ガラス)"],
-    "ガラスの層数": ["三層以上の複層","複層","単層"],
-    "ガラスの種類": ["3WgG06","3WgG07","3WgG08","3WgG09","3WgG10","3WgG11","3WgG12","3WgG13","3WgG14","3WgG15","3WgG16","3WsG06","3WsG07","3WsG08","3WsG09","3WsG10","3WsG11","3WsG12","3WsG13","3WsG14","3WsG15","3WsG16",
-        "3WgA06","3WgA07","3WgA08","3WgA09","3WgA10","3WgA11","3WgA12","3WgA13","3WgA14","3WgA15","3WgA16","3WsA06","3WsA07","3WsA08","3WsA09","3WsA10","3WsA11","3WsA12","3WsA13","3WsA14","3WsA15","3WsA16",
-        "3LgG06","3LgG07","3LgG08","3LgG09","3LgG10","3LgG11","3LgG12","3LgG13","3LgG14","3LgG15","3LgG16","3LsG06","3LsG07","3LsG08","3LsG09","3LsG10","3LsG11","3LsG12","3LsG13","3LsG14","3LsG15","3LsG16",
-        "3LgA06","3LgA07","3LgA08","3LgA09","3LgA10","3LgA11","3LgA12","3LgA13","3LgA14","3LgA15","3LgA16","3LsA06","3LsA07","3LsA08","3LsA09","3LsA10","3LsA11","3LsA12","3LsA13","3LsA14","3LsA15","3LsA16",
-        "3FA06","3FA07","3FA08","3FA09","3FA10","3FA11","3FA12","3FA13","3FA14","3FA15","3FA16","2LgG06","2LgG07","2LgG08","2LgG09","2LgG10","2LgG11","2LgG12","2LgG13","2LgG14","2LgG15","2LgG16","2LsG06","2LsG07","2LsG08","2LsG09","2LsG10","2LsG11","2LsG12","2LsG13","2LsG14","2LsG15","2LsG16",
-        "2LgA06","2LgA07","2LgA08","2LgA09","2LgA10","2LgA11","2LgA12","2LgA13","2LgA14","2LgA15","2LgA16","2LsA06","2LsA07","2LsA08","2LsA09","2LsA10","2LsA11","2LsA12","2LsA13","2LsA14","2LsA15","2LsA16","2FA06","2FA07","2FA08","2FA09","2FA10","2FA11","2FA12","2FA13","2FA14","2FA15","2FA16","T","S"],
-    "冷暖同時供給の有無": ["無","有","有（室負荷）","有（外気負荷）"],
-    "蓄熱の種類": ["水蓄熱(混合型)","水蓄熱(成層型)","氷蓄熱"],
-    "熱源機種": _heatsource_types,          # HeatSourcePerformance.json から自動生成
-    "流量制御方式": _flowcontrol_options,   # FLOWCONTROL.json から自動生成（Single Source of Truth）
-    "空調機タイプ": ["空調機","FCU","送風機","室内機","全熱交ユニット","放熱器","天井放射冷暖房パネル"],
-    "送風機の種類": ["給気","還気","外気","排気","循環","ポンプ"],
-    "風量制御方式": _flowcontrol_options,   # FLOWCONTROL.json から自動生成（Single Source of Truth）
-    "換気方式": ["一種換気","二種換気","三種換気"],
-    "換気送風機の種類": ["給気","排気","空調","循環"],
-    "換気送風量制御": _air_volume_ctrl_options,  # ventilationControl.json から自動生成
-    "換気代替空調対象室の用途": ["電気室","機械室","エレベータ機械室","その他"],
-    "照明在室検知制御": _occupant_sensing_options,     # lightingControl.json から自動生成
-    "照明明るさ検知制御": _illuminance_sensing_options, # lightingControl.json から自動生成
-    "照明タイムスケジュール制御": _time_schedule_options,       # lightingControl.json から自動生成
-    "照明初期照度補正機能": _initial_illum_options,    # lightingControl.json から自動生成
-    "給湯負荷": ["便所","浴室","厨房","その他"],
-    "節湯器具": ["自動給湯栓","節湯B1","無"],
-    "給湯熱源の用途": ["給湯負荷用","配管保温用","貯湯槽保温用","その他"],
-    "給湯熱源機種": ["ガス給湯機","ガス給湯暖房機","ボイラ","石油給湯機(給湯単機能)","石油給湯機(給湯機付ふろがま)","家庭用ヒートポンプ給湯機","業務用ヒートポンプ給湯機","貯湯式電気温水器","電気瞬間湯沸器","真空式温水発生機","無圧式温水発生機","地域熱供給"],
-    "配管保温仕様": ["保温仕様A","保温仕様B","保温仕様C","保温仕様D","保温仕様1","保温仕様2","保温仕様3","裸管"],
-    "速度制御方式": ["VVVF(電力回生なし)","VVVF(電力回生あり)","VVVF(電力回生なし、ギアレス)","VVVF(電力回生あり、ギアレス)","交流帰還制御"],
-    "太陽電池の種類": ["結晶系","結晶系以外"],
-    "アレイ設置方式": ["架台設置形","屋根置き形","その他"],
-    "排熱利用優先順位": ["1番目","2番目","3番目"],
-
-}
+db = database_loader.load_all_databases()
+input_options = database_loader.get_input_options(db)
 
 def get_input_options() -> dict:
     """入力値の選択肢一覧を返す関数（APIエンドポイント用）
@@ -110,7 +35,159 @@ def get_input_options() -> dict:
     """
     return input_options
 
+# -----------------------------------------------------------------------
+# i18n逆引きマップ（英語入力値 → 日本語DBキー）
+# make_inputdata.py の read 時に英語値を正規化するために使用する。
+# -----------------------------------------------------------------------
+_i18n_en_raw = database_loader.load_translations("en")
+_i18n_rev = {
+    cat: {v: k for k, v in mapping.items()}
+    for cat, mapping in _i18n_en_raw.items()
+    if isinstance(mapping, dict) and cat != "roomType"
+}
 
+def _norm(value, category):
+    """英語表示値を日本語DBキーに変換する（知らない値はそのまま通す）"""
+    if not isinstance(value, str) or value == "":
+        return value
+    return _i18n_rev.get(category, {}).get(value, value)
+
+
+def _norm_roomtype(rt_raw, bt_ja):
+    """室用途の英語値を日本語DBキーに変換する（buildingType の日本語キーが必要）"""
+    if not isinstance(rt_raw, str) or rt_raw == "":
+        return rt_raw
+    rt_rev = {v: k for k, v in _i18n_en_raw.get("roomType", {}).get(bt_ja, {}).items()}
+    return rt_rev.get(rt_raw, rt_raw)
+
+
+# JSONキー名 → i18nカテゴリ のマッピング
+_FIELD_TO_CATEGORY: dict[str, str] = {
+    "buildingType":                      "buildingType",
+    "orientation":                       "common_orientation",
+    "structureType":                     "common_structure_type",
+    "wallType":                          "ac_wall_type",
+    "wallInputMethod":                   "ac_wall_input_method",
+    "windowInputMethod":                 "ac_window_input_method",
+    "frameType":                         "ac_window_frame_type",
+    "glassLayers":                       "ac_window_glass_layers",
+    "blindType":                         "ac_window_blind",
+    "ahuType":                           "ac_ahu_type",
+    "fanType":                           "ac_ahu_fan_type",
+    "heatExchanger":                     "ac_ahu_heat_exchanger",
+    "heatExchangerControl":              "ac_ahu_heat_exchanger_control",
+    "outdoorCooling":                    "ac_ahu_outdoor_cooling",
+    "outdoorIntakeControl":              "ac_ahu_outdoor_intake_control",
+    "simultaneousSupply":                "ac_operation_simultaneous_supply",
+    "heatSourceNumberControl":           "ac_heat_source_number_control",
+    "heatSourceOperationPriority":       "ac_heat_source_operation_priority",
+    "heatStorageType":                   "ac_heat_storage_type",
+    "pumpNumberControl":                 "ac_pump_number_control",
+    "pumpOperationPriority":             "ac_pump_operation_priority",
+    "pumpFlowControl":                   "ac_pump_flow_control",
+    "ventilationMethod":                 "vt_ventilation_method",
+    "vt_fanType":                        "vt_fan_type",
+    "pacRoomUsage":                      "vt_pac_room_usage",
+    "controlAirVolume":                  "vt_control_air_volume",
+    "controlInverter":                   "vt_control_inverter",
+    "controlHighEfficiencyMotor":        "vt_control_high_efficiency_motor",
+    "OccupantSensingCTRL":               "lt_control_occupant_sensing",
+    "IlluminanceSensingCTRL":            "lt_control_illuminance_sensing",
+    "TimeScheduleCTRL":                  "lt_control_time_schedule",
+    "InitialIlluminationCorrectionCTRL": "lt_control_iumination_correction",
+    "fuelType":                          "hw_fuel_type",
+    "heatSourceType":                    "hw_heat_source_type",
+    "heatSourcePurpose":                 "hw_heat_source_purpose",
+    "hotWaterUsage":                     "hw_hot_water_usage",
+    "pipeInsulationLevel":               "hw_pipe_insulation_level",
+    "waterSavingFixture":                "hw_water_saving_fixture",
+    "controlType":                       "ev_control_type",
+    "arrayType":                         "pv_array_type",
+    "solarCellType":                     "pv_solar_cell_type",
+    "24hoursOperation":                  "cgs_24hours_operation",
+    "heatRecoveryPriority":              "cgs_heat_recovery_priority",
+}
+
+
+def normalize_input(input_dict: dict) -> None:
+    """入力dictの英語表示値を日本語DBキーにインプレースで変換する。
+
+    JSON API から受け取った入力データを計算エンジンが扱える形式に正規化する。
+    日本語値はそのまま通過する。
+    """
+    # Rooms: buildingType / roomType の変換
+    for room_data in input_dict.get("Rooms", {}).values():
+        if not isinstance(room_data, dict):
+            continue
+        room_data["buildingType"] = _norm(room_data.get("buildingType", ""), "buildingType")
+        bt_ja = room_data["buildingType"]
+        room_data["roomType"] = _norm_roomtype(room_data.get("roomType", ""), bt_ja)
+
+    # その他のセクション: _FIELD_TO_CATEGORY に基づいて再帰的に変換
+    def _walk(obj: dict) -> None:
+        for key, value in obj.items():
+            if isinstance(value, dict):
+                _walk(value)
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict):
+                        _walk(item)
+            elif isinstance(value, str) and key in _FIELD_TO_CATEGORY:
+                obj[key] = _norm(value, _FIELD_TO_CATEGORY[key])
+
+    for section_key, section in input_dict.items():
+        if section_key == "Rooms":
+            continue
+        if isinstance(section, dict):
+            _walk(section)
+
+
+# -----------------------------------------------------------------------
+# 建物用途・室用途の読み替え辞書（database/*.json から読み込む）
+# 建物用途: {"旧名称": "新名称"}
+# 室用途:   {"建物用途": {"旧名称": "新名称"}}
+# -----------------------------------------------------------------------
+_BUILDING_TYPE_ALIASES: dict[str, str] = db["建物用途エイリアス"]
+_ROOM_TYPE_ALIASES: dict[str, dict[str, str]] = db["室用途エイリアス"]
+_FUEL_TYPE_ALIASES: dict[str, str] = db["燃料種別エイリアス"]
+_FUEL_TO_HEATSOURCE: dict[str, str] = db["燃料種別から給湯熱源"]
+
+def apply_type_alias(value: str, aliases: dict[str, str]) -> tuple[str, str | None]:
+    """エイリアス辞書を適用する。
+
+    Returns:
+        (新値, 旧値) - 変換がなかった場合は旧値が None
+    """
+    new_value = aliases.get(value, value)
+    return new_value, (value if new_value != value else None)
+
+
+# -----------------------------------------------------------------------
+# 建材名称の正規化
+# NFKC正規化で全角→半角・全角スペース→半角スペースを一括変換した後、
+# 辞書(_MATERIAL_NAME_ALIASES)で追加のエイリアスを適用する。
+# -----------------------------------------------------------------------
+_MATERIAL_NAME_ALIASES: dict[str, str] = {
+    # 例: "旧名称": "新名称",
+}
+
+def normalize_material_name(name: str) -> str:
+    """建材名称の表記ゆれを正規化する。
+
+    1. 英語→日本語変換（i18nリバースルックアップ）
+    2. NFKC正規化（全角英数→半角、全角スペース→半角スペース等）
+    3. スペース除去（半角・全角スペースをすべて削除）
+    4. 辞書(_MATERIAL_NAME_ALIASES)によるエイリアス変換
+    """
+    ja = _norm(name, "ac_heat_thermal_conductivity")
+    normalized = unicodedata.normalize("NFKC", ja).replace(" ", "")
+
+    return _MATERIAL_NAME_ALIASES.get(normalized, normalized)
+
+
+# -----------------------------------------------------------------------
+# 窓：建具の種類とガラスの層数の変換マップ
+# -----------------------------------------------------------------------
 def convert_window_frame_type(frame_type_webpro):
     """
     WEBPROの「建具の種類」からBuilelibの「建具の種類」に変換する関数
@@ -167,12 +244,7 @@ def convert_window_frame_type(frame_type_webpro):
         frame_type = None
         layer_type = None
 
-
     return frame_type, layer_type
-
-
-# 検証結果メッセージ （global変数）
-validation = {}
 
 
 def check_duplicates(seq):
@@ -971,7 +1043,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 # Excelファイル変換中のバリデーション（check_value）で使用する選択肢に追加する。
                 # JSON変換後のバリデーション（inputdata_validation）は commons.py が
                 # SpecialInputData["flow_control"] を読んでスキーマに動的注入するため、ここでは不要。
-                input_options["風量制御方式"].append(dataSP1[0])
                 input_options["流量制御方式"].append(dataSP1[0])
 
     #----------------------------------
@@ -1069,19 +1140,19 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 else:
 
-                    # 主たる建物用途
-                    mainbuildingType = dataBL[2]
+                    # 主たる建物用途（英語値も受け付ける）
+                    mainbuildingType = _norm(str(dataBL[2]), "buildingType")
 
                     if sheet_BL_name[-5:] == "Rev.2":  # 2024年4月以降のシート（室用途が2列に分離）
 
-                        buildingType = str(dataBL[3])
-                        roomType = str(dataBL[4])
+                        buildingType = _norm(str(dataBL[3]), "buildingType")
+                        roomType = _norm_roomtype(str(dataBL[4]), buildingType)
 
                     else:
 
                         # 建物用途
-                        buildingType = str(dataBL[2])
-                        roomType = str(dataBL[3])                            
+                        buildingType = _norm(str(dataBL[2]), "buildingType")
+                        roomType = _norm_roomtype(str(dataBL[3]), buildingType)                            
 
                         # 2022.10更新のWebプログラムに対応（建物用途-室用途）
                         if "-" in roomType:
@@ -1089,14 +1160,14 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             roomType = roomType.split("-")[1]
 
                     # 建物用途の読み替え
-                    if buildingType == "百貨店等":
-                        buildingType = "物販店舗等"
-                        validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目: 建物用途「百貨店等」を「物販店舗等」に置き換えました。")
+                    buildingType, old = apply_type_alias(buildingType, _BUILDING_TYPE_ALIASES)
+                    if old:
+                        validation["warning"].append(f"様式1.室仕様 {i+1}行目: 建物用途「{old}」を「{buildingType}」に置き換えました。")
 
-                    # 室用途の読み替え
-                    if roomType == "ゴミ置場等":
-                        roomType = "廃棄物保管場所等"
-                        validation["warning"].append( "様式1.室仕様 "+ str(i+1) +"行目: 室用途「ゴミ置場等」を「廃棄物保管場所等」に置き換えました。")
+                    # 室用途の読み替え（建物用途ごとのエイリアスを参照）
+                    roomType, old = apply_type_alias(roomType, _ROOM_TYPE_ALIASES.get(buildingType, {}))
+                    if old:
+                        validation["warning"].append(f"様式1.室仕様 {i+1}行目: 室用途「{old}」を「{roomType}」に置き換えました。")
 
 
                     # 建物用途のチェック
@@ -1223,10 +1294,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # シートから「行」の読み込み
             dataBE2 = sheet_BE2.row_values(i)
 
-            # 断熱仕様名称が空欄でない場合
+            # 外壁名称が空欄でない場合
             if (dataBE2[0] != ""):
 
-                # 断熱仕様名称をkeyとする（上書き）
+                # 外壁名称をkeyとする（上書き）
                 eltKey = check_value(dataBE2[0], "様式2-2.外壁構成 "+ str(i+1) +"行目:「①外壁名称」", True, None, "文字列", None, 0, None)
 
                 if eltKey in data["WallConfigure"]:
@@ -1235,8 +1306,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 else:
                 
-                    # 外壁の種類(WEBPRO)
-                    walltype_webpro = check_value(dataBE2[1], "様式2-2.外壁構成 "+ str(i+1) +"行目:「②壁の種類」", True, None, "文字列", input_options["外壁の種類(WEBPRO)"], None, None)
+                    # 外壁の種類
+                    walltype = check_value(_norm(dataBE2[1], "ac_wall_type"), "様式2-2.外壁構成 "+ str(i+1) +"行目:「②壁の種類」", True, None, "文字列", input_options["外壁の種類"], None, None)
 
                     # 日射吸収率(2024年4月 日射吸収率が入力可能に)
                     if sheet_BE2_name[-5:] == "Rev.2":
@@ -1255,7 +1326,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         if sheet_BE2_name[-5:] == "Rev.2": 
 
                             data["WallConfigure"][eltKey] = {
-                                    "wall_type_webpro": walltype_webpro,
+                                    "wall_type_webpro": walltype,
                                     "structureType": "その他",
                                     "solarAbsorptionRatio": solarAbsorptionRatio,
                                     "inputMethod": inputMethod,
@@ -1268,7 +1339,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         else:
 
                             data["WallConfigure"][eltKey] = {
-                                    "wall_type_webpro": walltype_webpro,
+                                    "wall_type_webpro": walltype,
                                     "structureType": "その他",
                                     "solarAbsorptionRatio": solarAbsorptionRatio,
                                     "inputMethod": inputMethod,
@@ -1287,28 +1358,23 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                             if (dataBE2[4] != "") or (dataBE2[5] != ""):
 
-                                material_name = dataBE2[4].replace(' ', '')
-
-                                if material_name == "吹付け硬質ウレタンフォームＡ種1":
-                                    dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
-                                elif material_name == "吹付け硬質ウレタンフォームＡ種3":
-                                    dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+                                material_name = normalize_material_name(dataBE2[4])
 
                                 data["WallConfigure"][eltKey] = {
-                                        "wall_type_webpro": walltype_webpro,
+                                        "wall_type_webpro": walltype,
                                         "structureType": "その他",
                                         "solarAbsorptionRatio": solarAbsorptionRatio,
                                         "inputMethod": inputMethod,
                                         "layers": [
                                             {
-                                            "materialID": 
-                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                            "materialID":
+                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+2) +"行目:「⑤建材名称 ("+material_name+")」", False, None, "文字列", input_options["建材の種類"], None, None),
                                             "conductivity":
-                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+2) +"行目:「⑥熱伝導率」", False, None, "数値", None, 0, None),
                                             "thickness":
-                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦厚み」", False, None, "数値", None, 0, None),
+                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+2) +"行目:「⑦厚み」", False, None, "数値", None, 0, None),
                                             "Info":
-                                                check_value(dataBE2[8], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
+                                                check_value(dataBE2[8], "様式2-2.外壁構成 "+ str(i+2) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
                                             }
                                         ]
                                     }
@@ -1317,7 +1383,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 
                                 # 1行目が空白の場合
                                 data["WallConfigure"][eltKey] = {
-                                        "wall_type_webpro": walltype_webpro,
+                                        "wall_type_webpro": walltype,
                                         "structureType": "その他",
                                         "solarAbsorptionRatio": solarAbsorptionRatio,
                                         "inputMethod": inputMethod,
@@ -1332,23 +1398,18 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 
                                 if (dataBE2[4] != "") or (dataBE2[5] != ""):
 
-                                    material_name = dataBE2[4].replace(' ', '')
+                                    material_name = normalize_material_name(dataBE2[4])
 
-                                    if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
-                                        dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
-                                    elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
-                                        dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
-                                        
                                     data["WallConfigure"][eltKey]["layers"].append(
                                         {
-                                            "materialID": 
-                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                            "materialID":
+                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+loop+1) +"行目:「⑤建材名称 ("+material_name+")」", False, None, "文字列", input_options["建材の種類"], None, None),
                                             "conductivity":
-                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+loop+1) +"行目:「⑥熱伝導率」", False, None, "数値", None, 0, None),
                                             "thickness":
-                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦厚み」", False, None, "数値", None, 0, None),
+                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+loop+1) +"行目:「⑦厚み」", False, None, "数値", None, 0, None),
                                             "Info":
-                                                check_value(dataBE2[8], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
+                                                check_value(dataBE2[8], "様式2-2.外壁構成 "+ str(i+loop+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
                                         }
                                     )
 
@@ -1357,27 +1418,22 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                             if dataBE2[4] != "":
 
-                                material_name = dataBE2[4].replace(' ', '')
-
-                                if material_name == "吹付け硬質ウレタンフォームＡ種1":
-                                    dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
-                                elif material_name == "吹付け硬質ウレタンフォームＡ種3":
-                                    dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
+                                material_name = normalize_material_name(dataBE2[4])
 
                                 data["WallConfigure"][eltKey] = {
-                                        "wall_type_webpro": walltype_webpro,
+                                        "wall_type_webpro": walltype,
                                         "structureType": "その他",
                                         "solarAbsorptionRatio": solarAbsorptionRatio,
                                         "inputMethod": inputMethod,
                                         "layers": [
                                             {
                                             "materialID": 
-                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+2) +"行目:「⑤建材名称 ("+material_name+")」", False, None, "文字列", input_options["建材の種類"], None, None),
                                             "conductivity": None,
                                             "thickness":
-                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+2) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
                                             "Info":
-                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+2) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
                                             }
                                         ]
                                     }
@@ -1386,7 +1442,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 
                                 # 1行目が空白の場合
                                 data["WallConfigure"][eltKey] = {
-                                        "wall_type_webpro": walltype_webpro,
+                                        "wall_type_webpro": walltype,
                                         "structureType": "その他",
                                         "solarAbsorptionRatio": solarAbsorptionRatio,
                                         "inputMethod": inputMethod,
@@ -1401,22 +1457,17 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 
                                 if dataBE2[4] != "":
 
-                                    material_name = dataBE2[4].replace(' ', '')
+                                    material_name = normalize_material_name(dataBE2[4])
 
-                                    if dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種1":
-                                        dataBE2[4] = "吹付け硬質ウレタンフォームA種1"
-                                    elif dataBE2[4].replace(' ', '') == "吹付け硬質ウレタンフォームＡ種3":
-                                        dataBE2[4] = "吹付け硬質ウレタンフォームA種3"
-                                        
                                     data["WallConfigure"][eltKey]["layers"].append(
                                         {
                                             "materialID": 
-                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑤建材名称」", False, None, "文字列", None, None, None),
+                                                check_value(material_name, "様式2-2.外壁構成 "+ str(i+loop+1) +"行目:「⑤建材名称 ("+material_name+")」", False, None, "文字列", input_options["建材の種類"], None, None),
                                             "conductivity": None,
                                             "thickness":
-                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
+                                                check_value(dataBE2[5], "様式2-2.外壁構成 "+ str(i+loop+1) +"行目:「⑥厚み」", False, None, "数値", None, 0, None),
                                             "Info":
-                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+1) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
+                                                check_value(dataBE2[6], "様式2-2.外壁構成 "+ str(i+loop) +"行目:「⑦備考」", False, None, "文字列", None, None, None),
                                         }
                                     )
 
@@ -1481,7 +1532,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     elif inputMethod == "ガラスの性能を入力":
 
-                        frame_type_webpro = check_value(dataBE3[3], "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None)
+                        frame_type_webpro = check_value(_norm(dataBE3[3], "ac_window_frame_type"), "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None)
                         frameType, layer_type = convert_window_frame_type(frame_type_webpro)
 
                         data["WindowConfigure"][eltKey] = {
@@ -1501,7 +1552,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     elif inputMethod == "ガラスの種類を入力":
 
-                        frame_type_webpro = check_value(dataBE3[3], "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None)
+                        frame_type_webpro = check_value(_norm(dataBE3[3], "ac_window_frame_type"), "様式2-3.窓仕様 "+ str(i+1) +"行目:「④建具の種類」", True, None, "文字列", input_options["建具の種類"], None, None)
                         frame_type, layer_type = convert_window_frame_type(frame_type_webpro)
                             
                         data["WindowConfigure"][eltKey] = {
@@ -1561,6 +1612,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 else:
 
                     # 外壁の種類の判定（Ver.2のみ）
+                    dataBE1[2] = _norm(str(dataBE1[2]), "common_orientation")
                     if str(dataBE1[2]) == "日陰":
                         dataBE1[2] = "北"
                         wallType = "日の当たらない外壁"
@@ -1602,7 +1654,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "WallList": [
                                 {
                                     "Direction":
-                                        check_value(dataBE1[2], "様式2-4.外皮 "+ str(i+1) +"行目:「②方位」", True, None, "文字列", input_options["方位"], None, None),
+                                        check_value(_norm(dataBE1[2], "common_orientation"), "様式2-4.外皮 "+ str(i+1) +"行目:「②方位」", True, None, "文字列", input_options["方位"], None, None),
                                     "EnvelopeArea":
                                         check_value(dataBE1[6], "様式2-4.外皮 "+ str(i+1) +"行目:「⑤外皮面積（窓含）」", True, None, "数値", None, 0, None),
                                     "EnvelopeWidth": None,
@@ -1617,7 +1669,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                             "WindowNumber":
                                                 check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
                                             "isBlind":
-                                                check_value(dataBE1[9], "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                                check_value(_norm(dataBE1[9], "ac_window_blind"), "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["ブラインドの有無"], None, None),
                                             "EavesID": EavesID,
                                             "Info":
                                                 check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
@@ -1669,7 +1721,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "WindowNumber":
                                     check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
                                 "isBlind":
-                                    check_value(dataBE1[9], "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                    check_value(_norm(dataBE1[9], "ac_window_blind"), "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["ブラインドの有無"], None, None),
                                 "EavesID": EavesID,
                                 "Info":
                                     check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
@@ -1679,6 +1731,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 elif roomKey in data["EnvelopeSet"]: # 方位が空白ではない場合。
 
                     # 外壁の種類の判定（Ver.2のみ）
+                    dataBE1[2] = _norm(str(dataBE1[2]), "common_orientation")
                     if str(dataBE1[2]) == "日陰":
                         dataBE1[2] = "北"
                         wallType = "日の当たらない外壁"
@@ -1718,7 +1771,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     data["EnvelopeSet"][roomKey]["WallList"].append(
                         {
                             "Direction":
-                                check_value(dataBE1[2], "様式2-4.外皮 "+ str(i+1) +"行目:「②方位」", True, None, "文字列", input_options["方位"], None, None),
+                                check_value(_norm(dataBE1[2], "common_orientation"), "様式2-4.外皮 "+ str(i+1) +"行目:「②方位」", True, None, "文字列", input_options["方位"], None, None),
                             "EnvelopeArea":
                                 check_value(dataBE1[6], "様式2-4.外皮 "+ str(i+1) +"行目:「⑤外皮面積（窓含）」", True, None, "数値", None, 0, None),
                             "EnvelopeWidth": None,
@@ -1733,7 +1786,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     "WindowNumber":
                                         check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
                                     "isBlind":
-                                        check_value(dataBE1[9], "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                        check_value(_norm(dataBE1[9], "ac_window_blind"), "様式2-4.外皮 "+ str(i+1) +"行目:「⑧ブラインドの有無」", False, "無", "文字列", input_options["ブラインドの有無"], None, None),
                                     "EavesID": EavesID,
                                     "Info":
                                         check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
@@ -1789,16 +1842,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 else:
 
                     # 冷暖同時供給の有無
-                    if dataAC2[1] == "有":
-                        isSimultaneous_flag = "有"
-                    else:
-                        isSimultaneous_flag = "無"
-
+                    isSimultaneous_flag = check_value(_norm(dataAC2[1],"ac_operation_simultaneous_supply"), "様式2-5.熱源 "+ str(i+1) +"行目:「②冷暖同時供給の有無」", False, "無", "文字列", input_options["冷暖同時供給の有無"], None, None)
                     # 台数制御の有無
-                    if dataAC2[2] == "有":
-                        staging_control_flag = "有"
-                    else:
-                        staging_control_flag = "無"
+                    staging_control_flag = check_value(_norm(dataAC2[2],"ac_heat_source_number_control"), "様式2-5.熱源 "+ str(i+1) +"行目:「③台数制御の有無」", False, "無", "文字列", input_options["熱源台数制御"], None, None)
 
                     # 熱源群名称が入力されている箇所は、蓄熱有無を判定する。
                     if dataAC2[3] == "氷蓄熱" or dataAC2[3] == "水蓄熱(成層型)" or dataAC2[3] == "水蓄熱(混合型)":
@@ -1814,7 +1860,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     if storage_flag:
                         modeKey_C = "冷房(蓄熱)"
                         modeKey_H = "暖房(蓄熱)"
-                        StorageType = check_value(dataAC2[3], "様式2-5.熱源 "+ str(i+1) +"行目:「④蓄熱システム（運転モード）」", True, None, "文字列", input_options["蓄熱の種類"], None, None)
+                        StorageType = check_value(_norm(dataAC2[3], "ac_heat_storage_type"), "様式2-5.熱源 "+ str(i+1) +"行目:「④蓄熱システム（運転モード）」", True, None, "文字列", input_options["蓄熱の種類"], None, None)
                         StorageSize = check_value(dataAC2[4], "様式2-5.熱源 "+ str(i+1) +"行目:「⑤蓄熱システム（蓄熱容量）」", True, None, "数値", None, 0, None)                           
                     else:
                         modeKey_C = "冷房"
@@ -1826,7 +1872,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     if (dataAC2[5] != ""): # 熱源機種名称が入力されている。 
 
                         # 熱源機種
-                        HeatsourceType = check_value(dataAC2[5], "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
+                        HeatsourceType = check_value(_norm(dataAC2[5], "ac_heat_source_performance"), "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
 
                         if (dataAC2[6] != "") and (HeatsourceType in HeatSourcePerformance): # 冷熱源がある。
 
@@ -1978,7 +2024,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 if (dataAC2[5] != ""): # 熱源機種名称が入力されている。 
 
                     # 熱源機種
-                    HeatsourceType = check_value(dataAC2[5], "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
+                    HeatsourceType = check_value(_norm(dataAC2[5], "ac_heat_source_performance"), "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
 
                     if (dataAC2[6] != "") and (HeatsourceType in HeatSourcePerformance): # 冷熱源がある。
 
@@ -2087,7 +2133,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 if storage_flag:
                     modeKey_C = "冷房(蓄熱)"
                     modeKey_H = "暖房(蓄熱)"
-                    StorageType = check_value(dataAC2[3], "様式2-5.熱源 "+ str(i+1) +"行目:「④蓄熱システム（運転モード）」", True, None, "文字列", input_options["蓄熱の種類"], None, None)
+                    StorageType = check_value(_norm(dataAC2[3], "ac_heat_storage_type"), "様式2-5.熱源 "+ str(i+1) +"行目:「④蓄熱システム（運転モード）」", True, None, "文字列", input_options["蓄熱の種類"], None, None)
                     StorageSize = check_value(dataAC2[4], "様式2-5.熱源 "+ str(i+1) +"行目:「⑤蓄熱システム（蓄熱容量）」", True, None, "数値", None, 0, None)                           
                 else:
                     modeKey_C = "冷房"
@@ -2097,7 +2143,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 if (dataAC2[5] != ""): # 熱源機種名称が入力されている。 
 
                     # 熱源機種
-                    HeatsourceType = check_value(dataAC2[5], "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
+                    HeatsourceType = check_value(_norm(dataAC2[5], "ac_heat_source_performance"), "様式2-5.熱源 "+ str(i+1) +"行目:「⑥熱源機種」", True, None, "文字列", input_options["熱源機種"], None, None)
 
                     if (dataAC2[6] != "") and (HeatsourceType in HeatSourcePerformance): # 冷熱源がある。
 
@@ -2278,7 +2324,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "TemperatureDifference":
                                     check_value(dataAC3[2], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「③冷房時温度差」", True, None, "数値", None, 0, None),
                                 "isStagingControl": 
-                                    check_value(dataAC3[1], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「②台数制御の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                    check_value(_norm(dataAC3[1], "ac_pump_number_control"), "様式2-6.二次ポンプ "+ str(i+1) +"行目:「②台数制御の有無」", False, "無", "文字列", input_options["ポンプ台数制御"], None, None),
                                 "SecondaryPump" :[
                                     {
                                         "Number" :
@@ -2288,7 +2334,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                         "RatedPowerConsumption":
                                             check_value(dataAC3[7], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑦定格消費電力」", True, None, "数値", None, 0, None),
                                         "ContolType":
-                                            check_value(dataAC3[8], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
+                                            check_value(_norm(dataAC3[8], "ac_pump_flow_control"), "様式2-6.二次ポンプ"+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
                                         "MinOpeningRate":
                                             check_value(dataAC3[9], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑨変流量時最小流量比」", False, None, "数値", None, 0, 100),
                                         "Info":                                        
@@ -2310,7 +2356,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "TemperatureDifference":
                                     check_value(dataAC3[3], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「③暖房時温度差」", True, None, "数値", None, 0, None),
                                 "isStagingControl": 
-                                    check_value(dataAC3[1], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「②台数制御の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                    check_value(_norm(dataAC3[1], "ac_pump_number_control"), "様式2-6.二次ポンプ "+ str(i+1) +"行目:「②台数制御の有無」", False, "無", "文字列", input_options["ポンプ台数制御"], None, None),
                                 "SecondaryPump" :[
                                     {
                                         "Number" :
@@ -2320,7 +2366,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                         "RatedPowerConsumption":
                                             check_value(dataAC3[7], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑦定格消費電力」", True, None, "数値", None, 0, None),
                                         "ContolType":
-                                            check_value(dataAC3[8], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
+                                            check_value(_norm(dataAC3[8], "ac_pump_flow_control"), "様式2-6.二次ポンプ"+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
                                         "MinOpeningRate":
                                             check_value(dataAC3[9], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑨変流量時最小流量比」", False, None, "数値", None, 0, 100),
                                         "Info":                                        
@@ -2348,7 +2394,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "RatedPowerConsumption":
                                 check_value(dataAC3[7], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑦定格消費電力」", True, None, "数値", None, 0, None),
                             "ContolType":
-                                check_value(dataAC3[8], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
+                                check_value(_norm(dataAC3[8], "ac_pump_flow_control"), "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
                             "MinOpeningRate":
                                 check_value(dataAC3[9], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑨変流量時最小流量比」", False, None, "数値", None, 0, 100),
                             "Info":                                        
@@ -2367,7 +2413,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "RatedPowerConsumption":
                                 check_value(dataAC3[7], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑦定格消費電力」", True, None, "数値", None, 0, None),
                             "ContolType":
-                                check_value(dataAC3[8], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
+                                check_value(_norm(dataAC3[8], "ac_pump_flow_control"), "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑧流量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
                             "MinOpeningRate":
                                 check_value(dataAC3[9], "様式2-6.二次ポンプ "+ str(i+1) +"行目:「⑨変流量時最小流量比」", False, None, "数値", None, 0, 100),
                             "Info":                                        
@@ -2417,11 +2463,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                         data["AirHandlingSystem"][unitKey] = {
                             "isEconomizer": 
-                                check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None), 
+                                check_value(_norm(dataAC4[13], "ac_ahu_outdoor_cooling"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["外気冷房の有無"], None, None), 
                             "EconomizerMaxAirVolume":
                                 check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None), 
                             "isOutdoorAirCut":
-                                check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                check_value(_norm(dataAC4[12], "ac_ahu_outdoor_intake_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["外気取入制御の有無"], None, None),
                             "Pump_cooling": 
                                 check_value(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒二次ポンプ群名称（冷熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
                             "Pump_heating":
@@ -2433,7 +2479,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "AirHandlingUnit" :[
                                 {
                                     "Type":
-                                        check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                                        check_value(_norm(dataAC4[2], "ac_ahu_type"), "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
                                     "Number":
                                         check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
                                     "RatedCapacityCooling":
@@ -2445,7 +2491,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                         check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換器の設計風量」", False, None, "数値", None, None, None),    
                                     "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
                                     "FanControlType":
-                                        check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                                        check_value(_norm(dataAC4[10], "ac_ahu_air_volume_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
                                     "FanMinOpeningRate":
                                         check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
                                     "AirHeatExchangeRatioCooling":
@@ -2454,13 +2500,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                         check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲全熱交換効率（暖房時）」", False, None, "数値", None, 0, 100),
                                     "AirHeatExchangerEffectiveAirVolumeRatio": None,
                                     "AirHeatExchangerControl":
-                                        check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                        check_value(_norm(dataAC4[19], "ac_ahu_heat_exchanger_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑳自動換気切替機能の有無」", False, "無", "文字列", input_options["自動換気切替機能の有無"], None, None),
                                     "AirHeatExchangerPowerConsumption":
                                         check_value(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑ローター消費電力」", False, None, "数値", None, 0, None),
                                     "Info":
                                         check_value(dataAC4[25], "様式2-7.空調機 "+ str(i+1) +"行目:「㉕備考」", False, None, "文字列", None, None, None),
-                                    "isAirHeatExchanger": check_value(dataAC4[14], "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", None, None, None), 
-                                    "AirHeatExchanger_name": check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の名称」", False, "無", "文字列", None, None, None), 
+                                    "isAirHeatExchanger": check_value(_norm(dataAC4[14], "ac_ahu_heat_exchanger"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", input_options["全熱交換器の種別"], None, None),
+                                    "AirHeatExchanger_name": check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の名称」", False, "無", "文字列", None, None, None),
                                 }
                             ]
                         }
@@ -2469,11 +2515,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                         data["AirHandlingSystem"][unitKey] = {
                             "isEconomizer": 
-                                check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None), 
+                                check_value(_norm(dataAC4[13], "ac_ahu_outdoor_cooling"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["外気冷房の有無"], None, None), 
                             "EconomizerMaxAirVolume":
                                 check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None), 
                             "isOutdoorAirCut":
-                                check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                check_value(_norm(dataAC4[12], "ac_ahu_outdoor_intake_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["外気取入制御の有無"], None, None),
                             "Pump_cooling": 
                                 check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳二次ポンプ群名称（冷熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
                             "Pump_heating":
@@ -2485,7 +2531,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "AirHandlingUnit" :[
                                 {
                                     "Type":
-                                        check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                                        check_value(_norm(dataAC4[2], "ac_ahu_type"), "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
                                     "Number":
                                         check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
                                     "RatedCapacityCooling":
@@ -2497,7 +2543,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                         check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の設計風量」", False, None, "数値", None, None, None),    
                                     "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
                                     "FanControlType":
-                                        check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                                        check_value(_norm(dataAC4[10], "ac_ahu_air_volume_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
                                     "FanMinOpeningRate":
                                         check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
                                     "AirHeatExchangeRatioCooling":
@@ -2506,13 +2552,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                         check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
                                     "AirHeatExchangerEffectiveAirVolumeRatio": None,
                                     "AirHeatExchangerControl":
-                                        check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                        check_value(_norm(dataAC4[17], "ac_ahu_heat_exchanger_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["自動換気切替機能の有無"], None, None),
                                     "AirHeatExchangerPowerConsumption":
                                         check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲ローター消費電力」", False, None, "数値", None, 0, None),
                                     "Info":
                                         check_value(dataAC4[23], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔備考」", False, None, "文字列", None, None, None),
-                                    "isAirHeatExchanger": check_value(dataAC4[14], "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", None, None, None), 
-                                    "AirHeatExchanger_name": None, 
+                                    "isAirHeatExchanger": check_value(_norm(dataAC4[14], "ac_ahu_heat_exchanger"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", input_options["全熱交換器の種別"], None, None),
+                                    "AirHeatExchanger_name": None,
                                 }
                             ]
                         }
@@ -2526,13 +2572,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 if sheet_AC4_name[-5:] == "Rev.2":      # 2024年4月 全熱交換器の列が追加
 
-                    if dataAC4[14] == "全熱交換器あり・様式2-9記載あり":
+                    if _norm(dataAC4[14], "ac_ahu_heat_exchanger") == "全熱交換器あり・様式2-9記載あり":
                         validation["error"].append( "様式2-7.空調機:「⑮全熱交換器の有無」の選択肢が「全熱交換器あり・様式2-9記載あり」である場合は計算ができません。")
 
                     data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
                         {
                             "Type":
-                                check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                                check_value(_norm(dataAC4[2], "ac_ahu_type"), "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
                             "Number":
                                 check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
                             "RatedCapacityCooling":
@@ -2544,7 +2590,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換器の設計風量」", False, None, "数値", None, None, None),    
                             "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
                             "FanControlType":
-                                check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                                check_value(_norm(dataAC4[10], "ac_ahu_air_volume_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
                             "FanMinOpeningRate":
                                 check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
                             "AirHeatExchangeRatioCooling":
@@ -2553,13 +2599,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲全熱交換効率（暖房時）」", False, None, "数値", None, 0, 100),
                             "AirHeatExchangerEffectiveAirVolumeRatio": None,
                             "AirHeatExchangerControl":
-                                check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                check_value(_norm(dataAC4[19], "ac_ahu_heat_exchanger_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑳自動換気切替機能の有無」", False, "無", "文字列", input_options["自動換気切替機能の有無"], None, None),
                             "AirHeatExchangerPowerConsumption":
                                 check_value(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑ローター消費電力」", False, None, "数値", None, 0, None),
                             "Info":
                                 check_value(dataAC4[25], "様式2-7.空調機 "+ str(i+1) +"行目:「㉕備考」", False, None, "文字列", None, None, None),
-                            "isAirHeatExchanger": check_value(dataAC4[14], "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", None, None, None), 
-                            "AirHeatExchanger_name": check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の名称」", False, "無", "文字列", None, None, None), 
+                            "isAirHeatExchanger": check_value(_norm(dataAC4[14], "ac_ahu_heat_exchanger"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", input_options["全熱交換器の種別"], None, None),
+                            "AirHeatExchanger_name": check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の名称」", False, "無", "文字列", None, None, None),
                         }
                     )
 
@@ -2568,7 +2614,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     data["AirHandlingSystem"][unitKey]["AirHandlingUnit"].append(
                         {
                             "Type":
-                                check_value(dataAC4[2], "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
+                                check_value(_norm(dataAC4[2], "ac_ahu_type"), "様式2-7.空調機 "+ str(i+1) +"行目:「③空調機タイプ」", True, None, "文字列", input_options["空調機タイプ"], None, None), 
                             "Number":
                                 check_value(dataAC4[1], "様式2-7.空調機 "+ str(i+1) +"行目:「②台数」", True, None, "数値", None, None, None), 
                             "RatedCapacityCooling":
@@ -2580,7 +2626,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 check_value(dataAC4[15], "様式2-7.空調機 "+ str(i+1) +"行目:「⑯全熱交換器の設計風量」", False, None, "数値", None, None, None),    
                             "FanPowerConsumption": E_fan1+E_fan2+E_fan3+E_fan4,
                             "FanControlType":
-                                check_value(dataAC4[10], "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["風量制御方式"], None, None),
+                                check_value(_norm(dataAC4[10], "ac_ahu_air_volume_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑪風量制御方式」", False, "無", "文字列", input_options["流量制御方式"], None, None),
                             "FanMinOpeningRate":
                                 check_value(dataAC4[11], "様式2-7.空調機 "+ str(i+1) +"行目:「⑫変風量時最小風量比」", False, None, "数値", None, 0, 100),                                   
                             "AirHeatExchangeRatioCooling":
@@ -2589,18 +2635,18 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 check_value(dataAC4[16], "様式2-7.空調機 "+ str(i+1) +"行目:「⑰全熱交換効率」", False, None, "数値", None, 0, 100),
                             "AirHeatExchangerEffectiveAirVolumeRatio": None,
                             "AirHeatExchangerControl":
-                                check_value(dataAC4[17], "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                                check_value(_norm(dataAC4[17], "ac_ahu_heat_exchanger_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑱自動換気切替機能の有無」", False, "無", "文字列", input_options["自動換気切替機能の有無"], None, None),
                             "AirHeatExchangerPowerConsumption":
                                 check_value(dataAC4[18], "様式2-7.空調機 "+ str(i+1) +"行目:「⑲ローター消費電力」", False, None, "数値", None, 0, None),
                             "Info":
                                 check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔備考」", False, None, "文字列", None, None, None),
-                            "isAirHeatExchanger": check_value(dataAC4[14], "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", None, None, None), 
-                            "AirHeatExchanger_name": None, 
+                            "isAirHeatExchanger": check_value(_norm(dataAC4[14], "ac_ahu_heat_exchanger"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑮全熱交換器の有無」", False, "無", "文字列", input_options["全熱交換器の種別"], None, None),
+                            "AirHeatExchanger_name": None,
                         }
                     )
 
                 # 外気冷房制御のチェック（継続行に書いていれば有効にする）
-                isEconomizer           = check_value(dataAC4[13], "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["有無"], None, None)
+                isEconomizer           = check_value(_norm(dataAC4[13], "ac_ahu_outdoor_cooling"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["外気冷房の有無"], None, None)
                 EconomizerMaxAirVolume = check_value(dataAC4[5],  "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None)
 
                 if isEconomizer == "有" and EconomizerMaxAirVolume != "":
@@ -2608,7 +2654,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     data["AirHandlingSystem"][unitKey]["EconomizerMaxAirVolume"] = EconomizerMaxAirVolume
 
                 # 予熱時外気取り入れ停止の有無
-                isOutdoorAirCut = check_value(dataAC4[12], "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["有無"], None, None)
+                isOutdoorAirCut = check_value(_norm(dataAC4[12], "ac_ahu_outdoor_intake_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["外気取入制御の有無"], None, None)
                 if isOutdoorAirCut == "有":
                     data["AirHandlingSystem"][unitKey]["isOutdoorAirCut"] = isOutdoorAirCut
 
@@ -2724,7 +2770,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "VentilationUnitRef":{
                                 unitKey :{
                                     "UnitType":
-                                        check_value(dataV[5], "様式3-1.換気対象室 "+ str(i+1) +"行目:「②換気種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None),
+                                        check_value(_norm(dataV[5], "vt_fan_type"), "様式3-1.換気対象室 "+ str(i+1) +"行目:「②換気種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None),
                                     "Info":
                                         check_value(dataV[7], "様式3-1.換気対象室 "+ str(i+1) +"行目:「④備考」", None, None, "文字列", None, None, None),
                                 }
@@ -2745,7 +2791,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                     data["VentilationRoom"][roomKey]["VentilationUnitRef"][unitKey]  = {
                         "UnitType":
-                            check_value(dataV[5], "様式3-1.換気対象室 "+ str(i+1) +"行目:「②換気種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None),
+                            check_value(_norm(dataV[5], "vt_fan_type"), "様式3-1.換気対象室 "+ str(i+1) +"行目:「②換気種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None),
                         "Info":
                             check_value(dataV[7], "様式3-1.換気対象室 "+ str(i+1) +"行目:「④備考」", None, None, "文字列", None, None, None),
                     }               
@@ -2785,11 +2831,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataV[2], "様式3-2.換気送風機 "+ str(i+1) +"行目:「③電動機定格出力」", True, None, "数値", None, 0, None),
                         "PowerConsumption": None,
                         "HighEfficiencyMotor":
-                            check_value(dataV[3], "様式3-2.換気送風機 "+ str(i+1) +"行目:「④高効率電動機の有無」", False, "無", "文字列", input_options["有無"], None, None),                        
+                            check_value(_norm(dataV[3], "vt_control_high_efficiency_motor"), "様式3-2.換気送風機 "+ str(i+1) +"行目:「④高効率電動機の有無」", False, "無", "文字列", input_options["高効率電動機"], None, None),                        
                         "Inverter":
-                            check_value(dataV[4], "様式3-2.換気送風機 "+ str(i+1) +"行目:「⑤インバータの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            check_value(_norm(dataV[4], "vt_control_inverter"), "様式3-2.換気送風機 "+ str(i+1) +"行目:「⑤インバータの有無」", False, "無", "文字列", input_options["インバーター制御"], None, None),
                         "AirVolumeControl":
-                            check_value(dataV[5], "様式3-2.換気送風機 "+ str(i+1) +"行目:「⑥送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
+                            check_value(_norm(dataV[5], "vt_control_air_volume"), "様式3-2.換気送風機 "+ str(i+1) +"行目:「⑥送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
                         "VentilationRoomType": None,
                         "AC_CoolingCapacity": None,
                         "AC_RefEfficiency": None,
@@ -2825,7 +2871,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 送風機の種類
             if (dataV[5] != ""):
 
-                ventilation_type = check_value(dataV[5], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑤送風機の種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None)
+                ventilation_type = check_value(_norm(dataV[5], "vt_fan_type"), "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑤送風機の種類」", True, None, "文字列", input_options["換気送風機の種類"], None, None)
 
                 if ventilation_type == "空調":
                     
@@ -2837,13 +2883,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataV[7], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑧電動機定格出力」", True, None, "数値", None, 0, None),
                         "PowerConsumption": None,
                         "HighEfficiencyMotor":
-                            check_value(dataV[8], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑨高効率電動機の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            check_value(_norm(dataV[8], "vt_control_high_efficiency_motor"), "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑨高効率電動機の有無」", False, "無", "文字列", input_options["高効率電動機"], None, None),
                         "Inverter":
-                            check_value(dataV[9], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑩インバータの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            check_value(_norm(dataV[9], "vt_control_inverter"), "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑩インバータの有無」", False, "無", "文字列", input_options["インバーター制御"], None, None),
                         "AirVolumeControl":
-                            check_value(dataV[10], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑪送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
+                            check_value(_norm(dataV[10], "vt_control_air_volume"), "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑪送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
                         "VentilationRoomType":
-                            check_value(dataV[1], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「②換気対象室の用途」", True, None, "文字列か数値", input_options["換気代替空調対象室の用途"], None, None),
+                            check_value(_norm(dataV[1], "vt_pac_room_usage"), "様式3-3.換気代替空調 "+ str(i+1) +"行目:「②換気対象室の用途」", True, None, "文字列か数値", input_options["換気代替空調対象室の用途"], None, None),
                         "AC_CoolingCapacity":
                             check_value(dataV[2], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「③必要冷却能力」", True, None, "数値", None, 0, None),
                         "AC_RefEfficiency":
@@ -2866,11 +2912,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataV[7], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑧電動機定格出力」", True, None, "数値", None, 0, None),
                         "PowerConsumption": None,
                         "HighEfficiencyMotor":
-                            check_value(dataV[8], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑨高効率電動機の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            check_value(_norm(dataV[8], "vt_control_high_efficiency_motor"), "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑨高効率電動機の有無」", False, "無", "文字列", input_options["高効率電動機"], None, None),
                         "Inverter":
-                            check_value(dataV[9], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑩インバータの有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            check_value(_norm(dataV[9], "vt_control_inverter"), "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑩インバータの有無」", False, "無", "文字列", input_options["インバーター制御"], None, None),
                         "AirVolumeControl":
-                            check_value(dataV[10], "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑪送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
+                            check_value(_norm(dataV[10], "vt_control_air_volume"), "様式3-3.換気代替空調 "+ str(i+1) +"行目:「⑪送風量制御」", False, "無", "文字列", input_options["換気送風量制御"], None, None),
                         "VentilationRoomType": None,
                         "AC_CoolingCapacity": None,
                         "AC_RefEfficiency": None,
@@ -2948,13 +2994,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "Number":
                                     check_value(dataL[12], "様式4.照明 "+ str(i+1) +"行目:「⑦台数」", True, None, "数値", None, 0, None),
                                 "OccupantSensingCTRL":
-                                    check_value(dataL[13], "様式4.照明 "+ str(i+1) +"行目:「⑧在室検知制御」", False, "無", "文字列か数値", input_options["照明在室検知制御"], None, None),
+                                    check_value(_norm(dataL[13], "lt_control_occupant_sensing"), "様式4.照明 "+ str(i+1) +"行目:「⑧在室検知制御」", False, "無", "文字列か数値", input_options["照明在室検知制御"], None, None),
                                 "IlluminanceSensingCTRL":
-                                    check_value(dataL[14], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明明るさ検知制御"], None, None),
+                                    check_value(_norm(dataL[14], "lt_control_illuminance_sensing"), "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明明るさ検知制御"], None, None),
                                 "TimeScheduleCTRL":
-                                    check_value(dataL[15], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明タイムスケジュール制御"], None, None),
+                                    check_value(_norm(dataL[15], "lt_control_time_schedule"), "様式4.照明 "+ str(i+1) +"行目:「⑩照明タイムスケジュール制御」", False, "無", "文字列か数値", input_options["照明タイムスケジュール制御"], None, None),
                                 "InitialIlluminationCorrectionCTRL":
-                                    check_value(dataL[16], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
+                                    check_value(_norm(dataL[16], "lt_control_iumination_correction"), "様式4.照明 "+ str(i+1) +"行目:「⑪照明初期照度補正機能」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
                             }
                         }
                     }
@@ -2977,13 +3023,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "Number":
                             check_value(dataL[12], "様式4.照明 "+ str(i+1) +"行目:「⑦台数」", True, None, "数値", None, 0, None),
                         "OccupantSensingCTRL":
-                            check_value(dataL[13], "様式4.照明 "+ str(i+1) +"行目:「⑧在室検知制御」", False, "無", "文字列か数値", input_options["照明在室検知制御"], None, None),
+                            check_value(_norm(dataL[13], "lt_control_occupant_sensing"), "様式4.照明 "+ str(i+1) +"行目:「⑧在室検知制御」", False, "無", "文字列か数値", input_options["照明在室検知制御"], None, None),
                         "IlluminanceSensingCTRL":
-                            check_value(dataL[14], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明明るさ検知制御"], None, None),
+                            check_value(_norm(dataL[14], "lt_control_illuminance_sensing"), "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明明るさ検知制御"], None, None),
                         "TimeScheduleCTRL":
-                            check_value(dataL[15], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明タイムスケジュール制御"], None, None),
+                            check_value(_norm(dataL[15], "lt_control_time_schedule"), "様式4.照明 "+ str(i+1) +"行目:「⑩照明タイムスケジュール制御」", False, "無", "文字列か数値", input_options["照明タイムスケジュール制御"], None, None),
                         "InitialIlluminationCorrectionCTRL":
-                            check_value(dataL[16], "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
+                            check_value(_norm(dataL[16], "lt_control_iumination_correction"), "様式4.照明 "+ str(i+1) +"行目:「⑪照明初期照度補正機能」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
                     }
 
     #----------------------------------
@@ -3029,7 +3075,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "SystemName":
                                     check_value(dataHW1[7], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「④給湯機器名称」", True, None, "文字列", None, None, None),
                                 "HotWaterSavingSystem":
-                                    check_value(dataHW1[6], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「③節湯器具」", True, "無", "文字列", input_options["節湯器具"], None, None),
+                                    check_value(_norm(dataHW1[6], "hw_water_saving_fixture"), "様式5-1.給湯対象室 "+ str(i+1) +"行目:「③節湯器具」", True, "無", "文字列", input_options["節湯器具"], None, None),
                                 "Info":
                                     check_value(dataHW1[8], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, 0, None),
                             }
@@ -3044,7 +3090,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "SystemName":
                             check_value(dataHW1[7], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「④給湯機器名称」", True, None, "文字列", None, None, None),
                         "HotWaterSavingSystem":
-                            check_value(dataHW1[6], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「③節湯器具」", True, "無", "文字列", input_options["節湯器具"], None, None),
+                            check_value(_norm(dataHW1[6], "hw_water_saving_fixture"), "様式5-1.給湯対象室 "+ str(i+1) +"行目:「③節湯器具」", True, "無", "文字列", input_options["節湯器具"], None, None),
                         "Info":
                             check_value(dataHW1[8], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, 0, None),
                     }
@@ -3078,26 +3124,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 else:
 
-                    if str(dataHW2[1]) == "電力" or str(dataHW2[1]) == "電気":
-                        HeatSourceType = "電気瞬間湯沸器"
-                    elif str(dataHW2[1]) == "都市ガス":
-                        HeatSourceType = "ガス給湯機"
-                    elif str(dataHW2[1]) == "液化石油ガス":
-                        HeatSourceType = "ガス給湯機"
-                    elif str(dataHW2[1]) == "重油":
-                        HeatSourceType = "ボイラ"
-                    elif str(dataHW2[1]) == "灯油":
-                        HeatSourceType = "ボイラ"
-                    elif str(dataHW2[1]) == "他人から供給された熱（温水）":
-                        HeatSourceType = "地域熱供給"
-                    elif str(dataHW2[1]) == "他人から供給された熱(温水)":
-                        HeatSourceType = "地域熱供給"
-                    elif str(dataHW2[1]) == "他人から供給された熱（蒸気）":
-                        HeatSourceType = "地域熱供給"
-                    elif str(dataHW2[1]) == "他人から供給された熱(蒸気)":
-                        HeatSourceType = "地域熱供給"
-                    else:
-                        validation["error"].append( "様式5-2.給湯機器 "+ str(i+1) +"行目:「②燃料種類」の入力に誤りがあります。") 
+                    # 燃料種別：i18n正規化 → エイリアス → 入力チェック
+                    fuel_raw = _norm(str(dataHW2[1]), "hw_fuel_type")
+                    fuel_raw, fuel_old = apply_type_alias(fuel_raw, _FUEL_TYPE_ALIASES)
+                    if fuel_old:
+                        validation["warning"].append(f"様式5-2.給湯機器 {i+1}行目: 燃料種別「{fuel_old}」を「{fuel_raw}」に置き換えました。")
+                    fuel_type = check_value(fuel_raw, "様式5-2.給湯機器 "+ str(i+1) +"行目:「②燃料種類」", True, None, "文字列", input_options["燃料種別"], None, None)
+                    HeatSourceType = _FUEL_TO_HEATSOURCE.get(fuel_type)
 
                     RatedCapacity = check_value(dataHW2[2], "様式5-2.給湯機器 "+ str(i+1) +"行目:「③定格加熱能力」", True, None, "数値", None, 0, None)
                     efficiency = check_value(dataHW2[3], "様式5-2.給湯機器 "+ str(i+1) +"行目:「④熱源効率」", True, None, "数値", None, 0, None)
@@ -3123,7 +3156,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             }
                         ],
                         "InsulationType":
-                            check_value(InsulationType, "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑤配管保温仕様」", True, None, "文字列", input_options["配管保温仕様"], None, None),
+                            check_value(_norm(InsulationType, "hw_pipe_insulation_level"), "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑤配管保温仕様」", True, None, "文字列", input_options["配管保温仕様"], None, None),
                         "PipeSize": 
                             check_value(dataHW2[5], "様式5-2.給湯機器 "+ str(i+1) +"行目:「⑥接続口径」", True, None, "数値", None, 0, None),
                         "SolarSystemArea":
@@ -3193,7 +3226,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "TransportCapacityFactor":
                                     check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
                                 "ControlType":
-                                    check_value(dataEV[9], "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                                    check_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
                                 "Info":
                                     check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                             }
@@ -3215,7 +3248,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     "TransportCapacityFactor":
                                         check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
                                     "ControlType":
-                                        check_value(dataEV[9], "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                                        check_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
                                     "Info":
                                         check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                                 }
@@ -3237,7 +3270,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "TransportCapacityFactor":
                             check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
                         "ControlType":
-                            check_value(dataEV[9], "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                            check_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
                         "Info":
                             check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                     }
@@ -3273,9 +3306,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "PowerConditionerEfficiency":
                             check_value(dataPV[1], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「②パワーコンディショナの効率」", False, 0.927, "数値", None, 0, 1),
                         "CellType":
-                            check_value(dataPV[2], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「③太陽電池の種類」", True, None, "文字列", input_options["太陽電池の種類"], None, None),
+                            check_value(_norm(dataPV[2], "pv_solar_cell_type"), "様式7-1.太陽光発電 "+ str(i+1) +"行目:「③太陽電池の種類」", True, None, "文字列", input_options["太陽電池の種類"], None, None),
                         "ArraySetupType":
-                            check_value(dataPV[3], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「④アレイ設置方式」", True, None, "文字列", input_options["アレイ設置方式"], None, None),
+                            check_value(_norm(dataPV[3], "pv_array_type"), "様式7-1.太陽光発電 "+ str(i+1) +"行目:「④アレイ設置方式」", True, None, "文字列", input_options["アレイ設置方式"], None, None),
                         "ArrayCapacity":
                             check_value(dataPV[4], "様式7-1.太陽光発電 "+ str(i+1) +"行目:「⑤アレイのシステム容量」", True, None, "数値", None, 0, None),
                         "Direction":
@@ -3333,13 +3366,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataCG[8], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑨排熱効率（負荷率0.50)」", True, None, "数値", None, 0, 1),
 
                         "HeatRecoveryPriorityCooling":
-                            check_value(dataCG[9], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑩排熱利用優先順位（空調冷熱源)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
+                            check_value(_norm(dataCG[9], "cgs_heat_recovery_priority"), "様式7-3.コジェネ "+ str(i+1) +"行目:「⑩排熱利用優先順位（空調冷熱源)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
                         "HeatRecoveryPriorityHeating":
-                            check_value(dataCG[10], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑪排熱利用優先順位（空調温熱源)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
+                            check_value(_norm(dataCG[10], "cgs_heat_recovery_priority"), "様式7-3.コジェネ "+ str(i+1) +"行目:「⑪排熱利用優先順位（空調温熱源)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
                         "HeatRecoveryPriorityHotWater":
-                            check_value(dataCG[11], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑫排熱利用優先順位（給湯)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
+                            check_value(_norm(dataCG[11], "cgs_heat_recovery_priority"), "様式7-3.コジェネ "+ str(i+1) +"行目:「⑫排熱利用優先順位（給湯)」", False, None, "文字列", input_options["排熱利用優先順位"], None, None),
                         "24hourOperation":
-                            check_value(dataCG[12], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑬24時間運転の有無」", False, "無", "文字列", input_options["有無"], None, None),
+                            check_value(_norm(dataCG[12], "cgs_24hours_operation"), "様式7-3.コジェネ "+ str(i+1) +"行目:「⑬24時間運転の有無」", False, "無", "文字列", input_options["24時間運転の有無"], None, None),
                         
                         "CoolingSystem":
                             check_value(dataCG[13], "様式7-3.コジェネ "+ str(i+1) +"行目:「⑭排熱利用系統（空調冷熱源)」", False, None, "文字列", data["HeatsourceSystem"], None, None),
@@ -3611,11 +3644,14 @@ if __name__ == '__main__':
     print('----- make_inputdata.py -----')
 
     
-    file_name = "./tests/building/Builelib_inputSheet_sample_001.xlsx"
+    file_name = "./examples/sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
+    file_name = "./examples/sample01_WEBPRO_inputSheet_for_Ver3.8_English.xlsx"
     inputdata, validation = make_jsondata_from_Ver2_sheet(file_name)
     print(validation)
 
     # json出力
-    with open("./tests/building/Builelib_inputSheet_sample_001.json",'w', encoding='utf-8') as fw:
-        json.dump(inputdata,fw,indent=4,ensure_ascii=False)
+    # with open("./examples/sample01_WEBPRO_inputSheet_for_Ver3.8.json",'w', encoding='utf-8') as fw:
+    #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
+    with open("./examples/sample01_WEBPRO_inputSheet_for_Ver3.8_English.json",'w', encoding='utf-8') as fw:
+        json.dump(inputdata,fw,indent=4,ensure_ascii=False)

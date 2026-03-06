@@ -12,16 +12,6 @@ from builelib import commons as bc
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
 
-# 室使用条件データの読み込み
-with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
-    _RoomUsageSchedule = json.load(f)
-
-# カレンダーパターンの読み込み
-with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
-    _Calendar = json.load(f)
-
-
-
 def set_roomIndexCoeff(roomIndex):
     '''
     室の形状に応じて定められる係数（仕様書4.4）
@@ -54,7 +44,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     ----------
     inputdata : dict
         入力データ辞書（webproJsonSchema準拠）。
-    DEBUG : bool, optional
+    debug : bool, optional
         デバッグ出力の有無。
     output_dir : str, optional
         出力ディレクトリのパス。
@@ -62,51 +52,70 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         database_loader.load_all_databases() の戻り値。
         None の場合は後方互換のため内部で個別に読み込む。
     """
-    # Input validation
-    for room_zone_name in inputdata.get("LightingSystems", {}):
-        room_data = inputdata.get("Rooms", {}).get(room_zone_name, {})
-        if room_data.get("roomArea") is not None and room_data.get("roomArea", 0) < 0:
-            raise ValueError(f"roomArea for {room_zone_name} cannot be negative.")
 
-        lighting_system_data = inputdata.get("LightingSystems", {}).get(room_zone_name, {})
-        if lighting_system_data.get("roomWidth") is not None and lighting_system_data.get("roomWidth", 0) < 0:
-            raise ValueError(f"roomWidth for {room_zone_name} cannot be negative.")
-        if lighting_system_data.get("roomDepth") is not None and lighting_system_data.get("roomDepth", 0) < 0:
-            raise ValueError(f"roomDepth for {room_zone_name} cannot be negative.")
-        if lighting_system_data.get("unitHeight") is not None and lighting_system_data.get("unitHeight", 0) < 0:
-            raise ValueError(f"unitHeight for {room_zone_name} cannot be negative.")
-    
-    # db が渡された場合はそちらを使用（SP追加済み）
-    # db が None の場合は後方互換として内部で読み込む
+    ##----------------------------------------------------------------------------------
+    ## データベースの読み込み
+    ##----------------------------------------------------------------------------------
     if db is not None:
-        RoomUsageSchedule = db["RoomUsageSchedule"]
-        Calendar = db["CALENDAR"]
-        lightingCtrl = db["lightingControl"]
+        
+        _ROOM_USAGE_SCHEDULE = db["標準室使用スケジュール"]
+        _CALENDAR = db["カレンダー"]
+        CONTROL_OCCUPANT_SENSING = db["照明在室検知制御"]
+        CONTROL_ILLUMINANCE_SENSING = db["照明明るさ検知制御"]
+        CONTROL_TIME_SCHEDULE = db["照明タイムスケジュール制御"]
+        CONTROL_INITIAL_ILLUMINANCE_CORRECTION = db["照明初期照度補正機能"]
+
     else:
-        ## 標準室使用条件の読み込み＋更新（後方互換）
-        _special = inputdata.get("SpecialInputData", {})
-        RoomUsageSchedule = copy.deepcopy(_RoomUsageSchedule)
-        if "room_usage_condition" in _special:
-            for buildling_type in _special["room_usage_condition"]:
-                for room_type in _special["room_usage_condition"][buildling_type]:
-                    RoomUsageSchedule[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
+        # 室使用条件データの読み込み
+        with open(database_directory + 'common_room_usage_schedule.json', 'r', encoding='utf-8') as f:
+            _ROOM_USAGE_SCHEDULE = json.load(f)
 
-        ## カレンダーパターンの読み込み＋更新（後方互換）
-        Calendar = copy.deepcopy(_Calendar)
-        for pattern_name, pattern_data in _special.get("calender", {}).items():
-            Calendar[pattern_name] = pattern_data
+        # カレンダーパターンの読み込み
+        with open(database_directory + 'common_calendar.json', 'r', encoding='utf-8') as f:
+            _CALENDAR = json.load(f)
 
-        # データベースjsonの読み込み（後方互換）
-        with open( database_directory + 'lt_lighting_control.json', 'r', encoding='utf-8') as f:
-            lightingCtrl = json.load(f)
+        # 制御効果の読み込み
+        with open( database_directory + 'lt_control_occupant_sensing.json', 'r', encoding='utf-8') as f:
+            CONTROL_OCCUPANT_SENSING = json.load(f)
 
-    # 一次エネルギー換算係数
-    fprime = 9760
+        with open( database_directory + 'lt_control_illuminance_sensing.json', 'r', encoding='utf-8') as f:
+            CONTROL_ILLUMINANCE_SENSING = json.load(f)
+
+        with open( database_directory + 'lt_control_time_schedule.json', 'r', encoding='utf-8') as f:
+            CONTROL_TIME_SCHEDULE = json.load(f)
+
+        with open( database_directory + 'lt_control_iumination_correction.json', 'r', encoding='utf-8') as f:
+            CONTROL_INITIAL_ILLUMINANCE_CORRECTION = json.load(f)
+
+
+    ##----------------------------------------------------------------------------------
+    ## SPシート
+    ##----------------------------------------------------------------------------------
+    _special = inputdata.get("SpecialInputData", {})
+
+    ## 任意入力 標準室使用条件
+    ROOM_USAGE_SCHEDULE = copy.deepcopy(_ROOM_USAGE_SCHEDULE)
+    if "room_usage_condition" in _special:
+        for buildling_type in _special["room_usage_condition"]:
+            for room_type in _special["room_usage_condition"][buildling_type]:
+                ROOM_USAGE_SCHEDULE[buildling_type][room_type] = _special["room_usage_condition"][buildling_type][room_type]
+
+    ## 任意入力 カレンダーパターン
+    CALENDAR = copy.deepcopy(_CALENDAR)
+    if "calender" in _special:
+        for pattern_name in _special["calender"]:
+            CALENDAR[pattern_name] = _special["calender"][pattern_name]
+
+    # 任意入力 一次エネルギー換算係数
+    F_PRIME = 9760
     if "CalculationMode" in inputdata:
         if isinstance(inputdata["CalculationMode"]["一次エネルギー換算係数"], (int, float)):
-            fprime = inputdata["CalculationMode"]["一次エネルギー換算係数"]
+            F_PRIME = inputdata["CalculationMode"]["一次エネルギー換算係数"]
 
-    # 計算結果を格納する変数
+
+    ##----------------------------------------------------------------------------------
+    ## 計算結果を格納する変数
+    ##----------------------------------------------------------------------------------
     resultJson = {
         "E_lighting": None,
         "Es_lighting": None,
@@ -141,7 +150,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
         roomArea     = inputdata["Rooms"][room_zone_name]["roomArea"]
 
         # 時刻別スケジュールの読み込み
-        opePattern_hourly_light = bc.get_operation_schedule_lighting(buildingType, roomType, Calendar, RoomUsageSchedule)        
+        opePattern_hourly_light = bc.get_operation_schedule_lighting(buildingType, roomType, CALENDAR, ROOM_USAGE_SCHEDULE)        
         opeTime = np.sum( np.sum(opePattern_hourly_light))
 
 
@@ -167,9 +176,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
             # 在室検知制御方式の効果係数
             ctrl_occupant_sensing = 1
-            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"] in lightingCtrl["OccupantSensingCTRL"]:
+            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"] in CONTROL_OCCUPANT_SENSING:
                 # データベースから検索して効果係数を決定
-                ctrl_occupant_sensing = lightingCtrl["OccupantSensingCTRL"][ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"] ]
+                ctrl_occupant_sensing = CONTROL_OCCUPANT_SENSING[ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"] ]
             else:
                 # 直接入力された効果係数を使用
                 ctrl_occupant_sensing = float( inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["OccupantSensingCTRL"] )
@@ -177,9 +186,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
             # 明るさ検知制御方式の効果係数
             ctrl_illuminance_sensing = 1
-            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"] in lightingCtrl["IlluminanceSensingCTRL"]:
+            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"] in CONTROL_ILLUMINANCE_SENSING:
                 # データベースから検索して効果係数を決定
-                ctrl_illuminance_sensing = lightingCtrl["IlluminanceSensingCTRL"][ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"] ]
+                ctrl_illuminance_sensing = CONTROL_ILLUMINANCE_SENSING[ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"] ]
             else:
                 # 直接入力された効果係数を使用
                 ctrl_illuminance_sensing = float( inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["IlluminanceSensingCTRL"] )
@@ -187,9 +196,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
             # タイムスケジュール制御方式の効果係数
             ctrl_time_schedule = 1
-            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"] in lightingCtrl["TimeScheduleCTRL"]:
+            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"] in CONTROL_TIME_SCHEDULE:
                 # データベースから検索して効果係数を決定
-                ctrl_time_schedule = lightingCtrl["TimeScheduleCTRL"][ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"] ]
+                ctrl_time_schedule = CONTROL_TIME_SCHEDULE[ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"] ]
             else:
                 # 直接入力された効果係数を使用
                 ctrl_time_schedule = float( inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["TimeScheduleCTRL"] )
@@ -197,9 +206,9 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
             # 初期照度補正の効果係数
             initial_illumination_correction = 1
-            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"] in lightingCtrl["InitialIlluminationCorrectionCTRL"]:
+            if inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"] in CONTROL_INITIAL_ILLUMINANCE_CORRECTION:
                 # データベースから検索して効果係数を決定
-                initial_illumination_correction = lightingCtrl["InitialIlluminationCorrectionCTRL"][ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"] ]
+                initial_illumination_correction = CONTROL_INITIAL_ILLUMINANCE_CORRECTION[ inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"] ]
             else:
                 # 直接入力された効果係数を使用
                 initial_illumination_correction = float( inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["InitialIlluminationCorrectionCTRL"] )
@@ -212,7 +221,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
 
         # 時刻別の設計一次エネルギー消費量 [MJ]
-        E_room_hourly = opePattern_hourly_light * unitPower * roomIndexCoeff * fprime * 10**(-6)
+        E_room_hourly = opePattern_hourly_light * unitPower * roomIndexCoeff * F_PRIME * 10**(-6)
 
         # 各室の年間エネルギー消費量 [MJ]
         E_room = E_room_hourly.sum()
@@ -288,7 +297,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     # resultJson["E_lighting_hourly"] = E_lighting_hourly
 
     # 日積算値
-    resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly/fprime,1)
+    resultJson["for_CGS"]["Edesign_MWh_day"] = np.sum(E_lighting_hourly/F_PRIME,1)
 
     # エネルギー消費量の比率
     for room_zone_name in  resultJson["lighting"]:
@@ -304,7 +313,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
     # 日別一次エネルギー消費量
     df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（照明設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (fprime) /1000,
+        '一次エネルギー消費量（照明設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (F_PRIME) /1000,
         '電力消費量（照明設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
     }, index=bc.date_1year)
 
