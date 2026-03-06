@@ -1,0 +1,905 @@
+{
+    "_comment": "English display names for input_options values. Structure: Japanese DB key -> English display name. Used by get_valid_options(lang='en') and normalize_input(). Keys match database/*.json filenames (without .json).",
+
+    "common_area": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8"
+    },
+
+    "common_annual_solar_level": {
+        "A1": "A1",
+        "A2": "A2",
+        "A3": "A3",
+        "A4": "A4",
+        "A5": "A5"
+    },
+
+    "buildingType": {
+        "事務所等":   "Office",
+        "ホテル等":   "Hotel",
+        "病院等":     "Hospital",
+        "物販店舗等": "Retail store",
+        "学校等":     "School",
+        "飲食店等":   "Restaurant",
+        "集会所等":   "Assembly hall",
+        "工場等":     "Factory",
+        "共同住宅":   "Apartment building",
+        "既存部分":   "Existing building"
+    },
+
+    "roomType": {
+        "事務所等": {
+            "事務室":                 "Office room",
+            "電子計算機器事務室":     "Computer room",
+            "会議室":                 "Conference room",
+            "喫茶室":                 "Coffee lounge",
+            "社員食堂":               "Employee cafeteria",
+            "中央監視室":             "Central monitoring room",
+            "更衣室又は倉庫":         "Changing room or storage",
+            "廊下":                   "Corridor",
+            "ロビー":                 "Lobby",
+            "便所":                   "Restroom",
+            "喫煙室":                 "Smoking room",
+            "厨房":                   "Kitchen",
+            "屋内駐車場":             "Indoor parking",
+            "機械室":                 "Machine room",
+            "電気室":                 "Electrical room",
+            "湯沸室等":               "Kitchenette",
+            "食品庫等":               "Food storage",
+            "印刷室等":               "Print room",
+            "廃棄物保管場所等":       "Waste storage"
+        },
+        "ホテル等": {
+            "客室":                           "Guest room",
+            "客室内の浴室等":                 "In-room bathroom",
+            "終日利用される フロント":        "Front desk (24h)",
+            "終日利用される 事務室":          "Office (24h)",
+            "終日利用される 廊下":            "Corridor (24h)",
+            "終日利用される ロビー":          "Lobby (24h)",
+            "終日利用される 共用部の便所":    "Common restroom (24h)",
+            "終日利用される 喫煙室":          "Smoking room (24h)",
+            "宴会場":                         "Banquet hall",
+            "会議室":                         "Conference room",
+            "結婚式場":                       "Wedding hall",
+            "レストラン":                     "Restaurant",
+            "ラウンジ":                       "Lounge",
+            "バー":                           "Bar",
+            "店舗":                           "Shop",
+            "社員食堂":                       "Employee cafeteria",
+            "更衣室又は倉庫":                 "Changing room or storage",
+            "日中のみ利用される フロント":    "Front desk (daytime)",
+            "日中のみ利用される 事務室":      "Office (daytime)",
+            "日中のみ利用される 廊下":        "Corridor (daytime)",
+            "日中のみ利用される ロビー":      "Lobby (daytime)",
+            "日中のみ利用される 共用部の便所":"Common restroom (daytime)",
+            "日中のみ利用される 喫煙室":      "Smoking room (daytime)",
+            "厨房":                           "Kitchen",
+            "屋内駐車場":                     "Indoor parking",
+            "機械室":                         "Machine room",
+            "電気室":                         "Electrical room",
+            "湯沸室等":                       "Kitchenette",
+            "食品庫等":                       "Food storage",
+            "印刷室等":                       "Print room",
+            "廃棄物保管場所等":               "Waste storage"
+        },
+        "病院等": {
+            "病室":                           "Patient room",
+            "浴室等":                         "Bathroom",
+            "看護職員室":                     "Nursing staff room",
+            "終日利用される 廊下":            "Corridor (24h)",
+            "終日利用される ロビー":          "Lobby (24h)",
+            "終日利用される 共用部の便所":    "Common restroom (24h)",
+            "終日利用される 喫煙室":          "Smoking room (24h)",
+            "診察室":                         "Examination room",
+            "待合室":                         "Waiting room",
+            "手術室":                         "Operating room",
+            "検査室":                         "Laboratory",
+            "集中治療室":                     "ICU",
+            "解剖室等":                       "Autopsy room",
+            "レストラン":                     "Restaurant",
+            "事務室":                         "Office room",
+            "更衣室又は倉庫":                 "Changing room or storage",
+            "日中のみ利用される 廊下":        "Corridor (daytime)",
+            "日中のみ利用される ロビー":      "Lobby (daytime)",
+            "日中のみ利用される 共用部の便所":"Common restroom (daytime)",
+            "日中のみ利用される 喫煙室":      "Smoking room (daytime)",
+            "厨房":                           "Kitchen",
+            "屋内駐車場":                     "Indoor parking",
+            "機械室":                         "Machine room",
+            "電気室":                         "Electrical room",
+            "湯沸室等":                       "Kitchenette",
+            "食品庫等":                       "Food storage",
+            "印刷室等":                       "Print room",
+            "廃棄物保管場所等":               "Waste storage"
+        },
+        "物販店舗等": {
+            "大型店の売場":               "Large store sales floor",
+            "専門店の売場":               "Specialty store sales floor",
+            "スーパーマーケットの売場":   "Supermarket sales floor",
+            "荷さばき場":                 "Loading area",
+            "事務室":                     "Office room",
+            "更衣室又は倉庫":             "Changing room or storage",
+            "ロビー":                     "Lobby",
+            "便所":                       "Restroom",
+            "喫煙室":                     "Smoking room",
+            "厨房":                       "Kitchen",
+            "屋内駐車場":                 "Indoor parking",
+            "機械室":                     "Machine room",
+            "電気室":                     "Electrical room",
+            "湯沸室等":                   "Kitchenette",
+            "食品庫等":                   "Food storage",
+            "印刷室等":                   "Print room",
+            "廃棄物保管場所等":           "Waste storage"
+        },
+        "学校等": {
+            "小中学校の教室":                     "Elementary/middle school classroom",
+            "高等学校の教室":                     "High school classroom",
+            "職員室":                             "Staff room",
+            "小中学校又は高等学校の食堂":         "School cafeteria",
+            "大学の教室":                         "University classroom",
+            "大学の食堂":                         "University cafeteria",
+            "事務室":                             "Office room",
+            "研究室":                             "Research room",
+            "電子計算機器演習室":                 "Computer lab",
+            "実験室":                             "Laboratory",
+            "実習室":                             "Practice room",
+            "講堂又は体育館":                     "Auditorium or gymnasium",
+            "宿泊室":                             "Dormitory room",
+            "更衣室又は倉庫":                     "Changing room or storage",
+            "廊下":                               "Corridor",
+            "ロビー":                             "Lobby",
+            "便所":                               "Restroom",
+            "喫煙室":                             "Smoking room",
+            "厨房":                               "Kitchen",
+            "屋内駐車場":                         "Indoor parking",
+            "機械室":                             "Machine room",
+            "電気室":                             "Electrical room",
+            "湯沸室等":                           "Kitchenette",
+            "食品庫等":                           "Food storage",
+            "印刷室等":                           "Print room",
+            "廃棄物保管場所等":                   "Waste storage"
+        },
+        "飲食店等": {
+            "レストランの客室":   "Restaurant dining room",
+            "軽食店の客室":       "Light meal dining room",
+            "喫茶店の客室":       "Cafe dining room",
+            "バー":               "Bar",
+            "フロント":           "Front desk",
+            "事務室":             "Office room",
+            "更衣室又は倉庫":     "Changing room or storage",
+            "廊下":               "Corridor",
+            "ロビー":             "Lobby",
+            "便所":               "Restroom",
+            "喫煙室":             "Smoking room",
+            "厨房":               "Kitchen",
+            "屋内駐車場":         "Indoor parking",
+            "機械室":             "Machine room",
+            "電気室":             "Electrical room",
+            "湯沸室等":           "Kitchenette",
+            "食品庫等":           "Food storage",
+            "印刷室等":           "Print room",
+            "廃棄物保管場所等":   "Waste storage"
+        },
+        "集会所等": {
+            "アスレチック場の運動室":         "Athletic facility exercise room",
+            "アスレチック場のロビー":         "Athletic facility lobby",
+            "アスレチック場の便所":           "Athletic facility restroom",
+            "アスレチック場の喫煙室":         "Athletic facility smoking room",
+            "公式競技用スケート場":           "Official competition skating rink",
+            "公式競技用体育館":               "Official competition gymnasium",
+            "一般競技用スケート場":           "General competition skating rink",
+            "一般競技用体育館":               "General competition gymnasium",
+            "レクリエーション用スケート場":   "Recreation skating rink",
+            "レクリエーション用体育館":       "Recreation gymnasium",
+            "競技場の客席":                   "Stadium seats",
+            "競技場のロビー":                 "Stadium lobby",
+            "競技場の便所":                   "Stadium restroom",
+            "競技場の喫煙室":                 "Stadium smoking room",
+            "浴場施設の浴室":                 "Bathhouse bathing room",
+            "浴場施設の脱衣所":               "Bathhouse changing room",
+            "浴場施設の休憩室":               "Bathhouse rest room",
+            "浴場施設のロビー":               "Bathhouse lobby",
+            "浴場施設の便所":                 "Bathhouse restroom",
+            "浴場施設の喫煙室":               "Bathhouse smoking room",
+            "映画館の客席":                   "Cinema seats",
+            "映画館のロビー":                 "Cinema lobby",
+            "映画館の便所":                   "Cinema restroom",
+            "映画館の喫煙室":                 "Cinema smoking room",
+            "図書館の図書室":                 "Library reading room",
+            "図書館のロビー":                 "Library lobby",
+            "図書館の便所":                   "Library restroom",
+            "図書館の喫煙室":                 "Library smoking room",
+            "博物館の展示室":                 "Museum exhibition room",
+            "博物館のロビー":                 "Museum lobby",
+            "博物館の便所":                   "Museum restroom",
+            "博物館の喫煙室":                 "Museum smoking room",
+            "劇場の楽屋":                     "Theater dressing room",
+            "劇場の舞台":                     "Theater stage",
+            "劇場の客席":                     "Theater seats",
+            "劇場のロビー":                   "Theater lobby",
+            "劇場の便所":                     "Theater restroom",
+            "劇場の喫煙室":                   "Theater smoking room",
+            "カラオケボックス":               "Karaoke box",
+            "ボーリング場":                   "Bowling alley",
+            "パチンこ屋":                     "Pachinko parlor",
+            "競馬場又は競輪場の客席":         "Racetrack seats",
+            "競馬場又は競輪場の券売場":       "Racetrack ticket booth",
+            "競馬場又は競輪場の店舗":         "Racetrack shop",
+            "競馬場又は競輪場のロビー":       "Racetrack lobby",
+            "競馬場又は競輪場の便所":         "Racetrack restroom",
+            "競馬場又は競輪場の喫煙室":       "Racetrack smoking room",
+            "社寺の本殿":                     "Shrine/temple main hall",
+            "社寺のロビー":                   "Shrine/temple lobby",
+            "社寺の便所":                     "Shrine/temple restroom",
+            "社寺の喫煙室":                   "Shrine/temple smoking room",
+            "厨房":                           "Kitchen",
+            "屋内駐車場":                     "Indoor parking",
+            "機械室":                         "Machine room",
+            "電気室":                         "Electrical room",
+            "湯沸室等":                       "Kitchenette",
+            "食品庫等":                       "Food storage",
+            "印刷室等":                       "Print room",
+            "廃棄物保管場所等":               "Waste storage"
+        },
+        "工場等": {
+            "倉庫":                   "Warehouse",
+            "屋外駐車場又は駐輪場":   "Outdoor parking or bicycle parking"
+        },
+        "共同住宅": {
+            "屋内廊下":           "Indoor corridor",
+            "ロビー":             "Lobby",
+            "管理人室":           "Manager room",
+            "集会室":             "Meeting room",
+            "屋外廊下":           "Outdoor corridor",
+            "屋内駐車場":         "Indoor parking",
+            "機械室":             "Machine room",
+            "電気室":             "Electrical room",
+            "廃棄物保管場所等":   "Waste storage"
+        }
+    },
+
+    "common_orientation": {
+        "北":       "North",
+        "北東":     "Northeast",
+        "東":       "East",
+        "南東":     "Southeast",
+        "南":       "South",
+        "南西":     "Southwest",
+        "西":       "West",
+        "北西":     "Northwest",
+        "水平":     "Horizontal",
+        "水平（上）": "Horizontal (top)",
+        "水平（下）": "Horizontal (bottom)",
+        "日陰":     "Shaded"
+    },
+
+    "common_structure_type": {
+        "木造":           "Wood construction",
+        "鉄筋コンクリート造等": "Reinforced concrete",
+        "鉄骨造":         "Steel construction",
+        "その他":         "Other"
+    },
+
+    "ac_ahu_air_volume_control": {
+        "定風量制御":     "Constant Air Volume",
+        "回転数制御":     "Variable Air Volume"
+    },
+
+    "ac_ahu_fan_type": {
+        "給気":   "Supply",
+        "還気":   "Return",
+        "外気":   "Outdoor air",
+        "排気":   "Exhaust",
+        "循環":   "Circulation",
+        "ポンプ": "Pump"
+    },
+
+    "ac_ahu_heat_exchanger": {
+        "全熱交換器無し": "None",
+        "全熱交換器あり・様式2-9記載無し": "Equiped",
+        "全熱交換器あり・様式2-9記載あり": "Equiped (listed in 2-9)"
+    },
+
+    "ac_ahu_heat_exchanger_control": {
+        "有": "Enabled",
+        "無": "None"
+    },
+
+    "ac_ahu_outdoor_cooling": {
+        "有": "Enabled",
+        "無": "None"
+    },
+
+    "ac_ahu_outdoor_intake_control": {
+        "有": "Enabled",
+        "無": "None"
+    },
+
+    "ac_ahu_type": {
+        "空調機":           "Air handling unit",
+        "FCU":              "Fan coil unit",
+        "送風機":           "Fan",
+        "室内機":           "Indoor unit",
+        "全熱交ユニット":   "Total heat exchange unit",
+        "放熱器":           "Radiator",
+        "天井放射冷暖房パネル": "Ceiling radiant panel"
+    },
+
+    "ac_glass_to_window": {
+        "木製・樹脂製建具":                   "Wood/resin frame",
+        "金属木複合製・金属樹脂複合製建具":   "Metal-wood/metal-resin composite frame",
+        "金属製建具":                         "Metal frame"
+    },
+
+    "ac_gshp_openloop": {
+        "地盤A": "Ground type A",
+        "地盤B": "Ground type B",
+        "地盤C": "Ground type C",
+        "地盤D": "Ground type D",
+        "地盤E": "Ground type E",
+        "地盤F": "Ground type F"
+    },
+
+    "ac_heat_source_number_control": {
+        "有": "Enabled",
+        "無": "None"
+    },
+
+    "ac_heat_source_operation_priority": {
+        "1番目":  "1st",
+        "2番目":  "2nd",
+        "3番目":  "3rd",
+        "4番目":  "4th",
+        "5番目":  "5th",
+        "6番目":  "6th",
+        "7番目":  "7th",
+        "8番目":  "8th",
+        "9番目":  "9th",
+        "10番目": "10th"
+    },
+
+    "ac_heat_storage_type": {
+        "水蓄熱(混合型)": "Water thermal storage (mixed)",
+        "水蓄熱(成層型)": "Water thermal storage (stratified)",
+        "氷蓄熱":         "Ice thermal storage",
+        "追掛":           "Supplemental",
+        "無":             "None"
+    },
+
+    "ac_heat_source_performance": {
+        "温水ボイラ(灯油)":                                                 "Hot water boiler (kerosene)",
+        "温水ボイラ(LPG)":                                                  "Hot water boiler (LPG)",
+        "温水ボイラ(都市ガス)":                                             "Hot water boiler (city gas)",
+        "温水ボイラ(重油)":                                                 "Hot water boiler (heavy oil)",
+        "温水発生機(灯油)":                                                 "Hot water generator (kerosene)",
+        "温水発生機(LPG)":                                                  "Hot water generator (LPG)",
+        "温水発生機(都市ガス)":                                             "Hot water generator (city gas)",
+        "温水発生機(重油)":                                                 "Hot water generator (heavy oil)",
+        "蒸気ボイラ(灯油)":                                                 "Steam boiler (kerosene)",
+        "蒸気ボイラ(LPG)":                                                  "Steam boiler (LPG)",
+        "蒸気ボイラ(都市ガス)":                                             "Steam boiler (city gas)",
+        "蒸気ボイラ(重油)":                                                 "Steam boiler (heavy oil)",
+        "貫流ボイラ(灯油)":                                                 "Once-through boiler (kerosene)",
+        "貫流ボイラ(LPG)":                                                  "Once-through boiler (LPG)",
+        "貫流ボイラ(都市ガス)":                                             "Once-through boiler (city gas)",
+        "貫流ボイラ(重油)":                                                 "Once-through boiler (heavy oil)",
+        "小型貫流ボイラ(灯油)":                                             "Small once-through boiler (kerosene)",
+        "小型貫流ボイラ(LPG)":                                             "Small once-through boiler (LPG)",
+        "小型貫流ボイラ(都市ガス)":                                         "Small once-through boiler (city gas)",
+        "小型貫流ボイラ(重油)":                                             "Small once-through boiler (heavy oil)",
+        "ターボ冷凍機":                                                     "Turbo chiller",
+        "インバータターボ冷凍機":                                           "Inverter turbo chiller",
+        "スクリュー冷凍機":                                                 "Screw chiller",
+        "スクリュー冷凍機(氷蓄熱用)":                                       "Screw chiller (ice storage)",
+        "スクロール冷凍機":                                                 "Scroll chiller",
+        "スクロール冷凍機(氷蓄熱用)":                                       "Scroll chiller (ice storage)",
+        "ブラインターボ冷凍機(蓄熱時)":                                     "Brine turbo chiller (storage mode)",
+        "ブラインターボ冷凍機(追掛時)":                                     "Brine turbo chiller (supplemental mode)",
+        "ウォータチリングユニット(水冷式)":                                 "Water chilling unit (water-cooled)",
+        "ウォータチリングユニット(水冷式地中熱タイプ1)":                   "Water chilling unit (water-cooled, ground source type 1)",
+        "ウォータチリングユニット(水冷式地中熱タイプ2)":                   "Water chilling unit (water-cooled, ground source type 2)",
+        "ウォータチリングユニット(水冷式地中熱タイプ3)":                   "Water chilling unit (water-cooled, ground source type 3)",
+        "ウォータチリングユニット(水冷式地中熱タイプ4)":                   "Water chilling unit (water-cooled, ground source type 4)",
+        "ウォータチリングユニット(水冷式地中熱タイプ5)":                   "Water chilling unit (water-cooled, ground source type 5)",
+        "ウォータチリングユニット(水冷式地中熱タイプA)":                   "Water chilling unit (water-cooled, ground source type A)",
+        "ウォータチリングユニット(水冷式地中熱タイプB)":                   "Water chilling unit (water-cooled, ground source type B)",
+        "ウォータチリングユニット(水冷式地中熱タイプC)":                   "Water chilling unit (water-cooled, ground source type C)",
+        "ウォータチリングユニット(水冷式地中熱タイプD)":                   "Water chilling unit (water-cooled, ground source type D)",
+        "ウォータチリングユニット(水冷式地中熱タイプE)":                   "Water chilling unit (water-cooled, ground source type E)",
+        "ウォータチリングユニット(水冷式地中熱タイプF)":                   "Water chilling unit (water-cooled, ground source type F)",
+        "ウォータチリングユニット(空冷式)":                                 "Water chilling unit (air-cooled)",
+        "ウォータチリングユニット(空冷式モジュール形)":                     "Water chilling unit (air-cooled, modular)",
+        "ウォータチリングユニット(空冷式モジュール形氷蓄熱用)":             "Water chilling unit (air-cooled, modular, ice storage)",
+        "ウォータチリングユニット(空冷式氷蓄熱用)":                         "Water chilling unit (air-cooled, ice storage)",
+        "パッケージエアコンディショナ(水冷式)":                             "Package air conditioner (water-cooled)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプ1)":               "Package air conditioner (water-cooled, ground source type 1)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプ2)":               "Package air conditioner (water-cooled, ground source type 2)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプ3)":               "Package air conditioner (water-cooled, ground source type 3)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプ4)":               "Package air conditioner (water-cooled, ground source type 4)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプ5)":               "Package air conditioner (water-cooled, ground source type 5)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプA)":               "Package air conditioner (water-cooled, ground source type A)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプB)":               "Package air conditioner (water-cooled, ground source type B)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプC)":               "Package air conditioner (water-cooled, ground source type C)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプD)":               "Package air conditioner (water-cooled, ground source type D)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプE)":               "Package air conditioner (water-cooled, ground source type E)",
+        "パッケージエアコンディショナ(水冷式地中熱タイプF)":               "Package air conditioner (water-cooled, ground source type F)",
+        "パッケージエアコンディショナ(水冷式熱回収形)":                     "Package air conditioner (water-cooled, heat recovery)",
+        "パッケージエアコンディショナ(空冷式)":                             "Package air conditioner (air-cooled)",
+        "ルームエアコンディショナ":                                         "Room air conditioner",
+        "ガスヒートポンプ冷暖房機(LPG)":                                   "Gas heat pump unit (LPG)",
+        "ガスヒートポンプ冷暖房機(都市ガス)":                               "Gas heat pump unit (city gas)",
+        "ガスヒートポンプ冷暖房機(消費電力自給装置付、LPG)":               "Gas heat pump unit (with self-sustaining power, LPG)",
+        "ガスヒートポンプ冷暖房機(消費電力自給装置付、都市ガス)":           "Gas heat pump unit (with self-sustaining power, city gas)",
+        "吸収式冷凍機(LPG)":                                               "Absorption chiller (LPG)",
+        "吸収式冷凍機(灯油)":                                               "Absorption chiller (kerosene)",
+        "吸収式冷凍機(都市ガス)":                                           "Absorption chiller (city gas)",
+        "吸収式冷凍機(重油)":                                               "Absorption chiller (heavy oil)",
+        "吸収式冷凍機(蒸気)":                                               "Absorption chiller (steam)",
+        "吸収式冷凍機(温水)":                                               "Absorption chiller (hot water)",
+        "吸収式冷凍機(冷却水変流量、LPG)":                                 "Absorption chiller (variable cooling water, LPG)",
+        "吸収式冷凍機(冷却水変流量、灯油)":                                 "Absorption chiller (variable cooling water, kerosene)",
+        "吸収式冷凍機(冷却水変流量、都市ガス)":                             "Absorption chiller (variable cooling water, city gas)",
+        "吸収式冷凍機(冷却水変流量、重油)":                                 "Absorption chiller (variable cooling water, heavy oil)",
+        "吸収式冷凍機(冷却水変流量、蒸気)":                                 "Absorption chiller (variable cooling water, steam)",
+        "吸収式冷凍機(一重二重併用形、LPG)":                               "Absorption chiller (single/double effect, LPG)",
+        "吸収式冷凍機(一重二重併用形、都市ガス)":                           "Absorption chiller (single/double effect, city gas)",
+        "吸収式冷凍機(一重二重併用形、蒸気)":                               "Absorption chiller (single/double effect, steam)",
+        "吸収式冷凍機(一重二重併用形、冷却水変流量、LPG)":                 "Absorption chiller (single/double effect, variable cooling water, LPG)",
+        "吸収式冷凍機(一重二重併用形、冷却水変流量、都市ガス)":             "Absorption chiller (single/double effect, variable cooling water, city gas)",
+        "吸収式冷凍機(一重二重併用形、冷却水変流量、蒸気)":                 "Absorption chiller (single/double effect, variable cooling water, steam)",
+        "FF式ガス暖房機(都市ガス)":                                         "FF gas heater (city gas)",
+        "FF式ガス暖房機(LPG)":                                             "FF gas heater (LPG)",
+        "FF式石油暖房機":                                                   "FF oil heater",
+        "温風暖房機(灯油)":                                                 "Warm air heater (kerosene)",
+        "温風暖房機(LPG)":                                                  "Warm air heater (LPG)",
+        "温風暖房機(都市ガス)":                                             "Warm air heater (city gas)",
+        "温風暖房機(重油)":                                                 "Warm air heater (heavy oil)",
+        "電気式ヒーター":                                                   "Electric heater",
+        "電気蓄熱暖房器":                                                   "Electric thermal storage heater",
+        "地域熱供給(冷水)":                                                 "District cooling/heating (chilled water)",
+        "地域熱供給(温水)":                                                 "District cooling/heating (hot water)",
+        "地域熱供給(蒸気)":                                                 "District cooling/heating (steam)",
+        "熱交換器":                                                         "Heat exchanger",
+        "デシカ":                                                           "Desiccant unit"
+    },
+
+    "ac_heat_thermal_conductivity": {
+        "鋼":                                       "Steel",
+        "アルミニウム":                             "Aluminum",
+        "銅":                                       "Copper",
+        "ステンレス鋼":                             "Stainless steel",
+        "岩石":                                     "Rock",
+        "土壌":                                     "Soil",
+        "コンクリート":                             "Concrete",
+        "軽量コンクリート(軽量1種)":               "Lightweight concrete (type 1)",
+        "軽量コンクリート(軽量2種)":               "Lightweight concrete (type 2)",
+        "気泡コンクリート(ALC)":                   "Autoclaved lightweight concrete (ALC)",
+        "軽量気泡コンクリートパネル(ALCパネル)":   "ALC panel",
+        "コンクリートブロック(重量)":               "Concrete block (heavy)",
+        "コンクリートブロック(軽量)":               "Concrete block (lightweight)",
+        "セメント・モルタル":                       "Cement mortar",
+        "押出成型セメント板":                       "Extruded cement board",
+        "せっこうプラスター":                       "Gypsum plaster",
+        "せっこうボード":                           "Gypsum board",
+        "硬質せっこうボード":                       "Hard gypsum board",
+        "しっくい":                                 "Plaster",
+        "土壁":                                     "Earth wall",
+        "ガラス":                                   "Glass",
+        "タイル":                                   "Tile",
+        "れんが":                                   "Brick",
+        "かわら":                                   "Roof tile",
+        "ロックウール化粧吸音板":                   "Rock wool decorative acoustic board",
+        "火山性ガラス質複合板":                     "Volcanic glass composite board",
+        "ケイ酸カルシウム板0.8mm":                 "Calcium silicate board 0.8mm",
+        "ケイ酸カルシウム板1.0mm":                 "Calcium silicate board 1.0mm",
+        "0.8けい酸カルシウム板":                   "Calcium silicate board (0.8)",
+        "1.0けい酸カルシウム板":                   "Calcium silicate board (1.0)",
+        "天然木材":                                 "Natural wood",
+        "合板":                                     "Plywood",
+        "タタミボード":                             "Tatami board",
+        "シージングボード":                         "Sheathing board",
+        "A級インシュレーションボード":             "Grade A insulation board",
+        "パーティクルボード":                       "Particle board",
+        "木毛セメント板":                           "Wood wool cement board",
+        "木片セメント板":                           "Wood chip cement board",
+        "ハードファイバーボード(ハードボード)":     "Hardboard",
+        "ミディアムデンシティファイバーボード(MDF)": "MDF",
+        "ビニル系床材":                             "Vinyl flooring",
+        "FRP":                                      "FRP",
+        "アスファルト類":                           "Asphalt",
+        "畳床":                                     "Tatami underlay",
+        "建材畳床(III型50mm厚)":                   "Building material tatami (type III, 50mm)",
+        "建材畳床(Ⅲ型50mm厚)":                    "Building material tatami (type Ⅲ, 50mm)",
+        "建材畳床(K,N型50mm厚)":                   "Building material tatami (K,N type, 50mm)",
+        "カーペット類":                             "Carpet",
+        "グラスウール断熱材10K相当":               "Glass wool insulation 10K",
+        "グラスウール断熱材16K相当":               "Glass wool insulation 16K",
+        "グラスウール断熱材20K相当":               "Glass wool insulation 20K",
+        "グラスウール断熱材24K相当":               "Glass wool insulation 24K",
+        "グラスウール断熱材32K相当":               "Glass wool insulation 32K",
+        "高性能グラスウール断熱材16K相当":         "High-performance glass wool 16K",
+        "高性能グラスウール断熱材24K相当":         "High-performance glass wool 24K",
+        "高性能グラスウール断熱材32K相当":         "High-performance glass wool 32K",
+        "高性能グラスウール断熱材40K相当":         "High-performance glass wool 40K",
+        "高性能グラスウール断熱材48K相当":         "High-performance glass wool 48K",
+        "吹込み用グラスウール13K相当":             "Blown-in glass wool 13K",
+        "吹込み用グラスウール18K相当":             "Blown-in glass wool 18K",
+        "吹込み用グラスウール30K相当":             "Blown-in glass wool 30K",
+        "吹込み用グラスウール35K相当":             "Blown-in glass wool 35K",
+        "吹付けロックウール":                       "Sprayed rock wool",
+        "ロックウール断熱材(マット)":               "Rock wool insulation (mat)",
+        "ロックウール断熱材(フェルト)":             "Rock wool insulation (felt)",
+        "ロックウール断熱材(ボード)":               "Rock wool insulation (board)",
+        "吹込み用ロックウール25K相当":             "Blown-in rock wool 25K",
+        "吹込み用ロックウール65K相当":             "Blown-in rock wool 65K",
+        "吹込み用セルローズファイバー25K":         "Blown-in cellulose fiber 25K",
+        "吹込み用セルローズファイバー45K":         "Blown-in cellulose fiber 45K",
+        "吹込み用セルローズファイバー55K":         "Blown-in cellulose fiber 55K",
+        "押出法ポリスチレンフォーム保温板1種":     "Extruded polystyrene foam board type 1",
+        "押出法ポリスチレンフォーム保温板2種":     "Extruded polystyrene foam board type 2",
+        "押出法ポリスチレンフォーム保温板3種":     "Extruded polystyrene foam board type 3",
+        "A種ポリエチレンフォーム保温板1種2号":     "Type A polyethylene foam board type 1-2",
+        "A種ポリエチレンフォーム保温板2種":        "Type A polyethylene foam board type 2",
+        "ビーズ法ポリスチレンフォーム保温板特号":  "Expanded polystyrene foam board (special)",
+        "ビーズ法ポリスチレンフォーム保温板1号":  "Expanded polystyrene foam board no.1",
+        "ビーズ法ポリスチレンフォーム保温板2号":  "Expanded polystyrene foam board no.2",
+        "ビーズ法ポリスチレンフォーム保温板3号":  "Expanded polystyrene foam board no.3",
+        "ビーズ法ポリスチレンフォーム保温板4号":  "Expanded polystyrene foam board no.4",
+        "硬質ウレタンフォーム保温板2種1号":        "Rigid urethane foam board type 2-1",
+        "硬質ウレタンフォーム保温板2種2号":        "Rigid urethane foam board type 2-2",
+        "吹付け硬質ウレタンフォームA種1":          "Sprayed rigid urethane foam type A-1",
+        "吹付け硬質ウレタンフォームＡ種１":        "Sprayed rigid urethane foam type A-1 (alt)",
+        "吹付け硬質ウレタンフォームA種3":          "Sprayed rigid urethane foam type A-3",
+        "吹付け硬質ウレタンフォームＡ種3":         "Sprayed rigid urethane foam type A-3 (alt)",
+        "フェノールフォーム保温板1種1号":          "Phenolic foam board type 1-1",
+        "フェノールフォーム保温板1種2号":          "Phenolic foam board type 1-2",
+        "密閉中空層":                               "Sealed air layer",
+        "非密閉中空層":                             "Non-sealed air layer"
+    },
+
+    "ac_heat_thermal_conductivity_model": {
+        "グラスウール断熱材通常品":                     "Glass wool insulation (standard)",
+        "グラスウール断熱材高性能品":                   "Glass wool insulation (high-performance)",
+        "吹込み用グラスウール断熱材":                   "Blown-in glass wool insulation",
+        "ロックウール断熱材":                           "Rock wool insulation",
+        "吹込み用ロックウール断熱材":                   "Blown-in rock wool insulation",
+        "吹付けロックウール":                           "Sprayed rock wool",
+        "吹込み用セルローズファイバー断熱材":           "Blown-in cellulose fiber insulation",
+        "押出法ポリスチレンフォーム断熱材":             "Extruded polystyrene foam insulation",
+        "ポリエチレンフォーム断熱材":                   "Polyethylene foam insulation",
+        "ビーズ法ポリスチレンフォーム断熱材":           "Expanded polystyrene foam insulation",
+        "硬質ウレタンフォーム断熱材":                   "Rigid urethane foam insulation",
+        "吹付け硬質ウレタンフォーム":                   "Sprayed rigid urethane foam",
+        "フェノールフォーム断熱材":                     "Phenolic foam insulation",
+        "インシュレーションファイバー断熱材":           "Insulation fiber insulation",
+        "グラスウール断熱材１０K":                     "Glass wool 10K",
+        "グラスウール断熱材１２K":                     "Glass wool 12K",
+        "グラスウール断熱材１６K":                     "Glass wool 16K",
+        "グラスウール断熱材２０K":                     "Glass wool 20K",
+        "グラスウール断熱材２４K":                     "Glass wool 24K",
+        "グラスウール断熱材３２K":                     "Glass wool 32K",
+        "グラスウール断熱材４０K":                     "Glass wool 40K",
+        "グラスウール断熱材４８K":                     "Glass wool 48K",
+        "グラスウール断熱材６４K":                     "Glass wool 64K",
+        "グラスウール断熱材８０K":                     "Glass wool 80K",
+        "グラスウール断熱材９６K":                     "Glass wool 96K",
+        "高性能グラスウール断熱材１０K":               "High-performance glass wool 10K",
+        "高性能グラスウール断熱材１２K":               "High-performance glass wool 12K",
+        "高性能グラスウール断熱材１４Ｋ":              "High-performance glass wool 14K",
+        "高性能グラスウール断熱材１６K":               "High-performance glass wool 16K",
+        "高性能グラスウール断熱材２０K":               "High-performance glass wool 20K",
+        "高性能グラスウール断熱材２４K":               "High-performance glass wool 24K",
+        "高性能グラスウール断熱材２８K":               "High-performance glass wool 28K",
+        "高性能グラスウール断熱材３２K":               "High-performance glass wool 32K",
+        "高性能グラスウール断熱材３６K":               "High-performance glass wool 36K",
+        "高性能グラスウール断熱材３８K":               "High-performance glass wool 38K",
+        "高性能グラスウール断熱材４０K":               "High-performance glass wool 40K",
+        "高性能グラスウール断熱材４８K":               "High-performance glass wool 48K",
+        "吹込み用グラスウール断熱材 天井用":           "Blown-in glass wool (ceiling)",
+        "吹込み用グラスウール断熱材 屋根・床・壁用":   "Blown-in glass wool (roof/floor/wall)",
+        "ロックウール断熱材・マット24Ｋ以上":          "Rock wool insulation mat 24K+",
+        "ロックウール断熱材・マット30K以上":           "Rock wool insulation mat 30K+",
+        "ロックウール断熱材・マット40K以上":           "Rock wool insulation mat 40K+",
+        "ロックウール断熱材・フェルト":                "Rock wool insulation felt",
+        "ロックウール断熱材・ボード":                  "Rock wool insulation board",
+        "吹込み用ロックウール断熱材 天井用":           "Blown-in rock wool (ceiling)",
+        "吹込み用ロックウール断熱材 屋根・床・壁用":   "Blown-in rock wool (roof/floor/wall)",
+        "天井用・屋根・床・壁用":                      "Ceiling/roof/floor/wall",
+        "押出法ポリスチレンフォーム１種":              "XPS type 1",
+        "押出法ポリスチレンフォーム２種":              "XPS type 2",
+        "押出法ポリスチレンフォーム３種":              "XPS type 3",
+        "A種ポリエチレンフォーム保温板1種":            "Type A polyethylene foam board type 1",
+        "A種ポリエチレンフォーム保温板2種":            "Type A polyethylene foam board type 2",
+        "A種ポリエチレンフォーム保温板3種":            "Type A polyethylene foam board type 3",
+        "ビーズ法ポリスチレンフォーム1号":             "EPS foam no.1",
+        "ビーズ法ポリスチレンフォーム2号":             "EPS foam no.2",
+        "ビーズ法ポリスチレンフォーム3号":             "EPS foam no.3",
+        "ビーズ法ポリスチレンフォーム4号":             "EPS foam no.4",
+        "硬質ウレタンフォーム1種":                     "Rigid urethane foam type 1",
+        "硬質ウレタンフォーム2種1号":                  "Rigid urethane foam type 2-1",
+        "硬質ウレタンフォーム2種2号":                  "Rigid urethane foam type 2-2",
+        "硬質ウレタンフォーム2種3号":                  "Rigid urethane foam type 2-3",
+        "硬質ウレタンフォーム2種4号":                  "Rigid urethane foam type 2-4",
+        "吹付け硬質ウレタンフォームA種１":             "Sprayed rigid urethane foam A-1",
+        "吹付け硬質ウレタンフォームA種１H":            "Sprayed rigid urethane foam A-1H",
+        "吹付け硬質ウレタンフォームA種３":             "Sprayed rigid urethane foam A-3",
+        "フェノールフォーム１種":                      "Phenolic foam type 1",
+        "フェノールフォーム2種1号":                    "Phenolic foam type 2-1",
+        "フェノールフォーム2種2号":                    "Phenolic foam type 2-2",
+        "フェノールフォーム2種3号":                    "Phenolic foam type 2-3",
+        "フェノールフォーム3種1号":                    "Phenolic foam type 3-1",
+        "ファイバーマット":                            "Fiber mat",
+        "ファイバーボード":                            "Fiberboard"
+    },
+
+    "ac_operation_mode": {
+        "暖房": "Heating",
+        "中間": "Intermediate",
+        "冷房": "Cooling"
+    },
+
+    "ac_operation_simultaneous_supply": {
+        "無": "None",
+        "有": "Enabled",
+        "有（室負荷）": "Enabled (room load)",
+        "有（外気負荷）": "Enabled (outdoor load)"
+    },
+
+    "ac_pump_flow_control": {
+        "回転数制御":     "Variable Water Volume",
+        "定流量制御":     "Constant Water Volume"
+    },
+
+    "ac_pump_number_control": {
+        "有": "Enabled",
+        "無": "Disabled"
+    },
+
+    "ac_pump_operation_priority": {
+        "1番目":  "1st",
+        "2番目":  "2nd",
+        "3番目":  "3rd",
+        "4番目":  "4th",
+        "5番目":  "5th",
+        "6番目":  "6th",
+        "7番目":  "7th",
+        "8番目":  "8th",
+        "9番目":  "9th",
+        "10番目": "10th"
+    },
+
+    "ac_wall_input_method": {
+        "熱貫流率を入力":   "Enter U-value",
+        "建材構成を入力":   "Enter material composition",
+        "断熱材種類を入力": "Enter insulation type"
+    },
+
+    "ac_wall_type": {
+        "外壁":             "Exterior wall",
+        "内壁":             "Interior wall",
+        "接地壁":           "Ground-contact wall",
+        "日の当たる外壁":   "Sun-exposed exterior wall",
+        "日の当たらない外壁": "Shaded exterior wall",
+        "地盤に接する外壁": "Ground-contact exterior wall"
+    },
+
+    "ac_window_blind": {
+        "有": "Equiped",
+        "無": "None"
+    },
+
+    "ac_window_frame_type": {
+        "樹脂製":                               "Resin",
+        "樹脂製(単板ガラス)":                   "Resin (single glazing)",
+        "樹脂製(複層ガラス)":                   "Resin (double glazing)",
+        "樹脂製(二層複層ガラス)":               "Resin (double glazing, 2-layer)",
+        "樹脂製(三層以上の複層ガラス)":         "Resin (triple or more glazing)",
+        "木製":                                 "Wood",
+        "木製(単板ガラス)":                     "Wood (single glazing)",
+        "木製(複層ガラス)":                     "Wood (double glazing)",
+        "木製(二層複層ガラス)":                 "Wood (double glazing, 2-layer)",
+        "木製(三層以上の複層ガラス)":           "Wood (triple or more glazing)",
+        "金属樹脂複合製":                       "Metal-resin composite",
+        "金属樹脂複合製(単板ガラス)":           "Metal-resin composite (single glazing)",
+        "金属樹脂複合製(複層ガラス)":           "Metal-resin composite (double glazing)",
+        "金属樹脂複合製(二層複層ガラス)":       "Metal-resin composite (double glazing, 2-layer)",
+        "金属樹脂複合製(三層以上の複層ガラス)": "Metal-resin composite (triple or more glazing)",
+        "金属木複合製":                         "Metal-wood composite",
+        "金属木複合製(単板ガラス)":             "Metal-wood composite (single glazing)",
+        "金属木複合製(複層ガラス)":             "Metal-wood composite (double glazing)",
+        "金属木複合製(二層複層ガラス)":         "Metal-wood composite (double glazing, 2-layer)",
+        "金属木複合製(三層以上の複層ガラス)":   "Metal-wood composite (triple or more glazing)",
+        "金属製":                               "Metal",
+        "金属製(単板ガラス)":                   "Metal (single glazing)",
+        "金属製(複層ガラス)":                   "Metal (double glazing)",
+        "金属製(二層以上の複層ガラス)":         "Metal (double or more glazing)"
+    },
+
+    "ac_window_glass_layers": {
+        "三層以上の複層": "Triple or more glazing",
+        "複層":           "Double glazing",
+        "単層":           "Single glazing"
+    },
+
+    "ac_window_input_method": {
+        "性能値を入力":       "Enter performance values",
+        "ガラスの性能を入力": "Enter glass performance",
+        "ガラスの種類を入力": "Enter glass type"
+    },
+
+    "vt_control_air_volume": {
+        "無":         "None",
+        "CO濃度制御": "CO2 control",
+        "温度制御":   "Temperature control"
+    },
+
+    "vt_control_high_efficiency_motor": {
+        "有": "Enabled",
+        "無": "None"
+    },
+
+    "vt_control_inverter": {
+        "有": "Enabled",
+        "無": "None"
+    },
+
+    "vt_fan_type": {
+        "給気":   "Supply",
+        "排気":   "Exhaust",
+        "空調":   "AC",
+        "循環":   "Circulation"
+    },
+
+    "vt_pac_room_usage": {
+        "電気室":           "Electrical room",
+        "機械室":           "Machine room",
+        "エレベータ機械室": "Elevator machine room",
+        "その他":           "Other"
+    },
+
+    "vt_ventilation_method": {
+        "一種換気": "Type 1 ventilation",
+        "二種換気": "Type 2 ventilation",
+        "三種換気": "Type 3 ventilation"
+    },
+
+    "lt_control_illuminance_sensing": {
+        "無":             "None",
+        "調光方式":       "Dimming",
+        "調光方式BL":     "Dimming BL",
+        "調光方式W15":    "Dimming W15",
+        "調光方式W15BL":  "Dimming W15BL",
+        "調光方式W20":    "Dimming W20",
+        "調光方式W20BL":  "Dimming W20BL",
+        "調光方式W25":    "Dimming W25",
+        "調光方式W25BL":  "Dimming W25BL",
+        "点滅方式":       "Switching"
+    },
+
+    "lt_control_iumination_correction": {
+        "無":                 "None",
+        "タイマ方式(LED)":    "Timer (LED)",
+        "タイマ方式(蛍光灯)": "Timer (fluorescent)",
+        "センサ方式(LED)":    "Sensor (LED)",
+        "センサ方式(蛍光灯)": "Sensor (fluorescent)"
+    },
+
+    "lt_control_occupant_sensing": {
+        "無":         "None",
+        "下限調光方式": "Minimum dimming",
+        "点滅方式":   "Switching",
+        "減光方式":   "Dimming"
+    },
+
+    "lt_control_time_schedule": {
+        "無":     "None",
+        "減光方式": "Dimming",
+        "点滅方式": "Switching"
+    },
+
+    "hw_fuel_type": {
+        "電力":                     "Electricity",
+        "都市ガス":                 "City gas",
+        "液化石油ガス":             "LPG",
+        "重油":                     "Heavy oil",
+        "灯油":                     "Kerosene",
+        "他人から供給された熱(温水)": "District heating (hot water)",
+        "他人から供給された熱(蒸気)": "District heating (steam)"
+    },
+
+    "hw_heat_source_purpose": {
+        "給湯負荷用":   "Hot water load",
+        "配管保温用":   "Pipe insulation",
+        "貯湯槽保温用": "Storage tank insulation",
+        "その他":       "Other"
+    },
+
+    "hw_heat_source_type": {
+        "ガス給湯機":                 "Gas water heater",
+        "ガス給湯暖房機":             "Gas water heater with space heating",
+        "ボイラ":                     "Boiler",
+        "石油給湯機(給湯単機能)":     "Oil water heater (DHW only)",
+        "石油給湯機(給湯機付ふろがま)": "Oil water heater (with bath)",
+        "家庭用ヒートポンプ給湯機":   "Residential heat pump water heater",
+        "業務用ヒートポンプ給湯機":   "Commercial heat pump water heater",
+        "貯湯式電気温水器":           "Electric storage water heater",
+        "電気瞬間湯沸器":             "Electric instantaneous water heater",
+        "真空式温水発生機":           "Vacuum hot water generator",
+        "無圧式温水発生機":           "Atmospheric hot water generator",
+        "地域熱供給":                 "District heating"
+    },
+
+    "hw_hot_water_usage": {
+        "便所":   "Restroom",
+        "浴室":   "Bathroom",
+        "厨房":   "Kitchen",
+        "その他": "Other"
+    },
+
+    "hw_pipe_insulation_level": {
+        "保温仕様A": "Insulation spec A",
+        "保温仕様B": "Insulation spec B",
+        "保温仕様C": "Insulation spec C",
+        "保温仕様D": "Insulation spec D",
+        "保温仕様1": "Insulation spec 1",
+        "保温仕様2": "Insulation spec 2",
+        "保温仕様3": "Insulation spec 3",
+        "裸管":      "Bare pipe"
+    },
+
+    "hw_piping_thermal_conductivity": {
+        "15A以下":      "DN15 or less",
+        "20A以下":      "DN20 or less",
+        "25A以下":      "DN25 or less",
+        "32A以下":      "DN32 or less",
+        "40A以下":      "DN40 or less",
+        "50A以下":      "DN50 or less",
+        "65A以下":      "DN65 or less",
+        "80A以下":      "DN80 or less",
+        "100A以下":     "DN100 or less",
+        "125A以下":     "DN125 or less",
+        "125Aより大きい": "Larger than DN125"
+    },
+
+    "hw_water_saving_fixture": {
+        "自動給湯栓": "Automatic faucet",
+        "節湯B1":     "Water-saving B1",
+        "無":         "None"
+    },
+
+    "ev_control_type": {
+        "VVVF(電力回生なし)":       "VVVF (no regeneration)",
+        "VVVF(電力回生あり)":       "VVVF (with regeneration)",
+        "VVVF(電力回生なし、ギアレス)": "VVVF (no regeneration, gearless)",
+        "VVVF(電力回生あり、ギアレス)": "VVVF (with regeneration, gearless)",
+        "交流帰還制御":             "AC feedback control"
+    },
+
+    "pv_array_type": {
+        "架台設置形":   "Rack-mounted",
+        "屋根置き形":   "Roof-mounted",
+        "その他":       "Other"
+    },
+
+    "pv_solar_cell_type": {
+        "結晶系":     "Crystalline",
+        "結晶系以外": "Non-crystalline"
+    },
+
+    "cgs_24hours_operation": {
+        "有": "Yes",
+        "無": "None"
+    },
+
+    "cgs_heat_recovery_priority": {
+        "1番目": "1st",
+        "2番目": "2nd",
+        "3番目": "3rd"
+    }
+}
