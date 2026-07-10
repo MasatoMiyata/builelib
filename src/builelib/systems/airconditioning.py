@@ -3049,11 +3049,17 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
             resultJson["PUMP"][pump_name]["運転時間[時間]"] = np.sum(resultJson["PUMP"][pump_name]["Tps"],0)
             resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] = np.sum(resultJson["PUMP"][pump_name]["Qps"],0)
-            resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] = \
-                resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] * 1000 \
-                / (resultJson["PUMP"][pump_name]["運転時間[時間]"] * 3600)
+            if resultJson["PUMP"][pump_name]["運転時間[時間]"] > 0:
+                resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] = \
+                    resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] * 1000 \
+                    / (resultJson["PUMP"][pump_name]["運転時間[時間]"] * 3600)
+            else:
+                resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] = 0
 
-            resultJson["PUMP"][pump_name]["平均負荷率[-]"] = resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] / resultJson["PUMP"][pump_name]["定格能力[kW]"]
+            if resultJson["PUMP"][pump_name]["定格能力[kW]"] > 0:
+                resultJson["PUMP"][pump_name]["平均負荷率[-]"] = resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] / resultJson["PUMP"][pump_name]["定格能力[kW]"]
+            else:
+                resultJson["PUMP"][pump_name]["平均負荷率[-]"] = 0
 
             resultJson["PUMP"][pump_name]["台数制御の有無"] = inputdata["PUMP"][pump_name]["isStagingControl"]
             resultJson["PUMP"][pump_name]["電力消費量[MWh]"] = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
