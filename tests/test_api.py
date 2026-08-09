@@ -258,6 +258,12 @@ def test_calculate_no_file_output(tmp_path, minimal_payload):
 # POST /project/{id}/save + GET /project/{id}  — プロジェクト管理
 # ================================================================
 
+def test_project_list_endpoint_is_not_available():
+    """保存済みプロジェクトのID一覧を公開しない"""
+    response = client.get("/projects")
+    assert response.status_code == 404
+
+
 def test_save_project_with_new_generates_uuid(minimal_payload):
     """project_id=new で保存すると UUID が採番される"""
     response = client.post("/project/new/save", json=minimal_payload)

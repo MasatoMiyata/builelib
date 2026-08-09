@@ -50,8 +50,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# プロジェクト保存ディレクトリ
-PROJECTS_DIR = Path(__file__).parent / "projects"
+# プロジェクト保存ディレクトリ（永続ボリューム /usr/src/data にマウントされる）
+PROJECTS_DIR = Path(os.environ.get("BUILELIB_PROJECTS_DIR", "/usr/src/data/projects"))
 
 # JSONスキーマのパス
 _SCHEMA_PATH = Path(__file__).parent / "src/builelib/input/inputdata/webproJsonSchema.json"
@@ -289,7 +289,8 @@ def save_project(project_id: str, inputdata: BuildingInputData):
 
     - project_id に "new" を指定すると、UUIDを自動採番する
     - 既存の project_id を指定すると上書き保存する
-    - 保存先: ./projects/{project_id}.json
+    - 保存先: PROJECTS_DIR/{project_id}.json
+      （既定値: /usr/src/data/projects、BUILELIB_PROJECTS_DIR で変更可能）
     """
     # "new" の場合は UUID を自動採番
     if project_id == "new":
