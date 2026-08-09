@@ -54,7 +54,7 @@ def sample_001_payload():
     """Builelib_inputSheet_sample_001 から生成した入力 JSON（フル計算用）"""
     json_path = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        "examples", "sample_001_input.json"
+        "tests", "whole_building", "Builelib_inputSheet_sample_001_input.json"
     )
     if not os.path.exists(json_path):
         pytest.skip(f"サンプル JSON が見つかりません: {json_path}")
@@ -293,8 +293,9 @@ def test_calculate_result_has_bei_keys(minimal_payload):
     assert "基準一次エネルギー消費量[MJ]" in result
 
 
-def test_calculate_full_sample(sample_001_payload):
+def test_calculate_full_sample(sample_001_payload, tmp_path, monkeypatch):
     """sample_001 のフル計算で BEI が期待値と一致する"""
+    monkeypatch.chdir(tmp_path)
     response = client.post("/calculate", json=sample_001_payload)
     assert response.status_code == 200
     data = response.json()
@@ -307,19 +308,18 @@ def test_calculate_full_sample(sample_001_payload):
     assert abs(result["BEI_V"]  - 0.91) < 0.01
     assert abs(result["BEI_L"]  - 0.82) < 0.01
 
+    # 全設備を含む入力でも、API計算はファイルを生成しない
+    assert list(tmp_path.iterdir()) == []
 
-def test_calculate_no_file_output(tmp_path, minimal_payload):
-    """POST /calculate がカレントディレクトリに result.json を出力しない"""
-    # ※ calc_energy() の output_dir="" 問題のため、この検証は参考値
-    #    将来 output_dir=None 対応後に強化する
-    import glob
-    before = set(glob.glob("*.json"))
-    client.post("/calculate", json=minimal_payload)
-    after = set(glob.glob("*.json"))
-    new_files = after - before
-    # result_XX.json 系のファイルが増えていないことを確認
-    api_result_files = [f for f in new_files if f.startswith("result_")]
-    assert api_result_files == [], f"意図しないファイルが出力されました: {api_result_files}"
+
+def test_calculate_no_file_output(tmp_path, monkeypatch, minimal_payload):
+    """POST /calculate がカレントディレクトリにファイルを出力しない"""
+    monkeypatch.chdir(tmp_path)
+
+    response = client.post("/calculate", json=minimal_payload)
+
+    assert response.status_code == 200
+    assert list(tmp_path.iterdir()) == []
 
 
 # ================================================================
