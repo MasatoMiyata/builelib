@@ -11,6 +11,8 @@ nav:
       installation.md
   - InputSheet: 
       InputSheet.md
+  - Input JSON:
+      InputJson.md
   - Reference:
       logic.md
   - License: license.md
@@ -73,4 +75,4 @@ markdown_extensions:
   - md_in_html:
 
 # Copyright
-copyright: 'Copyright© 2019-2025 : Masato Miyata'
+copyright: 'Copyright© 2019-2026 : Masato Miyata'
