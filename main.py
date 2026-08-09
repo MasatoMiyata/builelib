@@ -101,9 +101,11 @@ app.add_middleware(
     allow_headers=["Content-Type"],
 )
 
-# プロジェクト保存ディレクトリ（永続ボリューム /usr/src/data にマウントされる）
+# プロジェクト保存ディレクトリ
+# ローカルではリポジトリ内、Dockerでは環境変数で永続ボリュームを指定する。
+_LOCAL_PROJECTS_DIR = Path(__file__).resolve().parent / "projects"
 PROJECTS_DIR = Path(
-    os.environ.get("BUILELIB_PROJECTS_DIR", str(SHARED_DATA_DIR / "projects"))
+    os.environ.get("BUILELIB_PROJECTS_DIR", str(_LOCAL_PROJECTS_DIR))
 )
 
 # Excelファイルベース計算で許可する拡張子
@@ -383,7 +385,8 @@ def save_project(project_id: str, inputdata: BuildingInputData):
     - project_id に "new" を指定すると、UUIDを自動採番する
     - 既存の project_id を指定すると上書き保存する
     - 保存先: PROJECTS_DIR/{project_id}.json
-      （既定値: /usr/src/data/projects、BUILELIB_PROJECTS_DIR で変更可能）
+      （ローカル既定値: main.py と同じディレクトリの projects）
+    - Docker等では BUILELIB_PROJECTS_DIR で保存先を変更可能
     """
     # "new" の場合は UUID を自動採番
     if project_id == "new":
