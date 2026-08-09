@@ -1,0 +1,939 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Builelib Manual">
+      
+      
+      
+        <link rel="canonical" href="https://masatomiyata.github.io/builelib/en/InputJson/">
+      
+      
+        <link rel="prev" href="../InputSheet/">
+      
+      
+        <link rel="next" href="../logic/">
+      
+      
+        
+          <link rel="alternate" href="../../InputJson/" hreflang="ja">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Input JSON - Builelib Manual</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700&display=swap">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#json" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../" title="Builelib Manual" class="md-header__button md-logo" aria-label="Builelib Manual" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Builelib Manual
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Input JSON
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../InputJson/" hreflang="ja" class="md-select__link">
+              Japanese
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Builelib Manual" class="md-nav__button md-logo" aria-label="Builelib Manual" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Builelib Manual
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to use
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InputSheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InputSheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input JSON
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input JSON
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本方針
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        全体構造
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDキーと参照関係
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        型の読み方
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必須項目、範囲、既定値
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        選択肢
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specialinputdata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SpecialInputData
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        推奨検証手順
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APIでの取得
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="json">入力JSON仕様<a class="headerlink" href="#json" title="Permanent link">&para;</a></h1>
+<p>このページは、Builelib が受け取る入力JSONの仕様を説明します。<br />
+他のプログラムから入力JSONを作成・検証するときは、次の3つを添付または参照してください。</p>
+<table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/builelib/input/inputdata/webproJsonSchema.json</code></td>
+<td>構造、型、必須項目、数値範囲、固定選択肢を検証するJSON Schema</td>
+</tr>
+<tr>
+<td><code>src/builelib/input/inputdata/input_options.json</code></td>
+<td>データベース由来の選択肢一覧</td>
+</tr>
+<tr>
+<td><code>docs-md/InputJson.ja.md</code></td>
+<td>人間向けの説明書</td>
+</tr>
+</tbody>
+</table>
+<p>APIを使う場合は、同じ情報を <code>/schema</code>、<code>/options</code>、<code>/validate</code> から取得・検証できます。</p>
+<h2 id="_1">基本方針<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>入力JSONの機械可読な正本は <code>webproJsonSchema.json</code> です。<br />
+このスキーマは JSON Schema Draft-07 形式で、<code>jsonschema</code> などの一般的な検証ライブラリで利用できます。</p>
+<p>選択肢のうち、建物用途、室用途、方位、設備方式などデータベースから生成されるものは <code>input_options.json</code> を参照します。<br />
+<code>webproJsonSchema.json</code> に固定で記載されている <code>enum</code> と、<code>input_options.json</code> の両方を確認することで、他プログラム側でも入力値を安定して検証できます。</p>
+<p><code>SpecialInputData</code> は任意拡張領域です。現時点では仕様が固定されていないため、詳細なスキーマ制約は設けません。</p>
+<h2 id="_2">全体構造<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>入力JSONはオブジェクトです。トップレベルには次のセクションを持ちます。</p>
+<table>
+<thead>
+<tr>
+<th>キー</th>
+<th>必須</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Building</code></td>
+<td>必須</td>
+<td>建物全体の基本情報</td>
+</tr>
+<tr>
+<td><code>Rooms</code></td>
+<td>必須</td>
+<td>室の一覧</td>
+</tr>
+<tr>
+<td><code>EnvelopeSet</code></td>
+<td>任意</td>
+<td>外皮構成と開口部の割り当て</td>
+</tr>
+<tr>
+<td><code>WallConfigure</code></td>
+<td>任意</td>
+<td>外壁・屋根などの断熱仕様</td>
+</tr>
+<tr>
+<td><code>WindowConfigure</code></td>
+<td>任意</td>
+<td>窓仕様</td>
+</tr>
+<tr>
+<td><code>ShadingConfigure</code></td>
+<td>任意</td>
+<td>日よけ仕様</td>
+</tr>
+<tr>
+<td><code>AirConditioningZone</code></td>
+<td>任意</td>
+<td>空調ゾーン</td>
+</tr>
+<tr>
+<td><code>HeatsourceSystem</code></td>
+<td>任意</td>
+<td>熱源システム</td>
+</tr>
+<tr>
+<td><code>SecondaryPumpSystem</code></td>
+<td>任意</td>
+<td>二次ポンプシステム</td>
+</tr>
+<tr>
+<td><code>AirHandlingSystem</code></td>
+<td>任意</td>
+<td>空調機システム</td>
+</tr>
+<tr>
+<td><code>VentilationRoom</code></td>
+<td>任意</td>
+<td>換気対象室</td>
+</tr>
+<tr>
+<td><code>VentilationUnit</code></td>
+<td>任意</td>
+<td>換気設備</td>
+</tr>
+<tr>
+<td><code>LightingSystems</code></td>
+<td>任意</td>
+<td>照明設備</td>
+</tr>
+<tr>
+<td><code>HotwaterRoom</code></td>
+<td>任意</td>
+<td>給湯対象室</td>
+</tr>
+<tr>
+<td><code>HotwaterSupplySystems</code></td>
+<td>任意</td>
+<td>給湯設備</td>
+</tr>
+<tr>
+<td><code>Elevators</code></td>
+<td>任意</td>
+<td>昇降機</td>
+</tr>
+<tr>
+<td><code>PhotovoltaicSystems</code></td>
+<td>任意</td>
+<td>太陽光発電設備</td>
+</tr>
+<tr>
+<td><code>CogenerationSystems</code></td>
+<td>任意</td>
+<td>コージェネレーション設備</td>
+</tr>
+<tr>
+<td><code>SpecialInputData</code></td>
+<td>任意</td>
+<td>Builelib独自の拡張入力</td>
+</tr>
+<tr>
+<td><code>CalculationMode</code></td>
+<td>任意</td>
+<td>計算モード、SPシート有効フラグ、一次エネルギー換算係数など</td>
+</tr>
+</tbody>
+</table>
+<p>最小構成では <code>Building</code> と <code>Rooms</code> が必要です。設備を計算対象にする場合は、対応するセクションを追加します。</p>
+<pre><code class="language-json">{
+  &quot;Building&quot;: {
+    &quot;Name&quot;: &quot;サンプル建物&quot;,
+    &quot;Region&quot;: &quot;6&quot;,
+    &quot;AnnualSolarRegion&quot;: &quot;A3&quot;,
+    &quot;BuildingFloorArea&quot;: 1000.0
+  },
+  &quot;Rooms&quot;: {
+    &quot;1F_事務室&quot;: {
+      &quot;buildingType&quot;: &quot;事務所等&quot;,
+      &quot;roomType&quot;: &quot;事務室&quot;,
+      &quot;roomArea&quot;: 100.0
+    }
+  }
+}
+</code></pre>
+<h2 id="id">IDキーと参照関係<a class="headerlink" href="#id" title="Permanent link">&para;</a></h2>
+<p>多くのセクションは、任意の名称をキーにしたオブジェクトです。<br />
+たとえば <code>Rooms</code> では <code>"1F_事務室"</code> が室ID、<code>PhotovoltaicSystems</code> では <code>"太陽光A"</code> が設備IDになります。</p>
+<p>IDキーは、同じJSON内の他セクションから参照されます。例として、換気、照明、給湯、昇降機などの室別入力は <code>Rooms</code> の室IDと対応します。</p>
+<p>主な依存関係は次のとおりです。</p>
+<table>
+<thead>
+<tr>
+<th>セクション</th>
+<th>前提となるセクション</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EnvelopeSet</code></td>
+<td><code>Building</code>, <code>Rooms</code>, <code>WallConfigure</code>, <code>WindowConfigure</code></td>
+</tr>
+<tr>
+<td><code>VentilationRoom</code></td>
+<td><code>Building</code>, <code>Rooms</code>, <code>VentilationUnit</code></td>
+</tr>
+<tr>
+<td><code>LightingSystems</code></td>
+<td><code>Building</code>, <code>Rooms</code></td>
+</tr>
+<tr>
+<td><code>HotwaterRoom</code></td>
+<td><code>Building</code>, <code>Rooms</code>, <code>HotwaterSupplySystems</code></td>
+</tr>
+<tr>
+<td><code>Elevators</code></td>
+<td><code>Building</code>, <code>Rooms</code></td>
+</tr>
+</tbody>
+</table>
+<p>参照先IDが存在するかどうかの厳密なクロスチェックは、JSON Schemaだけでは表現しきれません。計算前には <code>/validate</code> または Builelib の検証処理も併用してください。</p>
+<h2 id="_3">型の読み方<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>JSON Schemaでは、各項目の型を次のように表します。</p>
+<table>
+<thead>
+<tr>
+<th>型</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>string</code></td>
+<td>文字列</td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td>数値。整数も小数も含みます</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>true</code> または <code>false</code></td>
+</tr>
+<tr>
+<td><code>null</code></td>
+<td>値なし</td>
+</tr>
+<tr>
+<td><code>object</code></td>
+<td>キーと値を持つオブジェクト</td>
+</tr>
+<tr>
+<td><code>array</code></td>
+<td>配列</td>
+</tr>
+</tbody>
+</table>
+<p><code>type</code> が <code>["string", "null"]</code> のような配列の場合は、どちらの型も許容されます。<br />
+<code>anyOf</code> は複数の条件のうち、いずれかを満たせば有効という意味です。</p>
+<h2 id="_4">必須項目、範囲、既定値<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>各オブジェクトの <code>required</code> に記載された項目は必須です。<br />
+<code>minimum</code> と <code>maximum</code> がある数値項目は、その範囲内の値を指定してください。<br />
+<code>maxLength</code> がある文字列項目は、その文字数以下にしてください。</p>
+<p><code>default</code> は入力が省略された場合の参考値です。JSON Schema単体の検証では、通常は値を自動補完しません。Builelib がExcelからJSONを生成する処理では、項目によって既定値を設定します。</p>
+<h2 id="_5">選択肢<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>選択肢は2種類あります。</p>
+<table>
+<thead>
+<tr>
+<th>種類</th>
+<th>参照先</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>スキーマ固定の選択肢</td>
+<td><code>webproJsonSchema.json</code> の <code>enum</code></td>
+</tr>
+<tr>
+<td>データベース由来の選択肢</td>
+<td><code>input_options.json</code> または <code>/options</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>input_options.json</code> は <code>database_loader.get_input_options()</code> の結果です。<br />
+室用途のように建物用途に依存する選択肢は、次のような階層構造になります。</p>
+<pre><code class="language-json">{
+  &quot;室用途&quot;: {
+    &quot;事務所等&quot;: [
+      &quot;事務室&quot;,
+      &quot;会議室&quot;
+    ]
+  }
+}
+</code></pre>
+<p>他プログラムでフォームや入力補完を作る場合は、<code>input_options.json</code> を使って選択肢を表示し、保存前に <code>webproJsonSchema.json</code> で構造を検証してください。</p>
+<h2 id="specialinputdata">SpecialInputData<a class="headerlink" href="#specialinputdata" title="Permanent link">&para;</a></h2>
+<p><code>SpecialInputData</code> は、SPシートやBuilelib独自機能で使う任意拡張領域です。<br />
+現在は、気象データ、任意の室使用条件、任意の熱源特性、時刻別負荷など、複数の拡張データを格納できます。</p>
+<p>この領域は今後も変更される可能性があるため、今回の仕様では詳細な型や必須項目を固定しません。<br />
+外部プログラムでは、<code>SpecialInputData</code> を省略可能な <code>object</code> として扱い、既知のキーだけを解釈してください。</p>
+<h2 id="_6">推奨検証手順<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>他プログラムで入力JSONを使用する場合は、次の順序で検証してください。</p>
+<ol>
+<li>JSONとして読み込めることを確認する。</li>
+<li><code>webproJsonSchema.json</code> で構造、型、必須項目、範囲を検証する。</li>
+<li><code>input_options.json</code> でDB由来の選択肢を確認する。</li>
+<li>必要に応じて <code>/validate</code> でBuilelib側の検証結果を確認する。</li>
+<li>計算実行前に、参照IDの対応関係を確認する。</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>SpecialInputData.flow_control</code> で任意追加された制御方式など、一部の拡張値はBuilelibの検証処理でスキーマに動的注入されます。拡張入力を含むJSONでは、素の <code>webproJsonSchema.json</code> だけでなく <code>/validate</code> または <code>builelib.commons.inputdata_validation()</code> による検証を併用してください。</p>
+</div>
+<p>Pythonでの最小検証例です。</p>
+<pre><code class="language-python">import json
+from jsonschema import Draft7Validator
+
+with open(&quot;webproJsonSchema.json&quot;, encoding=&quot;utf-8&quot;) as f:
+    schema = json.load(f)
+
+with open(&quot;input.json&quot;, encoding=&quot;utf-8&quot;) as f:
+    inputdata = json.load(f)
+
+validator = Draft7Validator(schema)
+errors = sorted(validator.iter_errors(inputdata), key=lambda e: list(e.path))
+
+if errors:
+    for error in errors:
+        path = &quot; -&gt; &quot;.join(str(p) for p in error.absolute_path) or &quot;root&quot;
+        print(f&quot;{path}: {error.message}&quot;)
+else:
+    print(&quot;valid&quot;)
+</code></pre>
+<h2 id="api">APIでの取得<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
+<p>Builelib APIを利用する場合は、次のエンドポイントを使えます。</p>
+<table>
+<thead>
+<tr>
+<th>エンドポイント</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /schema</code></td>
+<td><code>webproJsonSchema.json</code> を返します</td>
+</tr>
+<tr>
+<td><code>GET /options</code></td>
+<td>入力値の選択肢一覧を返します</td>
+</tr>
+<tr>
+<td><code>POST /validate</code></td>
+<td>入力JSONを検証し、エラー一覧を返します</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright© 2019-2026 : Masato Miyata
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/MasatoMiyata/builelib" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.integrate", "navigation.expand", "navigation.top"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../js/mathjax.js"></script>
+      
+        <script src="../../js/mathjax-reload.js"></script>
+      
+        <script src="../../js/lang-switch.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
