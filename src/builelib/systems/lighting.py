@@ -306,40 +306,40 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
 
     ##----------------------------------------------------------------------------------
-    # CSV出力
+    # CSV出力（output_dir が指定されている場合のみ）
     ##----------------------------------------------------------------------------------
     if output_dir != "":
-        output_dir = output_dir + "_"
+        prefix = output_dir + "_"
 
-    # 日別一次エネルギー消費量
-    df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（照明設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (F_PRIME) /1000,
-        '電力消費量（照明設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
-    }, index=bc.date_1year)
+        # 日別一次エネルギー消費量
+        df_daily_energy = pd.DataFrame({
+            '一次エネルギー消費量（照明設備）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (F_PRIME) /1000,
+            '電力消費量（照明設備）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
+        }, index=bc.date_1year)
 
-    df_daily_energy.to_csv(output_dir + 'result_L_Energy_daily.csv', index_label="日時", encoding='CP932')
+        df_daily_energy.to_csv(prefix + 'result_L_Energy_daily.csv', index_label="日時", encoding='CP932')
 
-    # 室毎の計算結果
-    df_room_result = pd.DataFrame.from_dict(resultJson["lighting"], orient='index')
+        # 室毎の計算結果
+        df_room_result = pd.DataFrame.from_dict(resultJson["lighting"], orient='index')
 
-    rename_columns = {
-        "buildingType": "建物用途",
-        "roomType": "室用途",
-        "roomArea": "室面積",
-        "opelationTime": "年間点灯時間",
-        "roomIndex": "室指数",
-        "roomIndexCoeff": "室指数補正係数",
-        "unitPower": "定格消費電力[W]",
-        "unitPowerPerArea": "床面積あたりの定格消費電力[W/m2]",
-        "primaryEnergy": "設計一次エネルギー消費量[MJ]",
-        "standardEnergy": "基準一次エネルギー消費量[MJ]",
-        "primaryEnergyPerArea": "床面積あたりの設計値[MJ/m2]",
-        "energyRatio": "設計値/基準値",
-        "primaryEnergyRario": "設計値の比率[-]"
-    }
+        rename_columns = {
+            "buildingType": "建物用途",
+            "roomType": "室用途",
+            "roomArea": "室面積",
+            "opelationTime": "年間点灯時間",
+            "roomIndex": "室指数",
+            "roomIndexCoeff": "室指数補正係数",
+            "unitPower": "定格消費電力[W]",
+            "unitPowerPerArea": "床面積あたりの定格消費電力[W/m2]",
+            "primaryEnergy": "設計一次エネルギー消費量[MJ]",
+            "standardEnergy": "基準一次エネルギー消費量[MJ]",
+            "primaryEnergyPerArea": "床面積あたりの設計値[MJ/m2]",
+            "energyRatio": "設計値/基準値",
+            "primaryEnergyRario": "設計値の比率[-]"
+        }
 
-    df_room_result = df_room_result.rename(columns=rename_columns)
-    df_room_result.to_csv(output_dir + 'result_L_room.csv', index_label="室名", encoding='CP932')
+        df_room_result = df_room_result.rename(columns=rename_columns)
+        df_room_result.to_csv(prefix + 'result_L_room.csv', index_label="室名", encoding='CP932')
 
     return resultJson
 

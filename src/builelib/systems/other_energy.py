@@ -183,7 +183,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     AreaWeightedSchedule_OA = np.zeros((365,24))
 
     # 空調スケジュール
-    for room_zone_name in inputdata["AirConditioningZone"]:
+    for room_zone_name in inputdata.get("AirConditioningZone", {}):
         if room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
 
             AreaWeightedSchedule_AC += roomScheduleRoom[room_zone_name] * inputdata["Rooms"][room_zone_name]["roomArea"]
@@ -199,7 +199,7 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
                             AreaWeightedSchedule_AC += roomScheduleRoom[room_name] * inputdata["Rooms"][room_name]["zone"][zone_name]["zoneArea"]
 
     # 照明スケジュール
-    for room_zone_name in inputdata["LightingSystems"]:
+    for room_zone_name in inputdata.get("LightingSystems", {}):
         if room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
 
             AreaWeightedSchedule_LT += roomScheduleLight[room_zone_name] * inputdata["Rooms"][room_zone_name]["roomArea"]
@@ -237,14 +237,14 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     # CSV出力
     ##----------------------------------------------------------------------------------
     if output_dir != "":
-        output_dir = output_dir + "_"
+        prefix = output_dir + "_"
 
-    df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（その他）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (F_PRIME) /1000,
-        '電力消費量（その他）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
-    }, index=bc.date_1year)
+        df_daily_energy = pd.DataFrame({
+            '一次エネルギー消費量（その他）[GJ]'  : resultJson["for_CGS"]["Edesign_MWh_day"] *  (F_PRIME) /1000,
+            '電力消費量（その他）[MWh]'  : resultJson["for_CGS"]["Edesign_MWh_day"],
+        }, index=bc.date_1year)
 
-    df_daily_energy.to_csv(output_dir + 'result_OT_Energy_daily.csv', index_label="日時", encoding='CP932')
+        df_daily_energy.to_csv(prefix + 'result_OT_Energy_daily.csv', index_label="日時", encoding='CP932')
 
 
     ##----------------------------------------------------------------------------------
