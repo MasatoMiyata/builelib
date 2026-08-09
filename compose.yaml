@@ -8,6 +8,8 @@ services:
       - OMP_NUM_THREADS=1
       - MKL_NUM_THREADS=1
       - OPENBLAS_NUM_THREADS=1
+      - BUILELIB_DATA_DIR=/usr/src/data
+      - BUILELIB_PROJECTS_DIR=/usr/src/data/projects
     volumes:
       - builelib_data:/usr/src/data   # 名前付きボリューム（Apache と共有）
     ports:

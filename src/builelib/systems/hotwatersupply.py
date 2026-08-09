@@ -738,14 +738,14 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
     # CSV出力
     ##----------------------------------------------------------------------------------
     if output_dir != "":
-        output_dir = output_dir + "_"
+        prefix = output_dir + "_"
 
-    df_daily_energy = pd.DataFrame({
-        '一次エネルギー消費量（給湯設備）[GJ]'  : Edesign_MJ_day/1000,
-        '電力消費量（給湯設備）[MWh]'  : Edesign_MWh_Ele_day,
-    }, index=bc.date_1year)
+        df_daily_energy = pd.DataFrame({
+            '一次エネルギー消費量（給湯設備）[GJ]'  : Edesign_MJ_day/1000,
+            '電力消費量（給湯設備）[MWh]'  : Edesign_MWh_Ele_day,
+        }, index=bc.date_1year)
 
-    df_daily_energy.to_csv(output_dir + 'result_HW_Energy_daily.csv', index_label="日時", encoding='CP932')
+        df_daily_energy.to_csv(prefix + 'result_HW_Energy_daily.csv', index_label="日時", encoding='CP932')
 
 
     ##----------------------------------------------------------------------------------

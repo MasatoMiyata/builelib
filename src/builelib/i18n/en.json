@@ -301,7 +301,9 @@
     },
 
     "ac_ahu_heat_exchanger": {
+        "無": "None",
         "全熱交換器無し": "None",
+        "有": "Equiped",
         "全熱交換器あり・様式2-9記載無し": "Equiped",
         "全熱交換器あり・様式2-9記載あり": "Equiped (listed in 2-9)"
     },

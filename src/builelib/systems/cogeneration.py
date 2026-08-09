@@ -793,13 +793,13 @@ def calc_energy(inputdata, resultJson_for_CGS, DEBUG = False, output_dir = "", d
     # CSV出力
     ##----------------------------------------------------------------------------------
     if output_dir != "":
-        output_dir = output_dir + "_"
+        prefix = output_dir + "_"
 
-    df_daily_energy = pd.DataFrame({
-        '創エネルギー量（コジェネ）[GJ]'  : Etotal_cgs_red_d / 1000,
-    }, index=bc.date_1year)
+        df_daily_energy = pd.DataFrame({
+            '創エネルギー量（コジェネ）[GJ]'  : Etotal_cgs_red_d / 1000,
+        }, index=bc.date_1year)
 
-    df_daily_energy.to_csv(output_dir + 'result_CGS_Energy_daily.csv', index_label="日時", encoding='CP932')
+        df_daily_energy.to_csv(prefix + 'result_CGS_Energy_daily.csv', index_label="日時", encoding='CP932')
 
 
     return resultJson

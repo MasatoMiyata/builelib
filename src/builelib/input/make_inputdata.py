@@ -2696,29 +2696,32 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             if (iREF_c_i in data["HeatsourceSystem"]) and (iREF_c_o in data["HeatsourceSystem"]) \
                 and (iREF_h_i in data["HeatsourceSystem"]) and (iREF_h_o in data["HeatsourceSystem"]):
 
-                # 両方とも冷暖同時供給有無が「有」であったら
-                if data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-                    data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-                    data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
-                    data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
+                if "冷房" in data["HeatsourceSystem"][iREF_c_i] and "冷房" in data["HeatsourceSystem"][iREF_c_o] \
+                    and "暖房" in data["HeatsourceSystem"][iREF_h_i] and "暖房" in data["HeatsourceSystem"][iREF_h_o]:
 
-                    data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有"
+                    # 両方とも冷暖同時供給有無が「有」であったら
+                    if data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                        data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                        data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
+                        data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
 
-                # 外調系統だけ冷暖同時であれば（暫定措置）
-                elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
-                    data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-                    data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "無" and \
-                    data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
+                        data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有"
 
-                    data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有（外気負荷）"
+                    # 外調系統だけ冷暖同時であれば（暫定措置）
+                    elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
+                        data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                        data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "無" and \
+                        data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "有":
 
-                # 室負荷系統だけ冷暖同時であれば（暫定措置）
-                elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
-                    data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
-                    data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
-                    data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "無":
+                        data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有（外気負荷）"
 
-                    data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有（室負荷）"
+                    # 室負荷系統だけ冷暖同時であれば（暫定措置）
+                    elif data["HeatsourceSystem"][iREF_c_i]["冷房"]["isSimultaneous_for_ver2"] == "有" and \
+                        data["HeatsourceSystem"][iREF_c_o]["冷房"]["isSimultaneous_for_ver2"] == "無" and \
+                        data["HeatsourceSystem"][iREF_h_i]["暖房"]["isSimultaneous_for_ver2"] == "有" and \
+                        data["HeatsourceSystem"][iREF_h_o]["暖房"]["isSimultaneous_for_ver2"] == "無":
+
+                        data["AirConditioningZone"][zone_name]["isSimultaneousSupply"] = "有（室負荷）"
 
     # isSimultaneous_for_ver2 要素を削除
     for iREF in data["HeatsourceSystem"]:

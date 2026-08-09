@@ -153,7 +153,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             HEAT_SOURCE_PERFORMANCE.update(inputdata["SpecialInputData"]["heatsource_performance"])
 
     # 任意入力 室使用条件入力シート
-    if "room_usage_condition" in inputdata["SpecialInputData"]:
+    if "SpecialInputData" in inputdata and "room_usage_condition" in inputdata["SpecialInputData"]:
         for buildling_type in inputdata["SpecialInputData"]["room_usage_condition"]:
             for room_type in inputdata["SpecialInputData"]["room_usage_condition"][buildling_type]:
                 base_room_type = inputdata["SpecialInputData"]["room_usage_condition"][buildling_type][room_type]["ベースとする室用途"]
@@ -336,10 +336,13 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ## 他人から供給された熱の一次エネルギー換算係数（デフォルト）
     ##----------------------------------------------------------------------------------
 
-    if inputdata["Building"]["Coefficient_DHC"]["Cooling"] == None:
+    if inputdata["Building"].get("Coefficient_DHC") is None:
+        inputdata["Building"]["Coefficient_DHC"] = {"Cooling": None, "Heating": None}
+
+    if inputdata["Building"]["Coefficient_DHC"].get("Cooling") is None:
         inputdata["Building"]["Coefficient_DHC"]["Cooling"] = 1.36
 
-    if inputdata["Building"]["Coefficient_DHC"]["Heating"] == None:
+    if inputdata["Building"]["Coefficient_DHC"].get("Heating") is None:
         inputdata["Building"]["Coefficient_DHC"]["Heating"] = 1.36
 
 
@@ -667,11 +670,17 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ## 外壁の面積の計算（解説書 2.4.2.1）
     ##----------------------------------------------------------------------------------
 
+    # 省略されたキーをデフォルト初期化
+    if "EnvelopeSet" not in inputdata:
+        inputdata["EnvelopeSet"] = {}
+    if "WindowConfigure" not in inputdata:
+        inputdata["WindowConfigure"] = {}
+
     # 外皮面積の算出
     for room_zone_name in inputdata["EnvelopeSet"]:
 
         for wall_id, wall_configure in enumerate(inputdata["EnvelopeSet"][room_zone_name]["WallList"]):
-            
+
             if inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["EnvelopeArea"] == None:  # 外皮面積が空欄であれば、外皮の寸法から面積を計算。
 
                 inputdata["EnvelopeSet"][room_zone_name]["WallList"][wall_id]["EnvelopeArea"] = \
@@ -1413,6 +1422,10 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     ##----------------------------------------------------------------------------------
     ## 二次ポンプ群の一次エネルギー消費量（解説書 2.6）
     ##----------------------------------------------------------------------------------
+
+    # 省略された場合は空辞書で初期化
+    if "SecondaryPumpSystem" not in inputdata:
+        inputdata["SecondaryPumpSystem"] = {}
 
     # 二次ポンプが空欄であった場合、ダミーの仮想ポンプを追加する。
     number = 0
@@ -3049,11 +3062,17 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
             resultJson["PUMP"][pump_name]["運転時間[時間]"] = np.sum(resultJson["PUMP"][pump_name]["Tps"],0)
             resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] = np.sum(resultJson["PUMP"][pump_name]["Qps"],0)
-            resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] = \
-                resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] * 1000 \
-                / (resultJson["PUMP"][pump_name]["運転時間[時間]"] * 3600)
+            if resultJson["PUMP"][pump_name]["運転時間[時間]"] > 0:
+                resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] = \
+                    resultJson["PUMP"][pump_name]["年間処理熱量[MJ]"] * 1000 \
+                    / (resultJson["PUMP"][pump_name]["運転時間[時間]"] * 3600)
+            else:
+                resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] = 0
 
-            resultJson["PUMP"][pump_name]["平均負荷率[-]"] = resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] / resultJson["PUMP"][pump_name]["定格能力[kW]"]
+            if resultJson["PUMP"][pump_name]["定格能力[kW]"] > 0:
+                resultJson["PUMP"][pump_name]["平均負荷率[-]"] = resultJson["PUMP"][pump_name]["平均処理熱量[kW]"] / resultJson["PUMP"][pump_name]["定格能力[kW]"]
+            else:
+                resultJson["PUMP"][pump_name]["平均負荷率[-]"] = 0
 
             resultJson["PUMP"][pump_name]["台数制御の有無"] = inputdata["PUMP"][pump_name]["isStagingControl"]
             resultJson["PUMP"][pump_name]["電力消費量[MWh]"] = np.sum(resultJson["PUMP"][pump_name]["E_pump_day"], 0)
@@ -4647,7 +4666,10 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
     ##----------------------------------------------------------------------------------
     ## CGS計算用変数 （解説書 ８章 附属書 G.10 他の設備の計算結果の読み込み）
-    ##----------------------------------------------------------------------------------    
+    ##----------------------------------------------------------------------------------
+
+    if "CogenerationSystems" not in inputdata:
+        inputdata["CogenerationSystems"] = {}
 
     if len(inputdata["CogenerationSystems"]) == 1: # コジェネがあれば実行
 
@@ -4806,10 +4828,9 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         del resultJson["PUMP"][pump_name]
 
     ##----------------------------------------------------------------------------------
-    # CSV出力
+    # CSV出力（output_dir が指定されている場合のみ）
     ##----------------------------------------------------------------------------------
-    if output_dir != "":
-        output_dir = output_dir + "_"
+    prefix = (output_dir + "_") if output_dir != "" else None
 
     dump_items = {}
     for room_zone_name in resultJson["Qroom"]:
@@ -4817,7 +4838,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         dump_items[ room_zone_name + " 熱取得（暖房）[MJ]"] = resultJson["Qroom"][room_zone_name]["QroomDh"]
 
     df_daily_ahu = pd.DataFrame(dump_items, index=bc.date_1year)
-    df_daily_ahu.to_csv(output_dir + 'result_AC_ROOM_daily.csv', index_label="日時", encoding='shift-jis')
+    if prefix: df_daily_ahu.to_csv(prefix + 'result_AC_ROOM_daily.csv', index_label="日時", encoding='shift-jis')
 
     dump_items = {}
     for ahu_name in resultJson["AHU"]:
@@ -4832,7 +4853,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         dump_items[ ahu_name + " 全熱熱交換器の電力消費量 [MWh]"]   = resultJson["AHU"][ahu_name]["E_AHUaex_day"]
 
     df_daily_ahu = pd.DataFrame(dump_items, index=bc.date_1year)
-    df_daily_ahu.to_csv(output_dir + 'result_AC_AHU_daily.csv', index_label="日時", encoding='CP932')
+    if prefix: df_daily_ahu.to_csv(prefix + 'result_AC_AHU_daily.csv', index_label="日時", encoding='CP932')
 
     dump_items = {}
     for pump_name in resultJson["PUMP"]:
@@ -4841,7 +4862,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         dump_items[ pump_name + " 電力消費量 [MWh]"] = resultJson["PUMP"][pump_name]["E_pump_day"]
 
     df_daily_pump = pd.DataFrame(dump_items, index=bc.date_1year)
-    df_daily_pump.to_csv(output_dir + 'result_AC_PUMP_daily.csv', index_label="日時", encoding='CP932')
+    if prefix: df_daily_pump.to_csv(prefix + 'result_AC_PUMP_daily.csv', index_label="日時", encoding='CP932')
 
     dump_items = {}
     for ref_name in resultJson["REF"]:
@@ -4866,7 +4887,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         dump_items[ ref_name + " 冷却水ポンプ・消費電力 [kW]"] = resultJson["REF"][ref_name]["E_ref_ct_pump"]
 
     df_daily_ref = pd.DataFrame(dump_items, index=bc.date_1year)
-    df_daily_ref.to_csv(output_dir + 'result_AC_REF_daily.csv', index_label="日時", encoding='CP932')
+    if prefix: df_daily_ref.to_csv(prefix + 'result_AC_REF_daily.csv', index_label="日時", encoding='CP932')
 
     df_daily_energy = pd.DataFrame({
         '一次エネルギー消費量（空調機群）[GJ]'    : resultJson["日別エネルギー消費量"]["一次エネルギー消費量（空調機群）[GJ]"],
@@ -4879,7 +4900,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         '電力消費量（熱源群・補機）[MWh]': resultJson["日別エネルギー消費量"]["電力消費量（熱源群・補機）[MWh]"],
     }, index=bc.date_1year)
 
-    df_daily_energy.to_csv(output_dir + 'result_AC_Energy_daily.csv', index_label="日時", encoding='CP932')
+    if prefix: df_daily_energy.to_csv(prefix + 'result_AC_Energy_daily.csv', index_label="日時", encoding='CP932')
 
 
 
@@ -4969,19 +4990,19 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     
     # 室毎の計算結果
     df_room_result = pd.DataFrame.from_dict(resultJson["Qroom"], orient='index')
-    df_room_result.to_csv(output_dir + 'result_AC_Qroom.csv', index_label="室名称", encoding='CP932')
+    if prefix: df_room_result.to_csv(prefix + 'result_AC_Qroom.csv', index_label="室名称", encoding='CP932')
 
     # 空調機群毎の計算結果
     df_ahu_result = pd.DataFrame.from_dict(resultJson["AHU"], orient='index')
-    df_ahu_result.to_csv(output_dir + 'result_AC_AHU.csv', index_label="空調機群名称", encoding='CP932')
+    if prefix: df_ahu_result.to_csv(prefix + 'result_AC_AHU.csv', index_label="空調機群名称", encoding='CP932')
 
     # 二次ポンプ群毎の計算結果
     df_pump_result = pd.DataFrame.from_dict(resultJson["PUMP"], orient='index')
-    df_pump_result.to_csv(output_dir + 'result_AC_PUMP.csv', index_label="二次ポンプ群名称", encoding='CP932')
+    if prefix: df_pump_result.to_csv(prefix + 'result_AC_PUMP.csv', index_label="二次ポンプ群名称", encoding='CP932')
 
     # 熱源群毎の計算結果
     df_ref_result = pd.DataFrame.from_dict(resultJson["REF"], orient='index')
-    df_ref_result.to_csv(output_dir + 'result_AC_REF.csv', index_label="熱源群名称", encoding='CP932')
+    if prefix: df_ref_result.to_csv(prefix + 'result_AC_REF.csv', index_label="熱源群名称", encoding='CP932')
 
 
 
@@ -5020,4 +5041,4 @@ if __name__ == '__main__':  # pragma: no cover
     #     print( f'--- 熱源群名 {ref_name} ---')
     #     print( f'熱源群の熱源負荷 Qref: {np.sum(resultJson["REF"][ref_name]["Qref"],0)}' )
         
-    print( f'設計一次エネルギー消費量 全体: {resultJson["設計一次エネルギー消費量[MJ/年]"]}') 
+    print( f'設計一次エネルギー消費量 全体: {resultJson["設計一次エネルギー消費量[MJ/年]"]}')
