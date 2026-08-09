@@ -12,12 +12,14 @@ pytest + FastAPI TestClient を使用。
 import json
 import sys
 import os
+import uuid
 import pytest
 
 # main.py が builelib/ 直下にあるため sys.path に追加
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi.testclient import TestClient
+import main as main_module
 from main import app
 
 client = TestClient(app)
@@ -60,6 +62,13 @@ def sample_001_payload():
         return json.load(f)
 
 
+@pytest.fixture
+def project_dir(tmp_path, monkeypatch):
+    """プロジェクト保存先をテスト専用ディレクトリへ切り替える"""
+    monkeypatch.setattr(main_module, "PROJECTS_DIR", tmp_path)
+    return tmp_path
+
+
 # ================================================================
 # GET /  — 稼働確認
 # ================================================================
@@ -73,6 +82,65 @@ def test_root_returns_running_status():
     assert data["service"] == "builelib API"
     assert "version" in data
     assert "docs" in data
+
+
+# ================================================================
+# セキュリティ設定
+# ================================================================
+
+def test_cors_allows_builelib_net():
+    """builelib.net からのCORSプリフライトを許可する"""
+    response = client.options(
+        "/validate",
+        headers={
+            "Origin": "https://builelib.net",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "Content-Type",
+        },
+    )
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "https://builelib.net"
+
+
+def test_cors_rejects_unknown_origin():
+    """許可していないオリジンへCORSヘッダーを返さない"""
+    response = client.options(
+        "/validate",
+        headers={
+            "Origin": "https://example.com",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+    assert response.status_code == 400
+    assert "access-control-allow-origin" not in response.headers
+
+
+def test_request_body_size_limit(monkeypatch):
+    """上限を超えるリクエストボディを拒否する"""
+    monkeypatch.setattr(main_module, "MAX_REQUEST_BODY_BYTES", 32)
+    response = client.post(
+        "/validate",
+        content=b'{"value":"' + (b"a" * 64) + b'"}',
+        headers={"Content-Type": "application/json"},
+    )
+    assert response.status_code == 413
+
+
+def test_request_body_actual_size_limit_without_content_length(monkeypatch):
+    """Content-Lengthがなくても実データ量で上限を検査する"""
+    monkeypatch.setattr(main_module, "MAX_REQUEST_BODY_BYTES", 32)
+
+    def body_chunks():
+        yield b'{"value":"'
+        yield b"a" * 64
+        yield b'"}'
+
+    response = client.post(
+        "/validate",
+        content=body_chunks(),
+        headers={"Content-Type": "application/json"},
+    )
+    assert response.status_code == 413
 
 
 # ================================================================
@@ -255,6 +323,50 @@ def test_calculate_no_file_output(tmp_path, minimal_payload):
 
 
 # ================================================================
+# GET /calculate  — Excelファイルベース計算
+# ================================================================
+
+def test_calculate_from_file_accepts_shared_data_file(tmp_path, monkeypatch):
+    """共有データ領域内のExcelファイルを受け付ける"""
+    shared_dir = tmp_path / "shared"
+    shared_dir.mkdir()
+    input_file = shared_dir / "input.xlsx"
+    input_file.write_bytes(b"dummy")
+
+    called_with = []
+    monkeypatch.setattr(main_module, "SHARED_DATA_DIR", shared_dir)
+    monkeypatch.setattr(main_module, "calculate", lambda file_name: called_with.append(file_name))
+
+    response = client.get("/calculate", params={"file_name": "input.xlsx"})
+    assert response.status_code == 200
+    assert called_with == [str(input_file.resolve())]
+
+
+def test_calculate_from_file_rejects_outside_shared_data(tmp_path, monkeypatch):
+    """共有データ領域外のファイルを拒否する"""
+    shared_dir = tmp_path / "shared"
+    shared_dir.mkdir()
+    outside_file = tmp_path / "outside.xlsx"
+    outside_file.write_bytes(b"dummy")
+    monkeypatch.setattr(main_module, "SHARED_DATA_DIR", shared_dir)
+
+    response = client.get("/calculate", params={"file_name": str(outside_file)})
+    assert response.status_code == 403
+
+
+def test_calculate_from_file_rejects_unsupported_extension(tmp_path, monkeypatch):
+    """共有データ領域内でもExcel以外のファイルを拒否する"""
+    shared_dir = tmp_path / "shared"
+    shared_dir.mkdir()
+    input_file = shared_dir / "input.txt"
+    input_file.write_text("dummy", encoding="utf-8")
+    monkeypatch.setattr(main_module, "SHARED_DATA_DIR", shared_dir)
+
+    response = client.get("/calculate", params={"file_name": str(input_file)})
+    assert response.status_code == 400
+
+
+# ================================================================
 # POST /project/{id}/save + GET /project/{id}  — プロジェクト管理
 # ================================================================
 
@@ -264,20 +376,18 @@ def test_project_list_endpoint_is_not_available():
     assert response.status_code == 404
 
 
-def test_save_project_with_new_generates_uuid(minimal_payload):
+def test_save_project_with_new_generates_uuid(minimal_payload, project_dir):
     """project_id=new で保存すると UUID が採番される"""
     response = client.post("/project/new/save", json=minimal_payload)
     assert response.status_code == 200
     data = response.json()
     assert "project_id" in data
     assert "saved_at" in data
-    # UUID フォーマット確認（8-4-4-4-12）
     pid = data["project_id"]
-    parts = pid.split("-")
-    assert len(parts) == 5
+    assert uuid.UUID(pid).version == 4
 
 
-def test_save_and_load_project_roundtrip(minimal_payload):
+def test_save_and_load_project_roundtrip(minimal_payload, project_dir):
     """保存したプロジェクトを読み込むと同じデータが返る"""
     # 保存
     save_resp = client.post("/project/new/save", json=minimal_payload)
@@ -295,9 +405,9 @@ def test_save_and_load_project_roundtrip(minimal_payload):
     assert loaded["data"]["Rooms"] == minimal_payload["Rooms"]
 
 
-def test_save_project_with_explicit_id(minimal_payload):
+def test_save_project_with_explicit_id(minimal_payload, project_dir):
     """明示的な project_id で保存・上書きができる"""
-    pid = "test-project-explicit-id-12345"
+    pid = str(uuid.uuid4())
     r1 = client.post(f"/project/{pid}/save", json=minimal_payload)
     assert r1.status_code == 200
     assert r1.json()["project_id"] == pid
@@ -308,9 +418,18 @@ def test_save_project_with_explicit_id(minimal_payload):
     assert r2.json()["project_id"] == pid
 
 
-def test_load_nonexistent_project_returns_404():
+def test_invalid_project_id_is_rejected(minimal_payload, project_dir):
+    """UUID v4以外の project_id を拒否する"""
+    invalid_id = "test-project-explicit-id-12345"
+    save_response = client.post(f"/project/{invalid_id}/save", json=minimal_payload)
+    load_response = client.get(f"/project/{invalid_id}")
+    assert save_response.status_code == 400
+    assert load_response.status_code == 400
+
+
+def test_load_nonexistent_project_returns_404(project_dir):
     """存在しない project_id は 404 を返す"""
-    response = client.get("/project/this-project-does-not-exist-xyz-999")
+    response = client.get(f"/project/{uuid.uuid4()}")
     assert response.status_code == 404
 
 

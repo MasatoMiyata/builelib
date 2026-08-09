@@ -21,8 +21,9 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from builelib.runner import calculate, calculate_from_json
@@ -41,17 +42,72 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS設定（Vue 3 フロントエンドからのアクセスを許可）
+# 共有データディレクトリ
+SHARED_DATA_DIR = Path(os.environ.get("BUILELIB_DATA_DIR", "/usr/src/data"))
+
+# リクエストボディの上限（既定値: 30 MiB）
+MAX_REQUEST_BODY_BYTES = int(
+    os.environ.get("BUILELIB_MAX_REQUEST_BODY_BYTES", str(30 * 1024 * 1024))
+)
+
+# CORS許可元。複数指定する場合はカンマ区切りで設定する。
+CORS_ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        "BUILELIB_CORS_ALLOWED_ORIGINS",
+        "https://builelib.net",
+    ).split(",")
+    if origin.strip()
+]
+
+
+@app.middleware("http")
+async def limit_request_body_size(request: Request, call_next):
+    """POST等のリクエストボディが上限を超える場合は拒否する。"""
+    if request.method not in {"POST", "PUT", "PATCH"}:
+        return await call_next(request)
+
+    content_length = request.headers.get("content-length")
+    if content_length is not None:
+        try:
+            declared_size = int(content_length)
+        except ValueError:
+            return JSONResponse(status_code=400, content={"detail": "Content-Length が不正です"})
+        if declared_size < 0:
+            return JSONResponse(status_code=400, content={"detail": "Content-Length が不正です"})
+        if declared_size > MAX_REQUEST_BODY_BYTES:
+            return JSONResponse(
+                status_code=413,
+                content={"detail": "リクエストサイズが上限を超えています"},
+            )
+
+    # Content-Length が省略・偽装された場合に備えて実データ量も確認する。
+    body = await request.body()
+    if len(body) > MAX_REQUEST_BODY_BYTES:
+        return JSONResponse(
+            status_code=413,
+            content={"detail": "リクエストサイズが上限を超えています"},
+        )
+
+    return await call_next(request)
+
+
+# CORS設定（本番環境では builelib.net のみ許可）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],        # 本番環境では特定ドメインに絞ること
+    allow_origins=CORS_ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
 
 # プロジェクト保存ディレクトリ（永続ボリューム /usr/src/data にマウントされる）
-PROJECTS_DIR = Path(os.environ.get("BUILELIB_PROJECTS_DIR", "/usr/src/data/projects"))
+PROJECTS_DIR = Path(
+    os.environ.get("BUILELIB_PROJECTS_DIR", str(SHARED_DATA_DIR / "projects"))
+)
+
+# Excelファイルベース計算で許可する拡張子
+ALLOWED_INPUT_EXTENSIONS = {".xlsx", ".xlsm"}
 
 # JSONスキーマのパス
 _SCHEMA_PATH = Path(__file__).parent / "src/builelib/input/inputdata/webproJsonSchema.json"
@@ -69,6 +125,47 @@ def _get_schema() -> dict:
         with open(_SCHEMA_PATH, encoding="utf-8") as f:
             _CACHED_SCHEMA = json.load(f)
     return _CACHED_SCHEMA
+
+
+def _normalize_project_id(project_id: str) -> str:
+    """project_id をUUID v4として検証し、正規化した文字列を返す。"""
+    try:
+        parsed_id = uuid.UUID(project_id)
+    except (ValueError, AttributeError):
+        raise HTTPException(status_code=400, detail="project_id はUUID v4形式で指定してください")
+
+    if parsed_id.version != 4:
+        raise HTTPException(status_code=400, detail="project_id はUUID v4形式で指定してください")
+
+    return str(parsed_id)
+
+
+def _resolve_calculation_file(file_name: str) -> Path:
+    """計算対象が共有データ領域内の許可されたExcelファイルであることを確認する。"""
+    shared_data_dir = SHARED_DATA_DIR.resolve()
+    requested_path = Path(file_name)
+    if not requested_path.is_absolute():
+        requested_path = shared_data_dir / requested_path
+    resolved_path = requested_path.resolve()
+
+    try:
+        resolved_path.relative_to(shared_data_dir)
+    except ValueError:
+        raise HTTPException(
+            status_code=403,
+            detail="共有データ領域外のファイルは指定できません",
+        )
+
+    if resolved_path.suffix.lower() not in ALLOWED_INPUT_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail="計算対象は .xlsx または .xlsm ファイルに限定されています",
+        )
+
+    if not resolved_path.is_file():
+        raise HTTPException(status_code=404, detail="計算対象ファイルが見つかりません")
+
+    return resolved_path
 
 
 # ----------------------------------------------------------------
@@ -149,16 +246,12 @@ def calculate_from_file(file_name: str):
     既存のExcelファイルパスを指定して計算する。
     計算結果をファイル(json, CSV等)に書き出す。
     """
-    if not os.path.exists(file_name):
-        raise HTTPException(
-            status_code=404,
-            detail=f"ファイルが見つかりません: {file_name}"
-        )
+    input_path = _resolve_calculation_file(file_name)
     try:
-        calculate(file_name)
+        calculate(str(input_path))
         return {
             "status": "ok",
-            "message": f"計算完了。結果ファイルを確認してください: {file_name}",
+            "message": f"計算完了。結果ファイルを確認してください: {input_path.name}",
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"計算エラー: {str(e)}")
@@ -295,6 +388,8 @@ def save_project(project_id: str, inputdata: BuildingInputData):
     # "new" の場合は UUID を自動採番
     if project_id == "new":
         project_id = str(uuid.uuid4())
+    else:
+        project_id = _normalize_project_id(project_id)
 
     # ディレクトリ作成
     PROJECTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -334,6 +429,7 @@ def load_project(project_id: str):
     }
     ```
     """
+    project_id = _normalize_project_id(project_id)
     save_path = PROJECTS_DIR / f"{project_id}.json"
 
     if not save_path.exists():
