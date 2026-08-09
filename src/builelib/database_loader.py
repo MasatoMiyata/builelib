@@ -6,15 +6,15 @@ builelibのデータベースJSONファイルを一括で読み込み、管理�
 設計方針
 --------
 * database/*.json が「正」のデータソース
-* SPシートの追加データはここで一元的にマージする
-* 各計算モジュールはこのモジュールが返す辞書を使うだけでよい
+* 標準データベースの読み込みをこのモジュールに集約する
+* SPシートの追加データは、各計算モジュールが SpecialInputData を参照して反映する
 
 使用例
 ------
     from builelib import database_loader
 
     # 計算前に一度だけ呼ぶ
-    db = database_loader.load_all_databases(inputdata.get("SpecialInputData", {}))
+    db = database_loader.load_all_databases()
 
     # 各計算モジュールに渡す
     lighting.calc_energy(inputdata, db=db)
@@ -128,12 +128,18 @@ _db_files = {
 
 def load_all_databases(db_files: dict = _db_files) -> dict:
     """
-    全データベースJSONを一括で読み込み、SPシートの追加データをマージして返す。
+    指定されたデータベースJSONを一括で読み込んで返す。
+
+    Parameters
+    ----------
+    db_files : dict
+        キーをDB識別名、値を database/ 以下のJSONファイル名とする辞書。
+        省略時は標準データベース一式を読み込む。
 
     Returns
     -------
     dict
-        キー = DB識別名、値 = マージ済みDB辞書。
+        キー = DB識別名、値 = 読み込み済みDB辞書。
     """
     # データベースの読み込み
     db = {}

@@ -125,11 +125,9 @@ def calculate(inputfile_name, exec_calculation=True):
     if "SpecialInputData" not in inputdata:
         inputdata["SpecialInputData"] = {}
         
-    # データベースの一括読み込み
-    # SPシートの追加データ（flow_control, room_usage_condition 等）も含めてマージ済みの
-    # db 辞書を生成し、各設備の calc_energy() に渡す。
-    # これにより各モジュールでの個別 DB 読み込みと SP 追加処理が不要になる。
-    # db = database_loader.load_all_databases()
+    # データベース
+    # Excel入力ではSPシートの追加データを各計算モジュールで反映するため、
+    # db=None とし、各モジュール側で標準DBを読み込む。
     db = None
 
     #------------------------------------
@@ -621,11 +619,10 @@ def calculate_from_json(inputdata: dict) -> dict:
 
     #------------------------------------
     # データベースの一括読み込み
-    # SPシートの追加データ（flow_control, room_usage_condition 等）も含めてマージ済みの
-    # db 辞書を生成し、各設備の calc_energy() に渡す。
-    # これにより各モジュールでの個別 DB 読み込みと SP 追加処理が不要になる。
+    # 標準DBを一度だけ読み込み、各設備の calc_energy() に渡す。
+    # SpecialInputData の追加データは各計算モジュールで反映する。
     #------------------------------------
-    db = database_loader.load_all_databases(inputdata["SpecialInputData"])
+    db = database_loader.load_all_databases()
 
     #------------------------------------
     # 空気調和設備の計算
