@@ -4,34 +4,33 @@
 
 ### Building Energy-modeling Library
 
-**非住宅建築物エネルギー消費量計算プログラム**
+**Annual energy consumption calculation program for non-residential buildings**
 
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/MasatoMiyata/builelib)
 [![uv](https://img.shields.io/badge/managed%20by-uv-7C3AED?logo=astral)](https://docs.astral.sh/uv/)
 
-[English](README.en.md) | [ウェブサイト](https://builelib.net/) | [マニュアル](https://builelib.net/manual/)
+[日本語](README.ja.md) | [Website](https://builelib.net/) | [Manual](https://builelib.net/manual/)
 
 </div>
 
-## 概要
+## Overview
 
-Builelibは、非住宅建築物の年間エネルギー消費量を計算するPythonライブラリです。
-建築物省エネ基準に基づくWEBPRO（非住宅版）の計算方法をPythonで再現しています。
+Builelib is a Python library for calculating the annual energy consumption of non-residential buildings. It implements the calculation methods used by Japan's Building Energy Conservation Standard program for non-residential buildings (WEBPRO).
 
-Excel入力シートを使用するCLIのほか、Python API、JSONを使用するFastAPI、Dockerによる実行に対応しています。
+Builelib provides an Excel-based CLI, a Python API, a JSON-based FastAPI application, and a Docker configuration.
 
-## 動作環境
+## Requirements
 
-- Python 3.12以上
+- Python 3.12 or later
 - [uv](https://docs.astral.sh/uv/)
 - Git
-- Docker（コンテナで実行する場合のみ）
+- Docker, only when running the containerized API
 
-## セットアップ
+## Setup
 
-### 1. uvのインストール
+### 1. Install uv
 
 Windows PowerShell:
 
@@ -45,7 +44,7 @@ macOS / Linux:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### 2. リポジトリと依存関係の準備
+### 2. Clone the repository and install dependencies
 
 ```bash
 git clone https://github.com/MasatoMiyata/builelib.git
@@ -53,56 +52,56 @@ cd builelib
 uv sync --locked
 ```
 
-`uv sync` により、仮想環境 `.venv` の作成と依存関係のインストールが行われます。`--locked` は、コミットされている `uv.lock` の内容を変更せずに使用します。
+`uv sync` creates the `.venv` virtual environment and installs the dependencies. `--locked` uses the committed `uv.lock` without changing it.
 
-## CLIで実行する
+## Run from the CLI
 
-### 計算を実行する
+### Run a calculation
 
 ```bash
 uv run builelib <inputfile>
 ```
 
-`<inputfile>` は実際の `.xlsx` または `.xlsm` ファイルのパスに置き換えます。括弧 `< >` 自体は入力しません。
+Replace `<inputfile>` with the path to an actual `.xlsx` or `.xlsm` file. Do not type the angle brackets themselves.
 
-リポジトリ付属のサンプルを実行する例:
+Example using the included sample file:
 
 ```bash
 uv run builelib ./examples/Builelib_inputSheet_sample_001.xlsx
 ```
 
-パスに空白が含まれる場合は引用符で囲みます。
+Quote paths that contain spaces.
 
 ```powershell
 uv run builelib "C:\path with spaces\input.xlsx"
 ```
 
-### 入力検証のみ実行する
+### Validate input without calculating
 
-第2引数に `False` を指定すると、エネルギー計算を行わず、Excelの読み込みと入力検証のみを実行します。
+Pass `False` as the second argument to parse and validate the Excel input without running the energy calculations.
 
 ```bash
 uv run builelib <inputfile> False
 ```
 
-入力検証のみの場合も、入力データ、検証結果、設備別結果およびZIPファイルが出力されます。
+Validation-only mode still writes the converted input, validation results, per-system result files, and a ZIP archive.
 
-### 出力ファイル
+### Output files
 
-結果は入力Excelファイルと同じディレクトリに出力されます。既存の同名ファイルは上書きされます。
+Output files are written next to the input Excel file. Existing files with the same names are overwritten.
 
-| 出力名 | 内容 |
+| Output name | Contents |
 |---|---|
-| `<name>_input.json` | Excelから変換した入力データ |
-| `<name>_validation.json` | 入力検証結果 |
-| `<name>_result.json` | BEIなどの計算結果 |
-| `<name>_result_*.json` | 設備別の計算結果 |
-| `<name>_result_*.csv` | 設備別・時系列などの詳細結果（通常計算時） |
-| `<name>.zip` | 主な出力ファイルをまとめたZIP |
+| `<name>_input.json` | Input data converted from Excel |
+| `<name>_validation.json` | Input validation results |
+| `<name>_result.json` | Calculation results, including BEI |
+| `<name>_result_*.json` | Per-system calculation results |
+| `<name>_result_*.csv` | Detailed per-system or time-series results from a full calculation |
+| `<name>.zip` | ZIP archive containing the main output files |
 
-## Pythonから実行する
+## Run from Python
 
-### Excelファイルを計算する
+### Calculate from an Excel file
 
 ```python
 from builelib.runner import calculate
@@ -110,15 +109,15 @@ from builelib.runner import calculate
 calculate("./examples/Builelib_inputSheet_sample_001.xlsx")
 ```
 
-`calculate()` は結果を返すのではなく、入力Excelファイルと同じディレクトリへJSON、CSV、ZIPを出力します。入力検証のみを行う場合は、第2引数に `False` を指定します。
+`calculate()` writes JSON, CSV, and ZIP files next to the input Excel file instead of returning the results. Pass `False` as the second argument to validate the input only.
 
 ```python
 calculate("./examples/Builelib_inputSheet_sample_001.xlsx", False)
 ```
 
-### JSONデータをメモリ上で計算する
+### Calculate from JSON data in memory
 
-`calculate_from_json()` はwebproJsonSchema準拠の辞書を受け取り、ファイルを作成せずに結果を辞書で返します。
+`calculate_from_json()` accepts a dictionary that conforms to webproJsonSchema and returns a result dictionary without creating files.
 
 ```python
 from builelib.runner import calculate_from_json
@@ -128,80 +127,80 @@ print(output["result"])
 print(output["errors"])
 ```
 
-## Web APIを起動する
+## Run the Web API
 
-ローカル開発サーバーを起動します。
+Start the local development server:
 
 ```bash
 uv run uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-起動後、次のURLでAPI仕様と対話型ドキュメントを確認できます。
+After the server starts, open the interactive API documentation:
 
 - Swagger UI: <http://127.0.0.1:8000/docs>
 - ReDoc: <http://127.0.0.1:8000/redoc>
 
-主なエンドポイント:
+Main endpoints:
 
-| メソッド | パス | 内容 |
+| Method | Path | Description |
 |---|---|---|
-| `GET` | `/` | 稼働確認 |
-| `GET` | `/calculate` | サーバー上のExcelファイルを計算 |
-| `POST` | `/calculate` | JSON入力データを計算 |
-| `POST` | `/validate` | JSON入力データを検証 |
-| `GET` | `/schema` | JSONスキーマを取得 |
-| `GET` | `/options` | 入力値の選択肢を取得 |
-| `POST` | `/project/{project_id}/save` | プロジェクトを保存 |
-| `GET` | `/project/{project_id}` | プロジェクトを読み込み |
+| `GET` | `/` | Health check |
+| `GET` | `/calculate` | Calculate from an Excel file on the server |
+| `POST` | `/calculate` | Calculate from JSON input data |
+| `POST` | `/validate` | Validate JSON input data |
+| `GET` | `/schema` | Retrieve the JSON schema |
+| `GET` | `/options` | Retrieve the available input options |
+| `POST` | `/project/{project_id}/save` | Save a project |
+| `GET` | `/project/{project_id}` | Load a project |
 
-## Dockerで起動する
+## Run with Docker
 
-`compose.yaml` は外部volumeと外部networkを使用します。初回のみ作成してください。
+`compose.yaml` uses an external volume and an external network. Create them once before the first start.
 
 ```bash
 docker volume create builelib_data
 docker network create mynetwork
 ```
 
-イメージをビルドして起動します。
+Build and start the service:
 
 ```bash
 docker compose up --build -d
 ```
 
-起動後のAPIドキュメントは <http://localhost:8081/docs> です。
+The API documentation is available at <http://localhost:8081/docs>.
 
-停止する場合:
+Stop the service with:
 
 ```bash
 docker compose down
 ```
 
-外部volume `builelib_data` は `docker compose down` では削除されません。
+The external `builelib_data` volume is not removed by `docker compose down`.
 
-## 入力データの作成
+## Create input data
 
-建築物仕様の入力にはWEBPROの入力シートを使用します。入力方法はWEBPROと同じです。
+Enter the building specifications in a WEBPRO input sheet, using the same input procedure as WEBPRO.
 
-WEBPRO入力シートにBuilelib専用の **SPシート（様式SP）** を追加すると、計算条件を詳細に指定できます。サンプルは [`examples`](examples/) にあります。
+Add the Builelib-specific **SP sheet (Form SP)** to the WEBPRO input sheet to specify detailed calculation conditions. Sample files are available in [`examples`](examples/).
 
-詳しくは[マニュアル](https://builelib.net/manual/)を参照してください。
+See the [manual](https://builelib.net/manual/) for details.
 
-## テスト
+## Tests
 
 ```bash
 uv run python -m pytest tests
 ```
 
-特定のテストだけを実行する例:
+Example that runs a specific test file:
 
 ```bash
 uv run python -m pytest tests/test_api.py -v
 ```
 
-## 開発環境の削除
+## Remove the development environment
 
-Builelibはリポジトリ内の `.venv` にインストールされます。開発環境が不要になった場合は、リポジトリの親ディレクトリへ移動して `builelib` ディレクトリを削除します。
+Builelib is installed in the repository-local `.venv`. To remove the development environment, move to the repository's parent directory and delete the `builelib` directory.
 
 Windows PowerShell:
 
@@ -217,13 +216,13 @@ cd ..
 rm -rf ./builelib
 ```
 
-## 参考資料
+## References
 
-- [WEBPRO（非住宅版）](https://building.app.lowenergy.jp/)
-- [計算方法ドキュメント](https://webpro-nr.github.io/BESJP_EngineeringReference/index.html)
-- [計算方法ソース](https://github.com/WEBPRO-NR/BESJP_EngineeringReference)
+- [WEBPRO for non-residential buildings](https://building.app.lowenergy.jp/)
+- [Engineering reference](https://webpro-nr.github.io/BESJP_EngineeringReference/index.html)
+- [Engineering reference source](https://github.com/WEBPRO-NR/BESJP_EngineeringReference)
 
-## ライセンス
+## License
 
 [MIT License](LICENSE)
 
