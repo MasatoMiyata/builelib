@@ -107,7 +107,7 @@ By adding a Builelib-specific **SP sheet (Form SP)** to the WEBPRO input sheet, 
 WEBPRO の入力シートに Builelib 専用の **SP シート（様式 SP）** を追加することにより、
 計算条件を詳細に指定して計算を実行することができます。
 
-📚 **Manual / マニュアル:** https://masatomiyata.github.io/builelib/builelib_manual.html
+📚 **Manual / マニュアル:** https://builelib.net/manual/
 
 ---
 
