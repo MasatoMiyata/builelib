@@ -35,3 +35,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/builelib"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/examples",
+    "/tests",
+]
