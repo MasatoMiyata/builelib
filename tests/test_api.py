@@ -19,6 +19,7 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi.testclient import TestClient
+import builelib
 import main as main_module
 from main import app
 
@@ -80,8 +81,9 @@ def test_root_returns_running_status():
     data = response.json()
     assert data["status"] == "running"
     assert data["service"] == "builelib API"
-    assert "version" in data
+    assert data["version"] == builelib.__version__
     assert "docs" in data
+    assert app.version == builelib.__version__
 
 
 # ================================================================

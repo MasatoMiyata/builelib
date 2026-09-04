@@ -26,6 +26,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+import builelib
 from builelib.runner import calculate, calculate_from_json
 from builelib.input.make_inputdata import get_input_options, normalize_input
 from builelib import database_loader
@@ -36,7 +37,7 @@ from builelib import database_loader
 # ----------------------------------------------------------------
 app = FastAPI(
     title="builelib API",
-    version="2.3.0",
+    version=builelib.__version__,
     description="非住宅建築物エネルギー消費量計算 API",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -236,7 +237,7 @@ def root():
     """APIの稼働確認用エンドポイント"""
     return {
         "service": "builelib API",
-        "version": "2.0.0",
+        "version": builelib.__version__,
         "docs": "/docs",
         "status": "running",
     }

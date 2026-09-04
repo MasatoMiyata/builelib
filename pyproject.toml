@@ -1,6 +1,6 @@
 [project]
 name = "builelib"
-version = "2.1.0"
+version = "2.3.0"
 description = "A simulation program for calculating the annual energy consumption of non-residential buildings."
 authors = [
     {name = "Masato Miyata", email = "miyata-m92ta@mlit.go.jp"}
