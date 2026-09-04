@@ -8,7 +8,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/MasatoMiyata/builelib)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/MasatoMiyata/builelib)
 [![uv](https://img.shields.io/badge/managed%20by-uv-7C3AED?logo=astral)](https://docs.astral.sh/uv/)
 
 [English](README.md) | [ウェブサイト](https://builelib.net/) | [マニュアル](https://builelib.net/manual/)

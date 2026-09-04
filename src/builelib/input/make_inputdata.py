@@ -1662,6 +1662,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     "WallSpec":
                                         check_value(dataBE1[5], "様式2-4.外皮 "+ str(i+1) +"行目:「④外壁名称」", True, None, "文字列", data["WallConfigure"], None, None),  
                                     "WallType": wallType,
+                                    # 接地壁判定で WallType が後から上書きされても、
+                                    # 入力時の「日陰」を表示用途で識別できるよう保持する。
+                                    "OriginalWallType": wallType,
                                     "WindowList":[
                                         {
                                             "WindowID":
@@ -1779,6 +1782,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "WallSpec":
                                 check_value(dataBE1[5], "様式2-4.外皮 "+ str(i+1) +"行目:「④外壁名称」", True, None, "文字列", data["WallConfigure"], None, None),  
                             "WallType": wallType,
+                            # 接地壁判定で WallType が後から上書きされても、
+                            # 入力時の「日陰」を表示用途で識別できるよう保持する。
+                            "OriginalWallType": wallType,
                             "WindowList":[
                                 {
                                     "WindowID":

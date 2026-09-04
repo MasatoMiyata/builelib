@@ -452,6 +452,16 @@
                                     "内壁"
                                 ]
                             },
+                            "OriginalWallType":{
+                                "description": "入力方位から判定した、接地壁への後処理前の外壁の種類",
+                                "type": "string",
+                                "enum":[
+                                    "日の当たる外壁",
+                                    "日の当たらない外壁",
+                                    "地盤に接する外壁",
+                                    "内壁"
+                                ]
+                            },
                             "WindowList":{
                                 "type": "array",
                                 "items": {

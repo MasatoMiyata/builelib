@@ -39,7 +39,6 @@ __pycache__/
 # 開発中・開発用
 memo.md
 /src/builelib/input/make_inputdata_pyhasp.py
-/src/builelib/envelope/palstar.py
 /src/builelib/standard_ac.py
 projects/
 /src/builelib/archive/*.py

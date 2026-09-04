@@ -8,7 +8,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/MasatoMiyata/builelib)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/MasatoMiyata/builelib)
 [![uv](https://img.shields.io/badge/managed%20by-uv-7C3AED?logo=astral)](https://docs.astral.sh/uv/)
 
 [日本語](README.ja.md) | [Website](https://builelib.net/) | [Manual](https://builelib.net/manual/)
@@ -20,6 +20,18 @@
 Builelib is a Python library for calculating the annual energy consumption of non-residential buildings. It implements the calculation methods used by Japan's Building Energy Conservation Standard program for non-residential buildings (WEBPRO).
 
 Builelib provides an Excel-based CLI, a Python API, a JSON-based FastAPI application, and a Docker configuration.
+
+### Parse an input sheet in memory
+
+```python
+from builelib.input import parse_input_sheet
+
+result = parse_input_sheet("input.xlsx")
+print(result.data)
+print(result.errors, result.warnings)
+```
+
+This API supports `.xlsx` and `.xlsm` WEBPRO input sheets and does not create an intermediate JSON file. Envelope consumers can also import `calculate_wall_u_value` and `calculate_window_performance` from `builelib.input`.
 
 ## Requirements
 
