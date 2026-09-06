@@ -1055,50 +1055,103 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # シートの読み込み
             sheet_BL = wb.sheet_by_name("0) 基本情報")
 
-            # BL-1	建築物の名称
-            data["Building"]["Name"] = \
-                check_value(sheet_BL.cell(8, 2).value, "様式0.基本情報 9行目:「③建築物の名称」", True, None, "文字列", None, 0, 100)
+            # シート名称
+            sheet_BL_name = sheet_BL.row_values(0)[0]
 
-            # BL-2	都道府県 (選択)
-            data["Building"]["BuildingAddress"]["Prefecture"] = \
-                check_value(str(sheet_BL.cell(9, 3).value), "様式0.基本情報 10行目:「④都道府県」", False, None, "文字列", None, 0, 100)
-            
-            # BL-3	建築物所在地 市区町村 (選択)
-            if sheet_BL.ncols <= 5:
-                data["Building"]["BuildingAddress"]["City"] = None
+            # WEBPRO Ver.3.9以降対応（8行目に「評価対象」が追加されている）
+            if sheet_BL_name[-5:] == "Rev.2":
+
+                # BL-1	建築物の名称
+                data["Building"]["Name"] = \
+                    check_value(sheet_BL.cell(9, 2).value, "様式0.基本情報 10行目:「③建築物の名称」", True, None, "文字列", None, 0, 100)
+
+                # BL-2	都道府県 (選択)
+                data["Building"]["BuildingAddress"]["Prefecture"] = \
+                    check_value(str(sheet_BL.cell(10, 3).value), "様式0.基本情報 11行目:「④都道府県」", False, None, "文字列", None, 0, 100)
+                
+                # BL-3	建築物所在地 市区町村 (選択)
+                if sheet_BL.ncols <= 5:
+                    data["Building"]["BuildingAddress"]["City"] = None
+                else:
+                    data["Building"]["BuildingAddress"]["City"] = \
+                        check_value(str(sheet_BL.cell(10, 5).value), "様式0.基本情報 11行目:「④市区町村」", False, None, "文字列", None, 0, 100)
+                
+                # BL-4	丁目、番地等
+                data["Building"]["BuildingAddress"]["Address"] = \
+                    check_value(str(sheet_BL.cell(11, 2).value), "様式0.基本情報 12行目:「④所在地（詳細）」", False, None, "文字列", None, 0, 100)
+                
+                # BL-5	地域の区分	(自動)
+                area_num = sheet_BL.cell(12, 2).value
+                if type(area_num) is str and (area_num.endswith("地域")):  # 
+                    area_num = area_num.replace("地域","")
+                elif type(area_num) is not str:
+                    area_num = str(int(area_num))
+
+                data["Building"]["Region"] = \
+                    check_value(area_num, "様式0.基本情報 13行目:「⑤地域の区分」", True, None, "文字列", input_options["地域区分"], None, None)
+
+                # BL-6	年間日射地域区分 (自動)
+                data["Building"]["AnnualSolarRegion"] = \
+                    check_value(str(sheet_BL.cell(18, 2).value), "様式0.基本情報 19行目:「⑪年間日射地域区分」", True, "A3", "文字列", input_options["年間日射地域区分"], None, None)
+                
+                # BL-7	延べ面積  [㎡]	(数値)
+                data["Building"]["BuildingFloorArea"] = \
+                    check_value(str(sheet_BL.cell(17, 2).value), "様式0.基本情報 18行目:「⑩延べ面積」", True, None, "数値", None, 0, None)
+
+                # BL-8	「他人から供給された熱（冷熱）」の一次エネルギー換算係数 (数値)
+                data["Building"]["Coefficient_DHC"]["Cooling"] = \
+                    check_value(str(sheet_BL.cell(19, 2).value), "様式0.基本情報 20行目:「⑫他人から供給された熱（冷熱）の一次エネ換算係数」", None, 1.36, "数値", None, 0, None)
+                            
+                # BL-9	「他人から供給された熱（温熱）」の一次エネルギー換算係数 (数値)
+                data["Building"]["Coefficient_DHC"]["Heating"] = \
+                    check_value(str(sheet_BL.cell(20, 2).value), "様式0.基本情報 21行目:「⑬他人から供給された熱（温熱）の一次エネ換算係数」", None, 1.36, "数値", None, 0, None)
+
             else:
-                data["Building"]["BuildingAddress"]["City"] = \
-                    check_value(str(sheet_BL.cell(9, 5).value), "様式0.基本情報 10行目:「④市区町村」", False, None, "文字列", None, 0, 100)
-            
-            # BL-4	丁目、番地等
-            data["Building"]["BuildingAddress"]["Address"] = \
-                check_value(str(sheet_BL.cell(10, 2).value), "様式0.基本情報 11行目:「④所在地（詳細）」", False, None, "文字列", None, 0, 100)
-            
-            # BL-5	地域の区分	(自動)
-            area_num = sheet_BL.cell(11, 2).value
-            if type(area_num) is str and (area_num.endswith("地域")):  # 
-                area_num = area_num.replace("地域","")
-            elif type(area_num) is not str:
-                area_num = str(int(area_num))
 
-            data["Building"]["Region"] = \
-                check_value(area_num, "様式0.基本情報 12行目:「⑤地域の区分」", True, None, "文字列", input_options["地域区分"], None, None)
+                # BL-1	建築物の名称
+                data["Building"]["Name"] = \
+                    check_value(sheet_BL.cell(8, 2).value, "様式0.基本情報 9行目:「③建築物の名称」", True, None, "文字列", None, 0, 100)
 
-            # BL-6	年間日射地域区分 (自動)
-            data["Building"]["AnnualSolarRegion"] = \
-                check_value(str(sheet_BL.cell(17, 2).value), "様式0.基本情報 18行目:「⑪年間日射地域区分」", True, "A3", "文字列", input_options["年間日射地域区分"], None, None)
-            
-            # BL-7	延べ面積  [㎡]	(数値)
-            data["Building"]["BuildingFloorArea"] = \
-                check_value(str(sheet_BL.cell(16, 2).value), "様式0.基本情報 17行目:「⑩延べ面積」", True, None, "数値", None, 0, None)
+                # BL-2	都道府県 (選択)
+                data["Building"]["BuildingAddress"]["Prefecture"] = \
+                    check_value(str(sheet_BL.cell(9, 3).value), "様式0.基本情報 10行目:「④都道府県」", False, None, "文字列", None, 0, 100)
+                
+                # BL-3	建築物所在地 市区町村 (選択)
+                if sheet_BL.ncols <= 5:
+                    data["Building"]["BuildingAddress"]["City"] = None
+                else:
+                    data["Building"]["BuildingAddress"]["City"] = \
+                        check_value(str(sheet_BL.cell(9, 5).value), "様式0.基本情報 10行目:「④市区町村」", False, None, "文字列", None, 0, 100)
+                
+                # BL-4	丁目、番地等
+                data["Building"]["BuildingAddress"]["Address"] = \
+                    check_value(str(sheet_BL.cell(10, 2).value), "様式0.基本情報 11行目:「④所在地（詳細）」", False, None, "文字列", None, 0, 100)
+                
+                # BL-5	地域の区分	(自動)
+                area_num = sheet_BL.cell(11, 2).value
+                if type(area_num) is str and (area_num.endswith("地域")):  # 
+                    area_num = area_num.replace("地域","")
+                elif type(area_num) is not str:
+                    area_num = str(int(area_num))
 
-            # BL-8	「他人から供給された熱」	冷熱	(数値)
-            data["Building"]["Coefficient_DHC"]["Cooling"] = \
-                check_value(str(sheet_BL.cell(18, 2).value), "様式0.基本情報 19行目:「⑫他人から供給された熱（冷熱）の一次エネ換算係数」", None, 1.36, "数値", None, 0, None)
-                        
-            # BL-9	の一次エネルギー換算係数	温熱	(数値)
-            data["Building"]["Coefficient_DHC"]["Heating"] = \
-                check_value(str(sheet_BL.cell(19, 2).value), "様式0.基本情報 20行目:「⑬他人から供給された熱（温熱）の一次エネ換算係数」", None, 1.36, "数値", None, 0, None)
+                data["Building"]["Region"] = \
+                    check_value(area_num, "様式0.基本情報 12行目:「⑤地域の区分」", True, None, "文字列", input_options["地域区分"], None, None)
+
+                # BL-6	年間日射地域区分 (自動)
+                data["Building"]["AnnualSolarRegion"] = \
+                    check_value(str(sheet_BL.cell(17, 2).value), "様式0.基本情報 18行目:「⑪年間日射地域区分」", True, "A3", "文字列", input_options["年間日射地域区分"], None, None)
+                
+                # BL-7	延べ面積  [㎡]	(数値)
+                data["Building"]["BuildingFloorArea"] = \
+                    check_value(str(sheet_BL.cell(16, 2).value), "様式0.基本情報 17行目:「⑩延べ面積」", True, None, "数値", None, 0, None)
+
+                # BL-8	「他人から供給された熱（冷熱）」の一次エネルギー換算係数 (数値)
+                data["Building"]["Coefficient_DHC"]["Cooling"] = \
+                    check_value(str(sheet_BL.cell(18, 2).value), "様式0.基本情報 19行目:「⑫他人から供給された熱（冷熱）の一次エネ換算係数」", None, 1.36, "数値", None, 0, None)
+                            
+                # BL-9	「他人から供給された熱（温熱）」の一次エネルギー換算係数 (数値)
+                data["Building"]["Coefficient_DHC"]["Heating"] = \
+                    check_value(str(sheet_BL.cell(19, 2).value), "様式0.基本情報 20行目:「⑬他人から供給された熱（温熱）の一次エネ換算係数」", None, 1.36, "数値", None, 0, None)
 
         except:
 
