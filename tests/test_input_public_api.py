@@ -10,7 +10,12 @@ from builelib.input.parser import InputSheetParseResult, parse_input_sheet
 from builelib.input.performance import calculate_wall_u_value, calculate_window_performance
 
 
-EXAMPLE = Path(__file__).resolve().parents[1] / "examples" / "sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
+EXAMPLE = (
+    Path(__file__).resolve().parents[1]
+    / "examples"
+    / "WEBPRO"
+    / "sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
+)
 
 
 def test_parse_input_sheet_returns_in_memory_result():
