@@ -48,14 +48,45 @@ _FORM_SHEET_ALIASES = {
     "F7-3": ("F7-3", "7-3) コージェネレーション設備"),
 }
 
+_SP_SHEET_ALIASES = {
+    "SP-CM": ("SP-CM", "SP-CM) 計算モード"),
+    "SP-CD": ("SP-CD", "SP-CD) 気象"),
+    "SP-REF": ("SP-REF", "SP-REF) 基準値"),
+    "SP-RT-CP": ("SP-RT-CP", "SP-RT-CP) カレンダー"),
+    "SP-RT-UC": ("SP-RT-UC", "SP-RT-UC) 室使用条件"),
+    "SP-RT-SD": (
+        "SP-RT-SD",
+        "SP-RT-SD) 室スケジュール",
+        "SP-RT-SD) スケジュール",
+    ),
+    "SP-AC-MD": ("SP-AC-MD", "SP-AC-MD) 空調モード"),
+    "SP-AC-ST": ("SP-AC-ST", "SP-AC-ST) 日射熱取得率"),
+    "SP-AC-RL": ("SP-AC-RL", "SP-AC-RL) 室負荷"),
+    "SP-AC-AL": ("SP-AC-AL", "SP-AC-AL) 空調負荷"),
+    "SP-AC-HS": ("SP-AC-HS", "SP-AC-HS) 熱源特性"),
+    "SP-AC-WT": ("SP-AC-WT", "SP-AC-WT) 熱源送水温度"),
+    "SP-AC-CW": ("SP-AC-CW", "SP-AC-CW) 熱源冷却水温度"),
+    "SP-AC-FC": ("SP-AC-FC", "SP-AC-FC) 変流量・変風量制御"),
+}
 
-def _find_form_sheet(wb, form_name):
-    """標準様式シートを短縮名または従来名から取得する。"""
+
+def _find_sheet_by_alias(wb, alias_table, sheet_id):
+    """シートを言語非依存の短縮名または従来名から取得する。"""
     sheet_names = set(wb.sheet_names())
-    for sheet_name in _FORM_SHEET_ALIASES[form_name]:
+    for sheet_name in alias_table[sheet_id]:
         if sheet_name in sheet_names:
             return wb.sheet_by_name(sheet_name)
     return None
+
+
+def _find_form_sheet(wb, form_name):
+    """標準様式シートを取得する。"""
+    return _find_sheet_by_alias(wb, _FORM_SHEET_ALIASES, form_name)
+
+
+def _find_sp_sheet(wb, sheet_id):
+    """SPシートを取得する。"""
+    return _find_sheet_by_alias(wb, _SP_SHEET_ALIASES, sheet_id)
 
 def get_input_options() -> dict:
     """入力値の選択肢一覧を返す関数（APIエンドポイント用）
@@ -472,10 +503,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     data["CalculationMode"]["空調と照明の連成計算"] = False
     data["CalculationMode"]["一次エネルギー換算係数"] = 9760
     
-    if "SP-CM) 計算モード" in wb.sheet_names():
-
-        # シートの読み込み
-        sheet_SP_CM = wb.sheet_by_name("SP-CM) 計算モード")
+    sheet_SP_CM = _find_sp_sheet(wb, "SP-CM")
+    if sheet_SP_CM is not None:
 
         for i in range(10,sheet_SP_CM.nrows):
 
@@ -613,12 +642,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-REF：基準値入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-REF 基準値入力シート"] and "SP-REF) 基準値" in wb.sheet_names():
+    sheet_SP_REF = _find_sp_sheet(wb, "SP-REF")
+    if data["CalculationMode"]["SP-REF 基準値入力シート"] and sheet_SP_REF is not None:
 
         try:
-
-            # シートの読み込み
-            sheet_SP_REF = wb.sheet_by_name("SP-REF) 基準値")
 
             data["SpecialInputData"]["reference_energy"] = {} 
             data["SpecialInputData"]["reference_energy"]["空調[MJ/年]"] = sheet_SP_REF.row_values(10)[2]
@@ -637,12 +664,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-CD：気象データ入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-CD 気象データ入力シート"] and "SP-CD) 気象" in wb.sheet_names():
+    sheet_SP_CD = _find_sp_sheet(wb, "SP-CD")
+    if data["CalculationMode"]["SP-CD 気象データ入力シート"] and sheet_SP_CD is not None:
 
         try:
-
-            # シートの読み込み
-            sheet_SP_CD = wb.sheet_by_name("SP-CD) 気象")
 
             rows = [sheet_SP_CD.row_values(i) for i in range(10, sheet_SP_CD.nrows)]
 
@@ -674,14 +699,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-RT-CP：カレンダー入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-RT-CP カレンダーパターン入力シート"] and "SP-RT-CP) カレンダー" in wb.sheet_names():
+    sheet_SP_RT_CP = _find_sp_sheet(wb, "SP-RT-CP")
+    if data["CalculationMode"]["SP-RT-CP カレンダーパターン入力シート"] and sheet_SP_RT_CP is not None:
 
         try:
 
             data["SpecialInputData"]["calender"] = {}
-
-            # シートの読み込み
-            sheet_SP_RT_CP = wb.sheet_by_name("SP-RT-CP) カレンダー")
 
             # 入力されたカレンダーパターン名称を検索
             calender_p_list = sheet_SP_RT_CP.row_values(4)
@@ -709,17 +732,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-RT-SD：室スケジュール入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] and ("SP-RT-SD) 室スケジュール" in wb.sheet_names() or "SP-RT-SD) スケジュール" in wb.sheet_names()):
+    sheet_SP_RT_SD = _find_sp_sheet(wb, "SP-RT-SD")
+    if data["CalculationMode"]["SP-RT-SD 室スケジュール入力シート"] and sheet_SP_RT_SD is not None:
 
         try:
 
             data["SpecialInputData"]["room_schedule"] = {}
-
-            # シートの読み込み
-            if "SP-RT-SD) 室スケジュール" in wb.sheet_names():
-                sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) 室スケジュール")
-            elif "SP-RT-SD) スケジュール" in wb.sheet_names():
-                sheet_SP_RT_SD = wb.sheet_by_name("SP-RT-SD) スケジュール")
 
             for i in range(10,sheet_SP_RT_SD.nrows):
 
@@ -737,7 +755,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-RT-UC：室使用条件入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-RT-UC 室使用条件入力シート"] and "SP-RT-UC) 室使用条件" in wb.sheet_names():
+    sheet_SP_RT_UC = _find_sp_sheet(wb, "SP-RT-UC")
+    if data["CalculationMode"]["SP-RT-UC 室使用条件入力シート"] and sheet_SP_RT_UC is not None:
 
         try:
 
@@ -746,9 +765,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # デフォルトデータベースの読み込み
             with open(database_directory + "common_room_usage_schedule.json", 'r', encoding='utf-8') as f:
                 RoomUsageSchedule = json.load(f)
-
-            # シートの読み込み
-            sheet_SP_RT_UC = wb.sheet_by_name("SP-RT-UC) 室使用条件")
 
             for i in range(10,sheet_SP_RT_UC.nrows):
 
@@ -918,7 +934,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-AC-MD：空調運転モード入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-MD 空調モード入力シート"] and "SP-AC-MD) 空調モード" in wb.sheet_names():
+    sheet_SP_AC_MD = _find_sp_sheet(wb, "SP-AC-MD")
+    if data["CalculationMode"]["SP-AC-MD 空調モード入力シート"] and sheet_SP_AC_MD is not None:
 
         try:
 
@@ -927,9 +944,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 "setpoint_temperature": [],
                 "setpoint_humidity": [],
             }
-
-            # シートの読み込み
-            sheet_SP_AC_MD = wb.sheet_by_name("SP-AC-MD) 空調モード")
 
             for i in range(10,365+10):
 
@@ -947,12 +961,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-2 熱源特性入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] and "SP-AC-HS) 熱源特性" in wb.sheet_names():
+    sheet_SP2 = _find_sp_sheet(wb, "SP-AC-HS")
+    if data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] and sheet_SP2 is not None:
 
         data["SpecialInputData"]["heatsource_performance"] = {}
-
-        # シートの読み込み
-        sheet_SP2 = wb.sheet_by_name("SP-AC-HS) 熱源特性")
 
         ref_name = ""
         operation_mode = ""
@@ -1050,12 +1062,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-AC-FC 変風量・変流量制御特性入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] and "SP-AC-FC) 変流量・変風量制御" in wb.sheet_names():
+    sheet_SP1 = _find_sp_sheet(wb, "SP-AC-FC")
+    if data["CalculationMode"]["SP-AC-FC 変風量・変流量制御特性入力シート"] and sheet_SP1 is not None:
 
         data["SpecialInputData"]["flow_control"] = {}
-
-        # シートの読み込み
-        sheet_SP1 = wb.sheet_by_name("SP-AC-FC) 変流量・変風量制御")
 
         # 行のループ（nrowsが10より小さいと空行列になる）
         for i in range(10,sheet_SP1.nrows):
@@ -3507,14 +3517,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-AC-CW 熱源冷却水温度（日別）入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] and "SP-AC-CW) 熱源冷却水温度" in wb.sheet_names():
+    sheet_SP_AC_CW = _find_sp_sheet(wb, "SP-AC-CW")
+    if data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] and sheet_SP_AC_CW is not None:
 
         try:
 
             data["SpecialInputData"]["heatsource_chilled_water_temp"] = {}
-
-            # シートの読み込み
-            sheet_SP_AC_CW = wb.sheet_by_name("SP-AC-CW) 熱源冷却水温度")
 
             # 入力されたカレンダーパターン名称を検索
             ref_name_list = sheet_SP_AC_CW.row_values(7)
@@ -3540,14 +3548,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式 SP-AC-WT 熱源送水温度入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] and "SP-AC-WT) 熱源送水温度" in wb.sheet_names():
+    sheet_SP_AC_WT = _find_sp_sheet(wb, "SP-AC-WT")
+    if data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] and sheet_SP_AC_WT is not None:
 
         try:
 
             data["SpecialInputData"]["heatsource_supply_water_temp"] = {}
-
-            # シートの読み込み
-            sheet_SP_AC_WT = wb.sheet_by_name("SP-AC-WT) 熱源送水温度")
 
             # 入力されたカレンダーパターン名称を検索
             ref_name_list = sheet_SP_AC_WT.row_values(7)
@@ -3573,14 +3579,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式 SP-AC-AL 空調負荷（時刻別）入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] and "SP-AC-AL) 空調負荷" in wb.sheet_names():
+    sheet_SP_AC_AL = _find_sp_sheet(wb, "SP-AC-AL")
+    if data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] and sheet_SP_AC_AL is not None:
 
         try:
 
             data["SpecialInputData"]["Qahu"] = {}
-
-            # シートの読み込み
-            sheet_SP_AC_AL = wb.sheet_by_name("SP-AC-AL) 空調負荷")
 
             # 入力された空調機群名称を検索
             ahu_name_list = sheet_SP_AC_AL.row_values(4)
@@ -3606,14 +3610,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-AC-RL 室負荷（日別）入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] and "SP-AC-RL) 室負荷" in wb.sheet_names():
+    sheet_SP_AC_RL = _find_sp_sheet(wb, "SP-AC-RL")
+    if data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] and sheet_SP_AC_RL is not None:
 
         try:
 
             data["SpecialInputData"]["Qroom"] = {}
-
-            # シートの読み込み
-            sheet_SP_AC_RL = wb.sheet_by_name("SP-AC-RL) 室負荷")
 
             # 入力されたカレンダーパターン名称を検索
             floor_list = sheet_SP_AC_RL.row_values(7)
@@ -3655,14 +3657,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式SP-AC-ST 日射熱取得率（日別）入力シート の読み込み
     #----------------------------------
-    if data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] and "SP-AC-ST) 日射熱取得率" in wb.sheet_names():
+    sheet_SP_AC_ST = _find_sp_sheet(wb, "SP-AC-ST")
+    if data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] and sheet_SP_AC_ST is not None:
 
         try:
 
             data["SpecialInputData"]["window_Ivalue"] = {}
-
-            # シートの読み込み
-            sheet_SP_AC_ST = wb.sheet_by_name("SP-AC-ST) 日射熱取得率")
 
             # 入力されたカレンダーパターン名称を検索
             window_name_list = sheet_SP_AC_ST.row_values(4)
