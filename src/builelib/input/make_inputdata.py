@@ -24,6 +24,39 @@ validation = {}
 db = database_loader.load_all_databases()
 input_options = database_loader.get_input_options(db)
 
+# 標準様式シートの短い言語非依存名と、従来の日本語名。
+# 新しい入力シートでは F0 / F2-1 のような名前を優先し、既存ファイルとの
+# 後方互換性のために従来名も引き続き受け付ける。
+_FORM_SHEET_ALIASES = {
+    "F0": ("F0", "0) 基本情報"),
+    "F1": ("F1", "1) 室仕様"),
+    "F2-1": ("F2-1", "2-1) 空調ゾーン"),
+    "F2-2": ("F2-2", "2-2) 外壁構成 "),
+    "F2-3": ("F2-3", "2-3) 窓仕様"),
+    "F2-4": ("F2-4", "2-4) 外皮 "),
+    "F2-5": ("F2-5", "2-5) 熱源"),
+    "F2-6": ("F2-6", "2-6) 2次ﾎﾟﾝﾌﾟ"),
+    "F2-7": ("F2-7", "2-7) 空調機"),
+    "F3-1": ("F3-1", "3-1) 換気室"),
+    "F3-2": ("F3-2", "3-2) 換気送風機"),
+    "F3-3": ("F3-3", "3-3) 換気空調機"),
+    "F4": ("F4", "4) 照明"),
+    "F5-1": ("F5-1", "5-1) 給湯室"),
+    "F5-2": ("F5-2", "5-2) 給湯機器"),
+    "F6": ("F6", "6) 昇降機"),
+    "F7-1": ("F7-1", "7-1) 太陽光発電"),
+    "F7-3": ("F7-3", "7-3) コージェネレーション設備"),
+}
+
+
+def _find_form_sheet(wb, form_name):
+    """標準様式シートを短縮名または従来名から取得する。"""
+    sheet_names = set(wb.sheet_names())
+    for sheet_name in _FORM_SHEET_ALIASES[form_name]:
+        if sheet_name in sheet_names:
+            return wb.sheet_by_name(sheet_name)
+    return None
+
 def get_input_options() -> dict:
     """入力値の選択肢一覧を返す関数（APIエンドポイント用）
 
@@ -1048,12 +1081,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式0 基本情報入力シート の読み込み
     #----------------------------------
-    if "0) 基本情報" in wb.sheet_names():
+    sheet_BL = _find_form_sheet(wb, "F0")
+    if sheet_BL is not None:
 
         try:
-
-            # シートの読み込み
-            sheet_BL = wb.sheet_by_name("0) 基本情報")
 
             # シート名称
             sheet_BL_name = sheet_BL.row_values(0)[0]
@@ -1161,10 +1192,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     # 様式1 室仕様入力シート の読み込み
     # （ Builelibでは、各設備のシートに記載された建物用途・室用途は使わず、様式1の情報を使う ）
     #----------------------------------
-    if "1) 室仕様" in wb.sheet_names():
+    sheet_BL = _find_form_sheet(wb, "F1")
+    if sheet_BL is not None:
 
-        # シートの読み込み
-        sheet_BL = wb.sheet_by_name("1) 室仕様")
         # 初期化
         roomKey = None
 
@@ -1278,10 +1308,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式2-1 空調ゾーン入力シート の読み込み
     #----------------------------------
-    if "2-1) 空調ゾーン" in wb.sheet_names():
+    sheet_AC1 = _find_form_sheet(wb, "F2-1")
+    if sheet_AC1 is not None:
         
-        # シートの読み込み
-        sheet_AC1 = wb.sheet_by_name("2-1) 空調ゾーン")
         # 初期化
         roomKey = None
 
@@ -1330,10 +1359,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式2-2 外壁構成入力シート の読み込み
     #----------------------------------
-    if "2-2) 外壁構成 " in wb.sheet_names():
+    sheet_BE2 = _find_form_sheet(wb, "F2-2")
+    if sheet_BE2 is not None:
 
-        # シートの読み込み
-        sheet_BE2 = wb.sheet_by_name("2-2) 外壁構成 ")
         # 初期化
         eltKey = None
         inputMethod = None
@@ -1527,10 +1555,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式2-3 窓仕様入力シート の読み込み
     #----------------------------------
-    if "2-3) 窓仕様" in wb.sheet_names():
+    sheet_BE3 = _find_form_sheet(wb, "F2-3")
+    if sheet_BE3 is not None:
 
-        # シートの読み込み
-        sheet_BE3 = wb.sheet_by_name("2-3) 窓仕様")
         # 初期化
         eltKey = None
         inputMethod = None
@@ -1628,10 +1655,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     # 様式2-4 外皮入力シート の読み込み
     # （ Builelibでは、窓面積 を窓の枚数と読み替える。 ）
     #----------------------------------
-    if "2-4) 外皮 " in wb.sheet_names():
+    sheet_BE1 = _find_form_sheet(wb, "F2-4")
+    if sheet_BE1 is not None:
 
-        # シートの読み込み
-        sheet_BE1 = wb.sheet_by_name("2-4) 外皮 ")
         # 初期化
         roomKey = None
 
@@ -1865,7 +1891,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式2-5 熱源入力シート の読み込み
     #----------------------------------
-    if "2-5) 熱源" in wb.sheet_names():
+    sheet_AC2 = _find_form_sheet(wb, "F2-5")
+    if sheet_AC2 is not None:
         
         ## 熱源機器特性
         with open(database_directory + "ac_heat_source_performance.json", 'r', encoding='utf-8') as f:
@@ -1876,8 +1903,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             if "heatsource_performance" in data["SpecialInputData"]:
                 HeatSourcePerformance.update(data["SpecialInputData"]["heatsource_performance"])
 
-        # シートの読み込み
-        sheet_AC2 = wb.sheet_by_name("2-5) 熱源")
         # 初期化
         unitKey = None
         modeKey_C = None
@@ -2350,10 +2375,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式2-6 二次ポンプ入力シート の読み込み
     #----------------------------------
-    if "2-6) 2次ﾎﾟﾝﾌﾟ" in wb.sheet_names():
+    sheet_AC3 = _find_form_sheet(wb, "F2-6")
+    if sheet_AC3 is not None:
         
-        # シートの読み込み
-        sheet_AC3 = wb.sheet_by_name("2-6) 2次ﾎﾟﾝﾌﾟ")
         # 初期化
         unitKey = None
         modeKey = None
@@ -2483,10 +2507,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式2-7 空調機入力シート の読み込み
     #----------------------------------
-    if "2-7) 空調機" in wb.sheet_names():
+    sheet_AC4 = _find_form_sheet(wb, "F2-7")
+    if sheet_AC4 is not None:
         
-        # シートの読み込み
-        sheet_AC4 = wb.sheet_by_name("2-7) 空調機")
         # 初期化
         unitKey = None
 
@@ -2792,10 +2815,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式3-1 換気対象室入力シート の読み込み
     #----------------------------------
-    if "3-1) 換気室" in wb.sheet_names():
+    sheet_V1 = _find_form_sheet(wb, "F3-1")
+    if sheet_V1 is not None:
         
-        # シートの読み込み
-        sheet_V1 = wb.sheet_by_name("3-1) 換気室")
         # 初期化
         roomKey = None
 
@@ -2861,10 +2883,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式3-2 換気送風機入力シート の読み込み
     #----------------------------------
-    if "3-2) 換気送風機" in wb.sheet_names():
+    sheet_V2 = _find_form_sheet(wb, "F3-2")
+    if sheet_V2 is not None:
         
-        # シートの読み込み
-        sheet_V2 = wb.sheet_by_name("3-2) 換気送風機")
         # 初期化
         unitKey = None
 
@@ -2909,11 +2930,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式3-3 換気代替空調機入力シート の読み込み
     #----------------------------------
-    if "3-3) 換気空調機" in wb.sheet_names():
+    sheet_V3 = _find_form_sheet(wb, "F3-3")
+    if sheet_V3 is not None:
         
-        # シートの読み込み
-        sheet_V3 = wb.sheet_by_name("3-3) 換気空調機")
-
         # 初期化
         unitKey = None
         unitNum = 0
@@ -3003,10 +3022,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式4 照明入力シート の読み込み
     #----------------------------------
-    if "4) 照明" in wb.sheet_names():
+    sheet_L = _find_form_sheet(wb, "F4")
+    if sheet_L is not None:
         
-        # シートの読み込み
-        sheet_L = wb.sheet_by_name("4) 照明")
         # 初期化
         roomKey = None
 
@@ -3097,10 +3115,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式5-1 給湯対象室入力シート の読み込み
     #----------------------------------
-    if "5-1) 給湯室" in wb.sheet_names():
+    sheet_HW1 = _find_form_sheet(wb, "F5-1")
+    if sheet_HW1 is not None:
 
-        # シートの読み込み
-        sheet_HW1 = wb.sheet_by_name("5-1) 給湯室")
         # 初期化
         roomKey = None
 
@@ -3161,10 +3178,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式5-2 給湯機器入力シート の読み込み
     #----------------------------------
-    if "5-2) 給湯機器" in wb.sheet_names():
+    sheet_HW2 = _find_form_sheet(wb, "F5-2")
+    if sheet_HW2 is not None:
 
-        # シートの読み込み
-        sheet_HW2 = wb.sheet_by_name("5-2) 給湯機器")
         # 初期化
         unitKey = None
 
@@ -3234,10 +3250,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式6 昇降機入力シート の読み込み
     #----------------------------------
-    if "6) 昇降機" in wb.sheet_names():
+    sheet_EV = _find_form_sheet(wb, "F6")
+    if sheet_EV is not None:
 
-        # シートの読み込み
-        sheet_EV = wb.sheet_by_name("6) 昇降機")
         # 初期化
         roomKey = None
 
@@ -3341,10 +3356,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式7-1 太陽光発電入力シート の読み込み
     #----------------------------------
-    if "7-1) 太陽光発電" in wb.sheet_names():
+    sheet_PV = _find_form_sheet(wb, "F7-1")
+    if sheet_PV is not None:
 
-        # シートの読み込み
-        sheet_PV = wb.sheet_by_name("7-1) 太陽光発電")
         # 初期化
         unitKey = None
 
@@ -3385,10 +3399,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     # 様式7-3 コジェネ入力シート の読み込み
     #----------------------------------
-    if "7-3) コージェネレーション設備" in wb.sheet_names():
+    sheet_CG = _find_form_sheet(wb, "F7-3")
+    if sheet_CG is not None:
 
-        # シートの読み込み
-        sheet_CG = wb.sheet_by_name("7-3) コージェネレーション設備")
         # 初期化
         unitKey = None
 
