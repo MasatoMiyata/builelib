@@ -11,7 +11,6 @@ import sys
 from builelib import commons as bc
 from builelib.climate import climate
 from builelib.envelope import shading
-# from . import make_figure as mf
 
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
@@ -1247,14 +1246,6 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             print( f'年間室負荷（冷房要求） QroomDc: {resultJson["Qroom"][room_zone_name]["年間室負荷（冷房）[MJ]"]}' )
             print( f'年間室負荷（暖房要求） QroomDh: {resultJson["Qroom"][room_zone_name]["年間室負荷（暖房）[MJ]"]}' )
 
-
-    # 熱負荷のグラフ化（確認用）
-    # for room_zone_name in inputdata["AirConditioningZone"]:
-
-    #     mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHc"], "室負荷（冷房）："+room_zone_name, "b", "室負荷（冷房）")
-    #     mf.hourlyplot(resultJson["Qroom"][room_zone_name]["QroomHh"], "室負荷（暖房）："+room_zone_name, "m", "室負荷（暖房）")
-
-    # plt.show()
 
     print('室負荷計算完了')
 

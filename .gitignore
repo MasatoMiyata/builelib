@@ -41,7 +41,7 @@ memo.md
 /src/builelib/input/make_inputdata_pyhasp.py
 /src/builelib/standard_ac.py
 projects/
-/src/builelib/archive/*.py
+/src/builelib/archive/*
 
 # ===========================
 # docker
