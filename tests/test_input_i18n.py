@@ -1,6 +1,6 @@
 import pytest
 
-from builelib.input.make_inputdata import _norm, normalize_input
+from builelib.input.make_inputdata import _norm, _norm_roomtype, normalize_input
 
 
 @pytest.mark.parametrize(
@@ -60,6 +60,32 @@ def test_ac_operation_mode_translation(value, expected):
 )
 def test_ac_heat_source_input_translation(category, value, expected):
     assert _norm(value, category) == expected
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("Turbo chiller", "ターボ冷凍機"),
+        ("ターボ冷凍機", "ターボ冷凍機"),
+        ("Custom Heat Source", "Custom Heat Source"),
+        ("任意熱源A", "任意熱源A"),
+    ],
+)
+def test_custom_heat_source_name_only_normalizes_known_presets(value, expected):
+    assert _norm(value, "ac_heat_source_performance") == expected
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("Office room", "事務室"),
+        ("事務室", "事務室"),
+        ("Executive Lounge", "Executive Lounge"),
+        ("役員ラウンジ", "役員ラウンジ"),
+    ],
+)
+def test_custom_room_type_name_only_normalizes_known_presets(value, expected):
+    assert _norm_roomtype(value, "事務所等") == expected
 
 
 def test_normalize_input_translates_air_conditioning_hours():

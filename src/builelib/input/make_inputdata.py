@@ -784,7 +784,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 data_SP_RT_UC.extend( [""]*(29-len(data_SP_RT_UC)) )   # 空白文字を入れる（最大28列）
 
                 building_type  = _norm(data_SP_RT_UC[0], "buildingType")  # 建物用途
-                room_type_name = data_SP_RT_UC[1]  # 新しい室用途名称
+                # 既存室用途の英語名なら日本語DBキーへ揃え、任意名称ならそのまま保持する。
+                room_type_name = _norm_roomtype(data_SP_RT_UC[1], building_type)  # 新しい室用途名称
                 base_room_type = _norm_roomtype(data_SP_RT_UC[2], building_type)  # ベースとする室用途名称
 
                 # 次の条件を満たせば入力されていれば処理を実行
@@ -994,7 +995,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 「熱源機種名称」が空白でなければ。
             if (dataSP2[0] != ""):
 
-                ref_name = dataSP2[0]  # 熱源機種名の更新
+                # 既存機種の英語名なら日本語DBキーへ揃え、任意名称ならそのまま保持する。
+                ref_name = _norm(dataSP2[0], "ac_heat_source_performance")  # 熱源機種名の更新
 
                 # データがなければ作成
                 if ref_name not in data["SpecialInputData"]["heatsource_performance"]:
