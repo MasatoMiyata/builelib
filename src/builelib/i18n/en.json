@@ -20,6 +20,12 @@
         "A5": "A5"
     },
 
+    "common_air_conditioning_hours": {
+        "昼":   "Daytime",
+        "深夜": "Nighttime",
+        "終日": "All day"
+    },
+
     "buildingType": {
         "事務所等":   "Office",
         "ホテル等":   "Hotel",

@@ -110,11 +110,19 @@ _i18n_rev = {
     if isinstance(mapping, dict) and cat != "roomType"
 }
 
+# 過去の入力値を現在の正規値へ読み替える。
+_INPUT_VALUE_ALIASES = {
+    "common_air_conditioning_hours": {
+        "夜": "深夜",
+    },
+}
+
 def _norm(value, category):
     """英語表示値を日本語DBキーに変換する（知らない値はそのまま通す）"""
     if not isinstance(value, str) or value == "":
         return value
-    return _i18n_rev.get(category, {}).get(value, value)
+    normalized = _i18n_rev.get(category, {}).get(value, value)
+    return _INPUT_VALUE_ALIASES.get(category, {}).get(normalized, normalized)
 
 
 def _norm_roomtype(rt_raw, bt_ja):
@@ -128,6 +136,8 @@ def _norm_roomtype(rt_raw, bt_ja):
 # JSONキー名 → i18nカテゴリ のマッピング
 _FIELD_TO_CATEGORY: dict[str, str] = {
     "buildingType":                      "buildingType",
+    "airConditioningHours":               "common_air_conditioning_hours",
+    "空調運転パターン":                   "common_air_conditioning_hours",
     "orientation":                       "common_orientation",
     "structureType":                     "common_structure_type",
     "wallType":                          "ac_wall_type",
@@ -772,9 +782,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 data_SP_RT_UC = sheet_SP_RT_UC.row_values(i)
                 data_SP_RT_UC.extend( [""]*(29-len(data_SP_RT_UC)) )   # 空白文字を入れる（最大28列）
 
-                building_type  = data_SP_RT_UC[0]  # 建物用途
+                building_type  = _norm(data_SP_RT_UC[0], "buildingType")  # 建物用途
                 room_type_name = data_SP_RT_UC[1]  # 新しい室用途名称
-                base_room_type = data_SP_RT_UC[2]  # ベースとする室用途名称
+                base_room_type = _norm_roomtype(data_SP_RT_UC[2], building_type)  # ベースとする室用途名称
 
                 # 次の条件を満たせば入力されていれば処理を実行
                 if building_type != "" and room_type_name != "":
@@ -809,7 +819,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                     data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["ベースとする室用途"] = base_room_type
 
                     if data_SP_RT_UC[3] != "":
-                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["空調運転パターン"] = data_SP_RT_UC[3]
+                        data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["空調運転パターン"] = _norm(
+                            data_SP_RT_UC[3], "common_air_conditioning_hours"
+                        )
 
                     if data_SP_RT_UC[4] != "":
                         data["SpecialInputData"]["room_usage_condition"][building_type][room_type_name]["カレンダーパターン"] = data_SP_RT_UC[4]
