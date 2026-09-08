@@ -19,6 +19,19 @@ def test_air_conditioning_hours_translation(value, expected):
     assert _norm(value, "common_air_conditioning_hours") == expected
 
 
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("Cooling", "冷房"),
+        ("Heating", "暖房"),
+        ("冷房", "冷房"),
+        ("暖房", "暖房"),
+    ],
+)
+def test_ac_operation_mode_translation(value, expected):
+    assert _norm(value, "ac_operation_mode") == expected
+
+
 def test_normalize_input_translates_air_conditioning_hours():
     input_data = {
         "SpecialInputData": {

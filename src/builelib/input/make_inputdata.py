@@ -138,6 +138,7 @@ _FIELD_TO_CATEGORY: dict[str, str] = {
     "buildingType":                      "buildingType",
     "airConditioningHours":               "common_air_conditioning_hours",
     "空調運転パターン":                   "common_air_conditioning_hours",
+    "operationMode":                     "ac_operation_mode",
     "orientation":                       "common_orientation",
     "structureType":                     "common_structure_type",
     "wallType":                          "ac_wall_type",
@@ -961,7 +962,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 data_SP_AC_MD = sheet_SP_AC_MD.row_values(i)
 
-                data["SpecialInputData"]["AC_operation_mode"]["operation_mode"].append( data_SP_AC_MD[1] )
+                data["SpecialInputData"]["AC_operation_mode"]["operation_mode"].append(
+                    _norm(data_SP_AC_MD[1], "ac_operation_mode")
+                )
                 data["SpecialInputData"]["AC_operation_mode"]["setpoint_temperature"].append( data_SP_AC_MD[2] )
                 data["SpecialInputData"]["AC_operation_mode"]["setpoint_humidity"].append( data_SP_AC_MD[3] )
 
