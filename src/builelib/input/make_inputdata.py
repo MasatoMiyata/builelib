@@ -1022,20 +1022,26 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             # 「冷房／暖房」が空白でなければ。
             if (dataSP2[1] != ""):
 
-                if dataSP2[1] == "冷房":
+                input_operation_mode = _norm(dataSP2[1], "ac_operation_mode")
+
+                if input_operation_mode == "冷房":
                     operation_mode = "冷房時の特性"
-                elif dataSP2[1] == "暖房":
+                elif input_operation_mode == "暖房":
                     operation_mode = "暖房時の特性"
                 else:
                     raise Exception("予期せぬ選択肢です。")
 
-                data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode]["燃料種類"] = dataSP2[2]
-                data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode]["熱源種類"] = dataSP2[3]
+                data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode]["燃料種類"] = _norm(
+                    dataSP2[2], "ac_heat_source_fuel_type"
+                )
+                data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode]["熱源種類"] = _norm(
+                    dataSP2[3], "ac_heat_source_type"
+                )
 
             # 「特性の種類」が空白でなければ。
             if (dataSP2[4] != ""):
 
-                curve_type = dataSP2[4]
+                curve_type = _norm(dataSP2[4], "ac_heat_source_curve_type")
 
                 data["SpecialInputData"]["heatsource_performance"][ref_name][operation_mode][curve_type]=[
                     {

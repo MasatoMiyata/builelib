@@ -32,6 +32,36 @@ def test_ac_operation_mode_translation(value, expected):
     assert _norm(value, "ac_operation_mode") == expected
 
 
+@pytest.mark.parametrize(
+    ("category", "value", "expected"),
+    [
+        ("ac_heat_source_fuel_type", "Electricity", "電力"),
+        ("ac_heat_source_fuel_type", "Gas", "ガス"),
+        ("ac_heat_source_fuel_type", "LPG", "液化石油ガス"),
+        ("ac_heat_source_fuel_type", "Heavy oil", "重油"),
+        ("ac_heat_source_fuel_type", "Kerosene", "灯油"),
+        ("ac_heat_source_fuel_type", "Chilled water", "冷水"),
+        ("ac_heat_source_fuel_type", "Hot water", "温水"),
+        ("ac_heat_source_fuel_type", "Steam", "蒸気"),
+        ("ac_heat_source_type", "Not required", "不要"),
+        ("ac_heat_source_type", "Water", "水"),
+        ("ac_heat_source_type", "Air", "空気"),
+        ("ac_heat_source_type", "Ground type 1", "地盤1"),
+        ("ac_heat_source_type", "Ground type F", "地盤F"),
+        ("ac_heat_source_curve_type", "Capacity ratio", "能力比"),
+        ("ac_heat_source_curve_type", "Input ratio", "入力比"),
+        ("ac_heat_source_curve_type", "Part-load characteristics", "部分負荷特性"),
+        (
+            "ac_heat_source_curve_type",
+            "Supply water temperature characteristics",
+            "送水温度特性",
+        ),
+    ],
+)
+def test_ac_heat_source_input_translation(category, value, expected):
+    assert _norm(value, category) == expected
+
+
 def test_normalize_input_translates_air_conditioning_hours():
     input_data = {
         "SpecialInputData": {

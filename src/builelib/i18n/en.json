@@ -380,6 +380,41 @@
         "無":             "None"
     },
 
+    "ac_heat_source_fuel_type": {
+        "電力":         "Electricity",
+        "ガス":         "Gas",
+        "液化石油ガス": "LPG",
+        "重油":         "Heavy oil",
+        "灯油":         "Kerosene",
+        "冷水":         "Chilled water",
+        "温水":         "Hot water",
+        "蒸気":         "Steam"
+    },
+
+    "ac_heat_source_type": {
+        "不要":  "Not required",
+        "水":    "Water",
+        "空気":  "Air",
+        "地盤1": "Ground type 1",
+        "地盤2": "Ground type 2",
+        "地盤3": "Ground type 3",
+        "地盤4": "Ground type 4",
+        "地盤5": "Ground type 5",
+        "地盤A": "Ground type A",
+        "地盤B": "Ground type B",
+        "地盤C": "Ground type C",
+        "地盤D": "Ground type D",
+        "地盤E": "Ground type E",
+        "地盤F": "Ground type F"
+    },
+
+    "ac_heat_source_curve_type": {
+        "能力比":         "Capacity ratio",
+        "入力比":         "Input ratio",
+        "部分負荷特性":   "Part-load characteristics",
+        "送水温度特性":   "Supply water temperature characteristics"
+    },
+
     "ac_heat_source_performance": {
         "温水ボイラ(灯油)":                                                 "Hot water boiler (kerosene)",
         "温水ボイラ(LPG)":                                                  "Hot water boiler (LPG)",
