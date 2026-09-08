@@ -3752,7 +3752,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
 
     # JSON Schemaバリデーションの実行（構造・型・選択肢チェック）
-    schema_errors = bc.inputdata_validation(data)
+    # 空欄は check_value がシート名・行番号付きで既に報告しているため、
+    # JSON Schema 側の enum/type エラーを重ねて表示しない。
+    schema_errors = bc.inputdata_validation(data, skip_empty_values=True)
     for err in schema_errors:
         validation["error"].append(err)
 

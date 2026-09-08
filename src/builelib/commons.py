@@ -409,7 +409,7 @@ def get_operation_schedule_lighting(buildingType, roomType, Calendar, RoomUsageS
 
 
 # 入力データのバリデーション
-def inputdata_validation(inputdata):
+def inputdata_validation(inputdata, *, skip_empty_values=False):
     """
     JSON Schemaによる入力データのバリデーション。
     全エラーを収集してリストで返す（例外は発生させない）。
@@ -417,6 +417,12 @@ def inputdata_validation(inputdata):
     SP-AC-FC シートで追加されたカスタム制御方式（flow_control）は、
     database_loader 経由で取得した有効選択肢をスキーマに動的注入することで対応する。
     注入対象: FanControlType（風量制御）、ContolType（流量制御）
+
+    Parameters:
+        inputdata (dict): 検証対象の入力データ。
+        skip_empty_values (bool): True の場合、空文字に対するスキーマエラーを
+            返さない。Excel 読込時に check_value が報告済みの空欄エラーとの
+            重複を避けるために使用する。
 
     Returns:
         list: エラーメッセージのリスト（空リストの場合はバリデーション成功）
@@ -438,6 +444,12 @@ def inputdata_validation(inputdata):
     validator = jsonschema.Draft7Validator(schema_data)
     errors = []
     for error in validator.iter_errors(inputdata):
+        # Excel の空欄は check_value がシート名・行番号・項目名付きで報告する。
+        # 同じ空文字を enum/type 等でも報告すると利用者には二重エラーに見えるため、
+        # Excel 変換側から明示された場合だけスキーマエラーを抑制する。
+        if skip_empty_values and error.instance == "":
+            continue
+
         # エラーパス（例: "Rooms -> 室名 -> roomArea"）を生成
         path = " -> ".join(str(p) for p in error.absolute_path) if error.absolute_path else "(ルート)"
         errors.append(f"スキーマエラー [{path}]: {error.message}")
