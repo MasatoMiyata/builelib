@@ -133,6 +133,14 @@ def _norm_roomtype(rt_raw, bt_ja):
     return rt_rev.get(rt_raw, rt_raw)
 
 
+def _is_sheet_header(value, *labels):
+    """セル内改行や連続空白を無視して、日本語・英語の見出しか判定する。"""
+    if not isinstance(value, str):
+        return False
+    normalized = " ".join(value.split())
+    return normalized in {" ".join(label.split()) for label in labels}
+
+
 # JSONキー名 → i18nカテゴリ のマッピング
 _FIELD_TO_CATEGORY: dict[str, str] = {
     "buildingType":                      "buildingType",
@@ -724,7 +732,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             calender_column_num = {}
             for column_num in range(len(calender_p_list)):
                 name = calender_p_list[column_num]
-                if name != "" and name != "カレンダー\nパターン名称":
+                if name != "" and not _is_sheet_header(
+                    name,
+                    "カレンダー\nパターン名称",
+                    "Calendar Pattern Name",
+                ):
                     calender_column_num[name] = column_num
 
             # データの読み込み
@@ -3554,7 +3566,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             ref_column_num = {}
             for column_num in range(len(ref_name_list)):
                 ref_name = ref_name_list[column_num]
-                if ref_name != "" and ref_name != "熱源群名称":
+                if ref_name != "" and not _is_sheet_header(
+                    ref_name,
+                    "熱源群名称",
+                    "Heat Source Group Name",
+                ):
                     ref_column_num[ref_name] = column_num
             
             # データの読み込み
@@ -3585,7 +3601,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             ref_column_num = {}
             for column_num in range(len(ref_name_list)):
                 ref_name = ref_name_list[column_num]
-                if ref_name != "" and ref_name != "熱源群名称":
+                if ref_name != "" and not _is_sheet_header(
+                    ref_name,
+                    "熱源群名称",
+                    "Heat Source Group Name",
+                ):
                     ref_column_num[ref_name] = column_num
             
             # データの読み込み
@@ -3616,7 +3636,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             ahu_column_num = {}
             for column_num in range(len(ahu_name_list)):
                 ahu_name = ahu_name_list[column_num]
-                if ahu_name != "" and ahu_name != "空調機群名称":
+                if ahu_name != "" and not _is_sheet_header(
+                    ahu_name,
+                    "空調機群名称",
+                    "Air-Conditioning Unit Group Name",
+                ):
                     ahu_column_num[ahu_name] = column_num
             
             # データの読み込み
@@ -3649,7 +3673,22 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             room_column_num = {}
             for column_num in range(len(room_list)):
 
-                if room_list[column_num] != "空調ゾーン名称" and floor_list[column_num] != "" and room_list[column_num] != "" and type_list[column_num] != "":
+                if (
+                    floor_list[column_num] != ""
+                    and room_list[column_num] != ""
+                    and type_list[column_num] != ""
+                    and not _is_sheet_header(floor_list[column_num], "階", "Floor")
+                    and not _is_sheet_header(
+                        room_list[column_num],
+                        "空調ゾーン名称",
+                        "Air-Conditioning Zone Name",
+                    )
+                    and not _is_sheet_header(
+                        type_list[column_num],
+                        "室負荷の種類",
+                        "Room Load Type",
+                    )
+                ):
                     
                     # 階と室名をkeyとする
                     roomKey = str(floor_list[column_num]) + '_' + str(room_list[column_num])
@@ -3694,7 +3733,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             window_column_num = {}
             for column_num in range(len(window_name_list)):
                 window_name = window_name_list[column_num]
-                if window_name != "" and window_name != "開口部名称":
+                if window_name != "" and not _is_sheet_header(
+                    window_name,
+                    "開口部名称",
+                    "Opening Name",
+                ):
                     window_column_num[window_name] = column_num
 
             # データの読み込み
