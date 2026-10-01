@@ -975,8 +975,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 data_SP_AC_MD = sheet_SP_AC_MD.row_values(i)
 
+                operation_mode = data_SP_AC_MD[1]
+                if isinstance(operation_mode, str):
+                    operation_mode = operation_mode.removesuffix("期")
+
                 data["SpecialInputData"]["AC_operation_mode"]["operation_mode"].append(
-                    _norm(data_SP_AC_MD[1], "ac_operation_mode")
+                    _norm(operation_mode, "ac_operation_mode")
                 )
                 data["SpecialInputData"]["AC_operation_mode"]["setpoint_temperature"].append( data_SP_AC_MD[2] )
                 data["SpecialInputData"]["AC_operation_mode"]["setpoint_humidity"].append( data_SP_AC_MD[3] )
