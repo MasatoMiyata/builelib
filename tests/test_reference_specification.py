@@ -10,7 +10,7 @@ from openpyxl import Workbook, load_workbook
 from builelib import commons
 from builelib.input.make_inputdata import make_jsondata_from_Ver2_sheet
 from builelib.input.parser import parse_input_sheet
-from builelib.input.reference_specification import expand_reference_specifications, lighting_rated_power
+from builelib.input.reference_specification import expand_reference_specifications, lighting_rated_power, prepare_input_data
 
 
 def _workbook(tmp_path, rooms, lighting_rows):
@@ -74,8 +74,6 @@ def test_excel_reader_keeps_reference_request_for_calculation_stage(tmp_path):
     assert raw["ReferenceSpecificationRequests"] == [
         {"equipment": "照明", "room": "1F_R1", "source": "F4 11行目（機器名称）"}
     ]
-
-    from builelib.input.reference_specification import prepare_input_data
 
     complete, result_validation = prepare_input_data(raw, validation, from_excel=True)
     assert not [error for error in result_validation["error"] if "基準設定仕様" in error]
@@ -463,3 +461,173 @@ def test_malformed_json_request_returns_validation_error():
     source["Rooms"]["1F_ロビー"]["buildingType"] = []
     _, errors = expand_reference_specifications(source)
     assert any("建物用途・室用途が不正" in error for error in errors)
+
+# ---------------------------------------------------------------------------
+# 空調の基準設定仕様（仕様書第2章）
+# ---------------------------------------------------------------------------
+AC_SAMPLE_XLSX = Path(__file__).resolve().parents[1] / "examples" / "WEBPRO" / "sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
+AC_MARKER = "基準設定仕様"
+
+
+def _ac_zone_input(building="事務所等", room_type="事務室", area=100, region="6"):
+    return {
+        "Building": {"Region": region},
+        "Rooms": {"Z": {"buildingType": building, "roomType": room_type, "roomArea": area}},
+        "AirConditioningZone": {"Z": {
+            "AHU_cooling_insideLoad": AC_MARKER, "AHU_cooling_outdoorLoad": AC_MARKER,
+            "AHU_heating_insideLoad": AC_MARKER, "AHU_heating_outdoorLoad": AC_MARKER,
+        }},
+        "ReferenceSpecificationRequests": [{"equipment": "空調機群", "zone": "Z"}],
+    }
+
+
+def test_one_ahu_generates_heat_sources_and_pumps():
+    source = _ac_zone_input()
+    original = copy.deepcopy(source)
+    data, errors = expand_reference_specifications(source)
+    assert errors == []
+    assert source == original
+    assert "ReferenceSpecificationRequests" not in data
+
+    zone = data["AirConditioningZone"]["Z"]
+    assert zone["AHU_cooling_insideLoad"] == zone["AHU_cooling_outdoorLoad"]
+    ahu = data["AirHandlingSystem"][zone["AHU_cooling_insideLoad"]]
+    assert ahu["AirHandlingUnit"][0]["RatedCapacityCooling"] == pytest.approx(12)
+    assert ahu["AirHandlingUnit"][0]["FanAirVolume"] == pytest.approx(0.3 * 1000 * 100 * 0.0216)
+    assert ahu["AirHandlingUnit"][0]["isAirHeatExchanger"] == "全熱交換器あり・様式2-9記載無し"
+    cooling = data["HeatsourceSystem"][ahu["HeatSource_cooling"]]["冷房"]["Heatsource"]
+    assert len(cooling) == 2
+    assert cooling[0]["HeatsourceRatedCapacity"] == pytest.approx(7.3)
+    pumps = data["SecondaryPumpSystem"][ahu["Pump_cooling"]]["冷房"]["SecondaryPump"]
+    assert len(pumps) == 2
+    assert sum(p["RatedPowerConsumption"] for p in pumps) == pytest.approx(14.6 / 22)
+
+
+def test_two_ahu_groups_use_room_and_outdoor_area_factors():
+    data, errors = expand_reference_specifications(_ac_zone_input("ホテル等", "客室"))
+    assert errors == []
+    zone = data["AirConditioningZone"]["Z"]
+    inside = data["AirHandlingSystem"][zone["AHU_cooling_insideLoad"]]
+    outside = data["AirHandlingSystem"][zone["AHU_cooling_outdoorLoad"]]
+    assert inside is not outside
+    assert outside["AirHandlingUnit"][0]["Type"] == "空調機"
+    assert inside["AirHandlingUnit"][0]["FanAirVolume"] is None
+    assert outside["AirHandlingUnit"][0]["FanAirVolume"] is None
+    assert inside["AirHandlingUnit"][0]["RatedCapacityCooling"] == pytest.approx(6)
+    assert outside["AirHandlingUnit"][0]["RatedCapacityCooling"] == pytest.approx(3)
+    inside_source = data["HeatsourceSystem"][inside["HeatSource_cooling"]]["冷房"]["Heatsource"][0]
+    outside_source = data["HeatsourceSystem"][outside["HeatSource_cooling"]]["冷房"]["Heatsource"][0]
+    assert inside_source["HeatsourceRatedCapacity"] == pytest.approx(0.054 * 100 * 2 / 3)
+    assert outside_source["HeatsourceRatedCapacity"] == pytest.approx(0.054 * 100 / 3)
+
+
+def test_shared_ahu_uses_representative_usage_and_four_pumps():
+    source = _ac_zone_input("物販店舗等", "大型店の売場", area=100)
+    data, errors = expand_reference_specifications(source)
+    assert errors == []
+    ahu = next(iter(data["AirHandlingSystem"].values()))
+    pumps = data["SecondaryPumpSystem"][ahu["Pump_cooling"]]["冷房"]["SecondaryPump"]
+    assert len(pumps) == 4
+
+    # 室負荷20m²と外気負荷20m²で同点なら、H28表の行が早い事務室を代表にする。
+    shared = {
+        "Building": {"Region": "6"},
+        "Rooms": {
+            "office": {"buildingType": "事務所等", "roomType": "事務室", "roomArea": 30},
+            "hotel": {"buildingType": "ホテル等", "roomType": "客室", "roomArea": 60},
+        },
+        "AirConditioningZone": {
+            "office": {"AHU_cooling_insideLoad": "shared", "AHU_cooling_outdoorLoad": "other"},
+            "hotel": {"AHU_cooling_insideLoad": "other", "AHU_cooling_outdoorLoad": "shared"},
+        },
+        "AirHandlingSystem": {"shared": {"HeatSource_cooling": AC_MARKER}},
+        "ReferenceSpecificationRequests": [{"equipment": "熱源群", "ahu": "shared", "mode": "冷房"}],
+    }
+    expanded, errors = expand_reference_specifications(shared)
+    assert errors == []
+    name = expanded["AirHandlingSystem"]["shared"]["HeatSource_cooling"]
+    assert expanded["HeatsourceSystem"][name]["冷房"]["Heatsource"][0]["HeatsourceRatedCapacity"] == pytest.approx(0.073 * 40)
+
+
+def test_no_pump_and_partial_zone_marker():
+    no_pump, errors = expand_reference_specifications(
+        _ac_zone_input("学校等", "小中学校の教室", region="3")
+    )
+    assert errors == []
+    ahu = next(iter(no_pump["AirHandlingSystem"].values()))
+    assert ahu["Pump_cooling"] is None
+    assert ahu["Pump_heating"] is None
+    assert no_pump.get("SecondaryPumpSystem", {}) == {}
+
+    partial = _ac_zone_input()
+    partial["AirConditioningZone"]["Z"]["AHU_cooling_outdoorLoad"] = "existing"
+    _, errors = expand_reference_specifications(partial)
+    assert any("両方" in error for error in errors)
+
+
+@pytest.mark.parametrize(
+    ("building", "room_type"),
+    [
+        ("ホテル等", "客室"),
+        ("ホテル等", "客室内の浴室等"),
+        ("学校等", "宿直室"),
+    ],
+)
+def test_region8_second_ahu_uses_corrected_fan_control(building, room_type):
+    # 更新されたH28表のBM13・BM14・BM77にある2台目の制御方式を検証する。
+    data, errors = expand_reference_specifications(_ac_zone_input(building, room_type, region="8"))
+    assert errors == []
+    zone = data["AirConditioningZone"]["Z"]
+    assert zone["AHU_cooling_insideLoad"] != zone["AHU_cooling_outdoorLoad"]
+    outside = data["AirHandlingSystem"][zone["AHU_cooling_outdoorLoad"]]
+    assert outside["AirHandlingUnit"][0]["FanControlType"] == "定風量制御"
+
+
+def test_excel_collects_requests_and_prepares_all_ac_equipment(tmp_path):
+    workbook = load_workbook(AC_SAMPLE_XLSX)
+    workbook["2-1) 空調ゾーン"]["J11"] = AC_MARKER
+    workbook["2-1) 空調ゾーン"]["K11"] = AC_MARKER
+    for column in "VWXY":
+        workbook["2-7) 空調機"][f"{column}27"] = AC_MARKER
+    path = tmp_path / "ac_reference.xlsx"
+    workbook.save(path)
+
+    raw, excel_validation = make_jsondata_from_Ver2_sheet(str(path))
+    assert excel_validation["error"] == []
+    requests = raw["ReferenceSpecificationRequests"]
+    assert {request["equipment"] for request in requests} == {"空調機群", "熱源群", "二次ポンプ群"}
+    assert any("2-1) 空調ゾーン 11行目" in request["source"] for request in requests)
+    assert any("2-7) 空調機 27行目" in request["source"] for request in requests)
+
+    complete, validation = prepare_input_data(raw, excel_validation, from_excel=True)
+    assert validation["error"] == []
+    assert commons.inputdata_validation(complete) == []
+    assert "ReferenceSpecificationRequests" not in complete
+    assert complete["AirConditioningZone"]["1F_ロビー"]["AHU_cooling_insideLoad"].startswith("基準設定仕様_空調機群_")
+    assert complete["AirHandlingSystem"]["HU-11"]["HeatSource_cooling"].startswith("基準設定仕様_熱源群_")
+
+    # 片方だけを指定した場合、展開段階のエラーにもExcelのシート・行が残る。
+    partial = copy.deepcopy(raw)
+    partial["AirConditioningZone"]["1F_ロビー"]["AHU_cooling_outdoorLoad"] = "HU-11"
+    _, partial_validation = prepare_input_data(partial, excel_validation, from_excel=True)
+    assert any("2-1) 空調ゾーン 11行目" in error and "両方" in error for error in partial_validation["error"])
+
+
+@pytest.mark.parametrize("region", ("6", "8"))
+def test_two_ahu_json_runs_calculation(region):
+    from builelib.runner import calculate_from_json
+
+    source = json.loads(SAMPLE_JSON.read_text(encoding="utf-8"))
+    source["Building"]["Region"] = region
+    zone_name = "1F_ロビー"
+    source["Rooms"][zone_name]["buildingType"] = "ホテル等"
+    source["Rooms"][zone_name]["roomType"] = "客室"
+    for key in (
+        "AHU_cooling_insideLoad", "AHU_cooling_outdoorLoad",
+        "AHU_heating_insideLoad", "AHU_heating_outdoorLoad",
+    ):
+        source["AirConditioningZone"][zone_name][key] = AC_MARKER
+    source["ReferenceSpecificationRequests"] = [{"equipment": "空調機群", "zone": zone_name}]
+    result = calculate_from_json(source)
+    assert result["errors"] == []
+    assert isinstance(result["result"]["BEI_AC"], float)
