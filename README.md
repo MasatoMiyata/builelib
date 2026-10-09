@@ -113,7 +113,7 @@ Output files are written next to the input Excel file. Existing files with the s
 
 ## Run from Python
 
-### Calculate from an Excel file
+### Calculate from an Excel or JSON file
 
 ```python
 from builelib.runner import calculate
@@ -121,7 +121,7 @@ from builelib.runner import calculate
 calculate("./examples/Builelib_inputSheet_sample_001.xlsx")
 ```
 
-`calculate()` writes JSON, CSV, and ZIP files next to the input Excel file instead of returning the results. Pass `False` as the second argument to validate the input only.
+`calculate()` accepts a file path and reads Excel (`.xlsx`, `.xlsm`) or JSON (`.json`) according to its extension. It writes JSON, CSV, and ZIP files next to the input file instead of returning the results. For a JSON file, use `calculate("input.json")`. Pass `False` as the second argument to skip equipment calculations and validate the input.
 
 ```python
 calculate("./examples/Builelib_inputSheet_sample_001.xlsx", False)

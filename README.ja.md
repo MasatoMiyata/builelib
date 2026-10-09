@@ -102,7 +102,7 @@ uv run builelib <inputfile> False
 
 ## Pythonから実行する
 
-### Excelファイルを計算する
+### ExcelまたはJSONファイルから計算する
 
 ```python
 from builelib.runner import calculate
@@ -110,7 +110,7 @@ from builelib.runner import calculate
 calculate("./examples/Builelib_inputSheet_sample_001.xlsx")
 ```
 
-`calculate()` は結果を返すのではなく、入力Excelファイルと同じディレクトリへJSON、CSV、ZIPを出力します。入力検証のみを行う場合は、第2引数に `False` を指定します。
+`calculate()` はファイルのパスを受け取り、拡張子に応じてExcel（`.xlsx`、`.xlsm`）またはJSON（`.json`）を読み込みます。結果を戻り値で返さず、入力ファイルと同じディレクトリへJSON、CSV、ZIPを出力します。JSONファイルの場合も `calculate("input.json")` と指定できます。設備計算を省略して入力を検証する場合は、第2引数に `False` を指定します。
 
 ```python
 calculate("./examples/Builelib_inputSheet_sample_001.xlsx", False)

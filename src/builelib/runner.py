@@ -5,8 +5,10 @@ import zipfile
 import math
 
 from builelib.input.make_inputdata import make_jsondata_from_Ver2_sheet
+from builelib.input.preparation import prepare_input_data
+from builelib.input.reference_specification import REQUESTS_KEY
 from builelib.systems import airconditioning, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
-from builelib import database_loader
+from builelib import commons as bc, database_loader
 
 # json.dump用のクラス
 class MyEncoder(json.JSONEncoder):
@@ -24,10 +26,13 @@ class MyEncoder(json.JSONEncoder):
 
 
 def calculate(inputfile_name, exec_calculation=True):
-    """Builelibを実行するプログラム
+    """ExcelまたはJSONのファイルを読み込み、結果をファイルに出力する。
+
     Args:
-        inputfile_name (str): 入力ファイルの名称
-        exec_calculation (bool): 計算の実行 （True: 計算も行う、 False: 計算は行わない）
+        inputfile_name (str): .xlsx、.xlsm、.json の入力ファイルのパス
+        exec_calculation (bool): Falseなら入力準備と検証だけ行い、設備計算を省略する
+
+    計算結果は戻り値では返さず、入力ファイルと同じ場所に書き出す。
     """
 
     #------------------------------------
@@ -92,17 +97,38 @@ def calculate(inputfile_name, exec_calculation=True):
     # 渡されたファイルの拡張子を確認
     inputfile_name_split = os.path.splitext(inputfile_name)
 
-    if inputfile_name_split[-1] == ".xlsm" or inputfile_name_split[-1] == ".xlsx":
+    if inputfile_name_split[-1].lower() in (".xlsm", ".xlsx"):
 
-        # jsonファイルの生成
         try:
+            # JSONファイルの生成
             inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
+
+            # 「基準設定仕様」の展開
+            inputdata, validation = prepare_input_data(inputdata, validation, from_excel=True)
 
         except:
             validation = {
                 "error": "入力シートの読み込み時に予期せぬエラーが発生しました。"
             }
             exec_calculation = False  # 計算は行わない。
+
+    elif inputfile_name_split[-1].lower() == ".json":
+
+        try:
+            # JSONの読み込み
+            with open(inputfile_name, encoding="utf-8") as source:
+                inputdata = json.load(source)
+
+            # 「基準設定仕様」の展開
+            inputdata, validation = prepare_input_data(inputdata)
+
+            if not isinstance(inputdata, dict):
+                # 読み込みに失敗したJSON配列などを、後続の辞書アクセスへ渡さない。
+                inputdata = {}
+
+        except (OSError, ValueError) as exc:
+            validation = {"error": [f"JSON入力ファイルを読み込めません: {exc}"], "warning": []}
+            exec_calculation = False
 
     else:
 
@@ -547,10 +573,9 @@ def calculate(inputfile_name, exec_calculation=True):
 
 
 def calculate_from_json(inputdata: dict) -> dict:
-    """JSON辞書を直接受け取って計算し、結果辞書を返す関数（APIエンドポイント用）
+    """読み込み済みの入力辞書を計算し、結果とエラーを辞書で返す。
 
-    Excelファイルを経由せず、webproJsonSchema準拠の辞書を直接受け取る。
-    ファイル出力は行わず、計算結果を戻り値として返す。
+    ファイル出力は行わず、入力辞書の基準設定仕様を展開してから計算する。
 
     Args:
         inputdata (dict): webproJsonSchema準拠の入力データ辞書
@@ -611,6 +636,17 @@ def calculate_from_json(inputdata: dict) -> dict:
 
     # エラーメッセージの収集リスト
     errors = []
+
+    # 基準設定仕様の展開とスキーマ検証：
+    # ReferenceSpecificationRequests キーがあれば、設備生成要求の展開後にスキーマ検証する。
+    # キーがない通常のJSONも準備処理を通すが、従来どおりスキーマ検証は省略する。
+    has_reference_requests = isinstance(inputdata, dict) and REQUESTS_KEY in inputdata
+    inputdata, preparation_validation = prepare_input_data(
+        inputdata, validate_schema=has_reference_requests
+    )
+    errors.extend(preparation_validation["error"])
+    if errors:
+        return {"result": calc_reuslt, "errors": errors}
 
     # SpecialInputData が存在しない場合は空辞書をセット
     # （other_energy.py 等が inputdata["SpecialInputData"] を直接参照するため）
@@ -777,8 +813,13 @@ def calculate_ac(inputfile_name):
     
     # jsonファイルの生成
     inputdata, validation = make_jsondata_from_Ver2_sheet(inputfile_name)
+    # 基準設定仕様の展開とスキーマ検証を行う
+    inputdata, validation = prepare_input_data(inputdata, validation, from_excel=True)
 
     print(validation)
+    if validation["error"]:
+        # デバッグ用の入口でも、未展開または不正な設備を計算へ渡さない。
+        raise ValueError("\n".join(validation["error"]))
 
     # 計算の実行（デバッグモードON）
     resultJson_webpro = airconditioning.calc_energy(inputdata, debug=True)
