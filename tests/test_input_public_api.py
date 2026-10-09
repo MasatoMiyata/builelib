@@ -18,10 +18,22 @@ EXAMPLE = (
 )
 
 
-def test_parse_input_sheet_returns_in_memory_result():
-    result = parse_input_sheet(EXAMPLE)
+@pytest.mark.parametrize("trimmed_sheet_names", [False, True])
+def test_parse_input_sheet_returns_in_memory_result(tmp_path, trimmed_sheet_names):
+    input_path = EXAMPLE
+    if trimmed_sheet_names:
+        from openpyxl import load_workbook
+
+        workbook = load_workbook(EXAMPLE)
+        for sheet_name in ("2-2) 外壁構成 ", "2-4) 外皮 "):
+            workbook[sheet_name].title = sheet_name.strip()
+        input_path = tmp_path / "trimmed_sheet_names.xlsx"
+        workbook.save(input_path)
+
+    result = parse_input_sheet(input_path)
 
     assert isinstance(result, InputSheetParseResult)
+    assert result.data["WallConfigure"]
     assert len(result.data["AirHandlingSystem"]) == 26
     assert result.data["AirHandlingSystem"]["FCU1-1"]["Pump_cooling"] == "CHP2"
     assert result.data["AirHandlingSystem"]["FCU1-1"]["HeatSource_cooling"] == "AR1"
