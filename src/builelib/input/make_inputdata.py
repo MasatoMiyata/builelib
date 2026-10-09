@@ -3,6 +3,7 @@ import xlrd
 import json
 import os
 import copy
+import re
 import sys
 
 from builelib import commons as bc
@@ -73,6 +74,62 @@ _SP_SHEET_ALIASES = {
     "SP-AC-CW": ("SP-AC-CW", "SP-AC-CW) 熱源冷却水温度"),
     "SP-AC-FC": ("SP-AC-FC", "SP-AC-FC) 変流量・変風量制御"),
 }
+
+_SUPPORTED_SHEET_ALIASES = {**_FORM_SHEET_ALIASES, **_SP_SHEET_ALIASES}
+_SHEET_ID_BY_ALIAS = {
+    alias: sheet_id
+    for sheet_id, aliases in _SUPPORTED_SHEET_ALIASES.items()
+    for alias in aliases
+}
+_SHEET_HEADER_ID = re.compile(
+    r"^(?:様式|Form)\s*(SP-[A-Z0-9]+(?:-[A-Z0-9]+)*|\d+(?:-\d+)?)(?=[.)\s:]|$)",
+    re.IGNORECASE,
+)
+_SP_HEADER_ID = re.compile(r"^(SP-[A-Z0-9]+(?:-[A-Z0-9]+)*)(?=[.)\s:]|$)", re.IGNORECASE)
+
+
+def _sheet_id_from_header(value):
+    """A1 の様式番号だけを読む。後続の名称や Rev 表記は判定に使わない。"""
+    if not isinstance(value, str):
+        return None
+    header = unicodedata.normalize("NFKC", value).strip()
+    if header in _SUPPORTED_SHEET_ALIASES:
+        return header
+    match = _SHEET_HEADER_ID.match(header)
+    if match is None:
+        sp_match = _SP_HEADER_ID.match(header)
+        return sp_match.group(1).upper() if sp_match is not None else None
+    sheet_id = match.group(1).upper()
+    return sheet_id if sheet_id.startswith("SP-") else f"F{sheet_id}"
+
+
+def _validate_sheet_names(wb):
+    """対応様式の改名を検出する。非対応様式や補助シートは対象外。"""
+    errors = []
+    matched_aliases = {}
+    for sheet_name in wb.sheet_names():
+        sheet = wb.sheet_by_name(sheet_name)
+        header = sheet.cell_value(0, 0) if sheet.nrows and sheet.ncols else None
+        header_id = _sheet_id_from_header(header)
+        alias_id = _SHEET_ID_BY_ALIAS.get(sheet_name)
+
+        if alias_id is not None:
+            matched_aliases.setdefault(alias_id, []).append(sheet_name)
+        if alias_id is not None and header_id is not None and header_id != alias_id:
+            errors.append(
+                f"シート「{sheet_name}」のA1は様式{header_id}ですが、シート名は様式{alias_id}として認識されます。"
+            )
+        elif header_id in _SUPPORTED_SHEET_ALIASES and alias_id != header_id:
+            allowed = "、".join(f"「{name}」" for name in _SUPPORTED_SHEET_ALIASES[header_id])
+            errors.append(
+                f"シート「{sheet_name}」のA1は様式{header_id}ですが、シート名を認識できません。"
+                f"対応するシート名: {allowed}。"
+            )
+
+    for sheet_id, names in matched_aliases.items():
+        if len(names) > 1:
+            errors.append(f"様式{sheet_id}のシートが複数あります: {', '.join(names)}。")
+    return errors
 
 
 def _find_sheet_by_alias(wb, alias_table, sheet_id):
@@ -498,6 +555,10 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     # テンプレートjsonの読み込み
     with open( template_directory + 'template.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
+
+    validation["error"].extend(_validate_sheet_names(wb))
+    if validation["error"]:
+        return data, validation
 
     # 「基準設定仕様」の位置を記録するための変数（仕様値への展開は後で行う）。
     reference_requests = []

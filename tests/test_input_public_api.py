@@ -16,6 +16,11 @@ EXAMPLE = (
     / "WEBPRO"
     / "sample01_WEBPRO_inputSheet_for_Ver3.8.xlsx"
 )
+ENGLISH_EXAMPLE = (
+    Path(__file__).resolve().parents[1]
+    / "examples"
+    / "Builelib_inputSheet_English_sample_001.xlsx"
+)
 
 
 @pytest.mark.parametrize("trimmed_sheet_names", [False, True])
@@ -33,6 +38,7 @@ def test_parse_input_sheet_returns_in_memory_result(tmp_path, trimmed_sheet_name
     result = parse_input_sheet(input_path)
 
     assert isinstance(result, InputSheetParseResult)
+    assert result.errors == []
     assert result.data["WallConfigure"]
     assert len(result.data["AirHandlingSystem"]) == 26
     assert result.data["AirHandlingSystem"]["FCU1-1"]["Pump_cooling"] == "CHP2"
@@ -41,6 +47,58 @@ def test_parse_input_sheet_returns_in_memory_result(tmp_path, trimmed_sheet_name
     assert lobby_shaded_wall["Direction"] == "北"
     assert lobby_shaded_wall["WallType"] == "地盤に接する外壁"
     assert lobby_shaded_wall["OriginalWallType"] == "日の当たらない外壁"
+
+
+@pytest.mark.parametrize(
+    ("original_name", "form_id"),
+    [
+        ("2-2) 外壁構成 ", "F2-2"),
+        ("2-4) 外皮 ", "F2-4"),
+        ("4) 照明", "F4"),
+        ("5-1) 給湯室", "F5-1"),
+    ],
+)
+def test_parse_input_sheet_reports_renamed_supported_form(tmp_path, original_name, form_id):
+    from openpyxl import load_workbook
+
+    workbook = load_workbook(EXAMPLE)
+    workbook[original_name].title = "変更されたシート名"
+    path = tmp_path / "renamed_form.xlsx"
+    workbook.save(path)
+
+    result = parse_input_sheet(path)
+
+    assert any("変更されたシート名" in error and form_id in error for error in result.errors)
+
+
+def test_english_form_header_with_revision_detects_renamed_sheet(tmp_path):
+    from openpyxl import load_workbook
+
+    parsed = parse_input_sheet(ENGLISH_EXAMPLE)
+    assert parsed.errors == []
+    assert parsed.data["WallConfigure"]
+
+    workbook = load_workbook(ENGLISH_EXAMPLE)
+    assert "Rev.2" in workbook["F2-2"]["A1"].value
+    workbook["F2-2"].title = "Renamed wall form"
+    path = tmp_path / "renamed_english_form.xlsx"
+    workbook.save(path)
+
+    renamed = parse_input_sheet(path)
+    assert any("Renamed wall form" in error and "F2-2" in error for error in renamed.errors)
+
+
+def test_english_sp_header_detects_renamed_sheet(tmp_path):
+    from openpyxl import load_workbook
+
+    workbook = load_workbook(ENGLISH_EXAMPLE)
+    assert workbook["SP-CM"]["A1"].value.startswith("SP-CM:")
+    workbook["SP-CM"].title = "Renamed calculation mode"
+    path = tmp_path / "renamed_english_sp.xlsx"
+    workbook.save(path)
+
+    result = parse_input_sheet(path)
+    assert any("Renamed calculation mode" in error and "SP-CM" in error for error in result.errors)
 
 
 def test_parse_input_sheet_rejects_unsupported_suffix(tmp_path):
