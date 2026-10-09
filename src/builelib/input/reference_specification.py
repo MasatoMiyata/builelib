@@ -18,11 +18,15 @@ REQUESTS_KEY = "ReferenceSpecificationRequests"
 
 # 基準設定仕様データベース（JSONファイル）
 _DATABASE_PATH = Path(__file__).resolve().parents[1] / "database" / "common_reference_specification.json"
+_HEAT_SOURCE_PATH = Path(__file__).resolve().parents[1] / "database" / "ac_heat_source_performance.json"
 _LIGHTING_POWER_KEY = "基準設定消費電力 [W/m2]"
 _REQUEST_FIELDS = {
     "照明": {"room"},
     "外壁": {"zone", "wallIndex"},
     "窓": {"zone", "wallIndex", "windowIndex"},
+    "空調機群": {"zone"},
+    "熱源群": {"ahu", "mode"},
+    "二次ポンプ群": {"ahu", "mode"},
     "換気": {"room", "unitType", "info"},
     "給湯": {"room", "systemIndex", "savingSystem", "info"},
     "昇降機": {"room", "elevatorIndex"},
@@ -41,6 +45,13 @@ def _load_database():
             return json.load(source)
     except (OSError, ValueError) as exc:
         raise ReferenceSpecificationError(f"基準設定仕様データベースを読み込めません: {exc}") from exc
+
+
+@lru_cache(maxsize=1)
+def _heat_source_performance():
+    """熱源機種の燃料が電力かどうかを、既存の機種DBで調べる。"""
+    with _HEAT_SOURCE_PATH.open(encoding="utf-8") as source:
+        return json.load(source)
 
 
 def lighting_rated_power(building_type, room_type, room_area):
@@ -128,7 +139,7 @@ def _room_data(database, rooms, room_key):
 
 
 def _ac_values(database, building_type, room_type, region):
-    """地域区分に合う空調表から、外壁・窓の基準値を取得する。"""
+    """地域区分に合うH28空調表から、外壁・窓・空調の基準値を取得する。"""
     try:
         region_number = int(region)
     except (TypeError, ValueError):
@@ -174,9 +185,268 @@ def _indexed_item(items, index, label):
     return item
 
 
+# ---------------------------------------------------------------------------
+# 空調の基準設定仕様（仕様書第2章）
+# ここで使う共通のDB検索・面積検査は上の関数にまとめている。
+# ---------------------------------------------------------------------------
+
+
+def _required_text(record, key):
+    """NaN由来のnullや適用不可の「-」を機器の仕様として使わない。"""
+    value = record.get(key)
+    if not isinstance(value, str) or not value or value in ("NaN", "-"):
+        raise ReferenceSpecificationError(
+            f"データベースの「{key}」が使用できません（原表 {record.get('_source_row', '?')}行目）。"
+        )
+    return value
+
+
+def _region(result):
+    return result.get("Building", {}).get("Region")
+
+
+def _connected_context(result, database, ahu_name):
+    """空調機群に接続する全ゾーンの補正床面積と代表用途を求める。
+
+    室負荷だけなら2/3、外気負荷だけなら1/3、両方なら1を乗じる。
+    用途別面積が同じ場合は、H28表のExcel行番号が小さい用途を選ぶ。
+    """
+    zones = result.get("AirConditioningZone", {})
+    if not isinstance(zones, dict):
+        raise ReferenceSpecificationError("AirConditioningZoneはオブジェクトにしてください。")
+    totals = {}
+    rows = {}
+    for zone_name, zone in zones.items():
+        if not isinstance(zone, dict):
+            continue
+        inside = zone.get("AHU_cooling_insideLoad") == ahu_name
+        outside = zone.get("AHU_cooling_outdoorLoad") == ahu_name
+        if not inside and not outside:
+            continue
+        room, building_type, room_type = _room_data(database, result.get("Rooms", {}), zone_name)
+        record = _ac_values(database, building_type, room_type, _region(result))
+        factor = 1 if inside and outside else (2 / 3 if inside else 1 / 3)
+        key = (building_type, room_type)
+        totals[key] = totals.get(key, 0) + _positive_area(room.get("roomArea")) * factor
+        rows[key] = record.get("_source_row", math.inf)
+    if not totals:
+        raise ReferenceSpecificationError(f"空調機群「{ahu_name}」に接続する空調ゾーンがありません。")
+    representative = min(totals, key=lambda key: (-totals[key], rows[key]))
+    record = _ac_values(database, *representative, _region(result))
+    return record, sum(totals.values())
+
+
+def _heat_source_unit(record, mode, ordinal, area):
+    """H28表の面積当たりの値から、熱源1台分の定格値を作る。"""
+    temperature = 7 if mode == "冷房" else 45
+    label = "冷熱" if mode == "冷房" else "温熱"
+    kind = _required_text(record, f"熱源種類（{label}{ordinal}台目）")
+    capacity = _required_number(record, f"床面積あたりの熱源容量（{label}{ordinal}台目）") * area
+    main_energy = _required_number(record, f"床面積あたりの主機定格エネルギー消費量（{label}{ordinal}台目）") * area
+    sub_power = _required_number(record, f"床面積あたりの補機定格消費電力（{label}{ordinal}台目）") * area
+    wtf = _required_number(record, f"一次ポンプWTF（{label}{ordinal}台目）")
+    performance = _heat_source_performance().get(kind)
+    if not isinstance(performance, dict):
+        raise ReferenceSpecificationError(f"熱源機種「{kind}」が機種DBにありません。")
+    fuel = performance.get("冷房時の特性" if mode == "冷房" else "暖房時の特性", {}).get("燃料種類")
+    if not fuel:
+        raise ReferenceSpecificationError(f"熱源機種「{kind}」の{mode}時の燃料種類がありません。")
+    # H28表では主機の「エネルギー消費量」が一つの数値になっている。
+    # 計算用JSONでは電力と燃料が別欄なので、既存の熱源機種DBで燃料を調べて振り分ける。
+    return {
+        "HeatsourceType": kind, "Number": 1,
+        "SupplyWaterTempSummer": temperature,
+        "SupplyWaterTempMiddle": temperature,
+        "SupplyWaterTempWinter": temperature,
+        "HeatsourceRatedCapacity": capacity,
+        "HeatsourceRatedPowerConsumption": main_energy if fuel == "電力" else 0,
+        "HeatsourceRatedFuelConsumption": 0 if fuel == "電力" else main_energy,
+        "Heatsource_sub_RatedPowerConsumption": sub_power,
+        "PrimaryPumpPowerConsumption": 0 if wtf == 0 else capacity / wtf,
+        "PrimaryPumpContolType": "無",
+        "CoolingTowerCapacity": capacity if mode == "冷房" else 0,
+        "CoolingTowerFanPowerConsumption": (
+            _required_number(record, f"冷却塔ファン定格消費電力（冷熱{ordinal}台目）") if mode == "冷房" else 0
+        ),
+        "CoolingTowerPumpPowerConsumption": (
+            _required_number(record, f"冷却水ポンプ定格消費電力（冷熱{ordinal}台目）") if mode == "冷房" else 0
+        ),
+        "CoolingTowerContolType": "無", "Info": None,
+    }
+
+
+def _heat_source_group(record, mode, area):
+    label = "冷熱" if mode == "冷房" else "温熱"
+    staging = _required_text(record, f"台数制御（{label}）")
+    units = [_heat_source_unit(record, mode, 1, area)]
+    # H28表で2台目の機種がnullなら、台数制御が有でも2台目は存在しない。
+    second = record.get(f"熱源種類（{label}2台目）")
+    if staging == "有" and second not in (None, "", "NaN"):
+        units.append(_heat_source_unit(record, mode, 2, area))
+    return {
+        mode: {
+            "StorageType": None, "StorageSize": None,
+            "isStagingControl": staging, "Heatsource": units,
+        }
+    }
+
+
+def _pump_group(record, mode, area):
+    label = "冷水" if mode == "冷房" else "温水"
+    heat_label = "冷熱" if mode == "冷房" else "温熱"
+    count = _required_number(record, f"{label}ポンプ台数")
+    if count == 0:
+        return None
+    if int(count) != count or count > 8:
+        raise ReferenceSpecificationError(f"{label}ポンプ台数が不正です（原表 {record.get('_source_row', '?')}行目）。")
+    delta = _required_number(record, f"{label}ポンプ往返温度差")
+    wtf = _required_number(record, f"{label}ポンプWTF")
+    if delta == 0 or wtf == 0:
+        raise ReferenceSpecificationError(f"{label}ポンプの温度差・WTFには正の値が必要です（原表 {record.get('_source_row', '?')}行目）。")
+    # ポンプの流量と電力は熱源1台目・2台目の合計能力から計算する。
+    # 1台当たりの値にするため、最後にポンプ台数で割る。
+    capacity = _required_number(record, f"床面積あたりの熱源容量（{heat_label}1台目）")
+    second_kind = record.get(f"熱源種類（{heat_label}2台目）")
+    if second_kind not in (None, "", "NaN"):
+        capacity += _required_number(record, f"床面積あたりの熱源容量（{heat_label}2台目）")
+    capacity *= area
+    control = _required_text(record, f"{label}ポンプ制御方式")
+    staging = _required_text(record, f"{label}ポンプ台数制御")
+    pumps = []
+    # 原表には4台の用途もある。合計能力を台数で割り、台数分の要素を作る。
+    for ordinal in range(1, int(count) + 1):
+        pumps.append({
+            "Number": 1,
+            "RatedWaterFlowRate": capacity / delta * (3600 / 4186) / count,
+            "RatedPowerConsumption": capacity / wtf / count,
+            "ContolType": control,
+            "MinOpeningRate": 60 if control == "回転数制御" else None,
+            "Info": None,
+        })
+    return {
+        mode: {
+            "TemperatureDifference": 7, "isStagingControl": staging,
+            "SecondaryPump": pumps,
+        }
+    }
+
+
+def _air_handling_unit(record, area, ordinal, exchanger):
+    """空調機1台の値を作る。2台目がある場合、全熱交換器は2台目へ付ける。"""
+    suffix = "１" if ordinal == 1 else "2"
+    name = _required_text(record, f"空調機タイプ（{suffix}台目）")
+    cool = _required_number(record, f"床面積あたりの定格冷房能力（{suffix}台目）") * area
+    heat = _required_number(record, f"床面積あたりの定格暖房能力（{suffix}台目）") * area
+    air = _required_number(record, f"床面積あたりの定格給気風量（{suffix}台目）") * 1000 * area
+    atf = _required_number(record, f"給気/排気/外気ファンATF（{suffix}台目）")
+    if atf == 0:
+        raise ReferenceSpecificationError(f"空調機{ordinal}台目のファンATFには正の値が必要です（原表 {record.get('_source_row', '?')}行目）。")
+    control = _required_text(record, f"風量制御方式（{suffix}台目）")
+    outdoor_cut = _required_text(record, f"外気カット制御（{suffix}台目）")
+    economizer = _required_text(record, f"外気冷房制御（{suffix}台目）")
+    ratio = _required_number(record, "全熱交換機効率") * 100 if exchanger else None
+    # このJSONのFanAirVolumeは、様式2-7の「全熱交換器定格風量」に対応する。
+    # 空調機が1台だけの場合は給気風量の30%、2台なら2台目の給気風量を使う。
+    fan_air = air * (0.3 if ordinal == 1 else 1) if exchanger else None
+    unit = {
+        "Type": name, "Number": 1,
+        "RatedCapacityCooling": cool, "RatedCapacityHeating": heat,
+        "FanType": None, "FanAirVolume": fan_air,
+        "FanPowerConsumption": cool / atf,
+        "FanControlType": control,
+        "FanMinOpeningRate": _required_number(record, f"回転数制御最小開度（{suffix}台目）"),
+        "AirHeatExchangeRatioCooling": ratio,
+        "AirHeatExchangeRatioHeating": ratio,
+        "AirHeatExchangerEffectiveAirVolumeRatio": None,
+        "AirHeatExchangerControl": "無",
+        "AirHeatExchangerPowerConsumption": (
+            _required_number(record, "全熱交換機ローター消費電力") * area if exchanger else None
+        ),
+        "Info": None,
+        "isAirHeatExchanger": "全熱交換器あり・様式2-9記載無し" if exchanger else "全熱交換器無し",
+        "AirHeatExchanger_name": None,
+    }
+    group = {
+        "isEconomizer": economizer,
+        "EconomizerMaxAirVolume": air,
+        "isOutdoorAirCut": outdoor_cut,
+        "Pump_cooling": REFERENCE_MARKER, "Pump_heating": REFERENCE_MARKER,
+        "HeatSource_cooling": REFERENCE_MARKER, "HeatSource_heating": REFERENCE_MARKER,
+        "AirHandlingUnit": [unit],
+    }
+    return group
+
+
+def _expand_ac_request(result, database, request, used_names, next_ids):
+    """空調の生成要求を1件処理する。ExcelとJSONの両方から呼ばれる。"""
+    equipment = request["equipment"]
+    if equipment == "空調機群":
+        zone_name = request.get("zone")
+        zone = result.get("AirConditioningZone", {}).get(zone_name)
+        if not isinstance(zone, dict):
+            raise ReferenceSpecificationError(f"空調ゾーン「{zone_name}」がありません。")
+        inside = zone.get("AHU_cooling_insideLoad")
+        outside = zone.get("AHU_cooling_outdoorLoad")
+        if inside != REFERENCE_MARKER or outside != REFERENCE_MARKER:
+            raise ReferenceSpecificationError("室負荷処理と外気負荷処理の両方に「基準設定仕様」を指定してください。")
+        room, building_type, room_type = _room_data(database, result.get("Rooms", {}), zone_name)
+        record = _ac_values(database, building_type, room_type, _region(result))
+        area = _positive_area(room.get("roomArea"))
+        second_capacity = _required_number(record, "床面積あたりの定格冷房能力（2台目）")
+        exchanger_control = _required_text(record, "全熱交換機制御")
+        # ゾーンごとに固有の名称を発行する。同じ文字を複数ゾーンに指定しても
+        # 設備を共有したとは解釈せず、それぞれの床面積で別の空調機群を作る。
+        first_name, next_ids[equipment] = _next_name(equipment, used_names[equipment], next_ids[equipment])
+        first = _air_handling_unit(record, area, 1, second_capacity == 0 and exchanger_control == "有")
+        generated = [(first_name, first)]
+        if second_capacity > 0:
+            second_name, next_ids[equipment] = _next_name(equipment, used_names[equipment], next_ids[equipment])
+            second = _air_handling_unit(record, area, 2, exchanger_control == "有")
+            generated.append((second_name, second))
+        ahus = result.setdefault("AirHandlingSystem", {})
+        for name, group in generated:
+            ahus[name] = group
+        outside_name = generated[-1][0]
+        for key in ("AHU_cooling_insideLoad", "AHU_heating_insideLoad"):
+            zone[key] = first_name
+        for key in ("AHU_cooling_outdoorLoad", "AHU_heating_outdoorLoad"):
+            zone[key] = outside_name
+        # 新しく作った空調機の熱源・ポンプも第2.1・2.2節で生成する。
+        for name, _ in generated:
+            for dependent in ("熱源群", "二次ポンプ群"):
+                for mode in ("冷房", "暖房"):
+                    _expand_ac_request(result, database, {"equipment": dependent, "ahu": name, "mode": mode}, used_names, next_ids)
+        return
+
+    ahu_name = request.get("ahu")
+    mode = request.get("mode")
+    if mode not in ("冷房", "暖房"):
+        raise ReferenceSpecificationError("modeには冷房または暖房を指定してください。")
+    ahu = result.get("AirHandlingSystem", {}).get(ahu_name)
+    if not isinstance(ahu, dict):
+        raise ReferenceSpecificationError(f"空調機群「{ahu_name}」がありません。")
+    field = ("HeatSource_" if equipment == "熱源群" else "Pump_") + ("cooling" if mode == "冷房" else "heating")
+    if ahu.get(field) != REFERENCE_MARKER:
+        raise ReferenceSpecificationError(f"空調機群「{ahu_name}」の{field}に「基準設定仕様」がありません。")
+    record, area = _connected_context(result, database, ahu_name)
+    generated = _heat_source_group(record, mode, area) if equipment == "熱源群" else _pump_group(record, mode, area)
+    if generated is None:
+        ahu[field] = None  # H28表でポンプ台数0なら二次ポンプ群は作らない。
+        return
+    name, next_ids[equipment] = _next_name(equipment, used_names[equipment], next_ids[equipment])
+    target = "HeatsourceSystem" if equipment == "熱源群" else "SecondaryPumpSystem"
+    result.setdefault(target, {})[name] = generated
+    ahu[field] = name
+
 def _expand_equipment(result, database, request, used_names, next_ids):
     """設備の生成要求1件を展開し、既存の参照名称も差し替える。"""
     equipment = request["equipment"]
+
+    if equipment in ("空調機群", "熱源群", "二次ポンプ群"):
+        # 空調は接続ゾーンの面積集計と複数機器の生成が必要になる。
+        # このファイル内の空調専用関数へ渡し、Excel・JSONを同じ方法で展開する。
+        _expand_ac_request(result, database, request, used_names, next_ids)
+        return
 
     if equipment == "照明":
         room_key = request.get("room")
@@ -431,6 +701,7 @@ def expand_reference_specifications(inputdata):
     for key in (
         "EnvelopeSet", "WallConfigure", "WindowConfigure", "VentilationRoom",
         "VentilationUnit", "HotwaterRoom", "HotwaterSupplySystems", "Elevators",
+        "AirConditioningZone", "AirHandlingSystem", "HeatsourceSystem", "SecondaryPumpSystem",
     ):
         if key in result and not isinstance(result[key], dict):
             return result, [f"基準設定仕様: {key}はオブジェクトにしてください。"]
@@ -446,6 +717,9 @@ def expand_reference_specifications(inputdata):
         "照明": set(),
         "給湯": set(result.get("HotwaterSupplySystems", {})),
         "昇降機": set(),
+        "空調機群": set(result.get("AirHandlingSystem", {})),
+        "熱源群": set(result.get("HeatsourceSystem", {})),
+        "二次ポンプ群": set(result.get("SecondaryPumpSystem", {})),
     }
     for system in lighting_systems.values():
         if isinstance(system, dict) and isinstance(system.get("lightingUnit"), dict):
@@ -462,7 +736,13 @@ def expand_reference_specifications(inputdata):
     next_ids = {equipment: 1 for equipment in used_by_equipment}
     database = _load_database()
 
-    for number, request in enumerate(requests, start=1):
+    # 様式2-1の空調機群を先に作る。JSON利用者が要求をどの順番で書いても、
+    # 続く熱源・ポンプが接続先の空調機群を参照できる。
+    ordered_requests = sorted(
+        enumerate(requests, start=1),
+        key=lambda item: 0 if isinstance(item[1], dict) and item[1].get("equipment") == "空調機群" else 1,
+    )
+    for number, request in ordered_requests:
         # sourceはExcelの行番号など、利用者に示すための任意情報。
         source = request.get("source") if isinstance(request, dict) else None
         location = source if isinstance(source, str) and source else f"基準設定仕様 要求{number}"

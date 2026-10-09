@@ -1415,6 +1415,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataAC1[11], "様式2-1.空調ゾーン "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, None, None),
                     }
 
+                    # 「基準設定仕様」の展開時に必要となる情報を記録：
+                    if AHU_insideLoad == REFERENCE_MARKER or AHU_outdoorLoad == REFERENCE_MARKER:
+                        reference_requests.append({
+                            "equipment": "空調機群", "zone": roomKey,
+                            "source": f"{sheet_AC1.name} {i+1}行目（空調機群名称）",
+                        })
+
     #----------------------------------
     # 様式2-2 外壁構成入力シート の読み込み
     #----------------------------------
@@ -2619,8 +2626,15 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     # 様式2-7 空調機入力シート の読み込み
     #----------------------------------
     sheet_AC4 = _find_form_sheet(wb, "F2-7")
+    ahu_source_rows = {}
     if sheet_AC4 is not None:
-        
+
+        def reference_group_name(value, label, options):
+            # 基準設定仕様が入力されている場合は、チェックをスキップする。
+            if value == REFERENCE_MARKER:
+                return value
+            return check_value(value, label, False, None, "文字列", options, None, None)
+
         # 初期化
         unitKey = None
 
@@ -2644,6 +2658,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 else:
 
+                    ahu_source_rows[unitKey] = i + 1
                     E_fan1 = check_value(dataAC4[6], "様式2-7.空調機 "+ str(i+1) +"行目:「⑦送風機定格消費電力（給気）」", False, 0, "数値", None, 0, None)
                     E_fan2 = check_value(dataAC4[7], "様式2-7.空調機 "+ str(i+1) +"行目:「⑧送風機定格消費電力（還気）」", False, 0, "数値", None, 0, None)
                     E_fan3 = check_value(dataAC4[8], "様式2-7.空調機 "+ str(i+1) +"行目:「⑨送風機定格消費電力（外気）」", False, 0, "数値", None, 0, None)
@@ -2662,13 +2677,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "isOutdoorAirCut":
                                 check_value(_norm(dataAC4[12], "ac_ahu_outdoor_intake_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["外気取入制御の有無"], None, None),
                             "Pump_cooling": 
-                                check_value(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒二次ポンプ群名称（冷熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                                reference_group_name(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒二次ポンプ群名称（冷熱）」", data["SecondaryPumpSystem"]),
                             "Pump_heating":
-                                check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉓二次ポンプ群名称（温熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                                reference_group_name(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉓二次ポンプ群名称（温熱）」", data["SecondaryPumpSystem"]),
                             "HeatSource_cooling":
-                                check_value(dataAC4[23], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔熱源群名称（冷熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                                reference_group_name(dataAC4[23], "様式2-7.空調機 "+ str(i+1) +"行目:「㉔熱源群名称（冷熱）」", data["HeatsourceSystem"]),
                             "HeatSource_heating":
-                                check_value(dataAC4[24], "様式2-7.空調機 "+ str(i+1) +"行目:「㉕熱源群名称（温熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                                reference_group_name(dataAC4[24], "様式2-7.空調機 "+ str(i+1) +"行目:「㉕熱源群名称（温熱）」", data["HeatsourceSystem"]),
                             "AirHandlingUnit" :[
                                 {
                                     "Type":
@@ -2714,13 +2729,13 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "isOutdoorAirCut":
                                 check_value(_norm(dataAC4[12], "ac_ahu_outdoor_intake_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["外気取入制御の有無"], None, None),
                             "Pump_cooling": 
-                                check_value(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳二次ポンプ群名称（冷熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                                reference_group_name(dataAC4[19], "様式2-7.空調機 "+ str(i+1) +"行目:「⑳二次ポンプ群名称（冷熱）」", data["SecondaryPumpSystem"]),
                             "Pump_heating":
-                                check_value(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑二次ポンプ群名称（温熱）」", False, None, "文字列", data["SecondaryPumpSystem"], None, None),
+                                reference_group_name(dataAC4[20], "様式2-7.空調機 "+ str(i+1) +"行目:「㉑二次ポンプ群名称（温熱）」", data["SecondaryPumpSystem"]),
                             "HeatSource_cooling":
-                                check_value(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒熱源群名称（冷熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                                reference_group_name(dataAC4[21], "様式2-7.空調機 "+ str(i+1) +"行目:「㉒熱源群名称（冷熱）」", data["HeatsourceSystem"]),
                             "HeatSource_heating":
-                                check_value(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉓熱源群名称（温熱）」", False, None, "文字列", data["HeatsourceSystem"], None, None),
+                                reference_group_name(dataAC4[22], "様式2-7.空調機 "+ str(i+1) +"行目:「㉓熱源群名称（温熱）」", data["HeatsourceSystem"]),
                             "AirHandlingUnit" :[
                                 {
                                     "Type":
@@ -2851,15 +2866,30 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 if isOutdoorAirCut == "有":
                     data["AirHandlingSystem"][unitKey]["isOutdoorAirCut"] = isOutdoorAirCut
 
+    # # 「基準設定仕様」の展開時に必要となる情報を記録：
+    # 様式2-7で指定された熱源群・二次ポンプ群は、空調機群ごと・冷暖別に記録する。
+    for ahu_name, ahu in data["AirHandlingSystem"].items():
+        for field, equipment, mode in (
+            ("HeatSource_cooling", "熱源群", "冷房"),
+            ("HeatSource_heating", "熱源群", "暖房"),
+            ("Pump_cooling", "二次ポンプ群", "冷房"),
+            ("Pump_heating", "二次ポンプ群", "暖房"),
+        ):
+            if ahu[field] == REFERENCE_MARKER:
+                reference_requests.append({
+                    "equipment": equipment, "ahu": ahu_name, "mode": mode,
+                    "source": f"{sheet_AC4.name} {ahu_source_rows.get(ahu_name, '?')}行目（{field}）",
+                })
+
     ## Varidation
     for zone_name in data["AirConditioningZone"]:
 
         unit_name = data["AirConditioningZone"][zone_name]["AHU_cooling_insideLoad"]
-        if unit_name not in data["AirHandlingSystem"]:
+        if unit_name != REFERENCE_MARKER and unit_name not in data["AirHandlingSystem"]:
             validation["error"].append( "様式2-1.空調ゾーン:「③空調機群名称（室負荷処理）」が 様式2-7.空調機群入力シートで定義されてません（ ゾーン "+ zone_name +"「"+ unit_name +"」）。") 
 
         unit_name = data["AirConditioningZone"][zone_name]["AHU_cooling_outdoorLoad"]
-        if unit_name not in data["AirHandlingSystem"]:
+        if unit_name != REFERENCE_MARKER and unit_name not in data["AirHandlingSystem"]:
             validation["error"].append( "様式2-1.空調ゾーン:「④空調機群名称（外気負荷処理）」が 様式2-7.空調機群入力シートで定義されてません（ ゾーン "+ zone_name +"「"+ unit_name +"」）。") 
 
     #----------------------------------
