@@ -1973,6 +1973,24 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                   f"{envelope_source_rows.get((zone_name, wall_index, window_index), '?')}行目（開口部名称）",
                     })
 
+    # Excelでは様式2-4の「⑦窓面積」をWindowNumberに保存し、窓仕様のwindowAreaは1とする。
+    # 基準設定仕様の窓も同じ扱いなので、仕様値へ展開する前に面積を比較できる。
+    for zone_name, envelope in data["EnvelopeSet"].items():
+        for wall in envelope["WallList"]:
+            window_area_total = 0
+            for window in wall["WindowList"]:
+                window_id = window["WindowID"]
+                if window_id == "無" or (window_id != REFERENCE_MARKER and window_id not in data["WindowConfigure"]):
+                    continue
+                area = window["WindowNumber"]
+                if isinstance(area, (int, float)):
+                    window_area_total += area
+            envelope_area = wall["EnvelopeArea"]
+            if isinstance(envelope_area, (int, float)) and envelope_area < window_area_total:
+                validation["error"].append(
+                    f"様式2-4.外皮仕様: 空調ゾーン「{zone_name}」の窓面積が外皮面積よりも大きくなっています。"
+                )
+
     ## 接地壁の扱い（様式2-2 → 様式2-4）
     for eltKey in data["WallConfigure"]:
         if data["WallConfigure"][eltKey]["wall_type_webpro"] == "接地壁":

@@ -5,8 +5,7 @@ import zipfile
 import math
 
 from builelib.input.make_inputdata import make_jsondata_from_Ver2_sheet
-from builelib.input.preparation import prepare_input_data
-from builelib.input.reference_specification import REQUESTS_KEY
+from builelib.input.reference_specification import REQUESTS_KEY, prepare_input_data
 from builelib.systems import airconditioning, ventilation, lighting, hotwatersupply, elevator, photovoltaic, other_energy, cogeneration
 from builelib import commons as bc, database_loader
 

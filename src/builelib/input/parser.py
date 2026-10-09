@@ -9,7 +9,7 @@ from threading import RLock
 from typing import Any
 
 from .make_inputdata import make_jsondata_from_Ver2_sheet
-from .preparation import prepare_input_data
+from .reference_specification import prepare_input_data
 
 
 # 旧読取処理は検証メッセージをモジュール内で共有するため、同時実行を防ぐ。
