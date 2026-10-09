@@ -1,6 +1,8 @@
 """???????Excel?JSON?????????????"""
 
+from collections import Counter
 import copy
+import hashlib
 import json
 from pathlib import Path
 
@@ -631,3 +633,111 @@ def test_two_ahu_json_runs_calculation(region):
     result = calculate_from_json(source)
     assert result["errors"] == []
     assert isinstance(result["result"]["BEI_AC"], float)
+
+# 実際の入力シートを使う回帰テスト。期待結果はtests/reference_specificationに保存する。
+REFERENCE_CASES_DIR = Path(__file__).parent / "reference_specification"
+REFERENCE_CASES = ("case01", "case02")
+
+
+def _case_total(units, field):
+    """機器1台当たりの値と台数から、群全体の値を求める。"""
+    return round(sum(unit[field] * unit["Number"] for unit in units), 6)
+
+
+def _case_ac_snapshot(data):
+    """基準設定仕様で生成した空調設備の接続と主要な定格値を記録する。"""
+    zones = {}
+    ahus = {}
+    for zone_name in ("1F_事務室1", "1F_事務室2"):
+        zone = data["AirConditioningZone"][zone_name]
+        zones[zone_name] = {
+            "inside": zone["AHU_cooling_insideLoad"],
+            "outdoor": zone["AHU_cooling_outdoorLoad"],
+        }
+        for ahu_name in zones[zone_name].values():
+            ahu = data["AirHandlingSystem"][ahu_name]
+            units = ahu["AirHandlingUnit"]
+            ahus[ahu_name] = {
+                "heat_source_cooling": ahu["HeatSource_cooling"],
+                "heat_source_heating": ahu["HeatSource_heating"],
+                "pump_cooling": ahu["Pump_cooling"],
+                "pump_heating": ahu["Pump_heating"],
+                "rated_cooling_kW": _case_total(units, "RatedCapacityCooling"),
+                "rated_heating_kW": _case_total(units, "RatedCapacityHeating"),
+            }
+
+    heat_sources = {}
+    for name, group in data["HeatsourceSystem"].items():
+        if not name.startswith("基準設定仕様_"):
+            continue
+        mode, specification = next(iter(group.items()))
+        units = specification["Heatsource"]
+        heat_sources[name] = {
+            "mode": mode,
+            "units": len(units),
+            "capacity_kW": _case_total(units, "HeatsourceRatedCapacity"),
+            "power_kW": _case_total(units, "HeatsourceRatedPowerConsumption"),
+            "fuel_kW": _case_total(units, "HeatsourceRatedFuelConsumption"),
+        }
+
+    pumps = {}
+    for name, group in data["SecondaryPumpSystem"].items():
+        if not name.startswith("基準設定仕様_"):
+            continue
+        mode, specification = next(iter(group.items()))
+        units = specification["SecondaryPump"]
+        pumps[name] = {
+            "mode": mode,
+            "units": len(units),
+            "flow_m3_h": _case_total(units, "RatedWaterFlowRate"),
+            "power_kW": _case_total(units, "RatedPowerConsumption"),
+        }
+
+    return {"zones": zones, "air_handling_systems": ahus,
+            "heat_source_groups": heat_sources, "secondary_pump_groups": pumps}
+
+
+def _run_reference_case(case):
+    from builelib.runner import calculate_from_json
+
+    workbook = REFERENCE_CASES_DIR / f"基準設定仕様テスト_{case}.xlsx"
+    raw, excel_validation = make_jsondata_from_Ver2_sheet(str(workbook))
+    assert excel_validation["error"] == [], excel_validation["error"]
+    requests = dict(sorted(Counter(
+        request["equipment"] for request in raw["ReferenceSpecificationRequests"]
+    ).items()))
+
+    # Excelの入力検証に続けて、JSON共通処理で基準設定仕様を展開する。
+    prepared, validation = prepare_input_data(raw, excel_validation, from_excel=True)
+    assert validation["error"] == [], validation["error"]
+    assert "ReferenceSpecificationRequests" not in prepared
+    ac_snapshot = _case_ac_snapshot(prepared)
+
+    calculation = calculate_from_json(prepared)
+    assert calculation["errors"] == [], calculation["errors"]
+    return {
+        "source_sha256": hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        "request_counts": requests,
+        "air_conditioning": ac_snapshot,
+        "result": calculation["result"],
+    }
+
+
+@pytest.mark.parametrize("case", REFERENCE_CASES)
+def test_reference_specification_workbook_case(case):
+    expected_path = REFERENCE_CASES_DIR / f"{case}_expected.json"
+    expected = json.loads(expected_path.read_text(encoding="utf-8"))
+    actual = _run_reference_case(case)
+
+    assert actual["source_sha256"] == expected["source_sha256"], (
+        f"{case}のExcelが変更されています。期待結果を確認してください。"
+    )
+    assert actual["request_counts"] == expected["request_counts"]
+    assert actual["air_conditioning"] == expected["air_conditioning"]
+    assert actual["result"].keys() == expected["result"].keys()
+    for key, expected_value in expected["result"].items():
+        actual_value = actual["result"][key]
+        if isinstance(expected_value, (int, float)) and not isinstance(expected_value, bool):
+            assert actual_value == pytest.approx(expected_value, rel=1e-8, abs=1e-5), key
+        else:
+            assert actual_value == expected_value, key
