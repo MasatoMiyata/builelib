@@ -668,9 +668,14 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
 
     for unit_name in inputdata["HotwaterSupplySystems"]:
-        resultJson["HotwaterSupplySystems"][unit_name]["設計値/基準値"] = \
-            resultJson["HotwaterSupplySystems"][unit_name]["設計一次エネルギー消費量[MJ/年]"] / resultJson["HotwaterSupplySystems"][unit_name]["基準一次エネルギー消費量[MJ/年]"]
-
+        unit_result = resultJson["HotwaterSupplySystems"][unit_name]
+        reference_energy = unit_result["基準一次エネルギー消費量[MJ/年]"]
+        if reference_energy == 0:
+            unit_result["設計値/基準値"] = 0
+        else:
+            unit_result["設計値/基準値"] = (
+                unit_result["設計一次エネルギー消費量[MJ/年]"] / reference_energy
+            )
 
 
     #----------------------------------------------------------------------------------
