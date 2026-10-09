@@ -1,5 +1,15 @@
 # 更新履歴 / Changelog
 
+## Ver.2.3.4（2026.10）
+
+### 機能追加
+
+- 基準設定仕様の入力を可能としました。
+
+### New feature
+
+- Added support for entering reference specification settings.
+
 ## Ver.2.3.3（2026.10）
 
 ### 不具合修正
