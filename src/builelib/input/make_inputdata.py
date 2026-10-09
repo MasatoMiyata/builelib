@@ -7,6 +7,11 @@ import sys
 
 from builelib import commons as bc
 from builelib import database_loader
+# Excelから作った中間JSONを、JSON直接入力と共通の処理で展開する。
+from builelib.input.reference_specification import (
+    REFERENCE_MARKER,
+    REQUESTS_KEY,
+)
 
 # テンプレートファイルの保存場所
 template_directory =  os.path.dirname(os.path.abspath(__file__)) + "/inputdata/"
@@ -493,6 +498,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     # テンプレートjsonの読み込み
     with open( template_directory + 'template.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
+
+    # 「基準設定仕様」の位置を記録するための変数（仕様値への展開は後で行う）。
+    reference_requests = []
+    envelope_source_rows = {}
+    equipment_source_rows = {}
     
     #----------------------------------
     # 様式SP-CM：計算モード入力シート の読み込み
@@ -1707,6 +1717,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     sheet_BE1 = _find_form_sheet(wb, "F2-4")
     if sheet_BE1 is not None:
 
+        def envelope_name(value, label, options, required):
+            """基準設定仕様だけは、通常の名称一覧にないため展開まで検証を保留する。"""
+            if value == REFERENCE_MARKER:
+                return value
+            return check_value(value, label, required, None if required else "無", "文字列", options, None, None)
+
         # 初期化
         roomKey = None
 
@@ -1788,7 +1804,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     "EnvelopeWidth": None,
                                     "EnvelopeHeight": None,
                                     "WallSpec":
-                                        check_value(dataBE1[5], "様式2-4.外皮 "+ str(i+1) +"行目:「④外壁名称」", True, None, "文字列", data["WallConfigure"], None, None),  
+                                        envelope_name(dataBE1[5], "様式2-4.外皮 "+ str(i+1) +"行目:「④外壁名称」", data["WallConfigure"], True),
                                     "WallType": wallType,
                                     # 接地壁判定で WallType が後から上書きされても、
                                     # 入力時の「日陰」を表示用途で識別できるよう保持する。
@@ -1796,7 +1812,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     "WindowList":[
                                         {
                                             "WindowID":
-                                                check_value(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", False, "無", "文字列", data["WindowConfigure"], None, None),  
+                                                envelope_name(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", data["WindowConfigure"], False),
                                             "WindowNumber":
                                                 check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
                                             "isBlind":
@@ -1809,6 +1825,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 }
                             ],
                         }
+                    # 後段で生成要求を作るときに、配列位置から元のExcel行を引けるようにする。
+                    envelope_source_rows[(roomKey, 0, None)] = i + 1
+                    envelope_source_rows[(roomKey, 0, 0)] = i + 1
 
             else: # 階と室名が空欄である場合
 
@@ -1848,7 +1867,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         data["EnvelopeSet"][roomKey]["WallList"][-1]["WindowList"].append(
                             {
                                 "WindowID":
-                                    check_value(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", False, "無", "文字列", data["WindowConfigure"], None, None),  
+                                    envelope_name(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", data["WindowConfigure"], False),
                                 "WindowNumber":
                                     check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
                                 "isBlind":
@@ -1858,6 +1877,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     check_value(dataBE1[10], "様式2-4.外皮 "+ str(i+1) +"行目:「⑨備考」", False, None, "文字列", None, None, None),
                             }
                         )
+                        wall_index = len(data["EnvelopeSet"][roomKey]["WallList"]) - 1
+                        window_index = len(data["EnvelopeSet"][roomKey]["WallList"][-1]["WindowList"]) - 1
+                        envelope_source_rows[(roomKey, wall_index, window_index)] = i + 1
 
                 elif roomKey in data["EnvelopeSet"]: # 方位が空白ではない場合。
 
@@ -1908,7 +1930,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "EnvelopeWidth": None,
                             "EnvelopeHeight": None,
                             "WallSpec":
-                                check_value(dataBE1[5], "様式2-4.外皮 "+ str(i+1) +"行目:「④外壁名称」", True, None, "文字列", data["WallConfigure"], None, None),  
+                                envelope_name(dataBE1[5], "様式2-4.外皮 "+ str(i+1) +"行目:「④外壁名称」", data["WallConfigure"], True),
                             "WallType": wallType,
                             # 接地壁判定で WallType が後から上書きされても、
                             # 入力時の「日陰」を表示用途で識別できるよう保持する。
@@ -1916,7 +1938,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "WindowList":[
                                 {
                                     "WindowID":
-                                        check_value(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", False, "無", "文字列", data["WindowConfigure"], None, None),  
+                                        envelope_name(dataBE1[7], "様式2-4.外皮 "+ str(i+1) +"行目:「⑥開口部名称」", data["WindowConfigure"], False),
                                     "WindowNumber":
                                         check_value(dataBE1[8], "様式2-4.外皮 "+ str(i+1) +"行目:「⑦窓面積」", False, None, "数値", None, 0, None),
                                     "isBlind":
@@ -1928,6 +1950,28 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             ]       
                         }
                     )
+                    wall_index = len(data["EnvelopeSet"][roomKey]["WallList"]) - 1
+                    envelope_source_rows[(roomKey, wall_index, None)] = i + 1
+                    envelope_source_rows[(roomKey, wall_index, 0)] = i + 1
+
+    # 「基準設定仕様」の展開時に必要となる情報を記録：
+    # 仕様値に展開する際にエラーが生じたときのために、様式2-4で指定された外壁・窓の「Excel上の位置」も記録する。
+    for zone_name, envelope in data["EnvelopeSet"].items():
+        for wall_index, wall in enumerate(envelope["WallList"]):
+            if wall["WallSpec"] == REFERENCE_MARKER:
+                reference_requests.append({
+                    "equipment": "外壁", "zone": zone_name, "wallIndex": wall_index,
+                    "source": f"{sheet_BE1.name if sheet_BE1 is not None else '様式2-4.外皮'} "
+                              f"{envelope_source_rows.get((zone_name, wall_index, None), '?')}行目（外壁名称）",
+                })
+            for window_index, window in enumerate(wall["WindowList"]):
+                if window["WindowID"] == REFERENCE_MARKER:
+                    reference_requests.append({
+                        "equipment": "窓", "zone": zone_name, "wallIndex": wall_index,
+                        "windowIndex": window_index,
+                        "source": f"{sheet_BE1.name if sheet_BE1 is not None else '様式2-4.外皮'} "
+                                  f"{envelope_source_rows.get((zone_name, wall_index, window_index), '?')}行目（開口部名称）",
+                    })
 
     ## 接地壁の扱い（様式2-2 → 様式2-4）
     for eltKey in data["WallConfigure"]:
@@ -2910,6 +2954,16 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             }
                     }
 
+                    # 基準設定仕様を展開する際に必要となる情報を記録
+                    if unitKey == REFERENCE_MARKER:
+                        # 参照名称を一時的に除き、換気種類を生成要求へ移す。
+                        reference = data["VentilationRoom"][roomKey]["VentilationUnitRef"].pop(unitKey)
+                        reference_requests.append({
+                            "equipment": "換気", "room": roomKey,
+                            "unitType": reference["UnitType"], "info": reference["Info"],
+                            "source": f"{sheet_V1.name} {i+1}行目（換気機器名称）",
+                        })
+
             # 階と室名が空欄であり、かつ、機器名称に入力がある場合
             # 上記 if文 内で定義された roomKey をkeyとして、機器を追加する。
             elif (dataV[0] == "") and (dataV[1] == "") and (dataV[6] != "") and (roomKey in data["VentilationRoom"]):
@@ -2928,6 +2982,16 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "Info":
                             check_value(dataV[7], "様式3-1.換気対象室 "+ str(i+1) +"行目:「④備考」", None, None, "文字列", None, None, None),
                     }               
+
+                    # 基準設定仕様を展開する際に必要となる情報を記録
+                    if unitKey == REFERENCE_MARKER:
+                        # 追加行も同じ対象室を参照し、面積はRoomsから取得する。
+                        reference = data["VentilationRoom"][roomKey]["VentilationUnitRef"].pop(unitKey)
+                        reference_requests.append({
+                            "equipment": "換気", "room": roomKey,
+                            "unitType": reference["UnitType"], "info": reference["Info"],
+                            "source": f"{sheet_V1.name} {i+1}行目（換気機器名称）",
+                        })
 
     #----------------------------------
     # 様式3-2 換気送風機入力シート の読み込み
@@ -3105,8 +3169,6 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 else:
 
-                    unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A", "文字列", None, None, None)
-
                     data["LightingSystems"][roomKey] = {
                         "roomWidth": 
                             check_value(dataL[7], "様式4.照明 "+ str(i+1) +"行目:「②室の間口」", False, None, "数値", None, 0, None),
@@ -3116,28 +3178,46 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataL[6], "様式4.照明 "+ str(i+1) +"行目:「①天井高」", False, None, "数値", None, 0, None),
                         "roomIndex":
                             check_value(dataL[9], "様式4.照明 "+ str(i+1) +"行目:「④室指数」", False, None, "数値", None, 0, None),
-                        "lightingUnit": {
-                            unit_name: {
-                                "RatedPower":
-                                    check_value(dataL[11], "様式4.照明 "+ str(i+1) +"行目:「⑥定格消費電力」", True, None, "数値", None, 0, None),
-                                "Number":
-                                    check_value(dataL[12], "様式4.照明 "+ str(i+1) +"行目:「⑦台数」", True, None, "数値", None, 0, None),
-                                "OccupantSensingCTRL":
-                                    check_value(_norm(dataL[13], "lt_control_occupant_sensing"), "様式4.照明 "+ str(i+1) +"行目:「⑧在室検知制御」", False, "無", "文字列か数値", input_options["照明在室検知制御"], None, None),
-                                "IlluminanceSensingCTRL":
-                                    check_value(_norm(dataL[14], "lt_control_illuminance_sensing"), "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明明るさ検知制御"], None, None),
-                                "TimeScheduleCTRL":
-                                    check_value(_norm(dataL[15], "lt_control_time_schedule"), "様式4.照明 "+ str(i+1) +"行目:「⑩照明タイムスケジュール制御」", False, "無", "文字列か数値", input_options["照明タイムスケジュール制御"], None, None),
-                                "InitialIlluminationCorrectionCTRL":
-                                    check_value(_norm(dataL[16], "lt_control_iumination_correction"), "様式4.照明 "+ str(i+1) +"行目:「⑪照明初期照度補正機能」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
-                            }
-                        }
+                        "lightingUnit": {}
                     }
 
-            # 階と室名が空欄であり、かつ、消費電力の入力がある場合
-            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[11] != "") and (roomKey in data["LightingSystems"]):
+                    # 基準設定仕様を展開する際に必要となる情報を記録
+                    if dataL[10] == REFERENCE_MARKER:
+                        reference_requests.append({
+                            "equipment": "照明", "room": roomKey,
+                            "source": f"{sheet_L.name} {i+1}行目（機器名称）",
+                        })
+                        continue
+
+                    unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A", "文字列", None, None, None)
+                    data["LightingSystems"][roomKey]["lightingUnit"][unit_name] = {
+                        "RatedPower":
+                            check_value(dataL[11], "様式4.照明 "+ str(i+1) +"行目:「⑥定格消費電力」", True, None, "数値", None, 0, None),
+                        "Number":
+                            check_value(dataL[12], "様式4.照明 "+ str(i+1) +"行目:「⑦台数」", True, None, "数値", None, 0, None),
+                        "OccupantSensingCTRL":
+                            check_value(_norm(dataL[13], "lt_control_occupant_sensing"), "様式4.照明 "+ str(i+1) +"行目:「⑧在室検知制御」", False, "無", "文字列か数値", input_options["照明在室検知制御"], None, None),
+                        "IlluminanceSensingCTRL":
+                            check_value(_norm(dataL[14], "lt_control_illuminance_sensing"), "様式4.照明 "+ str(i+1) +"行目:「⑨明るさ検知制御」", False, "無", "文字列か数値", input_options["照明明るさ検知制御"], None, None),
+                        "TimeScheduleCTRL":
+                            check_value(_norm(dataL[15], "lt_control_time_schedule"), "様式4.照明 "+ str(i+1) +"行目:「⑩照明タイムスケジュール制御」", False, "無", "文字列か数値", input_options["照明タイムスケジュール制御"], None, None),
+                        "InitialIlluminationCorrectionCTRL":
+                            check_value(_norm(dataL[16], "lt_control_iumination_correction"), "様式4.照明 "+ str(i+1) +"行目:「⑪照明初期照度補正機能」", False, "無", "文字列か数値", input_options["照明初期照度補正機能"], None, None),
+                    }
+
+            # 階と室名が空欄の行は、直前の室に照明器具を追加する行。
+            # 基準設定仕様なら消費電力が空欄でも自動生成できるので読み取る。
+            elif (dataL[0] == "") and (dataL[1] == "") and (dataL[11] != "" or dataL[10] == REFERENCE_MARKER) and (roomKey in data["LightingSystems"]):
 
                 light_num += 1
+
+                # 追加行にも「基準設定仕様」を指定できる。面積はRoomsから取得する。
+                if dataL[10] == REFERENCE_MARKER:
+                    reference_requests.append({
+                        "equipment": "照明", "room": roomKey,
+                        "source": f"{sheet_L.name} {i+1}行目（機器名称）",
+                    })
+                    continue
                 unit_name = check_value(dataL[10], "様式4.照明 "+ str(i+1) +"行目:「④機器名称」", True, "器具A"+str(light_num), "文字列", None, None, None)
 
                 if unit_name in data["LightingSystems"][roomKey]["lightingUnit"]:
@@ -3210,7 +3290,11 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         ]
                     }
 
-            elif (dataHW1[6] != "") and (dataHW1[7] != "") and (roomKey in data["HotwaterRoom"]):
+                    # 基準設定仕様を展開する際に必要となる情報を記録
+                    if dataHW1[7] == REFERENCE_MARKER:
+                        equipment_source_rows[("給湯", roomKey, 0)] = i + 1
+
+            elif (dataHW1[6] != "" or dataHW1[7] == REFERENCE_MARKER) and (dataHW1[7] != "") and (roomKey in data["HotwaterRoom"]):
 
                 data["HotwaterRoom"][roomKey]["HotwaterSystem"].append(
                     {
@@ -3223,6 +3307,21 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             check_value(dataHW1[8], "様式5-1.給湯対象室 "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, 0, None),
                     }
                 )
+
+                # 基準設定仕様を展開する際に必要となる情報を記録
+                if dataHW1[7] == REFERENCE_MARKER:
+                    system_index = len(data["HotwaterRoom"][roomKey]["HotwaterSystem"]) - 1
+                    equipment_source_rows[("給湯", roomKey, system_index)] = i + 1
+
+    # 様式5-1で読み取った「基準設定仕様」の位置を生成要求に記録する。
+    for room_name, hotwater_room in data["HotwaterRoom"].items():
+        for system_index, system in enumerate(hotwater_room["HotwaterSystem"]):
+            if system["SystemName"] == REFERENCE_MARKER:
+                reference_requests.append({
+                    "equipment": "給湯", "room": room_name, "systemIndex": system_index,
+                    "source": f"{sheet_HW1.name if sheet_HW1 is not None else '様式5-1.給湯対象室'} "
+                              f"{equipment_source_rows.get(('給湯', room_name, system_index), '?')}行目（給湯機器名称）",
+                })
 
     #----------------------------------
     # 様式5-2 給湯機器入力シート の読み込み
@@ -3302,6 +3401,12 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     sheet_EV = _find_form_sheet(wb, "F6")
     if sheet_EV is not None:
 
+        def elevator_spec_value(value, *check_args):
+            # 「基準設定仕様」の場合はチェックせずに None を返す
+            if is_reference_elevator:
+                return None
+            return check_value(value, *check_args)
+
         # 初期化
         roomKey = None
 
@@ -3324,6 +3429,8 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                 dataEV[9] = "VVVF(電力回生なし、ギアレス)"
             elif str(dataEV[9]) == "VVVF（電力回生あり、ギアレス）":
                 dataEV[9] = "VVVF(電力回生あり、ギアレス)"
+
+            is_reference_elevator = dataEV[4] == REFERENCE_MARKER
             
             # 階と室名が空欄でない場合
             if (dataEV[0] != "") and (dataEV[1] != "") :
@@ -3344,19 +3451,24 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                 "ElevatorName":
                                     check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
                                 "Number": 
-                                    check_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),   
+                                    elevator_spec_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),
                                 "LoadLimit":
-                                    check_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),   
+                                    elevator_spec_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),
                                 "Velocity":
-                                    check_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),   
+                                    elevator_spec_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),
                                 "TransportCapacityFactor":
-                                    check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
+                                    elevator_spec_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),
                                 "ControlType":
-                                    check_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                                    elevator_spec_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),
                                 "Info":
                                     check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                             }
                         )
+
+                        # 基準設定仕様を展開する際に必要となる情報を記録
+                        if dataEV[4] == REFERENCE_MARKER:
+                            elevator_index = len(data["Elevators"][roomKey]["Elevator"]) - 1
+                            equipment_source_rows[("昇降機", roomKey, elevator_index)] = i + 1
                         
                     else:
 
@@ -3366,20 +3478,24 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                                     "ElevatorName":
                                         check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
                                     "Number": 
-                                        check_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),   
+                                        elevator_spec_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),
                                     "LoadLimit":
-                                        check_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),   
+                                        elevator_spec_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),
                                     "Velocity":
-                                        check_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),   
+                                        elevator_spec_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),
                                     "TransportCapacityFactor":
-                                        check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
+                                        elevator_spec_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),
                                     "ControlType":
-                                        check_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                                        elevator_spec_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),
                                     "Info":
                                         check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                                 }
                             ]
                         }
+
+                        # 基準設定仕様を展開する際に必要となる情報を記録
+                        if dataEV[4] == REFERENCE_MARKER:
+                            equipment_source_rows[("昇降機", roomKey, 0)] = i + 1
 
             elif (dataEV[5] != "") and (roomKey in data["Elevators"]):
 
@@ -3388,19 +3504,34 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                         "ElevatorName":
                             check_value(dataEV[4], "様式6.昇降機 "+ str(i+1) +"行目:「②機器名称」", False, "-", "文字列", None, None, None),                            
                         "Number": 
-                            check_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),   
+                            elevator_spec_value(dataEV[5], "様式6.昇降機 "+ str(i+1) +"行目:「③台数」", True, None, "数値", None, 0, None),
                         "LoadLimit":
-                            check_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),   
+                            elevator_spec_value(dataEV[6], "様式6.昇降機 "+ str(i+1) +"行目:「④積載量」", True, None, "数値", None, 0, None),
                         "Velocity":
-                            check_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),   
+                            elevator_spec_value(dataEV[7], "様式6.昇降機 "+ str(i+1) +"行目:「⑤速度」", True, None, "数値", None, 0, None),
                         "TransportCapacityFactor":
-                            check_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),  
+                            elevator_spec_value(dataEV[8], "様式6.昇降機 "+ str(i+1) +"行目:「⑥輸送能力係数」", True, 1, "数値", None, 0, None),
                         "ControlType":
-                            check_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),  
+                            elevator_spec_value(_norm(dataEV[9], "ev_control_type"), "様式6.昇降機 "+ str(i+1) +"行目:「⑦速度制御方式」", True, "交流帰還制御", "文字列", input_options["速度制御方式"], 0, None),
                         "Info":
                             check_value(dataEV[10], "様式6.昇降機 "+ str(i+1) +"行目:「⑧備考」", False, None, "文字列", None, None, None),
                     }
                 )
+
+                # 基準設定仕様を展開する際に必要となる情報を記録
+                if dataEV[4] == REFERENCE_MARKER:
+                    elevator_index = len(data["Elevators"][roomKey]["Elevator"]) - 1
+                    equipment_source_rows[("昇降機", roomKey, elevator_index)] = i + 1
+
+    # 様式6で読み取った「基準設定仕様」の位置を生成要求に記録する。
+    for room_name, elevator_room in data["Elevators"].items():
+        for elevator_index, elevator in enumerate(elevator_room["Elevator"]):
+            if elevator["ElevatorName"] == REFERENCE_MARKER:
+                reference_requests.append({
+                    "equipment": "昇降機", "room": room_name, "elevatorIndex": elevator_index,
+                    "source": f"{sheet_EV.name if sheet_EV is not None else '様式6.昇降機'} "
+                              f"{equipment_source_rows.get(('昇降機', room_name, elevator_index), '?')}行目（機器名称）",
+                })
 
     #----------------------------------
     # 様式7-1 太陽光発電入力シート の読み込み
@@ -3755,33 +3886,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
             validation["error"].append( "様式SP-AC-ST) 日射熱取得率（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
 
-    # JSON Schemaバリデーションの実行（構造・型・選択肢チェック）
-    # 空欄は check_value がシート名・行番号付きで既に報告しているため、
-    # JSON Schema 側の enum/type エラーを重ねて表示しない。
-    schema_errors = bc.inputdata_validation(data, skip_empty_values=True)
-    for err in schema_errors:
-        validation["error"].append(err)
-
-    # 外皮面積と窓面積の関係のチェック
-    if "EnvelopeSet" in data:
-        for room_zone_name in data["EnvelopeSet"]:
-            for (wall_id, wall_configure) in enumerate( data["EnvelopeSet"][room_zone_name]["WallList"] ):
-
-                window_total = 0  # 窓面積の集計用
-
-                if "WindowList" in wall_configure:   # 窓がある場合
-
-                    # 窓面積の合計を求める（Σ{窓面積×枚数}）
-                    for (window_id, window_configure) in enumerate(wall_configure["WindowList"]):
-
-                        if window_configure["WindowID"] != "無":
-
-                            window_total += \
-                                data["WindowConfigure"][ window_configure["WindowID"] ]["windowArea"] * window_configure["WindowNumber"]
-
-                if wall_configure["EnvelopeArea"] < window_total:
-                    validation["error"].append( "様式2-4.外皮仕様: 空調ゾーン"+ room_zone_name +"」の窓面積が外皮面積よりも大きくなっています。")
-
+    # 全シートの生成要求を中間JSONに格納する。
+    if reference_requests:
+        data[REQUESTS_KEY] = reference_requests
 
     return data, validation
 
