@@ -1,4 +1,6 @@
 import csv
+import copy
+import json
 import pytest
 from pathlib import Path
 from builelib.systems import hotwatersupply
@@ -186,6 +188,23 @@ def test_calc(inputdata, expectedvalue):
         # エラーが期待される場合
         with pytest.raises(Exception):
             hotwatersupply.calc_energy(inputdata)
+
+
+def test_unused_hotwater_system_produces_valid_json():
+    """給湯負荷が0の機器があっても、ブラウザーで読める結果JSONを返す。"""
+    from builelib.runner import MyEncoder
+
+    sample = Path(__file__).parent / "whole_building" / "sample01_WEBPRO_inputSheet_for_Ver3.8_input.json"
+    inputdata = json.loads(sample.read_text(encoding="utf-8"))
+    first_system = next(iter(inputdata["HotwaterSupplySystems"].values()))
+    inputdata["HotwaterSupplySystems"]["未使用の給湯機器"] = copy.deepcopy(first_system)
+
+    result = hotwatersupply.calc_energy(inputdata)
+    unused = result["HotwaterSupplySystems"]["未使用の給湯機器"]
+    assert unused["設計一次エネルギー消費量[MJ/年]"] == 0
+    assert unused["基準一次エネルギー消費量[MJ/年]"] == 0
+    assert unused["設計値/基準値"] == 0
+    json.dumps(result, ensure_ascii=False, allow_nan=False, cls=MyEncoder)
 
 if __name__ == '__main__':
     pytest.main(["-q", __file__])
