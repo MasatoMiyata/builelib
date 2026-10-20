@@ -68,6 +68,7 @@ _SP_SHEET_ALIASES = {
     "SP-AC-MD": ("SP-AC-MD", "SP-AC-MD) 空調モード"),
     "SP-AC-ST": ("SP-AC-ST", "SP-AC-ST) 日射熱取得率"),
     "SP-AC-RL": ("SP-AC-RL", "SP-AC-RL) 室負荷"),
+    "SP-AC-OA": ("SP-AC-OA", "SP-AC-OA) 外気補正"),
     "SP-AC-AL": ("SP-AC-AL", "SP-AC-AL) 空調負荷"),
     "SP-AC-HS": ("SP-AC-HS", "SP-AC-HS) 熱源特性"),
     "SP-AC-WT": ("SP-AC-WT", "SP-AC-WT) 熱源送水温度"),
@@ -578,6 +579,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     data["CalculationMode"]["SP-AC-ST 日射熱取得率（日別）入力シート"] = True
     data["CalculationMode"]["SP-AC-RL 室負荷（日別）入力シート"] = True
     data["CalculationMode"]["SP-AC-AL 空調負荷（時刻別）入力シート"] = True
+    data["CalculationMode"]["SP-AC-OA: 外気エンタルピー補正値入力シート"] = True
     data["CalculationMode"]["SP-AC-HS 熱源機器特性入力シート"] = True
     data["CalculationMode"]["SP-AC-WT 熱源送水温度（日別）入力シート"] = True
     data["CalculationMode"]["SP-AC-CW 熱源冷却水温度（日別）入力シート"] = True
@@ -3899,6 +3901,43 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
 
     #----------------------------------
+    # 様式 SP-AC-OA 外気エンタルピー補正値入力シート の読み込み
+    #----------------------------------
+    sheet_SP_AC_OA = _find_sp_sheet(wb, "SP-AC-OA")
+    if data["CalculationMode"]["SP-AC-OA: 外気エンタルピー補正値入力シート"] and sheet_SP_AC_OA is not None:
+
+        try:
+
+            data["SpecialInputData"]["HoaDaily_delta"] = {}
+
+            # 入力された空調機群名称を検索
+            ahu_name_list = sheet_SP_AC_OA.row_values(7)
+
+            print()
+
+            # 入力されている列について、名称と列数の対応関係を保存
+            ahu_column_num = {}
+            for column_num in range(len(ahu_name_list)):
+                ahu_name = ahu_name_list[column_num]
+                if ahu_name != "" and not _is_sheet_header(
+                    ahu_name,
+                    "空調機群名称",
+                    "Air-Conditioning Unit Group Name",
+                ):
+                    ahu_column_num[ahu_name] = column_num
+            
+            # データの読み込み
+            for ahu_name in ahu_column_num:
+                dataSP_AC_OA = []
+                for i in range(10,365+10):
+                    dataSP_AC_OA.append( sheet_SP_AC_OA.cell_value(i, ahu_column_num[ahu_name]) ) 
+                data["SpecialInputData"]["HoaDaily_delta"][ahu_name] = dataSP_AC_OA
+
+        except Exception as e:
+            validation["error"].append( "様式SP-AC-OA) 外気エンタルピー補正値入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
+
+
+    #----------------------------------
     # 様式SP-AC-RL 室負荷（日別）入力シート の読み込み
     #----------------------------------
     sheet_SP_AC_RL = _find_sp_sheet(wb, "SP-AC-RL")
@@ -4017,5 +4056,5 @@ if __name__ == '__main__':
     # with open("./examples/sample01_WEBPRO_inputSheet_for_Ver3.8.json",'w', encoding='utf-8') as fw:
     #     json.dump(inputdata,fw,indent=4,ensure_ascii=False)
 
-    with open("./examples/sample01_WEBPRO_inputSheet_for_Ver3.8_English.json",'w', encoding='utf-8') as fw:
+    with open("./input/④WEBPRO_inputSheet_for_Ver3.9_SPシート_外気エンタルピー補正.json",'w', encoding='utf-8') as fw:
         json.dump(inputdata,fw,indent=4,ensure_ascii=False)
