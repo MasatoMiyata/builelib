@@ -1192,12 +1192,14 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
 
                 if room_zone_name in resultJson["Qroom"]:  # SP-4シートに入力された室が空調ゾーンとして存在していれば
                     # 室負荷（冷房要求）の置き換え [MJ/day]
-                    if "QroomDc" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
-                        resultJson["Qroom"][room_zone_name]["QroomDc"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDc"]
+                    if "冷房" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
+                        print( f'任意入力による室負荷（冷房要求）の置き換え: {room_zone_name}' )
+                        resultJson["Qroom"][room_zone_name]["QroomDc"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["冷房"]
 
                     # 室負荷（暖房要求）の置き換え
-                    if "QroomDh" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
-                        resultJson["Qroom"][room_zone_name]["QroomDh"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["QroomDh"]
+                    if "暖房" in inputdata["SpecialInputData"]["Qroom"][room_zone_name]:
+                        print( f'任意入力による室負荷（暖房要求）の置き換え: {room_zone_name}' )
+                        resultJson["Qroom"][room_zone_name]["QroomDh"] = inputdata["SpecialInputData"]["Qroom"][room_zone_name]["暖房"]
 
 
     ##----------------------------------------------------------------------------------
