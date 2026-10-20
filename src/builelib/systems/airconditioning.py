@@ -1613,22 +1613,30 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         # 空調機群の日積算運転時間（冷暖合計）
         resultJson["AHU"][ahu_name]["Tahu_total"] = np.sum(resultJson["AHU"][ahu_name]["schedule"], 1)
 
+
+        # 外気エンタルピー補正 HoaDaily_delta
+        HoaDaily_delta = np.zeros(365)
+        if "HoaDaily_delta" in inputdata["SpecialInputData"]:
+            if ahu_name in inputdata["SpecialInputData"]["HoaDaily_delta"]:
+                HoaDaily_delta = inputdata["SpecialInputData"]["HoaDaily_delta"][ahu_name]
+
+
         # 空調機の運転モード と　外気エンタルピー
         if "終日" in resultJson["AHU"][ahu_name]["day_mode"]: # 一つでも「終日」があれば
             resultJson["AHU"][ahu_name]["day_mode"] = "終日"
-            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave
+            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave + HoaDaily_delta
 
         elif resultJson["AHU"][ahu_name]["day_mode"].count("昼") == len(resultJson["AHU"][ahu_name]["day_mode"]): # 全て「昼」であれば
             resultJson["AHU"][ahu_name]["day_mode"] = "昼"
-            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_day
+            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_day + HoaDaily_delta
 
         elif resultJson["AHU"][ahu_name]["day_mode"].count("夜") == len(resultJson["AHU"][ahu_name]["day_mode"]): # 全て夜であれば
             resultJson["AHU"][ahu_name]["day_mode"] = "夜"
-            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ngt
+            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ngt + HoaDaily_delta
 
         else: # 「昼」と「夜」が混在する場合は「終日とする。
             resultJson["AHU"][ahu_name]["day_mode"]  = "終日"
-            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave
+            resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave + HoaDaily_delta
 
         # 日別に運転時間を「冷房」と「暖房」に振り分ける。
         for dd in range(0,365):
