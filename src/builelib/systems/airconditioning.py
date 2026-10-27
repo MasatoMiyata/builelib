@@ -1264,6 +1264,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
             "day_mode": [],                    # 空調機群の運転時間帯（昼、夜、終日）
             "schedule": np.zeros((365,24)),    # 時刻別の運転スケジュール（365×24）
             "HoaDayAve": np.zeros(365),        # 空調運転時間帯の外気エンタルピー
+            "HoaDayAve_OutdoorCooling": np.zeros(365),   # 空調運転時間帯の外気エンタルピー（外気冷房用）
 
             "qoaAHU": np.zeros(365),           # 日平均外気負荷 [kW]
             "Tahu_total": np.zeros(365),       # 空調機群の日積算運転時間（冷暖合計）
@@ -1625,18 +1626,22 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         if "終日" in resultJson["AHU"][ahu_name]["day_mode"]: # 一つでも「終日」があれば
             resultJson["AHU"][ahu_name]["day_mode"] = "終日"
             resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave + HoaDaily_delta
+            resultJson["AHU"][ahu_name]["HoaDayAve_OutdoorCooling"] = Hoa_ave   #  外気冷房運転時の外気エンタルピーは、外気冷房運転時の外気エンタルピーを使用する。
 
         elif resultJson["AHU"][ahu_name]["day_mode"].count("昼") == len(resultJson["AHU"][ahu_name]["day_mode"]): # 全て「昼」であれば
             resultJson["AHU"][ahu_name]["day_mode"] = "昼"
             resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_day + HoaDaily_delta
+            resultJson["AHU"][ahu_name]["HoaDayAve_OutdoorCooling"] = Hoa_day    #  外気冷房運転時の外気エンタルピーは、外気冷房運転時の外気エンタルピーを使用する。
 
         elif resultJson["AHU"][ahu_name]["day_mode"].count("夜") == len(resultJson["AHU"][ahu_name]["day_mode"]): # 全て夜であれば
             resultJson["AHU"][ahu_name]["day_mode"] = "夜"
             resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ngt + HoaDaily_delta
+            resultJson["AHU"][ahu_name]["HoaDayAve_OutdoorCooling"] = Hoa_ngt    #  外気冷房運転時の外気エンタルピーは、外気冷房運転時の外気エンタルピーを使用する。
 
         else: # 「昼」と「夜」が混在する場合は「終日とする。
             resultJson["AHU"][ahu_name]["day_mode"]  = "終日"
             resultJson["AHU"][ahu_name]["HoaDayAve"] = Hoa_ave + HoaDaily_delta
+            resultJson["AHU"][ahu_name]["HoaDayAve_OutdoorCooling"] = Hoa_ave   #  外気冷房運転時の外気エンタルピーは、外気冷房運転時の外気エンタルピーを使用する。
 
         # 日別に運転時間を「冷房」と「暖房」に振り分ける。
         for dd in range(0,365):
@@ -1833,7 +1838,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                     # 外気冷房運転時の外気風量 [kg/s]
                     resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] = \
                         resultJson["AHU"][ahu_name]["Qroom"]["cooling_for_room"][dd] / \
-                        ((Hroom[dd]-resultJson["AHU"][ahu_name]["HoaDayAve"][dd]) * (3600/1000) * resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd])
+                        ((Hroom[dd]-resultJson["AHU"][ahu_name]["HoaDayAve_OutdoorCooling"][dd]) * (3600/1000) * resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd])
                     
                     # 上限・下限
                     if resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] < inputdata["AirHandlingSystem"][ahu_name]["outdoorAirVolume_cooling"] *1.293/3600:
@@ -1856,7 +1861,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                     if resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] > 0: # 外冷時風量＞０であれば
 
                         resultJson["AHU"][ahu_name]["Economizer"]["Qahu_oac"][dd] = \
-                            resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] * (Hroom[dd]-resultJson["AHU"][ahu_name]["HoaDayAve"][dd])*3600/1000* \
+                            resultJson["AHU"][ahu_name]["Economizer"]["AHUVovc"][dd] * (Hroom[dd]-resultJson["AHU"][ahu_name]["HoaDayAve_OutdoorCooling"][dd])*3600/1000* \
                             resultJson["AHU"][ahu_name]["Tahu"]["cooling_for_room"][dd]
 
 
@@ -4924,6 +4929,7 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     for ahu_name in resultJson["AHU"]:
         del resultJson["AHU"][ahu_name]["schedule"]
         del resultJson["AHU"][ahu_name]["HoaDayAve"]
+        del resultJson["AHU"][ahu_name]["HoaDayAve_OutdoorCooling"]
         del resultJson["AHU"][ahu_name]["qoaAHU"]
         del resultJson["AHU"][ahu_name]["Tahu_total"]
         del resultJson["AHU"][ahu_name]["E_fan_day"]
