@@ -2736,7 +2736,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "isEconomizer": 
                                 check_value(_norm(dataAC4[13], "ac_ahu_outdoor_cooling"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["外気冷房の有無"], None, None), 
                             "EconomizerMaxAirVolume":
-                                check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None), 
+                                check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, 0, "数値", None, None, None), 
                             "isOutdoorAirCut":
                                 check_value(_norm(dataAC4[12], "ac_ahu_outdoor_intake_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["外気取入制御の有無"], None, None),
                             "Pump_cooling": 
@@ -2788,7 +2788,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
                             "isEconomizer": 
                                 check_value(_norm(dataAC4[13], "ac_ahu_outdoor_cooling"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["外気冷房の有無"], None, None), 
                             "EconomizerMaxAirVolume":
-                                check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None), 
+                                check_value(dataAC4[5], "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, 0, "数値", None, None, None), 
                             "isOutdoorAirCut":
                                 check_value(_norm(dataAC4[12], "ac_ahu_outdoor_intake_control"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑬予熱時外気取り入れ停止の有無」", False, "無", "文字列", input_options["外気取入制御の有無"], None, None),
                             "Pump_cooling": 
@@ -2918,7 +2918,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
                 # 外気冷房制御のチェック（継続行に書いていれば有効にする）
                 isEconomizer           = check_value(_norm(dataAC4[13], "ac_ahu_outdoor_cooling"), "様式2-7.空調機 "+ str(i+1) +"行目:「⑭外気冷房の有無」", False, "無", "文字列", input_options["外気冷房の有無"], None, None)
-                EconomizerMaxAirVolume = check_value(dataAC4[5],  "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, None, "数値", None, None, None)
+                EconomizerMaxAirVolume = check_value(dataAC4[5],  "様式2-7.空調機 "+ str(i+1) +"行目:「⑥設計最大外気風量」", False, 0, "数値", None, None, None)
 
                 if isEconomizer == "有" and EconomizerMaxAirVolume != "":
                     data["AirHandlingSystem"][unitKey]["isEconomizer"] = isEconomizer
