@@ -177,7 +177,9 @@ def calculate(inputfile_name, exec_calculation=True):
                 energy_consumption_standard += resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["設計一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["基準一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["BEI_AC"] = math.ceil(resultdata_AC["BEI/AC"] * 100) / 100
+                # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+                # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+                calc_reuslt["BEI_AC"] = resultdata_AC["BEI/AC"]
 
             else:
                 resultdata_AC = {
@@ -220,7 +222,9 @@ def calculate(inputfile_name, exec_calculation=True):
                 energy_consumption_standard += resultdata_V["基準一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["設計一次エネルギー消費量（換気）[MJ]"] = resultdata_V["設計一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["基準一次エネルギー消費量（換気）[MJ]"] = resultdata_V["基準一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["BEI_V"] = math.ceil(resultdata_V["BEI/V"] * 100) / 100
+                # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+                # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+                calc_reuslt["BEI_V"] = resultdata_V["BEI/V"]
 
             else:
                 resultdata_V = {
@@ -263,7 +267,9 @@ def calculate(inputfile_name, exec_calculation=True):
                 energy_consumption_standard += resultdata_L["Es_lighting"]
                 calc_reuslt["設計一次エネルギー消費量（照明）[MJ]"] = resultdata_L["E_lighting"]
                 calc_reuslt["基準一次エネルギー消費量（照明）[MJ]"] = resultdata_L["Es_lighting"]
-                calc_reuslt["BEI_L"] = math.ceil(resultdata_L["BEI_L"] * 100) / 100
+                # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+                # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+                calc_reuslt["BEI_L"] = resultdata_L["BEI_L"]
 
             else:
                 resultdata_L = {
@@ -307,7 +313,9 @@ def calculate(inputfile_name, exec_calculation=True):
                 energy_consumption_standard += resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
                 calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
-                calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
+                # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+                # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+                calc_reuslt["BEI_HW"] = resultdata_HW["BEI/HW"]
             
             else:
                 resultdata_HW = {
@@ -350,7 +358,9 @@ def calculate(inputfile_name, exec_calculation=True):
                 energy_consumption_standard += resultdata_EV["Es_elevator"]
                 calc_reuslt["設計一次エネルギー消費量（昇降機）[MJ]"] = resultdata_EV["E_elevator"]
                 calc_reuslt["基準一次エネルギー消費量（昇降機）[MJ]"] = resultdata_EV["Es_elevator"]
-                calc_reuslt["BEI_EV"] = math.ceil(resultdata_EV["BEI_EV"] * 100) / 100
+                # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+                # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+                calc_reuslt["BEI_EV"] = resultdata_EV["BEI_EV"]
 
             else:
                 resultdata_EV = {
@@ -671,7 +681,9 @@ def calculate_from_json(inputdata: dict) -> dict:
             energy_consumption_standard += resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
             calc_reuslt["設計一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["設計一次エネルギー消費量[MJ/年]"]
             calc_reuslt["基準一次エネルギー消費量（空調）[MJ]"] = resultdata_AC["基準一次エネルギー消費量[MJ/年]"]
-            calc_reuslt["BEI_AC"] = math.ceil(resultdata_AC["BEI/AC"] * 100) / 100
+            # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+            # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+            calc_reuslt["BEI_AC"] = resultdata_AC["BEI/AC"]
     except Exception as e:
         errors.append(f"空気調和設備の計算エラー: {str(e)}")
 
@@ -687,7 +699,9 @@ def calculate_from_json(inputdata: dict) -> dict:
             energy_consumption_standard += resultdata_V["基準一次エネルギー消費量[MJ/年]"]
             calc_reuslt["設計一次エネルギー消費量（換気）[MJ]"] = resultdata_V["設計一次エネルギー消費量[MJ/年]"]
             calc_reuslt["基準一次エネルギー消費量（換気）[MJ]"] = resultdata_V["基準一次エネルギー消費量[MJ/年]"]
-            calc_reuslt["BEI_V"] = math.ceil(resultdata_V["BEI/V"] * 100) / 100
+            # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+            # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+            calc_reuslt["BEI_V"] = resultdata_V["BEI/V"]
     except Exception as e:
         errors.append(f"機械換気設備の計算エラー: {str(e)}")
 
@@ -703,7 +717,9 @@ def calculate_from_json(inputdata: dict) -> dict:
             energy_consumption_standard += resultdata_L["Es_lighting"]
             calc_reuslt["設計一次エネルギー消費量（照明）[MJ]"] = resultdata_L["E_lighting"]
             calc_reuslt["基準一次エネルギー消費量（照明）[MJ]"] = resultdata_L["Es_lighting"]
-            calc_reuslt["BEI_L"] = math.ceil(resultdata_L["BEI_L"] * 100) / 100
+            # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+            # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+            calc_reuslt["BEI_L"] = resultdata_L["BEI_L"]
     except Exception as e:
         errors.append(f"照明設備の計算エラー: {str(e)}")
 
@@ -719,7 +735,9 @@ def calculate_from_json(inputdata: dict) -> dict:
             energy_consumption_standard += resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
             calc_reuslt["設計一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["設計一次エネルギー消費量[MJ/年]"]
             calc_reuslt["基準一次エネルギー消費量（給湯）[MJ]"] = resultdata_HW["基準一次エネルギー消費量[MJ/年]"]
-            calc_reuslt["BEI_HW"] = math.ceil(resultdata_HW["BEI/HW"] * 100) / 100
+            # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+            # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+            calc_reuslt["BEI_HW"] = resultdata_HW["BEI/HW"]
     except Exception as e:
         errors.append(f"給湯設備の計算エラー: {str(e)}")
 
@@ -735,7 +753,9 @@ def calculate_from_json(inputdata: dict) -> dict:
             energy_consumption_standard += resultdata_EV["Es_elevator"]
             calc_reuslt["設計一次エネルギー消費量（昇降機）[MJ]"] = resultdata_EV["E_elevator"]
             calc_reuslt["基準一次エネルギー消費量（昇降機）[MJ]"] = resultdata_EV["Es_elevator"]
-            calc_reuslt["BEI_EV"] = math.ceil(resultdata_EV["BEI_EV"] * 100) / 100
+            # 各設備の計算モジュールで小数第2位に切り上げ済みのため、ここでは切り上げない
+            # （もう一度切り上げると、0.56 * 100 = 56.00000000000001 のような誤差で 0.01 大きくなる）
+            calc_reuslt["BEI_EV"] = resultdata_EV["BEI_EV"]
     except Exception as e:
         errors.append(f"昇降機の計算エラー: {str(e)}")
 
