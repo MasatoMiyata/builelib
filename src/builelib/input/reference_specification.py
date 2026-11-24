@@ -7,6 +7,7 @@ import math
 from pathlib import Path
 
 from builelib import commons as bc
+from .air_conditioning_zones import zone_properties, validate_air_conditioning_zones
 
 
 # Excelの機器名称にこの文字があると、自動生成の要求として読み取る。
@@ -138,6 +139,16 @@ def _room_data(database, rooms, room_key):
     return room, building_type, room_type
 
 
+def _zone_data(database, data, zone_name):
+    """空調・外皮の基準設定仕様を所属室の用途とゾーン合計面積で生成する。"""
+    try:
+        properties = zone_properties(data, zone_name)
+    except (ValueError, KeyError) as exc:
+        raise ReferenceSpecificationError(str(exc)) from None
+    room = {**properties, "roomArea": properties["zoneArea"]}
+    return _room_data(database, {zone_name: room}, zone_name)
+
+
 def _ac_values(database, building_type, room_type, region):
     """地域区分に合うH28空調表から、外壁・窓・空調の基準値を取得する。"""
     try:
@@ -223,7 +234,7 @@ def _connected_context(result, database, ahu_name):
         outside = zone.get("AHU_cooling_outdoorLoad") == ahu_name
         if not inside and not outside:
             continue
-        room, building_type, room_type = _room_data(database, result.get("Rooms", {}), zone_name)
+        room, building_type, room_type = _zone_data(database, result, zone_name)
         record = _ac_values(database, building_type, room_type, _region(result))
         factor = 1 if inside and outside else (2 / 3 if inside else 1 / 3)
         key = (building_type, room_type)
@@ -389,7 +400,7 @@ def _expand_ac_request(result, database, request, used_names, next_ids):
         outside = zone.get("AHU_cooling_outdoorLoad")
         if inside != REFERENCE_MARKER or outside != REFERENCE_MARKER:
             raise ReferenceSpecificationError("室負荷処理と外気負荷処理の両方に「基準設定仕様」を指定してください。")
-        room, building_type, room_type = _room_data(database, result.get("Rooms", {}), zone_name)
+        room, building_type, room_type = _zone_data(database, result, zone_name)
         record = _ac_values(database, building_type, room_type, _region(result))
         area = _positive_area(room.get("roomArea"))
         second_capacity = _required_number(record, "床面積あたりの定格冷房能力（2台目）")
@@ -502,7 +513,10 @@ def _expand_equipment(result, database, request, used_names, next_ids):
     room_key = request.get("zone") if equipment in ("外壁", "窓") else request.get("room")
     if not isinstance(room_key, str) or not room_key:
         raise ReferenceSpecificationError("対象室または空調ゾーンの名称が必要です。")
-    room, building_type, room_type = _room_data(database, result.get("Rooms", {}), room_key)
+    if equipment in ("外壁", "窓"):
+        room, building_type, room_type = _zone_data(database, result, room_key)
+    else:
+        room, building_type, room_type = _room_data(database, result.get("Rooms", {}), room_key)
 
     if equipment in ("外壁", "窓"):
         # zoneと配列位置で、様式2-4のどの外壁・窓を置き換えるか特定する。
@@ -779,8 +793,8 @@ def expand_reference_specifications(inputdata):
 def prepare_input_data(data, validation=None, *, from_excel=False, validate_schema=True):
     """基準設定仕様を展開し、計算に渡すJSONと検証結果を返す。
 
-    Excelのセル検査は読み取り側で済ませる。ここではExcel・JSONのどちらも
-    同じ展開処理を通し、その後で完成したJSONの構造を確認する。
+    Excelのセル検査は読み取り側で済ませる。室とゾーンの整合性を確認してから、
+    Excel・JSON共通の展開処理を通し、完成したJSONの構造を確認する。
     """
     # 呼び出し元のエラー一覧は書き換えず、読み取り時のエラーを引き継ぐ。
     validation = validation or {}
@@ -788,6 +802,17 @@ def prepare_input_data(data, validation=None, *, from_excel=False, validate_sche
         "error": list(validation.get("error", [])),
         "warning": list(validation.get("warning", [])),
     }
+
+    # 設備の生成や計算より先に、室と空調ゾーンの対応を検証する。
+    # Excelでは行番号付きで報告済みの同じエラーを重ねない。
+    zone_errors = validate_air_conditioning_zones(data)
+    for error in zone_errors:
+        if not any(error in previous for previous in result_validation["error"]):
+            result_validation["error"].append(error)
+    # 所属条件のエラーは設備生成前に停止する。他シートの既存エラーについては
+    # 従来どおり基準設定仕様のエラーも収集する。
+    if zone_errors or any("AirConditioningZone ->" in error for error in result_validation["error"]):
+        return data, result_validation
 
     # 中間JSONの「基準設定仕様」を通常の設備データに置き換える。
     # 要求に含まれるsource（Excelのシート・行）は展開エラーの先頭に付く。

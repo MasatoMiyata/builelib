@@ -8,6 +8,7 @@ import sys
 
 from builelib import commons as bc
 from builelib import database_loader
+from builelib.input.air_conditioning_zones import validate_air_conditioning_zones
 # Excelから作った中間JSONを、JSON直接入力と共通の処理で展開する。
 from builelib.input.reference_specification import (
     REFERENCE_MARKER,
@@ -563,6 +564,7 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
 
     # 「基準設定仕様」の位置を記録するための変数（仕様値への展開は後で行う）。
     reference_requests = []
+    zone_sources = {}
     envelope_source_rows = {}
     equipment_source_rows = {}
     
@@ -1432,58 +1434,66 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
     #----------------------------------
     sheet_AC1 = _find_form_sheet(wb, "F2-1")
     if sheet_AC1 is not None:
-        
-        # 初期化
-        roomKey = None
-
-        # 行のループ
-        for i in range(10,sheet_AC1.nrows):
-
-            # シートから「行」の読み込み
+        roomKey = None  # ②のゾーンキー。①の室キーとは独立して扱う。
+        zone_members = {}
+        for i in range(10, sheet_AC1.nrows):
             dataAC1 = sheet_AC1.row_values(i)
+            source = f"{sheet_AC1.name} {i+1}行目"
+            for column in (1, 8):
+                if sheet_AC1.cell_type(i, column) == xlrd.XL_CELL_NUMBER:
+                    dataAC1[column] = str(int(sheet_AC1.cell_value(i, column)))
+            if all(dataAC1[column] == "" for column in (0, 1, 7, 8, 9, 10)):
+                roomKey = None
+                continue
+            if dataAC1[0] == "" or dataAC1[1] == "":
+                validation["error"].append(f"{source}: AirConditioningZone -> ?:「①階・室名」を入力してください。")
+                roomKey = None
+                continue
+            member_key = f"{dataAC1[0]}_{dataAC1[1]}"
+            if dataAC1[7] != "" or dataAC1[8] != "":
+                if dataAC1[7] == "" or dataAC1[8] == "":
+                    validation["error"].append(f"{source}: AirConditioningZone -> ?:「②階・空調ゾーン名」を両方入力してください。")
+                    roomKey = None
+                    continue
+                roomKey = f"{dataAC1[7]}_{dataAC1[8]}"
+            elif roomKey is None:
+                validation["error"].append(f"{source}: AirConditioningZone -> ?: 引継ぎ元の空調ゾーンがありません。「②階・空調ゾーン名」を入力してください。")
+                continue
 
-            # 数値で入力された室名を文字列に変換
-            if sheet_AC1.cell_type(i,8) == xlrd.XL_CELL_NUMBER:
-                dataAC1[8] = str(int(sheet_AC1.cell_value(i,8)))
+            if roomKey not in data["AirConditioningZone"]:
+                AHU_insideLoad = check_value(dataAC1[9], f"{source}:「③空調機群名称（室負荷）」", True, None, "文字列")
+                AHU_outdoorLoad = check_value(dataAC1[10], f"{source}:「④空調機群名称（外気負荷）」", True, None, "文字列")
 
-            # 階と室名が空欄でない場合
-            if (dataAC1[7] != "") and (dataAC1[8] != ""):
 
-                # 階＋室+ゾーン名をkeyとする
-                roomKey = str(dataAC1[7]) + '_' + str(dataAC1[8])
+                # 冷暖同時供給については、暫定で「無」を入れておく。後に再度判定。
+                data["AirConditioningZone"][roomKey] = {
+                    "isNatualVentilation": "無",
+                    "isSimultaneousSupply": "無",
+                    "AHU_cooling_insideLoad": AHU_insideLoad,
+                    "AHU_cooling_outdoorLoad": AHU_outdoorLoad,
+                    "AHU_heating_insideLoad": AHU_insideLoad,
+                    "AHU_heating_outdoorLoad": AHU_outdoorLoad,
+                    "Info": check_value(dataAC1[11], f"{source}:「⑤備考」", False, None, "文字列"),
+                }
+                zone_members[roomKey] = []
 
-                if roomKey in data["AirConditioningZone"]:
+                # 「基準設定仕様」の展開時に必要となる情報を記録：
+                if AHU_insideLoad == REFERENCE_MARKER or AHU_outdoorLoad == REFERENCE_MARKER:
+                    reference_requests.append({
+                        "equipment": "空調機群", "zone": roomKey,
+                        "source": f"{source}（空調機群名称）",
+                    })
+            else:
+                for column, field in ((9, "AHU_cooling_insideLoad"), (10, "AHU_cooling_outdoorLoad")):
+                    if dataAC1[column] != "" and str(dataAC1[column]) != data["AirConditioningZone"][roomKey][field]:
+                        validation["error"].append(f"{source}: AirConditioningZone -> {roomKey}: 空調機群名称が他の所属室と一致しません。")
+            zone_members[roomKey].append(member_key)
+            zone_sources[roomKey] = " / ".join(filter(None, (zone_sources.get(roomKey), source)))
 
-                    validation["error"].append( "様式2-1.空調ゾーン:「②階・空調ゾーン名」の組み合わせに重複があります（"+ str(i+1) +"行目「"+ roomKey +"」）。")
-
-                elif roomKey not in data["Rooms"]:
-
-                    validation["error"].append( "様式2-1.空調ゾーン:「②空調ゾーン」が 様式1.室仕様入力シートで定義されてません。" +
-                        "Builelibでは「①室の仕様」と「②空調ゾーン」の内容を等しくしてください（"+ str(i+1) +"行目「"+ roomKey +"」）。") 
-
-                else:
-
-                    AHU_insideLoad  = check_value(dataAC1[9], "様式2-1.空調ゾーン "+ str(i+1) +"行目:「③空調機群名称（室負荷）」", True, None, "文字列", None, None, None)
-                    AHU_outdoorLoad = check_value(dataAC1[10], "様式2-1.空調ゾーン "+ str(i+1) +"行目:「④空調機群名称（外気負荷）」", True, None, "文字列", None, None, None)
-
-                    # 冷暖同時供給については、暫定で「無」を入れておく。後に再度判定。
-                    data["AirConditioningZone"][roomKey] = {
-                        "isNatualVentilation": "無",
-                        "isSimultaneousSupply": "無",
-                        "AHU_cooling_insideLoad": AHU_insideLoad,
-                        "AHU_cooling_outdoorLoad": AHU_outdoorLoad,
-                        "AHU_heating_insideLoad": AHU_insideLoad,
-                        "AHU_heating_outdoorLoad": AHU_outdoorLoad,
-                        "Info":
-                            check_value(dataAC1[11], "様式2-1.空調ゾーン "+ str(i+1) +"行目:「⑤備考」", False, None, "文字列", None, None, None),
-                    }
-
-                    # 「基準設定仕様」の展開時に必要となる情報を記録：
-                    if AHU_insideLoad == REFERENCE_MARKER or AHU_outdoorLoad == REFERENCE_MARKER:
-                        reference_requests.append({
-                            "equipment": "空調機群", "zone": roomKey,
-                            "source": f"{sheet_AC1.name} {i+1}行目（空調機群名称）",
-                        })
+        for zone_name, members in zone_members.items():
+            # 従来の同名1室1ゾーンでは生成JSONの形を変えない。
+            if members != [zone_name]:
+                data["AirConditioningZone"][zone_name]["roomKeys"] = members
 
     #----------------------------------
     # 様式2-2 外壁構成入力シート の読み込み
@@ -4033,6 +4043,9 @@ def make_jsondata_from_Ver2_sheet(inputfileName):
         except Exception as e:
             validation["error"].append( "様式SP-AC-ST) 日射熱取得率（日別）入力シート: シートの読み込みに失敗しました。"+ str(e) +"。")
 
+
+    # 所属条件の検証はJSON直接入力と共通。Excelでは行番号を付けて返す。
+    validation["error"].extend(validate_air_conditioning_zones(data, zone_sources))
 
     # 全シートの生成要求を中間JSONに格納する。
     if reference_requests:

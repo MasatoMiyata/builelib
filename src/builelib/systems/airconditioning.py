@@ -11,6 +11,7 @@ import sys
 from builelib import commons as bc
 from builelib.climate import climate
 from builelib.envelope import shading
+from builelib.input.air_conditioning_zones import zone_properties, lighting_heat_density
 
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
@@ -427,13 +428,12 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     # 空調ゾーン毎にループ
     for room_zone_name in inputdata["AirConditioningZone"]:
 
-        if room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
+        if "roomKeys" in inputdata["AirConditioningZone"][room_zone_name] or room_zone_name in inputdata["Rooms"]:
 
             # 建物用途・室用途、ゾーン面積等の取得
-            inputdata["AirConditioningZone"][room_zone_name]["buildingType"]  = inputdata["Rooms"][room_zone_name]["buildingType"]
-            inputdata["AirConditioningZone"][room_zone_name]["roomType"]      = inputdata["Rooms"][room_zone_name]["roomType"]
-            inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]      = inputdata["Rooms"][room_zone_name]["roomArea"]
-            inputdata["AirConditioningZone"][room_zone_name]["ceilingHeight"] = inputdata["Rooms"][room_zone_name]["ceilingHeight"]
+            inputdata["AirConditioningZone"][room_zone_name].update(zone_properties(inputdata, room_zone_name))
+            if "roomKeys" not in inputdata["AirConditioningZone"][room_zone_name]:
+                inputdata["AirConditioningZone"][room_zone_name]["ceilingHeight"] = inputdata["Rooms"][room_zone_name]["ceilingHeight"]
                 
         else:
 
@@ -1051,7 +1051,9 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
         
         # 様式4から照明発熱量を読み込む
         if COUPLING_LIGHTING:
-            if room_zone_name in inputdata["LightingSystems"]:
+            if "roomKeys" in inputdata["AirConditioningZone"][room_zone_name] or room_zone_name in inputdata["Rooms"]:
+                roomHeatGain_Light = lighting_heat_density(inputdata, room_zone_name, roomHeatGain_Light)
+            elif room_zone_name in inputdata["LightingSystems"]:
                 lighting_power = 0
                 for unit_name in inputdata["LightingSystems"][room_zone_name]["lightingUnit"]:
                     lighting_power += inputdata["LightingSystems"][room_zone_name]["lightingUnit"][unit_name]["RatedPower"] * \
@@ -4454,15 +4456,15 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                         if inputdata["AirConditioningZone"][ac_zone]["AHU_cooling_insideLoad"] == ahu_name and \
                             inputdata["AirConditioningZone"][ac_zone]["AHU_cooling_outdoorLoad"] == ahu_name:
             
-                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["AirConditioningZone"][ac_zone]["zoneArea"])
                         
                         elif inputdata["AirConditioningZone"][ac_zone]["AHU_cooling_insideLoad"] == ahu_name:
             
-                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["AirConditioningZone"][ac_zone]["zoneArea"])
 
                         elif inputdata["AirConditioningZone"][ac_zone]["AHU_cooling_outdoorLoad"] == ahu_name:
             
-                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["AirConditioningZone"][ac_zone]["zoneArea"])
                         
 
         elif inputdata["REF"][ref_name]["mode"] == "cooling":  # 暖房の場合
@@ -4476,15 +4478,15 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
                         if inputdata["AirConditioningZone"][ac_zone]["AHU_heating_insideLoad"] == ahu_name and \
                             inputdata["AirConditioningZone"][ac_zone]["AHU_heating_outdoorLoad"] == ahu_name:
             
-                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["AirConditioningZone"][ac_zone]["zoneArea"])
                         
                         elif inputdata["AirConditioningZone"][ac_zone]["AHU_heating_insideLoad"] == ahu_name:
             
-                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["AirConditioningZone"][ac_zone]["zoneArea"])
 
                         elif inputdata["AirConditioningZone"][ac_zone]["AHU_heating_outdoorLoad"] == ahu_name:
             
-                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["Rooms"][ac_zone]["roomArea"])
+                            resultJson["REF"][ref_name]["空調対象面積"] += float(inputdata["AirConditioningZone"][ac_zone]["zoneArea"])
                         
 
     ##----------------------------------------------------------------------------------
@@ -4635,9 +4637,9 @@ def calc_energy(inputdata, debug = False, output_dir = "", db = None):
     for room_zone_name in inputdata["AirConditioningZone"]:
     
         # 建物用途・室用途、ゾーン面積等の取得
-        buildingType = inputdata["Rooms"][room_zone_name]["buildingType"]
-        roomType     = inputdata["Rooms"][room_zone_name]["roomType"]
-        zoneArea     = inputdata["Rooms"][room_zone_name]["roomArea"]
+        buildingType = inputdata["AirConditioningZone"][room_zone_name]["buildingType"]
+        roomType     = inputdata["AirConditioningZone"][room_zone_name]["roomType"]
+        zoneArea     = inputdata["AirConditioningZone"][room_zone_name]["zoneArea"]
 
         resultJson["計算対象面積"] += zoneArea
         resultJson["基準一次エネルギー消費量[MJ/年]"] += \

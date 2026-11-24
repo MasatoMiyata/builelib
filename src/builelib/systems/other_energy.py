@@ -7,6 +7,7 @@ import copy
 import sys
 
 from builelib import commons as bc
+from builelib.input.air_conditioning_zones import zone_room_keys
 
 # データベースファイルの保存場所
 database_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/database/"
@@ -184,7 +185,10 @@ def calc_energy(inputdata, DEBUG = False, output_dir = "", db = None):
 
     # 空調スケジュール
     for room_zone_name in inputdata.get("AirConditioningZone", {}):
-        if room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
+        if "roomKeys" in inputdata["AirConditioningZone"][room_zone_name]:
+            for room_name in zone_room_keys(inputdata, room_zone_name):
+                AreaWeightedSchedule_AC += roomScheduleRoom[room_name] * inputdata["Rooms"][room_name]["roomArea"]
+        elif room_zone_name in inputdata["Rooms"]:  # ゾーン分けがない場合
 
             AreaWeightedSchedule_AC += roomScheduleRoom[room_zone_name] * inputdata["Rooms"][room_zone_name]["roomArea"]
 

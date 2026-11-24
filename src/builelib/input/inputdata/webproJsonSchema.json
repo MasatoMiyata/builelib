@@ -865,6 +865,13 @@
         },
         "AirConditioningZone":{
             "properties": {
+                "roomKeys": {
+                    "description": "所属するRoomsのキー。省略時はゾーン名と同名の室を参照する。",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {"type": "string", "minLength": 1}
+                },
                 "isNatualVentilation": {
                     "description": "AC1-4:自然換気の有無",
                     "type": "string",
